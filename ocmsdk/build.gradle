@@ -104,8 +104,6 @@ android {
     ocm { dimension "play" }
   }
 
-  defaultPublishConfig "ocmRelease"
-
   // true to publish all flavour artifacts
   publishNonDefault true
 }
