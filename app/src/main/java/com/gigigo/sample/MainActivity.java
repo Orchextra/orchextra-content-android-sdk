@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.ocm;
+package com.gigigo.sample;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

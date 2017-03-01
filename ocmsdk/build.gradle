@@ -104,6 +104,8 @@ android {
     ocm { dimension "play" }
   }
 
+  defaultPublishConfig "ocmRelease"
+
   // true to publish all flavour artifacts
   publishNonDefault true
 }
@@ -140,6 +142,7 @@ dependencies {
   compile rootProject.ext.libraries.imageloaderGlide
 
   //compile rootProject.ext.libraries.oxvuforiaimplementation
+
   ocmStagingCompile(rootProject.ext.libraries.orchextrasdkStaging) { transitive = true }
   ocmDebugCompile(rootProject.ext.libraries.orchextrasdkDebug) { transitive = true }
   ocmStoreCompile(rootProject.ext.libraries.orchextrasdkRelease) { transitive = true }

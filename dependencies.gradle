@@ -1,7 +1,6 @@
 allprojects {
   ext {
     libraries = [androidSupportDesign       : 'com.android.support:design:23.4.0',
-                 percent                    : 'com.android.support:percent:23.4.0',
 
                  daggerCompiler             : 'com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2',
                  dagger                     : 'com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2',
@@ -14,15 +13,10 @@ allprojects {
                  playServicesBase           : 'com.google.android.gms:play-services-base:9.4.0',
                  playServicesLocation       : 'com.google.android.gms:play-services-location:9.4.0',
                  playServicesGcm            : 'com.google.android.gms:play-services-gcm:9.4.0',
-                 googleAnalytics            : 'com.google.android.gms:play-services-analytics:9.4.0',
-
-                 multidex                   : 'com.android.support:multidex:1.0.1',
 
                  interactorExecutor         : 'com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:interactorexecutor-invoker:1.0.6',
                  threaddecoratedviewCommon  : 'com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-common:1.0.6',
                  threaddecoratedviewCompiler: 'com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-compiler:1.0.6',
-
-                 appliverySdk               : 'com.github.Applivery:applivery-android-sdk:v2.0.3',
 
                  gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.8',
                  ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.8',
@@ -32,7 +26,6 @@ allprojects {
                  baserecycleradapter        : 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.3',
                  multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.4.5',
 
-                 oxvuforiaimplementation    : 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.5',
                  orchextrasdkStaging        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:4.1.1RC:play9Staging@aar',
                  orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:4.1.1RC:play9Debug@aar',
                  orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:4.1.1RC:play9Release@aar',
