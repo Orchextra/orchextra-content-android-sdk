@@ -1,9 +1,9 @@
 <resources>
 
-  <style name="AppTheme" parent="MainAppTheme"/>
+  <style name="OcmAppTheme" parent="OcmMainAppTheme"/>
 
   <!-- Base application theme. -->
-  <style name="MainAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+  <style name="OcmMainAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <!--   your app branding color for the app bar -->
     <item name="colorPrimary">@android:color/transparent</item>
     <!--   darker variant for the status bar and contextual app bars -->
@@ -14,7 +14,7 @@
     <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
   </style>
 
-  <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+  <style name="OcmAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
   <style name="TextAppearanceDialogMessage" parent="@android:style/TextAppearance.Holo.Medium">
   <item name="android:textStyle">italic</item>

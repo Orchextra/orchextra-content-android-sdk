@@ -5,7 +5,7 @@ android {
   buildToolsVersion "25.0.2"
   defaultConfig {
     applicationId "com.gigigo.sample"
-    minSdkVersion 10
+    minSdkVersion 18
     targetSdkVersion 25
     versionCode 1
     versionName "1.0"
@@ -22,5 +22,5 @@ android {
 dependencies {
   compile 'com.android.support:appcompat-v7:25.1.0'
 
-  compile project(path: ':ocmsdk')
+  compile project(path: ':ocmsdk', configuration: 'ocmPrerelease')
 }

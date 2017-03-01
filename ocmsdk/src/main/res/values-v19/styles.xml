@@ -2,7 +2,7 @@
 <resources>
 
   <!-- Base application theme. -->
-  <style name="AppTheme" parent="MainAppTheme">
+  <style name="OcmAppTheme" parent="OcmMainAppTheme">
     <item name="android:windowTranslucentStatus">true</item>
   </style>
 </resources>
