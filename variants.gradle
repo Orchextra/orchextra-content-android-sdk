@@ -1,0 +1,144 @@
+ext {
+  googleKeyDebug = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
+  //gigigo.desarrollo -> Google Console --> Orchextra2016 --> Woah Dev
+  googleKey = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
+
+  ocmSdkVersion = [debug: 'ANDROID_1.0.0']
+
+  apiOcm = [debug     : 'https://cm.q.orchextra.io/',
+            staging   : 'https://cm.s.orchextra.io/',
+            prerelease: 'https://cm.orchextra.io/',
+            release   : 'https://cm.orchextra.io/',
+            store     : 'https://cm.orchextra.io/']
+
+  woahApiKey = [debug     : 'bf0d342f12f9c8f95cb22dfd8f5c4960',
+                staging   : 'bf0d342f12f9c8f95cb22dfd8f5c4960',
+                prerelease: 'bee98c6f090d06889e2f173d38bb98b3',
+                release   : 'bee98c6f090d06889e2f173d38bb98b3',
+                store     : 'bee98c6f090d06889e2f173d38bb98b3']
+  woahApiSecret = [debug     : '809d2f5a1b60f9632475834af2daf42e',
+                   staging   : 'bae5b4fc81742df754c52dcd4676b3e7',
+                   prerelease: '91468ab3faf2e13dca8233ef4e458290',
+                   release   : '91468ab3faf2e13dca8233ef4e458290',
+                   store     : '91468ab3faf2e13dca8233ef4e458290']
+
+  woahAppVersion = [debug: 'ANDROID_1.1.3']
+
+  apiWoah = [debug     : 'https://api-stream.q.gigigoapps.com/v1/',
+             staging   : 'https://api-stream.s.gigigoapps.com/v1/',
+             prerelease: 'https://api.woah.com/v1/',
+             release   : 'https://api.woah.com/v1/',
+             store     : 'https://api.woah.com/v1/']
+
+  concurrentInteractors = 3
+
+  retrofitLog = [debug     : 'true',
+                 staging   : 'true',
+                 prerelease: 'true',
+                 release   : 'false',
+                 store     : 'true']
+
+  googleAnalyticsTrackerId = [debug  : 'UA-88144306-2',
+                              release: 'UA-88355011-1',
+                              store  : 'UA-88355011-1'
+                              ]
+
+  youtubeDeveloperKey = [debug     : googleKeyDebug,
+                         prerelease: googleKey,
+                         release   : googleKey,
+                         store     : googleKey]
+
+  appliveryPlayStoreRelease = [debug     : false,
+                               staging   : false,
+                               prerelease: false,
+                               release   : true,
+                               store     : false
+  ]
+
+
+  ocm = [version        : [major: 1,
+                           minor: 1,
+                           patch: 3],
+         appName        : "WOAH",
+         applicationId  : "com.cocacola.woah",
+
+         demoId         : '',
+
+         appliveryAppId : [debug     : '5809e97757a492b2500657bb',
+                           prerelease: '5853addaf03dd583636c6070',
+                           release   : '5853addaf03dd583636c6070',
+                           store     : '58ae9db85ef2ecaa6b17faa0'],
+
+         appliveryApiKey: [debug     : '4de30fc0391775690e1cffc648b17c7aad5970a7',
+                           prerelease: '7f9a0979ea2e9cae2583929ef5a765106b78be8d',
+                           release   : '7f9a0979ea2e9cae2583929ef5a765106b78be8d',
+                           store     : 'b85ff3eedb887caa6cd52dbf38ba8fd7728473fc'
+                          ]]
+
+  deloitte = [version        : [major: 1,
+                                minor: 0,
+                                patch: 0],
+              appName        : "WOAH Deloitte",
+              applicationId  : "com.cocacola.woah",
+
+              demoId         : 'DEMO_DELOITTE',
+
+              appliveryAppId : [debug: '58330ecc73078f1b2d678c7a'],
+              appliveryApiKey: [debug: 'b85ff3eedb887caa6cd52dbf38ba8fd7728473fc']]
+
+  sofia = [version        : [major: 1,
+                             minor: 0,
+                             patch: 0],
+           appName        : "WOAH Sofia",
+           applicationId  : "com.cocacola.woah",
+
+           demoId         : 'DEMO_SOFIA',
+
+           appliveryAppId : [debug: '5809e97757a492b2500657bb'],
+           appliveryApiKey: [debug: 'b85ff3eedb887caa6cd52dbf38ba8fd7728473fc']]
+
+  sitc = [version        : [major: 1,
+                            minor: 0,
+                            patch: 0],
+          appName        : "WOAH SITC",
+          applicationId  : "com.cocacola.woah",
+
+          demoId         : 'DEMO_SITC',
+
+          appliveryAppId : [debug: '5819d44b3cea45dd3f271270'],
+          appliveryApiKey: [debug: 'b85ff3eedb887caa6cd52dbf38ba8fd7728473fc']]
+
+  kolab = [version        : [major: 1,
+                             minor: 0,
+                             patch: 0],
+           appName        : "KOLab",
+           applicationId  : "com.cocacola.woah",
+
+           demoId         : 'DEMO_KOLAB',
+
+           appliveryAppId : [debug: '58936bd3555939c13d21a680'],
+           appliveryApiKey: [debug: 'b85ff3eedb887caa6cd52dbf38ba8fd7728473fc']]
+
+
+  markets = [version        : [major: 1,
+                             minor: 0,
+                             patch: 0],
+           appName        : "Woah Markets Demo",
+           applicationId  : "com.cocacola.woah",
+
+           demoId         : 'DEMO_MARKETS',
+
+           appliveryAppId : [debug: '58a5c95bad732d382eff0172'],
+           appliveryApiKey: [debug: 'b85ff3eedb887caa6cd52dbf38ba8fd7728473fc']]
+
+  mwc =     [version        : [major: 1,
+                               minor: 0,
+                               patch: 0],
+             appName        : "Woah MWC",
+             applicationId  : "com.cocacola.woah",
+
+             demoId         : 'DEMO_MWC',
+
+             appliveryAppId : [debug: '58a5c95bad732d382eff0172'],
+             appliveryApiKey: [debug: 'b85ff3eedb887caa6cd52dbf38ba8fd7728473fc']]
+}

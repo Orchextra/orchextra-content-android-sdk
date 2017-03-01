@@ -1,0 +1,52 @@
+<resources>
+
+  <style name="AppTheme" parent="MainAppTheme"/>
+
+  <!-- Base application theme. -->
+  <style name="MainAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <!--   your app branding color for the app bar -->
+    <item name="colorPrimary">@android:color/transparent</item>
+    <!--   darker variant for the status bar and contextual app bars -->
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <!--   theme UI controls like checkboxes and text fields -->
+    <item name="colorAccent">@color/colorAccent</item>
+
+    <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
+  </style>
+
+  <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+  <style name="TextAppearanceDialogMessage" parent="@android:style/TextAppearance.Holo.Medium">
+  <item name="android:textStyle">italic</item>
+  <item name="android:textSize">14sp</item>
+  <item name="android:scrollbars">none</item>
+</style>
+
+<!--need it 4 c text of the buttons, applivery-->
+  <style name="AlertDialogTheme">
+    <item name="colorAccent">@color/black</item>
+    <item name="android:textColor">@color/black</item>
+    <item name="android:textColorPrimary">@color/black</item>
+
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:windowFullscreen">true</item>
+
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:windowBackground">@color/white</item>
+    <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+    <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+    <item name="android:textAppearanceMedium">@style/TextAppearanceDialogMessage</item>
+  </style>
+
+  <style name="SearchEditText" parent="Theme.AppCompat.Light">
+    <item name="colorControlNormal">@color/white_alpha</item>
+    <item name="colorControlActivated">@color/white</item>
+  </style>
+
+  <style name="CircularProgress" parent="Theme.AppCompat.Light">
+    <item name="colorAccent">@color/colorPrimary</item>
+  </style>
+
+</resources>

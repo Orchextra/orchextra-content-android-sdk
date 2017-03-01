@@ -1,0 +1,44 @@
+<resources>
+  <dimen name="fab_margin">16dp</dimen>
+  <dimen name="text_margin">16dp</dimen>
+
+
+  <dimen name="spacing_2">2dp</dimen>
+  <dimen name="spacing_4">4dp</dimen>
+  <dimen name="spacing_6">6dp</dimen>
+  <dimen name="spacing_8">8dp</dimen>
+  <dimen name="spacing_12">12dp</dimen>
+  <dimen name="spacing_16">16dp</dimen>
+  <dimen name="spacing_24">24dp</dimen>
+  <dimen name="spacing_32">32dp</dimen>
+  <dimen name="spacing_48">48dp</dimen>
+  <dimen name="spacing_64">64dp</dimen>
+  <dimen name="spacing_92">92dp</dimen>
+  <dimen name="spacing_105">105dp</dimen>
+  <dimen name="spacing_128">128dp</dimen>
+
+  <!-- Tamaños de letra -->
+  <dimen name="text_6">6sp</dimen>
+  <dimen name="text_9">9sp</dimen>
+  <dimen name="text_11">11sp</dimen>
+  <dimen name="text_14">14sp</dimen>
+  <dimen name="text_15">15sp</dimen>
+  <dimen name="text_17">17sp</dimen>
+  <dimen name="text_19">19sp</dimen>
+  <dimen name="text_21">21sp</dimen>
+  <dimen name="text_24">24sp</dimen>
+  <dimen name="text_30">30sp</dimen>
+
+  <dimen name="divider_size">1dp</dimen>
+
+  <dimen name="min_view_size">48dp</dimen>
+  <dimen name="button_size">65dp</dimen>
+  <dimen name="tab_bar_size">80dp</dimen>
+  <dimen name="image_height">220dp</dimen>
+
+  <!-- Default screen margins, per the Android Design guidelines. -->
+  <dimen name="activity_horizontal_margin">16dp</dimen>
+  <dimen name="activity_vertical_margin">16dp</dimen>
+
+  <dimen name="clip_to_padding_grid_layout">85dp</dimen>
+</resources>

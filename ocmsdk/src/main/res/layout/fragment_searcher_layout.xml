@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fire_engine_red"
+    >
+
+  <include
+      layout="@layout/ocm_retry_content_item"
+      android:id="@+id/ocm_empty_layout"
+      android:visibility="gone"
+      />
+
+  <com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView
+      android:id="@+id/searcher_recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:blank_background_color="@color/fire_engine_red"
+      app:divider_color="@android:color/white"
+      app:divider_size="1dp"
+      />
+
+  <ProgressBar
+      android:id="@+id/loadingSearchProgressbar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:visibility="gone"
+      />
+
+</FrameLayout>

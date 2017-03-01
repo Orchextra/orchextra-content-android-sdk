@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/appbarLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:tag="AppBarLayout"
+      android:theme="@style/AppTheme.AppBarOverlay"
+      >
+
+    <android.support.design.widget.CollapsingToolbarLayout
+        android:id="@+id/collapsingToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_scrollFlags="scroll|snap"
+        >
+
+      <FrameLayout
+          android:id="@+id/previewDetailContentLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+    </android.support.design.widget.CollapsingToolbarLayout>
+
+  </android.support.design.widget.AppBarLayout>
+
+  <android.support.v4.widget.NestedScrollView
+      android:id="@+id/nestedScrollView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/windowBackground"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      >
+
+    <FrameLayout
+        android:id="@+id/viewDetailContentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+  </android.support.v4.widget.NestedScrollView>
+
+  <ImageView
+      android:id="@+id/back_toolbar_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_16"
+      android:adjustViewBounds="true"
+      android:elevation="8dp"
+      android:padding="@dimen/spacing_16"
+      android:src="@drawable/ic_back_grey"
+      app:elevation="8dp"
+      app:layout_behavior="com.gigigo.orchextra.core.sdk.ui.behaviours.ScrollBackButtonBehavior"
+      />
+
+  <ImageView
+      android:id="@+id/share_toolbar_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="end|top"
+      android:layout_margin="@dimen/spacing_16"
+      android:adjustViewBounds="true"
+      android:elevation="8dp"
+      android:padding="@dimen/spacing_16"
+      android:src="@drawable/ic_share_gray"
+      android:visibility="gone"
+      app:elevation="8dp"
+      />
+
+</android.support.design.widget.CoordinatorLayout>

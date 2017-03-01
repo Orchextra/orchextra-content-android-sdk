@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="colorPrimary">#eb074c</color>
+  <color name="colorPrimaryDark">#c0053e</color>
+  <color name="colorAccent">#ffffff</color>
+  <color name="textColorPrimary">#ffffff</color>
+  <color name="windowBackground">#ffffff</color>
+  <color name="navigationBarColor">#363744</color>
+
+  <color name="fire_engine_red">#f40009</color>
+  <color name="logged_red">#f4010e</color>
+  <color name="cerise">#e50c7e</color>
+
+  <color name="greyish_brown">#474747</color>
+  <color name="greyish_brown_two">#4a4a4a</color>
+  <color name="greyish_brown_alpha">#47474747</color>
+  <color name="red">#e70a6c</color>
+  <color name="gray">#858585</color>
+  <color name="white">#FFF</color>
+  <color name="white_button_pressed">#DFFF</color>
+  <color name="white_alpha">#9FFF</color>
+  <color name="black">#000</color>
+
+
+  <!--Ini RES Ox-->
+  <!-- Background color of the icon in the notification area -->
+  <color name="ox_notification_background_color">#eb074c</color>
+  <!-- Toolbar title and icon color -->
+  <color name="ox_toolbar_title_color">#FFF</color>
+  <!--end RES Ox-->
+</resources>

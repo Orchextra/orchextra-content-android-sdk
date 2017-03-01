@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <item name="setting_privacy_policy" type="id">setting_privacy_policy</item>
+  <item name="setting_terms" type="id">setting_terms</item>
+  <item name="setting_profile" type="id">setting_profile</item>
+  <item name="setting_logout" type="id">setting_logout</item>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/windowBackground"
+    android:orientation="vertical"
+    >
+
+  <ImageView
+      android:id="@+id/article_header_image"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:adjustViewBounds="true"
+      android:src="@color/windowBackground"
+      />
+
+  <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmTitleTextView
+      android:id="@+id/article_header_text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_centerHorizontal="true"
+      android:layout_marginLeft="@dimen/spacing_large"
+      android:layout_marginRight="@dimen/spacing_large"
+      android:textColor="@color/greyish_brown_two"
+      android:textSize="@dimen/text_xxxxxlarge"
+      />
+</RelativeLayout>
