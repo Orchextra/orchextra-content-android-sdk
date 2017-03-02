@@ -143,10 +143,10 @@ dependencies {
 
   //compile rootProject.ext.libraries.oxvuforiaimplementation
 
-  ocmStagingCompile(rootProject.ext.libraries.orchextrasdkStaging) { transitive true }
-  ocmDebugCompile(rootProject.ext.libraries.orchextrasdkDebug) { transitive true }
-  ocmStoreCompile(rootProject.ext.libraries.orchextrasdkRelease) { transitive true }
-  ocmPrereleaseCompile(rootProject.ext.libraries.orchextrasdkRelease) { transitive true }
+//  ocmStagingCompile(rootProject.ext.libraries.orchextrasdkStaging) { transitive true }
+//  ocmDebugCompile(rootProject.ext.libraries.orchextrasdkDebug) { transitive true }
+//  ocmStoreCompile(rootProject.ext.libraries.orchextrasdkRelease) { transitive true }
+//  ocmPrereleaseCompile(rootProject.ext.libraries.orchextrasdkRelease) { transitive true }
   compile(rootProject.ext.libraries.orchextrasdkRelease) { transitive true }
 
   testCompile rootProject.ext.testLibraries.junit

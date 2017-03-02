@@ -22,5 +22,7 @@ android {
 dependencies {
   compile 'com.android.support:appcompat-v7:25.1.0'
 
-  compile project(path: ':ocmsdk', configuration: 'ocmPrerelease')
+  //compile project(path: ':ocmsdk', configuration: 'ocmPrerelease')
+
+  compile 'com.github.Nuborisar.orchextra-content-android-sdk:ocmsdk:v1.0RC6'
 }
