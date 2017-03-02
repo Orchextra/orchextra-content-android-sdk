@@ -64,12 +64,12 @@ public final class Ocm {
     OCManager.setUserIsAuthorizated(isAuthorizated);
   }
 
-  public static void setNewOrchextraCredentials(String apiKey, String apiSecret,
+  public static void startWithCredentials(String apiKey, String apiSecret,
       OcmCredentialCallback onCredentialCallback) {
     OCManager.setNewOrchextraCredentials(apiKey, apiSecret, onCredentialCallback);
   }
 
-  public static void setOrchextraBusinessUnit(String businessUnit) {
+  public static void setBusinessUnit(String businessUnit) {
     OCManager.setOrchextraBusinessUnit(businessUnit);
   }
 
@@ -79,5 +79,9 @@ public final class Ocm {
 
   public static void clearCache() {
     OCManager.clearCache();
+  }
+
+  public static void start() {
+    OCManager.start();
   }
 }

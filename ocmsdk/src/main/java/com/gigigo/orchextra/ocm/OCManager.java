@@ -138,7 +138,8 @@ public final class OCManager {
       CustomSchemeReceiver onCustomSchemeReceiver) {
     if (OCManager.instance != null) {
       Application app = (Application) instance.ocmContextProvider.getApplicationContext();
-      OCManager.instance.initOrchextra(app, oxKey, oxSecret, notificationActivityClass, onCustomSchemeReceiver);
+      OCManager.instance.initOrchextra(app, oxKey, oxSecret, notificationActivityClass,
+          onCustomSchemeReceiver);
     }
   }
 
@@ -209,40 +210,43 @@ public final class OCManager {
     app.registerActivityLifecycleCallbacks(ocmSdkLifecycle);
   }
 
-  private void initOrchextra(Application app, String oxKey, String oxSecret, Class notificationActivityClass, CustomSchemeReceiver onCustomSchemeReceiver) {
-    OrchextraBuilder orchextraBuilder =
-        new OrchextraBuilder(app)
-            .setApiKeyAndSecret(oxKey, oxSecret)
-            .setLogLevel(OrchextraLogLevel.NETWORK)
-            //.setGcmSenderId("117687721829")       //TODO Test sender Id nuborisar
-            .setNotificationActivityClass(notificationActivityClass.toString())
-           // .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
-            .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
-            .setOrchextraCompletionCallback(new OrchextraCompletionCallback() {
-              @Override public void onSuccess() {
-                Log.d("WOAH", "Orchextra initialized successfully");
-              }
+  private void initOrchextra(Application app, String oxKey, String oxSecret,
+      Class notificationActivityClass, CustomSchemeReceiver onCustomSchemeReceiver) {
 
-              @Override public void onError(String s) {
-                Log.d("WOAH", "onError: " + s);
-              }
+    OrchextraBuilder builder = new OrchextraBuilder(app);
+    builder.setApiKeyAndSecret(oxKey, oxSecret).setLogLevel(OrchextraLogLevel.NETWORK)
+        //.setGcmSenderId("117687721829")       //TODO Test sender Id nuborisar
+        // .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
+        .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
+        .setOrchextraCompletionCallback(new OrchextraCompletionCallback() {
+          @Override public void onSuccess() {
+            Log.d("WOAH", "Orchextra initialized successfully");
+          }
 
-              @Override public void onInit(String s) {
-                Log.d("WOAH", "onInit: " + s);
-              }
+          @Override public void onError(String s) {
+            Log.d("WOAH", "onError: " + s);
+          }
 
-              @Override public void onConfigurationReceive(String accessToken) {
-                Log.d("WOAH", "onConfigurationReceive: " + accessToken);
+          @Override public void onInit(String s) {
+            Log.d("WOAH", "onInit: " + s);
+          }
 
-                instance.oxSession.setToken(accessToken);
+          @Override public void onConfigurationReceive(String accessToken) {
+            Log.d("WOAH", "onConfigurationReceive: " + accessToken);
 
-                if (instance.ocmCredentialCallback != null) {
-                  ocmCredentialCallback.onCredentialReceiver(accessToken);
-                }
-              }
-            });
+            instance.oxSession.setToken(accessToken);
 
-    Orchextra.initialize(orchextraBuilder);
+            if (instance.ocmCredentialCallback != null) {
+              ocmCredentialCallback.onCredentialReceiver(accessToken);
+            }
+          }
+        });
+
+    if (notificationActivityClass != null) {
+      builder.setNotificationActivityClass(notificationActivityClass.toString());
+    }
+
+    Orchextra.initialize(builder);
 
     Orchextra.setCustomSchemeReceiver(onCustomSchemeReceiver);
   }
@@ -252,6 +256,10 @@ public final class OCManager {
     if (instance != null) {
       instance.ocmController.clearCache();
     }
+  }
+
+  public static void start() {
+    Orchextra.start();
   }
 
   //endregion

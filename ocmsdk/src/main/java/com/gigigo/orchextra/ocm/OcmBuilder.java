@@ -8,9 +8,9 @@ import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 public final class OcmBuilder {
 
   private final Application app;
-
   private String oxKey;
   private String oxSecret;
+
   private Class notificationActivityClass;
   private String contentLanguage;
   private OnRequiredLoginCallback onRequiredLoginCallback;
@@ -27,12 +27,12 @@ public final class OcmBuilder {
     return this;
   }
 
-  public OcmBuilder setDoRequiredLoginCallback(OnRequiredLoginCallback onRequiredLoginCallback) {
+  public OcmBuilder setOnDoRequiredLoginCallback(OnRequiredLoginCallback onRequiredLoginCallback) {
     this.onRequiredLoginCallback = onRequiredLoginCallback;
     return this;
   }
 
-  public OcmBuilder setEventCallback(OnEventCallback onEventCallback) {
+  public OcmBuilder setOnEventCallback(OnEventCallback onEventCallback) {
     this.onEventCallback = onEventCallback;
     return this;
   }
@@ -75,16 +75,12 @@ public final class OcmBuilder {
     return this;
   }
 
-  public OcmBuilder setCustomSchemeReceiver(CustomSchemeReceiver onCustomSchemeReceiver) {
+  public OcmBuilder setOnCustomSchemeReceiver(CustomSchemeReceiver onCustomSchemeReceiver) {
     this.onCustomSchemeReceiver = onCustomSchemeReceiver;
     return this;
   }
 
   public CustomSchemeReceiver getOnCustomSchemeReceiver() {
     return onCustomSchemeReceiver;
-  }
-
-  public void setOnCustomSchemeReceiver(CustomSchemeReceiver onCustomSchemeReceiver) {
-    this.onCustomSchemeReceiver = onCustomSchemeReceiver;
   }
 }
