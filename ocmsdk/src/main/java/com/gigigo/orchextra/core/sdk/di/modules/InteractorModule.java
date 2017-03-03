@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.core.sdk.di.modules;
 
 import com.gigigo.orchextra.core.domain.data.ElementNetworkDataSource;
-import com.gigigo.orchextra.core.domain.interactor.elements.GetElementByIdInteractor;
-import com.gigigo.orchextra.core.domain.interactor.home.GetMenuDataInteractor;
+import com.gigigo.orchextra.core.domain.interactors.elements.GetElementByIdInteractor;
+import com.gigigo.orchextra.core.domain.interactors.home.GetMenuDataInteractor;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.domain.data.MenuNetworkDataSource;
 import orchextra.dagger.Module;

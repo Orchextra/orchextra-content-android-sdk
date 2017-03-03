@@ -18,9 +18,9 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
-import com.gigigo.orchextra.core.domain.interactor.errors.GenericResponseDataError;
-import com.gigigo.orchextra.core.domain.interactor.errors.NoNetworkConnectionError;
-import com.gigigo.orchextra.core.domain.interactor.searcher.SearchTextInteractor;
+import com.gigigo.orchextra.core.domain.interactors.errors.GenericResponseDataError;
+import com.gigigo.orchextra.core.domain.interactors.errors.NoNetworkConnectionError;
+import com.gigigo.orchextra.core.domain.interactors.searcher.SearchTextInteractor;
 import java.util.ArrayList;
 import java.util.List;
 

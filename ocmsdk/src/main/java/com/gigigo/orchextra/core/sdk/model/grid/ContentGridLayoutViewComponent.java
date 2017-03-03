@@ -1,7 +1,7 @@
 package com.gigigo.orchextra.core.sdk.model.grid;
 
 import com.gigigo.orchextra.core.controller.model.grid.ContentViewPresenter;
-import com.gigigo.orchextra.core.domain.interactor.home.GetSectionDataInteractor;
+import com.gigigo.orchextra.core.domain.interactors.home.GetSectionDataInteractor;
 import com.gigigo.orchextra.core.sdk.di.components.OcmComponent;
 import com.gigigo.orchextra.core.sdk.di.providers.OcmModuleProvider;
 import com.gigigo.orchextra.core.sdk.di.scopes.PerSection;

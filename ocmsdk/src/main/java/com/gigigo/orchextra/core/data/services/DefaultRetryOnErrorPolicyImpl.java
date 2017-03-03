@@ -2,7 +2,7 @@ package com.gigigo.orchextra.core.data.services;
 
 import com.gigigo.ggglib.network.defaultelements.RetryOnErrorPolicy;
 import com.gigigo.ggglib.network.responses.HttpResponse;
-import com.gigigo.orchextra.core.domain.interactor.errors.OcmBusinessErrors;
+import com.gigigo.orchextra.core.domain.interactors.errors.OcmBusinessErrors;
 import com.gigigo.orchextra.core.data.dto.base.ApiErrorResponse;
 
 public class DefaultRetryOnErrorPolicyImpl implements RetryOnErrorPolicy<ApiErrorResponse> {

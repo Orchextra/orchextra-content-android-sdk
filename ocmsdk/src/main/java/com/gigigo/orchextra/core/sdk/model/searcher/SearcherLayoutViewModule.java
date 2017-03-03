@@ -6,7 +6,7 @@ import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutPresent
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.data.SearcherNetworkDataSource;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
-import com.gigigo.orchextra.core.domain.interactor.searcher.SearchTextInteractor;
+import com.gigigo.orchextra.core.domain.interactors.searcher.SearchTextInteractor;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.di.scopes.PerSection;
 import orchextra.dagger.Module;

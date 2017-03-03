@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.domain.interactor.errors;
+package com.gigigo.orchextra.core.domain.interactors.errors;
 
 import com.gigigo.interactorexecutor.interactors.InteractorError;
 import com.gigigo.interactorexecutor.responses.BusinessError;

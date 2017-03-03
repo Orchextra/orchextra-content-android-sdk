@@ -9,11 +9,14 @@ import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
+import java.util.List;
 
 public class App extends Application {
 
-  public static String API_KEY = "aba98891a3886e5909312ff489201163dff0fe93";
-  public static String API_SECRET = "3e83f8a0623a8028ba8f6d0d63846e22cab55f63";
+  public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
+  public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
 
   private CustomSchemeReceiver onCustomSchemeReceiver = new CustomSchemeReceiver() {
     @Override public void onReceive(String s) {
@@ -36,7 +39,7 @@ public class App extends Application {
 
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
-        .setContentLanguage("IT")
+        .setContentLanguage("ES")
         .setOnDoRequiredLoginCallback(onDoRequiredLoginCallback)
         .setOnEventCallback(onEventCallback)
         .setOnCustomSchemeReceiver(onCustomSchemeReceiver);
@@ -47,12 +50,6 @@ public class App extends Application {
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
-    //Ocm.start();
-
-    Ocm.startWithCredentials(API_KEY, API_SECRET, new OcmCredentialCallback() {
-      @Override public void onCredentialReceiver(String accessToken) {
-
-      }
-    });
+    Ocm.setBusinessUnit("it");
   }
 }

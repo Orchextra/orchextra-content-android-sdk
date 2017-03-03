@@ -1,5 +1,5 @@
 
-package com.gigigo.orchextra.core.domain.interactor.errors;
+package com.gigigo.orchextra.core.domain.interactors.errors;
 
 public enum OcmBusinessErrors {
   NO_AUTH_EXPIRED(401),

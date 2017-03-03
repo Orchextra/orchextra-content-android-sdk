@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.core.sdk.di.modules;
 
 import com.gigigo.interactorexecutor.base.invoker.InteractorInvoker;
-import com.gigigo.orchextra.core.domain.interactor.elements.GetElementByIdInteractor;
-import com.gigigo.orchextra.core.domain.interactor.home.GetMenuDataInteractor;
+import com.gigigo.orchextra.core.domain.interactors.elements.GetElementByIdInteractor;
+import com.gigigo.orchextra.core.domain.interactors.home.GetMenuDataInteractor;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.sdk.OcmControllerImp;
 import orchextra.dagger.Module;

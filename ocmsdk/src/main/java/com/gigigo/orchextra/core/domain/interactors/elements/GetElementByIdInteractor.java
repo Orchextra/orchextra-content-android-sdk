@@ -1,14 +1,13 @@
-package com.gigigo.orchextra.core.domain.interactor.elements;
+package com.gigigo.orchextra.core.domain.interactors.elements;
 
 import com.gigigo.interactorexecutor.interactors.Interactor;
 import com.gigigo.interactorexecutor.interactors.InteractorResponse;
 import com.gigigo.interactorexecutor.responses.BusinessObject;
 import com.gigigo.orchextra.core.domain.data.ElementNetworkDataSource;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
-import com.gigigo.orchextra.core.domain.interactor.errors.GenericResponseDataError;
-import com.gigigo.orchextra.core.domain.interactor.errors.NoNetworkConnectionError;
+import com.gigigo.orchextra.core.domain.interactors.errors.GenericResponseDataError;
+import com.gigigo.orchextra.core.domain.interactors.errors.NoNetworkConnectionError;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 
 public class GetElementByIdInteractor implements Interactor<InteractorResponse<ElementData>> {

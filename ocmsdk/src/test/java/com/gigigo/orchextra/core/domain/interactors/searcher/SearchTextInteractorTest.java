@@ -1,12 +1,12 @@
-package com.gigigo.orchextra.core.domain.interactor.searcher;
+package com.gigigo.orchextra.core.domain.interactors.searcher;
 
 import com.gigigo.interactorexecutor.interactors.InteractorResponse;
 import com.gigigo.interactorexecutor.responses.BusinessError;
 import com.gigigo.interactorexecutor.responses.BusinessObject;
 import com.gigigo.orchextra.core.domain.data.SearcherNetworkDataSource;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
-import com.gigigo.orchextra.core.domain.interactor.errors.GenericResponseDataError;
-import com.gigigo.orchextra.core.domain.interactor.errors.NoNetworkConnectionError;
+import com.gigigo.orchextra.core.domain.interactors.errors.GenericResponseDataError;
+import com.gigigo.orchextra.core.domain.interactors.errors.NoNetworkConnectionError;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import org.junit.Before;
 import org.junit.Test;
