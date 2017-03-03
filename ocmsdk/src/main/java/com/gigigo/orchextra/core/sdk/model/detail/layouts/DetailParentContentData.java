@@ -25,7 +25,7 @@ import com.gigigo.orchextra.ocmsdk.R;
 public abstract class DetailParentContentData extends UiBaseContentData {
 
   private View backToolbarButton;
-  private View shareToolbarButton;
+  protected View shareToolbarButton;
 
   protected UiDetailBaseContentData.OnFinishViewListener onFinishListener;
   protected OnShareListener onShareListener;
@@ -67,14 +67,8 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     });
 
     if (onShareListener != null) {
-      CoordinatorLayout.LayoutParams lp =
-          new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-              ViewGroup.LayoutParams.WRAP_CONTENT);
-      lp.setBehavior(new ScrollShareButtonBehavior(getContext()));
-      lp.gravity = Gravity.END | Gravity.TOP;
-      int dimension = (int) getResources().getDimension(R.dimen.spacing_16);
-      lp.setMargins(dimension, dimension, dimension, dimension);
-      shareToolbarButton.setLayoutParams(lp);
+
+      initShareButton();
 
       shareToolbarButton.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
@@ -83,6 +77,8 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       });
     }
   }
+
+  protected abstract void initShareButton();
 
   public void setOnFinishListener(UiDetailBaseContentData.OnFinishViewListener onFinishListener) {
     this.onFinishListener = onFinishListener;

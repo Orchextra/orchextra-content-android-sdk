@@ -6,7 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
@@ -16,6 +18,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
+import com.gigigo.orchextra.core.sdk.ui.behaviours.ScrollShareButtonBehavior;
 import com.gigigo.orchextra.ocmsdk.R;
 
 public class DetailCoordinatorLayoutContentData extends DetailParentContentData {
@@ -59,6 +62,17 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
       setListenerToPreview();
       setListenerWhenScroll();
     }
+  }
+
+  @Override protected void initShareButton() {
+    CoordinatorLayout.LayoutParams lp =
+        new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT);
+    lp.setBehavior(new ScrollShareButtonBehavior(getContext()));
+    lp.gravity = Gravity.END | Gravity.TOP;
+    int dimension = (int) getResources().getDimension(R.dimen.spacing_16);
+    lp.setMargins(dimension, dimension, dimension, dimension);
+    shareToolbarButton.setLayoutParams(lp);
   }
 
   private void setListenerToPreview() {

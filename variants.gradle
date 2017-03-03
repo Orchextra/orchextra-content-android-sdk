@@ -16,7 +16,7 @@ ext {
   retrofitLog = [debug     : 'true',
                  staging   : 'true',
                  prerelease: 'true',
-                 release   : 'false',
+                 release   : 'true',
                  store     : 'true']
 
   youtubeDeveloperKey = [debug     : googleKeyDebug,

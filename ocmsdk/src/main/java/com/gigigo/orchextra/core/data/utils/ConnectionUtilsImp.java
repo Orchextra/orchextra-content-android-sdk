@@ -29,57 +29,60 @@ public class ConnectionUtilsImp implements ConnectionUtils {
   private ConnectionStates getActiveConnectionStatus() {
     ConnectionStates connectionState;
 
-    ConnectivityManager connManager =
-        (ConnectivityManager) this.context.getSystemService(Context.CONNECTIVITY_SERVICE);
-    if (connManager != null) {
+    try {
 
-      NetworkInfo activeNetworkInfo = connManager.getActiveNetworkInfo();
-      if (activeNetworkInfo != null) {
-        if (activeNetworkInfo.isAvailable() && activeNetworkInfo.isConnected()) {
+      ConnectivityManager connManager = (ConnectivityManager) this.context.getSystemService(Context.CONNECTIVITY_SERVICE);
+      if (connManager != null) {
 
-          switch (activeNetworkInfo.getType()) {
-            case ConnectivityManager.TYPE_WIFI:
-            case ConnectivityManager.TYPE_WIMAX:
+        NetworkInfo activeNetworkInfo = connManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null) {
+          if (activeNetworkInfo.isAvailable() && activeNetworkInfo.isConnected()) {
 
-              WifiManager wifiManager =
-                  (WifiManager) this.context.getSystemService(Context.WIFI_SERVICE);
-              if (wifiManager != null) {
+            switch (activeNetworkInfo.getType()) {
+              case ConnectivityManager.TYPE_WIFI:
+              case ConnectivityManager.TYPE_WIMAX:
 
-                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                if (wifiInfo != null) {
-                  SupplicantState supState = wifiInfo.getSupplicantState();
-                  if (supState.equals(SupplicantState.COMPLETED)) {
-                    connectionState = ConnectionStates.WIFI;
+                WifiManager wifiManager = (WifiManager) this.context.getSystemService(Context.WIFI_SERVICE);
+                if (wifiManager != null) {
+
+                  WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                  if (wifiInfo != null) {
+                    SupplicantState supState = wifiInfo.getSupplicantState();
+                    if (supState.equals(SupplicantState.COMPLETED)) {
+                      connectionState = ConnectionStates.WIFI;
+                    } else {
+                      connectionState = ConnectionStates.DISCONNECT;
+                    }
                   } else {
-                    connectionState = ConnectionStates.DISCONNECT;
+                    connectionState = ConnectionStates.ERROR;
                   }
                 } else {
                   connectionState = ConnectionStates.ERROR;
                 }
-              } else {
-                connectionState = ConnectionStates.ERROR;
-              }
-              break;
-            case ConnectivityManager.TYPE_MOBILE:
-            case ConnectivityManager.TYPE_MOBILE_DUN:
+                break;
+              case ConnectivityManager.TYPE_MOBILE:
+              case ConnectivityManager.TYPE_MOBILE_DUN:
 
-              if (activeNetworkInfo.getState() == NetworkInfo.State.CONNECTED) {
-                connectionState = ConnectionStates.MOBILE;
-              } else {
+                if (activeNetworkInfo.getState() == NetworkInfo.State.CONNECTED) {
+                  connectionState = ConnectionStates.MOBILE;
+                } else {
+                  connectionState = ConnectionStates.DISCONNECT;
+                }
+                break;
+              default:
                 connectionState = ConnectionStates.DISCONNECT;
-              }
-              break;
-            default:
-              connectionState = ConnectionStates.DISCONNECT;
-              break;
+                break;
+            }
+          } else {
+            connectionState = ConnectionStates.DISCONNECT;
           }
         } else {
-          connectionState = ConnectionStates.DISCONNECT;
+          connectionState = ConnectionStates.ERROR;
         }
       } else {
         connectionState = ConnectionStates.ERROR;
       }
-    } else {
+    } catch (Exception e) {
       connectionState = ConnectionStates.ERROR;
     }
 

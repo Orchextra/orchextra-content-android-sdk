@@ -48,4 +48,8 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
       }
     }
   }
+
+  @Override protected void initShareButton() {
+    shareToolbarButton.setVisibility(View.VISIBLE);
+  }
 }
