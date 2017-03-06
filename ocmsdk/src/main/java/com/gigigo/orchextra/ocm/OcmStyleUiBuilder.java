@@ -7,21 +7,31 @@ public final class OcmStyleUiBuilder {
   private String mediumFontPath;
   private String lightFontPath;
 
-  public OcmStyleUiBuilder setTitleFontAssetsPath(String titleFontPath) {
+  /**
+   * Path to the font to apply in titles of the app
+   */
+  public OcmStyleUiBuilder setTitleFont(String titleFontPath) {
     this.titleFontPath = titleFontPath;
     return this;
   }
 
+  /**
+   * Path to the font to apply in general texts of the app
+   */
   public OcmStyleUiBuilder setNormalFont(String normalFonPath) {
     this.normalFonPath = normalFonPath;
     return this;
   }
 
+  /**
+   * Path to the font to apply in text of buttons of the app
+   */
   public OcmStyleUiBuilder setMediumFont(String mediumFontPath) {
     this.mediumFontPath = mediumFontPath;
     return this;
   }
 
+  @Deprecated
   public OcmStyleUiBuilder setLightFont(String lightFontPath) {
     this.lightFontPath = lightFontPath;
     return this;
@@ -39,6 +49,7 @@ public final class OcmStyleUiBuilder {
     return mediumFontPath;
   }
 
+  @Deprecated
   public String getLightFontPath() {
     return lightFontPath;
   }

@@ -17,6 +17,9 @@ public final class OcmBuilder {
   private OnEventCallback onEventCallback;
   private CustomSchemeReceiver onCustomSchemeReceiver;
 
+  /**
+   * Initialize the sdk with the Application context
+   */
   public OcmBuilder(Application app) {
     this.app = app;
   }
@@ -27,18 +30,43 @@ public final class OcmBuilder {
     return this;
   }
 
+  /**
+   * Callback to know when the user need to be logged in the app.
+   */
   public OcmBuilder setOnDoRequiredLoginCallback(OnRequiredLoginCallback onRequiredLoginCallback) {
     this.onRequiredLoginCallback = onRequiredLoginCallback;
     return this;
   }
 
+  /**
+   * Receive events which are produced when user do some actions
+   */
   public OcmBuilder setOnEventCallback(OnEventCallback onEventCallback) {
     this.onEventCallback = onEventCallback;
     return this;
   }
 
+  /**
+   * Set the sdk language
+   */
   public OcmBuilder setContentLanguage(String language) {
     this.contentLanguage = language;
+    return this;
+  }
+
+  /**
+   * Set the home/main activity which receives the actions of the sdk like to show notifications
+   */
+  public OcmBuilder setNotificationActivityClass(Class notificationActivityClass) {
+    this.notificationActivityClass = notificationActivityClass;
+    return this;
+  }
+
+  /**
+   * Callback to receive custom schemes from sdk
+   */
+  public OcmBuilder setOnCustomSchemeReceiver(CustomSchemeReceiver onCustomSchemeReceiver) {
+    this.onCustomSchemeReceiver = onCustomSchemeReceiver;
     return this;
   }
 
@@ -62,7 +90,7 @@ public final class OcmBuilder {
     return onEventCallback;
   }
 
-  public String getContentLanguage() {
+  String getContentLanguage() {
     return contentLanguage;
   }
 
@@ -70,17 +98,7 @@ public final class OcmBuilder {
     return notificationActivityClass;
   }
 
-  public OcmBuilder setNotificationActivityClass(Class notificationActivityClass) {
-    this.notificationActivityClass = notificationActivityClass;
-    return this;
-  }
-
-  public OcmBuilder setOnCustomSchemeReceiver(CustomSchemeReceiver onCustomSchemeReceiver) {
-    this.onCustomSchemeReceiver = onCustomSchemeReceiver;
-    return this;
-  }
-
-  public CustomSchemeReceiver getOnCustomSchemeReceiver() {
+  CustomSchemeReceiver getOnCustomSchemeReceiver() {
     return onCustomSchemeReceiver;
   }
 }

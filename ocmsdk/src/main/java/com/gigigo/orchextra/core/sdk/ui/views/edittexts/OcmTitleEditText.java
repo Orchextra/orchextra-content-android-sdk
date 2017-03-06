@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.v7ox.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.EditText;
@@ -11,7 +12,7 @@ import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 
-public class OcmTitleEditText extends EditText {
+public class OcmTitleEditText extends AppCompatEditText {
 
   private final Context context;
 
@@ -31,14 +32,6 @@ public class OcmTitleEditText extends EditText {
 
   public OcmTitleEditText(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    this.context = context;
-
-    init();
-  }
-
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  public OcmTitleEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
     this.context = context;
 
     init();
