@@ -85,8 +85,8 @@ Analytics
 -------------
 The setOnEventCallback method receive some values only for analytics usage. This callback is executed when the user do some actions with the app.
 
- - SHARE: When a content is shared.
- - CONTENT_START: When a content is showed.
+ - *SHARE*: When a content is shared.
+ - *CONTENT_START*: When a content is showed.
 
 Custom Schemes
 -------------
