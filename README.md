@@ -65,6 +65,7 @@ Then, in any part of our application we should start the library sdk.
 ```java
 Ocm.start();
 ```
+
 Change project/authCredentials SDK
 -------------
 In the new version we set the new project authCredentials when we initialize the sdk, if we want to change the Ox Project, we can call it in any moment.
@@ -72,3 +73,56 @@ In the new version we set the new project authCredentials when we initialize the
 Ocm.startWithCredentials(NEW_API_KEY,NEW_API_SECRET, callback);
 ```
 The callback returns the new access token credential. If the credentials have no change, the method do nothing.
+
+Authorization
+-------------
+The setOnDoRequiredLoginCallback method is a listener when the library needs that the user app is logged in.  The integrative application must be execute the login flow and communicate to the sdk that the user is logged in with the following method. If user is log out from the app, we have to execute this method as well.
+ ```java
+Ocm.setUserIsAuthorizated(true);
+ ```
+
+Analytics
+-------------
+The setOnEventCallback method receive some values only for analytics usage. This callback is executed when the user do some actions with the app.
+
+Custom Schemes
+-------------
+The setOnCustomSchemeReceiver setOnCustomSchemeReceiver execute the custom schemes that the library receives. 
+
+Language
+-------------
+Set the content language of the sdk with setContentLanguage method.
+
+Notification  Main Activity
+-------------
+You can set the main activity to execute the sdk notification.
+
+Styling Sdk
+-------------
+You can set the style sdk with the following class.
+```java
+OcmStyleUiBuilder ocmStyleUiBuilder =
+        new OcmStyleUiBuilder().setTitleFontAssetsPath("fonts/Gotham-Ultra.ttf")
+            .setNormalFont("fonts/Gotham-Book.ttf")
+            .setMediumFont("fonts/Gotham-Medium.ttf")
+            .setLightFont("fonts/Gotham-Light.ttf");
+    Ocm.setStyleUi(ocmStyleUiBuilder);
+```
+Setting Business Unit
+-------------
+```java
+Ocm.setBusinessUnit("it");
+```
+
+####Menu
+You can retrieve the menu of your content project with the following method
+```java
+Ocm.getMenus(new OnRetrieveUiMenuListener());
+```
+
+#####Content Grid
+When you retrieve the menu info, you can load the data from the each menu with the following method. The UiGridBaseContentData class is a fragment, which you can add to some activity.
+```java
+UiGridBaseContentData uiGridBaseContentData =
+        Ocm.generateGridView(uiMenu.get(tab.getPosition()).getElementUrl(), filter);
+```
