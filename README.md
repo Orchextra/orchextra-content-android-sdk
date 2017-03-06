@@ -5,11 +5,11 @@ A library that gives you access to Orchextra Content platform from your Android 
 
 Getting started
 -------------
-Start by creating a project in Orchextra Dashboard, if you haven't done it yet. Go to "Setting" > "SDK Configuration" to get the api key and api secret, you will need these values to start Orchextra SDK.
+Start by creating a project in [Orchextra Dashboard](https://dashboard.orchextra.io/start/login), if you haven't done it yet. Go to "Setting" > "SDK Configuration" to get the api key and api secret, you will need these values to start Orchextra SDK.
 
 Installation
 -------------
-You can check how SDK works with the :app module of this repository.
+You can check how SDK works with the [:app module](https://github.com/Orchextra/orchextra-content-android-sdk/tree/master/app/src/main/java/com/gigigo/sample) of this repository.
 
 Requirements
 -------------
@@ -30,7 +30,7 @@ allprojects {
 }
 ```
 
-Then we have to add the following dependency into this file:
+Then we have to add the following dependency into the build.gradle module:
 ```java
    compile 'com.github.Orchextra:orchextra-content-android-sdk:LAST_VERSION'
 ```
@@ -39,7 +39,7 @@ Then we have to add the following dependency into this file:
 
 and we must sync gradle project.
 
-You can check the last version of this library in the 'Releases' tab and substitute the LAST_VERSION reference with the last library version. 
+**NOTE**: You can check the last version of this library in the 'Releases' tab and substitute the LAST_VERSION reference with the last library version. 
 
 
 Integrating SDK
@@ -68,7 +68,7 @@ Ocm.start();
 
 Change project/authCredentials SDK
 -------------
-In the new version we set the new project authCredentials when we initialize the sdk, if we want to change the Ox Project, we can call it in any moment.
+If we doesn't set the new credentials when we initialize the sdk, or change them with new ones. We can set them in any moment during the application life.
 ```java
 Ocm.startWithCredentials(NEW_API_KEY,NEW_API_SECRET, callback);
 ```
@@ -76,14 +76,17 @@ The callback returns the new access token credential. If the credentials have no
 
 Authorization
 -------------
-The setOnDoRequiredLoginCallback method is a listener when the library needs that the user app is logged in.  The integrative application must be execute the login flow and communicate to the sdk that the user is logged in with the following method. If user is log out from the app, we have to execute this method as well.
- ```java
+Some content of the app is blocked and the user, who use the app, needs to be logged. The setOnDoRequiredLoginCallback method is a listener that is executed when the library needs that the user is logged in the app. The integrative application must execute the login flow and communicate to the sdk that the user is logged in with the following method. If user is log out from the app, we have to execute this method as well.
+```java
 Ocm.setUserIsAuthorizated(true);
- ```
+```
 
 Analytics
 -------------
 The setOnEventCallback method receive some values only for analytics usage. This callback is executed when the user do some actions with the app.
+
+ - SHARE: When a content is shared.
+ - CONTENT_START: When a content is showed.
 
 Custom Schemes
 -------------
