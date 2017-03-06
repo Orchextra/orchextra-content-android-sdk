@@ -3,4 +3,4 @@ jdk: oraclejdk7
 
 android:
   components:
-    - build-tools-19.0.1
+    - build-tools-23.0.3
