@@ -37,6 +37,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   private ImageView animationImageView;
   private UiDetailBaseContentData uiContentView;
 
+  @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   public static void open(Activity activity, String elementUrl, String urlImageToExpand, int width,
       int height, final View view) {
     final Intent intent = new Intent(activity, DetailActivity.class);
