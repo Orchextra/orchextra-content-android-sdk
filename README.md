@@ -56,6 +56,8 @@ OcmBuilder ocmBuilder =
         .setOnCustomSchemeReceiver(onCustomSchemeReceiver)
         .setContentLanguage(getContentLanguage())
         .setNotificationActivityClass(MainActivity.class);
+        
+Ocm.initialize(ocmBuilder);
 ```
 **IMPORTANT** you must make this call in **public void onCreate()** of your Application class, if you do not call initialize in this method, the SDK will not initialize properly. You can check that using the logLevel.
 
