@@ -13,7 +13,7 @@ You can check how SDK works with the [:app module](https://github.com/Orchextra/
 
 Requirements
 -------------
-Orchextra can be integrated in Android Gingerbread (v. 10) or later.
+Orchextra can be integrated in Ice Cream Sandwich (v. 14) or later.
 
 Adding the dependency
 -------------
@@ -26,6 +26,7 @@ allprojects {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
+        maven { url "https://repo.leanplum.com/" }
     }
 }
 ```
@@ -55,6 +56,8 @@ OcmBuilder ocmBuilder =
         .setOnCustomSchemeReceiver(onCustomSchemeReceiver)
         .setContentLanguage(getContentLanguage())
         .setNotificationActivityClass(MainActivity.class);
+        
+Ocm.initialize(ocmBuilder);
 ```
 **IMPORTANT** you must make this call in **public void onCreate()** of your Application class, if you do not call initialize in this method, the SDK will not initialize properly. You can check that using the logLevel.
 
