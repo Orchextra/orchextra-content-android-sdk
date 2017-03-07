@@ -14,10 +14,8 @@ ext {
   concurrentInteractors = 3
 
   retrofitLog = [debug     : 'true',
-                 staging   : 'true',
-                 prerelease: 'true',
-                 release   : 'true',
-                 store     : 'true']
+                 release   : 'true'
+                ]
 
   youtubeDeveloperKey = [debug     : googleKeyDebug,
                          prerelease: googleKey,

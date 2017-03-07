@@ -2,7 +2,6 @@ package com.gigigo.orchextra.core.sdk.utils;
 
 import android.app.Application;
 import android.util.Log;
-import com.gigigo.orchextra.ocm.OCManager;
 import com.leanplum.Leanplum;
 import com.leanplum.LeanplumActivityHelper;
 import com.leanplum.Var;
@@ -22,13 +21,13 @@ public class LeanplumSdk {
     LeanplumActivityHelper.enableLifecycleCallbacks(app);
 
     //Leanplum.setAppIdForDevelopmentMode("app_obDbH7vraMYn5f6KLQMixhXKP6r7Sc3Z5md2j9enjwA", "dev_z8tM4sr2k9CPoAd21HupyA6BG1EpzmfiCZ0jOeUAOEA");
-    Leanplum.setAppIdForProductionMode("app_obDbH7vraMYn5f6KLQMixhXKP6r7Sc3Z5md2j9enjwA", "prod_RBgeBaF74qEoFsTczh4ckG45weFO7ZzzUnINxDJjwTs");
+    Leanplum.setAppIdForProductionMode("app_obDbH7vraMYn5f6KLQMixhXKP6r7Sc3Z5md2j9enjwA",
+        "prod_RBgeBaF74qEoFsTczh4ckG45weFO7ZzzUnINxDJjwTs");
 
     //Leanplum.enableVerboseLoggingInDevelopmentMode();
 
     Leanplum.addVariablesChangedHandler(new VariablesChangedCallback() {
-      @Override
-      public void variablesChanged() {
+      @Override public void variablesChanged() {
         isUpdatedData = true;
         Log.i("Leanplum Test", String.valueOf(typeItem.value()));
       }
