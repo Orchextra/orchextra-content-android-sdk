@@ -13,7 +13,7 @@ You can check how SDK works with the [:app module](https://github.com/Orchextra/
 
 Requirements
 -------------
-Orchextra can be integrated in Android Gingerbread (v. 10) or later.
+Orchextra can be integrated in Ice Cream Sandwich (v. 14) or later.
 
 Adding the dependency
 -------------
