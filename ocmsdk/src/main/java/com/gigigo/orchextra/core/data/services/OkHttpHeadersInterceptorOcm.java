@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.data.services;
 
-
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
@@ -28,9 +27,15 @@ public class OkHttpHeadersInterceptorOcm implements Interceptor {
 
     Request.Builder builder = original.newBuilder();
 
-    builder = builder.header(ACCEPT_LANGUAGE, OCManager.getContentLanguage());
+    String contentLanguage = OCManager.getContentLanguage();
+    if (contentLanguage != null) {
+      builder = builder.header(ACCEPT_LANGUAGE, contentLanguage);
+    }
 
-    builder = builder.header(AUTHORIZATION, session.getAccessToken());
+    String accessToken = session.getAccessToken();
+    if (accessToken != null) {
+      builder = builder.header(AUTHORIZATION, accessToken);
+    }
 
     builder = builder.header(X_OCM_VERSION, BuildConfig.OCM_SDK_VERSION);
 
