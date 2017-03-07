@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fire_engine_red"
+    android:background="@color/ocm_background_grid"
     >
 
   <include
@@ -17,7 +17,7 @@
       android:id="@+id/searcher_recycler_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      app:blank_background_color="@color/fire_engine_red"
+      app:blank_background_color="@color/ocm_background_grid"
       app:divider_color="@android:color/white"
       app:divider_size="1dp"
       />

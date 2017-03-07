@@ -24,7 +24,7 @@
       android:layout_centerHorizontal="true"
       android:layout_marginLeft="@dimen/spacing_large"
       android:layout_marginRight="@dimen/spacing_large"
-      android:textColor="@color/greyish_brown_two"
+      android:textColor="@color/text_title"
       android:textSize="@dimen/text_xxxxxlarge"
       />
 </RelativeLayout>
