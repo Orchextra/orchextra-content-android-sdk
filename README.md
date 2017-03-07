@@ -26,6 +26,7 @@ allprojects {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
+        maven { url "https://repo.leanplum.com/" }
     }
 }
 ```
