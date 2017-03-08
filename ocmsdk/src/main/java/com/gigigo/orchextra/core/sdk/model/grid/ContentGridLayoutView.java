@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,6 +145,10 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     //if (clipToPaddingSize > 0) {
     //recyclerView.setClipToPaddingSize(clipToPaddingSize);
     //}
+
+    if (onScrollListener != null) {
+      recyclerView.setOnScrollListener(onScrollListener);
+    }
   }
 
   private void setAdapterDataViewHolders() {

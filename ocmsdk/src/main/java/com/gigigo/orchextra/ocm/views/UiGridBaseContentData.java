@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.ocm.views;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadMoreContentListener;
@@ -7,6 +8,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnLoadMoreContentListener;
 public abstract class UiGridBaseContentData extends UiBaseContentData {
 
   protected OnLoadMoreContentListener onLoadMoreContentListener;
+  protected RecyclerView.OnScrollListener onScrollListener;
 
   public abstract void setFilter(String filter);
 
@@ -24,5 +26,9 @@ public abstract class UiGridBaseContentData extends UiBaseContentData {
 
   public void setOnLoadMoreContentListener(OnLoadMoreContentListener onLoadMoreContentListener) {
     this.onLoadMoreContentListener = onLoadMoreContentListener;
+  }
+
+  public void setOnScrollListener(RecyclerView.OnScrollListener onScrollListener) {
+    this.onScrollListener = onScrollListener;
   }
 }

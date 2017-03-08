@@ -3,6 +3,9 @@ package com.gigigo.sample;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
@@ -14,8 +17,11 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
   private TabLayout tabLayout;
+  private View header;
 
   private List<UiMenu> uiMenu;
+
+
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -26,12 +32,15 @@ public class MainActivity extends AppCompatActivity {
 
   private void initViews() {
     tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+    header = findViewById(R.id.header);
   }
 
   private void startCredentials() {
     Ocm.startWithCredentials(App.API_KEY, App.API_SECRET, new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
-        getContent(accessToken);
+        if (uiMenu == null || uiMenu.size() == 0) {
+          getContent(accessToken);
+        }
       }
     });
   }
