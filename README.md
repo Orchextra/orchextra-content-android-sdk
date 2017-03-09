@@ -154,7 +154,7 @@ Setting Business Unit
 Ocm.setBusinessUnit("it");
 ```
 
-####Menu
+###Menu
 You can retrieve the menu of your content project with the following method. The UiMenu class has the info to show the app menu.
 ```java
 Ocm.getMenus(new OnRetrieveUiMenuListener() {
@@ -169,13 +169,56 @@ Ocm.getMenus(new OnRetrieveUiMenuListener() {
     });
 ```
 
-#####Content Grid
+###Content Grid View
 When you retrieve the menu info, you can load the data from the each menu with the following method. The UiGridBaseContentData class is a fragment, which you can add to some activity.
 ```java
-UiGridBaseContentData uiGridBaseContentData =
+    UiGridBaseContentData uiGridBaseContentData =
         Ocm.generateGridView(uiMenu.get(position).getElementUrl(), filter);
         
-getSupportFragmentManager().beginTransaction()
+    getSupportFragmentManager().beginTransaction()
         .replace(R.id.contentLayout, uiGridBaseContentData)
         .commit();
+```
+
+###Content Detail View
+We can open some detail view with the element url provided for some custom scheme.
+
+```java
+UiDetailBaseContentData uiDetailBaseContentData = Ocm.generateDetailView(uiMenu.get(position).getElementUrl());
+```
+
+###Content Search View
+We can open the search view to do search of the content.
+
+```java
+UiSearchBaseContentData uiSearchBaseContentData = Ocm.generateSearchView();
+```
+
+###Deep linking
+When the app is opened with some deep link, we can provide this deep link to the sdk with the following method. The sdk will do some action, if the deep link is configured in the dashboard.
+
+```java
+Ocm.processDeepLinks("some/deep/link");
+```
+
+###Local Storage
+We can provide a string pair list, which have the configuration for web and login views.
+
+```java
+Ocm.setLocalStorage(new HashMap<String, String>());
+```
+
+###Binding user
+We can define a specific custom user.
+
+```java
+CrmUser crmUser = new CrmUser("crmId", new GregorianCalendar(1981, Calendar.MAY, 31), CrmUser.Gender.GenderMale);
+Ocm.bindUser(crmUser);
+```
+
+###Clear cache
+With this method we can clear all sdk cache. Next content data request will update all sdk data. 
+
+```java
+Ocm.clearCache();
 ```
