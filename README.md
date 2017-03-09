@@ -155,14 +155,27 @@ Ocm.setBusinessUnit("it");
 ```
 
 ####Menu
-You can retrieve the menu of your content project with the following method
+You can retrieve the menu of your content project with the following method. The UiMenu class has the info to show the app menu.
 ```java
-Ocm.getMenus(new OnRetrieveUiMenuListener());
+Ocm.getMenus(new OnRetrieveUiMenuListener() {
+      @Override public void onResult(final List<UiMenu> uiMenu) {
+      }
+
+      @Override public void onNoNetworkConnectionError() {
+      }
+
+      @Override public void onResponseDataError() {
+      }
+    });
 ```
 
 #####Content Grid
 When you retrieve the menu info, you can load the data from the each menu with the following method. The UiGridBaseContentData class is a fragment, which you can add to some activity.
 ```java
 UiGridBaseContentData uiGridBaseContentData =
-        Ocm.generateGridView(uiMenu.get(tab.getPosition()).getElementUrl(), filter);
+        Ocm.generateGridView(uiMenu.get(position).getElementUrl(), filter);
+        
+getSupportFragmentManager().beginTransaction()
+        .replace(R.id.contentLayout, uiGridBaseContentData)
+        .commit();
 ```
