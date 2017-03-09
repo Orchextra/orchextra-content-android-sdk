@@ -15,16 +15,6 @@
       android:fitsSystemWindows="true"
       android:theme="@style/AppTheme">
 
-    <ImageView
-        android:id="@+id/header"
-        android:background="#FFF"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:src="@drawable/ggg_ox"
-        app:layout_scrollFlags="scroll|enterAlways"
-        />
-
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"

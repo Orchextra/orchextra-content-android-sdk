@@ -109,7 +109,6 @@ android {
   // true to publish all flavour artifacts
   publishNonDefault false
   defaultPublishConfig "ocmRelease"
-  buildToolsVersion '25.0.0'
 }
 
 jacocoAndroidUnitTestReport {

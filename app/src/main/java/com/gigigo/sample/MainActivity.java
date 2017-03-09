@@ -7,17 +7,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
+import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
+import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
+import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
   private TabLayout tabLayout;
-  private View header;
 
   private List<UiMenu> uiMenu;
 
@@ -32,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
   private void initViews() {
     tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-    header = findViewById(R.id.header);
   }
 
   private void startCredentials() {
@@ -117,5 +121,7 @@ public class MainActivity extends AppCompatActivity {
       TabLayout.Tab tab = tabLayout.getTabAt(0);
       loadFragment(tab);
     }
+
+    Ocm.clearCache();
   }
 }
