@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,7 @@ import com.gigigo.orchextra.core.sdk.model.grid.viewholders.CellImageViewHolder;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.dto.BottomPadding;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
@@ -45,8 +45,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View moreButton;
   private String viewId;
   private String emotion;
-  //private int clipToPaddingSize;
-
+  private BottomPadding paddingBottom;
   private View emptyView;
   private View errorView;
   private View progressView;
@@ -64,6 +63,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       presenter.reloadSection();
     }
   };
+
 
   public static ContentGridLayoutView newInstance() {
     return new ContentGridLayoutView();
@@ -125,7 +125,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     setAdapterDataViewHolders();
 
     //TODO Resolve clip to padding flashing when last row is 3 items 1x1. Remove logic in presenter
-    recyclerView.setGridColumns(6);
+    recyclerView.setGridColumns(3 * paddingBottom.getSize());
+    presenter.setPaddingBottom(paddingBottom.getSize());
 
     recyclerView.setOnRefreshListener(new MultipleGridRecyclerView.OnRefreshListener() {
       @Override public void onRefresh() {
@@ -143,7 +144,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
     //TODO Resolve clip to padding flashing when last row is 3 items 1x1. Remove logic in presenter
     //if (clipToPaddingSize > 0) {
-    //recyclerView.setClipToPaddingSize(clipToPaddingSize);
+    //recyclerView.setClipToPaddingBottomSize(clipToPaddingSize);
     //}
 
     if (onScrollListener != null) {
@@ -250,8 +251,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
   }
 
-  @Override public void setClipToPaddingSize(int clipToPaddingSize) {
-    //this.clipToPaddingSize = clipToPaddingSize;
+  @Override public void setClipToPaddingBottomSize(BottomPadding paddingBottom) {
+    this.paddingBottom = paddingBottom;
   }
 
   @Override public void scrollToTop() {

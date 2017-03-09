@@ -3,21 +3,13 @@ package com.gigigo.sample;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
-import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
+import com.gigigo.orchextra.ocm.dto.BottomPadding;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
-import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
-import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -110,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
   private void loadFragment(TabLayout.Tab tab) {
     UiGridBaseContentData uiGridBaseContentData =
         Ocm.generateGridView(uiMenu.get(tab.getPosition()).getElementUrl(), null);
+
+    uiGridBaseContentData.setClipToPaddingBottomSize(BottomPadding.PADDING_1);
 
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.contentLayout, uiGridBaseContentData)

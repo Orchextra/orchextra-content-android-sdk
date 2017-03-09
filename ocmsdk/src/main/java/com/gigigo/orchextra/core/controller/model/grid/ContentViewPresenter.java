@@ -34,6 +34,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private String section;
   private String filter;
   private List<Cell> cellGridContentDataList;
+  private int paddingBottom = 1;
 
   public ContentViewPresenter(GenericViewInjector viewInjector, OcmController ocmController,
       InteractorInvoker interactorInvoker, GetSectionDataInteractor getHomeDataInteractor,
@@ -115,8 +116,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
         CellGridContentData cell = new CellGridContentData();
         cell.setData(element);
-        cell.setColumn(pattern.get(indexPattern).getRow() * 2);
-        cell.setRow(pattern.get(indexPattern).getColumn() * 2);
+        cell.setColumn(pattern.get(indexPattern).getRow() * paddingBottom);
+        cell.setRow(pattern.get(indexPattern).getColumn() * paddingBottom);
 
         indexPattern = ++indexPattern % pattern.size();
 
@@ -126,16 +127,15 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
     while (cellGridContentDataList.size() % 3 != 0) {
       CellBlankElement cellBlankElement = new CellBlankElement();
-      cellBlankElement.setColumn(pattern.get(indexPattern).getRow() * 2);
-      cellBlankElement.setRow(pattern.get(indexPattern).getColumn() * 2);
+      cellBlankElement.setColumn(pattern.get(indexPattern).getRow() * paddingBottom);
+      cellBlankElement.setRow(pattern.get(indexPattern).getColumn() * paddingBottom);
       cellGridContentDataList.add(cellBlankElement);
 
       indexPattern = ++indexPattern % pattern.size();
     }
 
-    //TODO Resolve clip to padding flashing when last row is 3 items 1x1. Remove * 2 multiplier above
     if (cellGridContentDataList.size() > 0) {
-      for (int i = 0; i < 12; i++) {
+      for (int i = 0; i < 3 * 2 * paddingBottom; i++) {
         CellBlankElement cellElement = new CellBlankElement();
         cellElement.setRow(1);
         cellElement.setColumn(1);
@@ -175,5 +175,9 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   public void setFilter(String filter) {
     this.filter = filter;
     if (getView() != null) loadSection(false);
+  }
+
+  public void setPaddingBottom(int paddingBottom) {
+    this.paddingBottom = paddingBottom;
   }
 }
