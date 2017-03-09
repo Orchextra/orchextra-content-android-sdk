@@ -16,6 +16,7 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
     return new DetailSimpleLayoutContentData();
   }
 
+  @Override
   protected void initViews(View view) {
 
   }

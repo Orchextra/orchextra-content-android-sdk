@@ -4,6 +4,7 @@ import android.app.Application;
 import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.CustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
+import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -133,5 +134,9 @@ public final class Ocm {
    */
   public static void start() {
     OCManager.start();
+  }
+
+  public static void setOnCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {
+    OCManager.setOnCustomSchemeReceiver(onCustomSchemeReceiver);
   }
 }

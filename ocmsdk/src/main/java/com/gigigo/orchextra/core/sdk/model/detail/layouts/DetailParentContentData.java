@@ -13,12 +13,14 @@ import android.view.ViewGroup;
 import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeWebviewActivity;
 import com.gigigo.orchextra.core.sdk.ui.behaviours.ScrollShareButtonBehavior;
+import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 
@@ -98,8 +100,15 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     } else if (detailContentDataClass.equals(YoutubeContentData.class)) {
       launchExternalYoutube(((YoutubeContentData) uiBaseContentData).getUrl());
       return true;
+    } else if (detailContentDataClass.equals(DeepLinkContentData.class)) {
+      processDeepLink(((DeepLinkContentData) uiBaseContentData).getUri());
+      return true;
     }
     return false;
+  }
+
+  private void processDeepLink(String uri) {
+    OCManager.returnOcCustomSchemeCallback(uri);
   }
 
   private void launchExternalYoutube(String url) {

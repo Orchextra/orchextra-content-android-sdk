@@ -15,6 +15,8 @@ public class ElementCacheRender {
   private String format;
   private String source;
 
+  private String uri;
+
   public String getContentUrl() {
     return contentUrl;
   }
@@ -61,5 +63,13 @@ public class ElementCacheRender {
 
   public void setSource(String source) {
     this.source = source;
+  }
+
+  public String getUri() {
+    return uri;
+  }
+
+  public void setUri(String uri) {
+    this.uri = uri;
   }
 }

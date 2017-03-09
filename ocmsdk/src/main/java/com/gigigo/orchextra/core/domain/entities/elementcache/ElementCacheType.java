@@ -1,15 +1,16 @@
 package com.gigigo.orchextra.core.domain.entities.elementcache;
 
 public enum ElementCacheType {
-  GO_CONTENT("goContent"),
-  WEBVIEW("webview"),
-  BROWSER("browser"),
   ARTICLE("article"),
-  DEEP_LINK("deepLink"),
-  SCAN("scan"),
+  WEBVIEW("webview"),
   VUFORIA("vuforia"),
-  IMAGE("image"),
+  SCAN("scan"),
+  BROWSER("browser"),
   VIDEO("video"),
+
+  GO_CONTENT("goContent"),
+  DEEP_LINK("deepLink"),
+  IMAGE("image"),
   NONE("");
 
   private final String type;

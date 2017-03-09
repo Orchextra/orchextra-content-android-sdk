@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
@@ -89,7 +90,8 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
     if (detailContentData instanceof VuforiaContentData
         || detailContentData instanceof ScanContentData
         || detailContentData instanceof BrowserContentData
-        || detailContentData instanceof YoutubeContentData) {
+        || detailContentData instanceof YoutubeContentData
+        || detailContentData instanceof DeepLinkContentData) {
 
       appbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
 
