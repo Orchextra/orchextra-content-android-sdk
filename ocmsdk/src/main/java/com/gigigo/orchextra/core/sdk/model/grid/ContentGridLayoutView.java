@@ -45,7 +45,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View moreButton;
   private String viewId;
   private String emotion;
-  private BottomPadding paddingBottom;
+  //private int clipToPaddingSize;
   private View emptyView;
   private View errorView;
   private View progressView;
@@ -125,8 +125,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     setAdapterDataViewHolders();
 
     //TODO Resolve clip to padding flashing when last row is 3 items 1x1. Remove logic in presenter
-    recyclerView.setGridColumns(3 * paddingBottom.getSize());
-    presenter.setPaddingBottom(paddingBottom.getSize());
+    recyclerView.setGridColumns(3 * 2);
 
     recyclerView.setOnRefreshListener(new MultipleGridRecyclerView.OnRefreshListener() {
       @Override public void onRefresh() {
@@ -251,8 +250,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
   }
 
-  @Override public void setClipToPaddingBottomSize(BottomPadding paddingBottom) {
-    this.paddingBottom = paddingBottom;
+  @Override public void setClipToPaddingSize(int clipToPaddingSize) {
+    //this.clipToPaddingSize = clipToPaddingSize;
   }
 
   @Override public void scrollToTop() {

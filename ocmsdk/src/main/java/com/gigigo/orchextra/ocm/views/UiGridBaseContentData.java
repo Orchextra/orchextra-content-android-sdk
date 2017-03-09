@@ -13,7 +13,7 @@ public abstract class UiGridBaseContentData extends UiBaseContentData {
 
   public abstract void setFilter(String filter);
 
-  public abstract void setClipToPaddingBottomSize(BottomPadding paddingBottom);
+  public abstract void setClipToPaddingSize(int clipToPaddingSize);
 
   public abstract void scrollToTop();
 

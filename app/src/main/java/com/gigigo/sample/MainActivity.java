@@ -103,8 +103,6 @@ public class MainActivity extends AppCompatActivity {
     UiGridBaseContentData uiGridBaseContentData =
         Ocm.generateGridView(uiMenu.get(tab.getPosition()).getElementUrl(), null);
 
-    uiGridBaseContentData.setClipToPaddingBottomSize(BottomPadding.PADDING_1);
-
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.contentLayout, uiGridBaseContentData)
         .commit();
