@@ -15,7 +15,7 @@ public class ElementCacheRender {
   private String format;
   private String source;
 
-  private String uri;
+  private String schemeUri;
 
   public String getContentUrl() {
     return contentUrl;
@@ -66,10 +66,10 @@ public class ElementCacheRender {
   }
 
   public String getUri() {
-    return uri;
+    return schemeUri;
   }
 
-  public void setUri(String uri) {
-    this.uri = uri;
+  public void setSchemeUri(String schemeUri) {
+    this.schemeUri = schemeUri;
   }
 }

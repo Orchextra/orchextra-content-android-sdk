@@ -118,6 +118,10 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
         appbarLayout.setExpanded(true, false);
       }
     }, 1000);
+
+    if (detailContentData instanceof DeepLinkContentData && onFinishListener != null) {
+      onFinishListener.onFinish();
+    }
   }
 
   private PreviewFuntionalityListener previewFuntionalityListener =

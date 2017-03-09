@@ -77,7 +77,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
   private UiBaseContentData generateDetailView(ElementCacheType type, ElementCacheRender render) {
     if (type != ElementCacheType.NONE) {
-      return ocmViewGenerator.generateDetailView(ElementCacheType.DEEP_LINK, render);
+      return ocmViewGenerator.generateDetailView(type, render);
     }
     return null;
   }

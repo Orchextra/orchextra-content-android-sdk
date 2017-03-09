@@ -29,7 +29,7 @@ public class ApiElementCacheRenderMapper
     model.setSource(data.getSource());
     model.setFormat(data.getFormat());
 
-    model.setUri(data.getUri());
+    model.setSchemeUri(data.getSchemeUri());
 
     List<ArticleElement> articleElementList = new ArrayList<>();
     if (data.getElements() != null) {

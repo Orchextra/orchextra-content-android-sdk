@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     Ocm.setOnCustomSchemeReceiver(new OnCustomSchemeReceiver() {
       @Override public void onReceive(String customScheme) {
         Toast.makeText(MainActivity.this, customScheme, Toast.LENGTH_SHORT).show();
+        Orchextra.startScannerActivity();
       }
     });
   }

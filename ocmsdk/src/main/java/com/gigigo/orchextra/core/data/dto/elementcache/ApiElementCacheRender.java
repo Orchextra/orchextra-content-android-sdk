@@ -12,7 +12,7 @@ public class ApiElementCacheRender {
   private String title;
   private List<ApiArticleElement> elements;
 
-  private String uri;
+  private String schemeUri;
 
   private String source;
   private String format;
@@ -33,8 +33,8 @@ public class ApiElementCacheRender {
     return elements;
   }
 
-  public String getUri() {
-    return uri;
+  public String getSchemeUri() {
+    return schemeUri;
   }
 
   public String getSource() {
