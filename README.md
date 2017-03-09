@@ -91,17 +91,51 @@ The setOnEventCallback method receive some values only for analytics usage. This
  - *SHARE*: When a content is shared.
  - *CONTENT_START*: When a content is showed.
 
+```java
+ private OnEventCallback eventCallback = new OnEventCallback() {
+    @Override public void doEvent(OcmEvent event, Object data) {
+      switch (event) {
+        case SHARE:
+          break;
+        case CONTENT_START:
+          break;
+        case CONTENT_END:
+          break;
+      }
+    }
+  };
+  OcmBuilder ocmBuilder = new OcmBuilder(this).setOnEventCallback(eventCallback);
+```
+
+
 Custom Schemes
 -------------
-The setOnCustomSchemeReceiver setOnCustomSchemeReceiver execute the custom schemes that the library receives. 
+The setOnCustomSchemeReceiver setOnCustomSchemeReceiver execute the custom schemes that the library receives.
+
+```java
+ private CustomSchemeReceiver onCustomSchemeReceiver = new CustomSchemeReceiver() {
+    @Override public void onReceive(String deepLink) {
+    }
+  };
+  OcmBuilder ocmBuilder = new OcmBuilder(this).setOnCustomSchemeReceiver(onCustomSchemeReceiver);
+```
 
 Language
 -------------
 Set the content language of the sdk with setContentLanguage method.
 
+```java
+  OcmBuilder ocmBuilder = new OcmBuilder(this).setContentLanguage("EN");
+```
+
 Notification  Main Activity
 -------------
 You can set the main activity to execute the sdk notification.
+
+```java
+  OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class);
+```
+
 
 Styling Sdk
 -------------
