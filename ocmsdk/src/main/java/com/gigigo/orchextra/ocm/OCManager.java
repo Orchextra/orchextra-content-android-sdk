@@ -23,6 +23,7 @@ import com.gigigo.orchextra.core.sdk.di.injector.InjectorImpl;
 import com.gigigo.orchextra.core.sdk.di.modules.OcmModule;
 import com.gigigo.orchextra.device.bluetooth.beacons.BeaconBackgroundModeScan;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
+import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
@@ -55,6 +56,8 @@ public final class OCManager {
   private InjectorImpl injector;
   private Map<String, String> localStorage;
   private OcmCredentialCallback ocmCredentialCallback;
+
+  private OnCustomSchemeReceiver onCustomSchemeReceiver;
 
   static void initSdk(Application application) {
     instance = new OCManager();
@@ -191,6 +194,10 @@ public final class OCManager {
     return instance.language;
   }
 
+  public static void setOnCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {
+    OCManager.instance.onCustomSchemeReceiver = onCustomSchemeReceiver;
+  }
+
   private void initOcm(Application app) {
     initDependencyInjection(app);
     initLifecyle(app);
@@ -260,6 +267,12 @@ public final class OCManager {
 
   public static void start() {
     Orchextra.start();
+  }
+
+  public static void returnOcCustomSchemeCallback(String customScheme) {
+    if (instance.onCustomSchemeReceiver != null) {
+      instance.onCustomSchemeReceiver.onReceive(customScheme);
+    }
   }
 
   //endregion

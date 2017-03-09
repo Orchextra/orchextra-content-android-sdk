@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.sdk;
 
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -147,6 +148,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         if (render != null) {
           return generateYoutubeDetailView(render.getSource());
         }
+      case DEEP_LINK:
+        if (render != null) {
+          return generateDeepLinkView(render.getUri());
+        }
     }
     return null;
   }
@@ -189,5 +194,9 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return YoutubeContentData.newInstance(url);
     //YoutubeContentDataActivity.open(ocmContextProvider.getCurrentActivity(), source);
     //return null;
+  }
+
+  private UiBaseContentData generateDeepLinkView(String uri) {
+    return DeepLinkContentData.newInstance(uri);
   }
 }
