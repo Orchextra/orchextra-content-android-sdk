@@ -121,7 +121,5 @@ public class MainActivity extends AppCompatActivity {
       TabLayout.Tab tab = tabLayout.getTabAt(0);
       loadFragment(tab);
     }
-
-    Ocm.clearCache();
   }
 }
