@@ -1,28 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="colorPrimary">#eb074c</color>
-  <color name="colorPrimaryDark">#c0053e</color>
-  <color name="colorAccent">#ffffff</color>
+
+  <color name="oc_button_color_pressed">#DFFF</color>
+  <color name="oc_button_color">#FFF</color>
+
+  <!-- More content -->
+  <color name="oc_background_more_content_layout">#807f7f</color>
+  <color name="oc_more_content_text_color">#FFF</color>
+  <color name="oc_more_content_button_text_color">#807f7f</color>
+
+  <!-- Retry -->
+  <color name="oc_background_retry_content_layout">#807f7f</color>
+  <color name="oc_retry_content_text1_color">#FFF</color>
+  <color name="oc_retry_content_text2_color">#FFF</color>
+  <color name="oc_retry_content_button_text_color">#807f7f</color>
+
+  <!-- Detail -->
+  <color name="oc_article_rich_text_color">#474747</color>
+  <color name="oc_article_header_title_text_color">#4a4a4a</color>
+  <color name="oc_preview_title_text_color">#FFF</color>
+  <color name="oc_preview_down_arrow_tint_color">#FFF</color>
+  <color name="oc_preview_down_arrow_text_color">#9FFF</color>
+
+
+  <color name="oc_search_color_control_activated">#FFF</color>
+  <color name="oc_search_color_control_normal">#9FFF</color>
+
+  <color name="youtube_layout_container_color">#000</color>
+
+
+  <!-- Grid -->
+  <color name="oc_padlock_gradient_start">#f4010e</color>
+  <color name="oc_padlock_gradient_end">#e50c7e</color>
+  <color name="oc_background_grid_color">#f40009</color>
+  <color name="oc_background_search_grid_color">#f40009</color>
+
+
+  <color name="appColorPrimary">#eb074c</color>
+  <color name="appColorPrimaryDark">#c0053e</color>
+  <color name="appColorAccent">#ffffff</color>
+
   <color name="textColorPrimary">#ffffff</color>
-  <color name="windowBackground">#ffffff</color>
-  <color name="navigationBarColor">#363744</color>
 
-  <color name="ocm_background_grid">#f40009</color>
-  <color name="ocm_logged_start">#f4010e</color>
-  <color name="ocm_logged_end">#e50c7e</color>
+  <color name="bg_article_header_color">#FFF</color>
+  <color name="bg_article_image_color">#FFF</color>
+  <color name="bg_article_rich_text_color">#FFF</color>
+  <color name="bg_article_video_color">#FFF</color>
+  <color name="bg_article_content_color">#FFF</color>
 
-  <color name="text_normal">#474747</color>
-  <color name="text_title">#4a4a4a</color>
-  <color name="white">#FFF</color>
-  <color name="white_button_pressed">#DFFF</color>
-  <color name="white_alpha">#9FFF</color>
-  <color name="black">#000</color>
+  <color name="bg_dialog_applivery_color">#FFF</color>
 
-
-  <!--Ini RES Ox-->
-  <!-- Background color of the icon in the notification area -->
-  <color name="ox_notification_background_color">#eb074c</color>
-  <!-- Toolbar title and icon color -->
-  <color name="ox_toolbar_title_color">#FFF</color>
-  <!--end RES Ox-->
 </resources>

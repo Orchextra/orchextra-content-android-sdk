@@ -5,7 +5,7 @@
   <string name="alert_button_go_to_store">Go to Store</string>
 
   <string name="button_accept">Accept</string>
-  <string name="button_retry">Retry</string>
+  <string name="oc_retry_content_button_text">RETRY</string>
   <string name="button_cancel">Cancel</string>
   <string name="button_login">LOG IN</string>
   <string name="log_out">LOG OUT</string>
@@ -16,8 +16,8 @@
   <string name="error_location_disabled">You need to enable the location services</string>
   <string name="error_country_unavailable">This app is not available in your country</string>
   <string name="error_retry">Retry</string>
-  <string name="error_getting_content_title">SORRY</string>
-  <string name="error_getting_content_description">THERE WAS A PROBLEM \n GETTING THE CONTENT</string>
+  <string name="oc_retry_content_text1">Ups!</string>
+  <string name="oc_retry_content_text2">We have a mistake</string>
   <string name="error_google_play_services">Google Play Services need to be updated</string>
 
   <string name="welcome_button_get_started">GET STARTED</string>
@@ -32,11 +32,10 @@
   <string name="login_privacy_policy">PRIVACY POLICY</string>
   <string name="login_terms_and_conditions"><![CDATA[TERMS & CONDITIONS]]></string>
 
-  <string name="no_content_title_text1" translatable="false">AWESOME</string>
-  <string name="no_content_title_text2" translatable="false">CONTENT</string>
-  <string name="no_content_title_text3">COMING SOON...</string>
-  <string name="no_content_button">DISCOVER MORE</string>
-  <string name="preview_slide_text">SLIDE DOWN</string>
+  <string name="oc_more_content_text2">""</string>
+  <string name="oc_more_content_text1">Do you like similar content?</string>
+  <string name="oc_more_content_button_text">DISCOVER MORE</string>
+  <string name="oc_preview_down_arrow_text">SLIDE DOWN</string>
 
   <string name="hint_searcher_text" translatable="false">SEARCH</string>
   <string name="search_no_results_title" translatable="false">OOOOH</string>

@@ -25,7 +25,6 @@ import com.gigigo.orchextra.core.sdk.model.grid.viewholders.CellImageViewHolder;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocm.dto.BottomPadding;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
@@ -218,19 +217,19 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   @Override public void navigateToDetailView(String elementUrl, String urlImageToExpand,
       AppCompatActivity activity, View view) {
 
-    ImageView imageViewToExpand = (ImageView) view.findViewById(R.id.expand_image_view);
+    ImageView imageViewToExpandInDetail = (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
 
     if (urlImageToExpand != null) {
       String imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
           DeviceUtils.calculateRealWidthDevice(context),
           DeviceUtils.calculateRealHeightDevice(context));
 
-      imageLoader.load(imageUrl).into(imageViewToExpand).build();
+      imageLoader.load(imageUrl).into(imageViewToExpandInDetail).build();
     }
 
     DetailActivity.open(activity, elementUrl, urlImageToExpand,
         DeviceUtils.calculateRealWidthDevice(context),
-        DeviceUtils.calculateRealHeightDevice(context), imageViewToExpand);
+        DeviceUtils.calculateRealHeightDevice(context), imageViewToExpandInDetail);
   }
 
   @Override public void showAuthDialog() {

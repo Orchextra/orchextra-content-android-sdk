@@ -3,57 +3,9 @@
     android:id="@+id/ocm_more_content_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/oc_background_more_content_layout"
     android:paddingBottom="54dp"
     >
-
-  <LinearLayout
-      android:id="@+id/ocm_more_text_layout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@+id/ocm_more_logo_image_view"
-      android:layout_marginTop="20dp"
-      android:gravity="center_horizontal"
-      android:orientation="vertical"
-      >
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-      <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmTitleTextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:gravity="left"
-          android:letterSpacing=".5"
-          android:text="@string/no_content_title_text1"
-          android:textAllCaps="true"
-          android:textColor="@color/white"
-          android:textSize="15sp"
-          />
-      <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmNormalTextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:gravity="left"
-          android:paddingLeft="4dp"
-          android:text="@string/no_content_title_text2"
-          android:textAllCaps="true"
-          android:textColor="@color/white"
-          android:textSize="15sp"
-          />
-    </LinearLayout>
-
-    <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmNormalTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:paddingTop="6dp"
-        android:text="@string/no_content_title_text3"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        />
-  </LinearLayout>
 
   <ImageView
       android:id="@+id/ocm_more_logo_image_view"
@@ -61,25 +13,56 @@
       android:layout_height="wrap_content"
       android:layout_alignParentTop="true"
       android:layout_centerHorizontal="true"
-      android:layout_marginTop="34dp"
-      android:src="@drawable/ic_logo_more"
+      android:layout_marginTop="@dimen/spacing_64"
+      android:src="@drawable/oc_ic_logo_more_content"
       />
+
+  <LinearLayout
+      android:id="@+id/ocm_more_text_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/ocm_more_logo_image_view"
+      android:layout_marginTop="30dp"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      >
+
+    <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmNormalTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:paddingTop="6dp"
+        android:text="@string/oc_more_content_text1"
+        android:textColor="@color/oc_more_content_text_color"
+        android:textSize="@dimen/oc_more_content_text1_size"
+        />
+
+      <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmTitleTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="left"
+          android:letterSpacing=".5"
+          android:text="@string/oc_more_content_text2"
+          android:textColor="@color/oc_more_content_text_color"
+          android:textSize="@dimen/oc_more_content_text2_size"
+          />
+
+  </LinearLayout>
 
   <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmMediumTextView
       android:id="@+id/ocm_more_button"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@+id/ocm_more_text_layout"
+      android:layout_alignParentBottom="true"
       android:gravity="center_horizontal"
       android:padding="@dimen/spacing_16"
       android:layout_centerHorizontal="true"
       android:layout_gravity="center"
       android:layout_marginTop="25dp"
       android:background="@drawable/button_bg_round_white_selector"
-      android:text="@string/no_content_button"
-      android:textAllCaps="true"
-      android:textColor="@color/colorPrimary"
-      android:textSize="14sp"
+      android:text="@string/oc_more_content_button_text"
+      android:textColor="@color/oc_more_content_button_text_color"
+      android:textSize="@dimen/oc_more_content_text_button_size"
       android:layout_marginStart="@dimen/spacing_32"
       android:layout_marginEnd="@dimen/spacing_32"
       />

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="button_login">Entra</string>
-  <string name="button_retry">Riprova</string>
+  <string name="oc_retry_content_button_text">Riprova</string>
   <string name="error_country_unavailable">Capperi, non sono disponibile nel tuo Paese</string>
   <string name="error_location_disabled">Ho bisogno di sapere dove ti trovi. Attiva la localizzazione.</string>
   <string name="error_no_internet">La tua rete internet non funziona. Controlla la connessione e ritorna, io ti aspetto qui.</string>
@@ -9,14 +9,14 @@
   <string name="login_notification_title_label">Messaggi</string>
   <string name="log_out">LOG OUT</string>
   <string name="login_profile_settings">IMPOSTAZIONI DEL PROFILO</string>
-  <string name="no_content_button">Vuoi scoprire di più?</string>
+  <string name="oc_more_content_button_text">Vuoi scoprire di più?</string>
   <string name="login_notification_label">Vorrei mandarti delle notifiche. Sarà divertente.</string>
   <string name="welcome_button_get_started">FAMMI ENTRARE</string>
   <string name="login_feedback_us">SCRIVIMI</string>
-  <string name="error_getting_content_title">Scusa</string>
-  <string name="error_getting_content_description">Non ho trovato contenuti per te</string>
-  <string name="no_content_title_text3">Altri contenuti PAZZESCHI stanno arrivando.</string>
-  <string name="preview_slide_text">scorrere verso il basso</string>
+  <string name="oc_retry_content_text1">Scusa</string>
+  <string name="oc_retry_content_text2">Non ho trovato contenuti per te</string>
+  <string name="oc_more_content_text1">Altri contenuti PAZZESCHI stanno arrivando.</string>
+  <string name="oc_preview_down_arrow_text">scorrere verso il basso</string>
   <string name="error_has_to_accept_terms">È necessario accettare le condizioni di utilizzo.</string>
   <string name="login_terms_and_conditions"><![CDATA[Termini e condizioni]]></string>
   <string name="ox_accept_text">Accettare</string>

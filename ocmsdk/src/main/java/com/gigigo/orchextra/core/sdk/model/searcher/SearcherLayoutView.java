@@ -195,7 +195,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   @Override public void navigateToDetailView(String elementUrl, String urlImageToExpand,
       AppCompatActivity activity, View view) {
 
-    ImageView imageViewToExpand = (ImageView) view.findViewById(R.id.expand_image_view);
+    ImageView imageViewToExpand = (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
 
     String imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
         DeviceUtils.calculateRealWidthDevice(context),

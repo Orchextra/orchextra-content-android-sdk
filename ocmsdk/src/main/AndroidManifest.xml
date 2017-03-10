@@ -14,7 +14,7 @@
 
     <activity
         android:name="com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity"
-        android:screenOrientation="portrait"/>
+        android:screenOrientation="landscape"/>
   </application>
 
 </manifest>

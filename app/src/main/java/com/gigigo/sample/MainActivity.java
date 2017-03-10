@@ -3,6 +3,7 @@ package com.gigigo.sample;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.ocm.Ocm;
@@ -17,9 +18,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
   private TabLayout tabLayout;
+  private View progressbar;
 
   private List<UiMenu> uiMenu;
-
 
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void initViews() {
     tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+    progressbar = findViewById(R.id.progressbar);
   }
 
   private void startCredentials() {
@@ -111,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
   private void loadFragment(TabLayout.Tab tab) {
     UiGridBaseContentData uiGridBaseContentData =
         Ocm.generateGridView(uiMenu.get(tab.getPosition()).getElementUrl(), null);
+
+    uiGridBaseContentData.setProgressView(progressbar);
 
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.contentLayout, uiGridBaseContentData)

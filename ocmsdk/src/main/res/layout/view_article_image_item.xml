@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/spacing_medium"
     android:paddingRight="@dimen/spacing_medium"
-    android:background="@color/windowBackground"
+    android:background="@color/bg_article_image_color"
     android:scaleType="fitCenter"
     android:adjustViewBounds="true"
     />

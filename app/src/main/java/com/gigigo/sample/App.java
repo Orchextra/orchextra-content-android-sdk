@@ -15,7 +15,10 @@ import java.util.List;
 
 public class App extends Application {
 
-  public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
+  //public static String API_KEY = "a2966ba69f4ead1a4f1550bfda450e9fd07e6762";   //Asv project
+  //public static String API_SECRET = "f79713d7e9b0fcd69fedfb94f471106cb85d8ca4";
+
+  public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";    //Woah project
   public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
 
   private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
@@ -34,7 +37,7 @@ public class App extends Application {
 
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
-        .setContentLanguage("ES")
+        .setContentLanguage("EN")
         .setOnDoRequiredLoginCallback(onDoRequiredLoginCallback)
         .setOnEventCallback(onEventCallback);
 
