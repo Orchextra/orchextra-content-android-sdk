@@ -24,13 +24,12 @@ public final class Ocm {
     String oxKey = ocmBuilder.getOxKey();
     String oxSecret = ocmBuilder.getOxSecret();
     Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
-    CustomSchemeReceiver onCustomSchemeReceiver = ocmBuilder.getOnCustomSchemeReceiver();
 
     OCManager.initSdk(app);
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
-    OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, onCustomSchemeReceiver);
+    OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass);
   }
 
   /**
