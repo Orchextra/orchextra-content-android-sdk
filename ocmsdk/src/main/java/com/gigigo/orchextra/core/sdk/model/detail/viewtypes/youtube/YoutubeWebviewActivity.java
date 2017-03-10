@@ -17,7 +17,7 @@ public class YoutubeWebviewActivity extends BaseActivity {
   public static final int RESULT_CODE_YOUTUBE_PLAYER = 573;
 
   public static void open(Activity activity, String videoId) {
-    Intent intent = new Intent(activity, YoutubeContentDataActivity.class);
+    Intent intent = new Intent(activity, YoutubeWebviewActivity.class);
     intent.putExtra(EXTRA_YOUTUBE_VIDEO_ID, videoId);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     activity.startActivityForResult(intent, RESULT_CODE_YOUTUBE_PLAYER);
@@ -32,7 +32,12 @@ public class YoutubeWebviewActivity extends BaseActivity {
     WebView webviewYoutubeContainer = (WebView) findViewById(R.id.webviewYoutubeContainer);
     webviewYoutubeContainer.getSettings().setJavaScriptEnabled(true);
     webviewYoutubeContainer.getSettings().setPluginState(WebSettings.PluginState.ON);
-    webviewYoutubeContainer.loadUrl("http://www.youtube.com/embed/" + videoId + "?autoplay=1&vq=small");
+    webviewYoutubeContainer.loadUrl("http://www.youtube.com/embed/" + videoId + "?autoplay=1&vq=small&playsinline=0&fs=0&rel=0&cc_load_policy=1");
     webviewYoutubeContainer.setWebChromeClient(new WebChromeClient());
+  }
+
+  @Override public void onBackPressed() {
+    //super.onBackPressed();
+    finish();
   }
 }

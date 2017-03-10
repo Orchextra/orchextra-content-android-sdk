@@ -51,11 +51,8 @@ public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
 
     View.OnClickListener onYoutubeThumbnailClickListener = new View.OnClickListener() {
       @Override public void onClick(View v) {
-        YoutubeWebviewActivity.open(activity, articleElement.getSource());
-        //Intent intent = YouTubeStandalonePlayer.createVideoIntent(activity,
-        //    BuildConfig.YOUTUBE_DEVELOPER_KEY, articleElement.getSource(), 500, true, false);
-        //
-        //activity.startActivity(intent);
+        //YoutubeWebviewActivity.open(activity, articleElement.getSource());
+        YoutubeContentDataActivity.open(activity, articleElement.getSource());
       }
     };
 

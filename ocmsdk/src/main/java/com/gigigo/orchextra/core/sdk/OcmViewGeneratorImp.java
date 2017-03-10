@@ -40,7 +40,6 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   private final OcmController ocmController;
   private final Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvider;
   private final ImageLoader imageLoader;
-  private final OcmContextProvider ocmContextProvider;
 
   private OnRetrieveUiMenuListener onRetrieveUiMenuListener;
 
@@ -82,11 +81,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
   public OcmViewGeneratorImp(OcmController ocmController,
       Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvider,
-      ImageLoader imageLoader, OcmContextProvider ocmContextProvider) {
+      ImageLoader imageLoader) {
     this.ocmController = ocmController;
     this.detailElementsViewPresenterProvider = detailElementsViewPresenterProvider;
     this.imageLoader = imageLoader;
-    this.ocmContextProvider = ocmContextProvider;
   }
 
   public void getMenu(OnRetrieveUiMenuListener onRetrieveUiMenuListener) {
@@ -192,8 +190,6 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
   private UiBaseContentData generateYoutubeDetailView(String url) {
     return YoutubeContentData.newInstance(url);
-    //YoutubeContentDataActivity.open(ocmContextProvider.getCurrentActivity(), source);
-    //return null;
   }
 
   private UiBaseContentData generateDeepLinkView(String uri) {

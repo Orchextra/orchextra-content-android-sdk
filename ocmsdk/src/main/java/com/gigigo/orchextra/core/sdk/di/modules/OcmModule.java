@@ -47,8 +47,8 @@ import orchextra.javax.inject.Singleton;
 
   @Singleton @Provides OcmViewGenerator provideOcmViewGenerator(OcmController ocmController,
       Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvides,
-      ImageLoader imageLoader, OcmContextProvider ocmContextProvider) {
-    return new OcmViewGeneratorImp(ocmController, detailElementsViewPresenterProvides, imageLoader, ocmContextProvider);
+      ImageLoader imageLoader) {
+    return new OcmViewGeneratorImp(ocmController, detailElementsViewPresenterProvides, imageLoader);
   }
 
   @Singleton @Provides Authoritation provideAuthoritation() {
