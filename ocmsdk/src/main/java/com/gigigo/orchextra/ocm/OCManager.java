@@ -137,12 +137,10 @@ public final class OCManager {
     }
   }
 
-  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
-      CustomSchemeReceiver onCustomSchemeReceiver) {
+  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass) {
     if (OCManager.instance != null) {
       Application app = (Application) instance.ocmContextProvider.getApplicationContext();
-      OCManager.instance.initOrchextra(app, oxKey, oxSecret, notificationActivityClass,
-          onCustomSchemeReceiver);
+      OCManager.instance.initOrchextra(app, oxKey, oxSecret, notificationActivityClass);
     }
   }
 
@@ -218,7 +216,7 @@ public final class OCManager {
   }
 
   private void initOrchextra(Application app, String oxKey, String oxSecret,
-      Class notificationActivityClass, CustomSchemeReceiver onCustomSchemeReceiver) {
+      Class notificationActivityClass) {
 
     OrchextraBuilder builder = new OrchextraBuilder(app);
     builder.setApiKeyAndSecret(oxKey, oxSecret).setLogLevel(OrchextraLogLevel.NETWORK)
@@ -255,8 +253,16 @@ public final class OCManager {
 
     Orchextra.initialize(builder);
 
-    Orchextra.setCustomSchemeReceiver(onCustomSchemeReceiver);
+    Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
   }
+
+  private CustomSchemeReceiver onOxCustomSchemeReceiver = new CustomSchemeReceiver() {
+    @Override public void onReceive(String customScheme) {
+      if (instance.onCustomSchemeReceiver != null) {
+        instance.onCustomSchemeReceiver.onReceive(customScheme);
+      }
+    }
+  };
 
   public static void clearCache() {
     OCManager instance = OCManager.instance;

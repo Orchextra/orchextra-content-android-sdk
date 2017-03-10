@@ -15,7 +15,6 @@ public final class OcmBuilder {
   private String contentLanguage;
   private OnRequiredLoginCallback onRequiredLoginCallback;
   private OnEventCallback onEventCallback;
-  private CustomSchemeReceiver onCustomSchemeReceiver;
 
   /**
    * Initialize the sdk with the Application context
@@ -62,14 +61,6 @@ public final class OcmBuilder {
     return this;
   }
 
-  /**
-   * Callback to receive custom schemes from sdk
-   */
-  public OcmBuilder setOnCustomSchemeReceiver(CustomSchemeReceiver onCustomSchemeReceiver) {
-    this.onCustomSchemeReceiver = onCustomSchemeReceiver;
-    return this;
-  }
-
   Application getApp() {
     return app;
   }
@@ -96,9 +87,5 @@ public final class OcmBuilder {
 
   Class getNotificationActivityClass() {
     return notificationActivityClass;
-  }
-
-  CustomSchemeReceiver getOnCustomSchemeReceiver() {
-    return onCustomSchemeReceiver;
   }
 }

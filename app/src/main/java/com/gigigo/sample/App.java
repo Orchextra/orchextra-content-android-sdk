@@ -18,11 +18,6 @@ public class App extends Application {
   public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
   public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
 
-  private CustomSchemeReceiver onCustomSchemeReceiver = new CustomSchemeReceiver() {
-    @Override public void onReceive(String s) {
-
-    }
-  };
   private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {
 
@@ -41,8 +36,7 @@ public class App extends Application {
         .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
         .setContentLanguage("ES")
         .setOnDoRequiredLoginCallback(onDoRequiredLoginCallback)
-        .setOnEventCallback(onEventCallback)
-        .setOnCustomSchemeReceiver(onCustomSchemeReceiver);
+        .setOnEventCallback(onEventCallback);
 
     Ocm.initialize(ocmBuilder);
 
