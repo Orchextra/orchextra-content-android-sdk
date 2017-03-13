@@ -36,8 +36,8 @@
         android:text="@string/oc_preview_down_arrow_text"
         android:textAllCaps="true"
         android:textColor="@color/oc_preview_down_arrow_text_color"
-        android:layout_marginStart="@dimen/spacing_16"
-        android:layout_marginEnd="@dimen/spacing_16"
+        android:layout_marginStart="@dimen/oc_spacing_16"
+        android:layout_marginEnd="@dimen/oc_spacing_16"
         android:textSize="@dimen/oc_preview_down_arrow_text_size"
         />
 
@@ -60,10 +60,10 @@
 
     <ImageView
         android:id="@+id/share_button"
-        android:layout_width="@dimen/button_size"
-        android:layout_height="@dimen/button_size"
+        android:layout_width="@dimen/oc_button_size"
+        android:layout_height="@dimen/oc_button_size"
         android:layout_gravity="end"
-        android:layout_margin="@dimen/spacing_xlarge"
+        android:layout_margin="@dimen/oc_spacing_32"
         android:src="@drawable/ic_share_red"
         android:visibility="gone"
         />
@@ -73,13 +73,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/spacing_medium"
-        android:layout_marginStart="@dimen/spacing_medium"
+        android:layout_marginEnd="@dimen/oc_spacing_8"
+        android:layout_marginStart="@dimen/oc_spacing_8"
         android:gravity="end"
         android:maxLines="8"
         android:textColor="@color/oc_preview_title_text_color"
-        android:textSize="@dimen/text_24"
-        autofit:minTextSize="@dimen/text_11"
+        android:textSize="@dimen/oc_text_24"
+        autofit:minTextSize="@dimen/oc_text_11"
         />
   </LinearLayout>
 

@@ -5,9 +5,9 @@
     android:id="@+id/article_image_placeholder"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/spacing_medium"
-    android:paddingRight="@dimen/spacing_medium"
-    android:background="@color/bg_article_image_color"
+    android:paddingLeft="@dimen/oc_spacing_8"
+    android:paddingRight="@dimen/oc_spacing_8"
+    android:background="@color/oc_bg_article_image_color"
     android:scaleType="fitCenter"
     android:adjustViewBounds="true"
     />

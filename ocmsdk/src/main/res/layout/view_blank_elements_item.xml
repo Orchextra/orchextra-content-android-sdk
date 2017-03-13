@@ -3,7 +3,7 @@
     android:id="@+id/contentElementLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/appColorPrimary"
+    android:background="@color/oc_bg_blank_item_multiple_grid_color"
     >
 
 </FrameLayout>

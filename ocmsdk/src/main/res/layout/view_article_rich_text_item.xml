@@ -4,9 +4,9 @@
     android:id="@+id/article_rich_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bg_article_rich_text_color"
+    android:background="@color/oc_bg_article_rich_text_color"
     android:gravity="left"
-    android:padding="@dimen/spacing_large"
+    android:padding="@dimen/oc_spacing_16"
     android:textColor="@color/oc_article_rich_text_color"
-    android:textSize="@dimen/text_medium"
+    android:textSize="@dimen/oc_text_14"
     />

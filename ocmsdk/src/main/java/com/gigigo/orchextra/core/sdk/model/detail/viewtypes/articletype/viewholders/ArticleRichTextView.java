@@ -28,6 +28,5 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
     if (!TextUtils.isEmpty(articleElement.getHtml())) {
       articleRichText.setText(Html.fromHtml(articleElement.getHtml()));
     }
-
   }
 }

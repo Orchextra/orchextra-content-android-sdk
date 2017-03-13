@@ -1,67 +1,14 @@
 <resources>
-  <string name="disclaimer_text" translatable="false">This version is a prototype and not the final version. Excuse us for any instability you may find.</string>
 
-  <string name="update_title_text">Update</string>
-  <string name="alert_button_go_to_store">Go to Store</string>
-
-  <string name="button_accept">Accept</string>
   <string name="oc_retry_content_button_text">RETRY</string>
-  <string name="button_cancel">Cancel</string>
-  <string name="button_login">LOG IN</string>
-  <string name="log_out">LOG OUT</string>
-  <string name="error_has_to_accept_terms">You must accept the terms of use.</string>
-  <string name="button_settings">Settings</string>
 
-  <string name="error_no_internet">Sorry, you don\'t have internet access. Please check your connection</string>
-  <string name="error_location_disabled">You need to enable the location services</string>
-  <string name="error_country_unavailable">This app is not available in your country</string>
-  <string name="error_retry">Retry</string>
   <string name="oc_retry_content_text1">Ups!</string>
   <string name="oc_retry_content_text2">We have a mistake</string>
-  <string name="error_google_play_services">Google Play Services need to be updated</string>
 
-  <string name="welcome_button_get_started">GET STARTED</string>
-  <string name="welcome_label_terms_and">I accept the %1$s &amp; the %2$s</string>
-  <string name="consents_policy_text_and">Privacy Policy</string>
-  <string name="consents_terms_text_and">Terms</string>
-
-  <string name="login_notification_label">Get all notifications online right now, log in and enjoy life.</string>
-  <string name="login_notification_title_label">NOTIFICATIONS</string>
-  <string name="login_profile_settings">PROFILE SETTINGS</string>
-  <string name="login_feedback_us">FEEDBACK US!</string>
-  <string name="login_privacy_policy">PRIVACY POLICY</string>
-  <string name="login_terms_and_conditions"><![CDATA[TERMS & CONDITIONS]]></string>
-
-  <string name="oc_more_content_text2">""</string>
   <string name="oc_more_content_text1">Do you like similar content?</string>
+  <string name="oc_more_content_text2">""</string>
   <string name="oc_more_content_button_text">DISCOVER MORE</string>
+
   <string name="oc_preview_down_arrow_text">SLIDE DOWN</string>
 
-  <string name="hint_searcher_text" translatable="false">SEARCH</string>
-  <string name="search_no_results_title" translatable="false">OOOOH</string>
-  <string name="search_no_results_description" translatable="false">NO RESULTS FOUND</string>
-
-  <!--Init RES vuforia-->
-  <string name="ir_app_name" translatable="false">Image Recognition</string>
-  <string name="ir_loading_indicator_message" translatable="false">Loading image recognition module ...</string>
-  <string name="ir_permission_settings" translatable="false">Settings</string>
-  <string name="ir_permission_denied_camera" translatable="false">Denied camera permission</string>
-  <string name="ir_permission_rationale_title_camera" translatable="false">Camera Permission</string>
-  <string name="ir_permission_rationale_message_camera" translatable="false">Image recognition need Camera of device</string>
-  <!--End RES vuforia-->
-
-  <!--Ini RES Ox-->
-  <!-- Toolbar title in the scanner screen -->
-  <string name="ox_scanner_toolbar_title" translatable="false">Scanner</string>
-  <!-- Toolbar title in the webview screen -->
-  <string name="ox_webview_toolbar_title" translatable="false">Web View</string>
-  <string name="ox_permission_settings" translatable="false">Settings</string>
-  <string name="ox_permission_denied_geolocation" translatable="false">Denied geolocation device</string>
-  <string name="ox_permission_rationale_title_location" translatable="false">Location Permissions</string>
-  <string name="ox_permission_rationale_message_location" translatable="false">App needs the device location</string>
-
-  <string name="ox_accept_text">Accept</string>
-  <string name="ox_cancel_text">Cancel</string>
-
-  <!--end RES Ox-->
 </resources>

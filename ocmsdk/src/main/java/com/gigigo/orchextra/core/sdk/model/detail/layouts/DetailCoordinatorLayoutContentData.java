@@ -71,7 +71,7 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
             ViewGroup.LayoutParams.WRAP_CONTENT);
     lp.setBehavior(new ScrollShareButtonBehavior(getContext()));
     lp.gravity = Gravity.END | Gravity.TOP;
-    int dimension = (int) getResources().getDimension(R.dimen.spacing_16);
+    int dimension = (int) getResources().getDimension(R.dimen.oc_spacing_16);
     lp.setMargins(dimension, dimension, dimension, dimension);
     shareToolbarButton.setLayoutParams(lp);
   }

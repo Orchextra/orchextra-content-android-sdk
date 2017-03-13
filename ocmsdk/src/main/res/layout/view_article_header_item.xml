@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bg_article_header_color"
+    android:background="@color/oc_bg_article_header_color"
     android:orientation="vertical"
     >
 
@@ -13,7 +13,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:adjustViewBounds="true"
-      android:src="@color/bg_article_header_color"
+      android:src="@color/oc_bg_article_header_color"
       />
 
   <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmTitleTextView
@@ -22,9 +22,9 @@
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
       android:layout_centerHorizontal="true"
-      android:layout_marginLeft="@dimen/spacing_large"
-      android:layout_marginRight="@dimen/spacing_large"
+      android:layout_marginLeft="@dimen/oc_spacing_16"
+      android:layout_marginRight="@dimen/oc_spacing_16"
       android:textColor="@color/oc_article_header_title_text_color"
-      android:textSize="@dimen/text_xxxxxlarge"
+      android:textSize="@dimen/oc_text_30"
       />
 </RelativeLayout>

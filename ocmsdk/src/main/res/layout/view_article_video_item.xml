@@ -2,8 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/spacing_medium"
-    android:background="@color/bg_article_video_color"
+    android:layout_margin="@dimen/oc_spacing_8"
+    android:background="@color/oc_bg_article_video_color"
     >
 
   <com.google.android.youtube.player.YouTubeThumbnailView

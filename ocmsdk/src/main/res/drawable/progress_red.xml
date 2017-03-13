@@ -10,8 +10,8 @@
 
     <gradient
         android:angle="0"
-        android:endColor="@color/appColorPrimary"
-        android:startColor="@color/appColorPrimaryDark"
+        android:endColor="@color/oc_progress_webview_color"
+        android:startColor="@color/oc_progress_webview_color"
         android:type="sweep"
         android:useLevel="false" />
   </shape>

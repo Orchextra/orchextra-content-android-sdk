@@ -22,32 +22,27 @@
   <color name="oc_preview_down_arrow_tint_color">#FFF</color>
   <color name="oc_preview_down_arrow_text_color">#9FFF</color>
 
-
   <color name="oc_search_color_control_activated">#FFF</color>
   <color name="oc_search_color_control_normal">#9FFF</color>
 
-  <color name="youtube_layout_container_color">#000</color>
-
+  <color name="oc_youtube_layout_container_color">#000</color>
 
   <!-- Grid -->
-  <color name="oc_padlock_gradient_start">#f4010e</color>
-  <color name="oc_padlock_gradient_end">#e50c7e</color>
-  <color name="oc_background_grid_color">#f40009</color>
-  <color name="oc_background_search_grid_color">#f40009</color>
+  <color name="oc_padlock_gradient_start">#807f7f</color>
+  <color name="oc_padlock_gradient_end">#807f7f</color>
+  <color name="oc_background_grid_color">#807f7f</color>
+  <color name="oc_background_search_grid_color">#807f7f</color>
 
+  <color name="oc_bg_article_header_color">#FFF</color>
+  <color name="oc_bg_article_image_color">#FFF</color>
+  <color name="oc_bg_article_rich_text_color">#FFF</color>
+  <color name="oc_bg_article_video_color">#FFF</color>
+  <color name="oc_bg_article_content_color">#FFF</color>
 
-  <color name="appColorPrimary">#eb074c</color>
-  <color name="appColorPrimaryDark">#c0053e</color>
-  <color name="appColorAccent">#ffffff</color>
+  <color name="oc_bg_dialog_applivery_color">#FFF</color>
 
-  <color name="textColorPrimary">#ffffff</color>
+  <color name="oc_progress_webview_color">#FFF</color>
 
-  <color name="bg_article_header_color">#FFF</color>
-  <color name="bg_article_image_color">#FFF</color>
-  <color name="bg_article_rich_text_color">#FFF</color>
-  <color name="bg_article_video_color">#FFF</color>
-  <color name="bg_article_content_color">#FFF</color>
-
-  <color name="bg_dialog_applivery_color">#FFF</color>
+  <color name="oc_bg_blank_item_multiple_grid_color">#807f7f</color>
 
 </resources>

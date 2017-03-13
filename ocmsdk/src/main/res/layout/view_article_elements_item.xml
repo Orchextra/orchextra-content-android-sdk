@@ -4,6 +4,6 @@
     android:id="@+id/articleItemListLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_article_content_color"
+    android:background="@color/oc_bg_article_content_color"
     />
 
