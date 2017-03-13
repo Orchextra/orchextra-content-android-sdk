@@ -1,40 +1,24 @@
 <resources>
 
-  <dimen name="oc_spacing_2">2dp</dimen>
-  <dimen name="oc_spacing_4">4dp</dimen>
-  <dimen name="oc_spacing_6">6dp</dimen>
   <dimen name="oc_spacing_8">8dp</dimen>
-  <dimen name="oc_spacing_12">12dp</dimen>
   <dimen name="oc_spacing_16">16dp</dimen>
-  <dimen name="oc_spacing_24">24dp</dimen>
   <dimen name="oc_spacing_32">32dp</dimen>
-  <dimen name="oc_spacing_48">48dp</dimen>
   <dimen name="oc_spacing_64">64dp</dimen>
-  <dimen name="oc_spacing_92">92dp</dimen>
-  <dimen name="oc_spacing_105">105dp</dimen>
-  <dimen name="oc_spacing_128">128dp</dimen>
 
   <!-- Tamaños de letra -->
-  <dimen name="oc_text_6">6sp</dimen>
-  <dimen name="oc_text_9">9sp</dimen>
-  <dimen name="oc_text_11">11sp</dimen>
   <dimen name="oc_text_14">14sp</dimen>
-  <dimen name="oc_text_15">15sp</dimen>
-  <dimen name="oc_text_17">17sp</dimen>
-  <dimen name="oc_text_19">19sp</dimen>
-  <dimen name="oc_text_21">21sp</dimen>
   <dimen name="oc_text_24">24sp</dimen>
   <dimen name="oc_text_30">30sp</dimen>
 
   <dimen name="oc_more_content_text1_size">20sp</dimen>
   <dimen name="oc_more_content_text2_size">20sp</dimen>
-  <dimen name="oc_more_content_text_button_size">@dimen/text_14</dimen>
+  <dimen name="oc_more_content_text_button_size">14sp</dimen>
 
   <dimen name="oc_retry_content_text1_size">40sp</dimen>
   <dimen name="oc_retry_content_text2_size">20sp</dimen>
-  <dimen name="oc_retry_content_button_size">@dimen/text_14</dimen>
+  <dimen name="oc_retry_content_button_size">14sp</dimen>
 
-  <dimen name="oc_preview_down_arrow_text_size">@dimen/text_14</dimen>
+  <dimen name="oc_preview_down_arrow_text_size">14sp</dimen>
 
   <dimen name="oc_button_size">65dp</dimen>
 </resources>
