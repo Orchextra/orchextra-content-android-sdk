@@ -154,7 +154,7 @@ Setting Business Unit
 Ocm.setBusinessUnit("it");
 ```
 
-###Menu
+### Menu
 You can retrieve the menu of your content project with the following method. The UiMenu class has the info to show the app menu.
 ```java
 Ocm.getMenus(new OnRetrieveUiMenuListener() {
@@ -169,7 +169,7 @@ Ocm.getMenus(new OnRetrieveUiMenuListener() {
     });
 ```
 
-###Content Grid View
+### Content Grid View
 When you retrieve the menu info, you can load the data from the each menu with the following method. The UiGridBaseContentData class is a fragment, which you can add to some activity.
 ```java
     UiGridBaseContentData uiGridBaseContentData =
@@ -180,35 +180,35 @@ When you retrieve the menu info, you can load the data from the each menu with t
         .commit();
 ```
 
-###Content Detail View
+### Content Detail View
 We can open some detail view with the element url provided for some custom scheme.
 
 ```java
 UiDetailBaseContentData uiDetailBaseContentData = Ocm.generateDetailView(uiMenu.get(position).getElementUrl());
 ```
 
-###Content Search View
+### Content Search View
 We can open the search view to do search of the content.
 
 ```java
 UiSearchBaseContentData uiSearchBaseContentData = Ocm.generateSearchView();
 ```
 
-###Deep linking
+### Deep linking
 When the app is opened with some deep link, we can provide this deep link to the sdk with the following method. The sdk will do some action, if the deep link is configured in the dashboard.
 
 ```java
 Ocm.processDeepLinks("some/deep/link");
 ```
 
-###Local Storage
+### Local Storage
 We can provide a string pair list, which have the configuration for web and login views.
 
 ```java
 Ocm.setLocalStorage(new HashMap<String, String>());
 ```
 
-###Binding user
+### Binding user
 We can define a specific custom user.
 
 ```java
@@ -216,9 +216,101 @@ CrmUser crmUser = new CrmUser("crmId", new GregorianCalendar(1981, Calendar.MAY,
 Ocm.bindUser(crmUser);
 ```
 
-###Clear cache
+### Clear cache
 With this method we can clear all sdk cache. Next content data request will update all sdk data. 
 
 ```java
 Ocm.clearCache();
+```
+
+Overriding Sdk
+-------------
+
+### Colors
+
+```javaxml
+<color name="oc_button_color_pressed">#DFFF</color>
+  <color name="oc_button_color">#FFF</color>
+
+  <!-- More content -->
+  <color name="oc_background_more_content_layout">#807f7f</color>
+  <color name="oc_more_content_text_color">#FFF</color>
+  <color name="oc_more_content_button_text_color">#807f7f</color>
+
+  <!-- Retry -->
+  <color name="oc_background_retry_content_layout">#807f7f</color>
+  <color name="oc_retry_content_text1_color">#FFF</color>
+  <color name="oc_retry_content_text2_color">#FFF</color>
+  <color name="oc_retry_content_button_text_color">#807f7f</color>
+
+  <!-- Detail -->
+  <color name="oc_article_rich_text_color">#474747</color>
+  <color name="oc_article_header_title_text_color">#4a4a4a</color>
+  <color name="oc_preview_title_text_color">#FFF</color>
+  <color name="oc_preview_down_arrow_tint_color">#FFF</color>
+  <color name="oc_preview_down_arrow_text_color">#9FFF</color>
+
+  <color name="oc_search_color_control_activated">#FFF</color>
+  <color name="oc_search_color_control_normal">#9FFF</color>
+
+  <color name="oc_youtube_layout_container_color">#000</color>
+
+  <!-- Grid -->
+  <color name="oc_padlock_gradient_start">#807f7f</color>
+  <color name="oc_padlock_gradient_end">#807f7f</color>
+  <color name="oc_background_grid_color">#807f7f</color>
+  <color name="oc_background_search_grid_color">#807f7f</color>
+
+  <color name="oc_bg_article_header_color">#FFF</color>
+  <color name="oc_bg_article_image_color">#FFF</color>
+  <color name="oc_bg_article_rich_text_color">#FFF</color>
+  <color name="oc_bg_article_video_color">#FFF</color>
+  <color name="oc_bg_article_content_color">#FFF</color>
+
+  <color name="oc_bg_dialog_applivery_color">#FFF</color>
+
+  <color name="oc_progress_webview_color">#FFF</color>
+
+  <color name="oc_bg_blank_item_multiple_grid_color">#807f7f</color>
+```
+
+### Strings
+
+```xml
+<string name="oc_retry_content_button_text">RETRY</string>
+
+  <string name="oc_retry_content_text1">Ups!</string>
+  <string name="oc_retry_content_text2">We have a mistake</string>
+
+  <string name="oc_more_content_text1">Do you like similar content?</string>
+  <string name="oc_more_content_text2">""</string>
+  <string name="oc_more_content_button_text">DISCOVER MORE</string>
+
+  <string name="oc_preview_down_arrow_text">SLIDE DOWN</string>
+```
+
+### Dimensions
+
+```xml
+<dimen name="oc_spacing_8">8dp</dimen>
+  <dimen name="oc_spacing_16">16dp</dimen>
+  <dimen name="oc_spacing_32">32dp</dimen>
+  <dimen name="oc_spacing_64">64dp</dimen>
+
+  <!-- Tamaños de letra -->
+  <dimen name="oc_text_14">14sp</dimen>
+  <dimen name="oc_text_24">24sp</dimen>
+  <dimen name="oc_text_30">30sp</dimen>
+
+  <dimen name="oc_more_content_text1_size">20sp</dimen>
+  <dimen name="oc_more_content_text2_size">20sp</dimen>
+  <dimen name="oc_more_content_text_button_size">14sp</dimen>
+
+  <dimen name="oc_retry_content_text1_size">40sp</dimen>
+  <dimen name="oc_retry_content_text2_size">20sp</dimen>
+  <dimen name="oc_retry_content_button_size">14sp</dimen>
+
+  <dimen name="oc_preview_down_arrow_text_size">14sp</dimen>
+
+  <dimen name="oc_button_size">65dp</dimen>
 ```
