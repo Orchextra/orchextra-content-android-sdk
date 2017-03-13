@@ -228,8 +228,8 @@ Overriding Sdk
 
 ### Colors
 
-```javaxml
-<color name="oc_button_color_pressed">#DFFF</color>
+```xml
+  <color name="oc_button_color_pressed">#DFFF</color>
   <color name="oc_button_color">#FFF</color>
 
   <!-- More content -->
@@ -277,7 +277,7 @@ Overriding Sdk
 ### Strings
 
 ```xml
-<string name="oc_retry_content_button_text">RETRY</string>
+  <string name="oc_retry_content_button_text">RETRY</string>
 
   <string name="oc_retry_content_text1">Ups!</string>
   <string name="oc_retry_content_text2">We have a mistake</string>
@@ -292,7 +292,7 @@ Overriding Sdk
 ### Dimensions
 
 ```xml
-<dimen name="oc_spacing_8">8dp</dimen>
+  <dimen name="oc_spacing_8">8dp</dimen>
   <dimen name="oc_spacing_16">16dp</dimen>
   <dimen name="oc_spacing_32">32dp</dimen>
   <dimen name="oc_spacing_64">64dp</dimen>
