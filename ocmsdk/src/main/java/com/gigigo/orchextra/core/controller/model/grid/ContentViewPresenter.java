@@ -134,14 +134,14 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     }
 
     //TODO Resolve clip to padding flashing when last row is 3 items 1x1. Remove * 2 multiplier above
-    if (cellGridContentDataList.size() > 0) {
-      for (int i = 0; i < 12; i++) {
-        CellBlankElement cellElement = new CellBlankElement();
-        cellElement.setRow(1);
-        cellElement.setColumn(1);
-        cellGridContentDataList.add(cellElement);
-      }
-    }
+    //if (cellGridContentDataList.size() > 0) {
+    //  for (int i = 0; i < 12; i++) {
+    //    CellBlankElement cellElement = new CellBlankElement();
+    //    cellElement.setRow(1);
+    //    cellElement.setColumn(1);
+    //    cellGridContentDataList.add(cellElement);
+    //  }
+    //}
 
     return cellGridContentDataList;
   }
