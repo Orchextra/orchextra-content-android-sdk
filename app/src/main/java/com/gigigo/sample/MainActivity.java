@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         Ocm.generateGridView(uiMenu.get(tab.getPosition()).getElementUrl(), null);
 
     uiGridBaseContentData.setProgressView(progressbar);
-    uiGridBaseContentData.setClipToPaddingBottomSize(ClipToPadding.PADDING_BIG);
+    uiGridBaseContentData.setClipToPaddingBottomSize(ClipToPadding.PADDING_NONE);
 
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.contentLayout, uiGridBaseContentData)
