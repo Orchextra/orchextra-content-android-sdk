@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 import com.gigigo.orchextra.Orchextra;
+import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         Ocm.generateGridView(uiMenu.get(tab.getPosition()).getElementUrl(), null);
 
     uiGridBaseContentData.setProgressView(progressbar);
+    uiGridBaseContentData.setClipToPaddingBottomSize(ClipToPadding.PADDING_BIG);
 
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.contentLayout, uiGridBaseContentData)

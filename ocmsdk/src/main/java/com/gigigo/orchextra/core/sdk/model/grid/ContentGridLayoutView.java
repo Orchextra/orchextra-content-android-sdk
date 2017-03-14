@@ -20,6 +20,7 @@ import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.CellElementAdapter;
+import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.factory.ElementsViewHolderFactory;
 import com.gigigo.orchextra.core.sdk.model.grid.viewholders.CellImageViewHolder;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
@@ -44,7 +45,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View moreButton;
   private String viewId;
   private String emotion;
-  //private int clipToPaddingSize;
+  private ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
   private View emptyView;
   private View errorView;
   private View progressView;
@@ -62,7 +63,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       presenter.reloadSection();
     }
   };
-
 
   public static ContentGridLayoutView newInstance() {
     return new ContentGridLayoutView();
@@ -124,7 +124,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     setAdapterDataViewHolders();
 
     //TODO Resolve clip to padding flashing when last row is 3 items 1x1. Remove logic in presenter
-    recyclerView.setGridColumns(3 * 2);
+    int padding = clipToPadding.getPadding();
+    recyclerView.setGridColumns(clipToPadding == ClipToPadding.PADDING_NONE ? 3 : 3 * padding);
+    presenter.setPadding(padding);
 
     recyclerView.setOnRefreshListener(new MultipleGridRecyclerView.OnRefreshListener() {
       @Override public void onRefresh() {
@@ -139,11 +141,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
         presenter.onItemClicked(position, (AppCompatActivity) getActivity(), view);
       }
     });
-
-    //TODO Resolve clip to padding flashing when last row is 3 items 1x1. Remove logic in presenter
-    //if (clipToPaddingSize > 0) {
-    //recyclerView.setClipToPaddingBottomSize(clipToPaddingSize);
-    //}
 
     if (onScrollListener != null) {
       recyclerView.setOnScrollListener(onScrollListener);
@@ -249,8 +246,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
   }
 
-  @Override public void setClipToPaddingSize(int clipToPaddingSize) {
-    //this.clipToPaddingSize = clipToPaddingSize;
+  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
+    this.clipToPadding = clipToPadding;
   }
 
   @Override public void scrollToTop() {
