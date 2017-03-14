@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -36,8 +37,8 @@ public class YoutubeWebviewActivity extends BaseActivity {
     webviewYoutubeContainer.setWebChromeClient(new WebChromeClient());
   }
 
-  @Override public void onBackPressed() {
-    //super.onBackPressed();
-    finish();
+  @Override protected void onPause() {
+    super.onPause();
+    this.finish();
   }
 }
