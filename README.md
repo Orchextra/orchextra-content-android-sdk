@@ -250,9 +250,6 @@ Overriding Sdk
   <color name="oc_preview_down_arrow_tint_color">#FFF</color>
   <color name="oc_preview_down_arrow_text_color">#9FFF</color>
 
-  <color name="oc_search_color_control_activated">#FFF</color>
-  <color name="oc_search_color_control_normal">#9FFF</color>
-
   <color name="oc_youtube_layout_container_color">#000</color>
 
   <!-- Grid -->
@@ -297,7 +294,6 @@ Overriding Sdk
   <dimen name="oc_spacing_32">32dp</dimen>
   <dimen name="oc_spacing_64">64dp</dimen>
 
-  <!-- Tamaños de letra -->
   <dimen name="oc_text_14">14sp</dimen>
   <dimen name="oc_text_24">24sp</dimen>
   <dimen name="oc_text_30">30sp</dimen>

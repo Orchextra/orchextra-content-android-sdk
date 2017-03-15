@@ -22,8 +22,6 @@
   <color name="oc_preview_down_arrow_tint_color">#FFF</color>
   <color name="oc_preview_down_arrow_text_color">#9FFF</color>
 
-  <color name="oc_search_color_control_activated">#FFF</color>
-  <color name="oc_search_color_control_normal">#9FFF</color>
 
   <color name="oc_youtube_layout_container_color">#000</color>
 

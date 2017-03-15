@@ -36,9 +36,4 @@
     <item name="android:textAppearanceMedium">@style/TextAppearanceDialogMessage</item>
   </style>
 
-  <style name="SearchEditText" parent="Theme.AppCompat.Light">
-    <item name="colorControlNormal">@color/oc_search_color_control_normal</item>
-    <item name="colorControlActivated">@color/oc_search_color_control_activated</item>
-  </style>
-
 </resources>
