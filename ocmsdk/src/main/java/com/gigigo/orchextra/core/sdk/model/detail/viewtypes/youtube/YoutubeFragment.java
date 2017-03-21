@@ -1,6 +1,10 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -10,11 +14,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import com.gigigo.ggglogger.GGGLogImpl;
+import com.gigigo.ui.imageloader.ImageLoader;
+import com.gigigo.ui.imageloader.ImageLoaderCallback;
+import com.gigigo.ui.imageloader.glide.GlideImageLoaderImp;
+//import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
+
+import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -30,11 +43,50 @@ public class YoutubeFragment extends UiBaseContentData {
 
   private String youtubeId;
   private OnFullScreenListener onFullScreenModeListener;
+  private ImageLoaderCallback mImageCallback = new ImageLoaderCallback() {
+    @Override public void onSuccess(Bitmap bitmap) {
+      Bitmap bmp = bitmap;//   abmp.getBitmap();
+
+      boolean isBlack = false;
+      int midleImage = bmp.getHeight() / 2;
+      for (int i = 0; i < 20; i++) {
+        int pixel = bmp.getPixel(i, midleImage);
+        int r = Color.red(pixel);
+        int g = Color.green(pixel);
+        int b = Color.blue(pixel);
+        if (r == 0 && g == 0 && b == 0) {
+          isBlack = true;
+        } else {
+          isBlack = false;
+          break;
+        }
+      }
+
+      youtubeId = getArguments().getString(EXTRA_YOUTUBE_ID);
+      if (!TextUtils.isEmpty(youtubeId)) {
+        if (isBlack) {
+          //Toast.makeText(YoutubeFragment.this.getActivity(), "ES VERTICAL", Toast.LENGTH_LONG).show();
+          setYoutubeFragmentToView(LinearLayout.LayoutParams.MATCH_PARENT);
+        } else {
+          //Toast.makeText(YoutubeFragment.this.getActivity(), "ES HORIZONTAL", Toast.LENGTH_LONG).show();
+          setYoutubeFragmentToView(LinearLayout.LayoutParams.WRAP_CONTENT);
+        }
+        initYoutubeFragment();
+      }
+    }
+
+    @Override public void onError(Drawable drawable) {
+    }
+
+    @Override public void onLoading() {
+    }
+  };
 
   public static YoutubeFragment newInstance(String youtubeId) {
     YoutubeFragment youtubeElements = new YoutubeFragment();
 
     Bundle bundle = new Bundle();
+    if (youtubeId.equals("eq8ggWSHIgo")) youtubeId = "17uHCHfgs60";//madmax trailer--> "ikO91fQBsTQ";
     bundle.putString(EXTRA_YOUTUBE_ID, youtubeId);
     youtubeElements.setArguments(bundle);
 
@@ -43,18 +95,17 @@ public class YoutubeFragment extends UiBaseContentData {
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
-
     this.context = context;
   }
+
+  View mview;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-
     View view = inflater.inflate(R.layout.view_youtube_elements_item, container, false);
-
     initViews(view);
-
+    mview = view;
     return view;
   }
 
@@ -65,28 +116,47 @@ public class YoutubeFragment extends UiBaseContentData {
         .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
           @Override public void onGlobalLayout() {
             FrameLayout.LayoutParams lp =
-                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                    DeviceUtils.calculateRealHeightDevice(context));
+                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT);
+
+            //  DeviceUtils.calculateRealHeightDevice(context));
 
             youtubeLayoutContainer.setLayoutParams(lp);
 
             youtubeLayoutContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
           }
         });
+
+    youtubeId = getArguments().getString(EXTRA_YOUTUBE_ID);
+
+        ImageLoader glideImageLoaderImp =
+        new GlideImageLoaderImp(YoutubeFragment.this.getActivity().getApplicationContext());
+    String strImgForBlur = "http://img.youtube.com/vi/" + youtubeId + "/hqdefault.jpg";
+    ImageView imgBlurBackground = (ImageView) view.findViewById(R.id.imgBlurBackground);
+    glideImageLoaderImp.load(strImgForBlur)
+        .into(imgBlurBackground)
+        .transform(new BlurTransformation(YoutubeFragment.this.getActivity(), 20)).build();
+
+    glideImageLoaderImp.load(strImgForBlur).loaderCallback(mImageCallback).build();
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    //now in the callback
 
-    youtubeId = getArguments().getString(EXTRA_YOUTUBE_ID);
-    if (!TextUtils.isEmpty(youtubeId)) {
-      setYoutubeFragmentToView();
-      initYoutubeFragment();
-    }
   }
 
-  private void setYoutubeFragmentToView() {
+  private void setYoutubeFragmentToView(int h) {
     youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+    // Gets linearlayout
+    FrameLayout layout = (FrameLayout) mview.findViewById(R.id.youtubePlayerFragmentContent);
+    // Gets the layout params that will allow you to resize the layout
+    ViewGroup.LayoutParams params = layout.getLayoutParams();
+
+    // Changes the height and width to the specified *pixels*
+    params.height = h; //LinearLayout.LayoutParams.WRAP_CONTENT.;
+    params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+    layout.setLayoutParams(params);
 
     getChildFragmentManager().beginTransaction()
         .replace(R.id.youtubePlayerFragmentContent, youTubePlayerFragment)
@@ -94,17 +164,19 @@ public class YoutubeFragment extends UiBaseContentData {
   }
 
   private void initYoutubeFragment() {
-    youTubePlayerFragment.initialize(BuildConfig.YOUTUBE_DEVELOPER_KEY,
-        onInitializedListener);
+    youTubePlayerFragment.initialize(BuildConfig.YOUTUBE_DEVELOPER_KEY, onInitializedListener);
   }
+
+  YouTubePlayer mPlayer;
 
   public void setYouTubePlayer(YouTubePlayer player) {
     player.setPlayerStateChangeListener(playerStateChangeListener);
     player.setOnFullscreenListener(onFullScreenListener);
-    player.setFullscreen(true);
-    player.setShowFullscreenButton(false);
-    player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+    player.setFullscreen(false);
+    player.setShowFullscreenButton(true);
+    player.setPlayerStyle(YouTubePlayer.PlayerStyle.MINIMAL);
     player.loadVideo(youtubeId);
+    mPlayer = player;
   }
 
   YouTubePlayer.OnInitializedListener onInitializedListener =
@@ -151,13 +223,14 @@ public class YoutubeFragment extends UiBaseContentData {
         }
       };
 
-  private YouTubePlayer.OnFullscreenListener onFullScreenListener = new YouTubePlayer.OnFullscreenListener() {
-    @Override public void onFullscreen(boolean fullscreen) {
-      if (onFullScreenModeListener != null) {
-        onFullScreenModeListener.onFullScreen(fullscreen);
-      }
-    }
-  };
+  private YouTubePlayer.OnFullscreenListener onFullScreenListener =
+      new YouTubePlayer.OnFullscreenListener() {
+        @Override public void onFullscreen(boolean fullscreen) {
+          if (onFullScreenModeListener != null) {
+            onFullScreenModeListener.onFullScreen(fullscreen);
+          }
+        }
+      };
 
   public void setOnFullScreenModeListener(OnFullScreenListener onFullScreenModeListener) {
     this.onFullScreenModeListener = onFullScreenModeListener;

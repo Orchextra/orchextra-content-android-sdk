@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import com.gigigo.orchextra.core.sdk.di.base.BaseActivity;
 import com.gigigo.orchextra.ocmsdk.R;
-
+import com.google.android.youtube.player.YouTubePlayer;
+import java.util.List;
 
 public class YoutubeContentDataActivity extends BaseActivity {
 
@@ -25,9 +26,8 @@ public class YoutubeContentDataActivity extends BaseActivity {
     setContentView(R.layout.activity_youtube_main_container_layout);
 
     String videoId = getIntent().getStringExtra(EXTRA_YOUTUBE_VIDEO_ID);
-
+   // videoId = "17uHCHfgs60";//"ikO91fQBsTQ";
     YoutubeFragment youtubeElements = YoutubeFragment.newInstance(videoId);
-
     FragmentManager fragmentManager = getSupportFragmentManager();
     fragmentManager.beginTransaction()
         .replace(R.id.youtube_main_container, youtubeElements)

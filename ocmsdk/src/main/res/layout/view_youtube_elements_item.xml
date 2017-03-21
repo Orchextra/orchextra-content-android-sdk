@@ -3,12 +3,16 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/youtubeLayoutContainer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@color/oc_youtube_layout_container_color"
     >
-
+  <ImageView
+      android:id="@+id/imgBlurBackground"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scaleType="centerCrop"
+  />
   <FrameLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/youtubePlayerFragmentContent"
@@ -16,5 +20,4 @@
       android:layout_height="wrap_content"
       android:layout_centerInParent="true"
       />
-
 </RelativeLayout>

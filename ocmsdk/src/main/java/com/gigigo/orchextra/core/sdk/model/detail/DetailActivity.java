@@ -126,6 +126,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
     if (requestCode == YoutubeWebviewActivity.RESULT_CODE_YOUTUBE_PLAYER && uiContentView != null) {
     //  uiContentView.setTopScroll();
     } else {

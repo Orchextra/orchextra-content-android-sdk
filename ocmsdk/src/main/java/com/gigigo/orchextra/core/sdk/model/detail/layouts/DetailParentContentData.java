@@ -112,7 +112,8 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   }
 
   private void launchExternalYoutube(String url) {
-    YoutubeWebviewActivity.open(getActivity(), url);
+    //YoutubeWebviewActivity.open(getActivity(), url);
+    YoutubeContentDataActivity.open(getActivity(), url);
     //YoutubeWebviewActivity.open(getActivity(), url);
   }
 

@@ -52,7 +52,8 @@ public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
     View.OnClickListener onYoutubeThumbnailClickListener = new View.OnClickListener() {
       @Override public void onClick(View v) {
         //YoutubeWebviewActivity.open(activity, articleElement.getSource());
-        YoutubeWebviewActivity.open(activity, articleElement.getSource());
+      //  YoutubeWebviewActivity.open(activity, articleElement.getSource());
+        YoutubeContentDataActivity.open(activity, articleElement.getSource());
       }
     };
 
