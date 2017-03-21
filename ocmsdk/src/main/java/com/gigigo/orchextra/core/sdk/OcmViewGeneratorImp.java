@@ -1,7 +1,10 @@
 package com.gigigo.orchextra.core.sdk;
 
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
+import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -111,6 +114,23 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   }
 
   @Override
+  public UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share) {
+    ElementCachePreviewCard previewCard = new ElementCachePreviewCard();
+    List<ElementCachePreview> list = new ArrayList<>();
+    list.add(preview);
+    list.add(preview);
+    list.add(preview);
+    list.add(preview);
+    previewCard.setPreviewList(list);
+
+    PreviewCardContentData previewCardContentData = PreviewCardContentData.newInstance();
+    previewCardContentData.setImageLoader(imageLoader);
+    previewCardContentData.setPreview(previewCard);
+    previewCardContentData.setShare(share);
+    return previewCardContentData;
+  }
+
+  @Override
   public UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share) {
     PreviewContentData previewContentData = PreviewContentData.newInstance();
     previewContentData.setImageLoader(imageLoader);
@@ -125,6 +145,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
       case ARTICLE:
         if (render != null) {
           return generateArticleDetailView(render.getElements());
+        }
+      case CARDS:
+        if (render != null) {
+          return generateCardDetailView(render.getElements());
         }
       case WEBVIEW:
         if (render != null) {
@@ -170,6 +194,14 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     articleContentData.setImageLoader(imageLoader);
     articleContentData.addItems(elements);
     return articleContentData;
+  }
+
+  private UiBaseContentData generateCardDetailView(List<ArticleElement> elements) {
+    CardContentData cardContentData =
+        CardContentData.newInstance();
+    cardContentData.setImageLoader(imageLoader);
+    cardContentData.addItems(elements);
+    return cardContentData;
   }
 
   private UiBaseContentData generateWebViewDetailView(String url) {

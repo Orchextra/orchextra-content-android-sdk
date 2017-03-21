@@ -18,6 +18,8 @@ public interface OcmViewGenerator {
 
   UiDetailBaseContentData generateDetailView(String elementUrl);
 
+  UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
+
   UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share);
 
   UiBaseContentData generateDetailView(ElementCacheType type, ElementCacheRender elements);

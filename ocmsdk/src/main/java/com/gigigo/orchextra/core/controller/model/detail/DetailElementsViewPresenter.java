@@ -70,7 +70,8 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
   private UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share) {
     if (preview != null && preview.getBehaviour() != ElementCacheBehaviour.NONE) {
-      return ocmViewGenerator.generatePreview(preview, share);
+      //return ocmViewGenerator.generatePreview(preview, share);
+      return ocmViewGenerator.generateCardPreview(preview, share);
     }
     return null;
   }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,16 +76,6 @@ public class PreviewContentData extends UiBaseContentData {
 
   private void init(View view) {
     initView(view);
-
-    previewContentMainLayout.getViewTreeObserver()
-        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-          @Override public void onGlobalLayout() {
-            CollapsingToolbarLayout.LayoutParams lp = new CollapsingToolbarLayout.LayoutParams(
-                CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
-                DeviceUtils.calculateRealHeightDevice(context));
-            previewContentMainLayout.setLayoutParams(lp);
-          }
-        });
   }
 
   private void initView(View view) {

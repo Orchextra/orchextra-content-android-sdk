@@ -68,33 +68,6 @@ public class ArticleItemViewContainer extends LinearLayout {
     View view = inflater.inflate(R.layout.view_article_item_list_layout, this, true);
 
     articleListContainer = (LinearLayout) view.findViewById(R.id.articleListContainer);
-
-    /*
-    final ScrollView scrollView = (ScrollView) view.findViewById(R.id.articleListScroll);
-    final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = new ViewTreeObserver.OnScrollChangedListener() {
-      @Override public void onScrollChanged() {
-        Log.i("SCROLL", "getScrollY:"+scrollView.getScrollY());
-        OCManager.notifyEvent(OcmEvent.CONTENT_END, null);
-      }
-    };
-    scrollView.setOnTouchListener(new OnTouchListener() {
-      private ViewTreeObserver observer;
-
-      @Override public boolean onTouch(View v, MotionEvent event) {
-        if (observer == null) {
-          observer = scrollView.getViewTreeObserver();
-          observer.addOnScrollChangedListener(onScrollChangedListener);
-        }
-        else if (!observer.isAlive()) {
-          observer.removeOnScrollChangedListener(onScrollChangedListener);
-          observer = scrollView.getViewTreeObserver();
-          observer.addOnScrollChangedListener(onScrollChangedListener);
-        }
-
-        return false;
-      }
-    });
-    */
   }
 
   public void addArticleElementList(List<ArticleElement> articleElementList) {

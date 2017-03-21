@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.domain.entities.elementcache;
 
 public enum ElementCacheType {
   ARTICLE("article"),
+  CARDS("cards"),
   WEBVIEW("webview"),
   VUFORIA("vuforia"),
   SCAN("scan"),
