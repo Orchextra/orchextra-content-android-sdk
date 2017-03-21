@@ -44,7 +44,7 @@ public class CardContentData extends UiBaseContentData {
 
   private void init() {
     cardRecyclerViewContainer.setImageLoader(imageLoader);
-    cardRecyclerViewContainer.addArticleElementList(elements);
+    cardRecyclerViewContainer.addCards(elements);
   }
 
   public void setImageLoader(ImageLoader imageLoader) {

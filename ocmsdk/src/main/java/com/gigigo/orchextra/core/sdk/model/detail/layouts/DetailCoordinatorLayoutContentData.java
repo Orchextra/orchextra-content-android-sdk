@@ -5,7 +5,9 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,14 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
     collapsingToolbar = (FrameLayout) view.findViewById(R.id.collapsingToolbar);
     appbarLayout = (AppBarLayout) view.findViewById(R.id.appbarLayout);
     coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
+    NestedScrollView nestedScrollView = (NestedScrollView) view.findViewById(R.id.nestedScrollView);
+    //nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+    //  @Override
+    //  public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX,
+    //      int oldScrollY) {
+        //Log.i("SCROLL", "SCROLL :");
+    //  }
+    //});
   }
 
   @Override protected int getDetailLayout() {
@@ -157,12 +167,6 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
           }
         }
       };
-
-  //public void scrollToTop() {
-  //if (appbarLayout != null) {
-  //  appbarLayout.setExpanded(false, false);
-  //}
-  //}
 
   @Override public void onResume() {
     super.onResume();

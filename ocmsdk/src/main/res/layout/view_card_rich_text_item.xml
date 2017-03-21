@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmNormalTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_rich_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/oc_bg_article_rich_text_color"
+    android:gravity="left"
+    android:padding="@dimen/oc_spacing_16"
+    android:textColor="@color/oc_article_rich_text_color"
+    android:textSize="@dimen/oc_text_14"
+    />
