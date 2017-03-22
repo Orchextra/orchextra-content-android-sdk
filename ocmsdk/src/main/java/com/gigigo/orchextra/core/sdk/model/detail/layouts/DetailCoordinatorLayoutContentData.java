@@ -20,6 +20,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.sdk.ui.behaviours.ScrollShareButtonBehavior;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -41,14 +42,6 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
     collapsingToolbar = (FrameLayout) view.findViewById(R.id.collapsingToolbar);
     appbarLayout = (AppBarLayout) view.findViewById(R.id.appbarLayout);
     coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
-    NestedScrollView nestedScrollView = (NestedScrollView) view.findViewById(R.id.nestedScrollView);
-    //nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-    //  @Override
-    //  public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX,
-    //      int oldScrollY) {
-        //Log.i("SCROLL", "SCROLL :");
-    //  }
-    //});
   }
 
   @Override protected int getDetailLayout() {
