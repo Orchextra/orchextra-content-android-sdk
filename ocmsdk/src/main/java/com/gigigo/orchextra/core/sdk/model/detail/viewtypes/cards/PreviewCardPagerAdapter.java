@@ -3,13 +3,14 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
 import com.gigigo.ui.imageloader.ImageLoader;
 
-class PreviewCardPagerAdapter extends FragmentPagerAdapter{
+class PreviewCardPagerAdapter extends FragmentStatePagerAdapter {
 
   private final ImageLoader imageLoader;
   private ElementCachePreviewCard previewCard;

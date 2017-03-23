@@ -13,6 +13,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
 
 public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
@@ -58,7 +59,12 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
     UiBaseContentData detailContentData =
         generateDetailView(cachedElement.getType(), cachedElement.getRender());
 
-    if (previewContentData != null && detailContentData != null) {
+    if (detailContentData instanceof CardContentData) {
+      if (previewContentData != null) {
+        ((CardContentData) detailContentData).setPreview(previewContentData);
+      }
+      getView().renderDetailView(detailContentData, shareElement != null);
+    } else if (previewContentData != null && detailContentData != null) {
       getView().renderDetailViewWithPreview(previewContentData, detailContentData,
           shareElement != null);
     } else if (previewContentData != null) {
