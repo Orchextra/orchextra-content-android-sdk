@@ -121,7 +121,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     if (!TextUtils.isEmpty(url)) {
       String generateImageUrl = ImageGenerator.generateImageUrl(url, width, height);
-      imageLoader.load(generateImageUrl).into(animationImageView).override(width, height).build();
+      imageLoader.load(generateImageUrl).override(width, height).into(animationImageView);
     }
   }
 

@@ -32,7 +32,7 @@ import com.gigigo.ui.imageloader.ImageLoaderCallback;
 import com.gigigo.ui.imageloader.glide.GlideImageLoaderImp;
 //import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
 
-import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
+
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -81,9 +81,13 @@ public class YoutubeFragment extends UiBaseContentData {
     mview = view;
     youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
     fragmentManager = getChildFragmentManager();
+    final ImageView imgBlurBackground = (ImageView) view.findViewById(R.id.imgBlurBackground);
     mImageCallback = new ImageLoaderCallback() {
       @Override public void onSuccess(Bitmap bitmap) {
-        Bitmap bmp = bitmap;//   abmp.getBitmap();
+
+        Bitmap  resizedbitmap1=Bitmap.createBitmap(bitmap, 0,45,480, 270);
+        imgBlurBackground.setImageBitmap(resizedbitmap1);
+        Bitmap bmp = bitmap;
 
         boolean isBlack = false;
         int midleImage = bmp.getHeight() / 2;
@@ -103,9 +107,12 @@ public class YoutubeFragment extends UiBaseContentData {
         youtubeId = getArguments().getString(EXTRA_YOUTUBE_ID);
         orientation = getArguments().getInt(EXTRA_YOUTUBE_ORIENTARION);
         if (!TextUtils.isEmpty(youtubeId)) {
+
+
           if (isBlack ||orientation== Configuration.ORIENTATION_LANDSCAPE) {
             //Toast.makeText(YoutubeFragment.this.getActivity(), "ES VERTICAL", Toast.LENGTH_LONG).show();
             setYoutubeFragmentToView(LinearLayout.LayoutParams.MATCH_PARENT);
+         if(isBlack)  YoutubeFragment.this.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
           } else {
             //Toast.makeText(YoutubeFragment.this.getActivity(), "ES HORIZONTAL", Toast.LENGTH_LONG).show();
             setYoutubeFragmentToView(LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -134,7 +141,7 @@ public class YoutubeFragment extends UiBaseContentData {
             FrameLayout.LayoutParams lp =
                 new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
                     FrameLayout.LayoutParams.MATCH_PARENT);
-            //  DeviceUtils.calculateRealHeightDevice(context));
+
             youtubeLayoutContainer.setLayoutParams(lp);
             youtubeLayoutContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
           }
@@ -146,13 +153,11 @@ public class YoutubeFragment extends UiBaseContentData {
     ImageLoader glideImageLoaderImp =
         new GlideImageLoaderImp(YoutubeFragment.this.getActivity().getApplicationContext());
     String strImgForBlur = "http://img.youtube.com/vi/" + youtubeId + "/hqdefault.jpg";
-    ImageView imgBlurBackground = (ImageView) view.findViewById(R.id.imgBlurBackground);
-    glideImageLoaderImp.load(strImgForBlur)
-        .into(imgBlurBackground)
-        .transform(new BlurTransformation(YoutubeFragment.this.getActivity(), 20))
-        .build();
 
-    glideImageLoaderImp.load(strImgForBlur).loaderCallback(mImageCallback).build();
+    glideImageLoaderImp.load(strImgForBlur)
+        .into( mImageCallback)
+        //.transform(new BlurTransformation(YoutubeFragment.this.getActivity(), 20))
+         ;
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
