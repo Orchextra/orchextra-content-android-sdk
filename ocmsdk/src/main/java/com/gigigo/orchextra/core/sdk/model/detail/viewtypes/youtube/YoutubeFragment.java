@@ -32,7 +32,7 @@ import com.gigigo.ui.imageloader.ImageLoaderCallback;
 import com.gigigo.ui.imageloader.glide.GlideImageLoaderImp;
 //import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
 
-
+import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -53,6 +53,7 @@ public class YoutubeFragment extends UiBaseContentData {
   private ImageLoaderCallback mImageCallback;
   private FragmentManager fragmentManager;
   private YouTubePlayer mPlayer;
+
   public static YoutubeFragment newInstance(String youtubeId, int orientation) {
     YoutubeFragment youtubeElements = new YoutubeFragment();
 
@@ -85,7 +86,7 @@ public class YoutubeFragment extends UiBaseContentData {
     mImageCallback = new ImageLoaderCallback() {
       @Override public void onSuccess(Bitmap bitmap) {
 
-        Bitmap  resizedbitmap1=Bitmap.createBitmap(bitmap, 0,45,480, 270);
+        Bitmap resizedbitmap1 = Bitmap.createBitmap(bitmap, 0, 45, 480, 270);
         imgBlurBackground.setImageBitmap(resizedbitmap1);
         Bitmap bmp = bitmap;
 
@@ -108,11 +109,13 @@ public class YoutubeFragment extends UiBaseContentData {
         orientation = getArguments().getInt(EXTRA_YOUTUBE_ORIENTARION);
         if (!TextUtils.isEmpty(youtubeId)) {
 
-
-          if (isBlack ||orientation== Configuration.ORIENTATION_LANDSCAPE) {
+          if (isBlack || orientation == Configuration.ORIENTATION_LANDSCAPE) {
             //Toast.makeText(YoutubeFragment.this.getActivity(), "ES VERTICAL", Toast.LENGTH_LONG).show();
             setYoutubeFragmentToView(LinearLayout.LayoutParams.MATCH_PARENT);
-         if(isBlack)  YoutubeFragment.this.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            if (isBlack) {
+              YoutubeFragment.this.getActivity()
+                  .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
           } else {
             //Toast.makeText(YoutubeFragment.this.getActivity(), "ES HORIZONTAL", Toast.LENGTH_LONG).show();
             setYoutubeFragmentToView(LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -155,9 +158,8 @@ public class YoutubeFragment extends UiBaseContentData {
     String strImgForBlur = "http://img.youtube.com/vi/" + youtubeId + "/hqdefault.jpg";
 
     glideImageLoaderImp.load(strImgForBlur)
-        .into( mImageCallback)
-        //.transform(new BlurTransformation(YoutubeFragment.this.getActivity(), 20))
-         ;
+        .transform(new BlurTransformation(YoutubeFragment.this.getActivity(), 20))
+        .into(mImageCallback);
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -177,18 +179,16 @@ public class YoutubeFragment extends UiBaseContentData {
     params.height = h; //LinearLayout.LayoutParams.WRAP_CONTENT.;
     params.width = LinearLayout.LayoutParams.MATCH_PARENT;
     layout.setLayoutParams(params);
-    if (this.getActivity()!=null &&!this.getActivity().isFinishing()) {
-    fragmentManager.beginTransaction()
-        .replace(R.id.youtubePlayerFragmentContent, youTubePlayerFragment)
-        .commitAllowingStateLoss();
+    if (this.getActivity() != null && !this.getActivity().isFinishing()) {
+      fragmentManager.beginTransaction()
+          .replace(R.id.youtubePlayerFragmentContent, youTubePlayerFragment)
+          .commitAllowingStateLoss();
     }
   }
 
   private void initYoutubeFragment() {
     youTubePlayerFragment.initialize(BuildConfig.YOUTUBE_DEVELOPER_KEY, onInitializedListener);
   }
-
-
 
   public void setYouTubePlayer(YouTubePlayer player) {
     player.setPlayerStateChangeListener(playerStateChangeListener);
@@ -197,7 +197,6 @@ public class YoutubeFragment extends UiBaseContentData {
     player.setShowFullscreenButton(true);
     player.setPlayerStyle(YouTubePlayer.PlayerStyle.MINIMAL);
     player.loadVideo(youtubeId);
-
   }
 
   YouTubePlayer.OnInitializedListener onInitializedListener =
