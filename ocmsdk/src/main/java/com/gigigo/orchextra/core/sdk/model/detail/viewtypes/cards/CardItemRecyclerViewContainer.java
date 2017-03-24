@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;

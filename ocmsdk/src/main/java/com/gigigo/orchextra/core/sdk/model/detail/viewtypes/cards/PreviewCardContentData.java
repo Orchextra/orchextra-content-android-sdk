@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -10,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
@@ -66,6 +69,21 @@ public class PreviewCardContentData extends UiBaseContentData {
             cardViewPager.setLayoutParams(layoutParams);
           }
         });
+    cardViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+      }
+
+      @Override public void onPageSelected(int position) {
+        //PreviewContentData fragment = (PreviewContentData) pagerAdapter.getItem(position);
+        //fragment.bindTo();
+      }
+
+      @Override public void onPageScrollStateChanged(int state) {
+
+      }
+    });
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -91,5 +109,11 @@ public class PreviewCardContentData extends UiBaseContentData {
 
   public void setShare(ElementCacheShare share) {
     this.share = share;
+  }
+
+  public void notifyDataChanged() {
+    //if (pagerAdapter != null) {
+    //  pagerAdapter.notifyDataSetChanged();
+    //}
   }
 }

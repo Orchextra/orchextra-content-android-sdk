@@ -92,7 +92,7 @@ public class PreviewContentData extends UiBaseContentData {
     goToArticleButton = view.findViewById(R.id.go_to_article_button);
   }
 
-  private void bindTo() {
+  public void bindTo() {
     if (preview != null) {
       setImage();
 
