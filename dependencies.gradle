@@ -33,7 +33,9 @@ allprojects {
                  branch                     : 'io.branch.sdk.android:library:2.5.7',
                  leanplum                   : 'com.leanplum:Leanplum:1.3.3',
 
-                 realTextView               : 'me.grantland:autofittextview:0.2.1'
+                 realTextView               : 'me.grantland:autofittextview:0.2.1',
+
+                 doubleViewPager            : 'com.github.GigigoGreenLabs:GGG-DoubleViewPager-lib:a520a38157'
           ]
 
     testLibraries = [mockito          : 'org.mockito:mockito-core:2.0.31-beta',

@@ -5,15 +5,14 @@ import android.text.TextUtils;
 import com.gigigo.interactorexecutor.base.Presenter;
 import com.gigigo.interactorexecutor.base.viewinjector.GenericViewInjector;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
+import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 
 public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
@@ -53,25 +52,29 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   private void renderView(ElementCache cachedElement) {
     ElementCacheShare shareElement = cachedElement.getShare();
 
-    UiBaseContentData previewContentData =
-        generatePreview(cachedElement.getPreview(), shareElement);
+    if (cachedElement.getType() == ElementCacheType.ARTICLE) { //TODO sustituir por tipo CARDS
+      UiBaseContentData contentData = generateCardView(cachedElement);
+      getView().renderDetailView(contentData, shareElement != null);
+    } else {
+      UiBaseContentData previewContentData =
+          generatePreview(cachedElement.getPreview(), shareElement);
 
-    UiBaseContentData detailContentData =
-        generateDetailView(cachedElement.getType(), cachedElement.getRender());
+      UiBaseContentData detailContentData =
+          generateDetailView(cachedElement.getType(), cachedElement.getRender());
 
-    if (detailContentData instanceof CardContentData) {
-      if (previewContentData != null) {
-        ((CardContentData) detailContentData).setPreview(previewContentData);
+      if (previewContentData != null && detailContentData != null) {
+        getView().renderDetailViewWithPreview(previewContentData, detailContentData,
+            shareElement != null);
+      } else if (previewContentData != null) {
+        getView().renderPreview(previewContentData, shareElement != null);
+      } else if (detailContentData != null) {
+        getView().renderDetailView(detailContentData, shareElement != null);
       }
-      getView().renderDetailView(detailContentData, shareElement != null);
-    } else if (previewContentData != null && detailContentData != null) {
-      getView().renderDetailViewWithPreview(previewContentData, detailContentData,
-          shareElement != null);
-    } else if (previewContentData != null) {
-      getView().renderPreview(previewContentData, shareElement != null);
-    } else if (detailContentData != null) {
-      getView().renderDetailView(detailContentData, shareElement != null);
     }
+  }
+
+  private UiBaseContentData generateCardView(ElementCache cachedElement) {
+    return ocmViewGenerator.generateCardDetailView(cachedElement);
   }
 
   private UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share) {

@@ -24,19 +24,22 @@ public class VerticalPageTransformer implements ViewPager.PageTransformer {
     //  page.setAlpha(0);
     //}
 
-    page.setTranslationX(page.getWidth() * -position);
+    //page.setTranslationX(page.getWidth() * -position);
+    //
+    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    //  if (position >= 0) {
+    //    page.setTranslationY(position * page.getHeight());
+    //    page.setTranslationZ(10f);
+    //    page.setAlpha(1f);
+    //  } else {
+    //    page.setTranslationY(0f);
+    //    page.setTranslationZ(9.9f);
+    //  }
+    //  page.setAlpha(1f);
+    //}
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      if (position >= 0) {
-        page.setTranslationY(position * page.getHeight());
-        page.setTranslationZ(10f);
-        page.setAlpha(1f);
-      } else {
-        page.setTranslationY(0f);
-        page.setTranslationZ(9.9f);
-      }
-      page.setAlpha(1f);
-    }
+    page.setTranslationX(page.getWidth() * -position);
+    page.setTranslationY(position < 0 ? position * page.getHeight() : 0f);
 
     //float result = position > 0 ? - page.getHeight() + position * page.getHeight() : 0f;
     //Log.i("PAGE", "page:" + result);

@@ -146,10 +146,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
       //  if (render != null) {
       //    return generateArticleDetailView(render.getElements());
       //  }
-      case CARDS:
-        if (render != null) {
-          return generateCardDetailView(render.getElements());
-        }
+      //case CARDS:
+      //  if (render != null) {
+      //    return generateCardDetailView(render.getElements());
+      //  }
       case WEBVIEW:
         if (render != null) {
           return generateWebViewDetailView(render.getUrl());
@@ -196,7 +196,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return articleContentData;
   }
 
-  private UiBaseContentData generateCardDetailView(List<ArticleElement> elements) {
+  @Override
+  public UiBaseContentData generateCardDetailView(ElementCache elements) {
     CardContentData cardContentData =
         CardContentData.newInstance();
     cardContentData.setImageLoader(imageLoader);

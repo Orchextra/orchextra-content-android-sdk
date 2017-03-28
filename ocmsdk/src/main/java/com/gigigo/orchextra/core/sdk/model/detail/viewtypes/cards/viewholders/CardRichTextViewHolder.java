@@ -1,61 +1,76 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.AttrRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocmsdk.R;
 
-public class CardRichTextViewHolder extends CardViewElement<ArticleRichTextElement> {
+public class CardRichTextViewHolder extends CardViewElement {
 
   private TextView cardRichText;
   private ArticleRichTextElement richTextElement;
 
-  public static CardRichTextViewHolder newInstance() {
-    return new CardRichTextViewHolder();
+  public CardRichTextViewHolder(@NonNull Context context) {
+    super(context);
+
+    init();
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.view_card_rich_text_item, container, false);
+  public CardRichTextViewHolder(@NonNull Context context, @Nullable AttributeSet attrs) {
+    super(context, attrs);
+
+    init();
+  }
+
+  public CardRichTextViewHolder(@NonNull Context context, @Nullable AttributeSet attrs,
+      @AttrRes int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+
+    init();
+  }
+
+  private void init() {
+    LayoutInflater inflater =
+        (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    View view = inflater.inflate(R.layout.view_card_rich_text_item, this, true);
 
     initViews(view);
-
-    return view;
   }
 
   private void initViews(View view) {
     cardRichText = (TextView) view.findViewById(R.id.card_rich_text);
+    view.setOnClickListener(fakeClickListener);
   }
 
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
+  private View.OnClickListener fakeClickListener = new View.OnClickListener() {
+    @Override public void onClick(View v) {
 
-    if (richTextElement != null) {
-      bindTo();
     }
-  }
+  };
 
   private void bindTo() {
     if (!TextUtils.isEmpty(richTextElement.getHtml())) {
       cardRichText.setText(Html.fromHtml(richTextElement.getHtml()));
     }
-
-    //int heightDevice = DeviceUtils.calculateRealHeightDevice(getContext());
-    //FrameLayout.LayoutParams lp =
-    //    new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightDevice);
-    //cardRichText.setLayoutParams(lp);
   }
 
   public void setRichTextElement(ArticleRichTextElement richTextElement) {
     this.richTextElement = richTextElement;
+  }
+
+  @Override public void initialize() {
+    if (richTextElement != null) {
+      bindTo();
+    }
   }
 }

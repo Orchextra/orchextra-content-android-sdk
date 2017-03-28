@@ -1,7 +1,12 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.AttrRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +19,9 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 
-public class CardVideoViewHolder extends CardViewElement<ArticleVideoElement> {
+public class CardVideoViewHolder extends CardViewElement {
+
+  private final Context context;
 
   private YouTubeThumbnailView youtubeThumbnail;
   private ArticleVideoElement articleElement;
@@ -32,31 +39,46 @@ public class CardVideoViewHolder extends CardViewElement<ArticleVideoElement> {
         }
       };
 
-  public static CardVideoViewHolder newInstance() {
-    return new CardVideoViewHolder();
+  public CardVideoViewHolder(@NonNull Context context) {
+    super(context);
+    this.context = context;
+
+    init();
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.view_card_video_item, container, false);
+  public CardVideoViewHolder(@NonNull Context context, @Nullable AttributeSet attrs) {
+    super(context, attrs);
+    this.context = context;
+
+    init();
+  }
+
+  public CardVideoViewHolder(@NonNull Context context, @Nullable AttributeSet attrs,
+      @AttrRes int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+    this.context = context;
+
+    init();
+  }
+
+  private void init() {
+    LayoutInflater inflater =
+        (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    View view = inflater.inflate(R.layout.view_card_video_item, this, true);
 
     initViews(view);
-
-    return view;
   }
 
   private void initViews(View view) {
     youtubeThumbnail = (YouTubeThumbnailView) view.findViewById(R.id.youtubeThumbnail);
+    view.setOnClickListener(fakeClickListener);
   }
 
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
+  private View.OnClickListener fakeClickListener = new View.OnClickListener() {
+    @Override public void onClick(View v) {
 
-    if (articleElement != null) {
-      bindTo();
     }
-  }
+  };
 
   private void bindTo() {
     YouTubeThumbnailView.OnInitializedListener onInitializedListener =
@@ -77,7 +99,7 @@ public class CardVideoViewHolder extends CardViewElement<ArticleVideoElement> {
 
     View.OnClickListener onYoutubeThumbnailClickListener = new View.OnClickListener() {
       @Override public void onClick(View v) {
-        YoutubeContentDataActivity.open(getActivity(), articleElement.getSource());
+        YoutubeContentDataActivity.open((Activity) context, articleElement.getSource());
         //YoutubeWebviewActivity.open(activity, articleElement.getSource());
       }
     };
@@ -88,5 +110,11 @@ public class CardVideoViewHolder extends CardViewElement<ArticleVideoElement> {
 
   public void setArticleElement(ArticleVideoElement articleElement) {
     this.articleElement = articleElement;
+  }
+
+  @Override public void initialize() {
+    if (articleElement != null) {
+      bindTo();
+    }
   }
 }

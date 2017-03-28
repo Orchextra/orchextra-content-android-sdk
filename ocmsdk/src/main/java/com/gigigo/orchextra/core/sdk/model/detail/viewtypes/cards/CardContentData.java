@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.List;
@@ -15,9 +16,8 @@ import java.util.List;
 public class CardContentData extends UiBaseContentData {
 
   private ImageLoader imageLoader;
-  private List<ArticleElement> elements;
   private CardItemRecyclerViewContainer cardRecyclerViewContainer;
-  private UiBaseContentData previewContentData;
+  private ElementCache elements;
 
   public static CardContentData newInstance() {
     return new CardContentData();
@@ -45,15 +45,8 @@ public class CardContentData extends UiBaseContentData {
   }
 
   private void init() {
-    FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
-    cardRecyclerViewContainer.setSupportFragmentManager(supportFragmentManager);
     cardRecyclerViewContainer.setImageLoader(imageLoader);
     cardRecyclerViewContainer.addCards(elements);
-
-    if (cardRecyclerViewContainer != null) {
-      cardRecyclerViewContainer.setPreview(previewContentData);
-    }
-
     cardRecyclerViewContainer.initialize();
   }
 
@@ -61,11 +54,7 @@ public class CardContentData extends UiBaseContentData {
     this.imageLoader = imageLoader;
   }
 
-  public void addItems(List<ArticleElement> elements) {
+  public void addItems(ElementCache elements) {
     this.elements = elements;
-  }
-
-  public void setPreview(UiBaseContentData previewContentData) {
-    this.previewContentData = previewContentData;
   }
 }

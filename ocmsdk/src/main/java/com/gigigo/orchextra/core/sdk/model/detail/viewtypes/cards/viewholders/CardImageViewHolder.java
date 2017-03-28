@@ -1,12 +1,14 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.AttrRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
@@ -14,36 +16,53 @@ import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 
-public class CardImageViewHolder extends CardViewElement<ArticleImageElement> {
+public class CardImageViewHolder extends CardViewElement {
 
   private ImageLoader imageLoader;
   private ImageView cardImagePlaceholder;
   private ArticleImageElement imageElement;
 
-  public static CardImageViewHolder newInstance() {
-    return new CardImageViewHolder();
+  public CardImageViewHolder(@NonNull Context context) {
+    super(context);
+
+    init();
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+  public CardImageViewHolder(@NonNull Context context, @Nullable AttributeSet attrs) {
+    super(context, attrs);
 
-    View view = inflater.inflate(R.layout.view_card_image_item, container, false);
+    init();
+  }
+
+  public CardImageViewHolder(@NonNull Context context, @Nullable AttributeSet attrs,
+      @AttrRes int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+
+    init();
+  }
+
+  @Override public void initialize() {
+    bindTo();
+  }
+
+  private void init() {
+    LayoutInflater inflater =
+        (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    View view = inflater.inflate(R.layout.view_card_image_item, this, true);
 
     initViews(view);
-
-    return view;
   }
 
   private void initViews(View view) {
     cardImagePlaceholder = (ImageView) view.findViewById(R.id.card_image_placeholder);
+    view.setOnClickListener(fakeClickListener);
   }
 
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
+  private View.OnClickListener fakeClickListener = new View.OnClickListener() {
+    @Override public void onClick(View v) {
 
-    bindTo();
-  }
+    }
+  };
 
   private void bindTo() {
     if (imageElement != null) {
