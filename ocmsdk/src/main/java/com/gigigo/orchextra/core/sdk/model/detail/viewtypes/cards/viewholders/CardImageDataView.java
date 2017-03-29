@@ -1,14 +1,12 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
@@ -16,25 +14,25 @@ import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 
-public class CardImageViewHolder extends CardViewElement {
+public class CardImageDataView extends CardDataView {
 
   private ImageLoader imageLoader;
   private ImageView cardImagePlaceholder;
   private ArticleImageElement imageElement;
 
-  public CardImageViewHolder(@NonNull Context context) {
+  public CardImageDataView(@NonNull Context context) {
     super(context);
 
     init();
   }
 
-  public CardImageViewHolder(@NonNull Context context, @Nullable AttributeSet attrs) {
+  public CardImageDataView(@NonNull Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
 
     init();
   }
 
-  public CardImageViewHolder(@NonNull Context context, @Nullable AttributeSet attrs,
+  public CardImageDataView(@NonNull Context context, @Nullable AttributeSet attrs,
       @AttrRes int defStyleAttr) {
     super(context, attrs, defStyleAttr);
 

@@ -2,14 +2,12 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
@@ -19,7 +17,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 
-public class CardVideoViewHolder extends CardViewElement {
+public class CardVideoView extends CardDataView {
 
   private final Context context;
 
@@ -39,21 +37,21 @@ public class CardVideoViewHolder extends CardViewElement {
         }
       };
 
-  public CardVideoViewHolder(@NonNull Context context) {
+  public CardVideoView(@NonNull Context context) {
     super(context);
     this.context = context;
 
     init();
   }
 
-  public CardVideoViewHolder(@NonNull Context context, @Nullable AttributeSet attrs) {
+  public CardVideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
     this.context = context;
 
     init();
   }
 
-  public CardVideoViewHolder(@NonNull Context context, @Nullable AttributeSet attrs,
+  public CardVideoView(@NonNull Context context, @Nullable AttributeSet attrs,
       @AttrRes int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     this.context = context;

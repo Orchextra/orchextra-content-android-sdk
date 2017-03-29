@@ -16,7 +16,7 @@ import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardImageViewHolder;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardImageDataView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.PreviewContentDataView;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
@@ -131,7 +131,7 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
     Class<? extends ArticleElement> valueClass = articleElement.getClass();
 
     if (valueClass == ArticleImageElement.class) {
-      CardImageViewHolder cardImageViewHolder = new CardImageViewHolder(context);
+      CardImageDataView cardImageViewHolder = new CardImageDataView(context);
       cardImageViewHolder.setImageLoader(imageLoader);
       cardImageViewHolder.setImageElement((ArticleImageElement) articleElement);
       cardImageViewHolder.initialize();

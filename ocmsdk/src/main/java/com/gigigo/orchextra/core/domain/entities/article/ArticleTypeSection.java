@@ -5,6 +5,8 @@ public enum ArticleTypeSection {
   IMAGE("image"),
   VIDEO("video"),
   RICH_TEXT("richText"),
+  IMAGE_AND_TEXT("imageText"),
+  TEXT_AND_IMAGE("textImage"),
   NONE("");
 
   private final String typeSection;
@@ -26,4 +28,5 @@ public enum ArticleTypeSection {
   public String getTypeSection() {
     return typeSection;
   }
+
 }

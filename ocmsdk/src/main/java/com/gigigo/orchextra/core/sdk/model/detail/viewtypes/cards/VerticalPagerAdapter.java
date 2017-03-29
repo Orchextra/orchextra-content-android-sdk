@@ -5,14 +5,17 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleImageAndTextElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleTextAndImageElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardImageViewHolder;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardRichTextViewHolder;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardVideoViewHolder;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardViewElement;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardDataView;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardImageAndTextDataView;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardImageDataView;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardRichTextDataView;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardVideoView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.PreviewContentDataView;
 import com.gigigo.ui.imageloader.ImageLoader;
 
@@ -44,7 +47,7 @@ public class VerticalPagerAdapter extends PagerAdapter {
     if (elementCache.getPreview() != null) {
       return numElements + 1;
     } else {
-     return numElements;
+      return numElements;
     }
   }
 
@@ -76,28 +79,38 @@ public class VerticalPagerAdapter extends PagerAdapter {
         adapterPosition--;
       }
 
-      CardViewElement cardViewElement = null;
+      CardDataView cardViewElement = null;
 
       ArticleElement articleElement = elementCache.getRender().getElements().get(adapterPosition);
       if (articleElement.getClass() == ArticleImageElement.class) {
-        CardImageViewHolder cardImageViewHolder = new CardImageViewHolder(context);
+        CardImageDataView cardImageViewHolder = new CardImageDataView(context);
         cardImageViewHolder.setImageLoader(imageLoader);
         cardImageViewHolder.setImageElement((ArticleImageElement) articleElement);
         cardImageViewHolder.initialize();
 
         cardViewElement = cardImageViewHolder;
       } else if (articleElement.getClass() == ArticleRichTextElement.class) {
-        CardRichTextViewHolder cardRichTextViewHolder = new CardRichTextViewHolder(context);
+        CardRichTextDataView cardRichTextViewHolder = new CardRichTextDataView(context);
         cardRichTextViewHolder.setRichTextElement((ArticleRichTextElement) articleElement);
         cardRichTextViewHolder.initialize();
 
         cardViewElement = cardRichTextViewHolder;
       } else if (articleElement.getClass() == ArticleVideoElement.class) {
-        CardVideoViewHolder cardVideoViewHolder = new CardVideoViewHolder(context);
+        CardVideoView cardVideoViewHolder = new CardVideoView(context);
         cardVideoViewHolder.setArticleElement((ArticleVideoElement) articleElement);
         cardVideoViewHolder.initialize();
 
         cardViewElement = cardVideoViewHolder;
+      } else if (articleElement.getClass() == ArticleImageAndTextElement.class) {
+        CardImageAndTextDataView cardRichTextViewHolder = new CardImageAndTextDataView(context);
+        cardRichTextViewHolder.setDataElement((ArticleImageAndTextElement) articleElement);
+        cardRichTextViewHolder.setFirstItem(CardImageAndTextDataView.ITEM.IMAGE);
+        cardRichTextViewHolder.initialize();
+      } else if (articleElement.getClass() == ArticleTextAndImageElement.class) {
+        CardImageAndTextDataView cardRichTextViewHolder = new CardImageAndTextDataView(context);
+        cardRichTextViewHolder.setDataElement((ArticleImageAndTextElement) articleElement);
+        cardRichTextViewHolder.setFirstItem(CardImageAndTextDataView.ITEM.TEXT);
+        cardRichTextViewHolder.initialize();
       }
 
       container.addView(cardViewElement);

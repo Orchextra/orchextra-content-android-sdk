@@ -1,6 +1,7 @@
 allprojects {
   ext {
     libraries = [androidSupportDesign       : 'com.android.support:design:23.4.0',
+                 constraintLayout           : 'com.android.support.constraint:constraint-layout:1.0.2',
 
                  daggerCompiler             : 'com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2',
                  dagger                     : 'com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2',

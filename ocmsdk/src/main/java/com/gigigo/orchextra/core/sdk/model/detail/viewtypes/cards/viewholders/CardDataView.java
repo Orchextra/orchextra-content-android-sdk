@@ -7,17 +7,17 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-public abstract class CardViewElement extends FrameLayout {
+public abstract class CardDataView extends FrameLayout {
 
-  public CardViewElement(@NonNull Context context) {
+  public CardDataView(@NonNull Context context) {
     super(context);
   }
 
-  public CardViewElement(@NonNull Context context, @Nullable AttributeSet attrs) {
+  public CardDataView(@NonNull Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public CardViewElement(@NonNull Context context, @Nullable AttributeSet attrs,
+  public CardDataView(@NonNull Context context, @Nullable AttributeSet attrs,
       @AttrRes int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
