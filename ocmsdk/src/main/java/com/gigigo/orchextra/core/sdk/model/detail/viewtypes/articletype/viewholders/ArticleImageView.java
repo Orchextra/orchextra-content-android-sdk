@@ -37,6 +37,6 @@ public class ArticleImageView extends ArticleBaseView<ArticleImageElement> {
     String generatedImageUrl =
         ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(getContext()));
 
-    imageLoader.load(generatedImageUrl).into(articleImagePlaceholder).build();
+    imageLoader.load(generatedImageUrl).into(articleImagePlaceholder) ;
   }
 }

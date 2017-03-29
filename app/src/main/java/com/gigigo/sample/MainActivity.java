@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.contentLayout, uiGridBaseContentData)
-        .commit();
+        .commitAllowingStateLoss();
   }
 
   private void selectFirstTab() {
