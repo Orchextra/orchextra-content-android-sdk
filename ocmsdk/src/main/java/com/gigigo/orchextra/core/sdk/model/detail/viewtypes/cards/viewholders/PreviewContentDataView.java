@@ -118,7 +118,7 @@ public class PreviewContentDataView extends LinearLayout {
         ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(context),
             DeviceUtils.calculateRealHeightDevice(context));
 
-    imageLoader.load(generatedImageUrl).into(previewImage).build();
+    imageLoader.load(generatedImageUrl).into(previewImage);
   }
 
   private void setListeners() {

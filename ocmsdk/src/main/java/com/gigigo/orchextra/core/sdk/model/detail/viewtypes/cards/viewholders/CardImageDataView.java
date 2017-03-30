@@ -76,7 +76,7 @@ public class CardImageDataView extends CardDataView {
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, widthDevice);
 
-    imageLoader.load(generatedImageUrl).into(cardImagePlaceholder).build();
+    imageLoader.load(generatedImageUrl).into(cardImagePlaceholder);
 
     //ViewPager.LayoutParams lp = new ViewPager.LayoutParams(widthDevice, heightDevice);
     //cardImagePlaceholder.setLayoutParams(lp);
