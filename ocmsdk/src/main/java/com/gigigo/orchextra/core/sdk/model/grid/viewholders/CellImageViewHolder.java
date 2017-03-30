@@ -50,9 +50,8 @@ public class CellImageViewHolder extends BaseViewHolder<CellElementAdapter> {
                 mainLayout.getHeight());
 
         imageLoader.load(generatedImageUrl)
-            .into(imageView)
             .override(mainLayout.getWidth(), mainLayout.getHeight())
-            .build();
+            .into(imageView);
 
         mainLayout.getViewTreeObserver().removeOnPreDrawListener(this);
 
@@ -60,10 +59,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellElementAdapter> {
       }
     });
 
-    if (item.getData()
-        .getSegmentation()
-        .getRequiredAuth()
-        .equals(RequiredAuthoritation.LOGGED)) {
+    if (item.getData().getSegmentation().getRequiredAuth().equals(RequiredAuthoritation.LOGGED)) {
       padlockView.setVisibility(authoritation.isAuthorizatedUser() ? View.GONE : View.VISIBLE);
     } else {
       padlockView.setVisibility(View.GONE);

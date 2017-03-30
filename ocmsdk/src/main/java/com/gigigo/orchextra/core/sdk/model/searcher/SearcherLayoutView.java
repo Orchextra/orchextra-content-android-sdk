@@ -201,7 +201,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
         DeviceUtils.calculateRealWidthDevice(context),
         DeviceUtils.calculateRealHeightDevice(context));
 
-    imageLoader.load(imageUrl).into(imageViewToExpand).build();
+    imageLoader.load(imageUrl).into(imageViewToExpand);
 
     DetailActivity.open(activity, elementUrl, imageUrl,
         DeviceUtils.calculateRealWidthDevice(context),

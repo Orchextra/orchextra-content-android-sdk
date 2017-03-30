@@ -37,7 +37,7 @@ public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl,
         DeviceUtils.calculateRealWidthDevice(getContext()));
 
-    imageLoader.load(generatedImageUrl).into(articleHeaderImage).build();
+    imageLoader.load(generatedImageUrl).into(articleHeaderImage);
   }
 
   @Override protected void bindViews() {

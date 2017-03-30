@@ -142,6 +142,7 @@ dependencies {
   compile rootProject.ext.libraries.multipleGridRecyclerView
 
   compile rootProject.ext.libraries.imageloaderGlide
+  compile rootProject.ext.libraries.imageloaderGlideBlur
 
   //compile rootProject.ext.libraries.oxvuforiaimplementation
 

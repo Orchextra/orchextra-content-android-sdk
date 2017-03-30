@@ -221,7 +221,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           DeviceUtils.calculateRealWidthDevice(context),
           DeviceUtils.calculateRealHeightDevice(context));
 
-      imageLoader.load(imageUrl).into(imageViewToExpandInDetail).build();
+      imageLoader.load(imageUrl).into(imageViewToExpandInDetail);
     }
 
     DetailActivity.open(activity, elementUrl, urlImageToExpand,
