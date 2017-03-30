@@ -36,10 +36,6 @@ public class VerticalViewPager extends ViewPager {
       int isVerticalSwipe = detectVerticalSwipe(event);
 
       return isVerticalSwipe != -1 || super.onInterceptTouchEvent(event);
-
-      //boolean intercepted = super.onInterceptHoverEvent(swapXY(event));
-      //swapXY(event);
-      //return intercepted;
     }
     return super.onInterceptTouchEvent(event);
   }
