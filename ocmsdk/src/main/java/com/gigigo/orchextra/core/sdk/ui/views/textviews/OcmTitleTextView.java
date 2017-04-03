@@ -10,9 +10,9 @@ import android.util.AttributeSet;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.ocm.OCManager;
-import me.grantland.widget.AutofitTextView;
+import views.gigigo.com.textviewautofit.TextFitTextView;
 
-public class OcmTitleTextView extends AutofitTextView {
+public class OcmTitleTextView extends TextFitTextView {
 
   private final Context context;
 
@@ -42,7 +42,6 @@ public class OcmTitleTextView extends AutofitTextView {
     if (injector != null) {
       OcmStyleUi styleUi = injector.provideOcmStyleUi();
       if (styleUi != null && !TextUtils.isEmpty(styleUi.getTitleFontPath())) {
-        //setFont(styleUi.getTitleFontPath());
         setTypeface(Typeface.createFromAsset(context.getAssets(), styleUi.getTitleFontPath()));
       }
     }

@@ -143,13 +143,9 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   public UiBaseContentData generateDetailView(ElementCacheType type, ElementCacheRender render) {
     switch (type) {
       case ARTICLE:
-      //  if (render != null) {
-      //    return generateArticleDetailView(render.getElements());
-      //  }
-      //case CARDS:
-      //  if (render != null) {
-      //    return generateCardDetailView(render.getElements());
-      //  }
+        if (render != null) {
+          return generateArticleDetailView(render.getElements());
+        }
       case WEBVIEW:
         if (render != null) {
           return generateWebViewDetailView(render.getUrl());

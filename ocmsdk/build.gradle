@@ -156,7 +156,6 @@ dependencies {
   compile rootProject.ext.libraries.playServicesLocation
   compile rootProject.ext.libraries.playServicesGcm
 
-  compile rootProject.ext.libraries.realTextView
-
   compile rootProject.ext.libraries.doubleViewPager
+  compile rootProject.ext.libraries.autofitTextView
 }

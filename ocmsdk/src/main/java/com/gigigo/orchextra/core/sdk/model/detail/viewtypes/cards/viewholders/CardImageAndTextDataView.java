@@ -22,6 +22,7 @@ public class CardImageAndTextDataView extends CardDataView {
   private ArticleImageAndTextElement dataElement;
   private ITEM firstItem = ITEM.IMAGE;
   private float ratioFirstItem = 0.5f, ratioSecondItem = 0.5f;
+
   public CardImageAndTextDataView(@NonNull Context context) {
     super(context);
 
@@ -53,7 +54,6 @@ public class CardImageAndTextDataView extends CardDataView {
     contraintLayoutContainer = (ConstraintLayout) view.findViewById(R.id.contraintLayoutContainer);
     cardImagePlaceholder = (ImageView) view.findViewById(R.id.card_image_placeholder);
     cardRichText = (TextView) view.findViewById(R.id.card_rich_text);
-    //view.setOnClickListener(fakeClickListener);
   }
 
   public void setFirstItem(ITEM firstItem) {

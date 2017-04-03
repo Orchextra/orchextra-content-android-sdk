@@ -9,13 +9,13 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
+import com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmNormalTextView;
 import com.gigigo.orchextra.ocmsdk.R;
 
 public class CardRichTextDataView extends CardDataView {
 
-  private TextView cardRichText;
+  private OcmNormalTextView cardRichText;
   private ArticleRichTextElement richTextElement;
 
   public CardRichTextDataView(@NonNull Context context) {
@@ -46,15 +46,8 @@ public class CardRichTextDataView extends CardDataView {
   }
 
   private void initViews(View view) {
-    cardRichText = (TextView) view.findViewById(R.id.card_rich_text);
-    view.setOnClickListener(fakeClickListener);
+    cardRichText = (OcmNormalTextView) view.findViewById(R.id.card_rich_text);
   }
-
-  private View.OnClickListener fakeClickListener = new View.OnClickListener() {
-    @Override public void onClick(View v) {
-
-    }
-  };
 
   private void bindTo() {
     if (!TextUtils.isEmpty(richTextElement.getHtml())) {

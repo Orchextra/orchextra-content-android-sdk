@@ -2,13 +2,14 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:autofit="http://schemas.android.com/tools"
     android:id="@+id/contraintLayoutContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/oc_bg_article_video_color"
     >
 
-  <TextView
+  <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmNormalTextView
       android:id="@+id/card_rich_text"
       android:layout_width="0dp"
       android:layout_height="0dp"
@@ -16,7 +17,14 @@
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      android:background="@color/oc_bg_article_video_color"
+      android:background="@color/oc_bg_article_rich_text_color"
+      android:gravity="start"
+      android:layout_marginLeft="@dimen/oc_spacing_8"
+      android:layout_marginRight="@dimen/oc_spacing_8"
+      android:layout_marginTop="@dimen/spacing_12"
+      android:layout_marginBottom="@dimen/spacing_12"
+      android:textColor="@color/oc_article_rich_text_color"
+      android:textSize="@dimen/oc_text_14"
       />
 
   <ImageView

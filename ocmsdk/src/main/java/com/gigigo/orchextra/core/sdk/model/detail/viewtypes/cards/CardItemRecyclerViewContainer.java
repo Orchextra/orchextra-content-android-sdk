@@ -3,29 +3,137 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards;
 import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.emoiluj.doubleviewpager.DoubleViewPager;
-import com.emoiluj.doubleviewpager.DoubleViewPagerAdapter;
-import com.emoiluj.doubleviewpager.HorizontalViewPager;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleImageAndTextElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleTextAndImageElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.dto.ArticleBlankElement;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardImageAndTextDataView;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardImageDataView;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardRichTextDataView;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardVideoView;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.PreviewContentDataView;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.ArrayList;
+import views.gigigo.com.tviewpager.CallBackAdapterItemInstanciate;
+import views.gigigo.com.tviewpager.CustomHorizontalPagerAdapter;
+import views.gigigo.com.tviewpager.CustomVerticalPagerAdapter;
+import views.gigigo.com.tviewpager.VerticalViewPager;
 
 public class CardItemRecyclerViewContainer extends LinearLayout {
 
   private final Context context;
-  private ImageLoader imageLoader;
-  private DoubleViewPager doubleViewPager;
-  private ElementCache elements;
-  private DoubleViewPagerAdapter doubleViewPagerAdapter;
 
+  private ImageLoader imageLoader;
+  private VerticalViewPager verticalViewPager;
+  private ElementCache elements;
+  private CustomVerticalPagerAdapter verticalViewPagerAdapter;
   private Handler handler = new Handler();
+  private OnChangeVerticalPageListener onChangeVerticalPageListener;
+  private ArrayList<ElementCachePreview> previewList;
+  private ArrayList<ArticleElement> elementCacheList;
+
+  private Runnable switchPageRunnable = new Runnable() {
+    @Override public void run() {
+      //int currentItem = doubleViewPager.getCurrentItem();
+
+      //currentItem++;
+
+      //if (currentItem >= doubleViewPager.getChildCount()) {
+      //  currentItem = 0;
+      //}
+
+      //doubleViewPager.setCurrentItem(currentItem, true);
+
+      //startSwitchingPageAutomatically();
+    }
+  };
+
+  private CallBackAdapterItemInstanciate myCallBack = new CallBackAdapterItemInstanciate() {
+    @Override public Object OnVerticalInstantiateItem(ViewGroup collection, int position) {
+
+      ArticleElement articleElement = elementCacheList.get(position);
+
+      if (articleElement.getClass() == ArticleImageElement.class) {
+        CardImageDataView cardImageViewHolder = new CardImageDataView(context);
+        cardImageViewHolder.setImageLoader(imageLoader);
+        cardImageViewHolder.setImageElement((ArticleImageElement) articleElement);
+        cardImageViewHolder.initialize();
+
+        return cardImageViewHolder;
+      } else if (articleElement.getClass() == ArticleRichTextElement.class) {
+        CardRichTextDataView cardRichTextViewHolder = new CardRichTextDataView(context);
+        cardRichTextViewHolder.setRichTextElement((ArticleRichTextElement) articleElement);
+        cardRichTextViewHolder.initialize();
+
+        return cardRichTextViewHolder;
+      } else if (articleElement.getClass() == ArticleVideoElement.class) {
+        CardVideoView cardVideoViewHolder = new CardVideoView(context);
+        cardVideoViewHolder.setArticleElement((ArticleVideoElement) articleElement);
+        cardVideoViewHolder.initialize();
+
+        return cardVideoViewHolder;
+      } else if (articleElement.getClass() == ArticleImageAndTextElement.class) {
+        CardImageAndTextDataView cardRichTextViewHolder = new CardImageAndTextDataView(context);
+        cardRichTextViewHolder.setDataElement((ArticleImageAndTextElement) articleElement);
+        cardRichTextViewHolder.setFirstItem(CardImageAndTextDataView.ITEM.IMAGE);
+        cardRichTextViewHolder.initialize();
+
+        return cardRichTextViewHolder;
+
+      } else if (articleElement.getClass() == ArticleTextAndImageElement.class) {
+        CardImageAndTextDataView cardRichTextViewHolder = new CardImageAndTextDataView(context);
+        cardRichTextViewHolder.setDataElement((ArticleImageAndTextElement) articleElement);
+        cardRichTextViewHolder.setFirstItem(CardImageAndTextDataView.ITEM.TEXT);
+        cardRichTextViewHolder.initialize();
+
+        return cardRichTextViewHolder;
+      }
+
+      return null;
+    }
+
+    @Override public Object OnHorizontalInstantiateItem(ViewGroup collection, int position) {
+      int index = CustomHorizontalPagerAdapter.getVirtualPosition(position, previewList.size());
+
+      ElementCachePreview elementCachePreview = previewList.get(index);
+
+      PreviewContentDataView previewCardContentData = new PreviewContentDataView(context);
+      previewCardContentData.setImageLoader(imageLoader);
+      previewCardContentData.setPreview(elementCachePreview);
+      previewCardContentData.setShare(elements.getShare());
+      previewCardContentData.initialize();
+
+      return previewCardContentData;
+    }
+  };
+  private Runnable startAutoSwipingWhenPositionIsZero = new Runnable() {
+
+    @Override public void run() {
+      //int currentItem = doubleViewPager.getCurrentItem();
+      //int currentPageSelectedWhenScrolled = doubleViewPagerAdapter.getVerticalViewPager(currentItem)
+      //    .getCurrentPageSelectedWhenScrolled();
+
+      //if (currentPageSelectedWhenScrolled == 0) {
+      //  startSwitchingPageAutomatically();
+      //}
+
+      //if (onChangeVerticalPageListener != null) {
+      // onChangeVerticalPageListener.onChangeVerticalPage(currentPageSelectedWhenScrolled);
+      //}
+    }
+  };
 
   public CardItemRecyclerViewContainer(Context context) {
     super(context);
@@ -58,7 +166,8 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
   }
 
   private void initViews(View view) {
-    doubleViewPager = (DoubleViewPager) view.findViewById(R.id.verticalViewPager);
+    verticalViewPager = (VerticalViewPager) view.findViewById(R.id.verticalViewPager);
+    //verticalViewPager.setPageTransformer(false, new VerticalPageTransformer());
   }
 
   public void setImageLoader(ImageLoader imageLoader) {
@@ -71,37 +180,37 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
       return;
     }
 
-    ArrayList<PagerAdapter> verticalPagerAdapters = generateVerticalViewPagerAdapters();
-    initViewPager(verticalPagerAdapters);
+    initViewPager();
 
     startSwitchingPageAutomatically();
   }
 
-  private ArrayList<PagerAdapter> generateVerticalViewPagerAdapters() {
-    ArrayList<PagerAdapter> verticalAdapters = new ArrayList<>();
+  private void initViewPager() {
+    verticalViewPagerAdapter =
+        new CustomVerticalPagerAdapter(getContext(), elementCacheList, previewList, myCallBack);
 
-    for (int i = 0; i < 4; i++) {
-      verticalAdapters.add(createVerticalAdapters());
-    }
-
-    return verticalAdapters;
-  }
-
-  private VerticalPagerAdapter createVerticalAdapters() {
-    return new VerticalPagerAdapter(context, imageLoader, elements);
-  }
-
-  private void initViewPager(ArrayList<PagerAdapter> verticalPagerAdapters) {
-    doubleViewPagerAdapter =
-        new DoubleViewPagerAdapter(getContext(), verticalPagerAdapters);
-
-    doubleViewPager.setAdapter(doubleViewPagerAdapter);
-    doubleViewPagerAdapter.notifyDataSetChanged();
-    doubleViewPager.setOnSwipeMoveListener(onSwipeListener);
+    verticalViewPager.setAdapter(verticalViewPagerAdapter);
+    // verticalViewPagerAdapter.notifyDataSetChanged();
+    //verticalViewPager.setOnSwipeMoveListener(onSwipeListener);
   }
 
   public void addCards(ElementCache elements) {
     this.elements = elements;
+
+    ArrayList<ElementCachePreview> previewList = new ArrayList<>();
+    for (int i = 0; i < 5; i++) {
+      previewList.add(elements.getPreview());
+    }
+
+    this.previewList = previewList;
+
+    ArrayList<ArticleElement> elementCacheList = new ArrayList<>();
+    for (ArticleElement articleElement : elements.getRender().getElements()) {
+      elementCacheList.add(articleElement);
+    }
+    elementCacheList.add(0, new ArticleBlankElement());
+
+    this.elementCacheList = elementCacheList;
   }
 
   public void startSwitchingPageAutomatically() {
@@ -112,45 +221,25 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
     handler.removeCallbacks(switchPageRunnable);
   }
 
+  //private HorizontalViewPager.OnSwipeMoveListener onSwipeListener = new HorizontalViewPager.OnSwipeMoveListener() {
+  // @Override public void onSwipe() {
+  //   stopSwitchingPageAutomatically();
+  //
+  //   handler.postDelayed(startAutoSwipingWhenPositionIsZero, 1000);
+  // }
+  //};
+
   public void restartSwitchingPageAutomatically() {
     stopSwitchingPageAutomatically();
     startSwitchingPageAutomatically();
   }
 
-  Runnable switchPageRunnable = new Runnable() {
-    @Override public void run() {
-      int currentItem = doubleViewPager.getCurrentItem();
+  public void setOnChangeVerticalPageListener(
+      OnChangeVerticalPageListener onChangeVerticalPageListener) {
+    this.onChangeVerticalPageListener = onChangeVerticalPageListener;
+  }
 
-      currentItem++;
-
-      if (currentItem >= doubleViewPager.getChildCount()) {
-        currentItem = 0;
-      }
-
-      doubleViewPager.setCurrentItem(currentItem, true);
-
-      startSwitchingPageAutomatically();
-    }
-  };
-
-  private HorizontalViewPager.OnSwipeMoveListener onSwipeListener = new HorizontalViewPager.OnSwipeMoveListener() {
-    @Override public void onSwipe() {
-      stopSwitchingPageAutomatically();
-
-      handler.postDelayed(startAutoSwipingWhenPositionIsZero, 1000);
-    }
-  };
-
-  private Runnable startAutoSwipingWhenPositionIsZero = new Runnable() {
-    @Override public void run() {
-      int currentItem = doubleViewPager.getCurrentItem();
-      int currentPageSelectedWhenScrolled =
-          doubleViewPagerAdapter.getVerticalViewPager(currentItem)
-              .getCurrentPageSelectedWhenScrolled();
-
-      if (currentPageSelectedWhenScrolled == 0) {
-        startSwitchingPageAutomatically();
-      }
-    }
-  };
+  public interface OnChangeVerticalPageListener {
+    void onChangeVerticalPage(int numPage);
+  }
 }

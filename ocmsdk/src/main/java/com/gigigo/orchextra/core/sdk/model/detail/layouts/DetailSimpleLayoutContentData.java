@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 
@@ -42,6 +43,7 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
         if (uiBaseContentData instanceof PreviewContentData) {
           setOnClickListenerButtons();
         }
+
       } else {
         if (onFinishListener != null) {
           onFinishListener.onFinish();

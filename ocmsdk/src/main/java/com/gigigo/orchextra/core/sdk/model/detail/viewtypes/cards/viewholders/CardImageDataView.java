@@ -53,14 +53,7 @@ public class CardImageDataView extends CardDataView {
 
   private void initViews(View view) {
     cardImagePlaceholder = (ImageView) view.findViewById(R.id.card_image_placeholder);
-    view.setOnClickListener(fakeClickListener);
   }
-
-  private View.OnClickListener fakeClickListener = new View.OnClickListener() {
-    @Override public void onClick(View v) {
-
-    }
-  };
 
   private void bindTo() {
     if (imageElement != null) {
@@ -72,14 +65,10 @@ public class CardImageDataView extends CardDataView {
     ImageGenerator.generateThumbImage(imageThumb, cardImagePlaceholder);
 
     int widthDevice = DeviceUtils.calculateRealWidthDevice(getContext());
-    //int heightDevice = DeviceUtils.calculateRealHeightDevice(getContext());
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, widthDevice);
 
     imageLoader.load(generatedImageUrl).into(cardImagePlaceholder);
-
-    //ViewPager.LayoutParams lp = new ViewPager.LayoutParams(widthDevice, heightDevice);
-    //cardImagePlaceholder.setLayoutParams(lp);
   }
 
   public void setImageLoader(ImageLoader imageLoader) {

@@ -18,6 +18,7 @@ public class CardContentData extends UiBaseContentData {
   private ImageLoader imageLoader;
   private CardItemRecyclerViewContainer cardRecyclerViewContainer;
   private ElementCache elements;
+  private CardItemRecyclerViewContainer.OnChangeVerticalPageListener onChangeVerticalPageListener;
 
   public static CardContentData newInstance() {
     return new CardContentData();
@@ -47,6 +48,7 @@ public class CardContentData extends UiBaseContentData {
   private void init() {
     cardRecyclerViewContainer.setImageLoader(imageLoader);
     cardRecyclerViewContainer.addCards(elements);
+    cardRecyclerViewContainer.setOnChangeVerticalPageListener(onChangeVerticalPageListener);
     cardRecyclerViewContainer.initialize();
   }
 

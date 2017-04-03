@@ -69,14 +69,7 @@ public class CardVideoView extends CardDataView {
 
   private void initViews(View view) {
     youtubeThumbnail = (YouTubeThumbnailView) view.findViewById(R.id.youtubeThumbnail);
-    view.setOnClickListener(fakeClickListener);
   }
-
-  private View.OnClickListener fakeClickListener = new View.OnClickListener() {
-    @Override public void onClick(View v) {
-
-    }
-  };
 
   private void bindTo() {
     YouTubeThumbnailView.OnInitializedListener onInitializedListener =
