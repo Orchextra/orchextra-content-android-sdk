@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards;
 import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import views.gigigo.com.tviewpager.CallBackAdapterItemInstanciate;
 import views.gigigo.com.tviewpager.CustomHorizontalPagerAdapter;
 import views.gigigo.com.tviewpager.CustomVerticalPagerAdapter;
+import views.gigigo.com.tviewpager.OnVHPageChangeListener;
 import views.gigigo.com.tviewpager.VerticalViewPager;
 
 public class CardItemRecyclerViewContainer extends LinearLayout {
@@ -38,29 +40,21 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
   private ImageLoader imageLoader;
   private VerticalViewPager verticalViewPager;
   private ElementCache elements;
-  private CustomVerticalPagerAdapter verticalViewPagerAdapter;
   private Handler handler = new Handler();
-  private OnChangeVerticalPageListener onChangeVerticalPageListener;
   private ArrayList<ElementCachePreview> previewList;
   private ArrayList<ArticleElement> elementCacheList;
+  private int verticalPosition;
+  private OnChangeVerticalPageListener onChangeVerticalPageListener;
 
   private Runnable switchPageRunnable = new Runnable() {
     @Override public void run() {
-      //int currentItem = doubleViewPager.getCurrentItem();
+      verticalViewPager.nextPage(true);
 
-      //currentItem++;
-
-      //if (currentItem >= doubleViewPager.getChildCount()) {
-      //  currentItem = 0;
-      //}
-
-      //doubleViewPager.setCurrentItem(currentItem, true);
-
-      //startSwitchingPageAutomatically();
+      startSwitchingPageAutomatically();
     }
   };
 
-  private CallBackAdapterItemInstanciate myCallBack = new CallBackAdapterItemInstanciate() {
+  private CallBackAdapterItemInstanciate onInflateCustomLayoutCallback = new CallBackAdapterItemInstanciate() {
     @Override public Object OnVerticalInstantiateItem(ViewGroup collection, int position) {
 
       ArticleElement articleElement = elementCacheList.get(position);
@@ -121,13 +115,9 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
   private Runnable startAutoSwipingWhenPositionIsZero = new Runnable() {
 
     @Override public void run() {
-      //int currentItem = doubleViewPager.getCurrentItem();
-      //int currentPageSelectedWhenScrolled = doubleViewPagerAdapter.getVerticalViewPager(currentItem)
-      //    .getCurrentPageSelectedWhenScrolled();
-
-      //if (currentPageSelectedWhenScrolled == 0) {
-      //  startSwitchingPageAutomatically();
-      //}
+      if (verticalPosition == 0) {
+        startSwitchingPageAutomatically();
+      }
 
       //if (onChangeVerticalPageListener != null) {
       // onChangeVerticalPageListener.onChangeVerticalPage(currentPageSelectedWhenScrolled);
@@ -167,7 +157,6 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
 
   private void initViews(View view) {
     verticalViewPager = (VerticalViewPager) view.findViewById(R.id.verticalViewPager);
-    //verticalViewPager.setPageTransformer(false, new VerticalPageTransformer());
   }
 
   public void setImageLoader(ImageLoader imageLoader) {
@@ -186,12 +175,11 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
   }
 
   private void initViewPager() {
-    verticalViewPagerAdapter =
-        new CustomVerticalPagerAdapter(getContext(), elementCacheList, previewList, myCallBack);
+    CustomVerticalPagerAdapter verticalViewPagerAdapter =
+        new CustomVerticalPagerAdapter(getContext(), elementCacheList, previewList,
+            onInflateCustomLayoutCallback, onChangePageListener);
 
     verticalViewPager.setAdapter(verticalViewPagerAdapter);
-    // verticalViewPagerAdapter.notifyDataSetChanged();
-    //verticalViewPager.setOnSwipeMoveListener(onSwipeListener);
   }
 
   public void addCards(ElementCache elements) {
@@ -221,17 +209,10 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
     handler.removeCallbacks(switchPageRunnable);
   }
 
-  //private HorizontalViewPager.OnSwipeMoveListener onSwipeListener = new HorizontalViewPager.OnSwipeMoveListener() {
-  // @Override public void onSwipe() {
-  //   stopSwitchingPageAutomatically();
-  //
-  //   handler.postDelayed(startAutoSwipingWhenPositionIsZero, 1000);
-  // }
-  //};
+  public void onSwipePage() {
+     stopSwitchingPageAutomatically();
 
-  public void restartSwitchingPageAutomatically() {
-    stopSwitchingPageAutomatically();
-    startSwitchingPageAutomatically();
+     handler.postDelayed(startAutoSwipingWhenPositionIsZero, 1000);
   }
 
   public void setOnChangeVerticalPageListener(
@@ -242,4 +223,15 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
   public interface OnChangeVerticalPageListener {
     void onChangeVerticalPage(int numPage);
   }
+
+  private OnVHPageChangeListener onChangePageListener = new OnVHPageChangeListener() {
+    @Override public void onChangeHorizontalPage(int position) {
+      onSwipePage();
+    }
+
+    @Override public void onChangeVerticalPage(int position) {
+      verticalPosition = position;
+      onSwipePage();
+    }
+  };
 }
