@@ -9,7 +9,11 @@
       android:id="@+id/card_rich_text"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_margin="@dimen/oc_spacing_16"
+
+      android:layout_marginLeft="@dimen/oc_spacing_16"
+      android:layout_marginRight="@dimen/oc_spacing_16"
+      android:layout_marginTop="@dimen/spacing_92"
+      android:layout_marginBottom="@dimen/spacing_16"
       android:gravity="start"
       android:textColor="@color/oc_article_rich_text_color"
       android:textSize="@dimen/text_14"
