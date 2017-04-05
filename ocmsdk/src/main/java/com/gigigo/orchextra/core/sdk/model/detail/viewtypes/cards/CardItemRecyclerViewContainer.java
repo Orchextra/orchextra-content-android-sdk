@@ -3,7 +3,6 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards;
 import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,64 +53,64 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
     }
   };
 
-  private CallBackAdapterItemInstanciate onInflateCustomLayoutCallback = new CallBackAdapterItemInstanciate() {
-    @Override public Object OnVerticalInstantiateItem(ViewGroup collection, int position) {
+  private CallBackAdapterItemInstanciate onInflateCustomLayoutCallback =
+      new CallBackAdapterItemInstanciate() {
+        @Override public Object OnVerticalInstantiateItem(ViewGroup collection, int position) {
 
-      ArticleElement articleElement = elementCacheList.get(position);
+          ArticleElement articleElement = elementCacheList.get(position);
 
-      if (articleElement.getClass() == ArticleImageElement.class) {
-        CardImageDataView cardImageViewHolder = new CardImageDataView(context);
-        cardImageViewHolder.setImageLoader(imageLoader);
-        cardImageViewHolder.setImageElement((ArticleImageElement) articleElement);
-        cardImageViewHolder.initialize();
+          if (articleElement.getClass() == ArticleImageElement.class) {
+            CardImageDataView cardImageViewHolder = new CardImageDataView(context);
+            cardImageViewHolder.setImageLoader(imageLoader);
+            cardImageViewHolder.setImageElement((ArticleImageElement) articleElement);
+            cardImageViewHolder.initialize();
 
-        return cardImageViewHolder;
-      } else if (articleElement.getClass() == ArticleRichTextElement.class) {
-        CardRichTextDataView cardRichTextViewHolder = new CardRichTextDataView(context);
-        cardRichTextViewHolder.setRichTextElement((ArticleRichTextElement) articleElement);
-        cardRichTextViewHolder.initialize();
+            return cardImageViewHolder;
+          } else if (articleElement.getClass() == ArticleRichTextElement.class) {
+            CardRichTextDataView cardRichTextViewHolder = new CardRichTextDataView(context);
+            cardRichTextViewHolder.setRichTextElement((ArticleRichTextElement) articleElement);
+            cardRichTextViewHolder.initialize();
 
-        return cardRichTextViewHolder;
-      } else if (articleElement.getClass() == ArticleVideoElement.class) {
-        CardVideoView cardVideoViewHolder = new CardVideoView(context);
-        cardVideoViewHolder.setArticleElement((ArticleVideoElement) articleElement);
-        cardVideoViewHolder.initialize();
+            return cardRichTextViewHolder;
+          } else if (articleElement.getClass() == ArticleVideoElement.class) {
+            CardVideoView cardVideoViewHolder = new CardVideoView(context);
+            cardVideoViewHolder.setArticleElement((ArticleVideoElement) articleElement);
+            cardVideoViewHolder.initialize();
 
-        return cardVideoViewHolder;
-      } else if (articleElement.getClass() == ArticleImageAndTextElement.class) {
-        CardImageAndTextDataView cardRichTextViewHolder = new CardImageAndTextDataView(context);
-        cardRichTextViewHolder.setDataElement((ArticleImageAndTextElement) articleElement);
-        cardRichTextViewHolder.setFirstItem(CardImageAndTextDataView.ITEM.IMAGE);
-        cardRichTextViewHolder.initialize();
+            return cardVideoViewHolder;
+          } else if (articleElement.getClass() == ArticleImageAndTextElement.class) {
+            CardImageAndTextDataView cardRichTextViewHolder = new CardImageAndTextDataView(context);
+            cardRichTextViewHolder.setDataElement((ArticleImageAndTextElement) articleElement);
+            cardRichTextViewHolder.setFirstItem(CardImageAndTextDataView.ITEM.IMAGE);
+            cardRichTextViewHolder.initialize();
 
-        return cardRichTextViewHolder;
+            return cardRichTextViewHolder;
+          } else if (articleElement.getClass() == ArticleTextAndImageElement.class) {
+            CardImageAndTextDataView cardRichTextViewHolder = new CardImageAndTextDataView(context);
+            cardRichTextViewHolder.setDataElement((ArticleImageAndTextElement) articleElement);
+            cardRichTextViewHolder.setFirstItem(CardImageAndTextDataView.ITEM.TEXT);
+            cardRichTextViewHolder.initialize();
 
-      } else if (articleElement.getClass() == ArticleTextAndImageElement.class) {
-        CardImageAndTextDataView cardRichTextViewHolder = new CardImageAndTextDataView(context);
-        cardRichTextViewHolder.setDataElement((ArticleImageAndTextElement) articleElement);
-        cardRichTextViewHolder.setFirstItem(CardImageAndTextDataView.ITEM.TEXT);
-        cardRichTextViewHolder.initialize();
+            return cardRichTextViewHolder;
+          }
 
-        return cardRichTextViewHolder;
-      }
+          return null;
+        }
 
-      return null;
-    }
+        @Override public Object OnHorizontalInstantiateItem(ViewGroup collection, int position) {
+          int index = CustomHorizontalPagerAdapter.getVirtualPosition(position, previewList.size());
 
-    @Override public Object OnHorizontalInstantiateItem(ViewGroup collection, int position) {
-      int index = CustomHorizontalPagerAdapter.getVirtualPosition(position, previewList.size());
+          ElementCachePreview elementCachePreview = previewList.get(index);
 
-      ElementCachePreview elementCachePreview = previewList.get(index);
+          PreviewContentDataView previewCardContentData = new PreviewContentDataView(context);
+          previewCardContentData.setImageLoader(imageLoader);
+          previewCardContentData.setPreview(elementCachePreview);
+          previewCardContentData.setShare(elements.getShare());
+          previewCardContentData.initialize();
 
-      PreviewContentDataView previewCardContentData = new PreviewContentDataView(context);
-      previewCardContentData.setImageLoader(imageLoader);
-      previewCardContentData.setPreview(elementCachePreview);
-      previewCardContentData.setShare(elements.getShare());
-      previewCardContentData.initialize();
-
-      return previewCardContentData;
-    }
-  };
+          return previewCardContentData;
+        }
+      };
   private Runnable startAutoSwipingWhenPositionIsZero = new Runnable() {
 
     @Override public void run() {
@@ -122,6 +121,16 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
       //if (onChangeVerticalPageListener != null) {
       // onChangeVerticalPageListener.onChangeVerticalPage(currentPageSelectedWhenScrolled);
       //}
+    }
+  };
+  private OnVHPageChangeListener onChangePageListener = new OnVHPageChangeListener() {
+    @Override public void onChangeHorizontalPage(int position) {
+      onSwipePage();
+    }
+
+    @Override public void onChangeVerticalPage(int position) {
+      verticalPosition = position;
+      onSwipePage();
     }
   };
 
@@ -210,9 +219,9 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
   }
 
   public void onSwipePage() {
-     stopSwitchingPageAutomatically();
+    stopSwitchingPageAutomatically();
 
-     handler.postDelayed(startAutoSwipingWhenPositionIsZero, 1000);
+    handler.postDelayed(startAutoSwipingWhenPositionIsZero, 1000);
   }
 
   public void setOnChangeVerticalPageListener(
@@ -223,15 +232,4 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
   public interface OnChangeVerticalPageListener {
     void onChangeVerticalPage(int numPage);
   }
-
-  private OnVHPageChangeListener onChangePageListener = new OnVHPageChangeListener() {
-    @Override public void onChangeHorizontalPage(int position) {
-      onSwipePage();
-    }
-
-    @Override public void onChangeVerticalPage(int position) {
-      verticalPosition = position;
-      onSwipePage();
-    }
-  };
 }
