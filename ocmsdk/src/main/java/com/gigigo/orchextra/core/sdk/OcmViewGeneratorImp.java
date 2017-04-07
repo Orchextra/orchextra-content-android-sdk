@@ -1,26 +1,23 @@
 package com.gigigo.orchextra.core.sdk;
 
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
+import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
-import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
-import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
-import com.gigigo.orchextra.core.domain.OnRetrieveMenuListener;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleElement;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
-import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
-import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.ArticleContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailLayoutContentData;
@@ -41,44 +38,6 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   private final Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvider;
   private final ImageLoader imageLoader;
 
-  private OnRetrieveUiMenuListener onRetrieveUiMenuListener;
-
-  OnRetrieveMenuListener onRetrieveMenuListener = new OnRetrieveMenuListener() {
-    @Override public void onResult(MenuContentData menuContentData) {
-      List<UiMenu> menuList = new ArrayList<>();
-
-      if (menuContentData != null
-          && menuContentData.getMenuContentList() != null
-          && menuContentData.getMenuContentList().size() > 0) {
-        for (Element element : menuContentData.getMenuContentList().get(0).getElements()) {
-          UiMenu uiMenu = new UiMenu();
-
-          uiMenu.setSlug(element.getSlug());
-          uiMenu.setText(element.getSectionView().getText());
-          uiMenu.setElementUrl(element.getElementUrl());
-
-          menuList.add(uiMenu);
-        }
-      }
-
-      if (onRetrieveUiMenuListener != null) {
-        onRetrieveUiMenuListener.onResult(menuList);
-      }
-    }
-
-    @Override public void onNoNetworkConnectionError() {
-      if (onRetrieveUiMenuListener != null) {
-        onRetrieveUiMenuListener.onNoNetworkConnectionError();
-      }
-    }
-
-    @Override public void onResponseDataError() {
-      if (onRetrieveUiMenuListener != null) {
-        onRetrieveUiMenuListener.onResponseDataError();
-      }
-    }
-  };
-
   public OcmViewGeneratorImp(OcmController ocmController,
       Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvider,
       ImageLoader imageLoader) {
@@ -87,9 +46,27 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     this.imageLoader = imageLoader;
   }
 
-  public void getMenu(OnRetrieveUiMenuListener onRetrieveUiMenuListener) {
-    this.onRetrieveUiMenuListener = onRetrieveUiMenuListener;
-    ocmController.getMenu(false, onRetrieveMenuListener);
+  @Override
+  public List<UiMenu> getMenu() {
+    MenuContentData menuContentData = ocmController.getMenu(false);
+
+    List<UiMenu> menuList = new ArrayList<>();
+
+    if (menuContentData != null
+        && menuContentData.getMenuContentList() != null
+        && menuContentData.getMenuContentList().size() > 0) {
+      for (Element element : menuContentData.getMenuContentList().get(0).getElements()) {
+        UiMenu uiMenu = new UiMenu();
+
+        uiMenu.setSlug(element.getSlug());
+        uiMenu.setText(element.getSectionView().getText());
+        uiMenu.setElementUrl(element.getElementUrl());
+
+        menuList.add(uiMenu);
+      }
+    }
+
+    return menuList;
   }
 
   @Override public UiGridBaseContentData generateGridView(String viewId, String filter) {

@@ -1,18 +1,19 @@
 package com.gigigo.orchextra.core.controller;
 
+import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
-import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
+import java.util.List;
 
 public interface OcmViewGenerator {
 
-  void getMenu(OnRetrieveUiMenuListener onRetrieveUiMenuListener);
+  List<UiMenu> getMenu();
 
   UiGridBaseContentData generateGridView(String viewId, String filter);
 
