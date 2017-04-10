@@ -8,7 +8,6 @@ import com.gigigo.orchextra.core.domain.data.MenuNetworkDataSource;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.interactors.errors.GenericResponseDataError;
 import com.gigigo.orchextra.core.domain.interactors.errors.NoNetworkConnectionError;
-import com.gigigo.orchextra.core.domain.services.MenuDatabaseDomainService;
 import com.gigigo.orchextra.core.domain.services.MenuNetworkDomainService;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import org.junit.Before;
@@ -33,8 +32,7 @@ public class RetrieveSectionUiMenuInteractorTest {
 
   @Before public void setUp() throws Exception {
     MenuNetworkDomainService menuNetworkDomainService = new MenuNetworkDomainService(connectionUtils, menuNetworkDataSource);
-    MenuDatabaseDomainService menuDatabaseDomainService = new MenuDatabaseDomainService(dataBaseDataSource);
-    interactor = new GetMenuDataInteractor(menuDatabaseDomainService, menuNetworkDomainService);
+    interactor = new GetMenuDataInteractor(dataBaseDataSource, menuNetworkDomainService);
   }
 
   @Test public void shouldReturnNoNetworkConnectionErrorWhenDeviceNoHasInternetConnection()

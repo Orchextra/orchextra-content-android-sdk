@@ -50,9 +50,15 @@ public class MainActivity extends AppCompatActivity {
   private void startCredentials() {
     Ocm.startWithCredentials(App.API_KEY, App.API_SECRET, new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
-        if (uiMenu == null || uiMenu.size() == 0) {
-          getContent();
-        }
+        //TODO Fix in Orchextra
+        runOnUiThread(new Runnable() {
+          @Override public void run() {
+            if (uiMenu == null || uiMenu.size() == 0) {
+              getContent();
+            }
+          }
+        });
+
       }
     });
 
@@ -69,10 +75,10 @@ public class MainActivity extends AppCompatActivity {
 
     if (uiMenu == null) {
       Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
+    } else {
+      onGoDetailView(uiMenu);
+      selectFirstTab();
     }
-
-    onGoDetailView(uiMenu);
-    selectFirstTab();
   }
 
   private void onGoDetailView(List<UiMenu> uiMenu) {

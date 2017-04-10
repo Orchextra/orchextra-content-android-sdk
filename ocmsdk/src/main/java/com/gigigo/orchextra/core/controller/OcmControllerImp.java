@@ -1,43 +1,28 @@
 package com.gigigo.orchextra.core.controller;
 
-import com.gigigo.interactorexecutor.base.invoker.InteractorExecution;
-import com.gigigo.interactorexecutor.base.invoker.InteractorInvoker;
-import com.gigigo.interactorexecutor.base.invoker.InteractorResult;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
-import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
-import com.gigigo.orchextra.core.domain.interactors.elements.GetElementByIdInteractor;
-import com.gigigo.orchextra.core.domain.interactors.errors.GenericResponseDataError;
-import com.gigigo.orchextra.core.domain.interactors.errors.NoNetworkConnectionError;
+import com.gigigo.orchextra.core.domain.invocators.DetailContentElementInteractorInvocator;
+import com.gigigo.orchextra.core.domain.invocators.GridElementsInteractorInvocator;
 import com.gigigo.orchextra.core.domain.invocators.MenuInteractorInvocator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 public class OcmControllerImp implements OcmController {
 
-  private final InteractorInvoker interactorInvoker;
-  private final GetElementByIdInteractor getElementByIdInteractor;
   private final MenuInteractorInvocator menuInteractorInvocator;
+  private final GridElementsInteractorInvocator gridElementsInteractorInvocator;
+  private final DetailContentElementInteractorInvocator detailContentElementInteractorInvocator;
 
-  private Map<String, ContentItem> contentDataList;
-  private Map<String, ElementCache> elementCacheDataList;
+  public OcmControllerImp(MenuInteractorInvocator interactorInvocation,
+      GridElementsInteractorInvocator gridElementsInteractorInvocator, DetailContentElementInteractorInvocator detailContentElementInteractorInvocator) {
 
-  public OcmControllerImp(InteractorInvoker interactorInvoker,
-      GetElementByIdInteractor getElementByIdInteractor,
-      MenuInteractorInvocator interactorInvocation) {
-
-    this.interactorInvoker = interactorInvoker;
-    this.getElementByIdInteractor = getElementByIdInteractor;
     this.menuInteractorInvocator = interactorInvocation;
-
-    contentDataList = new HashMap<>();
-    elementCacheDataList = new HashMap<>();
-
-    //menuInteractorInvocator.attachView(this);
+    this.gridElementsInteractorInvocator = gridElementsInteractorInvocator;
+    this.detailContentElementInteractorInvocator = detailContentElementInteractorInvocator;
   }
 
   @Override public MenuContentData getMenu(boolean useCache) {
@@ -60,69 +45,36 @@ public class OcmControllerImp implements OcmController {
   }
 
   @Override public ContentItem getSectionContentById(String section) {
-    if (contentDataList != null && contentDataList.containsKey(section)) {
-      return contentDataList.get(section);
-    } else {
-      return null;
-    }
+    return detailContentElementInteractorInvocator.getDetailSectionContentBySection(section);
   }
 
   @Override public void saveSectionContentData(String section, ContentData contentData) {
-    contentDataList.put(section, contentData.getContent());
+    detailContentElementInteractorInvocator.saveDetailSectionContentBySection(section, contentData.getContent());
 
     Map<String, ElementCache> elementsCache = contentData.getElementsCache();
     if (elementsCache != null) {
       for (String key : elementsCache.keySet()) {
-        elementCacheDataList.put(key, elementsCache.get(key));
+        gridElementsInteractorInvocator.saveElementById(key, elementsCache.get(key));
       }
     }
   }
 
   @Override public void clearCache() {
     menuInteractorInvocator.clear();
-    contentDataList = new HashMap<>();
-    elementCacheDataList = new HashMap<>();
+    detailContentElementInteractorInvocator.clear();
+    gridElementsInteractorInvocator.clear();
   }
 
   @Override public ElementCache getCachedElement(final String elementUrl) {
     try {
-      final ElementCache[] elementCache = { elementCacheDataList.get(elementUrl) };
+      ElementCache elementCache = gridElementsInteractorInvocator.getElementById(elementUrl);
 
-      if (elementCache[0] == null) {
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-
+      if (elementCache == null) {
         String slug = getSlug(elementUrl);
-
-        getElementByIdInteractor.setElementId(slug);
-
-        new InteractorExecution<>(getElementByIdInteractor).result(
-            new InteractorResult<ElementData>() {
-              @Override public void onResult(ElementData result) {
-                elementCacheDataList.put(elementUrl, result.getElement());
-                elementCache[0] = result.getElement();
-                countDownLatch.countDown();
-              }
-            })
-            .error(NoNetworkConnectionError.class,
-                new InteractorResult<NoNetworkConnectionError>() {
-                  @Override public void onResult(NoNetworkConnectionError interactorError) {
-                    elementCache[0] = null;
-                    countDownLatch.countDown();
-                  }
-                })
-            .error(GenericResponseDataError.class,
-                new InteractorResult<GenericResponseDataError>() {
-                  @Override public void onResult(GenericResponseDataError interactorError) {
-                    elementCache[0] = null;
-                    countDownLatch.countDown();
-                  }
-                })
-            .execute(interactorInvoker);
-
-        countDownLatch.await();
+        elementCache = gridElementsInteractorInvocator.getElementById(slug);
       }
 
-      return elementCache[0];
+      return elementCache;
     } catch (Exception e) {
       return null;
     }

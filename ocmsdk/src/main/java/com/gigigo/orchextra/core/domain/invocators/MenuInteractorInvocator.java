@@ -2,77 +2,67 @@ package com.gigigo.orchextra.core.domain.invocators;
 
 import com.gigigo.interactorexecutor.base.invoker.InteractorExecution;
 import com.gigigo.interactorexecutor.base.invoker.InteractorInvoker;
-import com.gigigo.interactorexecutor.interactors.InteractorResponse;
-import com.gigigo.orchextra.core.domain.OnRetrieveMenuListener;
+import com.gigigo.interactorexecutor.base.invoker.InteractorResult;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
+import com.gigigo.orchextra.core.domain.interactors.errors.GenericResponseDataError;
 import com.gigigo.orchextra.core.domain.interactors.home.ClearMenuDataInteractor;
 import com.gigigo.orchextra.core.domain.interactors.home.GetMenuDataInteractor;
-import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
-import com.gigigo.threaddecoratedview.views.ThreadSpec;
 import java.util.concurrent.CountDownLatch;
 
 public class MenuInteractorInvocator {
 
   private final InteractorInvoker interactorInvoker;
   private final GetMenuDataInteractor getMenuDataInteractor;
-  private final ThreadSpec threadSpec;
   private final ClearMenuDataInteractor clearMenuDataInteractor;
-  private final OcmContextProvider contextProvider;
 
-  private OnRetrieveMenuListener onRetrieveMenuListener;
+  private MenuContentData result;
 
-  final CountDownLatch countDownLatch = new CountDownLatch(1);
-  private final MenuContentData[] result = new MenuContentData[1];
-
-  public MenuInteractorInvocator(OcmContextProvider contextProvider, ThreadSpec threadSpec, InteractorInvoker interactorInvoker,
+  public MenuInteractorInvocator(InteractorInvoker interactorInvoker,
       GetMenuDataInteractor getMenuDataInteractor,
       ClearMenuDataInteractor clearMenuDataInteractor) {
 
-    this.threadSpec = threadSpec;
-    this.contextProvider = contextProvider;
     this.interactorInvoker = interactorInvoker;
     this.getMenuDataInteractor = getMenuDataInteractor;
     this.clearMenuDataInteractor = clearMenuDataInteractor;
   }
 
   public MenuContentData getMenu(boolean useCache) {
+    result = null;
 
-    try {
+    getMenuInBackground(useCache);
 
-      getMenu1(useCache);
-
-      countDownLatch.await();
-
-      return result[0];
-    } catch (Exception e) {
-      return null;
-    }
+    return result;
   }
 
-  private void getMenu1(boolean useCache) {
-    getMenuDataInteractor.setUseCache(useCache);
+  private void getMenuInBackground(boolean useCache) {
+    try {
 
-    new Thread(new Runnable() {
-      @Override public void run() {
-        try {
-          InteractorResponse<MenuContentData> call = getMenuDataInteractor.call();
-          final MenuContentData menuContentData = call.getResult();
+      final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-          result[0] = menuContentData;
-          countDownLatch.countDown();
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    }).start();
+      getMenuDataInteractor.setUseCache(useCache);
+
+      new InteractorExecution<>(getMenuDataInteractor).result(
+          new InteractorResult<MenuContentData>() {
+            @Override public void onResult(MenuContentData menuContentData) {
+              result = menuContentData;
+              countDownLatch.countDown();
+            }
+          })
+          .error(GenericResponseDataError.class, new InteractorResult<GenericResponseDataError>() {
+            @Override public void onResult(GenericResponseDataError error) {
+              result = null;
+              countDownLatch.countDown();
+            }
+          })
+          .execute(interactorInvoker);
+
+      countDownLatch.await();
+    } catch (Exception e) {
+      result = null;
+    }
   }
 
   public void clear() {
     new InteractorExecution<>(clearMenuDataInteractor).execute(interactorInvoker);
   }
-
-
-
-
-
 }

@@ -3,33 +3,44 @@ package com.gigigo.orchextra.core.domain.interactors.elements;
 import com.gigigo.interactorexecutor.interactors.Interactor;
 import com.gigigo.interactorexecutor.interactors.InteractorResponse;
 import com.gigigo.interactorexecutor.responses.BusinessObject;
+import com.gigigo.orchextra.core.domain.data.DataBaseDataSource;
 import com.gigigo.orchextra.core.domain.data.ElementNetworkDataSource;
-
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.interactors.errors.GenericResponseDataError;
 import com.gigigo.orchextra.core.domain.interactors.errors.NoNetworkConnectionError;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 
-public class GetElementByIdInteractor implements Interactor<InteractorResponse<ElementData>> {
+public class GetElementByIdInteractor implements Interactor<InteractorResponse<ElementCache>> {
 
   private final ConnectionUtils connectionUtils;
   private final ElementNetworkDataSource elementNetworkDataSource;
+  private final DataBaseDataSource dataBaseDataSource;
 
   private String elementId;
 
   public GetElementByIdInteractor(ConnectionUtils connectionUtils,
-      ElementNetworkDataSource elementNetworkDataSource) {
+      ElementNetworkDataSource elementNetworkDataSource, DataBaseDataSource dataBaseDataSource) {
     this.connectionUtils = connectionUtils;
     this.elementNetworkDataSource = elementNetworkDataSource;
+    this.dataBaseDataSource = dataBaseDataSource;
   }
 
-  @Override public InteractorResponse<ElementData> call() throws Exception {
+  @Override public InteractorResponse<ElementCache> call() throws Exception {
+    ElementCache elementCache = dataBaseDataSource.retrieveElementById(elementId);
+
+    if (elementCache != null) {
+      return new InteractorResponse<>(elementCache);
+    }
+
     if (connectionUtils.hasConnection()) {
 
       BusinessObject<ElementData> boElement = elementNetworkDataSource.getElementById(elementId);
 
-      if (boElement.isSuccess()) {
-        return new InteractorResponse<>(boElement.getData());
+      ElementData data = boElement.getData();
+      if (boElement.isSuccess() && data != null) {
+        dataBaseDataSource.saveElementWithId(elementId, data.getElement());
+        return new InteractorResponse<>(data.getElement());
       } else {
         return new InteractorResponse<>(new GenericResponseDataError(boElement.getBusinessError()));
       }
