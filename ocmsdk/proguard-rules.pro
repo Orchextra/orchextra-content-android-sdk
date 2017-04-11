@@ -30,7 +30,7 @@
 -keepclasseswithmembernames,includedescriptorclasses class * {native <methods>;}
 
 # Application classes that will be serialized/deserialized over Gson
--keep class com.gigigo.orchextra.core.data.dto.** { *; }
+-keep class com.gigigo.orchextra.core.data.api.dto.** { *; }
 
 #Youtube Android Api
 -keep class com.google.android.youtube.player.**

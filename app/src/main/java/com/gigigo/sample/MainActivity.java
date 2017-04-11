@@ -10,8 +10,6 @@ import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
-import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
-import com.gigigo.orchextra.ocm.dto.BottomPadding;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import java.util.List;
@@ -22,7 +20,20 @@ public class MainActivity extends AppCompatActivity {
   private View progressbar;
 
   private List<UiMenu> uiMenu;
+  private TabLayout.OnTabSelectedListener onTabSelectedListener =
+      new TabLayout.OnTabSelectedListener() {
+        @Override public void onTabSelected(TabLayout.Tab tab) {
+          loadFragment(tab);
+        }
 
+        @Override public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override public void onTabReselected(TabLayout.Tab tab) {
+          loadFragment(tab);
+        }
+      };
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -39,9 +50,15 @@ public class MainActivity extends AppCompatActivity {
   private void startCredentials() {
     Ocm.startWithCredentials(App.API_KEY, App.API_SECRET, new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
-        if (uiMenu == null || uiMenu.size() == 0) {
-          getContent(accessToken);
-        }
+        //TODO Fix in Orchextra
+        runOnUiThread(new Runnable() {
+          @Override public void run() {
+            if (uiMenu == null || uiMenu.size() == 0) {
+              getContent();
+            }
+          }
+        });
+
       }
     });
 
@@ -53,38 +70,18 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  private void getContent(String accessToken) {
-    Ocm.getMenus(new OnRetrieveUiMenuListener() {
-      @Override public void onResult(final List<UiMenu> uiMenu) {
-        runOnUiThread(new Runnable() {
-          @Override public void run() {
-            onGoDetailView(uiMenu);
-            selectFirstTab();
-          }
-        });
-      }
+  private void getContent() {
+    uiMenu = Ocm.getMenus();
 
-      @Override public void onNoNetworkConnectionError() {
-        runOnUiThread(new Runnable() {
-          @Override public void run() {
-            Toast.makeText(MainActivity.this, "onNoNetworkConnectionError", Toast.LENGTH_SHORT)
-                .show();
-          }
-        });
-      }
-
-      @Override public void onResponseDataError() {
-        runOnUiThread(new Runnable() {
-          @Override public void run() {
-            Toast.makeText(MainActivity.this, "onResponseDataError", Toast.LENGTH_SHORT).show();
-          }
-        });
-      }
-    });
+    if (uiMenu == null) {
+      Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
+    } else {
+      onGoDetailView(uiMenu);
+      selectFirstTab();
+    }
   }
 
   private void onGoDetailView(List<UiMenu> uiMenu) {
-    this.uiMenu = uiMenu;
     if (uiMenu.size() > 0) {
       for (int i = 0; i < uiMenu.size(); i++) {
         UiMenu menu = uiMenu.get(i);
@@ -95,21 +92,6 @@ public class MainActivity extends AppCompatActivity {
 
     tabLayout.addOnTabSelectedListener(onTabSelectedListener);
   }
-
-  private TabLayout.OnTabSelectedListener onTabSelectedListener =
-      new TabLayout.OnTabSelectedListener() {
-        @Override public void onTabSelected(TabLayout.Tab tab) {
-          loadFragment(tab);
-        }
-
-        @Override public void onTabUnselected(TabLayout.Tab tab) {
-
-        }
-
-        @Override public void onTabReselected(TabLayout.Tab tab) {
-          loadFragment(tab);
-        }
-      };
 
   private void loadFragment(TabLayout.Tab tab) {
     UiGridBaseContentData uiGridBaseContentData =

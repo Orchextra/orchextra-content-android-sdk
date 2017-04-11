@@ -7,7 +7,7 @@ import com.gigigo.interactorexecutor.invoker.InteractorPriorityBlockingQueue;
 import com.gigigo.interactorexecutor.invoker.LogExceptionHandler;
 import com.gigigo.interactorexecutor.invoker.PriorizableThreadPoolExecutor;
 import com.gigigo.orchextra.BuildConfig;
-import com.gigigo.orchextra.core.data.utils.ConnectionUtilsImp;
+import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import java.util.concurrent.BlockingQueue;

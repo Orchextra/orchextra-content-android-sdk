@@ -2,13 +2,13 @@ package com.gigigo.orchextra.ocm;
 
 import android.app.Application;
 import com.gigigo.orchextra.CrmUser;
-import com.gigigo.orchextra.CustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
-import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
+import java.util.List;
 import java.util.Map;
 
 public final class Ocm {
@@ -49,8 +49,8 @@ public final class Ocm {
   /**
    * Get the app menus
    */
-  public static void getMenus(OnRetrieveUiMenuListener onRetrieveUiMenuListener) {
-    OCManager.getMenus(onRetrieveUiMenuListener);
+  public static List<UiMenu> getMenus() {
+    return OCManager.getMenus();
   }
 
   /**

@@ -26,7 +26,7 @@ import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
-import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
@@ -82,10 +82,11 @@ public final class OCManager {
     }
   }
 
-  static void getMenus(OnRetrieveUiMenuListener onRetrieveUiMenuListener) {
+  static List<UiMenu> getMenus() {
     if (instance != null) {
-      instance.ocmViewGenerator.getMenu(onRetrieveUiMenuListener);
+      return instance.ocmViewGenerator.getMenu();
     }
+    return null;
   }
 
   static UiGridBaseContentData generateGridView(String viewId, String filter) {

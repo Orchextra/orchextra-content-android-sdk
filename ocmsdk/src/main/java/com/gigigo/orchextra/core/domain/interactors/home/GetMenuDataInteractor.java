@@ -3,38 +3,47 @@ package com.gigigo.orchextra.core.domain.interactors.home;
 import com.gigigo.interactorexecutor.interactors.Interactor;
 import com.gigigo.interactorexecutor.interactors.InteractorResponse;
 import com.gigigo.interactorexecutor.responses.BusinessObject;
-import com.gigigo.orchextra.core.domain.data.MenuNetworkDataSource;
+import com.gigigo.orchextra.core.domain.data.DataBaseDataSource;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.interactors.errors.GenericResponseDataError;
-import com.gigigo.orchextra.core.domain.interactors.errors.NoNetworkConnectionError;
-import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
+import com.gigigo.orchextra.core.domain.services.MenuNetworkDomainService;
 
-/**
- * Created by rui.alonso on 20/9/16.
- */
 public class GetMenuDataInteractor implements Interactor<InteractorResponse<MenuContentData>> {
 
-  private final ConnectionUtils connectionUtils;
-  private final MenuNetworkDataSource menuNetworkDataSource;
+  private final MenuNetworkDomainService menuNetworkDomainService;
+  private final DataBaseDataSource menuDataBaseDataSource;
+  private boolean useCache = true;
 
-  public GetMenuDataInteractor(ConnectionUtils connectionUtils,
-      MenuNetworkDataSource menuNetworkDataSource) {
-    this.connectionUtils = connectionUtils;
-    this.menuNetworkDataSource = menuNetworkDataSource;
+  public GetMenuDataInteractor(DataBaseDataSource menuDataBaseDataSource,
+      MenuNetworkDomainService menuNetworkDomainService) {
+    this.menuDataBaseDataSource = menuDataBaseDataSource;
+    this.menuNetworkDomainService = menuNetworkDomainService;
   }
 
   @Override public InteractorResponse<MenuContentData> call() throws Exception {
-    if (connectionUtils.hasConnection()) {
-      BusinessObject<MenuContentData> boHomeData = menuNetworkDataSource.getMenuContentData();
 
-      if (boHomeData.isSuccess()) {
-        return new InteractorResponse<>(boHomeData.getData());
-      } else {
-        return new InteractorResponse<>(
-            new GenericResponseDataError(boHomeData.getBusinessError()));
+    if (useCache) {
+      BusinessObject<MenuContentData> boMenuContentFromDatabase =
+          menuDataBaseDataSource.retrieveMenu();
+
+      if (boMenuContentFromDatabase.isSuccess() && boMenuContentFromDatabase.getData() != null) {
+        return new InteractorResponse<>(boMenuContentFromDatabase.getData());
       }
-    } else {
-      return new InteractorResponse(new NoNetworkConnectionError());
     }
+
+    BusinessObject<MenuContentData> boMenuContentFromNetwork =
+        menuNetworkDomainService.retrieveMenuDataFromNetwork();
+
+    if (boMenuContentFromNetwork.isSuccess() && boMenuContentFromNetwork.getData() != null) {
+      menuDataBaseDataSource.saveMenu(boMenuContentFromNetwork.getData());
+      return new InteractorResponse<>(boMenuContentFromNetwork.getData());
+    } else {
+      return new InteractorResponse<>(
+          new GenericResponseDataError(boMenuContentFromNetwork.getBusinessError()));
+    }
+  }
+
+  public void setUseCache(boolean useCache) {
+    this.useCache = useCache;
   }
 }

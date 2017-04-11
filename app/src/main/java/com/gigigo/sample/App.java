@@ -7,12 +7,8 @@ import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
-import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
-import com.gigigo.orchextra.ocm.callbacks.OnRetrieveUiMenuListener;
-import com.gigigo.orchextra.ocm.dto.UiMenu;
-import java.util.List;
 
 public class App extends Application {
 

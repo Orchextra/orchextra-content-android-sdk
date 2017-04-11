@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.domain.outputs;
 
 import android.os.Handler;
+import android.util.Log;
 import com.gigigo.threaddecoratedview.views.ThreadSpec;
 
 public class MainThreadSpec implements ThreadSpec {

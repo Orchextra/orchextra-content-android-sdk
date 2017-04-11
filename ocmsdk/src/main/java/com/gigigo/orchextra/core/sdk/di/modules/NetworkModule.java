@@ -2,11 +2,11 @@ package com.gigigo.orchextra.core.sdk.di.modules;
 
 import com.gigigo.ggglib.network.executors.ApiServiceExecutor;
 import com.gigigo.ggglib.network.mappers.ApiGenericResponseMapper;
-import com.gigigo.orchextra.core.data.ElementNetworkDataSourceImp;
-import com.gigigo.orchextra.core.data.SearcherNetworkDataSourceImp;
-import com.gigigo.orchextra.core.data.HomeNetworkDataSourceImp;
-import com.gigigo.orchextra.core.data.MenuNetworkDataSourceImp;
-import com.gigigo.orchextra.core.data.services.OcmApiService;
+import com.gigigo.orchextra.core.data.api.ElementNetworkDataSourceImp;
+import com.gigigo.orchextra.core.data.api.SearcherNetworkDataSourceImp;
+import com.gigigo.orchextra.core.data.api.HomeNetworkDataSourceImp;
+import com.gigigo.orchextra.core.data.api.MenuNetworkDataSourceImp;
+import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.domain.data.ElementNetworkDataSource;
 import com.gigigo.orchextra.core.domain.data.SectionNetworkDataSource;
 import com.gigigo.orchextra.core.domain.data.MenuNetworkDataSource;

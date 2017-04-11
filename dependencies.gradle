@@ -15,9 +15,9 @@ allprojects {
                  playServicesLocation       : 'com.google.android.gms:play-services-location:9.4.0',
                  playServicesGcm            : 'com.google.android.gms:play-services-gcm:9.4.0',
 
-                 interactorExecutor         : 'com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:interactorexecutor-invoker:1.0.6',
-                 threaddecoratedviewCommon  : 'com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-common:1.0.6',
-                 threaddecoratedviewCompiler: 'com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-compiler:1.0.6',
+                 interactorExecutor         : 'com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:interactorexecutor-invoker:1.0.8RC',
+                 threaddecoratedviewCommon  : 'com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-common:1.0.8RC',
+                 threaddecoratedviewCompiler: 'com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-compiler:1.0.8RC',
 
                  gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.8',
                  ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.8',
