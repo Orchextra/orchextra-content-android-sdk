@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="oc_retry_content_button_text">Réessayer</string>
+
+  <string name="oc_retry_content_text1">DÉSOLÉ</string>
+  <string name="oc_retry_content_text2">IL Y A EU UN PROBLÈME\nEMPÊCHANT L'ACCÈS AUX CONTENUS</string>
+
+  <string name="oc_more_content_text1">AWESOME</string>
+  <string name="oc_more_content_text2">CONTENT COMING SOON…</string>
+  <string name="oc_more_content_button_text">EN SAVOIR PLUS</string>
+
+  <string name="oc_preview_down_arrow_text">GLISSER VERS LE BAS</string>
+
+</resources>
