@@ -17,8 +17,7 @@ import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPrese
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 
-public class DetailLayoutContentData extends UiDetailBaseContentData
-    implements DetailElementsView {
+public class DetailLayoutContentData extends UiDetailBaseContentData implements DetailElementsView {
 
   private String elementUrl;
   private DetailElementsViewPresenter presenter;
@@ -72,7 +71,7 @@ public class DetailLayoutContentData extends UiDetailBaseContentData
     presenter.loadSection(elementUrl);
 
     int contentIdIndex = elementUrl.lastIndexOf("/");
-    String idIndex = elementUrl.substring(contentIdIndex+1);
+    String idIndex = elementUrl.substring(contentIdIndex + 1);
 
     OCManager.notifyEvent(OcmEvent.CONTENT_START, idIndex);
   }
@@ -155,5 +154,15 @@ public class DetailLayoutContentData extends UiDetailBaseContentData
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    System.out.println("----------------------------------------------destroyview");
+
+    if (context instanceof Activity) {
+      ((Activity) context).finish();
+    }
+    this.context = null;
   }
 }

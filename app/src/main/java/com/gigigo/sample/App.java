@@ -1,14 +1,16 @@
 package com.gigigo.sample;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.squareup.leakcanary.LeakCanary;
 
-public class App extends Application {
+//MultiDexApplication
+public class App extends MultiDexApplication {
 
   //public static String API_KEY = "a2966ba69f4ead1a4f1550bfda450e9fd07e6762";   //Asv project
   //public static String API_SECRET = "f79713d7e9b0fcd69fedfb94f471106cb85d8ca4";
@@ -29,6 +31,13 @@ public class App extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
+     if (LeakCanary.isInAnalyzerProcess(this)) {
+      // This process is dedicated to LeakCanary for heap analysis.
+      // You should not init your app in this process.
+      return;
+    }
+    LeakCanary.install(this);
+    // Normal app init code...
 
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
@@ -43,5 +52,8 @@ public class App extends Application {
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
     Ocm.setBusinessUnit("it");
+
+
+
   }
 }
