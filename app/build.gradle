@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
   compileSdkVersion 25
   buildToolsVersion "25.0.2"
+
   defaultConfig {
     applicationId "com.gigigo.sample"
     minSdkVersion 18
@@ -10,6 +11,7 @@ android {
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    multiDexEnabled true
   }
   buildTypes {
     release {
@@ -24,4 +26,9 @@ dependencies {
 
   compile project(path: ':ocmsdk')
 //  compile 'com.github.Nuborisar:orchextra-content-android-sdk:v1.0RC7'
+
+  compile 'com.squareup.leakcanary:leakcanary-android:1.5'
+
+  compile 'com.android.support:multidex:1.0.1'
+
 }
