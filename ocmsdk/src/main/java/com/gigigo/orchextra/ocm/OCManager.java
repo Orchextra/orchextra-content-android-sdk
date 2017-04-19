@@ -229,8 +229,12 @@ public final class OCManager {
             Log.d("WOAH", "Orchextra initialized successfully");
           }
 
-          @Override public void onError(String s) {
-            Log.d("WOAH", "onError: " + s);
+          @Override public void onError(String error) {
+            Log.d("WOAH", "onError: " + error);
+
+            if (error.equals("401") && instance.ocmCredentialCallback != null) {
+              ocmCredentialCallback.onCredentailError(error);
+            }
           }
 
           @Override public void onInit(String s) {
