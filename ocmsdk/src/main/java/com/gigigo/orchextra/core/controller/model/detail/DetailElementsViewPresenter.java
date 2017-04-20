@@ -65,6 +65,8 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
       getView().renderPreview(previewContentData, shareElement != null);
     } else if (detailContentData != null) {
       getView().renderDetailView(detailContentData, shareElement != null);
+    } else {
+      getView().showEmptyView();
     }
   }
 
