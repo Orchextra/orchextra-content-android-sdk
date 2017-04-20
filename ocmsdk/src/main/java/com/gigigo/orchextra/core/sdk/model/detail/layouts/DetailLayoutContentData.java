@@ -17,8 +17,7 @@ import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPrese
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 
-public class DetailLayoutContentData extends UiDetailBaseContentData
-    implements DetailElementsView {
+public class DetailLayoutContentData extends UiDetailBaseContentData implements DetailElementsView {
 
   private String elementUrl;
   private DetailElementsViewPresenter presenter;
@@ -72,7 +71,7 @@ public class DetailLayoutContentData extends UiDetailBaseContentData
     presenter.loadSection(elementUrl);
 
     int contentIdIndex = elementUrl.lastIndexOf("/");
-    String idIndex = elementUrl.substring(contentIdIndex+1);
+    String idIndex = elementUrl.substring(contentIdIndex + 1);
 
     OCManager.notifyEvent(OcmEvent.CONTENT_START, idIndex);
   }
@@ -114,9 +113,9 @@ public class DetailLayoutContentData extends UiDetailBaseContentData
   }
 
   @Override public void showEmptyView() {
-    Activity activity = (Activity) context;
-    if (activity != null) {
-      activity.finish();
+    if (getView() != null) {
+      View emptyView = getView().findViewById(R.id.view_retry);
+      emptyView.setVisibility(View.VISIBLE);
     }
   }
 
