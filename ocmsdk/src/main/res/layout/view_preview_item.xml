@@ -58,7 +58,8 @@
       android:layout_height="wrap_content"
       android:layout_gravity="bottom|center_horizontal"
       android:orientation="vertical"
-      android:visibility="visible"
+      android:visibility="gone"
+
   >
     <com.gigigo.orchextra.ocm.views.MoreContentArrowView
         android:id="@+id/imgMoreContain"
