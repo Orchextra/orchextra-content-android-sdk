@@ -68,6 +68,9 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
   }
 
   @Override public void initUi() {
+    View ocmRetryButton = getView().findViewById(R.id.ocm_retry_button);
+    ocmRetryButton.setOnClickListener(retryButtonListener);
+
     presenter.loadSection(elementUrl);
 
     int contentIdIndex = elementUrl.lastIndexOf("/");
@@ -112,11 +115,16 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
 
   }
 
+ 
   @Override public void showEmptyView() {
-    Activity activity = (Activity) context;
+  /*  Activity activity = (Activity) context;
     if (activity != null) {
-      //this.onFinishListener = null;
-      activity.finish();
+         activity.finish();
+ }*/
+    if (getView() != null) {
+      View emptyView = getView().findViewById(R.id.view_retry);
+      emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+ 
     }
   }
 
@@ -168,4 +176,10 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
     }
     this.context = null;
   }
+  
+  private final View.OnClickListener retryButtonListener = new View.OnClickListener() {
+    @Override public void onClick(View v) {
+      presenter.loadSection(elementUrl);
+    }
+  };
 }

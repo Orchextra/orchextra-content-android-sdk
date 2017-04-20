@@ -42,7 +42,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
     if (cachedElement != null) {
       renderView(cachedElement);
     } else {
-      getView().showEmptyView();
+      getView().showEmptyView(true);
     }
 
     getView().showProgressView(false);
@@ -60,10 +60,16 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
     if (previewContentData != null && detailContentData != null) {
       getView().renderDetailViewWithPreview(previewContentData, detailContentData,
           shareElement != null);
+
+      getView().showEmptyView(false);
     } else if (previewContentData != null) {
       getView().renderPreview(previewContentData, shareElement != null);
+      getView().showEmptyView(false);
     } else if (detailContentData != null) {
       getView().renderDetailView(detailContentData, shareElement != null);
+      getView().showEmptyView(false);
+    } else {
+      getView().showEmptyView(true);
     }
   }
 

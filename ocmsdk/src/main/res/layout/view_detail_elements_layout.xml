@@ -5,11 +5,14 @@
     android:layout_height="match_parent"
     >
   <FrameLayout
-
       android:id="@+id/detail_container_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
       />
+
+  <include layout="@layout/ocm_retry_content_item"
+      android:visibility="gone"
+      android:id="@+id/view_retry"/>
 
 </FrameLayout>
