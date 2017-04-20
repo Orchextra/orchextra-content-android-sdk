@@ -28,11 +28,6 @@ public class ElementsViewHolderFactory extends BaseViewHolderFactory {
       return new CellImageViewHolder(context, parent, imageLoader, authoritation);
     } else if (valueClass == CellBlankElement.class) {
       return new CellBlankViewHolder(context, parent);
-      /** Not used for a library error */
-    //} else if (valueClass == CellReloadContentElement.class) {
-    //  return new CellReloadContentViewHolder(context, parent, null);
-    //} else if (valueClass == CellErrorElement.class) {
-    //  return new CellErrorViewHolder(context, parent, null);
     } else {
       return null;
     }
