@@ -19,7 +19,7 @@ public interface DetailElementsView {
 
   void showProgressView(boolean visible);
 
-  void showEmptyView();
+  void showEmptyView(boolean isEmpty);
 
   void shareElement(String shareText);
 }
