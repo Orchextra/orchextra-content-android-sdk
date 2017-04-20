@@ -115,6 +115,7 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
   @Override public void showEmptyView() {
     Activity activity = (Activity) context;
     if (activity != null) {
+      //this.onFinishListener = null;
       activity.finish();
     }
   }
@@ -161,6 +162,8 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
     System.out.println("----------------------------------------------destroyview");
 
     if (context instanceof Activity) {
+      presenter.detachView(this);
+      onFinishListener = null;
       ((Activity) context).finish();
     }
     this.context = null;

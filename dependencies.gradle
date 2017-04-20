@@ -23,8 +23,8 @@ allprojects {
                  ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.8',
 
 
-                 imageloaderGlide           : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.01',
-                 imageloaderGlideBlur           : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
+                 imageloaderGlide           : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.02',
+                 imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 //                 imageloaderGlideTransformation : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.01',
                  baserecycleradapter        : 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5',
                  multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.4.10',

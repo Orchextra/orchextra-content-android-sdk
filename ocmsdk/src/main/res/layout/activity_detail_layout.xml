@@ -10,7 +10,8 @@
       android:id="@+id/animationImageView"
       android:layout_width="match_parent"
       android:scaleType="centerCrop"
-      android:layout_height="match_parent"/>
+      android:layout_height="match_parent"
+      android:adjustViewBounds="true"/>
 
   <FrameLayout
       android:id="@+id/content_detail_view"

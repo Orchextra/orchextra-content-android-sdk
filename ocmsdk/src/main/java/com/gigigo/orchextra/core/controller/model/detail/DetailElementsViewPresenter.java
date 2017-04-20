@@ -24,7 +24,6 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   public DetailElementsViewPresenter(GenericViewInjector viewInjector, OcmController ocmController,
       OcmViewGenerator ocmViewGenerator) {
     super(viewInjector);
-
     this.ocmController = ocmController;
     this.ocmViewGenerator = ocmViewGenerator;
   }
