@@ -116,11 +116,12 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
   }
 
  
-  @Override public void showEmptyView() {
+  @Override public void showEmptyView(boolean isEmpty) {
   /*  Activity activity = (Activity) context;
     if (activity != null) {
          activity.finish();
  }*/
+
     if (getView() != null) {
       View emptyView = getView().findViewById(R.id.view_retry);
       emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
