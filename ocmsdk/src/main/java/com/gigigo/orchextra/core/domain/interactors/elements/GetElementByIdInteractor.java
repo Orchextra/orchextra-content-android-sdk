@@ -29,10 +29,16 @@ public class GetElementByIdInteractor implements Interactor<InteractorResponse<E
   @Override public InteractorResponse<ElementCache> call() throws Exception {
     ElementCache elementCache = dataBaseDataSource.retrieveElementById(elementId);
 
-    if (elementCache != null) {
+    if (elementCache != null
+        && elementCache.getPreview() != null      // Checks if the element
+        && elementCache.getRender() != null) {    // cache is musty
       return new InteractorResponse<>(elementCache);
     }
 
+    return getFromNetwork();
+  }
+
+  private InteractorResponse<ElementCache> getFromNetwork() {
     if (connectionUtils.hasConnection()) {
 
       BusinessObject<ElementData> boElement = elementNetworkDataSource.getElementById(elementId);

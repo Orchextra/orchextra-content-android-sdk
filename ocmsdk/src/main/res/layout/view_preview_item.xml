@@ -10,7 +10,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:scaleType="fitXY"
-      />
+  android:adjustViewBounds="true"/>
 
   <ImageView
       android:id="@+id/preview_background"
@@ -50,7 +50,8 @@
       android:layout_height="wrap_content"
       android:layout_gravity="bottom|center_horizontal"
       android:orientation="vertical"
-      android:visibility="visible"
+      android:visibility="gone"
+
       >
     <com.gigigo.orchextra.ocm.views.MoreContentArrowView
         android:id="@+id/imgMoreContain"
