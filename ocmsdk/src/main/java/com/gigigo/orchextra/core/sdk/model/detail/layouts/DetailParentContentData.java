@@ -20,14 +20,14 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeConte
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeWebviewActivity;
 import com.gigigo.orchextra.core.sdk.ui.behaviours.ScrollShareButtonBehavior;
+import com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 
 public abstract class DetailParentContentData extends UiBaseContentData {
 
-  private View backToolbarButton;
-  protected View shareToolbarButton;
+  private DetailToolbarView detailToolbarView;
 
   protected UiDetailBaseContentData.OnFinishViewListener onFinishListener;
   protected OnShareListener onShareListener;
@@ -47,8 +47,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   }
 
   private void initDetailViews(View view) {
-    backToolbarButton = view.findViewById(R.id.back_toolbar_button);
-    shareToolbarButton = view.findViewById(R.id.share_toolbar_button);
+    detailToolbarView = (DetailToolbarView) view.findViewById(R.id.detailToolbarView);
 
     initViews(view);
   }
@@ -60,19 +59,18 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   }
 
   protected void setOnClickListenerButtons() {
-    backToolbarButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (onFinishListener != null) {
-          onFinishListener.onFinish();
+    detailToolbarView.setOnClickBackButtonListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          if (onFinishListener != null) {
+            onFinishListener.onFinish();
+          }
         }
-      }
-    });
+      });
+
+    detailToolbarView.setShareButtonVisible(onShareListener != null);
 
     if (onShareListener != null) {
-
-      initShareButton();
-
-      shareToolbarButton.setOnClickListener(new View.OnClickListener() {
+      detailToolbarView.setOnClickShareButtonListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
           onShareListener.onShare();
         }

@@ -5,12 +5,13 @@ import android.support.annotation.AnimRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import com.gigigo.orchextra.ocmsdk.R;
 
-public class ScrollBackButtonBehavior extends CoordinatorLayout.Behavior<ImageView> {
+public class ScrollBackButtonBehavior extends CoordinatorLayout.Behavior<ViewGroup> {
 
   private final Context context;
 
@@ -25,12 +26,12 @@ public class ScrollBackButtonBehavior extends CoordinatorLayout.Behavior<ImageVi
   }
 
   @Override public boolean onStartNestedScroll(final CoordinatorLayout coordinatorLayout,
-      final ImageView child, final View directTargetChild, final View target,
+      final ViewGroup child, final View directTargetChild, final View target,
       final int nestedScrollAxes) {
     return true;
   }
 
-  @Override public void onNestedScroll(final CoordinatorLayout coordinatorLayout, ImageView child,
+  @Override public void onNestedScroll(final CoordinatorLayout coordinatorLayout, ViewGroup child,
       View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
 
     super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed,
@@ -45,15 +46,15 @@ public class ScrollBackButtonBehavior extends CoordinatorLayout.Behavior<ImageVi
     }
   }
 
-  private void doVisibleAnimation(ImageView child) {
+  private void doVisibleAnimation(ViewGroup child) {
     doAnimation(child, R.anim.scale_item_in);
   }
 
-  private void doHideAnimation(ImageView child) {
+  private void doHideAnimation(ViewGroup child) {
     doAnimation(child, R.anim.scale_item_out);
   }
 
-  private void doAnimation(ImageView child, @AnimRes int animRes) {
+  private void doAnimation(ViewGroup child, @AnimRes int animRes) {
     Animation animation = AnimationUtils.loadAnimation(context, animRes);
     child.startAnimation(animation);
   }
