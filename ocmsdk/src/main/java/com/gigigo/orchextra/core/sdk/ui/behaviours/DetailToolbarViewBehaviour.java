@@ -39,7 +39,7 @@ public class DetailToolbarViewBehaviour extends CoordinatorLayout.Behavior<Detai
             state = State.COLLAPSED;
           } else if (verticalOffset == 0) {
             if (state != State.EXPANDED) {
-              switchDetailViewItems(child, true);
+              //switchDetailViewItems(child, true);
             }
             state = State.EXPANDED;
           } else {

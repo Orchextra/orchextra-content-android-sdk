@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import com.gigigo.orchextra.ocmsdk.R;
 
@@ -20,7 +22,6 @@ public class DetailToolbarView extends FrameLayout {
   private View shareToolbarBgButton;
 
   private boolean isShareable;
-
 
   public DetailToolbarView(@NonNull Context context) {
     super(context);
@@ -60,19 +61,25 @@ public class DetailToolbarView extends FrameLayout {
   }
 
   public void switchBetweenButtonAndToolbar(boolean areVisibleToolbar) {
-    detailToolbar.setVisibility(areVisibleToolbar ? View.VISIBLE: View.GONE);
-    backToolbarBgButton.setVisibility(!areVisibleToolbar ? View.VISIBLE: View.INVISIBLE);
-    shareToolbarBgButton.setVisibility(!areVisibleToolbar ? View.VISIBLE: View.INVISIBLE);
+    boolean doAnimation = (detailToolbar.getVisibility() == GONE && areVisibleToolbar)
+        || (detailToolbar.getVisibility() == VISIBLE && !areVisibleToolbar);
 
-    //backToolbarButton.setVisibility(!areVisibleButtons ? View.VISIBLE : View.GONE);
-    //shareToolbarButton.setVisibility(!areVisibleButtons ? View.VISIBLE : View.GONE);
+    if (doAnimation) {
+      Animation animation = AnimationUtils.loadAnimation(context,
+          areVisibleToolbar ? R.anim.scale_y_up_in : R.anim.scale_y_up_out);
 
-    //detailToolbar.animate().translationY(0).setListener(new AnimatorListenerAdapter() {
-    //  @Override public void onAnimationEnd(Animator animation) {
-    //    super.onAnimationEnd(animation);
-    //    detailToolbar.setVisibility(View.GONE);
-    //  }
-    //});
+      detailToolbar.startAnimation(animation);
+      detailToolbar.setVisibility(areVisibleToolbar ? View.VISIBLE : View.GONE);
+
+      animation = AnimationUtils.loadAnimation(context,
+          !areVisibleToolbar ? R.anim.scale_item_in : R.anim.scale_item_out);
+
+      backToolbarBgButton.startAnimation(animation);
+      backToolbarBgButton.setVisibility(!areVisibleToolbar ? View.VISIBLE : View.INVISIBLE);
+
+      shareToolbarBgButton.startAnimation(animation);
+      shareToolbarBgButton.setVisibility(!areVisibleToolbar ? View.VISIBLE : View.INVISIBLE);
+    }
   }
 
   public void setOnClickBackButtonListener(OnClickListener onClickBackButtonListener) {
