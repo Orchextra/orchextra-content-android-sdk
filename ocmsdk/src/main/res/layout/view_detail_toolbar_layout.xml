@@ -16,14 +16,15 @@
   <FrameLayout
       android:id="@+id/back_toolbar_button"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:padding="@dimen/oc_spacing_16"
+      android:layout_height="@dimen/ocm_height_detail_toolbar"
+      android:paddingLeft="@dimen/oc_spacing_16"
       >
 
     <ImageView
         android:id="@+id/back_toolbar_bg_button"
         android:layout_width="@dimen/oc__detail_button_size"
         android:layout_height="@dimen/oc__detail_button_size"
+        android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:src="@drawable/oc_bg_button"
         />
@@ -41,15 +42,16 @@
   <FrameLayout
       android:id="@+id/share_toolbar_button"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_height="@dimen/ocm_height_detail_toolbar"
       android:layout_gravity="right"
-      android:padding="@dimen/oc_spacing_16"
+      android:paddingRight="@dimen/oc_spacing_16"
       >
 
     <ImageView
         android:id="@+id/share_bg_toolbar_button"
         android:layout_width="@dimen/oc__detail_button_size"
         android:layout_height="@dimen/oc__detail_button_size"
+        android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:src="@drawable/oc_bg_button"
         />
