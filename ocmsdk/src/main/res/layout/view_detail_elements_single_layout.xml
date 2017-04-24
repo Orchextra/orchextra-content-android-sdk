@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/oc_bg_article_content_color"
     >
 
   <FrameLayout
@@ -17,36 +18,5 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       />
-
-  <!--<FrameLayout-->
-  <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-  <!--android:id="@+id/contentMainLayout"-->
-  <!--android:layout_width="match_parent"-->
-  <!--android:layout_height="match_parent"-->
-  <!--/>-->
-
-  <!--<ImageView-->
-  <!--android:id="@+id/back_toolbar_button"-->
-  <!--android:layout_width="wrap_content"-->
-  <!--android:layout_height="wrap_content"-->
-  <!--android:layout_marginTop="18dp"-->
-  <!--android:adjustViewBounds="true"-->
-  <!--android:padding="18dp"-->
-  <!--android:src="@drawable/ocm_ic_back_grey"-->
-  <!--/>-->
-
-  <!--<ImageView-->
-  <!--android:id="@+id/share_toolbar_button"-->
-  <!--android:layout_width="wrap_content"-->
-  <!--android:layout_height="wrap_content"-->
-  <!--android:layout_gravity="end|top"-->
-  <!--android:layout_marginStart="18dp"-->
-  <!--android:layout_marginLeft="18dp"-->
-  <!--android:layout_marginTop="18dp"-->
-  <!--android:adjustViewBounds="true"-->
-  <!--android:padding="18dp"-->
-  <!--android:src="@drawable/ocm_ic_share_gray"-->
-  <!--android:visibility="gone"-->
-  <!--/>-->
 
 </FrameLayout>

@@ -65,17 +65,6 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
     }
   }
 
-  @Override protected void initShareButton() {
-    //CoordinatorLayout.LayoutParams lp =
-    //    new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-    //        ViewGroup.LayoutParams.WRAP_CONTENT);
-    //lp.setBehavior(new ScrollShareButtonBehavior(getContext()));
-    //lp.gravity = Gravity.END | Gravity.TOP;
-    //int dimension = (int) getResources().getDimension(R.dimen.oc_spacing_16);
-    //lp.setMargins(dimension, dimension, dimension, dimension);
-    //shareToolbarButton.setLayoutParams(lp);
-  }
-
   private void setListenerToPreview() {
     if (previewContentData != null && previewContentData instanceof PreviewContentData) {
       PreviewContentData previewLayoutView = ((PreviewContentData) previewContentData);
@@ -139,6 +128,7 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
               @Override public void run() {
                 if (!checkIfOxActionAndExecute(detailContentData)) {
                   coordinatorLayout.removeView(appbarLayout);
+                  detailToolbarView.switchBetweenButtonAndToolbar(true, true);
                 } else {
                   if (onFinishListener != null) {
                     onFinishListener.onFinish();
@@ -154,15 +144,10 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
             AppBarLayout.LayoutParams params =
                 (AppBarLayout.LayoutParams) collapsingToolbar.getLayoutParams();
             params.setScrollFlags(0);
+            detailToolbarView.blockSwipeEvents(true);
           }
         }
       };
-
-  //public void scrollToTop() {
-  //if (appbarLayout != null) {
-  //  appbarLayout.setExpanded(false, false);
-  //}
-  //}
 
   @Override public void onResume() {
     super.onResume();

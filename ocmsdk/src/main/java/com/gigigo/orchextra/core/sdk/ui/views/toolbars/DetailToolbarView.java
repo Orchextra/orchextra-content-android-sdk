@@ -21,7 +21,7 @@ public class DetailToolbarView extends FrameLayout {
   private View backToolbarBgButton;
   private View shareToolbarBgButton;
 
-  private boolean isShareable;
+  private boolean isBlocked;
 
   public DetailToolbarView(@NonNull Context context) {
     super(context);
@@ -61,10 +61,14 @@ public class DetailToolbarView extends FrameLayout {
   }
 
   public void switchBetweenButtonAndToolbar(boolean areVisibleToolbar) {
+    switchBetweenButtonAndToolbar(areVisibleToolbar, false);
+  }
+
+  public void switchBetweenButtonAndToolbar(boolean areVisibleToolbar, boolean forceChange) {
     boolean doAnimation = (detailToolbar.getVisibility() == GONE && areVisibleToolbar)
         || (detailToolbar.getVisibility() == VISIBLE && !areVisibleToolbar);
 
-    if (doAnimation) {
+    if (doAnimation && !isBlocked || doAnimation && forceChange) {
       Animation animation = AnimationUtils.loadAnimation(context,
           areVisibleToolbar ? R.anim.scale_y_up_in : R.anim.scale_y_up_out);
 
@@ -91,7 +95,10 @@ public class DetailToolbarView extends FrameLayout {
   }
 
   public void setShareButtonVisible(boolean shareButtonVisible) {
-    this.isShareable = shareButtonVisible;
     shareToolbarButton.setVisibility(shareButtonVisible ? View.VISIBLE : View.GONE);
+  }
+
+  public void blockSwipeEvents(boolean isBlocked) {
+    this.isBlocked = isBlocked;
   }
 }

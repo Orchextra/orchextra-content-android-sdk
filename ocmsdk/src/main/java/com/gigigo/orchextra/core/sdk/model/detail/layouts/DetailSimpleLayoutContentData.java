@@ -11,6 +11,7 @@ import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 public class DetailSimpleLayoutContentData extends DetailParentContentData {
 
   private UiBaseContentData uiBaseContentData;
+  private View contentMainLayout;
 
   public static DetailSimpleLayoutContentData newInstance() {
     return new DetailSimpleLayoutContentData();
@@ -18,7 +19,7 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
 
   @Override
   protected void initViews(View view) {
-
+    contentMainLayout = view.findViewById(R.id.contentMainLayout);
   }
 
   @Override protected int getDetailLayout() {
@@ -41,6 +42,9 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
 
         if (uiBaseContentData instanceof PreviewContentData) {
           setOnClickListenerButtons();
+        } else {
+          detailToolbarView.switchBetweenButtonAndToolbar(true);
+          setPaddingTop();
         }
       } else {
         if (onFinishListener != null) {
@@ -50,7 +54,9 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
     }
   }
 
-  @Override protected void initShareButton() {
-    //shareToolbarButton.setVisibility(View.VISIBLE);
+  private void setPaddingTop() {
+    int dimension =
+        (int) getContext().getResources().getDimension(R.dimen.ocm_height_detail_toolbar);
+    contentMainLayout.setPadding(0, dimension, 0, 0);
   }
 }
