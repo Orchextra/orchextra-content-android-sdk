@@ -45,15 +45,15 @@ public class ApiElementCacheRenderMapper
         }
       }
 
-      ArticleButtonElement articleButtonElement = new ArticleButtonElement();
-      articleButtonElement.setType(ArticleButtonType.IMAGE);
-      articleButtonElement.setSize(ArticleButtonSize.MEDIUM);
-      articleButtonElement.setElementUrl("element/article/THE-7-BEST-COLLABORATIONS-OF-2016-SkWhR4W4g");
-      articleButtonElement.setText("Ver en mapa");
-      articleButtonElement.setTextColor("#FF4422");
-      articleButtonElement.setBgColor("#4422FF");
-      articleButtonElement.setImageUrl("https://i.ytimg.com/vi/kzvdmSA13Nc/maxresdefault.jpg");
-      articleElementList.add(articleButtonElement);
+      //ArticleButtonElement articleButtonElement = new ArticleButtonElement();
+      //articleButtonElement.setType(ArticleButtonType.IMAGE);
+      //articleButtonElement.setSize(ArticleButtonSize.MEDIUM);
+      //articleButtonElement.setElementUrl("element/article/THE-7-BEST-COLLABORATIONS-OF-2016-SkWhR4W4g");
+      //articleButtonElement.setText("Ver en mapa");
+      //articleButtonElement.setTextColor("#FF4422");
+      //articleButtonElement.setBgColor("#4422FF");
+      //articleButtonElement.setImageUrl("https://i.ytimg.com/vi/kzvdmSA13Nc/maxresdefault.jpg");
+      //articleElementList.add(articleButtonElement);
     }
 
     model.setElements(articleElementList);
