@@ -115,10 +115,17 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
 
   }
 
+ 
   @Override public void showEmptyView(boolean isEmpty) {
+  /*  Activity activity = (Activity) context;
+    if (activity != null) {
+         activity.finish();
+ }*/
+
     if (getView() != null) {
       View emptyView = getView().findViewById(R.id.view_retry);
       emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+ 
     }
   }
 
@@ -159,6 +166,18 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
     super.onActivityResult(requestCode, resultCode, data);
   }
 
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    System.out.println("----------------------------------------------destroyview");
+
+    if (context instanceof Activity) {
+      presenter.detachView(this);
+      onFinishListener = null;
+      ((Activity) context).finish();
+    }
+    this.context = null;
+  }
+  
   private final View.OnClickListener retryButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       presenter.loadSection(elementUrl);

@@ -2,23 +2,23 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.view.View;
-import com.gigigo.ggglogger.GGGLogImpl;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeWebviewActivity;
-import com.gigigo.orchextra.ocmsdk.BuildConfig;
-import com.gigigo.orchextra.ocmsdk.R;
+import android.widget.ImageView;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubeStandalonePlayer;
-import com.google.android.youtube.player.YouTubeThumbnailLoader;
-import com.google.android.youtube.player.YouTubeThumbnailView;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
+import com.gigigo.orchextra.ocmsdk.R;
+import com.gigigo.ui.imageloader.ImageLoader;
+import com.gigigo.ui.imageloader.ImageLoaderCallback;
+import com.gigigo.ui.imageloader.glide.GlideImageLoaderImp;
 
 public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
 
-  private YouTubeThumbnailView youtubeThumbnail;
   private final Activity activity;
+
+  private ImageView imgPlay;
+  private ImageView imgThumb;
 
   public ArticleVideoView(Context context, ArticleVideoElement articleElement) {
     super(context, articleElement);
@@ -30,46 +30,38 @@ public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
   }
 
   @Override protected void bindViews() {
-    youtubeThumbnail = (YouTubeThumbnailView) itemView.findViewById(R.id.youtubeThumbnail);
+
+    imgPlay = (ImageView) itemView.findViewById(R.id.imgPlay);
+    imgThumb = (ImageView) itemView.findViewById(R.id.imgThumb);
   }
 
   @Override protected void bindTo(final ArticleVideoElement articleElement) {
-    YouTubeThumbnailView.OnInitializedListener onInitializedListener =
-        new YouTubeThumbnailView.OnInitializedListener() {
-          @Override public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView,
-              YouTubeThumbnailLoader youTubeThumbnailLoader) {
-            youTubeThumbnailLoader.setVideo(articleElement.getSource());
-            youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
-          }
-
-          @Override public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView,
-              YouTubeInitializationResult youTubeInitializationResult) {
-
-            GGGLogImpl.log("youTubeInitializationResult: " + youTubeInitializationResult.toString());
-          }
-        };
 
     View.OnClickListener onYoutubeThumbnailClickListener = new View.OnClickListener() {
       @Override public void onClick(View v) {
         YoutubeContentDataActivity.open(activity, articleElement.getSource());
-        //YoutubeWebviewActivity.open(activity, articleElement.getSource());
       }
     };
+    imgPlay.setOnClickListener(onYoutubeThumbnailClickListener);
 
-    youtubeThumbnail.initialize(BuildConfig.YOUTUBE_DEVELOPER_KEY, onInitializedListener);
-    youtubeThumbnail.setOnClickListener(onYoutubeThumbnailClickListener);
+    String youtubeId = articleElement.getSource();
+    ImageLoader glideImageLoaderImp = new GlideImageLoaderImp(activity.getApplicationContext());
+    String strImgForBlur = "http://img.youtube.com/vi/" + youtubeId + "/hqdefault.jpg";
+
+    glideImageLoaderImp.load(strImgForBlur).into(new ImageLoaderCallback() {
+      @Override public void onSuccess(Bitmap bitmap) {
+        //this is for prevent show only the play img when the video is down
+        imgPlay.setVisibility(VISIBLE);
+        imgThumb.setImageBitmap(bitmap);
+      }
+
+      @Override public void onError(Drawable drawable) {
+
+      }
+
+      @Override public void onLoading() {
+
+      }
+    });
   }
-
-  private YouTubeThumbnailLoader.OnThumbnailLoadedListener onThumbnailLoadedListener =
-      new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
-        @Override public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView,
-            YouTubeThumbnailLoader.ErrorReason errorReason) {
-
-          GGGLogImpl.log("errorReasononThumbnailError: " + errorReason.toString());
-        }
-
-        @Override
-        public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String videoId) {
-        }
-      };
 }

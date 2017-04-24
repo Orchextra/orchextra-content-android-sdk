@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <FrameLayout
+      android:id="@+id/detailToolbar"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/ocm_height_detail_toolbar"
+      android:background="@drawable/oc_bg_detail_toolbar_color"
+      android:visibility="gone"
+      />
+
+  <FrameLayout
+      android:id="@+id/back_toolbar_button"
+      android:layout_width="wrap_content"
+      android:layout_height="@dimen/ocm_height_detail_toolbar"
+      android:paddingLeft="@dimen/oc_spacing_16"
+      >
+
+    <ImageView
+        android:id="@+id/back_toolbar_bg_button"
+        android:layout_width="@dimen/oc__detail_button_size"
+        android:layout_height="@dimen/oc__detail_button_size"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:src="@drawable/oc_bg_button"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:src="@drawable/oc_ic_back"
+        />
+
+  </FrameLayout>
+
+  <FrameLayout
+      android:id="@+id/share_toolbar_button"
+      android:layout_width="wrap_content"
+      android:layout_height="@dimen/ocm_height_detail_toolbar"
+      android:layout_gravity="right"
+      android:paddingRight="@dimen/oc_spacing_16"
+      >
+
+    <ImageView
+        android:id="@+id/share_bg_toolbar_button"
+        android:layout_width="@dimen/oc__detail_button_size"
+        android:layout_height="@dimen/oc__detail_button_size"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:src="@drawable/oc_bg_button"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:src="@drawable/oc_ic_share"
+        />
+
+  </FrameLayout>
+
+</FrameLayout>

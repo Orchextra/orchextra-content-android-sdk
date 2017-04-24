@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="oc_retry_content_button_text">Újra</string>
+
+  <string name="oc_retry_content_text1">SAJNÁLJUK</string>
+  <string name="oc_retry_content_text2">A TARTALOM LEKÉRÉSEKOR \n HIBA LÉPETT FEL</string>
+
+  <string name="oc_more_content_text1">SZUPER</string>
+  <string name="oc_more_content_text2">HAMAROSAN ÉRKEZIK A TARTALOM...</string>
+  <string name="oc_more_content_button_text">TOVÁBBIAK FELFEDEZÉSE</string>
+
+  <string name="oc_preview_down_arrow_text">GÖRGETÉS LEFELÉ</string>
+
+</resources>

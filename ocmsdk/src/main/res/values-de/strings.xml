@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="oc_retry_content_button_text">Nochmal versuchen</string>
+
+  <string name="oc_retry_content_text1">SORRY</string>
+  <string name="oc_retry_content_text2">ES GAB EIN PROBLEM BEIM\n ABRUFEN DES INHALTS</string>
+
+  <string name="oc_more_content_text1">COOLE</string>
+  <string name="oc_more_content_text2">INHALTE DEMNÄCHST HIER…</string>
+  <string name="oc_more_content_button_text">MEHR ENTDECKEN</string>
+
+  <string name="oc_preview_down_arrow_text">NACH UNTEN</string>
+
+</resources>
