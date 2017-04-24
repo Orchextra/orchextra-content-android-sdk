@@ -12,7 +12,6 @@ import com.gigigo.orchextra.core.sdk.OcmViewGeneratorImp;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProviderImpl;
 import com.gigigo.orchextra.core.sdk.application.OcmSdkLifecycle;
-import com.gigigo.orchextra.core.sdk.utils.LeanplumSdk;
 import com.gigigo.ui.imageloader.ImageLoader;
 import com.gigigo.ui.imageloader.glide.GlideImageLoaderImp;
 import orchextra.dagger.Module;
@@ -61,9 +60,5 @@ import orchextra.javax.inject.Singleton;
 
   @Singleton @Provides OcmStyleUi provideOcmStyleUi() {
     return new OcmStyleUiImp();
-  }
-
-  @Singleton @Provides LeanplumSdk provideLeanplumSdk() {
-    return new LeanplumSdk(app);
   }
 }
