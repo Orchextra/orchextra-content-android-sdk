@@ -3,6 +3,8 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 import android.content.Context;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.widget.TextView;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
@@ -27,6 +29,7 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
   @Override protected void bindTo(ArticleRichTextElement articleElement) {
     if (!TextUtils.isEmpty(articleElement.getHtml())) {
       articleRichText.setText(Html.fromHtml(articleElement.getHtml()));
+      articleRichText.setMovementMethod(LinkMovementMethod.getInstance());
     }
   }
 }
