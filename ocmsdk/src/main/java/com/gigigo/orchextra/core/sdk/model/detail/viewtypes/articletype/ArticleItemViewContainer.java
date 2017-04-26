@@ -21,7 +21,6 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhold
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleVideoView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.dto.ArticleBlankElement;
 import com.gigigo.orchextra.ocmsdk.R;
-
 import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.List;
 
@@ -84,7 +83,7 @@ public class ArticleItemViewContainer extends LinearLayout {
       }
     }
   }
-
+//todo change by factory
   public ArticleBaseView create(ArticleElement articleElement) {
     Class<? extends ArticleElement> valueClass = articleElement.getClass();
 
@@ -106,4 +105,6 @@ public class ArticleItemViewContainer extends LinearLayout {
   public void setImageLoader(ImageLoader imageLoader) {
     this.imageLoader = imageLoader;
   }
+
+
 }

@@ -151,7 +151,6 @@ dependencies {
   testCompile rootProject.ext.testLibraries.assertj
   testCompile rootProject.ext.testLibraries.mockito
 
-  compile rootProject.ext.libraries.leanplum
   compile rootProject.ext.libraries.playServicesBase
   compile rootProject.ext.libraries.playServicesLocation
   compile rootProject.ext.libraries.playServicesGcm

@@ -1,6 +1,7 @@
 package com.gigigo.sample;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -59,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
           }
         });
 
+      }
+
+      @Override public void onCredentailError(String code) {
+        Snackbar.make(tabLayout, "No Internet Connection: " + code, Snackbar.LENGTH_INDEFINITE).show();
       }
     });
 

@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,19 +16,16 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeWebviewActivity;
-import com.gigigo.orchextra.core.sdk.ui.behaviours.ScrollShareButtonBehavior;
+import com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 
 public abstract class DetailParentContentData extends UiBaseContentData {
 
-  private View backToolbarButton;
-  protected View shareToolbarButton;
-
   protected UiDetailBaseContentData.OnFinishViewListener onFinishListener;
   protected OnShareListener onShareListener;
+  protected DetailToolbarView detailToolbarView;
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
@@ -47,8 +42,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   }
 
   private void initDetailViews(View view) {
-    backToolbarButton = view.findViewById(R.id.back_toolbar_button);
-    shareToolbarButton = view.findViewById(R.id.share_toolbar_button);
+    detailToolbarView = (DetailToolbarView) view.findViewById(R.id.detailToolbarView);
 
     initViews(view);
   }
@@ -60,7 +54,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   }
 
   protected void setOnClickListenerButtons() {
-    backToolbarButton.setOnClickListener(new View.OnClickListener() {
+    detailToolbarView.setOnClickBackButtonListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         if (onFinishListener != null) {
           onFinishListener.onFinish();
@@ -68,19 +62,16 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       }
     });
 
+    detailToolbarView.setShareButtonVisible(onShareListener != null);
+
     if (onShareListener != null) {
-
-      initShareButton();
-
-      shareToolbarButton.setOnClickListener(new View.OnClickListener() {
+      detailToolbarView.setOnClickShareButtonListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
           onShareListener.onShare();
         }
       });
     }
   }
-
-  protected abstract void initShareButton();
 
   public void setOnFinishListener(UiDetailBaseContentData.OnFinishViewListener onFinishListener) {
     this.onFinishListener = onFinishListener;
@@ -113,7 +104,6 @@ public abstract class DetailParentContentData extends UiBaseContentData {
 
   private void launchExternalYoutube(String url) {
     YoutubeContentDataActivity.open(getActivity(), url);
-    //YoutubeWebviewActivity.open(getActivity(), url);
   }
 
   private void launchOxVuforia() {
@@ -134,11 +124,11 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     this.onShareListener = onShareListener;
   }
 
-  public interface OnShareListener {
-    void onShare();
-  }
-
   protected abstract void initViews(View view);
 
   protected abstract int getDetailLayout();
+
+  public interface OnShareListener {
+    void onShare();
+  }
 }

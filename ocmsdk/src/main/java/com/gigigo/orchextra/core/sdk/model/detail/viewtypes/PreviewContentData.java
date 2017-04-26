@@ -23,6 +23,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.ocm.views.MoreContentArrowView;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 import com.gigigo.ui.imageloader.ImageLoaderCallback;
@@ -38,7 +39,6 @@ public class PreviewContentData extends UiBaseContentData {
   private ImageView previewImage;
   private ImageView previewBackgroundShadow;
   private TextView previewTitle;
-  private View shareButton;
   private View goToArticleButton;
 
   private PreviewFuntionalityListener previewFuntionalityListener;
@@ -88,8 +88,9 @@ public class PreviewContentData extends UiBaseContentData {
     previewImage = (ImageView) view.findViewById(R.id.preview_image);
     previewBackgroundShadow = (ImageView) view.findViewById(R.id.preview_background);
     previewTitle = (TextView) view.findViewById(R.id.preview_title);
-    shareButton = view.findViewById(R.id.share_button);
     goToArticleButton = view.findViewById(R.id.go_to_article_button);
+    MoreContentArrowView imgAnim  = (MoreContentArrowView) view.findViewById(R.id.imgMoreContain);
+    imgAnim.Anim(32,-1);
   }
 
   public void bindTo() {
@@ -98,10 +99,6 @@ public class PreviewContentData extends UiBaseContentData {
 
       previewTitle.setText(preview.getText());
       if(preview.getText() == null || (preview.getText() != null && preview.getText().isEmpty())) previewBackgroundShadow.setVisibility(View.GONE);
-
-      if (share != null) {
-        shareButton.setVisibility(View.VISIBLE);
-      }
 
       if (preview.getBehaviour().equals(ElementCacheBehaviour.SWIPE)) {
         goToArticleButton.setVisibility(View.VISIBLE);
@@ -114,9 +111,6 @@ public class PreviewContentData extends UiBaseContentData {
   private void setAnimations() {
     Animation animation = AnimationUtils.loadAnimation(context, R.anim.settings_items);
     previewTitle.startAnimation(animation);
-    if (shareButton.getVisibility() == View.VISIBLE) {
-      shareButton.startAnimation(animation);
-    }
   }
 
   private void setImage() {
@@ -130,14 +124,6 @@ public class PreviewContentData extends UiBaseContentData {
   }
 
   private void setListeners() {
-    shareButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (previewFuntionalityListener != null) {
-          previewFuntionalityListener.onClickShare(share);
-        }
-      }
-    });
-
     if (preview != null && preview.getBehaviour().equals(ElementCacheBehaviour.CLICK)) {
       previewContentMainLayout.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {

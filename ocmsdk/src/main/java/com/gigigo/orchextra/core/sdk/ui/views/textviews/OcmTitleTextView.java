@@ -47,7 +47,7 @@ public class OcmTitleTextView extends TextFitTextView {
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      setLetterSpacing(0.4f);
+      setLetterSpacing(0.2f);
     }
 
     addTextChangedListener(new TextWatcher() {

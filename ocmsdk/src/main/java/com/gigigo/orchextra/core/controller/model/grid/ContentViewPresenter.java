@@ -157,11 +157,11 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       ElementCache cachedElement = ocmController.getCachedElement(element.getElementUrl());
 
       String imageUrlToExpandInPreview = null;
-      if (cachedElement.getPreview() != null) {
+      if (cachedElement !=null && cachedElement.getPreview() != null) {
         imageUrlToExpandInPreview = cachedElement.getPreview().getImageUrl();
       }
 
-      if (checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
+      if (element!=null && checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
         getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview, activity,
             view);
       } else {

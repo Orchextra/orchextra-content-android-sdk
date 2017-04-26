@@ -42,5 +42,6 @@
   <color name="oc_progress_webview_color">#FFF</color>
 
   <color name="oc_bg_blank_item_multiple_grid_color">#807f7f</color>
+  <color name="oc_background_detail_toolbar">#999</color>
 
 </resources>

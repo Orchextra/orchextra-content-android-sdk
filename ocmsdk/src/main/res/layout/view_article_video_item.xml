@@ -6,18 +6,19 @@
     android:background="@color/oc_bg_article_video_color"
     >
 
-  <com.google.android.youtube.player.YouTubeThumbnailView
-      android:id="@+id/youtubeThumbnail"
+  <ImageView
+      android:id="@+id/imgThumb"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:adjustViewBounds="true"
       />
-
   <ImageView
+      android:id="@+id/imgPlay"
       android:layout_gravity="center"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:src="@drawable/ic_play_youtube"
+      android:visibility="gone"
       />
 
 </FrameLayout>

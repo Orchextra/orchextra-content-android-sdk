@@ -13,6 +13,9 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePrevie
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
+import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailLayoutContentData;
+import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.OcmEvent;
 
 public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
@@ -24,7 +27,6 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   public DetailElementsViewPresenter(GenericViewInjector viewInjector, OcmController ocmController,
       OcmViewGenerator ocmViewGenerator) {
     super(viewInjector);
-
     this.ocmController = ocmController;
     this.ocmViewGenerator = ocmViewGenerator;
   }
@@ -42,8 +44,9 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
     if (cachedElement != null) {
       renderView(cachedElement);
+      OCManager.notifyEvent(OcmEvent.CONTENT_START, cachedElement);
     } else {
-      getView().showEmptyView();
+      getView().showEmptyView(true);
     }
 
     getView().showProgressView(false);
@@ -62,14 +65,19 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
       UiBaseContentData detailContentData =
           generateDetailView(cachedElement.getType(), cachedElement.getRender());
 
-      if (previewContentData != null && detailContentData != null) {
-        getView().renderDetailViewWithPreview(previewContentData, detailContentData,
-            shareElement != null);
-      } else if (previewContentData != null) {
-        getView().renderPreview(previewContentData, shareElement != null);
-      } else if (detailContentData != null) {
-        getView().renderDetailView(detailContentData, shareElement != null);
-      }
+    if (previewContentData != null && detailContentData != null) {
+      getView().renderDetailViewWithPreview(previewContentData, detailContentData,
+          shareElement != null);
+
+      getView().showEmptyView(false);
+    } else if (previewContentData != null) {
+      getView().renderPreview(previewContentData, shareElement != null);
+      getView().showEmptyView(false);
+    } else if (detailContentData != null) {
+      getView().renderDetailView(detailContentData, shareElement != null);
+      getView().showEmptyView(false);
+    } else {
+      getView().showEmptyView(true);
     }
   }
 

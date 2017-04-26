@@ -1,50 +1,72 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
-import com.gigigo.orchextra.ocmsdk.BuildConfig;
+import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.ggglogger.GGGLogImpl;
+import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.ocmsdk.BuildConfig;
+import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 import com.gigigo.ui.imageloader.ImageLoaderCallback;
 import com.gigigo.ui.imageloader.glide.GlideImageLoaderImp;
-//import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
-
 import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.gigigo.orchextra.ocmsdk.R;
+
+//import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
 
 public class YoutubeFragment extends UiBaseContentData {
 
   private static final String EXTRA_YOUTUBE_ID = "EXTRA_YOUTUBE_ID";
   private static final String EXTRA_YOUTUBE_ORIENTARION = "EXTRA_YOUTUBE_ORIENTARION";
+  YouTubePlayer.PlayerStateChangeListener playerStateChangeListener =
+      new YouTubePlayer.PlayerStateChangeListener() {
+        @Override public void onLoading() {
+          GGGLogImpl.log("YouTubePlayer onLoading");
+        }
 
+        @Override public void onLoaded(String s) {
+          GGGLogImpl.log("YouTubePlayer onLoaded: " + s);
+        }
+
+        @Override public void onAdStarted() {
+          GGGLogImpl.log("YouTubePlayer onAdStarted");
+        }
+
+        @Override public void onVideoStarted() {
+          GGGLogImpl.log("YouTubePlayer onVideoStarted");
+        }
+
+        @Override public void onVideoEnded() {
+          GGGLogImpl.log("YouTubePlayer  onVideoEnded");
+        }
+
+        @Override public void onError(YouTubePlayer.ErrorReason errorReason) {
+          GGGLogImpl.log("YouTubePlayer  onError :" + errorReason.toString());
+        }
+      };
   private Context context;
-
   private YouTubePlayerSupportFragment youTubePlayerFragment;
   private View mview;
   private String youtubeId;
@@ -53,6 +75,31 @@ public class YoutubeFragment extends UiBaseContentData {
   private ImageLoaderCallback mImageCallback;
   private FragmentManager fragmentManager;
   private YouTubePlayer mPlayer;
+  private YouTubePlayer.OnFullscreenListener onFullScreenListener =
+      new YouTubePlayer.OnFullscreenListener() {
+        @Override public void onFullscreen(boolean fullscreen) {
+          if (onFullScreenModeListener != null) {
+            onFullScreenModeListener.onFullScreen(fullscreen);
+          }
+        }
+      };
+  YouTubePlayer.OnInitializedListener onInitializedListener =
+      new YouTubePlayer.OnInitializedListener() {
+
+        @Override
+        public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
+            boolean wasRestored) {
+          mPlayer = player;
+          if (!wasRestored) {
+            setYouTubePlayer(player);
+          }
+        }
+
+        @Override public void onInitializationFailure(YouTubePlayer.Provider provider,
+            YouTubeInitializationResult error) {
+          Log.d("errorMessage:", error.toString());
+        }
+      };
 
   public static YoutubeFragment newInstance(String youtubeId, int orientation) {
     YoutubeFragment youtubeElements = new YoutubeFragment();
@@ -140,13 +187,15 @@ public class YoutubeFragment extends UiBaseContentData {
         (RelativeLayout) view.findViewById(R.id.youtubeLayoutContainer);
     youtubeLayoutContainer.getViewTreeObserver()
         .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-          @Override public void onGlobalLayout() {
+          @TargetApi(Build.VERSION_CODES.JELLY_BEAN) @Override public void onGlobalLayout() {
             FrameLayout.LayoutParams lp =
                 new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
                     FrameLayout.LayoutParams.MATCH_PARENT);
 
             youtubeLayoutContainer.setLayoutParams(lp);
-            youtubeLayoutContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            if (AndroidSdkVersion.hasJellyBean16()) {
+              youtubeLayoutContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
           }
         });
 
@@ -165,7 +214,6 @@ public class YoutubeFragment extends UiBaseContentData {
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     //now in the callback
-
   }
 
   private void setYoutubeFragmentToView(int h) {
@@ -198,60 +246,6 @@ public class YoutubeFragment extends UiBaseContentData {
     player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
     player.loadVideo(youtubeId);
   }
-
-  YouTubePlayer.OnInitializedListener onInitializedListener =
-      new YouTubePlayer.OnInitializedListener() {
-
-        @Override
-        public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
-            boolean wasRestored) {
-          mPlayer = player;
-          if (!wasRestored) {
-            setYouTubePlayer(player);
-          }
-        }
-
-        @Override public void onInitializationFailure(YouTubePlayer.Provider provider,
-            YouTubeInitializationResult error) {
-          Log.d("errorMessage:", error.toString());
-        }
-      };
-
-  YouTubePlayer.PlayerStateChangeListener playerStateChangeListener =
-      new YouTubePlayer.PlayerStateChangeListener() {
-        @Override public void onLoading() {
-          GGGLogImpl.log("YouTubePlayer onLoading");
-        }
-
-        @Override public void onLoaded(String s) {
-          GGGLogImpl.log("YouTubePlayer onLoaded: " + s);
-        }
-
-        @Override public void onAdStarted() {
-          GGGLogImpl.log("YouTubePlayer onAdStarted");
-        }
-
-        @Override public void onVideoStarted() {
-          GGGLogImpl.log("YouTubePlayer onVideoStarted");
-        }
-
-        @Override public void onVideoEnded() {
-          GGGLogImpl.log("YouTubePlayer  onVideoEnded");
-        }
-
-        @Override public void onError(YouTubePlayer.ErrorReason errorReason) {
-          GGGLogImpl.log("YouTubePlayer  onError :" + errorReason.toString());
-        }
-      };
-
-  private YouTubePlayer.OnFullscreenListener onFullScreenListener =
-      new YouTubePlayer.OnFullscreenListener() {
-        @Override public void onFullscreen(boolean fullscreen) {
-          if (onFullScreenModeListener != null) {
-            onFullScreenModeListener.onFullScreen(fullscreen);
-          }
-        }
-      };
 
   public void setOnFullScreenModeListener(OnFullScreenListener onFullScreenModeListener) {
     this.onFullScreenModeListener = onFullScreenModeListener;

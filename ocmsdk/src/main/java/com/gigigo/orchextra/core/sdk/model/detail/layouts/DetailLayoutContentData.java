@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsView;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -17,8 +18,7 @@ import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPrese
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 
-public class DetailLayoutContentData extends UiDetailBaseContentData
-    implements DetailElementsView {
+public class DetailLayoutContentData extends UiDetailBaseContentData implements DetailElementsView {
 
   private String elementUrl;
   private DetailElementsViewPresenter presenter;
@@ -69,12 +69,10 @@ public class DetailLayoutContentData extends UiDetailBaseContentData
   }
 
   @Override public void initUi() {
+    View ocmRetryButton = getView().findViewById(R.id.ocm_retry_button);
+    ocmRetryButton.setOnClickListener(retryButtonListener);
+
     presenter.loadSection(elementUrl);
-
-    int contentIdIndex = elementUrl.lastIndexOf("/");
-    String idIndex = elementUrl.substring(contentIdIndex+1);
-
-    OCManager.notifyEvent(OcmEvent.CONTENT_START, idIndex);
   }
 
   @Override public void renderDetailViewWithPreview(UiBaseContentData previewContentData,
@@ -113,10 +111,17 @@ public class DetailLayoutContentData extends UiDetailBaseContentData
 
   }
 
-  @Override public void showEmptyView() {
-    Activity activity = (Activity) context;
+ 
+  @Override public void showEmptyView(boolean isEmpty) {
+  /*  Activity activity = (Activity) context;
     if (activity != null) {
-      activity.finish();
+         activity.finish();
+ }*/
+
+    if (getView() != null) {
+      View emptyView = getView().findViewById(R.id.view_retry);
+      emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+ 
     }
   }
 
@@ -156,4 +161,23 @@ public class DetailLayoutContentData extends UiDetailBaseContentData
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
   }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    System.out.println("----------------------------------------------destroyview");
+
+    if (context instanceof Activity) {
+      presenter.detachView(this);
+      onFinishListener = null;
+      ((Activity) context).finish();
+    }
+    this.context = null;
+  }
+  
+  private final View.OnClickListener retryButtonListener = new View.OnClickListener() {
+    @Override public void onClick(View v) {
+      presenter.loadSection(elementUrl);
+    }
+  };
+
 }
