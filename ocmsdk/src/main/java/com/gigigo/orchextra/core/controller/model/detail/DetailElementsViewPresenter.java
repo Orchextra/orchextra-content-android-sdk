@@ -55,7 +55,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   private void renderView(ElementCache cachedElement) {
     ElementCacheShare shareElement = cachedElement.getShare();
 
-    if (cachedElement.getType() == ElementCacheType.ARTICLE) { //TODO sustituir por tipo CARDS
+    if (cachedElement.getType() == ElementCacheType.CARDS) {
       UiBaseContentData contentData = generateCardView(cachedElement);
       getView().renderDetailView(contentData, shareElement != null);
     } else {
@@ -65,19 +65,19 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
       UiBaseContentData detailContentData =
           generateDetailView(cachedElement.getType(), cachedElement.getRender());
 
-    if (previewContentData != null && detailContentData != null) {
-      getView().renderDetailViewWithPreview(previewContentData, detailContentData,
-          shareElement != null);
+      if (previewContentData != null && detailContentData != null) {
+        getView().renderDetailViewWithPreview(previewContentData, detailContentData, shareElement != null);
 
-      getView().showEmptyView(false);
-    } else if (previewContentData != null) {
-      getView().renderPreview(previewContentData, shareElement != null);
-      getView().showEmptyView(false);
-    } else if (detailContentData != null) {
-      getView().renderDetailView(detailContentData, shareElement != null);
-      getView().showEmptyView(false);
-    } else {
-      getView().showEmptyView(true);
+        getView().showEmptyView(false);
+      } else if (previewContentData != null) {
+        getView().renderPreview(previewContentData, shareElement != null);
+        getView().showEmptyView(false);
+      } else if (detailContentData != null) {
+        getView().renderDetailView(detailContentData, shareElement != null);
+        getView().showEmptyView(false);
+      } else {
+        getView().showEmptyView(true);
+      }
     }
   }
 
@@ -87,8 +87,8 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
   private UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share) {
     if (preview != null && preview.getBehaviour() != ElementCacheBehaviour.NONE) {
-      //return ocmViewGenerator.generatePreview(preview, share);
-      return ocmViewGenerator.generateCardPreview(preview, share);
+      return ocmViewGenerator.generatePreview(preview, share);
+      //return ocmViewGenerator.generateCardPreview(preview, share);
     }
     return null;
   }

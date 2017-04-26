@@ -41,44 +41,6 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   private final Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvider;
   private final ImageLoader imageLoader;
 
-  private OnRetrieveUiMenuListener onRetrieveUiMenuListener;
-
-  OnRetrieveMenuListener onRetrieveMenuListener = new OnRetrieveMenuListener() {
-    @Override public void onResult(MenuContentData menuContentData) {
-      List<UiMenu> menuList = new ArrayList<>();
-
-      if (menuContentData != null
-          && menuContentData.getMenuContentList() != null
-          && menuContentData.getMenuContentList().size() > 0) {
-        for (Element element : menuContentData.getMenuContentList().get(0).getElements()) {
-          UiMenu uiMenu = new UiMenu();
-
-          uiMenu.setSlug(element.getSlug());
-          uiMenu.setText(element.getSectionView().getText());
-          uiMenu.setElementUrl(element.getElementUrl());
-
-          menuList.add(uiMenu);
-        }
-      }
-
-      if (onRetrieveUiMenuListener != null) {
-        onRetrieveUiMenuListener.onResult(menuList);
-      }
-    }
-
-    @Override public void onNoNetworkConnectionError() {
-      if (onRetrieveUiMenuListener != null) {
-        onRetrieveUiMenuListener.onNoNetworkConnectionError();
-      }
-    }
-
-    @Override public void onResponseDataError() {
-      if (onRetrieveUiMenuListener != null) {
-        onRetrieveUiMenuListener.onResponseDataError();
-      }
-    }
-  };
-
   public OcmViewGeneratorImp(OcmController ocmController,
       Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvider,
       ImageLoader imageLoader) {
@@ -87,9 +49,26 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     this.imageLoader = imageLoader;
   }
 
-  public void getMenu(OnRetrieveUiMenuListener onRetrieveUiMenuListener) {
-    this.onRetrieveUiMenuListener = onRetrieveUiMenuListener;
-    ocmController.getMenu(false, onRetrieveMenuListener);
+  public List<UiMenu> getMenu() {
+    MenuContentData menuContentData = ocmController.getMenu(false);
+
+    List<UiMenu> menuList = new ArrayList<>();
+
+    if (menuContentData != null
+        && menuContentData.getMenuContentList() != null
+        && menuContentData.getMenuContentList().size() > 0) {
+      for (Element element : menuContentData.getMenuContentList().get(0).getElements()) {
+        UiMenu uiMenu = new UiMenu();
+
+        uiMenu.setSlug(element.getSlug());
+        uiMenu.setText(element.getSectionView().getText());
+        uiMenu.setElementUrl(element.getElementUrl());
+
+        menuList.add(uiMenu);
+      }
+    }
+
+    return menuList;
   }
 
   @Override public UiGridBaseContentData generateGridView(String viewId, String filter) {
@@ -114,9 +93,6 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   public UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share) {
     ElementCachePreviewCard previewCard = new ElementCachePreviewCard();
     List<ElementCachePreview> list = new ArrayList<>();
-    list.add(preview);
-    list.add(preview);
-    list.add(preview);
     list.add(preview);
     previewCard.setPreviewList(list);
 
