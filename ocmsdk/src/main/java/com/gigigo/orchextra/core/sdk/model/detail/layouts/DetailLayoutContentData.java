@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsView;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -72,11 +73,6 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
     ocmRetryButton.setOnClickListener(retryButtonListener);
 
     presenter.loadSection(elementUrl);
-
-    int contentIdIndex = elementUrl.lastIndexOf("/");
-    String idIndex = elementUrl.substring(contentIdIndex + 1);
-
-    OCManager.notifyEvent(OcmEvent.CONTENT_START, idIndex);
   }
 
   @Override public void renderDetailViewWithPreview(UiBaseContentData previewContentData,
@@ -183,4 +179,5 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
       presenter.loadSection(elementUrl);
     }
   };
+
 }
