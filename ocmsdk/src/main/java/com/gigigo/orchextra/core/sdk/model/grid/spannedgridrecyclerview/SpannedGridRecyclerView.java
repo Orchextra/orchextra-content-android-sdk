@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.sdk.model.grid.spangridrecyclerview;
+package com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -122,12 +122,6 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
   @Override public void showProgressView(boolean isVisible) {
     if (multipleGridRecyclerView != null) {
       multipleGridRecyclerView.showLoadingView(isVisible);
-    }
-  }
-
-  @Override public void setOnScrollListener(RecyclerView.OnScrollListener onScrollListener) {
-    if (multipleGridRecyclerView != null) {
-      multipleGridRecyclerView.setOnScrollListener(onScrollListener);
     }
   }
 }

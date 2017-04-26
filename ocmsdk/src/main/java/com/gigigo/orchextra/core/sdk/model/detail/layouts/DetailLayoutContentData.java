@@ -52,12 +52,6 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
     return inflater.inflate(R.layout.view_detail_elements_layout, container, false);
   }
 
-  //@Override public void setTopScroll() {
-  //  if (detailCoordinatorLayoutContentData != null) {
-  //    detailCoordinatorLayoutContentData.scrollToTop();
-  //  }
-  //}
-
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
@@ -127,11 +121,6 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
   }
 
   @Override public void showEmptyView(boolean isEmpty) {
-  /*  Activity activity = (Activity) context;
-    if (activity != null) {
-         activity.finish();
- }*/
-
     if (getView() != null) {
       View emptyView = getView().findViewById(R.id.view_retry);
       emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);

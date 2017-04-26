@@ -30,8 +30,6 @@ public abstract class UiListedBaseContentData extends UiBaseContentData {
 
   public abstract void showProgressView(boolean isVisible);
 
-  public abstract void setOnScrollListener(RecyclerView.OnScrollListener onScrollListener);
-
   public void setImageLoader(ImageLoader imageLoader) {
     this.imageLoader = imageLoader;
   }

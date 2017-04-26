@@ -18,7 +18,7 @@ import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
-import com.gigigo.orchextra.core.sdk.model.grid.spangridrecyclerview.SpannedGridRecyclerView;
+import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -61,6 +61,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View progressView;
   private View appEmptyView;
   private View appErrorView;
+
   private View.OnClickListener onClickDiscoverMoreButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       if (onLoadMoreContentListener != null) {
@@ -168,9 +169,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       setEmptyViewLayout(appEmptyView != null ? appEmptyView : emptyView);
       setErrorViewLayout(appErrorView != null ? appErrorView : errorView);
       setLoadingViewLayout();
-      if (onScrollListener != null) {
-        uiListedBaseContentData.setOnScrollListener(onScrollListener);
-      }
       uiListedBaseContentData.setListedContentListener(listedContentListener);
 
       fragmentManager.beginTransaction()
