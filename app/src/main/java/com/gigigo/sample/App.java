@@ -15,8 +15,11 @@ public class App extends MultiDexApplication {
   //public static String API_KEY = "a2966ba69f4ead1a4f1550bfda450e9fd07e6762";   //Asv project
   //public static String API_SECRET = "f79713d7e9b0fcd69fedfb94f471106cb85d8ca4";
 
-  public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";    //Woah project
-  public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
+  //public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";    //Woah project
+  //public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
+
+  public static String API_KEY = "b65910721cdc73000b9c528e660ff050b553c2db";    //[UAT][CSE] - WOAH SITC project
+  public static String API_SECRET = "e460fa2f55b6d18860de8300a4b96493c5909019";
 
   private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {

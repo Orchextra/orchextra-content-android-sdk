@@ -6,18 +6,15 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
-import com.gigigo.orchextra.core.domain.OcmController;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementSectionView;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
-import com.gigigo.orchextra.core.sdk.model.grid.dto.CellElementAdapter;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.ui.imageloader.ImageLoader;
 
-public class CellImageViewHolder extends BaseViewHolder<CellElementAdapter> {
+public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
 
   private final View mainLayout;
   private final View padlockView;
@@ -38,7 +35,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellElementAdapter> {
     mainLayout = itemView.findViewById(R.id.cell_image_content_layout);
   }
 
-  @Override public void bindTo(CellElementAdapter item, int position) {
+  @Override public void bindTo(CellGridContentData item, int position) {
     final ElementSectionView sectionView = item.getData().getSectionView();
 
     ImageGenerator.generateThumbImage(sectionView.getImageThumb(), imageView);

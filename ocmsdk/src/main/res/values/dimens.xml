@@ -1,8 +1,10 @@
 <resources>
 
   <dimen name="oc_spacing_8">8dp</dimen>
+  <dimen name="oc_spacing_12">12dp</dimen>
   <dimen name="oc_spacing_16">16dp</dimen>
   <dimen name="oc_spacing_32">32dp</dimen>
+  <dimen name="oc_spacing_48">48dp</dimen>
   <dimen name="oc_spacing_64">64dp</dimen>
 
   <dimen name="oc_text_14">14sp</dimen>

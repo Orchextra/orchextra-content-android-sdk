@@ -5,6 +5,7 @@ import java.util.List;
 public class ContentItemLayout {
 
   private String name;
+  private ContentItemTypeLayout type;
   private List<ContentItemPattern> pattern;
 
   public String getName() {
@@ -21,5 +22,13 @@ public class ContentItemLayout {
 
   public void setPattern(List<ContentItemPattern> pattern) {
     this.pattern = pattern;
+  }
+
+  public ContentItemTypeLayout getType() {
+    return type;
+  }
+
+  public void setType(ContentItemTypeLayout type) {
+    this.type = type;
   }
 }
