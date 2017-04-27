@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocmsdk.R;
 
 public class DetailToolbarView extends FrameLayout {
@@ -22,6 +24,9 @@ public class DetailToolbarView extends FrameLayout {
   private View shareToolbarBgButton;
 
   private boolean isBlocked;
+
+  private boolean isFirstScrollPreview;
+  private boolean isFirstScrollFull;
 
   public DetailToolbarView(@NonNull Context context) {
     super(context);
@@ -58,6 +63,9 @@ public class DetailToolbarView extends FrameLayout {
     shareToolbarButton = view.findViewById(R.id.share_toolbar_button);
     backToolbarBgButton = view.findViewById(R.id.back_toolbar_bg_button);
     shareToolbarBgButton = view.findViewById(R.id.share_bg_toolbar_button);
+
+    isFirstScrollPreview = true;
+    isFirstScrollFull = true;
   }
 
   public void switchBetweenButtonAndToolbar(boolean areVisibleToolbar) {
@@ -83,6 +91,12 @@ public class DetailToolbarView extends FrameLayout {
 
       shareToolbarBgButton.startAnimation(animation);
       shareToolbarBgButton.setVisibility(!areVisibleToolbar ? View.VISIBLE : View.INVISIBLE);
+
+      if (isFirstScrollFull && areVisibleToolbar) {
+        OCManager.notifyEvent(OcmEvent.CONTENT_FULL);
+      } else if (isFirstScrollPreview && !areVisibleToolbar){
+        OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW);
+      }
     }
   }
 

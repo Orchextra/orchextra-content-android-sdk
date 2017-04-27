@@ -18,6 +18,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeConte
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 
@@ -81,18 +82,23 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     Class<? extends UiBaseContentData> detailContentDataClass = uiBaseContentData.getClass();
     if (detailContentDataClass.equals(VuforiaContentData.class)) {
       launchOxVuforia();
+      OCManager.notifyEvent(OcmEvent.VUFORIA);
       return true;
     } else if (detailContentDataClass.equals(ScanContentData.class)) {
       lauchOxScan();
+      OCManager.notifyEvent(OcmEvent.OPEN_BARCODE);
       return true;
     } else if (detailContentDataClass.equals(BrowserContentData.class)) {
       launchExternalBrowser(((BrowserContentData) uiBaseContentData).getUrl());
+      OCManager.notifyEvent(OcmEvent.VISIT_URL);
       return true;
     } else if (detailContentDataClass.equals(YoutubeContentData.class)) {
       launchExternalYoutube(((YoutubeContentData) uiBaseContentData).getUrl());
+      OCManager.notifyEvent(OcmEvent.PLAY_YOUTUBE);
       return true;
     } else if (detailContentDataClass.equals(DeepLinkContentData.class)) {
       processDeepLink(((DeepLinkContentData) uiBaseContentData).getUri());
+      OCManager.notifyEvent(OcmEvent.OPEN_IR);
       return true;
     }
     return false;
