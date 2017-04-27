@@ -84,6 +84,8 @@ public class DetailToolbarView extends FrameLayout {
       shareToolbarBgButton.startAnimation(animation);
       shareToolbarBgButton.setVisibility(!areVisibleToolbar ? View.VISIBLE : View.INVISIBLE);
     }
+
+
   }
 
   public void setOnClickBackButtonListener(OnClickListener onClickBackButtonListener) {

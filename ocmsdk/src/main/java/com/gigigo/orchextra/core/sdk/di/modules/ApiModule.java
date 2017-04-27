@@ -34,7 +34,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module public class ApiModule {
 
   @Provides @Singleton @EndpointOcm String provideEndpoint() {
-    return BuildConfig.API_URL;
+    //return BuildConfig.API_URL;
+    return "https://cm.s.orchextra.io/";
   }
 
   @Provides @Singleton @RetrofitLog boolean provideRetrofitLog() {
@@ -82,7 +83,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
   @Provides @Singleton @RetrofitOcm Retrofit provideOcmRetrofitObject(@EndpointOcm String enpoint,
       @GsonConverterFactoryObject
-          retrofit2.converter.gson.GsonConverterFactory gsonConverterFactory,
+          GsonConverterFactory gsonConverterFactory,
       @OkHttpClientOcm OkHttpClient okClient) {
 
     Retrofit retrofit = new Retrofit.Builder().baseUrl(enpoint)

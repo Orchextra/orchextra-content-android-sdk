@@ -27,7 +27,7 @@ dependencies {
   compile project(path: ':ocmsdk')
 //  compile 'com.github.Nuborisar:orchextra-content-android-sdk:v1.0RC7'
 
-  compile 'com.squareup.leakcanary:leakcanary-android:1.5'
+//  compile 'com.squareup.leakcanary:leakcanary-android:1.5'
 
   compile 'com.android.support:multidex:1.0.1'
 

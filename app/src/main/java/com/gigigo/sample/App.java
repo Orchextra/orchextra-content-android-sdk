@@ -7,7 +7,7 @@ import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
-import com.squareup.leakcanary.LeakCanary;
+//import com.squareup.leakcanary.LeakCanary;
 
 //MultiDexApplication
 public class App extends MultiDexApplication {
@@ -18,8 +18,8 @@ public class App extends MultiDexApplication {
   //public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";    //Woah project
   //public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
 
-  public static String API_KEY = "b65910721cdc73000b9c528e660ff050b553c2db";    //[UAT][CSE] - WOAH SITC project
-  public static String API_SECRET = "e460fa2f55b6d18860de8300a4b96493c5909019";
+  public static String API_KEY = "adfc8ba4340828a054bf061f692707a197af96cb";    //[UAT][CSE] - WOAH SITC project
+  public static String API_SECRET = "677cf75a17aeec144ee402c281ad3a732d736a8a";
 
   private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {
@@ -34,13 +34,13 @@ public class App extends MultiDexApplication {
 
   @Override public void onCreate() {
     super.onCreate();
-     if (LeakCanary.isInAnalyzerProcess(this)) {
-      // This process is dedicated to LeakCanary for heap analysis.
-      // You should not init your app in this process.
-      return;
-    }
-    LeakCanary.install(this);
-    // Normal app init code...
+    // if (LeakCanary.isInAnalyzerProcess(this)) {
+    //  // This process is dedicated to LeakCanary for heap analysis.
+    //  // You should not init your app in this process.
+    //  return;
+    //}
+    //LeakCanary.install(this);
+    //// Normal app init code...
 
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")

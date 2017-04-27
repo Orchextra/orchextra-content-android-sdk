@@ -18,6 +18,7 @@ import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
+import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalViewPager;
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
@@ -34,6 +35,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   @Inject ContentViewPresenter presenter;
   @Inject ImageLoader imageLoader;
   @Inject Authoritation authoritation;
+
   UiListedBaseContentData.ListedContentListener listedContentListener =
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
@@ -48,8 +50,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           }
         }
       };
+
   private FragmentManager fragmentManager;
-  private SpannedGridRecyclerView uiListedBaseContentData;
+  private UiListedBaseContentData uiListedBaseContentData;
   private ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
   private Context context;
   private View retryButton;
@@ -69,6 +72,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       }
     }
   };
+
   private View.OnClickListener onClickRetryButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       if (presenter != null) {
@@ -155,6 +159,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
         setDataGrid(cellDataList);
         break;
       case CAROUSEL:
+        setDataCarousel(cellDataList);
     }
   }
 
@@ -164,6 +169,24 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       uiListedBaseContentData = SpannedGridRecyclerView.newInstance();
 
       uiListedBaseContentData.setClipToPadding(clipToPadding);
+      uiListedBaseContentData.setImageLoader(imageLoader);
+      uiListedBaseContentData.setAuthoritation(authoritation);
+      setEmptyViewLayout(appEmptyView != null ? appEmptyView : emptyView);
+      setErrorViewLayout(appErrorView != null ? appErrorView : errorView);
+      setLoadingViewLayout();
+      uiListedBaseContentData.setListedContentListener(listedContentListener);
+
+      fragmentManager.beginTransaction()
+          .replace(R.id.listedDataContainer, uiListedBaseContentData)
+          .commit();
+    }
+    uiListedBaseContentData.setData(cellDataList);
+  }
+
+  private void setDataCarousel(List<Cell> cellDataList) {
+    if (uiListedBaseContentData == null) {
+      uiListedBaseContentData = HorizontalViewPager.newInstance();
+
       uiListedBaseContentData.setImageLoader(imageLoader);
       uiListedBaseContentData.setAuthoritation(authoritation);
       setEmptyViewLayout(appEmptyView != null ? appEmptyView : emptyView);
