@@ -13,6 +13,9 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
+import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailLayoutContentData;
+import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.OcmEvent;
 
 public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
@@ -41,6 +44,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
     if (cachedElement != null) {
       renderView(cachedElement);
+      OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, cachedElement);
     } else {
       getView().showEmptyView(true);
     }
@@ -96,6 +100,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
     if (!TextUtils.isEmpty(shareText)) {
       getView().shareElement(shareText);
+      OCManager.notifyEvent(OcmEvent.SHARE, cachedElement);
     }
   }
 
