@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.domain.entities.article;
+package com.gigigo.orchextra.core.domain.entities.article.base;
 
 public enum ArticleButtonSize {
   BIG("big"),

@@ -177,7 +177,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
   @Override public void initUi() {
     if (viewId != null) {
-      presenter.loadSection(viewId, true, emotion);
+      presenter.loadSection(viewId, emotion);
     }
   }
 

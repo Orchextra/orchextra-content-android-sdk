@@ -53,11 +53,11 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     getView().initUi();
   }
 
-  public void loadSection(String viewId, boolean useCache, String filter) {
+  public void loadSection(String viewId, String filter) {
     this.section = viewId;
     this.filter = filter;
 
-    loadSection(useCache);
+    loadSection(true);
   }
 
   public void reloadSection() {

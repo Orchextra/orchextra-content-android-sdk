@@ -5,15 +5,15 @@ import android.support.annotation.Nullable;
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonSize;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonType;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonSize;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonType;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElementRender;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleTypeSection;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleTypeSection;
 
 public class ApiArticleElementMapper implements
     ExternalClassToModelMapper<ApiArticleElement, ArticleElement> {

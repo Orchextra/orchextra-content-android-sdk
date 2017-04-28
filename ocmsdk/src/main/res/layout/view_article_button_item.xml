@@ -5,9 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_marginTop="@dimen/oc_spacing_16"
+    android:layout_marginBottom="@dimen/oc_spacing_16"
     >
 
-  <TextView
+  <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmNormalTextView
       android:id="@+id/articleTextButton"
       android:layout_width="match_parent"
       android:layout_height="@dimen/oc_button_article_size"

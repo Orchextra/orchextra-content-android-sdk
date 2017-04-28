@@ -1,5 +1,9 @@
 package com.gigigo.orchextra.core.domain.entities.article;
 
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonSize;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonType;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+
 public class ArticleButtonElement extends ArticleElement {
 
   private ArticleButtonType type;

@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.domain.entities.article;
 
-public class ArticleImageElement extends ArticleElement{
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+
+public class ArticleImageElement extends ArticleElement {
 
   private String elementUrl;
   private String imageUrl;

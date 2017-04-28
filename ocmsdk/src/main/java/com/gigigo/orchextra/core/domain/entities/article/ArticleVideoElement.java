@@ -1,5 +1,7 @@
 package com.gigigo.orchextra.core.domain.entities.article;
 
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+
 public class ArticleVideoElement extends ArticleElement {
 
   private String imageUrl;

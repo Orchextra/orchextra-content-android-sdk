@@ -1,5 +1,7 @@
 package com.gigigo.orchextra.core.domain.entities.article;
 
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+
 public class ArticleHeaderElement extends ArticleElement {
 
   private String html;
