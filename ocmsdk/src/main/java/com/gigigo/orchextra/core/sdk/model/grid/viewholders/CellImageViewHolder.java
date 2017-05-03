@@ -6,15 +6,12 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
-import com.gigigo.orchextra.core.domain.OcmController;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementSectionView;
+import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.CellElementAdapter;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
-import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 
 public class CellImageViewHolder extends BaseViewHolder<CellElementAdapter> {
@@ -41,23 +38,26 @@ public class CellImageViewHolder extends BaseViewHolder<CellElementAdapter> {
   @Override public void bindTo(CellElementAdapter item, int position) {
     final ElementSectionView sectionView = item.getData().getSectionView();
 
-    ImageGenerator.generateThumbImage(sectionView.getImageThumb(), imageView);
+    if (sectionView != null) {
+      ImageGenerator.generateThumbImage(sectionView.getImageThumb(), imageView);
 
-    mainLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-      @Override public boolean onPreDraw() {
-        String generatedImageUrl =
-            ImageGenerator.generateImageUrl(sectionView.getImageUrl(), mainLayout.getWidth(),
-                mainLayout.getHeight());
+      mainLayout.getViewTreeObserver()
+          .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override public boolean onPreDraw() {
+              String generatedImageUrl =
+                  ImageGenerator.generateImageUrl(sectionView.getImageUrl(), mainLayout.getWidth(),
+                      mainLayout.getHeight());
 
-        imageLoader.load(generatedImageUrl)
-            .override(mainLayout.getWidth(), mainLayout.getHeight())
-            .into(imageView);
+              imageLoader.load(generatedImageUrl)
+                  .override(mainLayout.getWidth(), mainLayout.getHeight())
+                  .into(imageView);
 
-        mainLayout.getViewTreeObserver().removeOnPreDrawListener(this);
+              mainLayout.getViewTreeObserver().removeOnPreDrawListener(this);
 
-        return true;
-      }
-    });
+              return true;
+            }
+          });
+    }
 
     if (item.getData().getSegmentation().getRequiredAuth().equals(RequiredAuthoritation.LOGGED)) {
       padlockView.setVisibility(authoritation.isAuthorizatedUser() ? View.GONE : View.VISIBLE);
