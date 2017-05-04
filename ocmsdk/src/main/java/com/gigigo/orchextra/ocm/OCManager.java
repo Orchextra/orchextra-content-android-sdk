@@ -284,5 +284,9 @@ public final class OCManager {
     }
   }
 
+  public static OcmContextProvider getOcmContextProvider() {
+    return OCManager.instance.ocmContextProvider;
+  }
+
   //endregion
 }
