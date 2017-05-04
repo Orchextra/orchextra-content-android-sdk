@@ -159,4 +159,5 @@ dependencies {
   compile rootProject.ext.libraries.playServicesGcm
 
   compile rootProject.ext.libraries.realTextView
+  compile rootProject.ext.libraries.customtabs
 }

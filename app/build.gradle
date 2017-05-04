@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.2"
+  compileSdkVersion rootProject.ext.androidCompileSdkVersion
+  buildToolsVersion rootProject.ext.androidBuildToolsVersion
 
   defaultConfig {
     applicationId "com.gigigo.sample"
-    minSdkVersion 18
-    targetSdkVersion 25
+    minSdkVersion rootProject.ext.androidMinSdkVersion
+    targetSdkVersion rootProject.ext.androidTargetSdkVersion
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -19,10 +19,11 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+  buildToolsVersion '25.0.0'
 }
 
 dependencies {
-  compile 'com.android.support:appcompat-v7:25.1.0'
+  compile "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
 
   compile project(path: ':ocmsdk')
 //  compile 'com.github.Nuborisar:orchextra-content-android-sdk:v1.0RC7'
