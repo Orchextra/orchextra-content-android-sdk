@@ -44,7 +44,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
     if (cachedElement != null) {
       renderView(cachedElement);
-      OCManager.notifyEvent(OcmEvent.CONTENT_START, cachedElement);
+      OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, cachedElement);
     } else {
       getView().showEmptyView(true);
     }
@@ -100,6 +100,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
     if (!TextUtils.isEmpty(shareText)) {
       getView().shareElement(shareText);
+      OCManager.notifyEvent(OcmEvent.SHARE, cachedElement);
     }
   }
 

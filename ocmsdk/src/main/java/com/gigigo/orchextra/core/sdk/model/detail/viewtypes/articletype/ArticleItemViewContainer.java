@@ -8,13 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonSize;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonType;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleBaseView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleBlankView;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleButtonView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleHeaderView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleImageView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleRichTextView;
@@ -44,7 +48,6 @@ public class ArticleItemViewContainer extends LinearLayout {
     init();
   }
 
-  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   public ArticleItemViewContainer(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     this.context = context;
@@ -110,7 +113,8 @@ public class ArticleItemViewContainer extends LinearLayout {
       }
     }
   }
-//todo change by factory
+
+  //todo change by factory
   public ArticleBaseView create(ArticleElement articleElement) {
     Class<? extends ArticleElement> valueClass = articleElement.getClass();
 
@@ -122,6 +126,8 @@ public class ArticleItemViewContainer extends LinearLayout {
       return new ArticleRichTextView(context, (ArticleRichTextElement) articleElement);
     } else if (valueClass == ArticleVideoElement.class) {
       return new ArticleVideoView(context, (ArticleVideoElement) articleElement);
+    } else if (valueClass == ArticleButtonElement.class) {
+      return new ArticleButtonView(context, (ArticleButtonElement) articleElement, imageLoader);
     } else if (valueClass == ArticleBlankElement.class) {
       return new ArticleBlankView(context, (ArticleBlankElement) articleElement);
     } else {
@@ -132,6 +138,4 @@ public class ArticleItemViewContainer extends LinearLayout {
   public void setImageLoader(ImageLoader imageLoader) {
     this.imageLoader = imageLoader;
   }
-
-
 }

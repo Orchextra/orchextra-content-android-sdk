@@ -138,6 +138,12 @@ public final class OCManager {
     }
   }
 
+  public static void notifyEvent(OcmEvent event) {
+    if (instance != null && instance.onEventCallback != null) {
+      instance.onEventCallback.doEvent(event);
+    }
+  }
+
   static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass) {
     if (OCManager.instance != null) {
       Application app = (Application) instance.ocmContextProvider.getApplicationContext();

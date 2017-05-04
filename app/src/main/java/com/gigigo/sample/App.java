@@ -1,6 +1,7 @@
 package com.gigigo.sample;
 
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -28,15 +29,19 @@ public class App extends MultiDexApplication {
   };
   private OnEventCallback onEventCallback = new OnEventCallback() {
     @Override public void doEvent(OcmEvent event, Object data) {
+      Log.v("EVENT_" + event.toString(), data.toString());
+    }
 
+    @Override public void doEvent(OcmEvent event) {
+      Log.v("EVENT", event.toString());
     }
   };
 
   @Override public void onCreate() {
     super.onCreate();
-    // if (LeakCanary.isInAnalyzerProcess(this)) {
-    //  // This process is dedicated to LeakCanary for heap analysis.
-    //  // You should not init your app in this process.
+     //if (LeakCanary.isInAnalyzerProcess(this)) {
+      // //This process is dedicated to LeakCanary for heap analysis.
+      // //You should not init your app in this process.
     //  return;
     //}
     //LeakCanary.install(this);
@@ -55,8 +60,5 @@ public class App extends MultiDexApplication {
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
     Ocm.setBusinessUnit("it");
-
-
-
   }
 }

@@ -22,6 +22,8 @@ import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.domain.interactors.errors.GenericResponseDataError;
 import com.gigigo.orchextra.core.domain.interactors.errors.NoNetworkConnectionError;
 import com.gigigo.orchextra.core.domain.interactors.home.GetSectionDataInteractor;
+import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.OcmEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -200,6 +202,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       }
 
       if (element != null && checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
+        OCManager.notifyEvent(OcmEvent.CELL_CLICKED, cachedElement);
         getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview, activity,
             view);
       } else {

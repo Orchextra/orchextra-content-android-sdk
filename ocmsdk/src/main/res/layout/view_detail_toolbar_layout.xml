@@ -22,8 +22,8 @@
 
     <ImageView
         android:id="@+id/back_toolbar_bg_button"
-        android:layout_width="@dimen/oc__detail_button_size"
-        android:layout_height="@dimen/oc__detail_button_size"
+        android:layout_width="@dimen/oc_detail_button_size"
+        android:layout_height="@dimen/oc_detail_button_size"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:src="@drawable/oc_bg_button"
@@ -49,8 +49,8 @@
 
     <ImageView
         android:id="@+id/share_bg_toolbar_button"
-        android:layout_width="@dimen/oc__detail_button_size"
-        android:layout_height="@dimen/oc__detail_button_size"
+        android:layout_width="@dimen/oc_detail_button_size"
+        android:layout_height="@dimen/oc_detail_button_size"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:src="@drawable/oc_bg_button"

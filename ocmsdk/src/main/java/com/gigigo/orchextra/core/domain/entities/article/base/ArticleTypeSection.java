@@ -1,10 +1,11 @@
-package com.gigigo.orchextra.core.domain.entities.article;
+package com.gigigo.orchextra.core.domain.entities.article.base;
 
 public enum ArticleTypeSection {
   HEADER("header"),
   IMAGE("image"),
   VIDEO("video"),
   RICH_TEXT("richText"),
+  BUTTON("button"),
   NONE("");
 
   private final String typeSection;

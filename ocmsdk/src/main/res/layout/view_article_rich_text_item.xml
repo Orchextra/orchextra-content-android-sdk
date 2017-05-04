@@ -12,4 +12,5 @@
     android:layout_marginBottom="@dimen/oc_spacing_12"
     android:textColor="@color/oc_article_rich_text_color"
     android:textSize="@dimen/oc_text_18"
+    android:autoLink="web"
     />
