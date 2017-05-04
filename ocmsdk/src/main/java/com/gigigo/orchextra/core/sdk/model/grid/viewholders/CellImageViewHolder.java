@@ -39,7 +39,6 @@ public class CellImageViewHolder extends BaseViewHolder<CellElementAdapter> {
     final ElementSectionView sectionView = item.getData().getSectionView();
 
     if (sectionView != null) {
-
       ImageGenerator.generateThumbImage(sectionView.getImageThumb(), imageView);
 
       mainLayout.getViewTreeObserver()
