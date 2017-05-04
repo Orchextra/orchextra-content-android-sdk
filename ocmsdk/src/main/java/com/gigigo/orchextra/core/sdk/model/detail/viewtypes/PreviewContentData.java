@@ -93,8 +93,8 @@ public class PreviewContentData extends UiBaseContentData {
     previewBackgroundShadow = (ImageView) view.findViewById(R.id.preview_background);
     previewTitle = (TextView) view.findViewById(R.id.preview_title);
     goToArticleButton = view.findViewById(R.id.go_to_article_button);
-    MoreContentArrowView imgAnim  = (MoreContentArrowView) view.findViewById(R.id.imgMoreContain);
-    imgAnim.Anim(32,-1);
+    MoreContentArrowView imgAnim = (MoreContentArrowView) view.findViewById(R.id.imgMoreContain);
+    imgAnim.Anim(32, -1);
   }
 
   private void bindTo() {
@@ -102,7 +102,9 @@ public class PreviewContentData extends UiBaseContentData {
       setImage();
 
       previewTitle.setText(preview.getText());
-      if(preview.getText() == null || (preview.getText() != null && preview.getText().isEmpty())) previewBackgroundShadow.setVisibility(View.GONE);
+      if (preview.getText() == null || (preview.getText() != null && preview.getText().isEmpty())) {
+        previewBackgroundShadow.setVisibility(View.GONE);
+      }
 
       if (preview.getBehaviour().equals(ElementCacheBehaviour.SWIPE)) {
         goToArticleButton.setVisibility(View.VISIBLE);
@@ -120,11 +122,13 @@ public class PreviewContentData extends UiBaseContentData {
   private void setImage() {
     String imageUrl = preview.getImageUrl();
 
-    String generatedImageUrl =
-        ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(context),
-            DeviceUtils.calculateRealHeightDevice(context));
+    if (imageUrl != null) {
+      String generatedImageUrl =
+          ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(context),
+              DeviceUtils.calculateRealHeightDevice(context));
 
-    imageLoader.load(generatedImageUrl).into(previewImage) ;
+      imageLoader.load(generatedImageUrl).into(previewImage);
+    }
   }
 
   private void setListeners() {
