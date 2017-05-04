@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.customtabs.CustomTabsIntent;
 import android.text.Html;
@@ -43,8 +44,6 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
   @Override protected void bindTo(ArticleRichTextElement articleElement) {
     if (!TextUtils.isEmpty(articleElement.getHtml())) {
       setTextViewHTML(articleRichText, articleElement.getHtml());
-      //articleRichText.setText(Html.fromHtml(articleElement.getHtml()));
-      //articleRichText.setMovementMethod(LinkMovementMethod.getInstance());
     }
   }
 
@@ -74,6 +73,9 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
 
   private void openChromeTabs(String url) {
     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+    builder.setToolbarColor(getContext().getResources().getColor(R.color.oc_background_detail_toolbar));
+    //builder.setCloseButtonIcon(BitmapFactory.decodeResource(
+    //    getResources(), android.R.drawable.ic_menu_b));
     CustomTabsIntent customTabsIntent = builder.build();
     customTabsIntent.launchUrl(ocmContextProvider.getCurrentActivity(), Uri.parse(url));
   }
