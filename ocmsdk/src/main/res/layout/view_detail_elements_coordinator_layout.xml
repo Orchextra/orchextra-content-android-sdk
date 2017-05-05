@@ -26,7 +26,6 @@
           android:id="@+id/previewDetailContentLayout"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-        android:background="#ff3300"
           />
 
     </android.support.design.widget.CollapsingToolbarLayout>
