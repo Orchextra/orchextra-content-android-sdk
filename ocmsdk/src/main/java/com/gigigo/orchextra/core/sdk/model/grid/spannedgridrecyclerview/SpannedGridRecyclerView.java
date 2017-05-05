@@ -2,7 +2,6 @@ package com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +90,9 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    multipleGridRecyclerView.addAll(cellDataList);
+    if (cellDataList != null) {
+      multipleGridRecyclerView.addAll(cellDataList);
+    }
   }
 
   @Override public void setData(List<Cell> cellDataList) {
