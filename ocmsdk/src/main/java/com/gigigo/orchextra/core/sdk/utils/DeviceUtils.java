@@ -50,7 +50,7 @@ public class DeviceUtils {
   }
 
   public static void openChromeTabs(Activity activity, String url) {
-    if (activity != null) {
+    if (activity != null && url!=null) {
       CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
       builder.setToolbarColor(
           activity.getResources().getColor(R.color.oc_background_detail_toolbar));
