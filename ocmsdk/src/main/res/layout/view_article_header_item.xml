@@ -23,6 +23,7 @@
       android:layout_centerVertical="true"
       android:layout_marginLeft="@dimen/oc_spacing_16"
       android:layout_marginRight="@dimen/oc_spacing_16"
+      android:background="#00000000"
       android:textColor="@color/oc_article_header_title_text_color"
       android:textSize="@dimen/oc_text_30"
       />

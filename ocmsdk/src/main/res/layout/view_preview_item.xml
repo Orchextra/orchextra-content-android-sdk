@@ -39,6 +39,7 @@
         android:textColor="@color/oc_preview_title_text_color"
         android:textSize="@dimen/oc_text_24"
         autofit:minTextSize="@dimen/oc_text_11"
+      android:background="#00000000"
         />
 
   </LinearLayout>

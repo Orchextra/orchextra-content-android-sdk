@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/oc_spacing_16"
         android:layout_marginStart="@dimen/oc_spacing_16"
+      android:background="#00000000"
         android:text="@string/oc_preview_down_arrow_text"
         android:textAllCaps="true"
         android:textColor="@color/oc_preview_down_arrow_text_color"
@@ -67,6 +68,7 @@
         android:layout_marginStart="@dimen/oc_spacing_8"
         android:gravity="end"
         android:maxLines="8"
+      android:background="#00000000"
         android:textColor="@color/oc_preview_title_text_color"
         android:textSize="@dimen/oc_text_24"
         />
