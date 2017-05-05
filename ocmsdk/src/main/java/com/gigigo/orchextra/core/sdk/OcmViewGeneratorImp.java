@@ -1,8 +1,11 @@
 package com.gigigo.orchextra.core.sdk;
 
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
+import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
@@ -46,7 +49,6 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     this.imageLoader = imageLoader;
   }
 
-  @Override
   public List<UiMenu> getMenu() {
     MenuContentData menuContentData = ocmController.getMenu(false);
 
@@ -85,6 +87,20 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     detailLayoutContentData.setPresenter(detailElementsViewPresenterProvider.get());
     detailLayoutContentData.setElementUrl(elementUrl);
     return detailLayoutContentData;
+  }
+
+  @Override
+  public UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share) {
+    ElementCachePreviewCard previewCard = new ElementCachePreviewCard();
+    List<ElementCachePreview> list = new ArrayList<>();
+    list.add(preview);
+    previewCard.setPreviewList(list);
+
+    PreviewCardContentData previewCardContentData = PreviewCardContentData.newInstance();
+    previewCardContentData.setImageLoader(imageLoader);
+    previewCardContentData.setPreview(previewCard);
+    previewCardContentData.setShare(share);
+    return previewCardContentData;
   }
 
   @Override
@@ -147,6 +163,15 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     articleContentData.setImageLoader(imageLoader);
     articleContentData.addItems(elements);
     return articleContentData;
+  }
+
+  @Override
+  public UiBaseContentData generateCardDetailView(ElementCache elements) {
+    CardContentData cardContentData =
+        CardContentData.newInstance();
+    cardContentData.setImageLoader(imageLoader);
+    cardContentData.addItems(elements);
+    return cardContentData;
   }
 
   private UiBaseContentData generateWebViewDetailView(String url) {

@@ -1,18 +1,15 @@
 package com.gigigo.orchextra.core.sdk.ui.views.textviews;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Build;
-import android.support.v7ox.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.TextView;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.ocm.OCManager;
+import views.gigigo.com.textviewautofit.TextFitTextView;
 
-public class OcmLightTextView extends AppCompatTextView {
+public class OcmLightTextView extends TextFitTextView {
 
   private final Context context;
 

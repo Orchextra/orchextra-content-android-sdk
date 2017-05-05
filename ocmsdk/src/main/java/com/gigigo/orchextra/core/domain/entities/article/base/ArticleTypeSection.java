@@ -5,6 +5,8 @@ public enum ArticleTypeSection {
   IMAGE("image"),
   VIDEO("video"),
   RICH_TEXT("richText"),
+  IMAGE_AND_TEXT("imageText"),
+  TEXT_AND_IMAGE("textImage"),
   BUTTON("button"),
   NONE("");
 

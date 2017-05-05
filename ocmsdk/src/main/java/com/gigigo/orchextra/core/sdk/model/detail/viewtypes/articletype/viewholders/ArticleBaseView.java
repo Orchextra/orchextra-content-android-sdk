@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
-public abstract class ArticleBaseView<T> extends FrameLayout{
+public abstract class ArticleBaseView<T> extends FrameLayout {
 
   private T articleElement;
   protected View itemView;
