@@ -31,5 +31,7 @@ public interface OcmViewGenerator {
   UiBaseContentData generateCardDetailView(ElementCache cachedElement);
 
   UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
+
+  void releaseImageLoader();
 }
 

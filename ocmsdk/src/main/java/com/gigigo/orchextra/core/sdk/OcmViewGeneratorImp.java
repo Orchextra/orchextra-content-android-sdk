@@ -1,18 +1,8 @@
 package com.gigigo.orchextra.core.sdk;
 
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
-import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
-import com.gigigo.orchextra.core.domain.entities.elements.Element;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
-import com.gigigo.orchextra.ocm.dto.UiMenu;
-import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
-import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
-import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
@@ -20,16 +10,26 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePrevie
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
+import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
+import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.ArticleContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailLayoutContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.WebViewContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.ArticleContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
+import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
+import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
+import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
@@ -196,5 +196,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
   private UiBaseContentData generateDeepLinkView(String uri) {
     return DeepLinkContentData.newInstance(uri);
+  }
+
+  @Override public void releaseImageLoader() {
+   //todo release imageview for avoid memory leak of detailactivity
+
   }
 }

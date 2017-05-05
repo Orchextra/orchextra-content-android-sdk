@@ -1,17 +1,11 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -26,8 +20,6 @@ import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.views.MoreContentArrowView;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
-import com.gigigo.ui.imageloader.ImageLoaderCallback;
-import com.gigigo.ui.imageloader.glide.transformations.RoundedCornersTransformation;
 
 public class PreviewContentData extends UiBaseContentData {
 
@@ -50,8 +42,7 @@ public class PreviewContentData extends UiBaseContentData {
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
-
-    this.context = context;
+    this.context = context.getApplicationContext();
   }
 
   @Nullable @Override
@@ -152,6 +143,7 @@ public class PreviewContentData extends UiBaseContentData {
   }
 
   public void setImageLoader(ImageLoader imageLoader) {
+    this.imageLoader = null;
     this.imageLoader = imageLoader;
   }
 }

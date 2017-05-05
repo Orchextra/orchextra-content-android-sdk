@@ -128,9 +128,25 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     if (requestCode == YoutubeWebviewActivity.RESULT_CODE_YOUTUBE_PLAYER && uiContentView != null) {
-    //  uiContentView.setTopScroll();
+      //  uiContentView.setTopScroll();
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
+  }
+
+  @Override protected void onDestroy() {
+
+    System.out.println("----------------------------------------------destroyActivityview");
+
+    if (presenter != null) {
+      presenter.detachView(this);
+    }
+    if (animationImageView != null) animationImageView = null;
+    if (imageLoader != null) imageLoader = null;
+    if (uiContentView != null) uiContentView = null;
+
+    this.finish();
+
+    super.onDestroy();
   }
 }
