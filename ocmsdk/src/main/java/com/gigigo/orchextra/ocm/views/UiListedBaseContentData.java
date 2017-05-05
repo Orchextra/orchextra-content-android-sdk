@@ -16,7 +16,7 @@ public abstract class UiListedBaseContentData extends UiBaseContentData {
   protected View emptyView;
   protected View errorView;
   protected View loadingView;
-  protected ClipToPadding clipToPadding;
+  protected ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
   protected Authoritation authoritation;
   protected ImageLoader imageLoader;
 
