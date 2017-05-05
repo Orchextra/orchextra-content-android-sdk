@@ -32,8 +32,8 @@ allprojects {
                  orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Debug@aar',
                  orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Release@aar',
 
-                 doubleViewPager            : 'com.github.nuborisar:customViewPager:0.7.1RC',
-                 autofitTextView            : 'com.github.GigigoGreenLabs:AutoFitTextView:0.5RC'
+                 doubleViewPager            : 'com.github.nuborisar:customViewPager:0.8RC',
+                 autofitTextView            : 'com.github.GigigoGreenLabs:AutoFitTextView:0.6RC'
           ]
 
     testLibraries = [mockito          : 'org.mockito:mockito-core:2.0.31-beta',

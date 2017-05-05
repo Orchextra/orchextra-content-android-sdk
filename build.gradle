@@ -17,9 +17,9 @@ buildscript {
 
 allprojects {
   ext {
-    androidCompileSdkVersion = 25
+    androidCompileSdkVersion = 24
     androidMinSdkVersion = 14
-    androidBuildToolsVersion = '25.0.2'
+    androidBuildToolsVersion = '24.0.3'
     androidTargetSdkVersion = 23
   }
 
