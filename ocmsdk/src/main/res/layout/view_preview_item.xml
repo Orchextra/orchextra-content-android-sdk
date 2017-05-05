@@ -9,16 +9,14 @@
       android:id="@+id/preview_image"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:scaleType="fitXY"
       android:adjustViewBounds="true"/>
 
   <ImageView
-      android:id="@+id/preview_background"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:scaleType="fitXY"
-      android:src="@drawable/bg_preview"
-      />
+    android:id="@+id/preview_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:adjustViewBounds="false"
+    android:background="@drawable/bg_preview" />
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

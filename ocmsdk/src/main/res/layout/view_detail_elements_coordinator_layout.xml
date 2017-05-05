@@ -10,7 +10,7 @@
   <android.support.design.widget.AppBarLayout
       android:id="@+id/appbarLayout"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       android:tag="AppBarLayout"
       android:theme="@style/OcmAppTheme.AppBarOverlay"
       >
@@ -26,6 +26,7 @@
           android:id="@+id/previewDetailContentLayout"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
+        android:background="#ff3300"
           />
 
     </android.support.design.widget.CollapsingToolbarLayout>
