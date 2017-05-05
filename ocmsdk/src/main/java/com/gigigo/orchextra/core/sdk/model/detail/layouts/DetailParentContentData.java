@@ -82,7 +82,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     Class<? extends UiBaseContentData> detailContentDataClass = uiBaseContentData.getClass();
     if (detailContentDataClass.equals(VuforiaContentData.class)) {
       launchOxVuforia();
-      OCManager.notifyEvent(OcmEvent.VUFORIA);
+      OCManager.notifyEvent(OcmEvent.OPEN_IR);
       return true;
     } else if (detailContentDataClass.equals(ScanContentData.class)) {
       lauchOxScan();
@@ -98,7 +98,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       return true;
     } else if (detailContentDataClass.equals(DeepLinkContentData.class)) {
       processDeepLink(((DeepLinkContentData) uiBaseContentData).getUri());
-      OCManager.notifyEvent(OcmEvent.OPEN_IR);
+      OCManager.notifyEvent(OcmEvent.VISIT_URL);
       return true;
     }
     return false;

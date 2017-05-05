@@ -1,17 +1,16 @@
 allprojects {
   ext {
+<<<<<<< HEAD
+    libraries = [androidSupportDesign       : 'com.android.support:design:23.4.0',
+                 constraintLayout           : 'com.android.support.constraint:constraint-layout:1.0.2',
+=======
+>>>>>>> refs/remotes/origin/develop
 
     supportVersion = '23.3.0'
-    libraries = [constraintLayout           : 'com.android.support.constraint:constraint-layout:1.0.2',
-                 androidSupportDesign       : "com.android.support:design:${supportVersion}",
+    libraries = [androidSupportDesign       : "com.android.support:design:${supportVersion}",
+
                  daggerCompiler             : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
                  dagger                     : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
-                 gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.8',
-                 ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.8',
-                 ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.8',
-                 orchextrasdkStaging        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Staging@aar',
-                 orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Debug@aar',
-                 orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Release@aar',
 
                  retrofit                   : "com.squareup.retrofit2:retrofit:2.0.2",
                  okHttp                     : "com.squareup.okhttp3:okhttp:3.4.1",
@@ -26,19 +25,28 @@ allprojects {
                  threaddecoratedviewCommon  : "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-common:1.0.8RC",
                  threaddecoratedviewCompiler: "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-compiler:1.0.8RC",
 
+<<<<<<< HEAD
                  imageloaderGlide           : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.01',
                  imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
                  baserecycleradapter        : 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5',
                  multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.4.10',
+=======
+                 gggJavaLib                 : "com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.8",
+                 ggglogger                  : "com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.8",
+                 ggglib                     : "com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.8",
+
+>>>>>>> refs/remotes/origin/develop
 
                  imageloaderGlide           : "com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.01",
                  imageloaderGlideBlur       : "com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01",
-                 //                 imageloaderGlideTransformation : "com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.01",
+//                 imageloaderGlideTransformation : "com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.01",
                  baserecycleradapter        : "com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5",
                  multipleGridRecyclerView   : "com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.4.10",
 
+<<<<<<< HEAD
                  doubleViewPager            : 'com.github.nuborisar:customViewPager:0.8RC',
-                 autofitTextView            : 'com.github.GigigoGreenLabs:AutoFitTextView:0.6RC']
+                 autofitTextView            : 'com.github.GigigoGreenLabs:AutoFitTextView:0.6RC'
+          ]
 
     testLibraries = [mockito          : 'org.mockito:mockito-core:2.0.31-beta',
                      junit            : 'junit:junit:4.12',
@@ -46,12 +54,32 @@ allprojects {
                      androidTestRunner: 'com.android.support.test:runner:0.4.1',
                      androidTestRules : 'com.android.support.test:rules:0.4.1',
                      espresso         : 'com.android.support.test.espresso:espresso-core:2.2.1',
-                     mockWebServer    : 'com.squareup.okhttp:mockwebserver:2.6.0']
-    //  modules = [floatingActionMenu: project(":floatingActionMenuLibrary"),
-    //               analytics         : project(":analytics"),
-    //               cidsdk            : project(":cidsdk"),
-    //               presentation      : project(":presentation"),
-    //               domain            : project(":domain"),
-    //               data              : project(":data")]
+                     mockWebServer    : 'com.squareup.okhttp:mockwebserver:2.6.0'
+      ]
+=======
+                 orchextrasdkStaging        : "com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Staging@aar",
+                 orchextrasdkDebug          : "com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Debug@aar",
+                 orchextrasdkRelease        : "com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Release@aar",
+
+                 realTextView               : "me.grantland:autofittextview:0.2.1",
+
+                 customtabs:                "com.android.support:customtabs:${supportVersion}"
+          ]
+
+    testLibraries = [mockito          : "org.mockito:mockito-core:1.10.19",
+                     junit            : "junit:junit:4.12",
+                     assertj          : "org.assertj:assertj-core:2.6.0",
+                     androidTestRunner: "com.android.support.test:runner:0.4.1",
+                     androidTestRules : "com.android.support.test:rules:0.4.1",
+                     espresso         : "com.android.support.test.espresso:espresso-core:2.2.1",
+                     mockWebServer    : "com.squareup.okhttp:mockwebserver:2.6.0"]
+
+//    modules = [floatingActionMenu: project(":floatingActionMenuLibrary"),
+//               analytics         : project(":analytics"),
+//               cidsdk            : project(":cidsdk"),
+//               presentation      : project(":presentation"),
+//               domain            : project(":domain"),
+//               data              : project(":data")]
+>>>>>>> refs/remotes/origin/develop
   }
 }

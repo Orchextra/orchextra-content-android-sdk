@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -73,23 +71,23 @@ public class DetailToolbarView extends FrameLayout {
   }
 
   public void switchBetweenButtonAndToolbar(boolean areVisibleToolbar, boolean forceChange) {
-    boolean doAnimation = (detailToolbar.getVisibility() == GONE && areVisibleToolbar)
+    boolean hasToChangeViews = (detailToolbar.getVisibility() == GONE && areVisibleToolbar)
         || (detailToolbar.getVisibility() == VISIBLE && !areVisibleToolbar);
 
-    if (doAnimation && !isBlocked || doAnimation && forceChange) {
-      Animation animation = AnimationUtils.loadAnimation(context,
-          areVisibleToolbar ? R.anim.scale_y_up_in : R.anim.scale_y_up_out);
+    if (hasToChangeViews && !isBlocked || hasToChangeViews && forceChange) {
+      //Animation animation = AnimationUtils.loadAnimation(context,
+      //    areVisibleToolbar ? R.anim.scale_y_up_in : R.anim.scale_y_up_out);
 
-      detailToolbar.startAnimation(animation);
+      //detailToolbar.startAnimation(animation);
       detailToolbar.setVisibility(areVisibleToolbar ? View.VISIBLE : View.GONE);
 
-      animation = AnimationUtils.loadAnimation(context,
-          !areVisibleToolbar ? R.anim.scale_item_in : R.anim.scale_item_out);
+      //animation = AnimationUtils.loadAnimation(context,
+      //    !areVisibleToolbar ? R.anim.scale_item_in : R.anim.scale_item_out);
 
-      backToolbarBgButton.startAnimation(animation);
+      //backToolbarBgButton.startAnimation(animation);
       backToolbarBgButton.setVisibility(!areVisibleToolbar ? View.VISIBLE : View.INVISIBLE);
 
-      shareToolbarBgButton.startAnimation(animation);
+      //shareToolbarBgButton.startAnimation(animation);
       shareToolbarBgButton.setVisibility(!areVisibleToolbar ? View.VISIBLE : View.INVISIBLE);
 
       if (isFirstScrollFull && areVisibleToolbar) {

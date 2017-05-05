@@ -6,10 +6,19 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
+<<<<<<< HEAD
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
+=======
+>>>>>>> refs/remotes/origin/develop
 import com.gigigo.orchextra.core.domain.entities.elements.ElementSectionView;
 import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
+<<<<<<< HEAD
+import com.gigigo.orchextra.ocmsdk.R;
+import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
+=======
+import com.gigigo.orchextra.core.sdk.model.grid.dto.CellElementAdapter;
+>>>>>>> refs/remotes/origin/develop
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;

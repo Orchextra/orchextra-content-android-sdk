@@ -179,11 +179,14 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
 
     ImageView imageViewToExpand = (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
 
-    String imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
-        DeviceUtils.calculateRealWidthDevice(context),
-        DeviceUtils.calculateRealHeightDevice(context));
+    String imageUrl = null;
+    if (urlImageToExpand != null) {
+      imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
+          DeviceUtils.calculateRealWidthDevice(context),
+          DeviceUtils.calculateRealHeightDevice(context));
 
-    imageLoader.load(imageUrl).into(imageViewToExpand);
+      imageLoader.load(imageUrl).into(imageViewToExpand);
+    }
 
     DetailActivity.open(activity, elementUrl, imageUrl,
         DeviceUtils.calculateRealWidthDevice(context),
