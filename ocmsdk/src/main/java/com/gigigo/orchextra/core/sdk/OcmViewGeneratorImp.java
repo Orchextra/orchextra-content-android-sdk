@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.sdk;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.CustomTabsContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
@@ -119,10 +120,6 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         if (render != null) {
           return generateArticleDetailView(render.getElements());
         }
-      case WEBVIEW:
-        if (render != null) {
-          return generateWebViewDetailView(render.getUrl());
-        }
       case VUFORIA:
         if (render != null) {
           return generateVuforiaDetailView();
@@ -131,7 +128,15 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         if (render != null) {
           return generateScanDetailView();
         }
+      case WEBVIEW:
+        if (render != null) {
+          return generateWebViewDetailView(render.getUrl());
+        }
       case BROWSER:
+        if (render != null) {
+          return generateCustomTabsDetailView(render.getUrl());
+        }
+      case EXTERNAL_BROWSER:
         if (render != null) {
           return generateBrowserDetailView(render.getUrl());
         }
@@ -176,6 +181,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
   private UiBaseContentData generateWebViewDetailView(String url) {
     return WebViewContentData.newInstance(url);
+  }
+
+  private UiBaseContentData generateCustomTabsDetailView(String url) {
+    return CustomTabsContentData.newInstance(url);
   }
 
   private UiBaseContentData generateVuforiaDetailView() {

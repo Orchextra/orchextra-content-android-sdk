@@ -3,12 +3,12 @@ package com.gigigo.orchextra.core.domain.entities.elementcache;
 public enum ElementCacheType {
   ARTICLE("article"),
   CARDS("cards"),
-  WEBVIEW("webview"),
   VUFORIA("vuforia"),
   SCAN("scan"),
-  BROWSER("browser"),
+  WEBVIEW("webview"),                     //WEBVIEW
+  BROWSER("browser"),                     //CUSTOM TABS
+  EXTERNAL_BROWSER("externalBrowser"),    //CHROME
   VIDEO("video"),
-
   GO_CONTENT("goContent"),
   DEEP_LINK("deepLink"),
   IMAGE("image"),
