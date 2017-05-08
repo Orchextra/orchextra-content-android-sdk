@@ -14,7 +14,6 @@ public class CustomTabsContentData extends UiBaseContentData {
 
   private String url;
 
-
   public static CustomTabsContentData newInstance(String url) {
     CustomTabsContentData customTabsContentData = new CustomTabsContentData();
 
@@ -39,6 +38,7 @@ public class CustomTabsContentData extends UiBaseContentData {
   }
 
   public String getUrl() {
+    if (url == null || url == "") url = getArguments().getString(EXTRA_URL);
     return url;
   }
 }

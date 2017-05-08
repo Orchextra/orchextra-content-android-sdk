@@ -50,14 +50,21 @@ public class DeviceUtils {
   }
 
   public static void openChromeTabs(Activity activity, String url) {
-    if (activity != null && url!=null) {
+    if (activity != null && url != null) {
       CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
       builder.setToolbarColor(
           activity.getResources().getColor(R.color.oc_background_detail_toolbar));
       //builder.setCloseButtonIcon(BitmapFactory.decodeResource(
       //    getResources(), android.R.drawable.ic_menu_b));
       CustomTabsIntent customTabsIntent = builder.build();
-      customTabsIntent.launchUrl(activity, Uri.parse(url));
+
+      //asv hack this never work if we use other builttools like 25, now we are using 24.0.3
+      // customTabsIntent.launchUrl(activity, Uri.parse(url));
+      //asv this is the same that launchUrl
+      customTabsIntent.intent.setData(Uri.parse(url));
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        activity.startActivity(customTabsIntent.intent);
+      }
     }
   }
 }
