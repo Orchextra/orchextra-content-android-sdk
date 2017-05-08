@@ -13,6 +13,7 @@ import com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.multiplegridrecyclerview.entities.CellBlankElement;
 import com.gigigo.multiplegridrecyclerview.viewholder.CellBlankViewHolder;
+import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutInterface;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutPresenter;
 import com.gigigo.orchextra.core.domain.OcmController;
@@ -20,7 +21,6 @@ import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
-import com.gigigo.orchextra.core.sdk.model.grid.dto.CellElementAdapter;
 import com.gigigo.orchextra.core.sdk.model.grid.factory.ElementsViewHolderFactory;
 import com.gigigo.orchextra.core.sdk.model.grid.viewholders.CellImageViewHolder;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
@@ -124,7 +124,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
 
     recyclerView.setAdapterViewHolderFactory(factory);
 
-    recyclerView.setAdapterDataViewHolder(CellElementAdapter.class, CellImageViewHolder.class);
+    recyclerView.setAdapterDataViewHolder(CellGridContentData.class, CellImageViewHolder.class);
     recyclerView.setAdapterDataViewHolder(CellBlankElement.class, CellBlankViewHolder.class);
 
     recyclerView.setUndecoratedViewHolder(CellBlankViewHolder.class);
@@ -143,25 +143,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   }
 
   @Override public void setData(List<Cell> cellGridContentDataList) {
-    List<Cell> cellElementList = new ArrayList<>();
-
-    for (Cell cellGridContentData : cellGridContentDataList) {
-      Cell cellElement;
-      if (cellGridContentData.getData() instanceof Element) {
-        cellElement = new CellElementAdapter();
-        cellElement.setRow(cellGridContentData.getRow());
-        cellElement.setColumn(cellGridContentData.getColumn());
-        cellElement.setData(cellGridContentData.getData());
-      } else {
-        cellElement = new CellBlankElement();
-        cellElement.setRow(cellGridContentData.getRow());
-        cellElement.setColumn(cellGridContentData.getColumn());
-      }
-
-      cellElementList.add(cellElement);
-    }
-
-    recyclerView.addAll(cellElementList);
+    recyclerView.addAll(cellGridContentDataList);
     recyclerView.setVisibility(View.VISIBLE);
     recyclerView.showRecyclerView();
   }

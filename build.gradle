@@ -9,7 +9,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.2'
+    classpath 'com.android.tools.build:gradle:2.1.2'
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
   }
@@ -17,10 +17,10 @@ buildscript {
 
 allprojects {
   ext {
-    androidCompileSdkVersion = 25
-    androidMinSdkVersion = 15
-    androidBuildToolsVersion = '25.0.2'
-    androidTargetSdkVersion = 25
+    androidCompileSdkVersion = 24
+    androidMinSdkVersion = 14
+    androidBuildToolsVersion = '24.0.3'
+    androidTargetSdkVersion = 23
   }
 
   repositories {

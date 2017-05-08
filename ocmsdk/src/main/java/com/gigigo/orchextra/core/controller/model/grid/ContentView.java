@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.controller.model.grid;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
 import com.gigigo.threaddecoratedview.views.qualifiers.NotDecorated;
 import com.gigigo.threaddecoratedview.views.qualifiers.ThreadDecoratedView;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 
   @NotDecorated void initUi();
 
-  void setData(List<Cell> cellGridContentDataList);
+  void setData(List<Cell> cellGridContentDataList, ContentItemTypeLayout type);
 
   void showEmptyView();
 

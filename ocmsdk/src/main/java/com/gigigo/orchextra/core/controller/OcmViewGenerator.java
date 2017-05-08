@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.controller;
 
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
@@ -26,5 +27,11 @@ public interface OcmViewGenerator {
   String getImageUrl(String elementUrl);
 
   UiSearchBaseContentData generateSearchView();
+
+  UiBaseContentData generateCardDetailView(ElementCache cachedElement);
+
+  UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
+
+  void releaseImageLoader();
 }
 

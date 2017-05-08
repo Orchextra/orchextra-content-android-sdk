@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.List;

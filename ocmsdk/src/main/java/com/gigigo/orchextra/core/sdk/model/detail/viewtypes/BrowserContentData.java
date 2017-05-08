@@ -14,7 +14,6 @@ public class BrowserContentData extends UiBaseContentData {
 
   private String url;
 
-
   public static BrowserContentData newInstance(String url) {
     BrowserContentData browserElements = new BrowserContentData();
 
@@ -39,6 +38,7 @@ public class BrowserContentData extends UiBaseContentData {
   }
 
   public String getUrl() {
+    if (url == null || url == "") url = getArguments().getString(EXTRA_URL);
     return url;
   }
 }

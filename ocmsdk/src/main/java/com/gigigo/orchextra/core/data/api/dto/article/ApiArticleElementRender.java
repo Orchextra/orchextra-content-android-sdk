@@ -1,5 +1,7 @@
 package com.gigigo.orchextra.core.data.api.dto.article;
 
+import java.util.List;
+
 public class ApiArticleElementRender {
 
   private String text;
@@ -9,6 +11,13 @@ public class ApiArticleElementRender {
   private String format;
   private String source;
   private String imageThumb;
+  private List<Float> ratios;
+
+  // Button
+  private String type;
+  private String size;
+  private String textColor;
+  private String bgColor;
 
   public String getText() {
     return text;
@@ -36,5 +45,25 @@ public class ApiArticleElementRender {
 
   public String getImageThumb() {
     return imageThumb;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public String getSize() {
+    return size;
+  }
+
+  public String getTextColor() {
+    return textColor;
+  }
+
+  public String getBgColor() {
+    return bgColor;
+  }
+
+  public List<Float> getRatios() {
+    return ratios;
   }
 }

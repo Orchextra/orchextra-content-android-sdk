@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:autofit="http://schemas.android.com/tools"
+    android:id="@+id/previewContentMainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <ImageView
+      android:id="@+id/preview_image"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scaleType="fitXY"
+      />
+
+  <ImageView
+      android:id="@+id/preview_background"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scaleType="fitXY"
+      android:src="@drawable/bg_preview"
+      />
+
+  <LinearLayout
+      android:id="@+id/go_to_article_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom|center_horizontal"
+      android:orientation="vertical"
+      android:visibility="gone"
+      >
+
+    <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmTitleTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/oc_spacing_16"
+        android:layout_marginStart="@dimen/oc_spacing_16"
+      android:background="#00000000"
+        android:text="@string/oc_preview_down_arrow_text"
+        android:textAllCaps="true"
+        android:textColor="@color/oc_preview_down_arrow_text_color"
+        android:textSize="@dimen/oc_preview_down_arrow_text_size"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="4dp"
+        android:src="@drawable/ic_down_arrow"
+        android:tint="@color/oc_preview_down_arrow_tint_color"
+        />
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical|end"
+      android:orientation="vertical"
+      >
+
+    <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmTitleTextView
+        android:id="@+id/preview_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/oc_spacing_8"
+        android:layout_marginStart="@dimen/oc_spacing_8"
+        android:gravity="end"
+        android:maxLines="8"
+      android:background="#00000000"
+        android:textColor="@color/oc_preview_title_text_color"
+        android:textSize="@dimen/oc_text_24"
+        />
+  </LinearLayout>
+
+</FrameLayout>
