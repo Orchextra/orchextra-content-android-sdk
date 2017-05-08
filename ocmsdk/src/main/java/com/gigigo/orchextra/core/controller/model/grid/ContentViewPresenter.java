@@ -115,9 +115,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   }
 
   private List<Cell> calculateCarouselCells(ContentItem contentItem) {
-    int indexPattern = 0;
-    List<ContentItemPattern> pattern = contentItem.getLayout().getPattern();
-
     List<Element> elements = contentItem.getElements();
 
     List<Cell> cellGridContentDataList = new ArrayList<>();
@@ -129,10 +126,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
         CellCarouselContentData cell = new CellCarouselContentData();
         cell.setData(element);
-        cell.setColumn(pattern.get(indexPattern).getRow());
-        cell.setRow(pattern.get(indexPattern).getColumn());
-
-        indexPattern = ++indexPattern % pattern.size();
+        cell.setColumn(1);
+        cell.setRow(1);
 
         cellGridContentDataList.add(cell);
       }

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
+import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 
@@ -16,6 +17,8 @@ public class HorizontalItemPageFragment extends Fragment {
   private ImageLoader imageLoader;
   private CellCarouselContentData cell;
   private ImageView horizontalItemImageView;
+  private UiListedBaseContentData.ListedContentListener listedContentListener;
+  private View.OnClickListener onItemClickListener;
 
   public static HorizontalItemPageFragment newInstance() {
     return new HorizontalItemPageFragment();
@@ -39,11 +42,16 @@ public class HorizontalItemPageFragment extends Fragment {
     super.onActivityCreated(savedInstanceState);
 
     setImage();
+    setListeners();
   }
 
   private void setImage() {
     String imageUrl = cell.getData().getSectionView().getImageUrl();
     imageLoader.load(imageUrl).into(horizontalItemImageView);
+  }
+
+  private void setListeners() {
+    horizontalItemImageView.setOnClickListener(onItemClickListener);
   }
 
   public void setImageLoader(ImageLoader imageLoader) {
@@ -52,5 +60,9 @@ public class HorizontalItemPageFragment extends Fragment {
 
   public void setCell(CellCarouselContentData cell) {
     this.cell = cell;
+  }
+
+  public void setOnItemClickListener(View.OnClickListener onItemClickListener) {
+    this.onItemClickListener = onItemClickListener;
   }
 }

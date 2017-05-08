@@ -46,8 +46,14 @@ public class HorizontalViewPager extends UiListedBaseContentData {
   }
 
   private void initViewPager() {
-    adapter = new HorizontalViewPagerAdapter(fragmentManager, imageLoader);
+    adapter = new HorizontalViewPagerAdapter(fragmentManager, imageLoader, listedContentListener);
     listedHorizontalViewPager.setAdapter(adapter);
+  }
+
+  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+
+    adapter.setItems(cellDataList);
   }
 
   @Override public void setData(List<Cell> cellDataList) {
