@@ -104,7 +104,7 @@ android {
 
   // true to publish all flavour artifacts
   publishNonDefault false
-  defaultPublishConfig "ocmStaging"
+  defaultPublishConfig "ocmRelease"
 }
 
 jacocoAndroidUnitTestReport {
