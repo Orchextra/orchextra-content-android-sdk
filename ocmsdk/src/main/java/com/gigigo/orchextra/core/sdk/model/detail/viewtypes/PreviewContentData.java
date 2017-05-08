@@ -3,11 +3,9 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -44,8 +42,7 @@ public class PreviewContentData extends UiBaseContentData {
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
-
-    this.context = context;
+    this.context = context.getApplicationContext();
   }
 
   @Nullable @Override
@@ -75,16 +72,6 @@ public class PreviewContentData extends UiBaseContentData {
 
   private void init(View view) {
     initView(view);
-
-    previewContentMainLayout.getViewTreeObserver()
-        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-          @Override public void onGlobalLayout() {
-            CollapsingToolbarLayout.LayoutParams lp = new CollapsingToolbarLayout.LayoutParams(
-                CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
-                DeviceUtils.calculateRealHeightDevice(context));
-            previewContentMainLayout.setLayoutParams(lp);
-          }
-        });
   }
 
   private void initView(View view) {
@@ -97,7 +84,7 @@ public class PreviewContentData extends UiBaseContentData {
     imgAnim.Anim(32, -1);
   }
 
-  private void bindTo() {
+  public void bindTo() {
     if (preview != null) {
       setImage();
 
@@ -156,6 +143,7 @@ public class PreviewContentData extends UiBaseContentData {
   }
 
   public void setImageLoader(ImageLoader imageLoader) {
+    this.imageLoader = null;
     this.imageLoader = imageLoader;
   }
 }

@@ -59,11 +59,11 @@ public class MainActivity extends AppCompatActivity {
             }
           }
         });
-
       }
 
       @Override public void onCredentailError(String code) {
-        Snackbar.make(tabLayout, "No Internet Connection: " + code, Snackbar.LENGTH_INDEFINITE).show();
+        Snackbar.make(tabLayout, "No Internet Connection: " + code, Snackbar.LENGTH_INDEFINITE)
+            .show();
       }
     });
 
@@ -113,7 +113,9 @@ public class MainActivity extends AppCompatActivity {
   private void selectFirstTab() {
     if (tabLayout.getChildCount() > 0) {
       TabLayout.Tab tab = tabLayout.getTabAt(0);
-      loadFragment(tab);
+      if (tab != null) {
+        loadFragment(tab);
+      }
     }
   }
 }

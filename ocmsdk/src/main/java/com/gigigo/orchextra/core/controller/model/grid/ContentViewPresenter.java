@@ -10,6 +10,7 @@ import com.gigigo.interactorexecutor.base.invoker.InteractorResult;
 import com.gigigo.interactorexecutor.base.viewinjector.GenericViewInjector;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.multiplegridrecyclerview.entities.CellBlankElement;
+import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
@@ -35,7 +36,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   private String section;
   private String filter;
-  private List<Cell> cellGridContentDataList;
+  private List<Cell> listedCellContentDataList;
   private int padding;
 
   public ContentViewPresenter(GenericViewInjector viewInjector, OcmController ocmController,
@@ -53,11 +54,11 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     getView().initUi();
   }
 
-  public void loadSection(String viewId, boolean useCache, String filter) {
+  public void loadSection(String viewId, String filter) {
     this.section = viewId;
     this.filter = filter;
 
-    loadSection(useCache);
+    loadSection(true);
   }
 
   public void reloadSection() {
@@ -77,10 +78,10 @@ public class ContentViewPresenter extends Presenter<ContentView> {
             && contentItem.getLayout() != null
             && contentItem.getElements() != null) {
 
-          cellGridContentDataList = calculateCellGridList(contentItem);
+          listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);;
 
-          if (cellGridContentDataList.size() != 0) {
-            getView().setData(cellGridContentDataList);
+          if (listedCellContentDataList.size() != 0) {
+            getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
           } else {
             getView().showEmptyView();
           }
@@ -103,7 +104,39 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     }).execute(interactorInvoker);
   }
 
-  private List<Cell> calculateCellGridList(ContentItem contentItem) {
+  private List<Cell> checkTypeAndCalculateCelListedContent(ContentItem contentItem) {
+    switch (contentItem.getLayout().getType()) {
+      case CAROUSEL:
+        return calculateCarouselCells(contentItem);
+      case GRID:
+      default:
+        return calculateGridCells(contentItem);
+    }
+  }
+
+  private List<Cell> calculateCarouselCells(ContentItem contentItem) {
+    List<Element> elements = contentItem.getElements();
+
+    List<Cell> cellGridContentDataList = new ArrayList<>();
+
+    for (int i = 0; i < elements.size(); i++) {
+      Element element = elements.get(i);
+
+      if (TextUtils.isEmpty(filter) || element.getTags().contains(filter)) {
+
+        CellCarouselContentData cell = new CellCarouselContentData();
+        cell.setData(element);
+        cell.setColumn(1);
+        cell.setRow(1);
+
+        cellGridContentDataList.add(cell);
+      }
+    }
+
+    return cellGridContentDataList;
+  }
+
+  private List<Cell> calculateGridCells(ContentItem contentItem) {
     int indexPattern = 0;
     List<ContentItemPattern> pattern = contentItem.getLayout().getPattern();
 
@@ -152,18 +185,18 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   }
 
   public void onItemClicked(int position, AppCompatActivity activity, View view) {
-    if (position < cellGridContentDataList.size()) {
+    if (position < listedCellContentDataList.size()) {
 
-      Element element = (Element) cellGridContentDataList.get(position).getData();
+      Element element = (Element) listedCellContentDataList.get(position).getData();
 
       ElementCache cachedElement = ocmController.getCachedElement(element.getElementUrl());
 
       String imageUrlToExpandInPreview = null;
-      if (cachedElement !=null && cachedElement.getPreview() != null) {
+      if (cachedElement != null && cachedElement.getPreview() != null) {
         imageUrlToExpandInPreview = cachedElement.getPreview().getImageUrl();
       }
 
-      if (element!=null && checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
+      if (element != null && checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
         OCManager.notifyEvent(OcmEvent.CELL_CLICKED, cachedElement);
         getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview, activity,
             view);
@@ -185,5 +218,9 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   public void setPadding(int padding) {
     this.padding = padding;
+  }
+
+  public int getChildCount() {
+    return listedCellContentDataList != null ? listedCellContentDataList.size() : 0;
   }
 }

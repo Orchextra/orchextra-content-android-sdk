@@ -1,8 +1,10 @@
 <resources>
 
   <dimen name="oc_spacing_8">8dp</dimen>
+  <dimen name="oc_spacing_12">12dp</dimen>
   <dimen name="oc_spacing_16">16dp</dimen>
   <dimen name="oc_spacing_32">32dp</dimen>
+  <dimen name="oc_spacing_48">48dp</dimen>
   <dimen name="oc_spacing_64">64dp</dimen>
 
   <dimen name="oc_text_14">14sp</dimen>
@@ -20,10 +22,14 @@
 
   <dimen name="oc_preview_down_arrow_text_size">14sp</dimen>
 
-  <dimen name="oc__detail_button_size">40dp</dimen>
-  <dimen name="oc_button_size">65dp</dimen>
+  <dimen name="oc_detail_button_size">40dp</dimen>
+  <dimen name="oc_button_article_size">48dp</dimen>
 
   <dimen name="ocm_height_detail_toolbar">70dp</dimen>
 
+  <dimen name="ocm_height_article_button">48dp</dimen>
+  <dimen name="ocm_margin_article_small_button">40dp</dimen>
+  <dimen name="ocm_margin_article_medium_button">20dp</dimen>
+  <dimen name="ocm_margin_article_big_button">10dp</dimen>
 
 </resources>

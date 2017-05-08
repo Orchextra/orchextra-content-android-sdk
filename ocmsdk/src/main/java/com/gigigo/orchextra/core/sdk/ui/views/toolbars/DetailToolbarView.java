@@ -96,6 +96,8 @@ public class DetailToolbarView extends FrameLayout {
         OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW);
       }
     }
+
+
   }
 
   public void setOnClickBackButtonListener(OnClickListener onClickBackButtonListener) {

@@ -1,7 +1,7 @@
 package com.gigigo.orchextra.core.domain.entities.elementcache;
 
 
-import com.gigigo.orchextra.core.domain.entities.article.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import java.util.List;
 
 public class ElementCacheRender {

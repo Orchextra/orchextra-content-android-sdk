@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <color name="black">#000</color>
 
   <color name="oc_button_color_pressed">#DFFF</color>
   <color name="oc_button_color">#FFF</color>

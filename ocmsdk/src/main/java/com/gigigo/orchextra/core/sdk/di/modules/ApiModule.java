@@ -82,7 +82,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
   @Provides @Singleton @RetrofitOcm Retrofit provideOcmRetrofitObject(@EndpointOcm String enpoint,
       @GsonConverterFactoryObject
-          retrofit2.converter.gson.GsonConverterFactory gsonConverterFactory,
+          GsonConverterFactory gsonConverterFactory,
       @OkHttpClientOcm OkHttpClient okClient) {
 
     Retrofit retrofit = new Retrofit.Builder().baseUrl(enpoint)

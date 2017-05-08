@@ -9,16 +9,14 @@
       android:id="@+id/preview_image"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:scaleType="fitXY"
-  android:adjustViewBounds="true"/>
+      android:adjustViewBounds="true"/>
 
   <ImageView
-      android:id="@+id/preview_background"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:scaleType="fitXY"
-      android:src="@drawable/bg_preview"
-      />
+    android:id="@+id/preview_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:adjustViewBounds="false"
+    android:background="@drawable/bg_preview" />
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -35,12 +33,13 @@
         android:layout_marginLeft="@dimen/oc_spacing_32"
         android:layout_marginRight="@dimen/oc_spacing_16"
         android:layout_marginStart="@dimen/oc_spacing_32"
-        android:layout_marginTop="@dimen/spacing_48"
+        android:layout_marginTop="@dimen/oc_spacing_48"
         android:gravity="end"
         android:maxLines="8"
         android:textColor="@color/oc_preview_title_text_color"
         android:textSize="@dimen/oc_text_24"
         autofit:minTextSize="@dimen/oc_text_11"
+      android:background="#00000000"
         />
 
   </LinearLayout>

@@ -1,0 +1,48 @@
+apply plugin: 'com.android.application'
+
+android {
+<<<<<<< HEAD
+  compileSdkVersion 24
+  buildToolsVersion "24.0.3"
+
+  defaultConfig {
+    applicationId "com.gigigo.sample"
+    minSdkVersion 18
+    targetSdkVersion 24
+=======
+  compileSdkVersion rootProject.ext.androidCompileSdkVersion
+  buildToolsVersion rootProject.ext.androidBuildToolsVersion
+
+  defaultConfig {
+    applicationId "com.gigigo.sample"
+    minSdkVersion rootProject.ext.androidMinSdkVersion
+    targetSdkVersion rootProject.ext.androidTargetSdkVersion
+>>>>>>> refs/remotes/origin/develop
+    versionCode 1
+    versionName "1.0"
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    multiDexEnabled true
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+  buildToolsVersion '25.0.0'
+}
+
+dependencies {
+<<<<<<< HEAD
+  //compile 'com.android.support:appcompat-v7:25.1.0'
+=======
+  compile "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
+>>>>>>> refs/remotes/origin/develop
+
+  compile project(path: ':ocmsdk')
+  //compile 'com.android.support:multidex:1.0.0'
+
+//  compile 'com.squareup.leakcanary:leakcanary-android:1.5'
+
+  compile 'com.android.support:multidex:1.0.1'
+}

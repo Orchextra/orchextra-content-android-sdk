@@ -8,8 +8,9 @@
     android:gravity="left"
     android:layout_marginLeft="@dimen/oc_spacing_8"
     android:layout_marginRight="@dimen/oc_spacing_8"
-    android:layout_marginTop="@dimen/spacing_12"
-    android:layout_marginBottom="@dimen/spacing_12"
+    android:layout_marginTop="@dimen/oc_spacing_12"
+    android:layout_marginBottom="@dimen/oc_spacing_12"
     android:textColor="@color/oc_article_rich_text_color"
     android:textSize="@dimen/oc_text_18"
+    android:autoLink="web"
     />

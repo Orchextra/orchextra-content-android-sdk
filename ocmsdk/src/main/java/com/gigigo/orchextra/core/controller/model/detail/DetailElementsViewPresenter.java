@@ -5,15 +5,14 @@ import android.text.TextUtils;
 import com.gigigo.interactorexecutor.base.Presenter;
 import com.gigigo.interactorexecutor.base.viewinjector.GenericViewInjector;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
+import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
-import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailLayoutContentData;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 
@@ -33,6 +32,12 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
   @Override public void onViewAttached() {
     getView().initUi();
+  }
+
+  @Override public void detachView(DetailElementsView view) {
+    super.detachView(view);
+    ocmViewGenerator.releaseImageLoader();
+   //  = null;
   }
 
   public void loadSection(String elementUrl) {
@@ -55,31 +60,41 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   private void renderView(ElementCache cachedElement) {
     ElementCacheShare shareElement = cachedElement.getShare();
 
-    UiBaseContentData previewContentData =
-        generatePreview(cachedElement.getPreview(), shareElement);
-
-    UiBaseContentData detailContentData =
-        generateDetailView(cachedElement.getType(), cachedElement.getRender());
-
-    if (previewContentData != null && detailContentData != null) {
-      getView().renderDetailViewWithPreview(previewContentData, detailContentData,
-          shareElement != null);
-
-      getView().showEmptyView(false);
-    } else if (previewContentData != null) {
-      getView().renderPreview(previewContentData, shareElement != null);
-      getView().showEmptyView(false);
-    } else if (detailContentData != null) {
-      getView().renderDetailView(detailContentData, shareElement != null);
-      getView().showEmptyView(false);
+    if (cachedElement.getType() == ElementCacheType.CARDS) {
+      UiBaseContentData contentData = generateCardView(cachedElement);
+      getView().renderDetailView(contentData, shareElement != null);
     } else {
-      getView().showEmptyView(true);
+      UiBaseContentData previewContentData =
+          generatePreview(cachedElement.getPreview(), shareElement);
+
+      UiBaseContentData detailContentData =
+          generateDetailView(cachedElement.getType(), cachedElement.getRender());
+
+      if (previewContentData != null && detailContentData != null) {
+        getView().renderDetailViewWithPreview(previewContentData, detailContentData,
+            shareElement != null);
+
+        getView().showEmptyView(false);
+      } else if (previewContentData != null) {
+        getView().renderPreview(previewContentData, shareElement != null);
+        getView().showEmptyView(false);
+      } else if (detailContentData != null) {
+        getView().renderDetailView(detailContentData, shareElement != null);
+        getView().showEmptyView(false);
+      } else {
+        getView().showEmptyView(true);
+      }
     }
+  }
+
+  private UiBaseContentData generateCardView(ElementCache cachedElement) {
+    return ocmViewGenerator.generateCardDetailView(cachedElement);
   }
 
   private UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share) {
     if (preview != null && preview.getBehaviour() != ElementCacheBehaviour.NONE) {
       return ocmViewGenerator.generatePreview(preview, share);
+      //return ocmViewGenerator.generateCardPreview(preview, share);
     }
     return null;
   }

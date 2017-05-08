@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.sdk.model.detail.layouts;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,12 +12,14 @@ import android.view.ViewGroup;
 import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.CustomTabsContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView;
+import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
@@ -27,9 +30,11 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   protected UiDetailBaseContentData.OnFinishViewListener onFinishListener;
   protected OnShareListener onShareListener;
   protected DetailToolbarView detailToolbarView;
+  private Context context;
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
+    this.context = context;
   }
 
   @Nullable @Override
@@ -100,6 +105,10 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       processDeepLink(((DeepLinkContentData) uiBaseContentData).getUri());
       OCManager.notifyEvent(OcmEvent.VISIT_URL);
       return true;
+    } else if (detailContentDataClass.equals(CustomTabsContentData.class)) {
+      launchCustomTabs(((CustomTabsContentData) uiBaseContentData).getUrl());
+      OCManager.notifyEvent(OcmEvent.VISIT_URL);
+      return true;
     }
     return false;
   }
@@ -124,6 +133,10 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     Intent i = new Intent(Intent.ACTION_VIEW);
     i.setData(Uri.parse(url));
     getContext().startActivity(i);
+  }
+
+  private void launchCustomTabs(String url) {
+    DeviceUtils.openChromeTabs((Activity) context, url);
   }
 
   public void setOnShareListener(OnShareListener onShareListener) {

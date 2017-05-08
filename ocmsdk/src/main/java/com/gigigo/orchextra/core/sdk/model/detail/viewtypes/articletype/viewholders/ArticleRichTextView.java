@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
+import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
@@ -53,7 +54,7 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
     int flags = strBuilder.getSpanFlags(span);
     ClickableSpan clickable = new ClickableSpan() {
       public void onClick(View view) {
-        openChromeTabs(span.getURL());
+        DeviceUtils.openChromeTabs(ocmContextProvider.getCurrentActivity(), span.getURL());
       }
     };
     strBuilder.setSpan(clickable, start, end, flags);
@@ -71,12 +72,5 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
     text.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
-  private void openChromeTabs(String url) {
-    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-    builder.setToolbarColor(getContext().getResources().getColor(R.color.oc_background_detail_toolbar));
-    //builder.setCloseButtonIcon(BitmapFactory.decodeResource(
-    //    getResources(), android.R.drawable.ic_menu_b));
-    CustomTabsIntent customTabsIntent = builder.build();
-    customTabsIntent.launchUrl(ocmContextProvider.getCurrentActivity(), Uri.parse(url));
-  }
+
 }

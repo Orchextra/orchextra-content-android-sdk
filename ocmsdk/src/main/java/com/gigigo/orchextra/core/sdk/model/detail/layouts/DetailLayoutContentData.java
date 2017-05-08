@@ -16,14 +16,28 @@ import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
+import com.gigigo.orchextra.ocmsdk.R;
 
 public class DetailLayoutContentData extends UiDetailBaseContentData implements DetailElementsView {
 
   private String elementUrl;
   private DetailElementsViewPresenter presenter;
+  private final View.OnClickListener retryButtonListener = new View.OnClickListener() {
+    @Override public void onClick(View v) {
+      presenter.loadSection(elementUrl);
+    }
+  };
   private OnFinishViewListener onFinishListener;
   private Context context;
+  private DetailParentContentData.OnShareListener onShareListener =
+      new DetailParentContentData.OnShareListener() {
+        @Override public void onShare() {
+          presenter.shareElement();
+        }
+      };
 
   public static DetailLayoutContentData newInstance() {
     return new DetailLayoutContentData();
@@ -53,12 +67,6 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
   @Override public void setOnFinishListener(OnFinishViewListener onFinishListener) {
     this.onFinishListener = onFinishListener;
   }
-
-  //@Override public void setTopScroll() {
-  //  if (detailCoordinatorLayoutContentData != null) {
-  //    detailCoordinatorLayoutContentData.scrollToTop();
-  //  }
-  //}
 
   public void setElementUrl(String elementUrl) {
     this.elementUrl = elementUrl;
@@ -111,17 +119,10 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
 
   }
 
- 
   @Override public void showEmptyView(boolean isEmpty) {
-  /*  Activity activity = (Activity) context;
-    if (activity != null) {
-         activity.finish();
- }*/
-
     if (getView() != null) {
       View emptyView = getView().findViewById(R.id.view_retry);
       emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
- 
     }
   }
 
@@ -151,33 +152,22 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
         .commit();
   }
 
-  private DetailParentContentData.OnShareListener onShareListener =
-      new DetailParentContentData.OnShareListener() {
-        @Override public void onShare() {
-          presenter.shareElement();
-        }
-      };
-
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
   }
 
   @Override public void onDestroyView() {
-    super.onDestroyView();
     System.out.println("----------------------------------------------destroyview");
 
     if (context instanceof Activity) {
-      presenter.detachView(this);
+      if (presenter != null) {
+        presenter.detachView(this);
+      }
       onFinishListener = null;
       ((Activity) context).finish();
     }
     this.context = null;
+    super.onDestroyView();
   }
-  
-  private final View.OnClickListener retryButtonListener = new View.OnClickListener() {
-    @Override public void onClick(View v) {
-      presenter.loadSection(elementUrl);
-    }
-  };
 
 }
