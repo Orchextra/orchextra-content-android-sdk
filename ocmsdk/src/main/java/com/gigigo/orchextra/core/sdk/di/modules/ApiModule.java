@@ -4,23 +4,23 @@ import com.gigigo.ggglib.network.converters.ErrorConverter;
 import com.gigigo.ggglib.network.defaultelements.RetryOnErrorPolicy;
 import com.gigigo.ggglib.network.executors.ApiServiceExecutor;
 import com.gigigo.ggglib.network.executors.RetrofitApiServiceExcecutor;
+import com.gigigo.orchextra.core.data.api.dto.base.BaseApiResponse;
+import com.gigigo.orchextra.core.data.api.services.DefaultErrorConverterImpl;
 import com.gigigo.orchextra.core.data.api.services.DefaultRetryOnErrorPolicyImpl;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.api.services.OkHttpHeadersInterceptorOcm;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.ApiServiceExecutorOcm;
+import com.gigigo.orchextra.core.sdk.di.qualifiers.EndpointOcm;
+import com.gigigo.orchextra.core.sdk.di.qualifiers.ErrorConverterOcm;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.GsonConverterFactoryObject;
+import com.gigigo.orchextra.core.sdk.di.qualifiers.HeadersInterceptorOcm;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.HttpLoggingInterceptorOcm;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.OkHttpClientOcm;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.RetrofitLog;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.RetrofitOcm;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.RetryOnErrorPolicyOcm;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
-import com.gigigo.orchextra.core.data.api.dto.base.BaseApiResponse;
-import com.gigigo.orchextra.core.data.api.services.DefaultErrorConverterImpl;
-import com.gigigo.orchextra.core.sdk.di.qualifiers.EndpointOcm;
-import com.gigigo.orchextra.core.sdk.di.qualifiers.ErrorConverterOcm;
-import com.gigigo.orchextra.core.sdk.di.qualifiers.HeadersInterceptorOcm;
 import java.util.concurrent.TimeUnit;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -48,8 +48,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
     return interceptor;
   }
 
-  @Provides
-  @Singleton OxSession provideOxSession() {
+  @Provides @Singleton OxSession provideOxSession() {
     return new OxSession();
   }
 
@@ -81,8 +80,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
   }
 
   @Provides @Singleton @RetrofitOcm Retrofit provideOcmRetrofitObject(@EndpointOcm String enpoint,
-      @GsonConverterFactoryObject
-          GsonConverterFactory gsonConverterFactory,
+      @GsonConverterFactoryObject GsonConverterFactory gsonConverterFactory,
       @OkHttpClientOcm OkHttpClient okClient) {
 
     Retrofit retrofit = new Retrofit.Builder().baseUrl(enpoint)
