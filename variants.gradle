@@ -5,25 +5,23 @@ ext {
 
   ocmSdkVersion = [debug: 'ANDROID_1.0.0']
 
-  apiOcm = [debug     : 'https://cm.q.orchextra.io/',
-            staging   : 'https://cm.s.orchextra.io/',
-            prerelease: 'https://cm.orchextra.io/',
-            release   : 'https://cm.orchextra.io/',
-            store     : 'https://cm.orchextra.io/']
+  apiOcm = [release: 'https://cm.orchextra.io/',
+            debug  : 'https://cm.q.orchextra.io/',
+            staging: 'https://cm.s.orchextra.io/'
+  ]
 
   concurrentInteractors = 3
 
-  retrofitLog = [debug     : 'true',
-                 release   : 'true'
-                ]
+  retrofitLog = [debug  : 'true',
+                 release: 'true'
+  ]
 
-  youtubeDeveloperKey = [debug     : googleKeyDebug,
-                         prerelease: googleKey,
-                         release   : googleKey,
-                         store     : googleKey]
+  youtubeDeveloperKey = [debug  : googleKeyDebug,
+                         release: googleKey
+  ]
 
-  ocm = [version        : [major: 1,
-                           minor: 1,
-                           patch: 3],
-         ]
+  ocm = [version: [major: 1,
+                   minor: 1,
+                   patch: 3],
+  ]
 }

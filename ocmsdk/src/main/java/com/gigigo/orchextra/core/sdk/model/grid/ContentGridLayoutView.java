@@ -206,7 +206,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void showErrorView() {
-    uiListedBaseContentData.showErrorView();
+    if (uiListedBaseContentData != null) {
+      uiListedBaseContentData.showErrorView();
+    }
   }
 
   @Override public void navigateToDetailView(String elementUrl, String urlImageToExpand,

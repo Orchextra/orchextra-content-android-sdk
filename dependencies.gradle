@@ -1,14 +1,18 @@
 allprojects {
   ext {
 
-    supportVersion = '23.3.0'
+    supportVersion = '24.2.1'
     libraries = [constraintLayout           : 'com.android.support.constraint:constraint-layout:1.0.2',
                  androidSupportDesign       : "com.android.support:design:${supportVersion}",
+                 androidCustomtabs          : "com.android.support:customtabs:24.2.1",
+
                  daggerCompiler             : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
                  dagger                     : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
+
                  gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.8',
                  ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.8',
                  ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.8',
+
                  orchextrasdkStaging        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Staging@aar',
                  orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Debug@aar',
                  orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Release@aar',
@@ -31,14 +35,8 @@ allprojects {
                  baserecycleradapter        : 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5',
                  multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.4.10',
 
-                 imageloaderGlide           : "com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.01",
-                 imageloaderGlideBlur       : "com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01",
-                 //                 imageloaderGlideTransformation : "com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.01",
-                 baserecycleradapter        : "com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5",
-                 multipleGridRecyclerView   : "com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.4.10",
-
                  doubleViewPager            : 'com.github.nuborisar:customViewPager:0.8RC',
-                 autofitTextView            : 'com.github.GigigoGreenLabs:AutoFitTextView:0.6RC']
+                 autofitTextView            : 'com.github.GigigoGreenLabs:AutoFitTextView:0.7RC']
 
     testLibraries = [mockito          : 'org.mockito:mockito-core:2.0.31-beta',
                      junit            : 'junit:junit:4.12',
