@@ -164,7 +164,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   private void setDataGrid(List<Cell> cellDataList) {
-    if (uiListedBaseContentData == null) {
+    //if (uiListedBaseContentData == null) {
 
       uiListedBaseContentData = SpannedGridRecyclerView.newInstance();
 
@@ -179,12 +179,12 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       fragmentManager.beginTransaction()
           .replace(R.id.listedDataContainer, uiListedBaseContentData)
           .commit();
-    }
+    //}
     uiListedBaseContentData.setData(cellDataList);
   }
 
   private void setDataCarousel(List<Cell> cellDataList) {
-    if (uiListedBaseContentData == null) {
+    //if (uiListedBaseContentData == null) {
       uiListedBaseContentData = HorizontalViewPager.newInstance();
 
       uiListedBaseContentData.setImageLoader(imageLoader);
@@ -197,7 +197,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       fragmentManager.beginTransaction()
           .replace(R.id.listedDataContainer, uiListedBaseContentData)
           .commit();
-    }
+    //}
     uiListedBaseContentData.setData(cellDataList);
   }
 
