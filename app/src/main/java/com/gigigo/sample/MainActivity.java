@@ -3,6 +3,7 @@ package com.gigigo.sample;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -19,12 +20,15 @@ public class MainActivity extends AppCompatActivity {
 
   private TabLayout tabLayout;
   private View progressbar;
+  private ViewPager viewpager;
+  private ScreenSlidePagerAdapter adapter;
 
   private List<UiMenu> uiMenu;
+
   private TabLayout.OnTabSelectedListener onTabSelectedListener =
       new TabLayout.OnTabSelectedListener() {
         @Override public void onTabSelected(TabLayout.Tab tab) {
-          loadFragment(tab);
+          viewpager.setCurrentItem(tab.getPosition());
         }
 
         @Override public void onTabUnselected(TabLayout.Tab tab) {
@@ -32,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override public void onTabReselected(TabLayout.Tab tab) {
-          loadFragment(tab);
+          viewpager.setCurrentItem(tab.getPosition());
         }
       };
 
@@ -46,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
   private void initViews() {
     tabLayout = (TabLayout) findViewById(R.id.tabLayout);
     progressbar = findViewById(R.id.progressbar);
+    viewpager = (ViewPager) findViewById(R.id.viewpager);
+
+    adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+    viewpager.setAdapter(adapter);
+    viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
   }
 
   private void startCredentials() {
@@ -82,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
       Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
     } else {
       onGoDetailView(uiMenu);
-      selectFirstTab();
+      adapter.setDataItems(uiMenu);
     }
   }
 
@@ -98,23 +107,23 @@ public class MainActivity extends AppCompatActivity {
     tabLayout.addOnTabSelectedListener(onTabSelectedListener);
   }
 
-  private void loadFragment(TabLayout.Tab tab) {
-    UiGridBaseContentData uiGridBaseContentData =
-        Ocm.generateGridView(uiMenu.get(tab.getPosition()).getElementUrl(), null);
-
-    uiGridBaseContentData.setProgressView(progressbar);
-    uiGridBaseContentData.setClipToPaddingBottomSize(ClipToPadding.PADDING_NONE);
-
-    getSupportFragmentManager().beginTransaction()
-        .replace(R.id.contentLayout, uiGridBaseContentData)
-        .commitAllowingStateLoss();
-  }
+  //private void loadFragment(TabLayout.Tab tab) {
+  //  UiGridBaseContentData uiGridBaseContentData =
+  //      Ocm.generateGridView(uiMenu.get(tab.getPosition()).getElementUrl(), null);
+  //
+  //  uiGridBaseContentData.setProgressView(progressbar);
+  //  uiGridBaseContentData.setClipToPaddingBottomSize(ClipToPadding.PADDING_NONE);
+  //
+  //  getSupportFragmentManager().beginTransaction()
+  //      .replace(R.id.contentLayout, uiGridBaseContentData)
+  //      .commitAllowingStateLoss();
+  //}
 
   private void selectFirstTab() {
     if (tabLayout.getChildCount() > 0) {
       TabLayout.Tab tab = tabLayout.getTabAt(0);
       if (tab != null) {
-        loadFragment(tab);
+        //loadFragment(tab);
       }
     }
   }

@@ -1,13 +1,13 @@
 package com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager;
 
-import android.os.Bundle;
+import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -17,28 +17,32 @@ public class HorizontalViewPager extends UiListedBaseContentData {
 
   private ViewPager listedHorizontalViewPager;
   private HorizontalViewPagerAdapter adapter;
-  private List<Cell> cellDataList;
   private FragmentManager fragmentManager;
 
-  public static HorizontalViewPager newInstance() {
-    return new HorizontalViewPager();
+  public HorizontalViewPager(Context context) {
+    super(context);
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    fragmentManager = getActivity().getSupportFragmentManager();
+  public HorizontalViewPager(Context context, @Nullable AttributeSet attrs) {
+    super(context, attrs);
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.view_horizontal_viewpager_item, container, false);
+  public HorizontalViewPager(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+  }
 
+  @Override protected void init() {
+    fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
+
+    View view = inflateLayout();
     initViews(view);
     initViewPager();
+  }
 
-    return view;
+  private View inflateLayout() {
+    LayoutInflater inflater =
+        (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    return inflater.inflate(R.layout.view_horizontal_viewpager_item, this, true);
   }
 
   private void initViews(View view) {
@@ -46,18 +50,13 @@ public class HorizontalViewPager extends UiListedBaseContentData {
   }
 
   private void initViewPager() {
-    adapter = new HorizontalViewPagerAdapter(fragmentManager, imageLoader, listedContentListener);
-    listedHorizontalViewPager.setAdapter(adapter);
-  }
-
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-
-    adapter.setItems(cellDataList);
+    if (listedHorizontalViewPager != null) {
+      adapter = new HorizontalViewPagerAdapter(fragmentManager, imageLoader, listedContentListener);
+      listedHorizontalViewPager.setAdapter(adapter);
+    }
   }
 
   @Override public void setData(List<Cell> cellDataList) {
-    this.cellDataList = cellDataList;
     if (listedHorizontalViewPager != null) {
       adapter.setItems(cellDataList);
     }
@@ -68,16 +67,22 @@ public class HorizontalViewPager extends UiListedBaseContentData {
   }
 
   @Override public void showErrorView() {
-    listedHorizontalViewPager.setVisibility(View.GONE);
-    errorView.setVisibility(View.VISIBLE);
+    if (listedHorizontalViewPager != null) {
+      listedHorizontalViewPager.setVisibility(View.GONE);
+      errorView.setVisibility(View.VISIBLE);
+    }
   }
 
   @Override public void showEmptyView() {
-    listedHorizontalViewPager.setVisibility(View.GONE);
-    emptyView.setVisibility(View.VISIBLE);
+    if (listedHorizontalViewPager != null) {
+      listedHorizontalViewPager.setVisibility(View.GONE);
+      emptyView.setVisibility(View.VISIBLE);
+    }
   }
 
   @Override public void showProgressView(boolean isVisible) {
-    loadingView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    if (loadingView != null) {
+      loadingView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
   }
 }
