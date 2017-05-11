@@ -1,14 +1,15 @@
 package com.gigigo.orchextra.core.sdk.di.modules;
 
 import android.app.Application;
-import com.gigigo.orchextra.core.sdk.OcmStyleUi;
-import com.gigigo.orchextra.core.sdk.OcmStyleUiImp;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
+import com.gigigo.orchextra.core.sdk.OcmStyleUi;
+import com.gigigo.orchextra.core.sdk.OcmStyleUiImp;
 import com.gigigo.orchextra.core.sdk.OcmViewGeneratorImp;
+import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProviderImpl;
 import com.gigigo.orchextra.core.sdk.application.OcmSdkLifecycle;
@@ -54,8 +55,13 @@ import orchextra.javax.inject.Singleton;
     return new Authoritation();
   }
 
-  @Singleton @Provides OcmSchemeHandler provideOcmSchemeHandler(OcmContextProvider contextProvider) {
-    return new OcmSchemeHandler(contextProvider);
+  @Singleton @Provides ActionHandler provideActionHandler(OcmContextProvider ocmContextProvider) {
+    return new ActionHandler(ocmContextProvider);
+  }
+
+  @Singleton @Provides OcmSchemeHandler provideOcmSchemeHandler(OcmContextProvider contextProvider,
+      OcmController ocmController, ActionHandler actionHandler) {
+    return new OcmSchemeHandler(contextProvider, ocmController, actionHandler);
   }
 
   @Singleton @Provides OcmStyleUi provideOcmStyleUi() {

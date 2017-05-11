@@ -5,24 +5,20 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
+import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
-import com.gigigo.orchextra.core.sdk.ui.behaviours.ScrollShareButtonBehavior;
+import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.R;
 
 public class DetailCoordinatorLayoutContentData extends DetailParentContentData {
@@ -33,6 +29,41 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
   private UiBaseContentData previewContentData;
   private UiBaseContentData detailContentData;
   private boolean isFirstTime = true;
+  private PreviewFuntionalityListener previewFuntionalityListener =
+      new PreviewFuntionalityListener() {
+
+        @Override public void onClickShare(ElementCacheShare share) {
+          if (onShareListener != null) {
+            onShareListener.onShare();
+          }
+        }
+
+        @Override public void onClickGoToArticleButton() {
+          if (appbarLayout != null) {
+            new Handler().postDelayed(new Runnable() {
+              @Override public void run() {
+                if (!checkIfOxActionAndExecute(detailContentData)) {
+                  coordinatorLayout.removeView(appbarLayout);
+                  detailToolbarView.switchBetweenButtonAndToolbar(true, true);
+                } else {
+                  if (onFinishListener != null) {
+                    onFinishListener.onFinish();
+                  }
+                }
+              }
+            }, 200);
+          }
+        }
+
+        @Override public void disablePreviewScrolling() {
+          if (collapsingToolbar != null) {
+            AppBarLayout.LayoutParams params =
+                (AppBarLayout.LayoutParams) collapsingToolbar.getLayoutParams();
+            params.setScrollFlags(0);
+            detailToolbarView.blockSwipeEvents(true);
+          }
+        }
+      };
 
   public static DetailCoordinatorLayoutContentData newInstance() {
     return new DetailCoordinatorLayoutContentData();
@@ -115,42 +146,6 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
       onFinishListener.onFinish();
     }
   }
-
-  private PreviewFuntionalityListener previewFuntionalityListener =
-      new PreviewFuntionalityListener() {
-
-        @Override public void onClickShare(ElementCacheShare share) {
-          if (onShareListener != null) {
-            onShareListener.onShare();
-          }
-        }
-
-        @Override public void onClickGoToArticleButton() {
-          if (appbarLayout != null) {
-            new Handler().postDelayed(new Runnable() {
-              @Override public void run() {
-                if (!checkIfOxActionAndExecute(detailContentData)) {
-                  coordinatorLayout.removeView(appbarLayout);
-                  detailToolbarView.switchBetweenButtonAndToolbar(true, true);
-                } else {
-                  if (onFinishListener != null) {
-                    onFinishListener.onFinish();
-                  }
-                }
-              }
-            }, 200);
-          }
-        }
-
-        @Override public void disablePreviewScrolling() {
-          if (collapsingToolbar != null) {
-            AppBarLayout.LayoutParams params =
-                (AppBarLayout.LayoutParams) collapsingToolbar.getLayoutParams();
-            params.setScrollFlags(0);
-            detailToolbarView.blockSwipeEvents(true);
-          }
-        }
-      };
 
   @Override public void onResume() {
     super.onResume();

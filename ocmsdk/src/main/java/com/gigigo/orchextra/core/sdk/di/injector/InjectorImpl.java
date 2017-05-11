@@ -22,6 +22,9 @@ import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.components.OcmComponent;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivityComponent;
+import com.gigigo.orchextra.core.sdk.model.detail.layouts.DaggerDetailContentDataComponent;
+import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailContentDataComponent;
+import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailParentContentData;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutViewComponent;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutViewComponent;
@@ -64,5 +67,12 @@ public class InjectorImpl implements Injector {
   @Override
   public OcmStyleUi provideOcmStyleUi() {
     return ocmComponent.provideOcmStyleUi();
+  }
+
+  @Override public void injectDetailContentData(DetailParentContentData detailParentContentData) {
+    DetailContentDataComponent detailContentDataComponent =
+        DaggerDetailContentDataComponent.builder().ocmComponent(ocmComponent).build();
+
+    detailContentDataComponent.injectDetailContentData(detailParentContentData);
   }
 }

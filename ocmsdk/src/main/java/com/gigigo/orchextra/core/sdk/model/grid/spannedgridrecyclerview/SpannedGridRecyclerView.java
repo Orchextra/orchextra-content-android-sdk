@@ -23,9 +23,6 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
 
   private MultipleGridRecyclerView multipleGridRecyclerView;
 
-  private List<Cell> cellDataList;
-  private AppCompatTextView textview;
-
   public SpannedGridRecyclerView(Context context) {
     super(context);
   }
@@ -51,8 +48,6 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
   }
 
   private void initViews(View view) {
-    textview = (AppCompatTextView) view.findViewById(R.id.textview);
-
     multipleGridRecyclerView =
         (MultipleGridRecyclerView) view.findViewById(R.id.multipleGridRecyclerView);
   }
@@ -102,10 +97,8 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
   }
 
   @Override public void setData(List<Cell> cellDataList) {
-    this.cellDataList = cellDataList;
     if (multipleGridRecyclerView != null) {
       multipleGridRecyclerView.addAll(cellDataList);
-      textview.setText("" + cellDataList.size());
     }
   }
 
