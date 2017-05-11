@@ -33,18 +33,22 @@ public class OcmSchemeHandler {
         if (render != null) {
           processImageRecognitionAction();
         }
+        break;
       case SCAN:
         if (render != null) {
           processScanAction();
         }
+        break;
       case EXTERNAL_BROWSER:
         if (render != null) {
           processExternalBrowser(render.getUrl());
         }
+        break;
       case DEEP_LINK:
         if (render != null) {
           processDeepLink(render.getUri());
         }
+        break;
       default:
         openDetailActivity(path);
         break;
