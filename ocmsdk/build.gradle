@@ -124,7 +124,7 @@ dependencies {
   compile 'com.android.support:customtabs:24.2.1'
 
   compile rootProject.ext.libraries.androidSupportDesign
-  compile rootProject.ext.libraries.constraintLayout
+//  compile rootProject.ext.libraries.constraintLayout
 
   compile rootProject.ext.libraries.ggglib
   compile rootProject.ext.libraries.gggJavaLib

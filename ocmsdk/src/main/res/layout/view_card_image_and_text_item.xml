@@ -20,21 +20,21 @@
       android:gravity="start"
       android:textColor="@color/oc_article_rich_text_color"
       android:textSize="@dimen/oc_text_14"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      />
 
+      />
+  <!--app:layout_constraintEnd_toEndOf="parent"-->
+  <!--app:layout_constraintLeft_toLeftOf="parent"-->
+  <!--app:layout_constraintRight_toRightOf="parent"-->
+  <!--app:layout_constraintStart_toStartOf="parent"-->
   <ImageView
       android:id="@+id/card_image_placeholder"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
+
 
       />
-
+  <!--app:layout_constraintEnd_toEndOf="parent"-->
+  <!--app:layout_constraintLeft_toLeftOf="parent"-->
+  <!--app:layout_constraintRight_toRightOf="parent"-->
+  <!--app:layout_constraintStart_toStartOf="parent"-->
 </android.support.constraint.ConstraintLayout>

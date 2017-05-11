@@ -1,8 +1,9 @@
 allprojects {
   ext {
 
-    supportVersion = '23.3.0'
-    libraries = [constraintLayout           : 'com.android.support.constraint:constraint-layout:1.0.2',
+    supportVersion = '24.2.1'
+    libraries = [
+//        constraintLayout           : 'com.android.support.constraint:constraint-layout:1.0.2',
                  androidSupportDesign       : "com.android.support:design:${supportVersion}",
                  daggerCompiler             : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
                  dagger                     : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
