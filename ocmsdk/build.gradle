@@ -19,7 +19,9 @@ android {
     targetSdkVersion rootProject.ext.androidTargetSdkVersion
     versionCode 1
     versionName "1.0"
-
+    ndk {
+      abiFilters "armeabi-v7a"
+    }
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
   buildTypes {
@@ -141,7 +143,7 @@ dependencies {
   compile rootProject.ext.libraries.imageloaderGlide
   compile rootProject.ext.libraries.imageloaderGlideBlur
 
-  //compile rootProject.ext.libraries.oxvuforiaimplementation
+  compile rootProject.ext.libraries.oxvuforiaimplementation
 //  compile(rootProject.ext.libraries.orchextrasdkStaging) { transitive = true }
   ocmStagingCompile(rootProject.ext.libraries.orchextrasdkStaging) { transitive = true }
   ocmDebugCompile(rootProject.ext.libraries.orchextrasdkDebug) { transitive = true }

@@ -2,38 +2,39 @@ allprojects {
   ext {
 
     supportVersion = '24.2.1'
-    libraries = [
-//        constraintLayout           : 'com.android.support.constraint:constraint-layout:1.0.2',
-                 androidSupportDesign       : "com.android.support:design:${supportVersion}",
-                 daggerCompiler             : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
-                 dagger                     : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
-                 gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.8',
-                 ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.8',
-                 ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.8',
-                 orchextrasdkStaging        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Staging@aar',
-                 orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Debug@aar',
-                 orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Release@aar',
+    libraries =
+        [//        constraintLayout           : 'com.android.support.constraint:constraint-layout:1.0.2',
+         androidSupportDesign       : "com.android.support:design:${supportVersion}",
+         daggerCompiler             : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
+         dagger                     : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
+         gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.8',
+         ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.8',
+         ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.8',
+         orchextrasdkStaging        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Staging@aar',
+         orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Debug@aar',
+         orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Release@aar',
 
-                 retrofit                   : "com.squareup.retrofit2:retrofit:2.0.2",
-                 okHttp                     : "com.squareup.okhttp3:okhttp:3.4.1",
-                 loggingInterceptor         : "com.squareup.okhttp3:logging-interceptor:3.4.1",
-                 gson                       : "com.google.code.gson:gson:2.6.2",
+         retrofit                   : "com.squareup.retrofit2:retrofit:2.0.2",
+         okHttp                     : "com.squareup.okhttp3:okhttp:3.4.1",
+         loggingInterceptor         : "com.squareup.okhttp3:logging-interceptor:3.4.1",
+         gson                       : "com.google.code.gson:gson:2.6.2",
 
-                 playServicesBase           : "com.google.android.gms:play-services-base:9.4.0",
-                 playServicesLocation       : "com.google.android.gms:play-services-location:9.4.0",
-                 playServicesGcm            : "com.google.android.gms:play-services-gcm:9.4.0",
+         playServicesBase           : "com.google.android.gms:play-services-base:9.4.0",
+         playServicesLocation       : "com.google.android.gms:play-services-location:9.4.0",
+         playServicesGcm            : "com.google.android.gms:play-services-gcm:9.4.0",
 
-                 interactorExecutor         : "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:interactorexecutor-invoker:1.0.8RC",
-                 threaddecoratedviewCommon  : "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-common:1.0.8RC",
-                 threaddecoratedviewCompiler: "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-compiler:1.0.8RC",
+         interactorExecutor         : "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:interactorexecutor-invoker:1.0.8RC",
+         threaddecoratedviewCommon  : "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-common:1.0.8RC",
+         threaddecoratedviewCompiler: "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-compiler:1.0.8RC",
 
-                 imageloaderGlide           : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.01',
-                 imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
-                 baserecycleradapter        : 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5',
-                 multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.4.10',
+         imageloaderGlide           : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.01',
+         imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
+         baserecycleradapter        : 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5',
+         multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.4.10',
 
-                 doubleViewPager            : 'com.github.nuborisar:customViewPager:0.8RC',
-                 autofitTextView            : 'com.github.GigigoGreenLabs:AutoFitTextView:0.7RC']
+         oxvuforiaimplementation    : 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6',
+         doubleViewPager            : 'com.github.nuborisar:customViewPager:0.8RC',
+         autofitTextView            : 'com.github.GigigoGreenLabs:AutoFitTextView:0.7RC']
 
     testLibraries = [mockito          : 'org.mockito:mockito-core:2.0.31-beta',
                      junit            : 'junit:junit:4.12',

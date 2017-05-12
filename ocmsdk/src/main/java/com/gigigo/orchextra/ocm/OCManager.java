@@ -30,6 +30,7 @@ import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
+import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -228,7 +229,7 @@ public final class OCManager {
     OrchextraBuilder builder = new OrchextraBuilder(app);
     builder.setApiKeyAndSecret(oxKey, oxSecret).setLogLevel(OrchextraLogLevel.NETWORK)
         //.setGcmSenderId("117687721829")       //TODO Test sender Id nuborisar
-        // .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
+          .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
         .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
         .setOrchextraCompletionCallback(new OrchextraCompletionCallback() {
           @Override public void onSuccess() {
