@@ -142,7 +142,10 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
       presenter.detachView(this);
     }
     if (animationImageView != null) animationImageView = null;
-    if (imageLoader != null) imageLoader = null;
+    if (imageLoader != null) {
+      imageLoader.load("").clearPreviousData();
+      imageLoader = null;
+    }
     if (uiContentView != null) uiContentView = null;
 
     this.finish();
