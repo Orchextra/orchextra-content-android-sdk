@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.ocm;
 
+import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 import com.gigigo.orchextra.CrmUser;
@@ -21,6 +22,7 @@ import com.gigigo.orchextra.core.sdk.di.components.OcmComponent;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.di.injector.InjectorImpl;
 import com.gigigo.orchextra.core.sdk.di.modules.OcmModule;
+import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.device.bluetooth.beacons.BeaconBackgroundModeScan;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
@@ -291,8 +293,22 @@ public final class OCManager {
   }
 
   public static OcmContextProvider getOcmContextProvider() {
+    OCManager instance = OCManager.instance;
+    if (instance == null) {
+      return null;
+    }
     return OCManager.instance.ocmContextProvider;
   }
 
   //endregion
+
+  static void closeDetailView() {
+    OCManager instance = OCManager.instance;
+    if (instance != null && instance.ocmContextProvider != null) {
+      Activity currentActivity = instance.ocmContextProvider.getCurrentActivity();
+      if (currentActivity != null && currentActivity instanceof DetailActivity) {
+        currentActivity.finish();
+      }
+    }
+  }
 }

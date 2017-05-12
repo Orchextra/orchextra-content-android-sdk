@@ -1,6 +1,7 @@
 package com.gigigo.sample;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -19,7 +20,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
   private TabLayout tabLayout;
-  private View progressbar;
   private ViewPager viewpager;
   private ScreenSlidePagerAdapter adapter;
 
@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
   private void initViews() {
     tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-    progressbar = findViewById(R.id.progressbar);
     viewpager = (ViewPager) findViewById(R.id.viewpager);
 
     adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
