@@ -97,8 +97,8 @@ android {
   // true to publish all flavour artifacts
   publishNonDefault true
 //  defaultPublishConfig "ocmStaging"
-  defaultPublishConfig "ocmDebug"
-//  defaultPublishConfig "ocmRelease"
+//  defaultPublishConfig "ocmDebug"
+  defaultPublishConfig "ocmRelease"
 }
 
 jacocoAndroidUnitTestReport {
@@ -134,11 +134,9 @@ dependencies {
   compile rootProject.ext.libraries.imageloaderGlideBlur
 
   compile rootProject.ext.libraries.oxvuforiaimplementation
-//  compile(rootProject.ext.libraries.orchextrasdkStaging) { transitive = true }
   ocmStagingCompile(rootProject.ext.libraries.orchextrasdkStaging) { transitive = true }
   ocmDebugCompile(rootProject.ext.libraries.orchextrasdkDebug) { transitive = true }
    ocmReleaseCompile(rootProject.ext.libraries.orchextrasdkRelease) { transitive = true }
-//  compile(rootProject.ext.libraries.orchextrasdkRelease) { transitive = true }
 
   testCompile rootProject.ext.testLibraries.junit
   testCompile rootProject.ext.testLibraries.assertj
