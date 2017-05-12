@@ -12,10 +12,10 @@
 
       android:layout_marginLeft="@dimen/oc_spacing_16"
       android:layout_marginRight="@dimen/oc_spacing_16"
-      android:layout_marginTop="@dimen/spacing_92"
-      android:layout_marginBottom="@dimen/spacing_16"
+      android:layout_marginTop="@dimen/oc_spacing_92"
+      android:layout_marginBottom="@dimen/oc_spacing_16"
       android:gravity="start"
       android:textColor="@color/oc_article_rich_text_color"
-      android:textSize="@dimen/text_14"
+      android:textSize="@dimen/oc_text_14"
       />
 </FrameLayout>

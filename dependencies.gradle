@@ -5,11 +5,15 @@ allprojects {
     libraries = [
 //        constraintLayout           : 'com.android.support.constraint:constraint-layout:1.0.2',
                  androidSupportDesign       : "com.android.support:design:${supportVersion}",
+                 androidCustomtabs          : "com.android.support:customtabs:${supportVersion}",
+
                  daggerCompiler             : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
                  dagger                     : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
+
                  gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.8',
                  ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.8',
                  ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.8',
+
                  orchextrasdkStaging        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Staging@aar',
                  orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Debug@aar',
                  orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Release@aar',
@@ -41,12 +45,7 @@ allprojects {
                      androidTestRunner: 'com.android.support.test:runner:0.4.1',
                      androidTestRules : 'com.android.support.test:rules:0.4.1',
                      espresso         : 'com.android.support.test.espresso:espresso-core:2.2.1',
-                     mockWebServer    : 'com.squareup.okhttp:mockwebserver:2.6.0']
-    //  modules = [floatingActionMenu: project(":floatingActionMenuLibrary"),
-    //               analytics         : project(":analytics"),
-    //               cidsdk            : project(":cidsdk"),
-    //               presentation      : project(":presentation"),
-    //               domain            : project(":domain"),
-    //               data              : project(":data")]
+                     mockWebServer    : 'com.squareup.okhttp:mockwebserver:2.6.0'
+    ]
   }
 }

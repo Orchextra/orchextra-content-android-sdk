@@ -18,6 +18,7 @@
 
 package com.gigigo.orchextra.core.sdk.di.injector;
 
+import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailParentContentData;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
@@ -30,6 +31,8 @@ public interface Injector {
   void injectDetailActivity(DetailActivity detailActivity);
 
   void injectSearcherLayoutView(SearcherLayoutView searcherLayoutView);
+
+  void injectDetailContentData(DetailParentContentData detailParentContentData);
 
   OcmStyleUi provideOcmStyleUi();
 }

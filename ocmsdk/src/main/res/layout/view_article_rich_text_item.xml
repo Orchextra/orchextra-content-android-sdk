@@ -13,4 +13,5 @@
     android:textColor="@color/oc_article_rich_text_color"
     android:textSize="@dimen/oc_text_18"
     android:autoLink="web"
+    android:lineSpacingExtra="3dp"
     />

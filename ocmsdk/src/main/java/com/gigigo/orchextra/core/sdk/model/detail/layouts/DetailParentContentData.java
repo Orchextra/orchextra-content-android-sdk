@@ -1,50 +1,50 @@
 package com.gigigo.orchextra.core.sdk.model.detail.layouts;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
+import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.CustomTabsContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
+import orchextra.javax.inject.Inject;
 
 public abstract class DetailParentContentData extends UiBaseContentData {
+
+  @Inject ActionHandler actionHandler;
 
   protected UiDetailBaseContentData.OnFinishViewListener onFinishListener;
   protected OnShareListener onShareListener;
   protected DetailToolbarView detailToolbarView;
-  private Context context;
-
-  @Override public void onAttach(Context context) {
-    super.onAttach(context);
-    this.context = context;
-  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(getDetailLayout(), container, false);
 
+    initDi();
     initDetailViews(view);
 
     return view;
+  }
+
+  private void initDi() {
+    Injector injector = OCManager.getInjector();
+    if (injector != null) {
+      injector.injectDetailContentData(this);
+    }
   }
 
   private void initDetailViews(View view) {
@@ -113,30 +113,28 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     return false;
   }
 
+  private void launchCustomTabs(String url) {
+    actionHandler.launchCustomTabs(url);
+  }
+
   private void processDeepLink(String uri) {
-    OCManager.returnOcCustomSchemeCallback(uri);
+    actionHandler.processDeepLink(uri);
   }
 
   private void launchExternalYoutube(String url) {
-    YoutubeContentDataActivity.open(getActivity(), url);
-  }
-
-  private void launchOxVuforia() {
-    Orchextra.startImageRecognition();
-  }
-
-  private void lauchOxScan() {
-    Orchextra.startScannerActivity();
+    actionHandler.launchExternalYoutube(url);
   }
 
   private void launchExternalBrowser(String url) {
-    Intent i = new Intent(Intent.ACTION_VIEW);
-    i.setData(Uri.parse(url));
-    getContext().startActivity(i);
+    actionHandler.launchExternalBrowser(url);
   }
 
-  private void launchCustomTabs(String url) {
-    DeviceUtils.openChromeTabs((Activity) context, url);
+  private void lauchOxScan() {
+    actionHandler.lauchOxScan();
+  }
+
+  private void launchOxVuforia() {
+    actionHandler.launchOxVuforia();
   }
 
   public void setOnShareListener(OnShareListener onShareListener) {

@@ -3,14 +3,14 @@
   <style name="OcmAppTheme" parent="OcmMainAppTheme"/>
 
   <!-- Base application theme. -->
-  <style name="OcmMainAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+  <style name="OcmMainAppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
     <!--   your app branding color for the app bar -->
     <item name="colorPrimary">@android:color/transparent</item>
 
     <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
   </style>
 
-  <style name="OcmAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+  <style name="OcmAppTheme.AppBarOverlay" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
   <style name="TextAppearanceDialogMessage" parent="@android:style/TextAppearance.Holo.Medium">
   <item name="android:textStyle">italic</item>

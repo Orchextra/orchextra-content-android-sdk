@@ -28,17 +28,7 @@ android {
     }
     debug {
       debuggable true
-      testCoverageEnabled true
-    }
-    store {
-      debuggable true
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-    }
-    prerelease {
-      debuggable true
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//      testCoverageEnabled true
     }
     release {
       debuggable false
@@ -104,7 +94,9 @@ android {
 
   // true to publish all flavour artifacts
   publishNonDefault true
-  defaultPublishConfig "ocmRelease"
+//  defaultPublishConfig "ocmStaging"
+  defaultPublishConfig "ocmDebug"
+//  defaultPublishConfig "ocmRelease"
 }
 
 jacocoAndroidUnitTestReport {
@@ -114,17 +106,15 @@ jacocoAndroidUnitTestReport {
 configurations {
   ocmStagingCompile
   ocmDebugCompile
-  ocmStoreCompile
-  ocmPrereleaseCompile
   ocmReleaseCompile
 }
 
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile 'com.android.support:customtabs:24.2.1'
 
   compile rootProject.ext.libraries.androidSupportDesign
 //  compile rootProject.ext.libraries.constraintLayout
+  compile rootProject.ext.libraries.androidCustomtabs
 
   compile rootProject.ext.libraries.ggglib
   compile rootProject.ext.libraries.gggJavaLib
@@ -145,9 +135,8 @@ dependencies {
 //  compile(rootProject.ext.libraries.orchextrasdkStaging) { transitive = true }
   ocmStagingCompile(rootProject.ext.libraries.orchextrasdkStaging) { transitive = true }
   ocmDebugCompile(rootProject.ext.libraries.orchextrasdkDebug) { transitive = true }
-  ocmStoreCompile(rootProject.ext.libraries.orchextrasdkRelease) { transitive = true }
-  ocmPrereleaseCompile(rootProject.ext.libraries.orchextrasdkRelease) { transitive = true }
-  ocmReleaseCompile(rootProject.ext.libraries.orchextrasdkRelease) { transitive = true }
+   ocmReleaseCompile(rootProject.ext.libraries.orchextrasdkRelease) { transitive = true }
+//  compile(rootProject.ext.libraries.orchextrasdkRelease) { transitive = true }
 
   testCompile rootProject.ext.testLibraries.junit
   testCompile rootProject.ext.testLibraries.assertj

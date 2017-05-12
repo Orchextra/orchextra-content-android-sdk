@@ -138,4 +138,8 @@ public final class Ocm {
   public static void setOnCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {
     OCManager.setOnCustomSchemeReceiver(onCustomSchemeReceiver);
   }
+
+  public static void closeDetailView() {
+    OCManager.closeDetailView();
+  }
 }

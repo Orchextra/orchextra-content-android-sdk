@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.sdk.di.providers;
 
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
+import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.application.OcmSdkLifecycle;
 import com.gigigo.ui.imageloader.ImageLoader;
@@ -17,4 +18,6 @@ public interface OcmModuleProvider extends ControllerModuleProvider, Presentatio
   Authoritation provideAuthoritation();
 
   OcmStyleUi provideOcmStyleUi();
+
+  ActionHandler provideActionHandler();
 }
