@@ -78,7 +78,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
             && contentItem.getLayout() != null
             && contentItem.getElements() != null) {
 
-          listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);;
+          listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
 
           if (listedCellContentDataList.size() != 0) {
             getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
@@ -94,12 +94,16 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     }).error(NoNetworkConnectionError.class, new InteractorResult<NoNetworkConnectionError>() {
       @Override public void onResult(NoNetworkConnectionError result) {
         getView().showProgressView(false);
-        getView().showErrorView();
+        if (listedCellContentDataList != null && listedCellContentDataList.size() >= 0) {
+          getView().showErrorView();
+        }
       }
     }).error(GenericResponseDataError.class, new InteractorResult<GenericResponseDataError>() {
       @Override public void onResult(GenericResponseDataError result) {
         getView().showProgressView(false);
-        getView().showErrorView();
+        if (listedCellContentDataList != null && listedCellContentDataList.size() >= 0) {
+          getView().showErrorView();
+        }
       }
     }).execute(interactorInvoker);
   }

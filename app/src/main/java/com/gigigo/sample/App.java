@@ -30,11 +30,9 @@ public class App extends MultiDexApplication {
   };
   private OnEventCallback onEventCallback = new OnEventCallback() {
     @Override public void doEvent(OcmEvent event, Object data) {
-      Log.v("EVENT_" + event.toString(), data.toString());
     }
 
     @Override public void doEvent(OcmEvent event) {
-      Log.v("EVENT", event.toString());
     }
   };
 
