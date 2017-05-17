@@ -3,11 +3,14 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
@@ -50,6 +53,7 @@ public class PreviewContentData extends UiBaseContentData {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.view_preview_item, container, false);
 
+
     init(view);
 
     return view;
@@ -60,6 +64,20 @@ public class PreviewContentData extends UiBaseContentData {
 
     bindTo();
     setListeners();
+
+    previewBackgroundShadow.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+      @Override public boolean onPreDraw() {
+        int width = DeviceUtils.calculateRealWidthDevice(context);
+        int height = DeviceUtils.calculateRealHeightDevice(context);
+
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
+        previewBackgroundShadow.setLayoutParams(lp);
+
+        previewBackgroundShadow.getViewTreeObserver().removeOnPreDrawListener(this);
+
+        return true;
+      }
+    });
   }
 
   public void setPreview(ElementCachePreview preview) {
@@ -113,6 +131,7 @@ public class PreviewContentData extends UiBaseContentData {
       String generatedImageUrl =
           ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(context),
               DeviceUtils.calculateRealHeightDevice(context));
+      Log.v("imageurl",""+generatedImageUrl);
 
       imageLoader.load(generatedImageUrl).into(previewImage);
     }

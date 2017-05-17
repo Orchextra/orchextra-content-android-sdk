@@ -7,8 +7,10 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -80,6 +82,20 @@ public class PreviewContentDataView extends LinearLayout {
     previewBackgroundShadow = (ImageView) view.findViewById(R.id.preview_background);
     previewTitle = (TextView) view.findViewById(R.id.preview_title);
     goToArticleButton = view.findViewById(R.id.go_to_article_button);
+
+    previewBackgroundShadow.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+      @Override public boolean onPreDraw() {
+        int width = DeviceUtils.calculateRealWidthDevice(context);
+        int height = DeviceUtils.calculateRealHeightDevice(context);
+
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
+        previewBackgroundShadow.setLayoutParams(lp);
+
+        previewBackgroundShadow.getViewTreeObserver().removeOnPreDrawListener(this);
+
+        return true;
+      }
+    });
   }
 
   public void bindTo() {
@@ -87,7 +103,7 @@ public class PreviewContentDataView extends LinearLayout {
       setImage();
 
       previewTitle.setText(preview.getText());
-      if(preview.getText() == null || (preview.getText() != null && preview.getText().isEmpty())) previewBackgroundShadow.setVisibility(View.GONE);
+      if(preview.getText() == null || preview.getText().isEmpty()) previewBackgroundShadow.setVisibility(View.GONE);
 
       if (preview.getBehaviour().equals(ElementCacheBehaviour.SWIPE)) {
         goToArticleButton.setVisibility(View.VISIBLE);

@@ -62,6 +62,6 @@ public class App extends MultiDexApplication {
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
-    Ocm.setBusinessUnit("it");
+    Ocm.setBusinessUnit("pl");
   }
 }
