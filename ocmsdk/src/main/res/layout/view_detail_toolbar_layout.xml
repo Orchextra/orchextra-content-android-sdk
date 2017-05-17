@@ -15,7 +15,7 @@
 
   <FrameLayout
       android:id="@+id/back_toolbar_button"
-      android:layout_width="wrap_content"
+      android:layout_width="@dimen/ocm_height_detail_toolbar"
       android:layout_height="@dimen/ocm_height_detail_toolbar"
       android:paddingLeft="@dimen/oc_spacing_16"
       >

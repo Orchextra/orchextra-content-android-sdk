@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/oc_bg_article_content_color"
     >
 
+
   <FrameLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/contentMainLayout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      />
+      android:background="@color/oc_bg_article_content_color"
+      >
 
-  <com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView
-      android:id="@+id/detailToolbarView"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      />
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/contentMainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
-</FrameLayout>
+    <com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView
+        android:id="@+id/detailToolbarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+  </FrameLayout>
+</ScrollView>
