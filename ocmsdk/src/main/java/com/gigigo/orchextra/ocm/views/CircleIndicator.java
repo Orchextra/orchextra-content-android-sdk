@@ -30,8 +30,8 @@ public class CircleIndicator extends LinearLayout {
   private int mIndicatorHeight = -1;
   private int mAnimatorResId = R.animator.scale_with_alpha;
   private int mAnimatorReverseResId = 0;
-  private int mIndicatorBackgroundResId = R.drawable.oc_indicator_white_radius;
-  private int mIndicatorUnselectedBackgroundResId = R.drawable.oc_indicator_white_radius;
+  private int mIndicatorBackgroundResId = R.drawable.oc_indicator;
+  private int mIndicatorUnselectedBackgroundResId = R.drawable.oc_indicator;
   private Animator mAnimatorOut;
   private Animator mAnimatorIn;
   private Animator mImmediateAnimatorOut;
@@ -84,7 +84,7 @@ public class CircleIndicator extends LinearLayout {
         typedArray.getResourceId(R.styleable.CircleIndicator_ci_animator_reverse, 0);
     mIndicatorBackgroundResId =
         typedArray.getResourceId(R.styleable.CircleIndicator_ci_drawable,
-            R.drawable.oc_indicator_white_radius);
+            R.drawable.oc_indicator);
     mIndicatorUnselectedBackgroundResId =
         typedArray.getResourceId(R.styleable.CircleIndicator_ci_drawable_unselected,
             mIndicatorBackgroundResId);
@@ -103,7 +103,7 @@ public class CircleIndicator extends LinearLayout {
    */
   public void configureIndicator(int indicatorWidth, int indicatorHeight, int indicatorMargin) {
     configureIndicator(indicatorWidth, indicatorHeight, indicatorMargin,
-        R.animator.scale_with_alpha, 0, R.drawable.oc_indicator_white_radius, R.drawable.oc_indicator_white_radius);
+        R.animator.scale_with_alpha, 0, R.drawable.oc_indicator, R.drawable.oc_indicator);
   }
 
   public void configureIndicator(int indicatorWidth, int indicatorHeight, int indicatorMargin,
@@ -140,7 +140,7 @@ public class CircleIndicator extends LinearLayout {
     mImmediateAnimatorIn = createAnimatorIn(context);
     mImmediateAnimatorIn.setDuration(0);
 
-    mIndicatorBackgroundResId = (mIndicatorBackgroundResId == 0) ? R.drawable.oc_indicator_white_radius
+    mIndicatorBackgroundResId = (mIndicatorBackgroundResId == 0) ? R.drawable.oc_indicator
         : mIndicatorBackgroundResId;
     mIndicatorUnselectedBackgroundResId =
         (mIndicatorUnselectedBackgroundResId == 0) ? mIndicatorBackgroundResId
