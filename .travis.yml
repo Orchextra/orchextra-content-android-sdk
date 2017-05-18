@@ -1,52 +1,22 @@
+sudo: false
 language: android
-jdk:
-  - oraclejdk8
-sudo: true
-before_install:
-- chmod +x gradlew
+jdk: oraclejdk8
 env:
-  global:
-   - ANDROID_API_LEVEL=25
-   - EMULATOR_API_LEVEL=21
-   - ANDROID_BUILD_TOOLS_VERSION=25.0.2
-   - ANDROID_ABI=google_apis/armeabi-v7a
-   - ADB_INSTALL_TIMEOUT=8 # minutes (2 minutes by default)
+  matrix:
+  - ANDROID_TARGET=android-24  ANDROID_ABI=armeabi-v7a
 android:
   components:
-    - tools
-    - tools
-    - platform-tools
-    - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-    - android-$ANDROID_API_LEVEL
-    - android-$EMULATOR_API_LEVEL
-    - extra
-    - add-on
-    - extra-google-m2repository
-    - extra-android-m2repository
-
-    # Google Play Services
-    - extra-google-google_play_services
-    # Support library
-    - extra-android-support
-
-    - addon-google_apis-google-$ANDROID_API_LEVEL
-    - addon-google_apis-google-$EMULATOR_API_LEVEL
-
-    - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API_LEVEL
-    - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API_LEVEL
-#    - extra-google-m2repository
-#    - extra-android-m2repository
-#    - extra-android-support
-#    - sys-img-armeabi-v7a-android-21
-#    - sys-img-armeabi-v7a-android-19
-
-  licenses:
-    - 'android-sdk-preview-license-52d11cd2'
-    - 'android-sdk-license-.+'
-    - 'google-gdk-license-.+'
-    - '.+'
-before_script:
-    - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
-    - emulator -avd test -no-skin -no-audio -no-window &
-    - android-wait-for-emulator
-    - adb shell input keyevent 82 &
+  - tools
+  - tools
+  - android-24
+  - build-tools-24.0.3
+  - platform-tools
+before_install:
+- export ANDROID_HOME=/usr/local/android-sdk
+- echo "sdk.dir=$ANDROID_HOME" > local.properties
+#notifications:
+#  webhooks:
+#    urls:
+#    - secure: A1YKQ32CBvm6s0gfwb+UKZuniYdb5ZUENvSpSt/k7nQmyZ9U0p4Sn8qqSSKfRyYVRLT3C3za53aoqFwSqFj6mZ82YO6HbKl/RqhGQLmdIPpyhXKUE5xKlyMbgmAYRBDh41+eQ1i22mkT+jiqVW06VFSB0YyeDKAZjXxk8hfyIUA=
+#    on_success: change
+#    on_failure: always
