@@ -47,4 +47,7 @@
 
   <color name="cell_selectioncolor">#4d000000</color>
 
+
+  <color name="oc_indicator_color">#ffffff</color>
+
 </resources>
