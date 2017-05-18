@@ -1,7 +1,10 @@
 package com.gigigo.orchextra.core.sdk.model.grid;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -28,6 +31,7 @@ import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
+import com.gigigo.ui.imageloader.ImageLoaderCallback;
 import java.util.List;
 import orchextra.javax.inject.Inject;
 
@@ -206,7 +210,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   @Override public void navigateToDetailView(String elementUrl, String urlImageToExpand,
       AppCompatActivity activity, View view) {
 
-    ImageView imageViewToExpandInDetail =
+    final ImageView imageViewToExpandInDetail =
         (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
 
     if (urlImageToExpand != null) {
@@ -214,12 +218,32 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           DeviceUtils.calculateRealWidthDevice(context),
           DeviceUtils.calculateRealHeightDevice(context));
 
-      imageLoader.load(imageUrl).into(imageViewToExpandInDetail);
+      imageLoader.load(imageUrl).into(new ImageLoaderCallback() {
+        @Override public void onSuccess(Bitmap bitmap) {
+          clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
+        }
+
+        @Override public void onError(Drawable drawable) {
+          clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
+        }
+
+        @Override public void onLoading() {
+
+        }
+      }, imageViewToExpandInDetail);
     }
 
     DetailActivity.open(activity, elementUrl, urlImageToExpand,
         DeviceUtils.calculateRealWidthDevice(context),
         DeviceUtils.calculateRealHeightDevice(context), imageViewToExpandInDetail);
+  }
+
+  private void clearImageToExpandWhenAnimationEnds(final ImageView imageViewToExpandInDetail) {
+    new Handler().postDelayed(new Runnable() {
+      @Override public void run() {
+        imageViewToExpandInDetail.setImageDrawable(null);
+      }
+    }, 750);
   }
 
   @Override public void showAuthDialog() {

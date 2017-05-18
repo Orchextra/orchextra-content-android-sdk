@@ -27,13 +27,14 @@ public class HorizontalViewPagerAdapter extends FragmentStatePagerAdapter {
     HorizontalItemPageFragment horizontalItemPageFragment =
         HorizontalItemPageFragment.newInstance();
     horizontalItemPageFragment.setImageLoader(imageLoader);
-    horizontalItemPageFragment.setOnItemClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (listedContentListener != null) {
-          listedContentListener.onItemClicked(position, v);
-        }
-      }
-    });
+    horizontalItemPageFragment.setOnClickHorizontalItem(
+        new HorizontalItemPageFragment.OnClickHorizontalItem() {
+          @Override public void onClickItem(View view) {
+            if (listedContentListener != null) {
+              listedContentListener.onItemClicked(position, view);
+            }
+          }
+        });
     horizontalItemPageFragment.setCell(cell);
 
     return horizontalItemPageFragment;
