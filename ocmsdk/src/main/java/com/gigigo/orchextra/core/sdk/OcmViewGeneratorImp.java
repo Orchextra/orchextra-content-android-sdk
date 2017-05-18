@@ -1,13 +1,7 @@
 package com.gigigo.orchextra.core.sdk;
 
+import android.support.annotation.NonNull;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
-import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
-import com.gigigo.orchextra.core.domain.entities.elements.Element;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.CustomTabsContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
@@ -22,6 +16,7 @@ import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailLayoutContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.CustomTabsContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
@@ -32,6 +27,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentDat
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
+import com.gigigo.orchextra.core.sdk.model.grid.webview.ContentWebViewGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
@@ -79,6 +75,23 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   }
 
   @Override public UiGridBaseContentData generateGridView(String viewId, String filter) {
+    ElementCache cachedElement = ocmController.getCachedElement(viewId);
+
+    if (cachedElement != null) {
+      if (cachedElement.getType() == ElementCacheType.WEBVIEW
+          && cachedElement.getRender() != null) {
+        return generateWebContentData(cachedElement.getRender().getUrl());
+      }
+    }
+
+    return generateGridContentData(viewId, filter);
+  }
+
+  private UiGridBaseContentData generateWebContentData(String url) {
+    return ContentWebViewGridLayoutView.newInstance(url);
+  }
+
+  @NonNull private UiGridBaseContentData generateGridContentData(String viewId, String filter) {
     ContentGridLayoutView contentGridLayoutView = ContentGridLayoutView.newInstance();
     contentGridLayoutView.setViewId(viewId);
     contentGridLayoutView.setEmotion(filter);
@@ -96,8 +109,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return detailLayoutContentData;
   }
 
-  @Override
-  public UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share) {
+  @Override public UiBaseContentData generateCardPreview(ElementCachePreview preview,
+      ElementCacheShare share) {
     ElementCachePreviewCard previewCard = new ElementCachePreviewCard();
     List<ElementCachePreview> list = new ArrayList<>();
     list.add(preview);
@@ -169,17 +182,14 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   }
 
   private UiBaseContentData generateArticleDetailView(List<ArticleElement> elements) {
-    ArticleContentData articleContentData =
-        ArticleContentData.newInstance();
+    ArticleContentData articleContentData = ArticleContentData.newInstance();
     articleContentData.setImageLoader(imageLoader);
     articleContentData.addItems(elements);
     return articleContentData;
   }
 
-  @Override
-  public UiBaseContentData generateCardDetailView(ElementCache elements) {
-    CardContentData cardContentData =
-        CardContentData.newInstance();
+  @Override public UiBaseContentData generateCardDetailView(ElementCache elements) {
+    CardContentData cardContentData = CardContentData.newInstance();
     cardContentData.setImageLoader(imageLoader);
     cardContentData.addItems(elements);
     return cardContentData;
@@ -214,7 +224,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   }
 
   @Override public void releaseImageLoader() {
-   //todo release imageview for avoid memory leak of detailactivity
+    //todo release imageview for avoid memory leak of detailactivity
 
   }
 }

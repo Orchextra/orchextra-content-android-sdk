@@ -29,13 +29,18 @@ public class OcmControllerImp implements OcmController {
     return menuInteractorInvocator.getMenu(useCache);
   }
 
-  @Override public String getContentUrlBySection(String section) {
+  @Override
+  public ElementCache getElementCacheBySection(String section) {
     MenuContentData savedMenuContentData = menuInteractorInvocator.getMenu(true);
     if (savedMenuContentData == null || savedMenuContentData.getElementsCache() == null) {
       return null;
     }
 
-    ElementCache elementCache = savedMenuContentData.getElementsCache().get(section);
+    return savedMenuContentData.getElementsCache().get(section);
+  }
+
+  @Override public String getContentUrlBySection(String section) {
+    ElementCache elementCache = getElementCacheBySection(section);
 
     if (elementCache == null || elementCache.getRender() == null) {
       return null;

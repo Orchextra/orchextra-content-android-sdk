@@ -94,14 +94,14 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     }).error(NoNetworkConnectionError.class, new InteractorResult<NoNetworkConnectionError>() {
       @Override public void onResult(NoNetworkConnectionError result) {
         getView().showProgressView(false);
-        if (listedCellContentDataList != null && listedCellContentDataList.size() >= 0) {
+        if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
           getView().showErrorView();
         }
       }
     }).error(GenericResponseDataError.class, new InteractorResult<GenericResponseDataError>() {
       @Override public void onResult(GenericResponseDataError result) {
         getView().showProgressView(false);
-        if (listedCellContentDataList != null && listedCellContentDataList.size() >= 0) {
+        if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
           getView().showErrorView();
         }
       }

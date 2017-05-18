@@ -11,6 +11,8 @@ public interface OcmController {
 
   ElementCache getCachedElement(String elementUrl);
 
+  ElementCache getElementCacheBySection(String section);
+
   String getContentUrlBySection(String section);
 
   ContentItem getSectionContentById(String section);
