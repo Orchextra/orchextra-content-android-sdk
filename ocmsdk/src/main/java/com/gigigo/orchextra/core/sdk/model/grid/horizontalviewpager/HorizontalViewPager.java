@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
+import com.gigigo.orchextra.ocm.views.CircleIndicator;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 public class HorizontalViewPager extends UiListedBaseContentData {
 
   private ViewPager listedHorizontalViewPager;
+  private CircleIndicator indicator;
   private HorizontalViewPagerAdapter adapter;
   private FragmentManager fragmentManager;
 
@@ -47,6 +49,7 @@ public class HorizontalViewPager extends UiListedBaseContentData {
 
   private void initViews(View view) {
     listedHorizontalViewPager = (ViewPager) view.findViewById(R.id.listedHorizontalViewPager);
+    indicator = (CircleIndicator) view.findViewById(R.id.ci_indicator);
   }
 
   private void initViewPager() {
@@ -59,6 +62,7 @@ public class HorizontalViewPager extends UiListedBaseContentData {
   @Override public void setData(List<Cell> cellDataList) {
     if (listedHorizontalViewPager != null) {
       adapter.setItems(cellDataList);
+      indicator.setViewPager(listedHorizontalViewPager);
     }
   }
 
