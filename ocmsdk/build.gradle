@@ -1,5 +1,15 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'me.tatarka:gradle-retrolambda:3.2.3'
+  }
+}
+
 apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'jacoco-android'
 
 def CONCURRENT_INTERACTORS = "CONCURRENT_INTERACTORS"
@@ -148,4 +158,9 @@ dependencies {
 
   compile rootProject.ext.libraries.doubleViewPager
   compile rootProject.ext.libraries.autofitTextView
+
+
+  compile rootProject.ext.libraries.rxAndroid
+  compile rootProject.ext.libraries.rxJava
+  compile rootProject.ext.libraries.arrow
 }
