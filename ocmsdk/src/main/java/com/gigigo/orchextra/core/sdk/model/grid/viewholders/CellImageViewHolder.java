@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.sdk.model.grid.viewholders;
 
 import android.content.Context;
+import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -44,12 +45,16 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
       mainLayout.getViewTreeObserver()
           .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override public boolean onPreDraw() {
+
+              byte[] imageByteArray = Base64.decode(sectionView.getImageThumb(), Base64.DEFAULT);
               String generatedImageUrl =
                   ImageGenerator.generateImageUrl(sectionView.getImageUrl(), mainLayout.getWidth(),
                       mainLayout.getHeight());
 
+
               imageLoader.load(generatedImageUrl)
                   .override(mainLayout.getWidth(), mainLayout.getHeight())
+                  .thumbnailByte(imageByteArray)
                   .into(imageView);
 
               mainLayout.getViewTreeObserver().removeOnPreDrawListener(this);
