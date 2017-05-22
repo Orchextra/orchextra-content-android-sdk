@@ -42,7 +42,7 @@ public class YoutubeContentDataActivity extends BaseActivity {
 
   public int getScreenOrientation() {
     Display getOrient = getWindowManager().getDefaultDisplay();
-    int orientation = Configuration.ORIENTATION_UNDEFINED;
+    int orientation;
     if (getOrient.getWidth() == getOrient.getHeight()) {
       orientation = Configuration.ORIENTATION_SQUARE;
     } else {
