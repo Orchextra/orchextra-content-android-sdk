@@ -242,7 +242,7 @@ public class YoutubeFragment extends UiBaseContentData {
     player.setPlayerStateChangeListener(playerStateChangeListener);
     player.setOnFullscreenListener(onFullScreenListener);
     player.setFullscreen(false);
-    player.setShowFullscreenButton(false);
+    player.setShowFullscreenButton(true);
     player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
     player.loadVideo(youtubeId);
   }
