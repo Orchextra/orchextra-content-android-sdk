@@ -175,6 +175,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     uiListedBaseContentData.setParams(clipToPadding, imageLoader, authoritation);
     uiListedBaseContentData.setData(cellDataList);
 
+    listedDataContainer.removeAllViews();
     listedDataContainer.addView(uiListedBaseContentData);
   }
 
@@ -188,6 +189,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, imageLoader, authoritation);
     uiListedBaseContentData.setData(cellDataList);
 
+    listedDataContainer.removeAllViews();
     listedDataContainer.addView(uiListedBaseContentData);
   }
 
