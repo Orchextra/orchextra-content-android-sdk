@@ -15,6 +15,7 @@ public class ScreenSlidePageFragment extends Fragment {
   private static final String EXTRA_SCREEN_SLIDE_SECTION = "EXTRA_SCREEN_SLIDE_SECTION";
 
   private Bundle arguments;
+  private View emptyViewLayout;
 
   public static ScreenSlidePageFragment newInstance(String section) {
     ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
@@ -29,6 +30,7 @@ public class ScreenSlidePageFragment extends Fragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     saveArguments();
+
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -51,15 +53,18 @@ public class ScreenSlidePageFragment extends Fragment {
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    View rootView = inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
+    View view = inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
 
-    return rootView;
+    emptyViewLayout = view.findViewById(R.id.emptyViewLayout);
+
+    return view;
   }
 
   public void setView(UiGridBaseContentData contentView) {
-
     if (contentView != null) {
       contentView.setClipToPaddingBottomSize(ClipToPadding.PADDING_BIG);
+      contentView.setEmptyView(emptyViewLayout);
+      contentView.setErrorView(emptyViewLayout);
 
         getChildFragmentManager().beginTransaction()
             .replace(R.id.content_main_view, contentView)
