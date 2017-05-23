@@ -1,7 +1,10 @@
 package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
+import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import io.reactivex.Observable;
 
@@ -13,20 +16,20 @@ public interface OcmDataStore {
   /**
    * Get an {@link Observable} which will emit a {@link ApiMenuContentDataResponse}.
    */
-  Observable<ApiMenuContentDataResponse> getMenuEntity();
+  Observable<ApiMenuContentData> getMenuEntity();
 
   /**
    * Get an {@link Observable} which will emit a {@link ApiSectionContentDataResponse}.
    */
-  Observable<ApiSectionContentDataResponse> getSectionEntity(String elementUrl);
+  Observable<ApiSectionContentData> getSectionEntity(String elementUrl);
 
   /**
    * Get an {@link Observable} which will emit a {@link ApiSectionContentDataResponse}.
    */
-  Observable<ApiSectionContentDataResponse> searchByText(String section);
+  Observable<ApiSectionContentData> searchByText(String section);
 
   /**
    * Get an {@link Observable} which will emit a {@link ApiElementDataResponse}.
    */
-  Observable<ApiElementDataResponse> getElementById(String section);
+  Observable<ApiElementData> getElementById(String section);
 }

@@ -1,8 +1,11 @@
 package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
 import android.support.annotation.NonNull;
+import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
@@ -25,19 +28,19 @@ import orchextra.javax.inject.Singleton;
     this.ocmCache = ocmCache;
   }
 
-  @Override public Observable<ApiMenuContentDataResponse> getMenuEntity() {
+  @Override public Observable<ApiMenuContentData> getMenuEntity() {
     return ocmApiService.getMenuDataRx();//.doOnNext();   //TODO: RX
   }
 
-  @Override public Observable<ApiSectionContentDataResponse> getSectionEntity(String elementUrl) {
+  @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl) {
     return ocmApiService.getSectionDataRx(elementUrl);
   }
 
-  @Override public Observable<ApiSectionContentDataResponse> searchByText(String section) {
+  @Override public Observable<ApiSectionContentData> searchByText(String section) {
     return ocmApiService.searchRx(section);
   }
 
-  @Override public Observable<ApiElementDataResponse> getElementById(String section) {
+  @Override public Observable<ApiElementData> getElementById(String section) {
     return ocmApiService.getElementByIdRx(section);
   }
 }

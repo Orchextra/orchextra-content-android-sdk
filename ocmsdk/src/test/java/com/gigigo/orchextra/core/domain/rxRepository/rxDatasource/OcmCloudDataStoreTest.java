@@ -1,7 +1,9 @@
 package com.gigigo.orchextra.core.domain.rxRepository.rxDatasource;
 
+import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
@@ -39,8 +41,8 @@ import static org.mockito.Mockito.verify;
   }
 
   @Test public void testGetSectionEntityFromApi() {
-    ApiSectionContentDataResponse fakeApiSection = new ApiSectionContentDataResponse();
-    Observable<ApiSectionContentDataResponse> fakeObservable = Observable.just(fakeApiSection);
+    ApiSectionContentData fakeApiSection = new ApiSectionContentData();
+    Observable<ApiSectionContentData> fakeObservable = Observable.just(fakeApiSection);
     given(mockRestApi.getSectionDataRx(FAKE_SECTION)).willReturn(fakeObservable);
 
     ocmCloudDataStore.getSectionEntity(FAKE_SECTION);
@@ -49,8 +51,8 @@ import static org.mockito.Mockito.verify;
   }
 
   @Test public void testSearchByTextEntityFromApi() {
-    ApiSectionContentDataResponse fakeApiSection = new ApiSectionContentDataResponse();
-    Observable<ApiSectionContentDataResponse> fakeObservable = Observable.just(fakeApiSection);
+    ApiSectionContentData fakeApiSection = new ApiSectionContentData();
+    Observable<ApiSectionContentData> fakeObservable = Observable.just(fakeApiSection);
     given(mockRestApi.searchRx(FAKE_SEACH_TEXT)).willReturn(fakeObservable);
 
     ocmCloudDataStore.searchByText(FAKE_SEACH_TEXT);
@@ -59,8 +61,8 @@ import static org.mockito.Mockito.verify;
   }
 
   @Test public void testGetElementByIdEntityFromApi() {
-    ApiElementDataResponse fakeApiElement = new ApiElementDataResponse();
-    Observable<ApiElementDataResponse> fakeObservable = Observable.just(fakeApiElement);
+    ApiElementData fakeApiElement = new ApiElementData();
+    Observable<ApiElementData> fakeObservable = Observable.just(fakeApiElement);
     given(mockRestApi.getElementByIdRx(FAKE_ID)).willReturn(fakeObservable);
 
     ocmCloudDataStore.getElementById(FAKE_ID);
