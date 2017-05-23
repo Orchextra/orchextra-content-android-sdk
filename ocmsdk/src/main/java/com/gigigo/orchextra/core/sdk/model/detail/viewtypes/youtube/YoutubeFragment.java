@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -35,40 +34,11 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
-//import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
-
 public class YoutubeFragment extends UiBaseContentData {
 
   private static final String EXTRA_YOUTUBE_ID = "EXTRA_YOUTUBE_ID";
   private static final String EXTRA_YOUTUBE_ORIENTARION = "EXTRA_YOUTUBE_ORIENTARION";
   private static final String EXTRA_PLAYED_VIDEO = "EXTRA_PLAYED_VIDEO";
-
-  YouTubePlayer.PlayerStateChangeListener playerStateChangeListener =
-      new YouTubePlayer.PlayerStateChangeListener() {
-        @Override public void onLoading() {
-          GGGLogImpl.log("YouTubePlayer onLoading");
-        }
-
-        @Override public void onLoaded(String s) {
-          GGGLogImpl.log("YouTubePlayer onLoaded: " + s);
-        }
-
-        @Override public void onAdStarted() {
-          GGGLogImpl.log("YouTubePlayer onAdStarted");
-        }
-
-        @Override public void onVideoStarted() {
-          GGGLogImpl.log("YouTubePlayer onVideoStarted");
-        }
-
-        @Override public void onVideoEnded() {
-          GGGLogImpl.log("YouTubePlayer  onVideoEnded");
-        }
-
-        @Override public void onError(YouTubePlayer.ErrorReason errorReason) {
-          GGGLogImpl.log("YouTubePlayer  onError :" + errorReason.toString());
-        }
-      };
 
   private int playedVideo;
   private YouTubePlayerSupportFragment youTubePlayerFragment;
@@ -94,8 +64,9 @@ public class YoutubeFragment extends UiBaseContentData {
         public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
             boolean wasRestored) {
           mPlayer = player;
+
           if (!wasRestored) {
-            setYouTubePlayer(player);
+            setYouTubePlayer(mPlayer);
           }
         }
 
@@ -172,7 +143,6 @@ public class YoutubeFragment extends UiBaseContentData {
             //Toast.makeText(YoutubeFragment.this.getActivity(), "ES HORIZONTAL", Toast.LENGTH_LONG).show();
             setYoutubeFragmentToView(LinearLayout.LayoutParams.WRAP_CONTENT);
           }
-          initYoutubeFragment();
         }
       }
 
@@ -223,6 +193,8 @@ public class YoutubeFragment extends UiBaseContentData {
       //Restore the fragment's state here
       playedVideo = savedInstanceState.getInt(EXTRA_PLAYED_VIDEO);
     }
+
+    initYoutubeFragment();
   }
 
   private void setYoutubeFragmentToView(int h) {
@@ -248,37 +220,37 @@ public class YoutubeFragment extends UiBaseContentData {
   }
 
   public void setYouTubePlayer(final YouTubePlayer player) {
-    player.setPlayerStateChangeListener(playerStateChangeListener);
     player.setOnFullscreenListener(onFullScreenListener);
     player.setFullscreen(false);
     player.setShowFullscreenButton(true);
     player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-    player.loadVideo(youtubeId);
-    new Handler().postDelayed(new Runnable() {
-      @Override public void run() {
-        player.seekToMillis(playedVideo);
-        player.play();
-      }
-    }, 700);
+    player.loadVideo(youtubeId, playedVideo);
+  }
 
+  @Override public void onResume() {
+    super.onResume();
   }
 
   public void setOnFullScreenModeListener(OnFullScreenListener onFullScreenModeListener) {
     this.onFullScreenModeListener = onFullScreenModeListener;
   }
 
-  public interface OnFullScreenListener {
-    void onFullScreen(boolean isFullScreen);
-  }
-
-  @Override
-  public void onSaveInstanceState(Bundle outState) {
+  @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
 
-    outState.putInt(EXTRA_PLAYED_VIDEO, mPlayer.getCurrentTimeMillis());
+    if (mPlayer != null) {
+      outState.putInt(EXTRA_PLAYED_VIDEO, mPlayer.getCurrentTimeMillis());
+    }
   }
 
-  @Override public void onPause() {
-    super.onPause();
+  @Override public void onDestroy() {
+    if (mPlayer != null) {
+      mPlayer.release();
+    }
+    super.onDestroy();
+  }
+
+  public interface OnFullScreenListener {
+    void onFullScreen(boolean isFullScreen);
   }
 }
