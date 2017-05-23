@@ -8,7 +8,7 @@ import io.reactivex.Observable;
 /**
  * Interface that represents a data store from where data is retrieved.
  */
-public interface UserDataStore {
+public interface OcmDataStore {
 
   /**
    * Get an {@link Observable} which will emit a {@link ApiMenuContentDataResponse}.
