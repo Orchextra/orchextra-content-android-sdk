@@ -10,7 +10,7 @@ import io.reactivex.Observable;
  */
 
 public interface OcmRepository {
-  Observable<MenuContentData> getMenu(boolean useCache);
+  Observable<MenuContentData> getMenu(boolean forceReload);
 
   Observable<ElementCache> getCachedElement(String elementUrl);
 
