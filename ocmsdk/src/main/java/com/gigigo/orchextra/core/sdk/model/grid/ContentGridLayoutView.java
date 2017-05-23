@@ -129,6 +129,12 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     moreButton.setOnClickListener(onClickDiscoverMoreButtonListener);
   }
 
+  private void setCustomViews() {
+    setEmptyViewLayout(appEmptyView != null ? appEmptyView : emptyView);
+    setErrorViewLayout(appErrorView != null ? appErrorView : errorView);
+    setLoadingViewLayout();
+  }
+
   private void setEmptyViewLayout(View emptyView) {
     uiListedBaseContentData.setEmptyViewLayout(emptyView);
   }
@@ -167,10 +173,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private void setDataGrid(List<Cell> cellDataList) {
     uiListedBaseContentData = new SpannedGridRecyclerView(context);
 
-
-    setEmptyViewLayout(appEmptyView != null ? appEmptyView : emptyView);
-    setErrorViewLayout(appErrorView != null ? appErrorView : errorView);
-    setLoadingViewLayout();
+    setCustomViews();
     uiListedBaseContentData.setListedContentListener(listedContentListener);
     uiListedBaseContentData.setParams(clipToPadding, imageLoader, authoritation);
     uiListedBaseContentData.setData(cellDataList);
@@ -182,9 +185,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private void setDataCarousel(List<Cell> cellDataList) {
     uiListedBaseContentData = new HorizontalViewPager(context);
 
-    setEmptyViewLayout(appEmptyView != null ? appEmptyView : emptyView);
-    setErrorViewLayout(appErrorView != null ? appErrorView : errorView);
-    setLoadingViewLayout();
+    setCustomViews();
     uiListedBaseContentData.setListedContentListener(listedContentListener);
     uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, imageLoader, authoritation);
     uiListedBaseContentData.setData(cellDataList);
@@ -196,6 +197,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   @Override public void showEmptyView() {
     if (uiListedBaseContentData != null) {
       uiListedBaseContentData.showEmptyView();
+    } else if(appEmptyView != null) {
+      appEmptyView.setVisibility(View.VISIBLE);
     } else if(emptyView != null) {
       emptyView.setVisibility(View.VISIBLE);
     }
@@ -204,6 +207,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   @Override public void showErrorView() {
     if (uiListedBaseContentData != null) {
       uiListedBaseContentData.showErrorView();
+    } else if (appErrorView != null) {
+      appErrorView.setVisibility(View.VISIBLE);
     } else if (errorView != null) {
       errorView.setVisibility(View.VISIBLE);
     }
