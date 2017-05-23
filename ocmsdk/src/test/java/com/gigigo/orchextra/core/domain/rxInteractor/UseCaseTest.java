@@ -1,8 +1,7 @@
-package com.gigigo.orchextra.core.domain.interactors.core.domain._interactor;
+package com.gigigo.orchextra.core.domain.rxInteractor;
 
 import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
-import com.gigigo.orchextra.core.domain.rxInteractor.UseCase;
 import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.TestScheduler;
@@ -63,12 +62,13 @@ public class UseCaseTest {
       super(threadExecutor, postExecutionThread);
     }
 
-    @Override public void execute(DisposableObserver<Object> observer, Params params) {
-      super.execute(observer, params);
+    @Override Observable<Object> buildUseCaseObservable(Params params) {
+      return Observable.empty();
     }
 
-    @Override public Observable<Object> buildUseCaseObservable(Params params) {
-      return Observable.empty();
+    @Override
+    public void execute(DisposableObserver<Object> observer, Params params) {
+      super.execute(observer, params);
     }
   }
 
