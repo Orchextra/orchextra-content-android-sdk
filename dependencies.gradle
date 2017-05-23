@@ -44,7 +44,9 @@ allprojects {
 
          rxAndroid                  : 'io.reactivex.rxjava2:rxandroid:2.0.1',
          rxJava                     : 'io.reactivex.rxjava2:rxjava:2.1.0',
-         arrow                      : 'com.fernandocejas:arrow:1.0.0']
+         arrow                      : 'com.fernandocejas:arrow:1.0.0',
+
+         kache                      : 'com.github.mskn73:kache:0.1-alpha']
 
     testLibraries = [mockito          : 'org.mockito:mockito-core:2.0.31-beta',
                      junit            : 'junit:junit:4.12',
