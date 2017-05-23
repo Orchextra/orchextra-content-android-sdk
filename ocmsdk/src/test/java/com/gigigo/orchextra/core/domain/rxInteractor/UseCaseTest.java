@@ -16,8 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UseCaseTest {
+@RunWith(MockitoJUnitRunner.class) public class UseCaseTest {
 
   private UseCaseTestClass useCase;
 
@@ -28,30 +27,26 @@ public class UseCaseTest {
 
   @Rule public ExpectedException expectedException = ExpectedException.none();
 
-  @Before
-  public void setUp() {
+  @Before public void setUp() {
     this.useCase = new UseCaseTestClass(mockThreadExecutor, mockPostExecutionThread);
     this.testObserver = new TestDisposableObserver<>();
     given(mockPostExecutionThread.getScheduler()).willReturn(new TestScheduler());
   }
 
-  @Test
-  public void testBuildUseCaseObservableReturnCorrectResult() {
+  @Test public void testBuildUseCaseObservableReturnCorrectResult() {
     useCase.execute(testObserver, Params.EMPTY);
 
     assertThat(testObserver.valuesCount).isZero();
   }
 
-  @Test
-  public void testSubscriptionWhenExecutingUseCase() {
+  @Test public void testSubscriptionWhenExecutingUseCase() {
     useCase.execute(testObserver, Params.EMPTY);
     useCase.dispose();
 
     assertThat(testObserver.isDisposed()).isTrue();
   }
 
-  @Test
-  public void testShouldFailWhenExecuteWithNullObserver() {
+  @Test public void testShouldFailWhenExecuteWithNullObserver() {
     expectedException.expect(NullPointerException.class);
     useCase.execute(null, Params.EMPTY);
   }
@@ -66,8 +61,7 @@ public class UseCaseTest {
       return Observable.empty();
     }
 
-    @Override
-    public void execute(DisposableObserver<Object> observer, Params params) {
+    @Override public void execute(DisposableObserver<Object> observer, Params params) {
       super.execute(observer, params);
     }
   }
@@ -90,6 +84,8 @@ public class UseCaseTest {
 
   private static class Params {
     private static Params EMPTY = new Params();
-    private Params() {}
+
+    private Params() {
+    }
   }
 }

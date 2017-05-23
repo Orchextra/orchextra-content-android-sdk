@@ -15,8 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
-@RunWith(MockitoJUnitRunner.class)
-public class GetMenusTest {
+@RunWith(MockitoJUnitRunner.class) public class GetMenusTest {
 
   private static final boolean FORCE_RELOAD = false;
 
@@ -28,14 +27,11 @@ public class GetMenusTest {
 
   @Rule public ExpectedException expectedException = ExpectedException.none();
 
-  @Before
-  public void setUp() {
-    getMenus = new GetMenus(mockOcmRepository, mockThreadExecutor,
-        mockPostExecutionThread);
+  @Before public void setUp() {
+    getMenus = new GetMenus(mockOcmRepository, mockThreadExecutor, mockPostExecutionThread);
   }
 
-  @Test
-  public void testGetUserDetailsUseCaseObservableHappyCase() {
+  @Test public void testGetUserDetailsUseCaseObservableHappyCase() {
     getMenus.buildUseCaseObservable(GetMenus.Params.forForceReload(FORCE_RELOAD));
 
     verify(mockOcmRepository).getMenu(FORCE_RELOAD);
@@ -44,8 +40,7 @@ public class GetMenusTest {
     verifyZeroInteractions(mockThreadExecutor);
   }
 
-  @Test
-  public void testShouldFailWhenNoOrEmptyParameters() {
+  @Test public void testShouldFailWhenNoOrEmptyParameters() {
     expectedException.expect(NullPointerException.class);
     getMenus.buildUseCaseObservable(null);
   }
