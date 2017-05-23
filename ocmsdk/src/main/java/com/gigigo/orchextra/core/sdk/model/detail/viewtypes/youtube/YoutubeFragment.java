@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
@@ -40,6 +41,8 @@ public class YoutubeFragment extends UiBaseContentData {
 
   private static final String EXTRA_YOUTUBE_ID = "EXTRA_YOUTUBE_ID";
   private static final String EXTRA_YOUTUBE_ORIENTARION = "EXTRA_YOUTUBE_ORIENTARION";
+  private static final String EXTRA_PLAYED_VIDEO = "EXTRA_PLAYED_VIDEO";
+
   YouTubePlayer.PlayerStateChangeListener playerStateChangeListener =
       new YouTubePlayer.PlayerStateChangeListener() {
         @Override public void onLoading() {
@@ -66,7 +69,8 @@ public class YoutubeFragment extends UiBaseContentData {
           GGGLogImpl.log("YouTubePlayer  onError :" + errorReason.toString());
         }
       };
-  private Context context;
+
+  private int playedVideo;
   private YouTubePlayerSupportFragment youTubePlayerFragment;
   private View mview;
   private String youtubeId;
@@ -115,9 +119,10 @@ public class YoutubeFragment extends UiBaseContentData {
     return youtubeElements;
   }
 
-  @Override public void onAttach(Context context) {
-    super.onAttach(context);
-    this.context = context;
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    setRetainInstance(true);
   }
 
   @Nullable @Override
@@ -213,7 +218,11 @@ public class YoutubeFragment extends UiBaseContentData {
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    //now in the callback
+
+    if (savedInstanceState != null) {
+      //Restore the fragment's state here
+      playedVideo = savedInstanceState.getInt(EXTRA_PLAYED_VIDEO);
+    }
   }
 
   private void setYoutubeFragmentToView(int h) {
@@ -238,13 +247,20 @@ public class YoutubeFragment extends UiBaseContentData {
     youTubePlayerFragment.initialize(BuildConfig.YOUTUBE_DEVELOPER_KEY, onInitializedListener);
   }
 
-  public void setYouTubePlayer(YouTubePlayer player) {
+  public void setYouTubePlayer(final YouTubePlayer player) {
     player.setPlayerStateChangeListener(playerStateChangeListener);
     player.setOnFullscreenListener(onFullScreenListener);
     player.setFullscreen(false);
     player.setShowFullscreenButton(true);
     player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
     player.loadVideo(youtubeId);
+    new Handler().postDelayed(new Runnable() {
+      @Override public void run() {
+        player.seekToMillis(playedVideo);
+        player.play();
+      }
+    }, 700);
+
   }
 
   public void setOnFullScreenModeListener(OnFullScreenListener onFullScreenModeListener) {
@@ -253,5 +269,16 @@ public class YoutubeFragment extends UiBaseContentData {
 
   public interface OnFullScreenListener {
     void onFullScreen(boolean isFullScreen);
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+
+    outState.putInt(EXTRA_PLAYED_VIDEO, mPlayer.getCurrentTimeMillis());
+  }
+
+  @Override public void onPause() {
+    super.onPause();
   }
 }
