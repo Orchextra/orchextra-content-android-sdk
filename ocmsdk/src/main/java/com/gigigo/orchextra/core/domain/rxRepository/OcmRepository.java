@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.domain._repository;
+package com.gigigo.orchextra.core.domain.rxRepository;
 
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;

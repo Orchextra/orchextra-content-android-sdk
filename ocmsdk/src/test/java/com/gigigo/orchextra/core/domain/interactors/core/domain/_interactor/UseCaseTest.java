@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.core.domain.interactors.core.domain._interactor;
 
-import com.gigigo.orchextra.core.domain._executor.PostExecutionThread;
-import com.gigigo.orchextra.core.domain._executor.ThreadExecutor;
-import com.gigigo.orchextra.core.domain._interactor.UseCase;
+import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
+import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
+import com.gigigo.orchextra.core.domain.rxInteractor.UseCase;
 import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.TestScheduler;

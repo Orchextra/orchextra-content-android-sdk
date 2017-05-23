@@ -1,8 +1,8 @@
-package com.gigigo.orchextra.core.domain._interactor;
+package com.gigigo.orchextra.core.domain.rxInteractor;
 
 import com.fernandocejas.arrow.checks.Preconditions;
-import com.gigigo.orchextra.core.domain._executor.PostExecutionThread;
-import com.gigigo.orchextra.core.domain._executor.ThreadExecutor;
+import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
+import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;

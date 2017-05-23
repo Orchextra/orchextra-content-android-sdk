@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.domain._exception;
+package com.gigigo.orchextra.core.domain.rxException;
 
 /**
  * Interface to represent a wrapper around an {@link Exception} to manage errors.

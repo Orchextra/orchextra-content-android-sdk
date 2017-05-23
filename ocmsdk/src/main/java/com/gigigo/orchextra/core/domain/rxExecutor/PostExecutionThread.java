@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.domain._executor;
+package com.gigigo.orchextra.core.domain.rxExecutor;
 
 import io.reactivex.Scheduler;
 

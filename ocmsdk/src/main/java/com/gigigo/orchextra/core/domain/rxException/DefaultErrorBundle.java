@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.domain._exception;
+package com.gigigo.orchextra.core.domain.rxException;
 
 /**
  *  Wrapper around Exceptions used to manage default errors.

@@ -1,6 +1,6 @@
-package com.gigigo.orchextra.core.domain._executor;
+package com.gigigo.orchextra.core.domain.rxExecutor;
 
-import com.gigigo.orchextra.core.domain._interactor.UseCase;
+import com.gigigo.orchextra.core.domain.rxInteractor.UseCase;
 import java.util.concurrent.Executor;
 
 /**
