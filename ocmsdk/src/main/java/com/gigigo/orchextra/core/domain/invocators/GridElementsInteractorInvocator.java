@@ -53,6 +53,12 @@ public class GridElementsInteractorInvocator {
               countDownLatch.countDown();
             }
           })
+          .error(NoNetworkConnectionError.class, new InteractorResult<NoNetworkConnectionError>() {
+            @Override public void onResult(NoNetworkConnectionError interactorError) {
+              elementCache = null;
+              countDownLatch.countDown();
+            }
+          })
           .error(GenericResponseDataError.class, new InteractorResult<GenericResponseDataError>() {
             @Override public void onResult(GenericResponseDataError interactorError) {
               elementCache = null;
