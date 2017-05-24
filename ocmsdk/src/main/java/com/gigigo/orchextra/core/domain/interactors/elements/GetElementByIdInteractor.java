@@ -30,8 +30,9 @@ public class GetElementByIdInteractor implements Interactor<InteractorResponse<E
     ElementCache elementCache = dataBaseDataSource.retrieveElementById(elementId);
 
     if (elementCache != null
-        && elementCache.getPreview() != null      // Checks if the element
-        && elementCache.getRender() != null) {    // cache is musty
+        //&& elementCache.getPreview() != null      // Checks if the element
+        //&& elementCache.getRender() != null       // cache is musty
+        ) {
       return new InteractorResponse<>(elementCache);
     }
 
