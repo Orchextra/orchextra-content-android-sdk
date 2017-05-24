@@ -31,7 +31,7 @@ allprojects {
          threaddecoratedviewCommon  : "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-common:1.0.8RC",
          threaddecoratedviewCompiler: "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-compiler:1.0.8RC",
 
-         imageloaderGlide           : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.05',
+         imageloaderGlide           : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.05.1',
          imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 
          baserecycleradapter        : 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5',
