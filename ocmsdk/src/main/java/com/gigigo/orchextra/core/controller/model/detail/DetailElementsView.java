@@ -22,4 +22,6 @@ public interface DetailElementsView {
   void showEmptyView(boolean isEmpty);
 
   void shareElement(String shareText);
+
+  void finishView();
 }
