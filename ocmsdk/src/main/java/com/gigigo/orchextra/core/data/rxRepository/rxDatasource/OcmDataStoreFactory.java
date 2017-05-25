@@ -13,8 +13,8 @@ import orchextra.javax.inject.Singleton;
   private final OcmDataStore cloudDataStore;
   private final OcmDataStore diskDataStore;
 
-  @Inject public OcmDataStoreFactory(@Named("cloud_ocm_datastore") OcmDataStore cloudDataStore,
-      @Named("cloud_ocm_datastore") OcmDataStore diskDataStore) {
+  @Inject public OcmDataStoreFactory(OcmCloudDataStore cloudDataStore,
+      OcmDiskDataStore diskDataStore) {
     this.cloudDataStore = cloudDataStore;
     this.diskDataStore = diskDataStore;
   }

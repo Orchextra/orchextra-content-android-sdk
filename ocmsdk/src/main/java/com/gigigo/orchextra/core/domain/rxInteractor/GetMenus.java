@@ -5,7 +5,7 @@ import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import io.reactivex.Observable;
-import javax.inject.Inject;
+import orchextra.javax.inject.Inject;
 
 /**
  * This class is an implementation of {@link UseCase} that represents a use case for

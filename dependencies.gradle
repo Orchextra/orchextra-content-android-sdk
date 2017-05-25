@@ -10,17 +10,17 @@ allprojects {
          daggerCompiler             : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
          dagger                     : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
 
-         gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.8',
-         ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.8',
-         ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.8',
+         gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:2c184f2ed7',
+         ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:2c184f2ed7',
+         ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7',
 
-         orchextrasdkStaging        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Staging@aar',
-         orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Debug@aar',
-         orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1000TEST:play9Release@aar',
+         orchextrasdkStaging        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1002TEST:play9Staging@aar',
+         orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1002TEST:play9Debug@aar',
+         orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1002TEST:play9Release@aar',
 
-         retrofit                   : "com.squareup.retrofit2:retrofit:2.0.2",
-         okHttp                     : "com.squareup.okhttp3:okhttp:3.4.1",
-         loggingInterceptor         : "com.squareup.okhttp3:logging-interceptor:3.4.1",
+         retrofit                   : "com.squareup.retrofit2:retrofit:2.3.0",
+         okHttp                     : "com.squareup.okhttp3:okhttp:3.8.0",
+         loggingInterceptor         : "com.squareup.okhttp3:logging-interceptor:3.8.0",
          gson                       : "com.google.code.gson:gson:2.6.2",
 
          playServicesBase           : "com.google.android.gms:play-services-base:9.4.0",
@@ -31,7 +31,7 @@ allprojects {
          threaddecoratedviewCommon  : "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-common:1.0.8RC",
          threaddecoratedviewCompiler: "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-compiler:1.0.8RC",
 
-         imageloaderGlide           : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.05',
+         imageloaderGlide           : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.05.2',
          imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 
          baserecycleradapter        : 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5',
@@ -44,6 +44,7 @@ allprojects {
 
          rxAndroid                  : 'io.reactivex.rxjava2:rxandroid:2.0.1',
          rxJava                     : 'io.reactivex.rxjava2:rxjava:2.1.0',
+         rxRetrofit                 : 'com.squareup.retrofit2:adapter-rxjava2:2.3.0',
          arrow                      : 'com.fernandocejas:arrow:1.0.0',
 
          kache                      : 'com.github.mskn73:kache:0.1-alpha']

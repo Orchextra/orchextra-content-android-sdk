@@ -10,7 +10,8 @@ import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import io.reactivex.Observable;
-import javax.inject.Inject;
+
+import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
 /**

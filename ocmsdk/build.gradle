@@ -153,6 +153,8 @@ dependencies {
 
   compile rootProject.ext.libraries.rxAndroid
   compile rootProject.ext.libraries.rxJava
+  compile rootProject.ext.libraries.rxRetrofit
+  compile rootProject.ext.libraries.okHttp
   compile rootProject.ext.libraries.arrow
 
   compile rootProject.ext.libraries.kache
