@@ -1,11 +1,12 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders;
 
 import android.content.Context;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 
 public class ArticleImageView extends ArticleBaseView<ArticleImageElement> {
@@ -34,9 +35,20 @@ public class ArticleImageView extends ArticleBaseView<ArticleImageElement> {
   private void setImage(final String imageUrl, String imageThumb) {
     ImageGenerator.generateThumbImage(imageThumb, articleImagePlaceholder);
 
-    String generatedImageUrl =
-        ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(getContext()));
+    articleImagePlaceholder.getViewTreeObserver()
+        .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+          @Override public boolean onPreDraw() {
 
-    imageLoader.load(generatedImageUrl).into(articleImagePlaceholder) ;
+            String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl,
+                DeviceUtils.calculateRealWidthDevice(getContext()),
+                DeviceUtils.calculateRealHeightDevice(getContext()));
+
+            imageLoader.load(generatedImageUrl).into(articleImagePlaceholder);
+
+            articleImagePlaceholder.getViewTreeObserver().removeOnPreDrawListener(this);
+
+            return true;
+          }
+        });
   }
 }
