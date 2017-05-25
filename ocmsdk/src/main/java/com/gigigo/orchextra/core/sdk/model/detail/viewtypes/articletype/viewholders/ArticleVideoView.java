@@ -43,6 +43,7 @@ public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
       }
     };
     imgPlay.setOnClickListener(onYoutubeThumbnailClickListener);
+    imgThumb.setOnClickListener(onYoutubeThumbnailClickListener);
 
     String youtubeId = articleElement.getSource();
     ImageLoader glideImageLoaderImp = new GlideImageLoaderImp(activity.getApplicationContext());

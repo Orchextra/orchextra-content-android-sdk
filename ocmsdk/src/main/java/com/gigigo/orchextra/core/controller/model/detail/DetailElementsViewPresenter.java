@@ -51,7 +51,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
       renderView(cachedElement);
       OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, cachedElement);
     } else {
-      getView().showEmptyView(true);
+      getView().finishView();
     }
 
     getView().showProgressView(false);

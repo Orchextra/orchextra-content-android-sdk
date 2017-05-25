@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;

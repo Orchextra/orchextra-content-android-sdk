@@ -135,6 +135,12 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
     startActivity(intent);
   }
 
+  @Override public void finishView() {
+    if (onFinishListener != null) {
+      onFinishListener.onFinish();
+    }
+  }
+
   private void addLayoutToView(UiBaseContentData uiBaseContentData, boolean canShare) {
 
     DetailSimpleLayoutContentData detailSimpleLayoutContentData =
