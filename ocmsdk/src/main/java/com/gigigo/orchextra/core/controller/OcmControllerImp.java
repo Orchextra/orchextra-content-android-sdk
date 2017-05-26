@@ -14,6 +14,11 @@ import com.gigigo.orchextra.core.domain.invocators.GridElementsInteractorInvocat
 import com.gigigo.orchextra.core.domain.invocators.MenuInteractorInvocator;
 import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Single;
+import io.reactivex.annotations.NonNull;
 
 public class OcmControllerImp implements OcmController {
 
@@ -33,8 +38,15 @@ public class OcmControllerImp implements OcmController {
   }
 
   @Override public MenuContentData getMenu(boolean useCache) {
-    MenuObserver menuObserver = new MenuObserver();
-    //return getMenus.execute(menuObserver, GetMenus.Params.forForceReload(!useCache)).blockingFirst(); //menuInteractorInvocator.getMenu(useCache);
+    try {
+      MenuObserver menuObserver = new MenuObserver();
+
+      int i = Observable.fromArray(1,2,3,4).blockingFirst();
+      MenuContentData a = Single.fromObservable(getMenus.execute(menuObserver, GetMenus.Params.forForceReload(!useCache))).blockingGet();
+    }catch (Exception e) {
+      e.printStackTrace();
+    }
+    //getMenus.execute(menuObserver, GetMenus.Params.forForceReload(!useCache)).blockingSingle(); //menuInteractorInvocator.getMenu(useCache);
     return menuInteractorInvocator.getMenu(useCache);
   }
 

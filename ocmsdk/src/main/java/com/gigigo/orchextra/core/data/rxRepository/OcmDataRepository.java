@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.data.rxRepository;
 
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
@@ -29,7 +30,8 @@ public class OcmDataRepository implements OcmRepository {
 
   @Override public Observable<MenuContentData> getMenu(boolean forceReload) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getCloudDataStore();
-    return ocmDataStore.getMenuEntity().map(apiMenuContentListResponseMapper::externalClassToModel);
+    return ocmDataStore.getMenuEntity().map(apiMenuContentData -> apiMenuContentListResponseMapper.externalClassToModel(
+        apiMenuContentData.getResult()));
   }
 
   @Override public Observable<ElementCache> getCachedElement(String elementUrl) {

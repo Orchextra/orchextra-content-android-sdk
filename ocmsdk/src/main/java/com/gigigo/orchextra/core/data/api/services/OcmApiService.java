@@ -30,12 +30,12 @@ public interface OcmApiService {
 
 
 
-  @GET(MENUS) Observable<ApiMenuContentData> getMenuDataRx();
+  @GET(MENUS) Observable<ApiMenuContentDataResponse> getMenuDataRx();
 
-  @GET(SECTION) Observable<ApiSectionContentData> getSectionDataRx(
+  @GET(SECTION) Observable<ApiSectionContentDataResponse> getSectionDataRx(
       @Path(value = "section", encoded = true) String section);
 
-  @GET(SEARCH) Observable<ApiSectionContentData> searchRx(@Query("search") String textToSearch);
+  @GET(SEARCH) Observable<ApiSectionContentDataResponse> searchRx(@Query("search") String textToSearch);
 
-  @GET(ELEMENT) Observable<ApiElementData> getElementByIdRx(@Path(value = "elementId", encoded = true) String elementId);
+  @GET(ELEMENT) Observable<ApiElementDataResponse> getElementByIdRx(@Path(value = "elementId", encoded = true) String elementId);
 }

@@ -16,20 +16,20 @@ public interface OcmDataStore {
   /**
    * Get an {@link Observable} which will emit a {@link ApiMenuContentDataResponse}.
    */
-  Observable<ApiMenuContentData> getMenuEntity();
+  Observable<ApiMenuContentDataResponse> getMenuEntity();
 
   /**
    * Get an {@link Observable} which will emit a {@link ApiSectionContentDataResponse}.
    */
-  Observable<ApiSectionContentData> getSectionEntity(String elementUrl);
+  Observable<ApiSectionContentDataResponse> getSectionEntity(String elementUrl);
 
   /**
    * Get an {@link Observable} which will emit a {@link ApiSectionContentDataResponse}.
    */
-  Observable<ApiSectionContentData> searchByText(String section);
+  Observable<ApiSectionContentDataResponse> searchByText(String section);
 
   /**
    * Get an {@link Observable} which will emit a {@link ApiElementDataResponse}.
    */
-  Observable<ApiElementData> getElementById(String section);
+  Observable<ApiElementDataResponse> getElementById(String section);
 }

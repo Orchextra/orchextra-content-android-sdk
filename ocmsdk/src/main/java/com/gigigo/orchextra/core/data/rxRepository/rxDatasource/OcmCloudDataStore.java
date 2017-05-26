@@ -29,19 +29,19 @@ import orchextra.javax.inject.Singleton;
     this.ocmCache = ocmCache;
   }
 
-  @Override public Observable<ApiMenuContentData> getMenuEntity() {
+  @Override public Observable<ApiMenuContentDataResponse> getMenuEntity() {
     return ocmApiService.getMenuDataRx();//.doOnNext();   //TODO: RX
   }
 
-  @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl) {
+  @Override public Observable<ApiSectionContentDataResponse> getSectionEntity(String elementUrl) {
     return ocmApiService.getSectionDataRx(elementUrl);
   }
 
-  @Override public Observable<ApiSectionContentData> searchByText(String section) {
+  @Override public Observable<ApiSectionContentDataResponse> searchByText(String section) {
     return ocmApiService.searchRx(section);
   }
 
-  @Override public Observable<ApiElementData> getElementById(String section) {
+  @Override public Observable<ApiElementDataResponse> getElementById(String section) {
     return ocmApiService.getElementByIdRx(section);
   }
 }
