@@ -52,8 +52,11 @@ public class HorizontalViewPager extends UiListedBaseContentData {
     indicator = (CircleIndicator) view.findViewById(R.id.ci_indicator);
   }
 
-  public void setViewPagerIndicatorYOffset(float offset){
+  public void setViewPagerIndicatorYOffset(float offset) {
     indicator.setY(offset);
+    LayoutParams layoutParams = (LayoutParams) indicator.getLayoutParams();
+    layoutParams.setMargins(0, (int) offset, 0, 0);
+    indicator.setLayoutParams(layoutParams);
   }
 
   private void initViewPager() {
