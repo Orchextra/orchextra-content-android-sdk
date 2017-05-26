@@ -20,4 +20,13 @@ public interface OcmController {
   void saveSectionContentData(String section, ContentData contentData);
 
   void clearCache();
+
+
+  void getMenu(boolean useCache, GetMenusCallback getMenusCallback);
+
+  // Callbacks
+  interface GetMenusCallback {
+    void onGetMenusLoaded(MenuContentData menus);
+    void onGetMenusFails(Throwable e);
+  }
 }

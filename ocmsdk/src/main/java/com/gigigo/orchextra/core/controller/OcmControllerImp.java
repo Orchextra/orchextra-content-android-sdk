@@ -38,31 +38,31 @@ public class OcmControllerImp implements OcmController {
   }
 
   @Override public MenuContentData getMenu(boolean useCache) {
-    try {
-      MenuObserver menuObserver = new MenuObserver();
-
-      int i = Observable.fromArray(1,2,3,4).blockingFirst();
-      MenuContentData a = Single.fromObservable(getMenus.execute(menuObserver, GetMenus.Params.forForceReload(!useCache))).blockingGet();
-    }catch (Exception e) {
-      e.printStackTrace();
-    }
-    //getMenus.execute(menuObserver, GetMenus.Params.forForceReload(!useCache)).blockingSingle(); //menuInteractorInvocator.getMenu(useCache);
     return menuInteractorInvocator.getMenu(useCache);
+  }
+
+  @Override public void getMenu(boolean useCache, GetMenusCallback getMenusCallback) {
+    getMenus.execute(new MenuObserver(getMenusCallback), GetMenus.Params.forForceReload(!useCache));
   }
 
 
   private final class MenuObserver extends DefaultObserver<MenuContentData> {
+    private final GetMenusCallback getMenusCallback;
+
+    public MenuObserver(GetMenusCallback getMenusCallback) {
+      this.getMenusCallback = getMenusCallback;
+    }
 
     @Override public void onComplete() {
 
     }
 
     @Override public void onError(Throwable e) {
-      e.printStackTrace();
+      getMenusCallback.onGetMenusFails(e);
     }
 
     @Override public void onNext(MenuContentData menuContentData) {
-      Log.v("MenuContent", "elements " + menuContentData.getMenuContentList().size());
+      getMenusCallback.onGetMenusLoaded(menuContentData);
     }
   }
   //

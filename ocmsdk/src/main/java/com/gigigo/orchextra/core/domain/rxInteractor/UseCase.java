@@ -41,13 +41,12 @@ public abstract class UseCase<T, Params> {
    * by {@link #buildUseCaseObservable(Params)} ()} method.
    * @param params Parameters (Optional) used to build/execute this use case.
    */
-  public Observable<T> execute(DisposableObserver<T> observer, Params params) {
+  public void execute(DisposableObserver<T> observer, Params params) {
     Preconditions.checkNotNull(observer);
     final Observable<T> observable = this.buildUseCaseObservable(params)
         .subscribeOn(Schedulers.from(threadExecutor))
         .observeOn(postExecutionThread.getScheduler());
     addDisposable(observable.subscribeWith(observer));
-    return observable;
   }
 
   /**
