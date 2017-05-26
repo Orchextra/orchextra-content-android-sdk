@@ -1,9 +1,6 @@
 package com.gigigo.orchextra.core.controller;
 
 import android.util.Log;
-import com.gigigo.orchextra.core.data.rxRepository.OcmDataRepository;
-import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmCloudDataStore;
-import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
@@ -14,11 +11,6 @@ import com.gigigo.orchextra.core.domain.invocators.GridElementsInteractorInvocat
 import com.gigigo.orchextra.core.domain.invocators.MenuInteractorInvocator;
 import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Single;
-import io.reactivex.annotations.NonNull;
 
 public class OcmControllerImp implements OcmController {
 
@@ -41,15 +33,15 @@ public class OcmControllerImp implements OcmController {
     return menuInteractorInvocator.getMenu(useCache);
   }
 
-  @Override public void getMenu(boolean useCache, GetMenusCallback getMenusCallback) {
+  @Override public void getMenu(boolean useCache, GetMenusControllerCallback getMenusCallback) {
     getMenus.execute(new MenuObserver(getMenusCallback), GetMenus.Params.forForceReload(!useCache));
   }
 
 
   private final class MenuObserver extends DefaultObserver<MenuContentData> {
-    private final GetMenusCallback getMenusCallback;
+    private final GetMenusControllerCallback getMenusCallback;
 
-    public MenuObserver(GetMenusCallback getMenusCallback) {
+    public MenuObserver(GetMenusControllerCallback getMenusCallback) {
       this.getMenusCallback = getMenusCallback;
     }
 

@@ -22,10 +22,10 @@ public interface OcmController {
   void clearCache();
 
 
-  void getMenu(boolean useCache, GetMenusCallback getMenusCallback);
+  void getMenu(boolean useCache, GetMenusControllerCallback getMenusCallback);
 
   // Callbacks
-  interface GetMenusCallback {
+  interface GetMenusControllerCallback {
     void onGetMenusLoaded(MenuContentData menus);
     void onGetMenusFails(Throwable e);
   }

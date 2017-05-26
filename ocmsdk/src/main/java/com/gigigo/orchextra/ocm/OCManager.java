@@ -92,6 +92,20 @@ public final class OCManager {
     return null;
   }
 
+  static void getMenus(final OCManagerCallbacks.Menus menusCallback) {
+    if (instance != null) {
+      instance.ocmViewGenerator.getMenu(new OcmViewGenerator.GetMenusViewGeneratorCallback() {
+        @Override public void onGetMenusLoaded(List<UiMenu> menus) {
+          menusCallback.onMenusLoaded(menus);
+        }
+
+        @Override public void onGetMenusFails(Throwable e) {
+          menusCallback.onMenusFails(e);
+        }
+      });
+    }
+  }
+
   static UiGridBaseContentData generateGridView(String viewId, String filter) {
     return instance.ocmViewGenerator.generateGridView(viewId, filter);
   }

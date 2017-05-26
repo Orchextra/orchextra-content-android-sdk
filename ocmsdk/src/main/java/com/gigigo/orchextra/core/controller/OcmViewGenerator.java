@@ -6,6 +6,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePrevie
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -33,5 +34,14 @@ public interface OcmViewGenerator {
   UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
 
   void releaseImageLoader();
+
+
+  void getMenu(GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
+
+  // Callbacks
+  interface GetMenusViewGeneratorCallback {
+    void onGetMenusLoaded(List<UiMenu> menus);
+    void onGetMenusFails(Throwable e);
+  }
 }
 

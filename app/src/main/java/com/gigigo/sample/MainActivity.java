@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.Ocm;
+import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -84,14 +85,24 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void getContent() {
-    uiMenu = Ocm.getMenus();
 
-    if (uiMenu == null) {
-      Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
-    } else {
-      onGoDetailView(uiMenu);
-      adapter.setDataItems(uiMenu);
-    }
+    Ocm.getMenus(new OcmCallbacks.Menus() {
+      @Override public void onMenusLoaded(List<UiMenu> menus) {
+        uiMenu = menus;
+        if (uiMenu == null) {
+          Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
+        } else {
+          onGoDetailView(uiMenu);
+          adapter.setDataItems(uiMenu);
+        }
+      }
+
+      @Override public void onMenusFails(Throwable e) {
+        if (uiMenu == null) {
+          Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+      }
+    });
   }
 
   private void onGoDetailView(List<UiMenu> uiMenu) {

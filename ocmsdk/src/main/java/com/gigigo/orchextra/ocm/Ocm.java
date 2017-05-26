@@ -54,6 +54,21 @@ public final class Ocm {
   }
 
   /**
+   * Get the app menus
+   */
+  public static void getMenus(OcmCallbacks.Menus menusCallback) {
+    OCManager.getMenus(new OCManagerCallbacks.Menus() {
+      @Override public void onMenusLoaded(List<UiMenu> menus) {
+        menusCallback.onMenusLoaded(menus);
+      }
+
+      @Override public void onMenusFails(Throwable e) {
+        menusCallback.onMenusFails(e);
+      }
+    });
+  }
+
+  /**
    * Return a fragment which you can add to your views.
    *
    * @param viewId It is the content url returned in the menus call.

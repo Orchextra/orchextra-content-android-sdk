@@ -55,6 +55,22 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   public List<UiMenu> getMenu() {
     MenuContentData menuContentData = ocmController.getMenu(false);
 
+    return transformMenu(menuContentData);
+  }
+
+  @Override public void getMenu(final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
+    ocmController.getMenu(false, new OcmController.GetMenusControllerCallback() {
+      @Override public void onGetMenusLoaded(MenuContentData menus) {
+        getMenusViewGeneratorCallback.onGetMenusLoaded(transformMenu(menus));
+      }
+
+      @Override public void onGetMenusFails(Throwable e) {
+        getMenusViewGeneratorCallback.onGetMenusFails(e);
+      }
+    });
+  }
+
+  private List<UiMenu> transformMenu(MenuContentData menuContentData) {
     List<UiMenu> menuList = new ArrayList<>();
 
     if (menuContentData != null
