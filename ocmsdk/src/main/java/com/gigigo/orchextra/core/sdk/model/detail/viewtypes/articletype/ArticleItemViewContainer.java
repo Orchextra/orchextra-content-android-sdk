@@ -78,10 +78,7 @@ public class ArticleItemViewContainer extends LinearLayout {
         ArticleBaseView articleBaseView = create(articleElement);
 
         if (articleBaseView != null) {
-          LinearLayout.LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-              ViewGroup.LayoutParams.WRAP_CONTENT);
-
-          articleListContainer.addView(articleBaseView, lp);
+          articleListContainer.addView(articleBaseView);
         }
       }
     }
