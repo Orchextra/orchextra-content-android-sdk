@@ -8,7 +8,6 @@ import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.invocators.DetailContentElementInteractorInvocator;
 import com.gigigo.orchextra.core.domain.invocators.GridElementsInteractorInvocator;
 import com.gigigo.orchextra.core.domain.invocators.MenuInteractorInvocator;
-import java.util.HashMap;
 import java.util.Map;
 
 public class OcmControllerImp implements OcmController {
@@ -72,13 +71,15 @@ public class OcmControllerImp implements OcmController {
 
   @Override public ElementCache getCachedElement(final String elementUrl) {
     try {
-      ElementCache elementCache = gridElementsInteractorInvocator.getElementById(elementUrl);
+      String slug = getSlug(elementUrl);
+      ElementCache elementCache = gridElementsInteractorInvocator.getElementById(slug);
+      /*ElementCache elementCache = gridElementsInteractorInvocator.getElementById(elementUrl);
 
       if (elementCache == null) {
         String slug = getSlug(elementUrl);
         elementCache = gridElementsInteractorInvocator.getElementById(slug);
       }
-
+*/
       return elementCache;
     } catch (Exception e) {
       return null;

@@ -32,6 +32,8 @@ public class GridElementsInteractorInvocator {
   }
 
   public ElementCache getElementById(String slug) {
+
+    //asv wtf?? este pseudo await funca??
     elementCache = null;
 
     getElementByIdInBackground(slug);
@@ -41,7 +43,7 @@ public class GridElementsInteractorInvocator {
 
   private void getElementByIdInBackground(String slug) {
     try {
-
+System.out.println("getElementByIdInBackground\n\n");
       final CountDownLatch countDownLatch = new CountDownLatch(1);
 
       getElementByIdInteractor.setElementId(slug);
