@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.controller;
 
+import android.util.Log;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
@@ -8,6 +9,8 @@ import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.invocators.DetailContentElementInteractorInvocator;
 import com.gigigo.orchextra.core.domain.invocators.GridElementsInteractorInvocator;
 import com.gigigo.orchextra.core.domain.invocators.MenuInteractorInvocator;
+import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
+import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import java.util.Map;
 
 public class OcmControllerImp implements OcmController {
@@ -15,10 +18,13 @@ public class OcmControllerImp implements OcmController {
   private final MenuInteractorInvocator menuInteractorInvocator;
   private final GridElementsInteractorInvocator gridElementsInteractorInvocator;
   private final DetailContentElementInteractorInvocator detailContentElementInteractorInvocator;
+  private final GetMenus getMenus;
 
   public OcmControllerImp(MenuInteractorInvocator interactorInvocation,
-      GridElementsInteractorInvocator gridElementsInteractorInvocator, DetailContentElementInteractorInvocator detailContentElementInteractorInvocator) {
+      GridElementsInteractorInvocator gridElementsInteractorInvocator, DetailContentElementInteractorInvocator detailContentElementInteractorInvocator,
+      GetMenus getMenus) {
 
+    this.getMenus = getMenus;
     this.menuInteractorInvocator = interactorInvocation;
     this.gridElementsInteractorInvocator = gridElementsInteractorInvocator;
     this.detailContentElementInteractorInvocator = detailContentElementInteractorInvocator;
@@ -26,6 +32,31 @@ public class OcmControllerImp implements OcmController {
 
   @Override public MenuContentData getMenu(boolean useCache) {
     return menuInteractorInvocator.getMenu(useCache);
+  }
+
+  @Override public void getMenu(boolean useCache, GetMenusControllerCallback getMenusCallback) {
+    getMenus.execute(new MenuObserver(getMenusCallback), GetMenus.Params.forForceReload(!useCache));
+  }
+
+
+  private final class MenuObserver extends DefaultObserver<MenuContentData> {
+    private final GetMenusControllerCallback getMenusCallback;
+
+    public MenuObserver(GetMenusControllerCallback getMenusCallback) {
+      this.getMenusCallback = getMenusCallback;
+    }
+
+    @Override public void onComplete() {
+
+    }
+
+    @Override public void onError(Throwable e) {
+      getMenusCallback.onGetMenusFails(e);
+    }
+
+    @Override public void onNext(MenuContentData menuContentData) {
+      getMenusCallback.onGetMenusLoaded(menuContentData);
+    }
   }
 
   @Override
@@ -79,7 +110,7 @@ public class OcmControllerImp implements OcmController {
         String slug = getSlug(elementUrl);
         elementCache = gridElementsInteractorInvocator.getElementById(slug);
       }
-*/
+      */
       return elementCache;
     } catch (Exception e) {
       return null;
@@ -94,4 +125,5 @@ public class OcmControllerImp implements OcmController {
       return null;
     }
   }
+
 }
