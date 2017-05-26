@@ -10,6 +10,7 @@ public class ApiElementCache {
   private ApiElementCachePreview preview;
   private ApiElementCacheRender render;
   private ApiElementCacheShare share;
+  private String name;
 
   public String getSlug() {
     return slug;
@@ -33,5 +34,9 @@ public class ApiElementCache {
 
   public ApiElementCacheShare getShare() {
     return share;
+  }
+
+  public String getName() {
+    return name;
   }
 }

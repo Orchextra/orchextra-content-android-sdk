@@ -22,6 +22,7 @@ public class ApiElementMapper implements ExternalClassToModelMapper<ApiElement, 
 
     model.setSlug(data.getSlug());
     model.setElementUrl(data.getElementUrl());
+    model.setName(data.getName());
 
     if (data.getSegmentation() != null) {
       model.setSegmentation(apiMenuItemSegmentation.externalClassToModel(data.getSegmentation()));
@@ -38,6 +39,7 @@ public class ApiElementMapper implements ExternalClassToModelMapper<ApiElement, 
       }
     }
     model.setTags(tagList);
+
 
     return model;
   }
