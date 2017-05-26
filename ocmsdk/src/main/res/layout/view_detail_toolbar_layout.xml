@@ -43,7 +43,7 @@
 
   <TextView
     android:id="@+id/detailTitleText"
-    android:text="Regalo de bienvenida"
+
     android:layout_width="wrap_content"
     android:layout_height="@dimen/ocm_height_detail_toolbar"
     android:layout_toRightOf="@+id/back_toolbar_button"
