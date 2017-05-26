@@ -29,6 +29,6 @@ android {
 dependencies {
   //compile 'com.android.support:appcompat-v7:25.1.0'
   compile project(path: ':ocmsdk')
-  compile 'com.squareup.leakcanary:leakcanary-android:1.5'
+//  compile 'com.squareup.leakcanary:leakcanary-android:1.5'
   compile 'com.android.support:multidex:1.0.1'
 }

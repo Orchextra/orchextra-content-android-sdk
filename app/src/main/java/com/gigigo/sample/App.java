@@ -9,7 +9,7 @@ import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
-import com.squareup.leakcanary.LeakCanary;
+
 
 //MultiDexApplication
 public class App extends MultiDexApplication {
@@ -42,12 +42,12 @@ public class App extends MultiDexApplication {
 
   @Override public void onCreate() {
     super.onCreate();
-     if (LeakCanary.isInAnalyzerProcess(this)) {
-       //This process is dedicated to LeakCanary for heap analysis.
-       //You should not init your app in this process.
-      return;
-    }
-    LeakCanary.install(this);
+    // if (LeakCanary.isInAnalyzerProcess(this)) {
+    //   //This process is dedicated to LeakCanary for heap analysis.
+    //   //You should not init your app in this process.
+    //  return;
+    //}
+    //LeakCanary.install(this);
     //// Normal app init code...
 
     MultiDex.install(this);

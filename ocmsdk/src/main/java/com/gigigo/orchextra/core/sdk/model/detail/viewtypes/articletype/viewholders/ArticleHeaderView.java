@@ -2,12 +2,14 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 
 import android.content.Context;
 import android.text.Html;
+import android.util.Base64;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
-import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 
 public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
@@ -31,13 +33,24 @@ public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
     }
   }
 
-  private void setImage(final String imageUrl, String imageThumb) {
-    ImageGenerator.generateThumbImage(imageThumb, articleHeaderImage);
+  private void setImage(final String imageUrl, final String imageThumb) {
+    articleHeaderImage.getViewTreeObserver()
+        .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+          @Override public boolean onPreDraw() {
+            byte[] imageThumbBytes = Base64.decode(imageThumb, Base64.DEFAULT);
 
-    String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl,
-        DeviceUtils.calculateRealWidthDevice(getContext()));
+            String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl,
+                DeviceUtils.calculateRealWidthDevice(getContext()));
 
-    imageLoader.load(generatedImageUrl).into(articleHeaderImage);
+            imageLoader.load(generatedImageUrl)
+                .thumbnailByte(imageThumbBytes)
+                .into(articleHeaderImage);
+
+            articleHeaderImage.getViewTreeObserver().removeOnPreDrawListener(this);
+
+            return true;
+          }
+        });
   }
 
   @Override protected void bindViews() {

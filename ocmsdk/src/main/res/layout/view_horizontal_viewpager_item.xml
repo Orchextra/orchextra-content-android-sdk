@@ -17,6 +17,7 @@
       android:layout_height="18dp"
       app:ci_drawable="@drawable/oc_indicator"
       android:layout_gravity="bottom"
-      android:layout_marginBottom="12dp"
+
       ></com.gigigo.orchextra.ocm.views.CircleIndicator>
+  <!--android:layout_marginBottom="12dp"-->
 </FrameLayout>

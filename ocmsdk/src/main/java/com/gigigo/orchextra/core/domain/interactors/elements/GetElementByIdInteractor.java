@@ -58,5 +58,7 @@ public class GetElementByIdInteractor implements Interactor<InteractorResponse<E
 
   public void setElementId(String elementId) {
     this.elementId = elementId;
+
+    System.out.println("***********************************************************\n"+elementId);
   }
 }
