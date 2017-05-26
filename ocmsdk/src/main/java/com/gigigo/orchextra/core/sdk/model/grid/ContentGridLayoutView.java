@@ -6,8 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -194,6 +192,11 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     listedDataContainer.addView(uiListedBaseContentData);
   }
 
+  public void setViewPagerIndicatorYOffset(float yOffset){
+    if(uiListedBaseContentData instanceof HorizontalViewPager){
+      ((HorizontalViewPager)uiListedBaseContentData).setViewPagerIndicatorYOffset(yOffset);
+    }
+  }
   @Override public void showEmptyView() {
     if (uiListedBaseContentData != null) {
       uiListedBaseContentData.showEmptyView();
