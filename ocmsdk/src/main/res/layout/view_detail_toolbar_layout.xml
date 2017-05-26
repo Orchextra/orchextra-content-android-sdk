@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,9 +15,11 @@
 
   <FrameLayout
       android:id="@+id/back_toolbar_button"
-      android:layout_width="@dimen/ocm_height_detail_toolbar"
+      android:layout_width="wrap_content"
       android:layout_height="@dimen/ocm_height_detail_toolbar"
+      android:layout_alignParentLeft="true"
       android:paddingLeft="@dimen/oc_spacing_16"
+      android:paddingStart="@dimen/oc_spacing_16"
       >
 
     <ImageView
@@ -39,11 +41,29 @@
 
   </FrameLayout>
 
+  <TextView
+      android:id="@+id/detailTitleText"
+      android:layout_width="wrap_content"
+      android:layout_height="@dimen/ocm_height_detail_toolbar"
+      android:layout_toRightOf="@+id/back_toolbar_button"
+      android:layout_toLeftOf="@+id/share_toolbar_button"
+      android:ellipsize="end"
+      android:gravity="center_vertical"
+      android:maxLines="2"
+      android:textColor="@color/oc_color_text_toolbar"
+      android:textSize="@dimen/oc_size_text_toolbar"
+      android:layout_marginLeft="@dimen/oc_spacing_8"
+      android:layout_marginRight="@dimen/oc_spacing_8"
+      android:visibility="gone"
+      />
+
   <FrameLayout
       android:id="@+id/share_toolbar_button"
       android:layout_width="wrap_content"
       android:layout_height="@dimen/ocm_height_detail_toolbar"
+      android:layout_alignParentRight="true"
       android:layout_gravity="right"
+      android:paddingEnd="@dimen/oc_spacing_16"
       android:paddingRight="@dimen/oc_spacing_16"
       >
 
@@ -66,4 +86,4 @@
 
   </FrameLayout>
 
-</FrameLayout>
+</RelativeLayout>

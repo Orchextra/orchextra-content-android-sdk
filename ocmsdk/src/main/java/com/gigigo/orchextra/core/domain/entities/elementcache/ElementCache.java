@@ -10,6 +10,7 @@ public class ElementCache {
   private ElementCachePreview preview;
   private ElementCacheRender render;
   private ElementCacheShare share;
+  private String name;
 
   public String getSlug() {
     return slug;
@@ -57,5 +58,13 @@ public class ElementCache {
 
   public void setShare(ElementCacheShare share) {
     this.share = share;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

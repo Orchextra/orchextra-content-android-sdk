@@ -9,6 +9,7 @@ public class Element {
     private String slug;
     private String elementUrl;
     private List<String> tags;
+    private String name;
 
     public ElementSegmentation getSegmentation() {
         return segmentation;
@@ -48,5 +49,13 @@ public class Element {
 
     public List<String> getTags() {
         return tags;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
