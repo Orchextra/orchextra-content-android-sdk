@@ -13,6 +13,7 @@ import com.gigigo.multiplegridrecyclerview.entities.CellBlankElement;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
@@ -29,8 +30,6 @@ import java.util.List;
 
 public class ContentViewPresenter extends Presenter<ContentView> {
 
-  private final InteractorInvoker interactorInvoker;
-  private final GetSectionDataInteractor getHomeDataInteractor;
   private final Authoritation authoritation;
   private final OcmController ocmController;
 
@@ -45,8 +44,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     super(viewInjector);
 
     this.ocmController = ocmController;
-    this.interactorInvoker = interactorInvoker;
-    this.getHomeDataInteractor = getHomeDataInteractor;
     this.authoritation = authoritation;
   }
 
@@ -68,44 +65,42 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private void loadSection(final boolean useCache) {
     getView().showProgressView(true);
 
-    getHomeDataInteractor.setSection(section);
-    getHomeDataInteractor.setUseCache(useCache);
-
-    new InteractorExecution<>(getHomeDataInteractor).result(new InteractorResult<ContentItem>() {
-
-      @Override public void onResult(ContentItem contentItem) {
-        if (contentItem != null
-            && contentItem.getLayout() != null
-            && contentItem.getElements() != null) {
-
-          listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
-
-          if (listedCellContentDataList.size() != 0) {
-            getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
-          } else {
-            getView().showEmptyView();
-          }
-        } else {
-          getView().showEmptyView();
-        }
-
-        getView().showProgressView(false);
+    ocmController.getSection(!useCache, section, new OcmController.GetSectionControllerCallback() {
+      @Override public void onGetSectionLoaded(ContentData contentData) {
+        ContentItem contentItem = contentData.getContent();
+        renderContentItem(contentItem);
       }
-    }).error(NoNetworkConnectionError.class, new InteractorResult<NoNetworkConnectionError>() {
-      @Override public void onResult(NoNetworkConnectionError result) {
-        getView().showProgressView(false);
-        if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
-          getView().showErrorView();
-        }
+
+      @Override public void onGetSectionFails(Exception e) {
+        renderError();
       }
-    }).error(GenericResponseDataError.class, new InteractorResult<GenericResponseDataError>() {
-      @Override public void onResult(GenericResponseDataError result) {
-        getView().showProgressView(false);
-        if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
-          getView().showErrorView();
-        }
+    });
+  }
+
+  private void renderContentItem(ContentItem contentItem) {
+    if (contentItem != null
+        && contentItem.getLayout() != null
+        && contentItem.getElements() != null) {
+
+      listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
+
+      if (listedCellContentDataList.size() != 0) {
+        getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
+      } else {
+        getView().showEmptyView();
       }
-    }).execute(interactorInvoker);
+    } else {
+      getView().showEmptyView();
+    }
+
+    getView().showProgressView(false);
+  }
+
+  private void renderError() {
+    getView().showProgressView(false);
+    if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
+      getView().showErrorView();
+    }
   }
 
   private List<Cell> checkTypeAndCalculateCelListedContent(ContentItem contentItem) {

@@ -37,9 +37,8 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl) {
-    //return ocmApiService.getSectionDataRx(elementUrl).map(dataResponse -> dataResponse.getResult())
-    //    .doOnNext(apiSectionContentData -> ocmCache.putSection(apiSectionContentData));
-    return null;
+    return ocmApiService.getSectionDataRx(elementUrl).map(dataResponse -> dataResponse.getResult())
+        .doOnNext(apiSectionContentData -> ocmCache.putSection(apiSectionContentData));
   }
 
   @Override public Observable<ApiSectionContentData> searchByText(String section) {
