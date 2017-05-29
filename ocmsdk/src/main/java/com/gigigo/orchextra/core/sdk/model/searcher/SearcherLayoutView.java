@@ -17,7 +17,6 @@ import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutInterface;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutPresenter;
 import com.gigigo.orchextra.core.domain.OcmController;
-import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
@@ -29,7 +28,6 @@ import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
-import java.util.ArrayList;
 import java.util.List;
 import orchextra.javax.inject.Inject;
 
@@ -93,14 +91,18 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   }
 
   @Override public void initUi() {
-    setMultipleGridLayout();
+    setMultipleGridLayout(calculateWidthCell());
   }
 
-  private void setMultipleGridLayout() {
+  private int calculateWidthCell() {
+    return DeviceUtils.calculateRealWidthDevice(getContext()) * 2 / 3;
+  }
+
+  private void setMultipleGridLayout(int widthCell) {
     recyclerView.setLoadingViewLayout(progressLayout);
     recyclerView.setEmptyViewLayout(emptyLayout);
 
-    setAdapterDataViewHolders();
+    setAdapterDataViewHolders(widthCell);
 
     recyclerView.setOnRefreshListener(new MultipleGridRecyclerView.OnRefreshListener() {
       @Override public void onRefresh() {
@@ -118,9 +120,9 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
     });
   }
 
-  private void setAdapterDataViewHolders() {
+  private void setAdapterDataViewHolders(int widthCell) {
     ElementsViewHolderFactory factory =
-        new ElementsViewHolderFactory(context, imageLoader, authoritation);
+        new ElementsViewHolderFactory(context, imageLoader, authoritation, widthCell);
 
     recyclerView.setAdapterViewHolderFactory(factory);
 

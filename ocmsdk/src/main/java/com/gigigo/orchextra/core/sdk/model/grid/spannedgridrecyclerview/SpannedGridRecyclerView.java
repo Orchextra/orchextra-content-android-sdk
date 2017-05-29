@@ -2,8 +2,6 @@ package com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +14,7 @@ import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.factory.ElementsViewHolderFactory;
 import com.gigigo.orchextra.core.sdk.model.grid.viewholders.CellImageViewHolder;
+import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
@@ -39,7 +38,12 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
   @Override protected void init() {
     View view = inflateLayout();
     initViews(view);
-    initRecyclerView();
+    int widthCell = calculateWidthCell();
+    initRecyclerView(widthCell);
+  }
+
+  private int calculateWidthCell() {
+    return DeviceUtils.calculateRealWidthDevice(getContext()) * 2 / 3;
   }
 
   private View inflateLayout() {
@@ -53,8 +57,8 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
         (MultipleGridRecyclerView) view.findViewById(R.id.multipleGridRecyclerView);
   }
 
-  private void initRecyclerView() {
-    setAdapterDataViewHolders();
+  private void initRecyclerView(int widthCell) {
+    setAdapterDataViewHolders(widthCell);
 
     //TODO Resolve clip to padding flashing when last row is 3 items 1x1. Remove logic in presenter
     int padding = (clipToPadding != null) ? clipToPadding.getPadding()
@@ -83,9 +87,9 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
     multipleGridRecyclerView.setLoadingViewLayout(loadingView);
   }
 
-  private void setAdapterDataViewHolders() {
+  private void setAdapterDataViewHolders(int widthCell) {
     ElementsViewHolderFactory factory =
-        new ElementsViewHolderFactory(getContext(), imageLoader, authoritation);
+        new ElementsViewHolderFactory(getContext(), imageLoader, authoritation, widthCell);
 
     multipleGridRecyclerView.setAdapterViewHolderFactory(factory);
 
