@@ -7,6 +7,7 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import io.reactivex.Observable;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
@@ -22,19 +23,19 @@ import orchextra.javax.inject.Singleton;
     this.ocmCache = ocmCache;
   }
 
-  @Override public Observable<ApiMenuContentDataResponse> getMenuEntity() {
+  @Override public Observable<ApiMenuContentData> getMenuEntity() {
     return ocmCache.getMenus();
   }
 
-  @Override public Observable<ApiSectionContentDataResponse> getSectionEntity(String elementUrl) {
+  @Override public Observable<ContentData> getSectionEntity(String elementUrl) {
     return null;
   }
 
-  @Override public Observable<ApiSectionContentDataResponse> searchByText(String section) {
+  @Override public Observable<ApiSectionContentData> searchByText(String section) {
     return null;
   }
 
-  @Override public Observable<ApiElementDataResponse> getElementById(String section) {
+  @Override public Observable<ApiElementData> getElementById(String section) {
     return null;
   }
 

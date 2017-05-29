@@ -6,11 +6,17 @@ import com.gigigo.orchextra.core.data.rxCache.OcmCacheImp;
 import com.google.gson.annotations.SerializedName;
 
 import com.mskn73.kache.Kacheable;
+import com.mskn73.kache.annotations.KacheLife;
 import java.util.List;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
-public class ApiMenuContentData{
+@KacheLife(expiresTime = 1000 * 60L)
+public class ApiMenuContentData implements Kacheable {
+
+  @NotNull @Override public String getKey() {
+    return OcmCacheImp.MENU_KEY;
+  }
 
   @SerializedName("menus")
   private List<ApiMenuContent> menuContentList;

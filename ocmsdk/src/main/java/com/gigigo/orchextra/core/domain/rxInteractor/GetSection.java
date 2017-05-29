@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.domain.rxInteractor;
 
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
@@ -9,9 +10,9 @@ import orchextra.javax.inject.Inject;
 
 /**
  * This class is an implementation of {@link UseCase} that represents a use case for
- * retrieving a collection of all {@link ElementCache}.
+ * retrieving a collection of all {@link ContentData}.
  */
-public class GetSection extends UseCase<ElementCache, GetSection.Params> {
+public class GetSection extends UseCase<ContentData, GetSection.Params> {
 
   private final OcmRepository ocmRepository;
 
@@ -21,7 +22,7 @@ public class GetSection extends UseCase<ElementCache, GetSection.Params> {
     this.ocmRepository = ocmRepository;
   }
 
-  @Override Observable<ElementCache> buildUseCaseObservable(Params params) {
+  @Override Observable<ContentData> buildUseCaseObservable(Params params) {
     return this.ocmRepository.getSectionElements(params.forceReload, params.section);
   }
 

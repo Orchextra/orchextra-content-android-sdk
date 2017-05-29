@@ -1,9 +1,11 @@
 package com.gigigo.orchextra.core.data.rxRepository;
 
+import com.gigigo.ggglib.network.mappers.ApiGenericResponseMapper;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
@@ -19,24 +21,29 @@ import orchextra.javax.inject.Singleton;
 @Singleton public class OcmDataRepository implements OcmRepository {
   private final OcmDataStoreFactory ocmDataStoreFactory;
   private final ApiMenuContentListResponseMapper apiMenuContentListResponseMapper;
+  //private final ApiGenericResponseMapper apiGenericResponseMapper;
 
   @Inject public OcmDataRepository(OcmDataStoreFactory ocmDataStoreFactory,
       ApiMenuContentListResponseMapper apiMenuContentListResponseMapper) {
     this.ocmDataStoreFactory = ocmDataStoreFactory;
     this.apiMenuContentListResponseMapper = apiMenuContentListResponseMapper;
+    //this.apiGenericResponseMapper = apiGenericResponseMapper;
   }
 
   @Override public Observable<MenuContentData> getMenu(boolean forceReload) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForMenus(forceReload);
     return ocmDataStore.getMenuEntity()
         .map(apiMenuContentData -> apiMenuContentListResponseMapper.externalClassToModel(
-            apiMenuContentData.getResult()));
+            apiMenuContentData));
   }
 
   @Override
-  public Observable<ElementCache> getSectionElements(boolean forceReload, String elementUrl) {
+  public Observable<ContentData> getSectionElements(boolean forceReload, String elementUrl) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getCloudDataStore();
-    return null;//ocmDataStore.getSectionEntity(elementUrl).map()
+    //return ocmDataStore.getSectionEntity(elementUrl)
+    //    .map(apiSectionContentData -> apiGenericResponseMapper.mapApiGenericResponseToBusiness(
+    //        apiSectionContentData);
+    return null;
   }
 
   @Override public Observable<ElementCache> getDetail(String section) {

@@ -1,5 +1,7 @@
 package com.gigigo.orchextra.core.controller;
 
+import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
+import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
@@ -106,13 +108,29 @@ public class OcmControllerImp implements OcmController {
 
   //region new
   @Override public void getMenu(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
-    getMenus.execute(new MenuObserver(getMenusCallback), GetMenus.Params.forForceReload(forceReload));
+    getMenus.execute(new MenuObserver(getMenusCallback),
+        GetMenus.Params.forForceReload(forceReload));
   }
 
-  @Override public void getSection(boolean useCache, final String section,
+  @Override public void getSection(final boolean forceReload, final String section,
       GetSectionControllerCallback getSectionControllerCallback) {
-    getSection.execute(new SectionObserver(getSectionControllerCallback),
-        GetSection.Params.forSection(!useCache, section));
+
+    getMenu(false, new GetMenusControllerCallback() {
+      @Override public void onGetMenusLoaded(MenuContentData menus) {
+        ElementCache elementCache = menus.getElementsCache().get(section);
+        if (elementCache == null || elementCache.getRender() == null) {
+          getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException());
+        } else {
+          String url = elementCache.getRender().getContentUrl();
+          getSection.execute(new SectionObserver(getSectionControllerCallback),
+              GetSection.Params.forSection(forceReload, url));
+        }
+      }
+
+      @Override public void onGetMenusFails(Exception e) {
+        getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(e));
+      }
+    });
   }
   //end region
   //region observers
@@ -129,7 +147,7 @@ public class OcmControllerImp implements OcmController {
     }
 
     @Override public void onError(Throwable e) {
-      getMenusCallback.onGetMenusFails(e);
+      getMenusCallback.onGetMenusFails(new ApiMenuNotFoundException(e));
     }
 
     @Override public void onNext(MenuContentData menuContentData) {
@@ -137,7 +155,7 @@ public class OcmControllerImp implements OcmController {
     }
   }
 
-  private final class SectionObserver extends DefaultObserver<ElementCache> {
+  private final class SectionObserver extends DefaultObserver<ContentData> {
     private final GetSectionControllerCallback getSectionControllerCallback;
 
     public SectionObserver(GetSectionControllerCallback getSectionControllerCallback) {
@@ -149,11 +167,11 @@ public class OcmControllerImp implements OcmController {
     }
 
     @Override public void onError(Throwable e) {
-      getSectionControllerCallback.onGetMenusFails(e);
+      getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(e));
     }
 
-    @Override public void onNext(ElementCache elementCache) {
-      //getSectionControllerCallback.on(elementCache);
+    @Override public void onNext(ContentData contentData) {
+      getSectionControllerCallback.onGetSectionLoaded(contentData);
     }
   }
   //end region

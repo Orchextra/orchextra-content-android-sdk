@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
@@ -64,10 +65,12 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         getMenusViewGeneratorCallback.onGetMenusLoaded(transformMenu(menus));
       }
 
-      @Override public void onGetMenusFails(Throwable e) {
-        getMenusViewGeneratorCallback.onGetMenusFails(e);
+      @Override public void onGetMenusFails(Exception e) {
+        getMenusViewGeneratorCallback.onGetMenusFails(new ApiMenuNotFoundException(e));
       }
     });
+
+
   }
 
   private List<UiMenu> transformMenu(MenuContentData menuContentData) {
@@ -91,14 +94,14 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   }
 
   @Override public UiGridBaseContentData generateGridView(String viewId, String filter) {
-    ElementCache cachedElement = ocmController.getCachedElement(viewId);
-
-    if (cachedElement != null) {
-      if (cachedElement.getType() == ElementCacheType.WEBVIEW
-          && cachedElement.getRender() != null) {
-        return generateWebContentData(cachedElement.getRender().getUrl());
-      }
-    }
+    //ElementCache cachedElement = ocmController.getCachedElement(viewId);
+    //
+    //if (cachedElement != null) {
+    //  if (cachedElement.getType() == ElementCacheType.WEBVIEW
+    //      && cachedElement.getRender() != null) {
+    //    return generateWebContentData(cachedElement.getRender().getUrl());
+    //  }
+    //}
 
     return generateGridContentData(viewId, filter);
   }

@@ -1,5 +1,7 @@
 package com.gigigo.orchextra.core.data.rxCache;
 
+import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
+import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
@@ -7,12 +9,19 @@ import io.reactivex.Observable;
 
 public interface OcmCache {
 
-  Observable<ApiMenuContentDataResponse> getMenus();
+  Observable<ApiMenuContentData> getMenus();
 
-  void putMenus(ApiMenuContentDataResponse apiMenuContentDataResponse);
+  void putMenus(ApiMenuContentData apiMenuContentData);
 
   boolean isMenuCached();
 
   boolean isMenuExpired();
 
+  Observable<ApiSectionContentData> getSection(String elementUrl);
+
+  void putSection(ApiSectionContentData apiSectionContentData);
+
+  boolean isSectionCached(String elementUrl);
+
+  boolean isSectionExpired(String elementUrl);
 }

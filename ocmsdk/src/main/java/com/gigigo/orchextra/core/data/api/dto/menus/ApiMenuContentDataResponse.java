@@ -6,11 +6,6 @@ import com.mskn73.kache.Kacheable;
 import com.mskn73.kache.annotations.KacheLife;
 import org.jetbrains.annotations.NotNull;
 
-@KacheLife(expiresTime = 1000 * 60L)
-public class ApiMenuContentDataResponse extends BaseApiResponse<ApiMenuContentData>
-    implements Kacheable {
+public class ApiMenuContentDataResponse extends BaseApiResponse<ApiMenuContentData> {
 
-  @NotNull @Override public String getKey() {
-    return OcmCacheImp.MENU_KEY;
-  }
 }

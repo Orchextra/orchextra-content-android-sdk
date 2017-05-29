@@ -9,6 +9,7 @@ import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import io.reactivex.Observable;
 
 import orchextra.javax.inject.Inject;
@@ -29,21 +30,23 @@ import orchextra.javax.inject.Singleton;
     this.ocmCache = ocmCache;
   }
 
-  @Override public Observable<ApiMenuContentDataResponse> getMenuEntity() {
-    return ocmApiService.getMenuDataRx()
+  @Override public Observable<ApiMenuContentData> getMenuEntity() {
+    return ocmApiService.getMenuDataRx().map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiMenuContentDataResponse -> ocmCache.putMenus(
             apiMenuContentDataResponse));
   }
 
-  @Override public Observable<ApiSectionContentDataResponse> getSectionEntity(String elementUrl) {
-    return ocmApiService.getSectionDataRx(elementUrl);
+  @Override public Observable<ContentData> getSectionEntity(String elementUrl) {
+    //return ocmApiService.getSectionDataRx(elementUrl).map(dataResponse -> dataResponse.getResult())
+    //    .doOnNext(apiSectionContentData -> ocmCache.putSection(apiSectionContentData));
+    return null;
   }
 
-  @Override public Observable<ApiSectionContentDataResponse> searchByText(String section) {
-    return ocmApiService.searchRx(section);
+  @Override public Observable<ApiSectionContentData> searchByText(String section) {
+    return ocmApiService.searchRx(section).map(dataResponse -> dataResponse.getResult());
   }
 
-  @Override public Observable<ApiElementDataResponse> getElementById(String section) {
-    return ocmApiService.getElementByIdRx(section);
+  @Override public Observable<ApiElementData> getElementById(String section) {
+    return ocmApiService.getElementByIdRx(section).map(dataResponse -> dataResponse.getResult());
   }
 }

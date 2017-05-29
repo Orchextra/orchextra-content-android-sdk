@@ -1,11 +1,13 @@
 package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
+import com.gigigo.ggglib.network.responses.ApiGenericResponse;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import io.reactivex.Observable;
 
 /**
@@ -14,22 +16,22 @@ import io.reactivex.Observable;
 public interface OcmDataStore {
 
   /**
-   * Get an {@link Observable} which will emit a {@link ApiMenuContentDataResponse}.
+   * Get an {@link Observable} which will emit a {@link ApiMenuContentData}.
    */
-  Observable<ApiMenuContentDataResponse> getMenuEntity();
+  Observable<ApiMenuContentData> getMenuEntity();
 
   /**
-   * Get an {@link Observable} which will emit a {@link ApiSectionContentDataResponse}.
+   * Get an {@link Observable} which will emit a {@link ApiSectionContentData}.
    */
-  Observable<ApiSectionContentDataResponse> getSectionEntity(String elementUrl);
+  Observable<ContentData> getSectionEntity(String elementUrl);
 
   /**
-   * Get an {@link Observable} which will emit a {@link ApiSectionContentDataResponse}.
+   * Get an {@link Observable} which will emit a {@link ApiSectionContentData}.
    */
-  Observable<ApiSectionContentDataResponse> searchByText(String section);
+  Observable<ApiSectionContentData> searchByText(String section);
 
   /**
-   * Get an {@link Observable} which will emit a {@link ApiElementDataResponse}.
+   * Get an {@link Observable} which will emit a {@link ApiElementData}.
    */
-  Observable<ApiElementDataResponse> getElementById(String section);
+  Observable<ApiElementData> getElementById(String section);
 }

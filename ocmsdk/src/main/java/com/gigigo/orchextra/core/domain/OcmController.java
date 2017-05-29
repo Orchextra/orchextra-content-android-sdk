@@ -31,16 +31,16 @@ public interface OcmController {
 
   void getMenu(boolean forceReload, final GetMenusControllerCallback getMenusCallback);
 
-  void getSection(boolean useCache, final String section, final GetSectionControllerCallback getSectionControllerCallback);
+  void getSection(boolean forceReload, final String section, final GetSectionControllerCallback getSectionControllerCallback);
 
   // Callbacks
   interface GetMenusControllerCallback {
     void onGetMenusLoaded(MenuContentData menus);
-    void onGetMenusFails(Throwable e);
+    void onGetMenusFails(Exception e);
   }
 
   interface GetSectionControllerCallback {
-    void onGetSectionLoaded(MenuContentData menus);
-    void onGetMenusFails(Throwable e);
+    void onGetSectionLoaded(ContentData contentData);
+    void onGetSectionFails(Exception e);
   }
 }
