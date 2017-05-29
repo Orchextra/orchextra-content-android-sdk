@@ -95,7 +95,7 @@ public class DetailToolbarView extends FrameLayout {
 
       if (isFirstScrollFull && areVisibleToolbar) {
         OCManager.notifyEvent(OcmEvent.CONTENT_FULL);
-      } else if (isFirstScrollPreview && !areVisibleToolbar){
+      } else if (isFirstScrollPreview && !areVisibleToolbar) {
         OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW);
       }
     }

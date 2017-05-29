@@ -1,8 +1,4 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-apply from: 'common_methods.gradle'
-apply from: 'dependencies.gradle'
-apply from: 'variants.gradle'
-
 
 buildscript {
   repositories {
@@ -16,13 +12,6 @@ buildscript {
 }
 
 allprojects {
-  ext {
-    androidCompileSdkVersion = 24
-    androidMinSdkVersion = 14
-    androidBuildToolsVersion = '24.0.3'
-    androidTargetSdkVersion = 23
-  }
-
   repositories {
     jcenter()
     mavenCentral()

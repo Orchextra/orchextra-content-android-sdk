@@ -8,15 +8,12 @@
     android:id="@+id/listedHorizontalViewPager"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f33003" />
+     />
 
   <com.gigigo.orchextra.ocm.views.CircleIndicator
     android:id="@+id/ci_indicator"
     android:layout_width="match_parent"
     android:layout_height="18dp"
-    android:layout_below="@id/listedHorizontalViewPager"
-    android:layout_marginTop="-18dp"
-    android:background="#f7766003"
     app:ci_drawable="@drawable/oc_indicator"></com.gigigo.orchextra.ocm.views.CircleIndicator>
   <!--android:layout_marginBottom="12dp"-->
 </RelativeLayout>

@@ -1,5 +1,5 @@
-ext {
-  googleKeyDebug = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
+project.ext {
+   googleKeyDebug = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
   //gigigo.desarrollo -> Google Console --> Orchextra2016 --> Woah Dev
   googleKey = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
 

@@ -2,6 +2,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'jacoco-android'
 
+apply from: 'common_methods.gradle'
+apply from: 'dependencies.gradle'
+apply from: 'variants.gradle'
+
 def CONCURRENT_INTERACTORS = "CONCURRENT_INTERACTORS"
 def RETROFIT_LOG = "RETROFIT_LOG"
 
@@ -11,12 +15,12 @@ def OCM_SDK_VERSION = "OCM_SDK_VERSION";
 def YOUTUBE_DEVELOPER_KEY = "YOUTUBE_DEVELOPER_KEY"
 
 android {
-  compileSdkVersion rootProject.ext.androidCompileSdkVersion
-  buildToolsVersion rootProject.ext.androidBuildToolsVersion
+  compileSdkVersion project.androidCompileSdkVersion
+  buildToolsVersion project.androidBuildToolsVersion
 
   defaultConfig {
-    minSdkVersion rootProject.ext.androidMinSdkVersion
-    targetSdkVersion rootProject.ext.androidTargetSdkVersion
+    minSdkVersion project.androidMinSdkVersion
+    targetSdkVersion project.androidTargetSdkVersion
     versionCode 1
     versionName "1.0"
     ndk {
@@ -30,7 +34,7 @@ android {
     }
     debug {
       debuggable true
-//      testCoverageEnabled true
+      //      testCoverageEnabled true
     }
     release {
       debuggable false
@@ -40,7 +44,7 @@ android {
   }
 
   productFlavors.whenObjectAdded { flavor ->
-    def version = rootProject.ext[flavor.name].version
+    def version = project[flavor.name].version
 
     flavor.versionCode generateAutoVersionCode()
     flavor.versionName generateVersionName(version.major, version.minor, version.patch)
@@ -50,7 +54,7 @@ android {
 
     variant.productFlavors.each { flavor ->
 
-      def flavorData = rootProject.ext[flavor.name]
+      def flavorData = project[flavor.name]
       def appName = flavorData.appName
 
       println("--**************************OCMSDK**************************--")
@@ -61,12 +65,12 @@ android {
           variant.buildType.name +
           "-------------")
 
-      setVariantBuildConfigField(variant, rootProject.ext.apiOcm, API_URL, STRING)
-      setVariantBuildConfigField(variant, rootProject.ext.ocmSdkVersion, OCM_SDK_VERSION, STRING)
-      setVariantBuildConfigField(variant, rootProject.ext.concurrentInteractors,
+      setVariantBuildConfigField(variant, project.apiOcm, API_URL, STRING)
+      setVariantBuildConfigField(variant, project.ocmSdkVersion, OCM_SDK_VERSION, STRING)
+      setVariantBuildConfigField(variant, project.concurrentInteractors,
           CONCURRENT_INTERACTORS, INT)
-      setVariantBuildConfigField(variant, rootProject.ext.retrofitLog, RETROFIT_LOG, BOOLEAN)
-      setVariantBuildConfigField(variant, rootProject.ext.youtubeDeveloperKey,
+      setVariantBuildConfigField(variant, project.retrofitLog, RETROFIT_LOG, BOOLEAN)
+      setVariantBuildConfigField(variant, project.youtubeDeveloperKey,
           YOUTUBE_DEVELOPER_KEY, STRING)
 
       println("--**********************************************************--")
@@ -96,9 +100,9 @@ android {
 
   // true to publish all flavour artifacts
   publishNonDefault true
-//  defaultPublishConfig "ocmStaging"
+  //  defaultPublishConfig "ocmStaging"
   defaultPublishConfig "ocmDebug"
-//  defaultPublishConfig "ocmRelease"
+  //  defaultPublishConfig "ocmRelease"
 }
 
 jacocoAndroidUnitTestReport {
@@ -112,40 +116,48 @@ configurations {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile fileTree(dir: 'libs', include: ['*.jar']) //youtube
 
-  compile rootProject.ext.libraries.androidSupportDesign
-//  compile rootProject.ext.libraries.constraintLayout
-  compile rootProject.ext.libraries.androidCustomtabs
+  //google Support/CustomTabs/playServices
+  compile project.libraries.androidSupportDesign
+  compile project.libraries.androidCustomtabs
 
-  compile rootProject.ext.libraries.ggglib
-  compile rootProject.ext.libraries.gggJavaLib
+  compile project.libraries.playServicesBase
+  compile project.libraries.playServicesLocation
+  compile project.libraries.playServicesGcm
 
-  compile rootProject.ext.libraries.interactorExecutor
-  compile rootProject.ext.libraries.threaddecoratedviewCommon
-  apt rootProject.ext.libraries.threaddecoratedviewCompiler
 
-  apt rootProject.ext.libraries.daggerCompiler
-  compile rootProject.ext.libraries.dagger
+  //gigigo Lib
+  compile project.libraries.ggglib
+  compile project.libraries.gggJavaLib
 
-  compile rootProject.ext.libraries.multipleGridRecyclerView
+  //gigigo Executor
+  compile project.libraries.interactorExecutor
+  compile project.libraries.threaddecoratedviewCommon
+  apt project.libraries.threaddecoratedviewCompiler
 
-  compile rootProject.ext.libraries.imageloaderGlide
-  compile rootProject.ext.libraries.imageloaderGlideBlur
+  //Dagger
+  apt project.libraries.daggerCompiler
+  compile project.libraries.dagger
 
-  compile rootProject.ext.libraries.oxvuforiaimplementation
-  ocmStagingCompile(rootProject.ext.libraries.orchextrasdkStaging) { transitive = true }
-  ocmDebugCompile(rootProject.ext.libraries.orchextrasdkDebug) { transitive = true }
-   ocmReleaseCompile(rootProject.ext.libraries.orchextrasdkRelease) { transitive = true }
+  //Image Loader Glide/Blur
+  compile project.libraries.imageloaderGlide
+  compile project.libraries.imageloaderGlideBlur
 
-  testCompile rootProject.ext.testLibraries.junit
-  testCompile rootProject.ext.testLibraries.assertj
-  testCompile rootProject.ext.testLibraries.mockito
+  //Orchextra
+  compile project.libraries.oxvuforiaimplementation
+  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true }
+  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true }
+  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true }
 
-  compile rootProject.ext.libraries.playServicesBase
-  compile rootProject.ext.libraries.playServicesLocation
-  compile rootProject.ext.libraries.playServicesGcm
+  //customs Views
+  compile project.libraries.doubleViewPager
+  compile project.libraries.autofitTextView
+  compile project.libraries.multipleGridRecyclerView
 
-  compile rootProject.ext.libraries.doubleViewPager
-  compile rootProject.ext.libraries.autofitTextView
+  //TEST
+  testCompile project.testLibraries.junit
+  testCompile project.testLibraries.assertj
+  testCompile project.testLibraries.mockito
 }
+
