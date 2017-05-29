@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.gigigo.interactorexecutor.base.Presenter;
 import com.gigigo.interactorexecutor.base.viewinjector.GenericViewInjector;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
+import com.gigigo.orchextra.core.controller.dto.DetailViewInfo;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
@@ -58,28 +59,30 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   }
 
   private void renderView(ElementCache cachedElement) {
-    ElementCacheShare shareElement = cachedElement.getShare();
+    DetailViewInfo detailViewInfo = new DetailViewInfo();
+    detailViewInfo.setShareable(cachedElement.getShare() != null);
+    detailViewInfo.setNameArticle(cachedElement.getName());
 
     if (cachedElement.getType() == ElementCacheType.CARDS) {
       UiBaseContentData contentData = generateCardView(cachedElement);
-      getView().renderDetailView(contentData, shareElement != null);
+      getView().renderDetailView(contentData, detailViewInfo);
     } else {
       UiBaseContentData previewContentData =
-          generatePreview(cachedElement.getPreview(), shareElement);
+          generatePreview(cachedElement.getPreview(), cachedElement.getShare());
 
       UiBaseContentData detailContentData =
           generateDetailView(cachedElement.getType(), cachedElement.getRender());
 
       if (previewContentData != null && detailContentData != null) {
         getView().renderDetailViewWithPreview(previewContentData, detailContentData,
-            shareElement != null);
+            detailViewInfo);
 
         getView().showEmptyView(false);
       } else if (previewContentData != null) {
-        getView().renderPreview(previewContentData, shareElement != null);
+        getView().renderPreview(previewContentData, detailViewInfo);
         getView().showEmptyView(false);
       } else if (detailContentData != null) {
-        getView().renderDetailView(detailContentData, shareElement != null);
+        getView().renderDetailView(detailContentData, detailViewInfo);
         getView().showEmptyView(false);
       } else {
         getView().showEmptyView(true);

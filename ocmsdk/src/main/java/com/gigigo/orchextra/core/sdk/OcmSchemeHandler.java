@@ -25,33 +25,36 @@ public class OcmSchemeHandler {
 
     ElementCache cachedElement = ocmController.getCachedElement(path);
 
-    ElementCacheType type = cachedElement.getType();
-    ElementCacheRender render = cachedElement.getRender();
+    if (cachedElement != null) {
 
-    switch (type) {
-      case VUFORIA:
-        if (render != null) {
-          processImageRecognitionAction();
-        }
-        break;
-      case SCAN:
-        if (render != null) {
-          processScanAction();
-        }
-        break;
-      case EXTERNAL_BROWSER:
-        if (render != null) {
-          processExternalBrowser(render.getUrl());
-        }
-        break;
-      case DEEP_LINK:
-        if (render != null) {
-          processDeepLink(render.getUri());
-        }
-        break;
-      default:
-        openDetailActivity(path);
-        break;
+      ElementCacheType type = cachedElement.getType();
+      ElementCacheRender render = cachedElement.getRender();
+
+      switch (type) {
+        case VUFORIA:
+          if (render != null) {
+            processImageRecognitionAction();
+          }
+          break;
+        case SCAN:
+          if (render != null) {
+            processScanAction();
+          }
+          break;
+        case EXTERNAL_BROWSER:
+          if (render != null) {
+            processExternalBrowser(render.getUrl());
+          }
+          break;
+        case DEEP_LINK:
+          if (render != null) {
+            processDeepLink(render.getUri());
+          }
+          break;
+        default:
+          openDetailActivity(path);
+          break;
+      }
     }
   }
 

@@ -9,6 +9,7 @@ public class ApiElement {
     private ApiElementSectionView sectionView;
     private String slug;
     private String elementUrl;
+    private String name;
 
     public ApiElementSegmentation getSegmentation() {
         return segmentation;
@@ -28,5 +29,9 @@ public class ApiElement {
 
     public List<String> getTags() {
         return tags;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -16,12 +17,14 @@ public class DetailToolbarView extends FrameLayout {
   private final Context context;
 
   private View detailToolbar;
+  private TextView detailTitleText;
   private View backToolbarButton;
   private View shareToolbarButton;
   private View backToolbarBgButton;
   private View shareToolbarBgButton;
 
   private boolean isBlocked;
+  private String title;
 
   private boolean isFirstScrollPreview;
   private boolean isFirstScrollFull;
@@ -50,6 +53,11 @@ public class DetailToolbarView extends FrameLayout {
 
   private void init() {
     initViews();
+    setToolbarTitle();
+  }
+
+  private void setToolbarTitle() {
+    detailTitleText.setText(title);
   }
 
   private void initViews() {
@@ -57,6 +65,7 @@ public class DetailToolbarView extends FrameLayout {
     View view = inflater.inflate(R.layout.view_detail_toolbar_layout, this, true);
 
     detailToolbar = view.findViewById(R.id.detailToolbar);
+    detailTitleText = (TextView) view.findViewById(R.id.detailTitleText);
     backToolbarButton = view.findViewById(R.id.back_toolbar_button);
     shareToolbarButton = view.findViewById(R.id.share_toolbar_button);
     backToolbarBgButton = view.findViewById(R.id.back_toolbar_bg_button);
@@ -75,29 +84,21 @@ public class DetailToolbarView extends FrameLayout {
         || (detailToolbar.getVisibility() == VISIBLE && !areVisibleToolbar);
 
     if (hasToChangeViews && !isBlocked || hasToChangeViews && forceChange) {
-      //Animation animation = AnimationUtils.loadAnimation(context,
-      //    areVisibleToolbar ? R.anim.scale_y_up_in : R.anim.scale_y_up_out);
 
-      //detailToolbar.startAnimation(animation);
       detailToolbar.setVisibility(areVisibleToolbar ? View.VISIBLE : View.GONE);
 
-      //animation = AnimationUtils.loadAnimation(context,
-      //    !areVisibleToolbar ? R.anim.scale_item_in : R.anim.scale_item_out);
-
-      //backToolbarBgButton.startAnimation(animation);
       backToolbarBgButton.setVisibility(!areVisibleToolbar ? View.VISIBLE : View.INVISIBLE);
 
-      //shareToolbarBgButton.startAnimation(animation);
       shareToolbarBgButton.setVisibility(!areVisibleToolbar ? View.VISIBLE : View.INVISIBLE);
 
+      detailTitleText.setVisibility(areVisibleToolbar ? View.VISIBLE : View.GONE);
+     
       if (isFirstScrollFull && areVisibleToolbar) {
         OCManager.notifyEvent(OcmEvent.CONTENT_FULL);
-      } else if (isFirstScrollPreview && !areVisibleToolbar){
+      } else if (isFirstScrollPreview && !areVisibleToolbar) {
         OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW);
       }
     }
-
-
   }
 
   public void setOnClickBackButtonListener(OnClickListener onClickBackButtonListener) {
@@ -114,5 +115,10 @@ public class DetailToolbarView extends FrameLayout {
 
   public void blockSwipeEvents(boolean isBlocked) {
     this.isBlocked = isBlocked;
+  }
+
+  public void setToolbarTitle(String title) {
+    this.title = title;
+    setToolbarTitle();
   }
 }

@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.controller.model.detail;
 
+import com.gigigo.orchextra.core.controller.dto.DetailViewInfo;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.threaddecoratedview.views.qualifiers.NotDecorated;
 import com.gigigo.threaddecoratedview.views.qualifiers.ThreadDecoratedView;
@@ -11,11 +12,11 @@ public interface DetailElementsView {
   void initUi();
 
   void renderDetailViewWithPreview(UiBaseContentData previewContentData,
-      UiBaseContentData detailContentData, boolean canShare);
+      UiBaseContentData detailContentData, DetailViewInfo detailViewInfo);
 
-  void renderDetailView(UiBaseContentData detailContentData, boolean canShare);
+  void renderDetailView(UiBaseContentData detailContentData, DetailViewInfo detailViewInfo);
 
-  void renderPreview(UiBaseContentData previewContentData, boolean canShare);
+  void renderPreview(UiBaseContentData previewContentData, DetailViewInfo detailViewInfo);
 
   void showProgressView(boolean visible);
 

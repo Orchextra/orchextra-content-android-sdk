@@ -28,6 +28,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   protected UiDetailBaseContentData.OnFinishViewListener onFinishListener;
   protected OnShareListener onShareListener;
   protected DetailToolbarView detailToolbarView;
+  private String nameArticle;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -36,6 +37,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
 
     initDi();
     initDetailViews(view);
+    setData();
 
     return view;
   }
@@ -51,6 +53,10 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     detailToolbarView = (DetailToolbarView) view.findViewById(R.id.detailToolbarView);
 
     initViews(view);
+  }
+
+  private void setData() {
+    detailToolbarView.setToolbarTitle(nameArticle);
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -144,6 +150,10 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   protected abstract void initViews(View view);
 
   protected abstract int getDetailLayout();
+
+  public void setArticleName(String nameArticle) {
+    this.nameArticle = nameArticle;
+  }
 
   public interface OnShareListener {
     void onShare();
