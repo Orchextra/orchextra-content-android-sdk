@@ -1,7 +1,12 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'jacoco-android'
+
+apply from: 'common_methods.gradle'
+apply from: 'dependencies.gradle'
+apply plugin: 'me.tatarka.retrolambda'
+
+apply from: 'variants.gradle'
 
 def CONCURRENT_INTERACTORS = "CONCURRENT_INTERACTORS"
 def RETROFIT_LOG = "RETROFIT_LOG"
@@ -12,12 +17,12 @@ def OCM_SDK_VERSION = "OCM_SDK_VERSION";
 def YOUTUBE_DEVELOPER_KEY = "YOUTUBE_DEVELOPER_KEY"
 
 android {
-  compileSdkVersion rootProject.ext.androidCompileSdkVersion
-  buildToolsVersion rootProject.ext.androidBuildToolsVersion
+  compileSdkVersion project.androidCompileSdkVersion
+  buildToolsVersion project.androidBuildToolsVersion
 
   defaultConfig {
-    minSdkVersion rootProject.ext.androidMinSdkVersion
-    targetSdkVersion rootProject.ext.androidTargetSdkVersion
+    minSdkVersion project.androidMinSdkVersion
+    targetSdkVersion project.androidTargetSdkVersion
     versionCode 1
     versionName "1.0"
     ndk {
@@ -31,7 +36,7 @@ android {
     }
     debug {
       debuggable true
-//      testCoverageEnabled true
+      //      testCoverageEnabled true
     }
     release {
       debuggable false
@@ -41,7 +46,7 @@ android {
   }
 
   productFlavors.whenObjectAdded { flavor ->
-    def version = rootProject.ext[flavor.name].version
+    def version = project[flavor.name].version
 
     flavor.versionCode generateAutoVersionCode()
     flavor.versionName generateVersionName(version.major, version.minor, version.patch)
@@ -51,7 +56,7 @@ android {
 
     variant.productFlavors.each { flavor ->
 
-      def flavorData = rootProject.ext[flavor.name]
+      def flavorData = project[flavor.name]
       def appName = flavorData.appName
 
       println("--**************************OCMSDK**************************--")
@@ -62,12 +67,12 @@ android {
           variant.buildType.name +
           "-------------")
 
-      setVariantBuildConfigField(variant, rootProject.ext.apiOcm, API_URL, STRING)
-      setVariantBuildConfigField(variant, rootProject.ext.ocmSdkVersion, OCM_SDK_VERSION, STRING)
-      setVariantBuildConfigField(variant, rootProject.ext.concurrentInteractors,
+      setVariantBuildConfigField(variant, project.apiOcm, API_URL, STRING)
+      setVariantBuildConfigField(variant, project.ocmSdkVersion, OCM_SDK_VERSION, STRING)
+      setVariantBuildConfigField(variant, project.concurrentInteractors,
           CONCURRENT_INTERACTORS, INT)
-      setVariantBuildConfigField(variant, rootProject.ext.retrofitLog, RETROFIT_LOG, BOOLEAN)
-      setVariantBuildConfigField(variant, rootProject.ext.youtubeDeveloperKey,
+      setVariantBuildConfigField(variant, project.retrofitLog, RETROFIT_LOG, BOOLEAN)
+      setVariantBuildConfigField(variant, project.youtubeDeveloperKey,
           YOUTUBE_DEVELOPER_KEY, STRING)
 
       println("--**********************************************************--")
@@ -97,9 +102,9 @@ android {
 
   // true to publish all flavour artifacts
   publishNonDefault true
-//  defaultPublishConfig "ocmStaging"
+  //  defaultPublishConfig "ocmStaging"
   defaultPublishConfig "ocmDebug"
-//  defaultPublishConfig "ocmRelease"
+  //  defaultPublishConfig "ocmRelease"
 }
 
 jacocoAndroidUnitTestReport {
@@ -113,49 +118,56 @@ configurations {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile fileTree(dir: 'libs', include: ['*.jar']) //youtube
 
-  compile rootProject.ext.libraries.androidSupportDesign
-//  compile rootProject.ext.libraries.constraintLayout
-  compile rootProject.ext.libraries.androidCustomtabs
+  //google Support/CustomTabs/playServices
+  compile project.libraries.androidSupportDesign
+  compile project.libraries.androidCustomtabs
 
-  compile rootProject.ext.libraries.ggglib
-  compile rootProject.ext.libraries.gggJavaLib
-
-  compile rootProject.ext.libraries.interactorExecutor
-  compile rootProject.ext.libraries.threaddecoratedviewCommon
-  apt rootProject.ext.libraries.threaddecoratedviewCompiler
-
-  apt rootProject.ext.libraries.daggerCompiler
-  compile rootProject.ext.libraries.dagger
-
-  compile rootProject.ext.libraries.multipleGridRecyclerView
-
-  compile rootProject.ext.libraries.imageloaderGlide
-  compile rootProject.ext.libraries.imageloaderGlideBlur
-
-  compile rootProject.ext.libraries.oxvuforiaimplementation
-  ocmStagingCompile(rootProject.ext.libraries.orchextrasdkStaging) { transitive = true }
-  ocmDebugCompile(rootProject.ext.libraries.orchextrasdkDebug) { transitive = true }
-   ocmReleaseCompile(rootProject.ext.libraries.orchextrasdkRelease) { transitive = true }
-
-  testCompile rootProject.ext.testLibraries.junit
-  testCompile rootProject.ext.testLibraries.assertj
-  testCompile rootProject.ext.testLibraries.mockito
-
-  compile rootProject.ext.libraries.playServicesBase
-  compile rootProject.ext.libraries.playServicesLocation
-  compile rootProject.ext.libraries.playServicesGcm
-
-  compile rootProject.ext.libraries.doubleViewPager
-  compile rootProject.ext.libraries.autofitTextView
+  compile project.libraries.playServicesBase
+  compile project.libraries.playServicesLocation
+  compile project.libraries.playServicesGcm
 
 
-  compile rootProject.ext.libraries.rxAndroid
-  compile rootProject.ext.libraries.rxJava
-  compile rootProject.ext.libraries.rxRetrofit
-  compile rootProject.ext.libraries.okHttp
-  compile rootProject.ext.libraries.arrow
+  //gigigo Lib
+  compile project.libraries.ggglib
+  compile project.libraries.gggJavaLib
 
-  compile rootProject.ext.libraries.kache
+  //gigigo Executor
+  compile project.libraries.interactorExecutor
+  compile project.libraries.threaddecoratedviewCommon
+  apt project.libraries.threaddecoratedviewCompiler
+
+  //Dagger
+  apt project.libraries.daggerCompiler
+  compile project.libraries.dagger
+
+  //Image Loader Glide/Blur
+  compile project.libraries.imageloaderGlide
+  compile project.libraries.imageloaderGlideBlur
+
+  //Orchextra
+  compile project.libraries.oxvuforiaimplementation
+  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true }
+  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true }
+  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true }
+
+  //customs Views
+  compile project.libraries.doubleViewPager
+  compile project.libraries.autofitTextView
+  compile project.libraries.multipleGridRecyclerView
+
+
+  compile project.libraries.rxAndroid
+  compile project.libraries.rxJava
+  compile project.libraries.rxRetrofit
+  compile project.libraries.arrow
+
+  compile project.libraries.kache
+
+  //TEST
+  testCompile project.testLibraries.junit
+  testCompile project.testLibraries.assertj
+  testCompile project.testLibraries.mockito
 }
+

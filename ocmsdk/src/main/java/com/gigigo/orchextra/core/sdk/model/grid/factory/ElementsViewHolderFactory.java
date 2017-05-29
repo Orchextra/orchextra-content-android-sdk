@@ -15,16 +15,19 @@ public class ElementsViewHolderFactory extends BaseViewHolderFactory {
 
   private final ImageLoader imageLoader;
   private final Authoritation authoritation;
+  private final int widthCell;
 
-  public ElementsViewHolderFactory(Context context, ImageLoader imageLoader, Authoritation authoritation) {
+  public ElementsViewHolderFactory(Context context, ImageLoader imageLoader,
+      Authoritation authoritation, int widthCell) {
     super(context);
     this.imageLoader = imageLoader;
     this.authoritation = authoritation;
+    this.widthCell = widthCell;
   }
 
   @Override public BaseViewHolder create(Class valueClass, ViewGroup parent) {
     if (valueClass == CellGridContentData.class) {
-      return new CellImageViewHolder(context, parent, imageLoader, authoritation);
+      return new CellImageViewHolder(context, parent, imageLoader, authoritation, widthCell);
     } else if (valueClass == CellBlankElement.class) {
       return new CellBlankViewHolder(context, parent);
     } else {
