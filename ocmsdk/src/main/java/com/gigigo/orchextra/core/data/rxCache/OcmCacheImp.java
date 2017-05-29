@@ -48,6 +48,6 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public boolean isMenuExpired() {
-    return false;
+    return kache.isExpired(MENU_KEY, ApiMenuContentDataResponse.class);
   }
 }
