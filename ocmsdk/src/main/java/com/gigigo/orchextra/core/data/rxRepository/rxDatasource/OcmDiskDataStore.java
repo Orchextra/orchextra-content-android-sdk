@@ -27,7 +27,7 @@ import orchextra.javax.inject.Singleton;
     return ocmCache.getMenus();
   }
 
-  @Override public Observable<ContentData> getSectionEntity(String elementUrl) {
+  @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl) {
     return null;
   }
 

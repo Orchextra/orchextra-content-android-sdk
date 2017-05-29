@@ -36,7 +36,7 @@ import orchextra.javax.inject.Singleton;
             apiMenuContentDataResponse));
   }
 
-  @Override public Observable<ContentData> getSectionEntity(String elementUrl) {
+  @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl) {
     //return ocmApiService.getSectionDataRx(elementUrl).map(dataResponse -> dataResponse.getResult())
     //    .doOnNext(apiSectionContentData -> ocmCache.putSection(apiSectionContentData));
     return null;

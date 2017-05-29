@@ -23,7 +23,7 @@ public interface OcmDataStore {
   /**
    * Get an {@link Observable} which will emit a {@link ApiSectionContentData}.
    */
-  Observable<ContentData> getSectionEntity(String elementUrl);
+  Observable<ApiSectionContentData> getSectionEntity(String elementUrl);
 
   /**
    * Get an {@link Observable} which will emit a {@link ApiSectionContentData}.
