@@ -92,7 +92,7 @@ public class DetailToolbarView extends FrameLayout {
       shareToolbarBgButton.setVisibility(!areVisibleToolbar ? View.VISIBLE : View.INVISIBLE);
 
       detailTitleText.setVisibility(areVisibleToolbar ? View.VISIBLE : View.GONE);
-     
+
       if (isFirstScrollFull && areVisibleToolbar) {
         OCManager.notifyEvent(OcmEvent.CONTENT_FULL);
       } else if (isFirstScrollPreview && !areVisibleToolbar) {
