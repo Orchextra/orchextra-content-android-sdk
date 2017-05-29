@@ -12,11 +12,9 @@ import io.reactivex.Observable;
 public interface OcmRepository {
   Observable<MenuContentData> getMenu(boolean forceReload);
 
-  Observable<ElementCache> getCachedElement(String elementUrl);
+  Observable<ElementCache> getSectionElements(boolean forceReload, String elementUrl);
 
-  Observable<ElementCache> getElementCacheBySection(String section);
+  Observable<ElementCache> getDetail(String section);
 
-  Observable<String> getContentUrlBySection(String section);
-
-  Observable<ContentItem> getSectionContentById(String section);
+  Observable<ContentItem> doSearch(String textToSearch);
 }

@@ -7,26 +7,40 @@ import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 
 public interface OcmController {
 
+  @Deprecated
   MenuContentData getMenu(boolean useCache);
 
+  @Deprecated
   ElementCache getCachedElement(String elementUrl);
 
+  @Deprecated
   ElementCache getElementCacheBySection(String section);
 
+  @Deprecated
   String getContentUrlBySection(String section);
 
+  @Deprecated
   ContentItem getSectionContentById(String section);
 
+  @Deprecated
   void saveSectionContentData(String section, ContentData contentData);
 
+  @Deprecated
   void clearCache();
 
 
-  void getMenu(boolean useCache, GetMenusControllerCallback getMenusCallback);
+  void getMenu(boolean forceReload, final GetMenusControllerCallback getMenusCallback);
+
+  void getSection(boolean useCache, final String section, final GetSectionControllerCallback getSectionControllerCallback);
 
   // Callbacks
   interface GetMenusControllerCallback {
     void onGetMenusLoaded(MenuContentData menus);
+    void onGetMenusFails(Throwable e);
+  }
+
+  interface GetSectionControllerCallback {
+    void onGetSectionLoaded(MenuContentData menus);
     void onGetMenusFails(Throwable e);
   }
 }

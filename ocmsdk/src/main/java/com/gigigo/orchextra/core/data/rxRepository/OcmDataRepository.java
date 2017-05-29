@@ -16,37 +16,34 @@ import orchextra.javax.inject.Singleton;
  * Created by francisco.hernandez on 23/5/17.
  */
 
-@Singleton
-public class OcmDataRepository implements OcmRepository {
+@Singleton public class OcmDataRepository implements OcmRepository {
   private final OcmDataStoreFactory ocmDataStoreFactory;
   private final ApiMenuContentListResponseMapper apiMenuContentListResponseMapper;
 
-  @Inject
-  public OcmDataRepository(OcmDataStoreFactory ocmDataStoreFactory,
+  @Inject public OcmDataRepository(OcmDataStoreFactory ocmDataStoreFactory,
       ApiMenuContentListResponseMapper apiMenuContentListResponseMapper) {
     this.ocmDataStoreFactory = ocmDataStoreFactory;
     this.apiMenuContentListResponseMapper = apiMenuContentListResponseMapper;
   }
 
   @Override public Observable<MenuContentData> getMenu(boolean forceReload) {
+    OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForMenus(forceReload);
+    return ocmDataStore.getMenuEntity()
+        .map(apiMenuContentData -> apiMenuContentListResponseMapper.externalClassToModel(
+            apiMenuContentData.getResult()));
+  }
+
+  @Override
+  public Observable<ElementCache> getSectionElements(boolean forceReload, String elementUrl) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getCloudDataStore();
-    return ocmDataStore.getMenuEntity().map(apiMenuContentData -> apiMenuContentListResponseMapper.externalClassToModel(
-        apiMenuContentData.getResult()));
+    return null;//ocmDataStore.getSectionEntity(elementUrl).map()
   }
 
-  @Override public Observable<ElementCache> getCachedElement(String elementUrl) {
+  @Override public Observable<ElementCache> getDetail(String section) {
     return null;
   }
 
-  @Override public Observable<ElementCache> getElementCacheBySection(String section) {
-    return null;
-  }
-
-  @Override public Observable<String> getContentUrlBySection(String section) {
-    return null;
-  }
-
-  @Override public Observable<ContentItem> getSectionContentById(String section) {
+  @Override public Observable<ContentItem> doSearch(String textToSearch) {
     return null;
   }
 }

@@ -23,7 +23,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<ApiMenuContentDataResponse> getMenuEntity() {
-    return null;
+    return ocmCache.getMenus();
   }
 
   @Override public Observable<ApiSectionContentDataResponse> getSectionEntity(String elementUrl) {
@@ -36,5 +36,9 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<ApiElementDataResponse> getElementById(String section) {
     return null;
+  }
+
+  public OcmCache getOcmCache() {
+    return ocmCache;
   }
 }

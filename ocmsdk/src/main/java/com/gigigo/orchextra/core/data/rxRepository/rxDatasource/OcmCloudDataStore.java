@@ -30,7 +30,9 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<ApiMenuContentDataResponse> getMenuEntity() {
-    return ocmApiService.getMenuDataRx();//.doOnNext();   //TODO: RX
+    return ocmApiService.getMenuDataRx()
+        .doOnNext(apiMenuContentDataResponse -> ocmCache.putMenus(
+            apiMenuContentDataResponse));
   }
 
   @Override public Observable<ApiSectionContentDataResponse> getSectionEntity(String elementUrl) {
