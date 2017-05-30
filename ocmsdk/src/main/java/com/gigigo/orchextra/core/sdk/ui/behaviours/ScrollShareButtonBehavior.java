@@ -86,11 +86,11 @@ public class ScrollShareButtonBehavior extends CoordinatorLayout.Behavior<ImageV
   }
 
   private void doVisibleAnimation(ImageView child) {
-    doAnimation(child, R.anim.scale_item_in);
+    doAnimation(child, R.anim.oc_scale_item_in);
   }
 
   private void doHideAnimation(ImageView child) {
-    doAnimation(child, R.anim.scale_item_out);
+    doAnimation(child, R.anim.oc_scale_item_out);
   }
 
   private void doAnimation(ImageView child, @AnimRes int animRes) {

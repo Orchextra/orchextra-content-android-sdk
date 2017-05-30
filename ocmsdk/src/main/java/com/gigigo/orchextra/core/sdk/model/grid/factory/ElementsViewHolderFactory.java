@@ -16,7 +16,8 @@ public class ElementsViewHolderFactory extends BaseViewHolderFactory {
   private final ImageLoader imageLoader;
   private final Authoritation authoritation;
 
-  public ElementsViewHolderFactory(Context context, ImageLoader imageLoader, Authoritation authoritation) {
+  public ElementsViewHolderFactory(Context context, ImageLoader imageLoader,
+      Authoritation authoritation) {
     super(context);
     this.imageLoader = imageLoader;
     this.authoritation = authoritation;

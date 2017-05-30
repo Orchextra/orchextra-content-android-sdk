@@ -17,7 +17,6 @@ import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutInterface;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutPresenter;
 import com.gigigo.orchextra.core.domain.OcmController;
-import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
@@ -29,7 +28,6 @@ import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
-import java.util.ArrayList;
 import java.util.List;
 import orchextra.javax.inject.Inject;
 

@@ -13,6 +13,7 @@ import com.gigigo.orchextra.core.controller.dto.DetailViewInfo;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsView;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
+import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
@@ -135,6 +136,7 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
 
   @Override public void finishView() {
     if (onFinishListener != null) {
+      onFinishListener.setAppbarExpanded(true);
       onFinishListener.onFinish();
     }
   }
@@ -170,6 +172,7 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
       }
       onFinishListener = null;
       ((Activity) context).finish();
+
     }
     this.context = null;
     super.onDestroyView();

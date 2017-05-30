@@ -2,8 +2,6 @@ package com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +14,7 @@ import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.factory.ElementsViewHolderFactory;
 import com.gigigo.orchextra.core.sdk.model.grid.viewholders.CellImageViewHolder;
+import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;

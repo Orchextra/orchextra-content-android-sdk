@@ -4,10 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
-import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 
@@ -27,6 +24,12 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
 
   @Override protected int getDetailLayout() {
     return R.layout.view_detail_elements_single_layout;
+  }
+
+  @Override protected void closeView() {
+    if (onFinishListener != null) {
+      onFinishListener.onFinish();
+    }
   }
 
   public void setViews(UiBaseContentData uiBaseContentData) {
@@ -51,10 +54,12 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
         }
 
       } else {
-        if (onFinishListener != null) {
-          onFinishListener.onFinish();
-        }
+        closeView();
       }
+    }
+
+    if (onFinishListener != null) {
+      onFinishListener.setAppbarExpanded(false);
     }
   }
 
