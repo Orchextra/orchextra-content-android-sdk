@@ -38,12 +38,7 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
   @Override protected void init() {
     View view = inflateLayout();
     initViews(view);
-    int widthCell = calculateWidthCell();
-    initRecyclerView(widthCell);
-  }
-
-  private int calculateWidthCell() {
-    return DeviceUtils.calculateRealWidthDevice(getContext()) * 2 / 3;
+    initRecyclerView();
   }
 
   private View inflateLayout() {
@@ -57,8 +52,8 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
         (MultipleGridRecyclerView) view.findViewById(R.id.multipleGridRecyclerView);
   }
 
-  private void initRecyclerView(int widthCell) {
-    setAdapterDataViewHolders(widthCell);
+  private void initRecyclerView() {
+    setAdapterDataViewHolders();
 
     //TODO Resolve clip to padding flashing when last row is 3 items 1x1. Remove logic in presenter
     int padding = (clipToPadding != null) ? clipToPadding.getPadding()
@@ -87,9 +82,9 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
     multipleGridRecyclerView.setLoadingViewLayout(loadingView);
   }
 
-  private void setAdapterDataViewHolders(int widthCell) {
+  private void setAdapterDataViewHolders() {
     ElementsViewHolderFactory factory =
-        new ElementsViewHolderFactory(getContext(), imageLoader, authoritation, widthCell);
+        new ElementsViewHolderFactory(getContext(), imageLoader, authoritation);
 
     multipleGridRecyclerView.setAdapterViewHolderFactory(factory);
 

@@ -114,7 +114,7 @@ public class PreviewContentDataView extends LinearLayout {
   }
 
   private void setAnimations() {
-    Animation animation = AnimationUtils.loadAnimation(context, R.anim.settings_items);
+    Animation animation = AnimationUtils.loadAnimation(context, R.anim.oc_settings_items);
     previewTitle.startAnimation(animation);
   }
 

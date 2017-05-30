@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
-import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
@@ -18,7 +17,6 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
-import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.R;
 
 public class DetailCoordinatorLayoutContentData extends DetailParentContentData {
@@ -29,6 +27,8 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
   private UiBaseContentData previewContentData;
   private UiBaseContentData detailContentData;
   private boolean isFirstTime = true;
+  private boolean isAppBarExpanded = true;
+
   private PreviewFuntionalityListener previewFuntionalityListener =
       new PreviewFuntionalityListener() {
 
@@ -46,9 +46,7 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
                   coordinatorLayout.removeView(appbarLayout);
                   detailToolbarView.switchBetweenButtonAndToolbar(true, true);
                 } else {
-                  if (onFinishListener != null) {
-                    onFinishListener.onFinish();
-                  }
+                  closeView();
                 }
               }
             }, 200);
@@ -77,6 +75,13 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
 
   @Override protected int getDetailLayout() {
     return R.layout.view_detail_elements_coordinator_layout;
+  }
+
+  @Override protected void closeView() {
+    if (onFinishListener != null) {
+      onFinishListener.setAppbarExpanded(isAppBarExpanded);
+      onFinishListener.onFinish();
+    }
   }
 
   public void setViews(UiBaseContentData previewContentData, UiBaseContentData detailContentData) {
@@ -110,27 +115,27 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
   }
 
   public void setListenerWhenScroll() {
-    if (detailContentData instanceof VuforiaContentData
-        || detailContentData instanceof ScanContentData
-        || detailContentData instanceof BrowserContentData
-        || detailContentData instanceof YoutubeContentData
-        || detailContentData instanceof DeepLinkContentData) {
+    appbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
 
-      appbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-
-        boolean isAppBarExpanded = true;
-
-        @Override public void onOffsetChanged(final AppBarLayout appBarLayout, int verticalOffset) {
-          if (verticalOffset == 0) {
-            isAppBarExpanded = true;
-          } else if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()
-              && isAppBarExpanded) {
-            isAppBarExpanded = false;
+      @Override public void onOffsetChanged(final AppBarLayout appBarLayout, int verticalOffset) {
+        if (verticalOffset == 0) {
+          isAppBarExpanded = true;
+        } else if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()
+            && isAppBarExpanded) {
+          isAppBarExpanded = false;
+          if (detailContentData instanceof VuforiaContentData
+              || detailContentData instanceof ScanContentData
+              || detailContentData instanceof BrowserContentData
+              || detailContentData instanceof YoutubeContentData
+              || detailContentData instanceof DeepLinkContentData) {
             executeExternalAction();
           }
         }
-      });
-    }
+        if (onFinishListener != null) {
+          onFinishListener.setAppbarExpanded(isAppBarExpanded);
+        }
+      }
+    });
   }
 
   private void executeExternalAction() {
@@ -142,8 +147,8 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
       }
     }, 1000);
 
-    if (detailContentData instanceof DeepLinkContentData && onFinishListener != null) {
-      onFinishListener.onFinish();
+    if (detailContentData instanceof DeepLinkContentData) {
+      closeView();
     }
   }
 

@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.controller.model.detail;
 
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.threaddecoratedview.views.qualifiers.NotDecorated;
 import com.gigigo.threaddecoratedview.views.qualifiers.ThreadDecoratedView;
@@ -15,7 +14,7 @@ public interface DetailView {
 
   void showError();
 
-  void finishView();
+  void finishView(boolean showingPreview);
 
   void setAnimationImageView();
 }

@@ -91,18 +91,14 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   }
 
   @Override public void initUi() {
-    setMultipleGridLayout(calculateWidthCell());
+    setMultipleGridLayout();
   }
 
-  private int calculateWidthCell() {
-    return DeviceUtils.calculateRealWidthDevice(getContext()) * 2 / 3;
-  }
-
-  private void setMultipleGridLayout(int widthCell) {
+  private void setMultipleGridLayout() {
     recyclerView.setLoadingViewLayout(progressLayout);
     recyclerView.setEmptyViewLayout(emptyLayout);
 
-    setAdapterDataViewHolders(widthCell);
+    setAdapterDataViewHolders();
 
     recyclerView.setOnRefreshListener(new MultipleGridRecyclerView.OnRefreshListener() {
       @Override public void onRefresh() {
@@ -120,9 +116,9 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
     });
   }
 
-  private void setAdapterDataViewHolders(int widthCell) {
+  private void setAdapterDataViewHolders() {
     ElementsViewHolderFactory factory =
-        new ElementsViewHolderFactory(context, imageLoader, authoritation, widthCell);
+        new ElementsViewHolderFactory(context, imageLoader, authoritation);
 
     recyclerView.setAdapterViewHolderFactory(factory);
 
