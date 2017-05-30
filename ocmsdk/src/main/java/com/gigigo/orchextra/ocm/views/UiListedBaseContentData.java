@@ -2,12 +2,10 @@ package com.gigigo.orchextra.ocm.views;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.ui.imageloader.ImageLoader;
@@ -23,6 +21,12 @@ public abstract class UiListedBaseContentData extends LinearLayout {
   protected ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
   protected Authoritation authoritation;
   protected ImageLoader imageLoader;
+
+  //4 carrusel
+  public boolean bIsSliderActive = false;
+  public boolean bIsYOffsetSetted = false;
+  public int mTime = 0;
+  public float mYOffset = 0;
 
   public UiListedBaseContentData(Context context) {
     super(context);
