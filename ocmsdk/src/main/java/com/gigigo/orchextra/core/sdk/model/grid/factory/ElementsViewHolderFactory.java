@@ -15,6 +15,7 @@ public class ElementsViewHolderFactory extends BaseViewHolderFactory {
 
   private final ImageLoader imageLoader;
   private final Authoritation authoritation;
+  private int showedItemsPosition = -1;
 
   public ElementsViewHolderFactory(Context context, ImageLoader imageLoader,
       Authoritation authoritation) {
@@ -25,7 +26,8 @@ public class ElementsViewHolderFactory extends BaseViewHolderFactory {
 
   @Override public BaseViewHolder create(Class valueClass, ViewGroup parent) {
     if (valueClass == CellGridContentData.class) {
-      return new CellImageViewHolder(context, parent, imageLoader, authoritation);
+
+      return new CellImageViewHolder(context, parent, imageLoader, authoritation, showedItemsPosition);
     } else if (valueClass == CellBlankElement.class) {
       return new CellBlankViewHolder(context, parent);
     } else {
