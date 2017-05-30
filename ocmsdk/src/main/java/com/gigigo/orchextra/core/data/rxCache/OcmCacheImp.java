@@ -54,10 +54,10 @@ import orchextra.javax.inject.Singleton;
     return kache.isExpired(MENU_KEY, ApiMenuContentDataResponse.class);
   }
 
-  @Override public Observable<ApiSectionContentData> getSection(String elementUrl) {
+  @Override public Observable<ApiSectionContentData> getSection(final String elementUrl) {
     return Observable.create(emitter -> {
       ApiSectionContentData apiSectionContentData =
-          (ApiSectionContentData) kache.get(ApiSectionContentData.class, MENU_KEY);
+          (ApiSectionContentData) kache.get(ApiSectionContentData.class, elementUrl);
 
       if (apiSectionContentData != null) {
         emitter.onNext(apiSectionContentData);

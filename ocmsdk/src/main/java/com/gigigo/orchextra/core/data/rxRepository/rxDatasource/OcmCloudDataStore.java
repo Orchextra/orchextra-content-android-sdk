@@ -12,6 +12,7 @@ import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import io.reactivex.Observable;
 
+import io.reactivex.functions.Consumer;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -38,6 +39,7 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl) {
     return ocmApiService.getSectionDataRx(elementUrl).map(dataResponse -> dataResponse.getResult())
+        .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
         .doOnNext(apiSectionContentData -> ocmCache.putSection(apiSectionContentData));
   }
 

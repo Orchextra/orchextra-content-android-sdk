@@ -41,7 +41,7 @@ import orchextra.javax.inject.Singleton;
 
   @Override
   public Observable<ContentData> getSectionElements(boolean forceReload, String elementUrl) {
-    OcmDataStore ocmDataStore = ocmDataStoreFactory.getCloudDataStore();
+    OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForSections(forceReload, elementUrl);
     return ocmDataStore.getSectionEntity(elementUrl)
         .map(apiSectionContentData -> apiContentDataResponseMapper.externalClassToModel(
             apiSectionContentData));

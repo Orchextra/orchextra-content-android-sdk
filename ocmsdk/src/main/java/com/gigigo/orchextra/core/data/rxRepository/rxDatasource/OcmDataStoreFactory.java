@@ -27,15 +27,35 @@ import orchextra.javax.inject.Singleton;
     OcmDataStore ocmDataStore;
 
     if (force) {
-      Log.i(TAG, "CLOUD - getDataStoreForMenus");
+      Log.i(TAG, "CLOUD - Menus");
       ocmDataStore = getCloudDataStore();
     } else {
       OcmCache cache = diskDataStore.getOcmCache();
       if (cache.isMenuCached() && !cache.isMenuExpired()) {
-        Log.i(TAG, "DISK  - getDataStoreForMenus");
+        Log.i(TAG, "DISK  - Menus");
         ocmDataStore = getDiskDataStore();
       } else {
-        Log.i(TAG, "CLOUD - getDataStoreForMenus");
+        Log.i(TAG, "CLOUD - Menus");
+        ocmDataStore = getCloudDataStore();
+      }
+    }
+
+    return ocmDataStore;
+  }
+
+  public OcmDataStore getDataStoreForSections(boolean force, String section) {
+    OcmDataStore ocmDataStore;
+
+    if (force) {
+      Log.i(TAG, "CLOUD - Sections");
+      ocmDataStore = getCloudDataStore();
+    } else {
+      OcmCache cache = diskDataStore.getOcmCache();
+      if (cache.isSectionCached(section) && !cache.isSectionExpired(section)) {
+        Log.i(TAG, "DISK  - Sections");
+        ocmDataStore = getDiskDataStore();
+      } else {
+        Log.i(TAG, "CLOUD - Sections");
         ocmDataStore = getCloudDataStore();
       }
     }

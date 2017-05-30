@@ -9,6 +9,7 @@ public class ApiSectionContentData implements Kacheable {
 
   private ApiContentItem content;
   private Map<String, ApiElementCache> elementsCache;
+  private String key;
 
   public ApiContentItem getContent() {
     return content;
@@ -18,7 +19,11 @@ public class ApiSectionContentData implements Kacheable {
     return elementsCache;
   }
 
+  public void setKey(String key) {
+    this.key = key;
+  }
+
   @NotNull @Override public String getKey() {
-    return content.getSlug();
+    return key;
   }
 }
