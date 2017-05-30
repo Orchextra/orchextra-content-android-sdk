@@ -33,5 +33,5 @@ public interface OcmDataStore {
   /**
    * Get an {@link Observable} which will emit a {@link ApiElementData}.
    */
-  Observable<ApiElementData> getElementById(String section);
+  Observable<ApiElementData> getElementById(String slug);
 }

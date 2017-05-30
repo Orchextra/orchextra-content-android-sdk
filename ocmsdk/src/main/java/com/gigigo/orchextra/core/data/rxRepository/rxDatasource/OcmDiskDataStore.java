@@ -35,8 +35,8 @@ import orchextra.javax.inject.Singleton;
     return null;
   }
 
-  @Override public Observable<ApiElementData> getElementById(String section) {
-    return null;
+  @Override public Observable<ApiElementData> getElementById(String slug) {
+    return ocmCache.getDetail(slug);
   }
 
   public OcmCache getOcmCache() {
