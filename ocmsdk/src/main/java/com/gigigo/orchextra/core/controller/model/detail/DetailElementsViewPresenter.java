@@ -46,16 +46,22 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
     getView().showProgressView(true);
 
-    ElementCache cachedElement = ocmController.getCachedElement(elementUrl);
+    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
+      @Override public void onGetDetailLoaded(ElementCache elementCache) {
+        if (elementCache != null) {
+          renderView(elementCache);
+          OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, elementCache);
+        } else {
+          getView().finishView();
+        }
 
-    if (cachedElement != null) {
-      renderView(cachedElement);
-      OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, cachedElement);
-    } else {
-      getView().finishView();
-    }
+        getView().showProgressView(false);
+      }
 
-    getView().showProgressView(false);
+      @Override public void onGetDetailFails(Exception e) {
+        getView().showProgressView(false);
+      }
+    });
   }
 
   private void renderView(ElementCache cachedElement) {
@@ -110,8 +116,18 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   }
 
   public void shareElement() {
-    ElementCache cachedElement = ocmController.getCachedElement(elementUrl);
+    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
+      @Override public void onGetDetailLoaded(ElementCache elementCache) {
+        showShare(elementCache);
+      }
 
+      @Override public void onGetDetailFails(Exception e) {
+        e.printStackTrace();
+      }
+    });
+  }
+
+  private void showShare(ElementCache cachedElement) {
     ElementCacheShare shareElement = cachedElement.getShare();
 
     String shareText = retrieveShareText(shareElement);

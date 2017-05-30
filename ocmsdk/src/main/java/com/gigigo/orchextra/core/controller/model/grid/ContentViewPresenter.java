@@ -188,20 +188,27 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
       Element element = (Element) listedCellContentDataList.get(position).getData();
 
-      ElementCache cachedElement = ocmController.getCachedElement(element.getElementUrl());
+      ocmController.getDetails(false, element.getElementUrl(),
+          new OcmController.GetDetailControllerCallback() {
+            @Override public void onGetDetailLoaded(ElementCache elementCache) {
+              String imageUrlToExpandInPreview = null;
+              if (elementCache != null && elementCache.getPreview() != null) {
+                imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
+              }
 
-      String imageUrlToExpandInPreview = null;
-      if (cachedElement != null && cachedElement.getPreview() != null) {
-        imageUrlToExpandInPreview = cachedElement.getPreview().getImageUrl();
-      }
+              if (element != null && checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
+                OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
+                getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
+                    activity, view);
+              } else {
+                getView().showAuthDialog();
+              }
+            }
 
-      if (element != null && checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
-        OCManager.notifyEvent(OcmEvent.CELL_CLICKED, cachedElement);
-        getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview, activity,
-            view);
-      } else {
-        getView().showAuthDialog();
-      }
+            @Override public void onGetDetailFails(Exception e) {
+              e.printStackTrace();
+            }
+          });
     }
   }
 

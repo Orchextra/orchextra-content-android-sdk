@@ -1,11 +1,13 @@
 package com.gigigo.orchextra.core.controller;
 
+import com.gigigo.orchextra.core.data.rxException.ApiDetailNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.invocators.DetailContentElementInteractorInvocator;
 import com.gigigo.orchextra.core.domain.invocators.GridElementsInteractorInvocator;
@@ -138,7 +140,9 @@ public class OcmControllerImp implements OcmController {
 
   @Override public void getDetails(boolean forceReload, String elementUrl,
       GetDetailControllerCallback getDetailControllerCallback) {
-
+    String slug = getSlug(elementUrl);
+    getDetail.execute(new DetailObserver(getDetailControllerCallback),
+        GetDetail.Params.forDetail(forceReload, slug));
   }
   //end region
   //region observers
@@ -183,17 +187,22 @@ public class OcmControllerImp implements OcmController {
     }
   }
 
-  private final class DetailObserver extends DefaultObserver<ElementCache> {
-    @Override public void onNext(ElementCache elementCache) {
-      super.onNext(elementCache);
+  private final class DetailObserver extends DefaultObserver<ElementData> {
+    private final GetDetailControllerCallback getDetailControllerCallback;
+
+    public DetailObserver(GetDetailControllerCallback getDetailControllerCallback) {
+      this.getDetailControllerCallback = getDetailControllerCallback;
+    }
+
+    @Override public void onNext(ElementData elementData) {
+      getDetailControllerCallback.onGetDetailLoaded(elementData.getElement());
     }
 
     @Override public void onComplete() {
-      super.onComplete();
     }
 
     @Override public void onError(Throwable exception) {
-      super.onError(exception);
+      getDetailControllerCallback.onGetDetailFails(new ApiDetailNotFoundException(exception));
     }
   }
   //end region

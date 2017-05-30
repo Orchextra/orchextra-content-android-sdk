@@ -69,8 +69,6 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         getMenusViewGeneratorCallback.onGetMenusFails(new ApiMenuNotFoundException(e));
       }
     });
-
-
   }
 
   private List<UiMenu> transformMenu(MenuContentData menuContentData) {
@@ -190,14 +188,19 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return null;
   }
 
-  @Override public String getImageUrl(String elementUrl) {
-    ElementCache cachedElement = ocmController.getCachedElement(elementUrl);
+  @Override public void getImageUrl(String elementUrl,
+      final GetDetailImageViewGeneratorCallback getDetailImageViewGeneratorCallback) {
+    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
+      @Override public void onGetDetailLoaded(ElementCache elementCache) {
+        if (elementCache != null && elementCache.getPreview() != null) {
+          getDetailImageViewGeneratorCallback.onGetImageLoaded(elementCache.getPreview().getImageUrl());
+        }
+      }
 
-    if (cachedElement != null && cachedElement.getPreview() != null) {
-      return cachedElement.getPreview().getImageUrl();
-    }
-
-    return null;
+      @Override public void onGetDetailFails(Exception e) {
+        e.printStackTrace();
+      }
+    });
   }
 
   private UiBaseContentData generateArticleDetailView(List<ArticleElement> elements) {

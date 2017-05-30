@@ -25,7 +25,7 @@ public interface OcmViewGenerator {
 
   UiBaseContentData generateDetailView(ElementCacheType type, ElementCacheRender elements);
 
-  String getImageUrl(String elementUrl);
+  void getImageUrl(String elementUrl, GetDetailImageViewGeneratorCallback getDetailImageViewGeneratorCallback);
 
   UiSearchBaseContentData generateSearchView();
 
@@ -42,6 +42,11 @@ public interface OcmViewGenerator {
   interface GetMenusViewGeneratorCallback {
     void onGetMenusLoaded(List<UiMenu> menus);
     void onGetMenusFails(Throwable e);
+  }
+
+  interface GetDetailImageViewGeneratorCallback {
+    void onGetImageLoaded(String imagePath);
+    void onGetImageError(Exception e);
   }
 }
 

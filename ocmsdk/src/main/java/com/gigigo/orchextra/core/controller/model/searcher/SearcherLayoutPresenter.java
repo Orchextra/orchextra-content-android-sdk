@@ -147,20 +147,27 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
 
       Element element = (Element) cellGridContentDataList.get(position).getData();
 
-      ElementCache cachedElement = ocmController.getCachedElement(element.getElementUrl());
 
-      String imageUrlToExpandInPreview = null;
-      if (cachedElement.getPreview() != null) {
-        imageUrlToExpandInPreview = cachedElement.getPreview().getImageUrl();
-      }
+      ocmController.getDetails(false, element.getElementUrl(), new OcmController.GetDetailControllerCallback() {
+        @Override public void onGetDetailLoaded(ElementCache elementCache) {
+          String imageUrlToExpandInPreview = null;
+          if (elementCache.getPreview() != null) {
+            imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
+          }
 
-      if (checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
+          if (checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
 
-        getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview, activity,
-            view);
-      } else {
-        getView().showAuthDialog();
-      }
+            getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview, activity,
+                view);
+          } else {
+            getView().showAuthDialog();
+          }
+        }
+
+        @Override public void onGetDetailFails(Exception e) {
+          e.printStackTrace();
+        }
+      });
     }
   }
 
