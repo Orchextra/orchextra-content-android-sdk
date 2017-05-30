@@ -2,9 +2,11 @@ package com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import com.bumptech.glide.Glide;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -80,11 +82,12 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
     multipleGridRecyclerView.setEmptyViewLayout(emptyView);
     multipleGridRecyclerView.setErrorViewLayout(errorView);
     multipleGridRecyclerView.setLoadingViewLayout(loadingView);
+
   }
 
   private void setAdapterDataViewHolders() {
     ElementsViewHolderFactory factory =
-        new ElementsViewHolderFactory(getContext(), imageLoader, authoritation);
+        new ElementsViewHolderFactory(getContext(), authoritation);
 
     multipleGridRecyclerView.setAdapterViewHolderFactory(factory);
 
