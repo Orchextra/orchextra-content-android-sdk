@@ -184,25 +184,26 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     uiListedBaseContentData = new HorizontalViewPager(context);
 
     setCustomViews();
+    if(this.bIsSliderActive)this.setViewPagerAutoSlideTime(this.mTime);
+    if(this.bIsYOffsetSetted)this.setViewPagerIndicatorYOffset(this.mYOffset);
+
     uiListedBaseContentData.setListedContentListener(listedContentListener);
     uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, imageLoader, authoritation);
     uiListedBaseContentData.setData(cellDataList);
+
+
+
 
     listedDataContainer.removeAllViews();
     listedDataContainer.addView(uiListedBaseContentData);
   }
 
-  public void setViewPagerIndicatorYOffset(float yOffset){
-    if(uiListedBaseContentData instanceof HorizontalViewPager){
-      ((HorizontalViewPager)uiListedBaseContentData).setViewPagerIndicatorYOffset(yOffset);
-    }
-  }
   @Override public void showEmptyView() {
     if (uiListedBaseContentData != null) {
       uiListedBaseContentData.showEmptyView();
-    } else if(appEmptyView != null) {
+    } else if (appEmptyView != null) {
       appEmptyView.setVisibility(View.VISIBLE);
-    } else if(emptyView != null) {
+    } else if (emptyView != null) {
       emptyView.setVisibility(View.VISIBLE);
     }
   }
@@ -307,5 +308,26 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
   public void setEmotion(String emotion) {
     this.emotion = emotion;
+  }
+
+
+  public boolean bIsSliderActive = false;
+  public boolean bIsYOffsetSetted = false;
+  public int mTime = 0;
+  public float mYOffset = 0;
+  public void setViewPagerAutoSlideTime(int time) {
+     this.mTime = time;
+    this.bIsSliderActive = true;
+    if (uiListedBaseContentData instanceof HorizontalViewPager) {
+      ((HorizontalViewPager) uiListedBaseContentData).setViewPagerAutoSlideTime(time);
+    }
+  }
+
+  public void setViewPagerIndicatorYOffset(float yOffset) {
+    this.mYOffset = yOffset;
+    this.bIsYOffsetSetted = true;
+    if (uiListedBaseContentData instanceof HorizontalViewPager) {
+      ((HorizontalViewPager) uiListedBaseContentData).setViewPagerIndicatorYOffset(yOffset);
+    }
   }
 }
