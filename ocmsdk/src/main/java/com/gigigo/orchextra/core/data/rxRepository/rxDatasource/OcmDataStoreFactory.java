@@ -63,6 +63,28 @@ import orchextra.javax.inject.Singleton;
     return ocmDataStore;
   }
 
+
+  public OcmDataStore getDataStoreForDetail(boolean force, String slug) {
+    OcmDataStore ocmDataStore;
+
+    if (force) {
+      Log.i(TAG, "CLOUD - Detail");
+      ocmDataStore = getCloudDataStore();
+    } else {
+      OcmCache cache = diskDataStore.getOcmCache();
+      if (cache.isDetailCached(slug) && !cache.isDetailExpired(slug)) {
+        Log.i(TAG, "DISK  - Detail");
+        ocmDataStore = getDiskDataStore();
+      } else {
+        Log.i(TAG, "CLOUD - Detail");
+        ocmDataStore = getCloudDataStore();
+      }
+    }
+
+    return ocmDataStore;
+  }
+
+
   public OcmDataStore getCloudDataStore() {
     return cloudDataStore;
   }
