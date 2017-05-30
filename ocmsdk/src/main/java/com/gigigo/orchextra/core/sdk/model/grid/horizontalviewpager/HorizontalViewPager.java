@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -8,11 +10,14 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RelativeLayout;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.ocm.views.CircleIndicator;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class HorizontalViewPager extends UiListedBaseContentData {
 
@@ -20,6 +25,7 @@ public class HorizontalViewPager extends UiListedBaseContentData {
   private CircleIndicator indicator;
   private HorizontalViewPagerAdapter adapter;
   private FragmentManager fragmentManager;
+  int mLoops = 1;
 
   public HorizontalViewPager(Context context) {
     super(context);
@@ -52,13 +58,6 @@ public class HorizontalViewPager extends UiListedBaseContentData {
     indicator = (CircleIndicator) view.findViewById(R.id.ci_indicator);
   }
 
-  public void setViewPagerIndicatorYOffset(float offset) {
-    indicator.setY(offset);
-    LayoutParams layoutParams = (LayoutParams) indicator.getLayoutParams();
-    layoutParams.setMargins(0, (int) offset, 0, 0);
-    indicator.setLayoutParams(layoutParams);
-  }
-
   private void initViewPager() {
     if (listedHorizontalViewPager != null) {
       adapter = new HorizontalViewPagerAdapter(fragmentManager, imageLoader, listedContentListener);
@@ -68,8 +67,22 @@ public class HorizontalViewPager extends UiListedBaseContentData {
 
   @Override public void setData(List<Cell> cellDataList) {
     if (listedHorizontalViewPager != null) {
+
       adapter.setItems(cellDataList);
       indicator.setViewPager(listedHorizontalViewPager);
+
+      if (bIsYOffsetSetted) this.setViewPagerIndicatorYOffset(mYOffset);
+      if (bIsSliderActive) {
+        mLoops = 20;
+
+        this.setViewPagerAutoSlideTime(mTime);
+        startSlider(mTime, cellDataList.size() * mLoops);
+      } else {
+        mLoops = 1;
+      }
+      indicator.setLoops(mLoops);
+      indicator.setRealSize(cellDataList.size());
+       adapter.setLoops(mLoops);
     }
   }
 
@@ -95,5 +108,49 @@ public class HorizontalViewPager extends UiListedBaseContentData {
     if (loadingView != null) {
       loadingView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
+  }
+
+  private static Handler mHandler = new Handler(Looper.getMainLooper());
+  static int currentPage = 0;
+
+  public void setViewPagerAutoSlideTime(final int time) {
+    bIsSliderActive = true;
+    mTime = time;
+  }
+
+  private void startSlider(final int time, final int NUM_PAGES) {
+
+    final Runnable update = new Runnable() {
+      public void run() {
+        if (currentPage > NUM_PAGES - 1) {
+          currentPage = 0;
+        }
+        listedHorizontalViewPager.setCurrentItem(currentPage, true);
+
+        currentPage = currentPage + 1;
+      }
+    };
+    new Timer().schedule(new TimerTask() {
+      @Override public void run() {
+        mHandler.post(update);
+      }
+    }, 2000, time);
+  }
+
+  public void setViewPagerIndicatorYOffset(float offset) {
+    try {
+      offset = dip2px(offset);
+      RelativeLayout.LayoutParams layoutParams =
+          (RelativeLayout.LayoutParams) indicator.getLayoutParams();
+      layoutParams.setMargins(0, (int) offset, 0, 0);
+      indicator.setLayoutParams(layoutParams);
+    } catch (Throwable tr) {
+      System.out.println(tr.toString());
+    }
+  }
+
+  public int dip2px(float dpValue) {
+    final float scale = getResources().getDisplayMetrics().density;
+    return (int) (dpValue * scale + 0.5f);
   }
 }

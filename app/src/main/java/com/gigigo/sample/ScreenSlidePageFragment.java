@@ -66,9 +66,14 @@ public class ScreenSlidePageFragment extends Fragment {
       contentView.setEmptyView(emptyViewLayout);
       contentView.setErrorView(emptyViewLayout);
 
-        getChildFragmentManager().beginTransaction()
+      ((com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView) contentView).setViewPagerIndicatorYOffset(172);
+      ((com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView) contentView).setViewPagerAutoSlideTime(3000);
+
+      getChildFragmentManager().beginTransaction()
             .replace(R.id.content_main_view, contentView)
             .commit();
-      }
+
+
+    }
     }
 }
