@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.data.rxCache;
 import android.content.Context;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
@@ -78,5 +79,31 @@ import orchextra.javax.inject.Singleton;
 
   @Override public boolean isSectionExpired(String elementUrl) {
     return kache.isExpired(elementUrl, ApiSectionContentData.class);
+  }
+
+  @Override public Observable<ApiElementData> getDetail(String slug) {
+    return Observable.create(emitter -> {
+      ApiElementData apiElementData =
+          (ApiElementData) kache.get(ApiElementData.class, slug);
+
+      if (apiElementData != null) {
+        emitter.onNext(apiElementData);
+        emitter.onComplete();
+      } else {
+        emitter.onError(new ApiSectionNotFoundException());
+      }
+    });
+  }
+
+  @Override public void putDetail(ApiElementData apiElementData) {
+    if (apiElementData!=null) kache.put(apiElementData);
+  }
+
+  @Override public boolean isDetailCached(String slug) {
+    return kache.isCached(slug);
+  }
+
+  @Override public boolean isDetailExpired(String slug) {
+    return kache.isExpired(slug, ApiElementData.class);
   }
 }
