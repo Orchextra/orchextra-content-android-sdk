@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
-@KacheLife(expiresTime = 1000 * 60L)
+@KacheLife(expiresTime = 1000 * 60 * 60 * 24) // 1 día
 public class ApiMenuContentData implements Kacheable {
 
   @NotNull @Override public String getKey() {
