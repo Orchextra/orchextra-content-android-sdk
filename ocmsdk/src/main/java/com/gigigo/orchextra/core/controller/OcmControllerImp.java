@@ -127,8 +127,12 @@ public class OcmControllerImp implements OcmController {
           getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException());
         } else {
           String url = elementCache.getRender().getContentUrl();
-          getSection.execute(new SectionObserver(getSectionControllerCallback),
-              GetSection.Params.forSection(forceReload, url));
+          if (url != null) {
+            getSection.execute(new SectionObserver(getSectionControllerCallback),
+                GetSection.Params.forSection(forceReload, url));
+          } else {
+            getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException("elementCache.getRender().getContentUrl() IS NULL"));
+          }
         }
       }
 

@@ -12,4 +12,8 @@ public class ApiSectionNotFoundException extends Exception {
   public ApiSectionNotFoundException(final Throwable cause) {
     super(cause);
   }
+
+  public ApiSectionNotFoundException(String message) {
+    super(message);
+  }
 }
