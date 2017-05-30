@@ -15,7 +15,7 @@ public interface OcmRepository {
 
   Observable<ContentData> getSectionElements(boolean forceReload, String elementUrl);
 
-  Observable<ElementCache> getDetail(String section);
+  Observable<ElementCache> getDetail(boolean forceReload, String section);
 
   Observable<ContentItem> doSearch(String textToSearch);
 }

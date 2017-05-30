@@ -33,6 +33,8 @@ public interface OcmController {
 
   void getSection(boolean forceReload, final String section, final GetSectionControllerCallback getSectionControllerCallback);
 
+  void getDetails(boolean forceReload, final String elementUrl, final GetDetailControllerCallback getDetailControllerCallback);
+
   // Callbacks
   interface GetMenusControllerCallback {
     void onGetMenusLoaded(MenuContentData menus);
@@ -42,5 +44,10 @@ public interface OcmController {
   interface GetSectionControllerCallback {
     void onGetSectionLoaded(ContentData contentData);
     void onGetSectionFails(Exception e);
+  }
+
+  interface GetDetailControllerCallback {
+    void onGetDetailLoaded(ElementCache elementCache);
+    void onGetDetailFails(Exception e);
   }
 }

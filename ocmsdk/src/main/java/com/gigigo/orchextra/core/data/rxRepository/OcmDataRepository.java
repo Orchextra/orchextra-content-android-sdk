@@ -47,7 +47,9 @@ import orchextra.javax.inject.Singleton;
             apiSectionContentData));
   }
 
-  @Override public Observable<ElementCache> getDetail(String section) {
+  @Override public Observable<ElementCache> getDetail(boolean forceReload, String elementUrl) {
+    OcmDataStore ocmDataStore = ocmDataStoreFactory.getCloudDataStore();
+    //ocmDataStore.getElementById(elementUrl).map()
     return null;
   }
 

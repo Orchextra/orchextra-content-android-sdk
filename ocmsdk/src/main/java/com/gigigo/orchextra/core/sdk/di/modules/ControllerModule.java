@@ -19,6 +19,7 @@ import com.gigigo.orchextra.core.domain.invocators.GridElementsInteractorInvocat
 import com.gigigo.orchextra.core.domain.invocators.MenuInteractorInvocator;
 import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
+import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
@@ -57,10 +58,10 @@ import orchextra.javax.inject.Singleton;
       MenuInteractorInvocator menuInteractorInvocator,
       GridElementsInteractorInvocator gridElementsInteractorInvocator,
       DetailContentElementInteractorInvocator detailContentElementInteractorInvocator,
-      GetMenus getMenus, GetSection getSection) {
+      GetMenus getMenus, GetSection getSection, GetDetail getDetail) {
 
     return new OcmControllerImp(menuInteractorInvocator, gridElementsInteractorInvocator,
-        detailContentElementInteractorInvocator, getMenus, getSection);
+        detailContentElementInteractorInvocator, getMenus, getSection, getDetail);
   }
 
   @Provides @Singleton ThreadExecutor provideThreadExecutor(JobExecutor jobExecutor) {

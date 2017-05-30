@@ -11,6 +11,7 @@ import com.gigigo.orchextra.core.domain.invocators.DetailContentElementInteracto
 import com.gigigo.orchextra.core.domain.invocators.GridElementsInteractorInvocator;
 import com.gigigo.orchextra.core.domain.invocators.MenuInteractorInvocator;
 import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
+import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
 import java.util.Map;
@@ -22,17 +23,19 @@ public class OcmControllerImp implements OcmController {
   private final DetailContentElementInteractorInvocator detailContentElementInteractorInvocator;
   private final GetMenus getMenus;
   private final GetSection getSection;
+  private final GetDetail getDetail;
 
   public OcmControllerImp(MenuInteractorInvocator interactorInvocation,
       GridElementsInteractorInvocator gridElementsInteractorInvocator,
       DetailContentElementInteractorInvocator detailContentElementInteractorInvocator,
-      GetMenus getMenus, GetSection getSection) {
+      GetMenus getMenus, GetSection getSection, GetDetail getDetail) {
 
     this.menuInteractorInvocator = interactorInvocation;
     this.gridElementsInteractorInvocator = gridElementsInteractorInvocator;
     this.detailContentElementInteractorInvocator = detailContentElementInteractorInvocator;
     this.getMenus = getMenus;
     this.getSection = getSection;
+    this.getDetail = getDetail;
   }
 
   @Override public MenuContentData getMenu(boolean useCache) {
@@ -132,6 +135,11 @@ public class OcmControllerImp implements OcmController {
       }
     });
   }
+
+  @Override public void getDetails(boolean forceReload, String elementUrl,
+      GetDetailControllerCallback getDetailControllerCallback) {
+
+  }
   //end region
   //region observers
 
@@ -172,6 +180,20 @@ public class OcmControllerImp implements OcmController {
 
     @Override public void onNext(ContentData contentData) {
       getSectionControllerCallback.onGetSectionLoaded(contentData);
+    }
+  }
+
+  private final class DetailObserver extends DefaultObserver<ElementCache> {
+    @Override public void onNext(ElementCache elementCache) {
+      super.onNext(elementCache);
+    }
+
+    @Override public void onComplete() {
+      super.onComplete();
+    }
+
+    @Override public void onError(Throwable exception) {
+      super.onError(exception);
     }
   }
   //end region
