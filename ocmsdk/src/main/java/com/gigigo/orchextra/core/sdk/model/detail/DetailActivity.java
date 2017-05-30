@@ -18,6 +18,7 @@ import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeWebviewActivity;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
@@ -47,12 +48,14 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     intent.putExtra(DetailActivity.EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL, height);
 
     if (activity != null) {
-      if (view != null) {
+      if (view != null && urlImageToExpand != null) {
         ActivityOptionsCompat optionsCompat =
             ActivityOptionsCompat.makeSceneTransitionAnimation(activity, view, "thumbnail");
         activity.startActivity(intent, optionsCompat.toBundle());
       } else {
         activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.oc_detail_activity_open_out,
+            R.anim.oc_detail_activity_open_in);
       }
     }
   }
@@ -93,6 +96,8 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   }
 
   @Override public void initUi() {
+    presenter.setOnFinishViewListener(onFinishViewListener);
+
     setAnimationImageView();
 
     String elementUrl = getIntent().getStringExtra(EXTRA_ELEMENT_URL);
@@ -110,8 +115,15 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     finish();
   }
 
-  @Override public void finishView() {
-    onBackPressed();
+  @Override public void finishView(boolean showingPreview) {
+    finish();
+    if (!showingPreview) {
+      overridePendingTransition(R.anim.oc_slide_out_right, R.anim.oc_slide_in_left);
+    }
+  }
+
+  @Override public void onBackPressed() {
+    finishView(onFinishViewListener == null || onFinishViewListener.isAppbarExpanded());
   }
 
   @Override public void setAnimationImageView() {
@@ -152,4 +164,10 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     super.onDestroy();
   }
+
+  OnFinishViewListener onFinishViewListener = new OnFinishViewListener() {
+    @Override public void onFinish() {
+      finishView(isAppbarExpanded());
+    }
+  };
 }

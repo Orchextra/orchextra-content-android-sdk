@@ -17,6 +17,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeConte
 import com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
+import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import orchextra.javax.inject.Inject;
@@ -25,7 +26,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
 
   @Inject ActionHandler actionHandler;
 
-  protected UiDetailBaseContentData.OnFinishViewListener onFinishListener;
+  protected OnFinishViewListener onFinishListener;
   protected OnShareListener onShareListener;
   protected DetailToolbarView detailToolbarView;
   private String nameArticle;
@@ -68,9 +69,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   protected void setOnClickListenerButtons() {
     detailToolbarView.setOnClickBackButtonListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        if (onFinishListener != null) {
-          onFinishListener.onFinish();
-        }
+        closeView();
       }
     });
 
@@ -85,7 +84,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     }
   }
 
-  public void setOnFinishListener(UiDetailBaseContentData.OnFinishViewListener onFinishListener) {
+  public void setOnFinishListener(OnFinishViewListener onFinishListener) {
     this.onFinishListener = onFinishListener;
   }
 
@@ -150,6 +149,8 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   protected abstract void initViews(View view);
 
   protected abstract int getDetailLayout();
+
+  protected abstract void closeView();
 
   public void setArticleName(String nameArticle) {
     this.nameArticle = nameArticle;

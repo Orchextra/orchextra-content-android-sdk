@@ -3,9 +3,12 @@ package com.gigigo.orchextra.core.controller.model.detail;
 import com.gigigo.interactorexecutor.base.Presenter;
 import com.gigigo.interactorexecutor.base.viewinjector.GenericViewInjector;
 import com.gigigo.orchextra.ocm.Ocm;
+import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 
 public class DetailPresenter extends Presenter<DetailView> {
+
+  private OnFinishViewListener onFinishViewListener;
 
   public DetailPresenter(GenericViewInjector viewInjector) {
     super(viewInjector);
@@ -19,14 +22,14 @@ public class DetailPresenter extends Presenter<DetailView> {
     UiDetailBaseContentData contentDetailView = Ocm.generateDetailView(elementUrl);
 
     if (contentDetailView != null) {
-      contentDetailView.setOnFinishListener(new UiDetailBaseContentData.OnFinishViewListener() {
-        @Override public void onFinish() {
-          getView().finishView();
-        }
-      });
+      contentDetailView.setOnFinishListener(onFinishViewListener);
       getView().setView(contentDetailView);
     } else {
       getView().showError();
     }
+  }
+
+  public void setOnFinishViewListener(OnFinishViewListener onFinishViewListener) {
+    this.onFinishViewListener = onFinishViewListener;
   }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
@@ -18,19 +19,17 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
 
   private final View mainLayout;
   private final View padlockView;
-  private final int widthCell;
 
   private ImageLoader imageLoader;
   private ImageView imageView;
   private Authoritation authoritation;
 
   public CellImageViewHolder(Context context, ViewGroup parent, ImageLoader imageLoader,
-      Authoritation authoritation, int widthCell) {
+      Authoritation authoritation) {
     super(context, parent, R.layout.cell_image_content_item);
 
     this.imageLoader = imageLoader;
     this.authoritation = authoritation;
-    this.widthCell = widthCell;
 
     imageView = (ImageView) itemView.findViewById(R.id.cell_image_view);
     padlockView = itemView.findViewById(R.id.padlock_layout);
@@ -43,14 +42,26 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
     if (sectionView != null) {
       ImageGenerator.generateThumbImage(sectionView.getImageThumb(), imageView);
 
-      byte[] imageByteArray = Base64.decode(sectionView.getImageThumb(), Base64.DEFAULT);
+      mainLayout.getViewTreeObserver()
+          .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override public boolean onPreDraw() {
 
-      String generatedImageUrl =
-          ImageGenerator.generateImageUrl(sectionView.getImageUrl(), widthCell);
+              byte[] imageByteArray = Base64.decode(sectionView.getImageThumb(), Base64.DEFAULT);
+              String generatedImageUrl =
+                  ImageGenerator.generateImageUrl(sectionView.getImageUrl(), mainLayout.getWidth(),
+                      mainLayout.getHeight());
 
-      imageLoader.load(generatedImageUrl).thumbnailByte(imageByteArray).into(imageView);
 
-      System.out.println("Url grid cell: " + generatedImageUrl);
+              imageLoader.load(generatedImageUrl)
+                  .override(mainLayout.getWidth(), mainLayout.getHeight())
+                  .thumbnailByte(imageByteArray)
+                  .into(imageView);
+
+              mainLayout.getViewTreeObserver().removeOnPreDrawListener(this);
+
+              return true;
+            }
+          });
     }
 
     if (item.getData().getSegmentation().getRequiredAuth().equals(RequiredAuthoritation.LOGGED)) {
