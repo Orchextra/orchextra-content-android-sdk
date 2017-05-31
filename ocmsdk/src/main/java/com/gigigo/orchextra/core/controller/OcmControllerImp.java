@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.controller;
 
 import com.gigigo.orchextra.core.data.rxException.ApiDetailNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
+import com.gigigo.orchextra.core.data.rxException.ApiSearchNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
@@ -243,7 +244,7 @@ public class OcmControllerImp implements OcmController {
 
     @Override public void onError(Throwable e) {
       if (searchControllerCallback != null) {
-        searchControllerCallback.onSearchFails(new ApiSectionNotFoundException(e));
+        searchControllerCallback.onSearchFails(new ApiSearchNotFoundException(e));
       }
     }
 
