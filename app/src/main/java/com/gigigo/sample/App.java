@@ -63,7 +63,7 @@ public class App extends MultiDexApplication {
 
     OcmStyleUiBuilder ocmStyleUiBuilder = new OcmStyleUiBuilder();
 
-    ocmStyleUiBuilder.enabledTitleToolbarDetailView(true);
+    ocmStyleUiBuilder.setEnabledTitleToolbarDetailView(true);
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
