@@ -12,4 +12,6 @@ public interface OcmStyleUi {
   String getMediumFontPath();
 
   String getLightFontPath();
+
+  boolean isEnabledTitleToolbarDetailView();
 }
