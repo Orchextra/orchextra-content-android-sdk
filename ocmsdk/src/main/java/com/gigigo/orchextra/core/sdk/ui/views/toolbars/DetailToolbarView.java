@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import com.gigigo.orchextra.core.sdk.OcmStyleUi;
+import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -28,6 +30,8 @@ public class DetailToolbarView extends FrameLayout {
 
   private boolean isFirstScrollPreview;
   private boolean isFirstScrollFull;
+
+  private OcmStyleUi ocmStyleUi;
 
   public DetailToolbarView(@NonNull Context context) {
     super(context);
@@ -52,12 +56,22 @@ public class DetailToolbarView extends FrameLayout {
   }
 
   private void init() {
+    initDi();
     initViews();
     setToolbarTitle();
   }
 
+  private void initDi() {
+    Injector injector = OCManager.getInjector();
+    if (injector != null) {
+      ocmStyleUi = injector.provideOcmStyleUi();
+    }
+  }
+
   private void setToolbarTitle() {
-    detailTitleText.setText(title);
+    if (ocmStyleUi != null && ocmStyleUi.isEnabledTitleToolbarDetailView()) {
+      detailTitleText.setText(title);
+    }
   }
 
   private void initViews() {

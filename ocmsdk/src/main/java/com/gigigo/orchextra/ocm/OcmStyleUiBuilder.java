@@ -6,6 +6,7 @@ public final class OcmStyleUiBuilder {
   private String normalFonPath;
   private String mediumFontPath;
   private String lightFontPath;
+  private boolean enabledTitleToolbarDetailView;
 
   /**
    * Path to the font to apply in titles of the app
@@ -37,6 +38,11 @@ public final class OcmStyleUiBuilder {
     return this;
   }
 
+  public OcmStyleUiBuilder enabledTitleToolbarDetailView(boolean enabled) {
+    this.enabledTitleToolbarDetailView = enabled;
+    return this;
+  }
+
   public String getTitleFontPath() {
     return titleFontPath;
   }
@@ -52,5 +58,9 @@ public final class OcmStyleUiBuilder {
   @Deprecated
   public String getLightFontPath() {
     return lightFontPath;
+  }
+
+  public boolean isEnabledTitleToolbarDetailView() {
+    return enabledTitleToolbarDetailView;
   }
 }

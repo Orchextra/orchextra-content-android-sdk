@@ -8,12 +8,14 @@ public class OcmStyleUiImp implements OcmStyleUi {
   private String normalFonPath;
   private String mediumFontPath;
   private String lightFontPath;
+  private boolean isEnabledTitleToolbarDetailView;
 
   @Override public void setStyleUi(OcmStyleUiBuilder styleUi) {
     this.titleFontPath = styleUi.getTitleFontPath();
     this.normalFonPath = styleUi.getNormalFonPath();
     this.mediumFontPath = styleUi.getMediumFontPath();
     this.lightFontPath = styleUi.getLightFontPath();
+    this.isEnabledTitleToolbarDetailView = styleUi.isEnabledTitleToolbarDetailView();
   }
 
   @Override
@@ -34,5 +36,10 @@ public class OcmStyleUiImp implements OcmStyleUi {
   @Override
   public String getLightFontPath() {
     return lightFontPath;
+  }
+
+  @Override
+  public boolean isEnabledTitleToolbarDetailView() {
+    return isEnabledTitleToolbarDetailView;
   }
 }
