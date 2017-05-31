@@ -59,7 +59,10 @@ import orchextra.javax.inject.Singleton;
         .map(apiElementData -> apiElementDataMapper.externalClassToModel(apiElementData));
   }
 
-  @Override public Observable<ContentItem> doSearch(String textToSearch) {
-    return null;
+  @Override public Observable<ContentData> doSearch(String textToSearch) {
+    OcmDataStore ocmDataStore = ocmDataStoreFactory.getCloudDataStore();
+    return ocmDataStore.searchByText(textToSearch)
+        .map(apiSectionContentData -> apiContentDataResponseMapper.externalClassToModel(
+            apiSectionContentData));
   }
 }
