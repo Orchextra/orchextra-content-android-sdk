@@ -195,11 +195,15 @@ public class OcmControllerImp implements OcmController {
     }
 
     @Override public void onError(Throwable e) {
-      getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(e));
+      if (getSectionControllerCallback != null) {
+        getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(e));
+      }
     }
 
     @Override public void onNext(ContentData contentData) {
-      getSectionControllerCallback.onGetSectionLoaded(contentData);
+      if (getSectionControllerCallback != null) {
+        getSectionControllerCallback.onGetSectionLoaded(contentData);
+      }
     }
   }
 
@@ -211,14 +215,18 @@ public class OcmControllerImp implements OcmController {
     }
 
     @Override public void onNext(ElementData elementData) {
-      getDetailControllerCallback.onGetDetailLoaded(elementData.getElement());
+      if (getDetailControllerCallback != null) {
+        getDetailControllerCallback.onGetDetailLoaded(elementData.getElement());
+      }
     }
 
     @Override public void onComplete() {
     }
 
     @Override public void onError(Throwable exception) {
-      getDetailControllerCallback.onGetDetailFails(new ApiDetailNotFoundException(exception));
+      if (getDetailControllerCallback != null) {
+        getDetailControllerCallback.onGetDetailFails(new ApiDetailNotFoundException(exception));
+      }
     }
   }
 
@@ -234,11 +242,13 @@ public class OcmControllerImp implements OcmController {
     }
 
     @Override public void onError(Throwable e) {
-      searchControllerCallback.onSearchFails(new ApiSectionNotFoundException(e));
+      if (searchControllerCallback != null) {
+        searchControllerCallback.onSearchFails(new ApiSectionNotFoundException(e));
+      }
     }
 
     @Override public void onNext(ContentData contentData) {
-      searchControllerCallback.onSearchLoaded(contentData);
+      if (searchControllerCallback != null) searchControllerCallback.onSearchLoaded(contentData);
     }
   }
   //end region
