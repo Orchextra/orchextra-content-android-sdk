@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Base64;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
@@ -42,7 +43,10 @@ public class ArticleImageView extends ArticleBaseView<ArticleImageElement> {
             String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl,
                 DeviceUtils.calculateRealWidthDevice(getContext()));
 
-            imageLoader.load(generatedImageUrl).thumbnailByte(imageThumbBytes).into(articleImagePlaceholder);
+            Glide.with(getContext())
+                .load(generatedImageUrl)
+                .thumbnail(Glide.with(getContext()).load(imageThumbBytes))
+                .into(articleImagePlaceholder);
 
             articleImagePlaceholder.getViewTreeObserver().removeOnPreDrawListener(this);
 

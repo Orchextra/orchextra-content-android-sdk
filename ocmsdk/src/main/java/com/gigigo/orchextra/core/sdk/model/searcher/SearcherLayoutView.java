@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.bumptech.glide.Glide;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -183,7 +184,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
           DeviceUtils.calculateRealWidthDevice(context),
           DeviceUtils.calculateRealHeightDevice(context));
 
-      imageLoader.load(imageUrl).into(imageViewToExpand);
+      Glide.with(getContext()).load(imageUrl).into(imageViewToExpand);
     }
 
     DetailActivity.open(activity, elementUrl, imageUrl,

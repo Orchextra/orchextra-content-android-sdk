@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
@@ -37,7 +38,6 @@ public class PreviewContentData extends UiBaseContentData {
   private View goToArticleButton;
 
   private PreviewFuntionalityListener previewFuntionalityListener;
-  private ImageLoader imageLoader;
 
   public static PreviewContentData newInstance() {
     return new PreviewContentData();
@@ -133,7 +133,7 @@ public class PreviewContentData extends UiBaseContentData {
               DeviceUtils.calculateRealHeightDevice(context));
       Log.v("imageurl",""+generatedImageUrl);
 
-      imageLoader.load(generatedImageUrl).into(previewImage);
+      Glide.with(this).load(generatedImageUrl).into(previewImage);
     }
   }
 
@@ -162,7 +162,6 @@ public class PreviewContentData extends UiBaseContentData {
   }
 
   public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = null;
-    this.imageLoader = imageLoader;
+
   }
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -16,15 +17,12 @@ import com.gigigo.ui.imageloader.ImageLoader;
 
 public class ArticleButtonView extends ArticleBaseView<ArticleButtonElement> {
 
-  private final ImageLoader imageLoader;
-
   private TextView articleTextButton;
   private ImageView articleImageButton;
 
   public ArticleButtonView(Context context, ArticleButtonElement articleElement,
       ImageLoader imageLoader) {
     super(context, articleElement);
-    this.imageLoader = imageLoader;
   }
 
   @Override protected int getViewLayout() {
@@ -91,7 +89,7 @@ public class ArticleButtonView extends ArticleBaseView<ArticleButtonElement> {
   private void bindImageButton(final ArticleButtonElement articleElement) {
     articleImageButton.setVisibility(VISIBLE);
 
-    imageLoader.load(articleElement.getImageUrl()).into(articleImageButton);
+    Glide.with(getContext()).load(articleElement.getImageUrl()).into(articleImageButton);
 
     articleImageButton.setOnClickListener(new OnClickListener() {
       @Override public void onClick(View v) {

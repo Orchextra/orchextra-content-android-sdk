@@ -12,6 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.core.controller.model.grid.ContentView;
 import com.gigigo.orchextra.core.controller.model.grid.ContentViewPresenter;
@@ -184,15 +188,12 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     uiListedBaseContentData = new HorizontalViewPager(context);
 
     setCustomViews();
-    if(this.bIsSliderActive)this.setViewPagerAutoSlideTime(this.mTime);
-    if(this.bIsYOffsetSetted)this.setViewPagerIndicatorYOffset(this.mYOffset);
+    if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
+    if (this.bIsYOffsetSetted) this.setViewPagerIndicatorYOffset(this.mYOffset);
 
     uiListedBaseContentData.setListedContentListener(listedContentListener);
     uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, imageLoader, authoritation);
     uiListedBaseContentData.setData(cellDataList);
-
-
-
 
     listedDataContainer.removeAllViews();
     listedDataContainer.addView(uiListedBaseContentData);
@@ -229,19 +230,18 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           DeviceUtils.calculateRealWidthDevice(context),
           DeviceUtils.calculateRealHeightDevice(context));
 
-      imageLoader.load(imageUrl).into(new ImageLoaderCallback() {
-        @Override public void onSuccess(Bitmap bitmap) {
+      Glide.with(getContext()).load(imageUrl).into(new SimpleTarget<GlideDrawable>() {
+        @Override public void onResourceReady(GlideDrawable resource,
+            GlideAnimation<? super GlideDrawable> glideAnimation) {
+          imageViewToExpandInDetail.setImageDrawable(resource);
           clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
         }
 
-        @Override public void onError(Drawable drawable) {
+        @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
+          super.onLoadFailed(e, errorDrawable);
           clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
         }
-
-        @Override public void onLoading() {
-
-        }
-      }, imageViewToExpandInDetail);
+      });
     }
 
     DetailActivity.open(activity, elementUrl, urlImageToExpand,
@@ -310,13 +310,13 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     this.emotion = emotion;
   }
 
-
   public boolean bIsSliderActive = false;
   public boolean bIsYOffsetSetted = false;
   public int mTime = 0;
   public float mYOffset = 0;
+
   public void setViewPagerAutoSlideTime(int time) {
-     this.mTime = time;
+    this.mTime = time;
     this.bIsSliderActive = true;
     if (uiListedBaseContentData instanceof HorizontalViewPager) {
       ((HorizontalViewPager) uiListedBaseContentData).setViewPagerAutoSlideTime(time);
