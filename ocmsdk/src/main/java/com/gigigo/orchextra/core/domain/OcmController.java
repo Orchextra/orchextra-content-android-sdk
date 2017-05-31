@@ -47,6 +47,8 @@ public interface OcmController {
   void getDetails(boolean forceReload, final String elementUrl,
       final GetDetailControllerCallback getDetailControllerCallback);
 
+  void search(String textToSearch, SearchControllerCallback searchControllerCallback);
+
   // Callbacks
   interface GetMenusControllerCallback {
     void onGetMenusLoaded(MenuContentData menus);
@@ -64,5 +66,11 @@ public interface OcmController {
     void onGetDetailLoaded(ElementCache elementCache);
 
     void onGetDetailFails(Exception e);
+  }
+
+  interface SearchControllerCallback {
+    void onSearchLoaded(ContentData contentData);
+
+    void onSearchFails(Exception e);
   }
 }

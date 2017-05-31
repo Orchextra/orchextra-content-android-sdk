@@ -35,7 +35,7 @@ public class SearchElements extends UseCase<ContentData, SearchElements.Params> 
       this.textToSearch = textToSearch;
     }
 
-    public static Params forSection(boolean forceReload, String textToSearch) {
+    public static Params forTextToSearch(boolean forceReload, String textToSearch) {
       return new Params(forceReload, textToSearch);
     }
   }
