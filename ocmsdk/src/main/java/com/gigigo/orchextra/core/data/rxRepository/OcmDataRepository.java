@@ -39,9 +39,7 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<MenuContentData> getMenu(boolean forceReload) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForMenus(forceReload);
-    return ocmDataStore.getMenuEntity()
-        .map(apiMenuContentData -> apiMenuContentListResponseMapper.externalClassToModel(
-            apiMenuContentData));
+    return ocmDataStore.getMenuEntity().map(apiMenuContentListResponseMapper::externalClassToModel);
   }
 
   @Override
@@ -49,20 +47,17 @@ import orchextra.javax.inject.Singleton;
     OcmDataStore ocmDataStore =
         ocmDataStoreFactory.getDataStoreForSections(forceReload, elementUrl);
     return ocmDataStore.getSectionEntity(elementUrl)
-        .map(apiSectionContentData -> apiContentDataResponseMapper.externalClassToModel(
-            apiSectionContentData));
+        .map(apiContentDataResponseMapper::externalClassToModel);
   }
 
   @Override public Observable<ElementData> getDetail(boolean forceReload, String elementUrl) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForDetail(forceReload, elementUrl);
-    return ocmDataStore.getElementById(elementUrl)
-        .map(apiElementData -> apiElementDataMapper.externalClassToModel(apiElementData));
+    return ocmDataStore.getElementById(elementUrl).map(apiElementDataMapper::externalClassToModel);
   }
 
   @Override public Observable<ContentData> doSearch(String textToSearch) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getCloudDataStore();
     return ocmDataStore.searchByText(textToSearch)
-        .map(apiSectionContentData -> apiContentDataResponseMapper.externalClassToModel(
-            apiSectionContentData));
+        .map(apiContentDataResponseMapper::externalClassToModel);
   }
 }
