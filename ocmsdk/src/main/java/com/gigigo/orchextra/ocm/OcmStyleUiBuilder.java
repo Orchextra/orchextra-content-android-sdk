@@ -38,7 +38,7 @@ public final class OcmStyleUiBuilder {
     return this;
   }
 
-  public OcmStyleUiBuilder enabledTitleToolbarDetailView(boolean enabled) {
+  public OcmStyleUiBuilder setEnabledTitleToolbarDetailView(boolean enabled) {
     this.enabledTitleToolbarDetailView = enabled;
     return this;
   }
