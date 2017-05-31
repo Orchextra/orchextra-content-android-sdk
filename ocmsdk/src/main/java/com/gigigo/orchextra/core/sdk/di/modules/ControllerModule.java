@@ -22,6 +22,7 @@ import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
+import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.ocm.UIThread;
@@ -58,10 +59,11 @@ import orchextra.javax.inject.Singleton;
       MenuInteractorInvocator menuInteractorInvocator,
       GridElementsInteractorInvocator gridElementsInteractorInvocator,
       DetailContentElementInteractorInvocator detailContentElementInteractorInvocator,
-      GetMenus getMenus, GetSection getSection, GetDetail getDetail) {
+      GetMenus getMenus, GetSection getSection, GetDetail getDetail,
+      SearchElements searchElements) {
 
     return new OcmControllerImp(menuInteractorInvocator, gridElementsInteractorInvocator,
-        detailContentElementInteractorInvocator, getMenus, getSection, getDetail);
+        detailContentElementInteractorInvocator, getMenus, getSection, getDetail, searchElements);
   }
 
   @Provides @Singleton ThreadExecutor provideThreadExecutor(JobExecutor jobExecutor) {
@@ -76,9 +78,8 @@ import orchextra.javax.inject.Singleton;
     return ocmDataRepository;
   }
 
-  @Provides @Singleton OcmCache provideCache(
-      OcmContextProvider context) {
-    return new OcmCacheImp(context.getApplicationContext(), context.getApplicationContext().getCacheDir().getPath());
+  @Provides @Singleton OcmCache provideCache(OcmContextProvider context) {
+    return new OcmCacheImp(context.getApplicationContext(),
+        context.getApplicationContext().getCacheDir().getPath());
   }
-
 }

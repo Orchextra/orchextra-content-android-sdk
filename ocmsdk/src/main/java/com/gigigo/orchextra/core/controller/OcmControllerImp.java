@@ -16,6 +16,7 @@ import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
+import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import java.util.Map;
 
 public class OcmControllerImp implements OcmController {
@@ -26,11 +27,13 @@ public class OcmControllerImp implements OcmController {
   private final GetMenus getMenus;
   private final GetSection getSection;
   private final GetDetail getDetail;
+  private final SearchElements searchElements;
 
   public OcmControllerImp(MenuInteractorInvocator interactorInvocation,
       GridElementsInteractorInvocator gridElementsInteractorInvocator,
       DetailContentElementInteractorInvocator detailContentElementInteractorInvocator,
-      GetMenus getMenus, GetSection getSection, GetDetail getDetail) {
+      GetMenus getMenus, GetSection getSection, GetDetail getDetail,
+      SearchElements searchElements) {
 
     this.menuInteractorInvocator = interactorInvocation;
     this.gridElementsInteractorInvocator = gridElementsInteractorInvocator;
@@ -38,6 +41,7 @@ public class OcmControllerImp implements OcmController {
     this.getMenus = getMenus;
     this.getSection = getSection;
     this.getDetail = getDetail;
+    this.searchElements = searchElements;
   }
 
   @Override public MenuContentData getMenu(boolean useCache) {
@@ -131,7 +135,8 @@ public class OcmControllerImp implements OcmController {
             getSection.execute(new SectionObserver(getSectionControllerCallback),
                 GetSection.Params.forSection(forceReload, url));
           } else {
-            getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException("elementCache.getRender().getContentUrl() IS NULL"));
+            getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(
+                "elementCache.getRender().getContentUrl() IS NULL"));
           }
         }
       }
@@ -148,6 +153,13 @@ public class OcmControllerImp implements OcmController {
     getDetail.execute(new DetailObserver(getDetailControllerCallback),
         GetDetail.Params.forDetail(forceReload, slug));
   }
+
+  @Override
+  public void search(String textToSearch, SearchControllerCallback searchControllerCallback) {
+    searchElements.execute(new SearchObserver(searchControllerCallback),
+        SearchElements.Params.forTextToSearch(true, textToSearch));
+  }
+
   //end region
   //region observers
 
@@ -207,6 +219,26 @@ public class OcmControllerImp implements OcmController {
 
     @Override public void onError(Throwable exception) {
       getDetailControllerCallback.onGetDetailFails(new ApiDetailNotFoundException(exception));
+    }
+  }
+
+  private final class SearchObserver extends DefaultObserver<ContentData> {
+    private final SearchControllerCallback searchControllerCallback;
+
+    public SearchObserver(SearchControllerCallback searchControllerCallback) {
+      this.searchControllerCallback = searchControllerCallback;
+    }
+
+    @Override public void onComplete() {
+
+    }
+
+    @Override public void onError(Throwable e) {
+      searchControllerCallback.onSearchFails(new ApiSectionNotFoundException(e));
+    }
+
+    @Override public void onNext(ContentData contentData) {
+      searchControllerCallback.onSearchLoaded(contentData);
     }
   }
   //end region
