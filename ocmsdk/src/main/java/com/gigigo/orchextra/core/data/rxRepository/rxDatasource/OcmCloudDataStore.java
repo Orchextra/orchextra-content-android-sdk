@@ -33,14 +33,13 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<ApiMenuContentData> getMenuEntity() {
     return ocmApiService.getMenuDataRx().map(dataResponse -> dataResponse.getResult())
-        .doOnNext(apiMenuContentDataResponse -> ocmCache.putMenus(
-            apiMenuContentDataResponse));
+        .doOnNext(ocmCache::putMenus);
   }
 
   @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl) {
     return ocmApiService.getSectionDataRx(elementUrl).map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
-        .doOnNext(apiSectionContentData -> ocmCache.putSection(apiSectionContentData));
+        .doOnNext(ocmCache::putSection);
   }
 
   @Override public Observable<ApiSectionContentData> searchByText(String section) {
@@ -49,6 +48,6 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<ApiElementData> getElementById(String section) {
     return ocmApiService.getElementByIdRx(section).map(dataResponse -> dataResponse.getResult())
-        .doOnNext(apiElementData -> ocmCache.putDetail(apiElementData));
+        .doOnNext(ocmCache::putDetail);
   }
 }
