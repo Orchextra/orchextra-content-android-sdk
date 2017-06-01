@@ -168,7 +168,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   }
 
   @Override public void onDestroy() {
-    presenter.detachView(this);
+    presenter.detachView();
 
     super.onDestroy();
   }
