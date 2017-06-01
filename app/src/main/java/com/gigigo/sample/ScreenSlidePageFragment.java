@@ -17,6 +17,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
   private Bundle arguments;
   private View emptyViewLayout;
+  private View errorViewLayout;
 
   public static ScreenSlidePageFragment newInstance(String section) {
     ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
@@ -56,6 +57,7 @@ public class ScreenSlidePageFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
 
     emptyViewLayout = view.findViewById(R.id.emptyViewLayout);
+    errorViewLayout = view.findViewById(R.id.errorViewLayout);
 
     return view;
   }
@@ -64,7 +66,7 @@ public class ScreenSlidePageFragment extends Fragment {
     if (contentView != null) {
       contentView.setClipToPaddingBottomSize(ClipToPadding.PADDING_BIG);
       contentView.setEmptyView(emptyViewLayout);
-      contentView.setErrorView(emptyViewLayout);
+      contentView.setErrorView(errorViewLayout);
 
       if (contentView instanceof ContentGridLayoutView) {
         ((ContentGridLayoutView) contentView).setViewPagerIndicatorYOffset(172);

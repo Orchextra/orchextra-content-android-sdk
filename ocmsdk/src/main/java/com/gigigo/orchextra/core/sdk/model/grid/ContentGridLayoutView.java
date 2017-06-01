@@ -213,8 +213,10 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (uiListedBaseContentData != null) {
       uiListedBaseContentData.showErrorView();
     } else if (appErrorView != null) {
+      appEmptyView.setVisibility(View.GONE);
       appErrorView.setVisibility(View.VISIBLE);
     } else if (errorView != null) {
+      appEmptyView.setVisibility(View.GONE);
       errorView.setVisibility(View.VISIBLE);
     }
   }

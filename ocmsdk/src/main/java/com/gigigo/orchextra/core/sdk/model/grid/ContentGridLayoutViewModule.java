@@ -10,7 +10,7 @@ import orchextra.dagger.Provides;
 
 @Module public class ContentGridLayoutViewModule {
 
-  @Provides @PerSection ContentViewPresenter provideContentViewPresenter(
+  @Provides ContentViewPresenter provideContentViewPresenter(
       OcmController ocmController, Authoritation authoritation) {
     return new ContentViewPresenter(ocmController, authoritation);
   }
