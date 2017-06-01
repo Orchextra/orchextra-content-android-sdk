@@ -15,8 +15,6 @@ import java.util.List;
 
 public interface OcmViewGenerator {
 
-  List<UiMenu> getMenu();
-
   UiGridBaseContentData generateGridView(String viewId, String filter);
 
   UiDetailBaseContentData generateDetailView(String elementUrl);

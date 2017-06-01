@@ -49,13 +49,6 @@ public final class Ocm {
   /**
    * Get the app menus
    */
-  public static List<UiMenu> getMenus() {
-    return OCManager.getMenus();
-  }
-
-  /**
-   * Get the app menus
-   */
   public static void getMenus(OcmCallbacks.Menus menusCallback) {
     OCManager.getMenus(new OCManagerCallbacks.Menus() {
       @Override public void onMenusLoaded(List<UiMenu> menus) {
@@ -134,13 +127,6 @@ public final class Ocm {
    */
   public static void bindUser(CrmUser crmUser) {
     OCManager.bindUser(crmUser);
-  }
-
-  /**
-   * Clear the cache of the sdk content
-   */
-  public static void clearCache() {
-    OCManager.clearCache();
   }
 
   /**

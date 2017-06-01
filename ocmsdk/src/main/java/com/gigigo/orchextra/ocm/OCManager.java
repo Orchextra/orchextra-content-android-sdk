@@ -85,13 +85,6 @@ public final class OCManager {
     }
   }
 
-  static List<UiMenu> getMenus() {
-    if (instance != null) {
-      return instance.ocmViewGenerator.getMenu();
-    }
-    return null;
-  }
-
   static void getMenus(final OCManagerCallbacks.Menus menusCallback) {
     if (instance != null) {
       instance.ocmViewGenerator.getMenu(new OcmViewGenerator.GetMenusViewGeneratorCallback() {
@@ -289,13 +282,6 @@ public final class OCManager {
       returnOcCustomSchemeCallback(customScheme);
     }
   };
-
-  public static void clearCache() {
-    OCManager instance = OCManager.instance;
-    if (instance != null) {
-      instance.ocmController.clearCache();
-    }
-  }
 
   public static void start() {
     Orchextra.start();
