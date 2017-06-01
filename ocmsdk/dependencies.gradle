@@ -30,10 +30,6 @@ project.ext {
                playServicesLocation       : "com.google.android.gms:play-services-location:9.4.0",
                playServicesGcm            : "com.google.android.gms:play-services-gcm:9.4.0",
 
-               interactorExecutor         : "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:interactorexecutor-invoker:1.0.8RC",
-               threaddecoratedviewCommon  : "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-common:1.0.8RC",
-               threaddecoratedviewCompiler: "com.github.Gigigo-Android-Devs.gigigo-interactor-executor-library:threaddecoratedview-compiler:1.0.8RC",
-
                imageloaderGlide           : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.05',
                imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 

@@ -128,15 +128,9 @@ dependencies {
   compile project.libraries.playServicesLocation
   compile project.libraries.playServicesGcm
 
-
   //gigigo Lib
   compile project.libraries.ggglib
   compile project.libraries.gggJavaLib
-
-  //gigigo Executor
-  compile project.libraries.interactorExecutor
-  compile project.libraries.threaddecoratedviewCommon
-  apt project.libraries.threaddecoratedviewCompiler
 
   //Dagger
   apt project.libraries.daggerCompiler
