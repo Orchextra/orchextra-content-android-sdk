@@ -22,7 +22,6 @@ import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 import orchextra.javax.inject.Inject;
 
 public class DetailActivity extends BaseInjectionActivity<DetailActivityComponent>
@@ -152,7 +151,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     System.out.println("----------------------------------------------destroyActivityview");
 
     if (presenter != null) {
-      presenter.detachView(this);
+      presenter.detachView();
     }
     if (animationImageView != null) animationImageView = null;
 
