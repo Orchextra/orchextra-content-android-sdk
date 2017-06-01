@@ -2,13 +2,9 @@ package com.gigigo.orchextra.core.controller.model.detail;
 
 import com.gigigo.orchextra.core.controller.dto.DetailViewInfo;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
-import com.gigigo.threaddecoratedview.views.qualifiers.NotDecorated;
-import com.gigigo.threaddecoratedview.views.qualifiers.ThreadDecoratedView;
 
-@ThreadDecoratedView
 public interface DetailElementsView {
 
-  @NotDecorated
   void initUi();
 
   void renderDetailViewWithPreview(UiBaseContentData previewContentData,

@@ -2,8 +2,7 @@ package com.gigigo.orchextra.core.controller.model.detail;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import com.gigigo.interactorexecutor.base.Presenter;
-import com.gigigo.interactorexecutor.base.viewinjector.GenericViewInjector;
+import com.gigigo.orchextra.control.presenters.base.Presenter;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.controller.dto.DetailViewInfo;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
@@ -24,9 +23,8 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
   private String elementUrl;
 
-  public DetailElementsViewPresenter(GenericViewInjector viewInjector, OcmController ocmController,
+  public DetailElementsViewPresenter(OcmController ocmController,
       OcmViewGenerator ocmViewGenerator) {
-    super(viewInjector);
     this.ocmController = ocmController;
     this.ocmViewGenerator = ocmViewGenerator;
   }
@@ -35,8 +33,8 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
     getView().initUi();
   }
 
-  @Override public void detachView(DetailElementsView view) {
-    super.detachView(view);
+  @Override public void detachView() {
+    super.detachView();
     ocmViewGenerator.releaseImageLoader();
    //  = null;
   }
