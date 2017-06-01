@@ -1,25 +1,16 @@
 package com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
-import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
-import com.gigigo.ui.imageloader.ImageLoaderCallback;
-import com.vuforia.Frame;
 
 public class HorizontalItemPageFragment extends Fragment {
 
@@ -58,8 +49,11 @@ public class HorizontalItemPageFragment extends Fragment {
   }
 
   private void setImage() {
-    String imageUrl = cell.getData().getSectionView().getImageUrl();
-    Glide.with(getContext()).load(imageUrl).into(horizontalItemImageView);
+    if(cell!=null) {
+
+      String imageUrl = cell.getData().getSectionView().getImageUrl();
+      Glide.with(getContext()).load(imageUrl).into(horizontalItemImageView);
+    }
   }
 
   private void setListeners() {

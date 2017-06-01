@@ -189,7 +189,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
     setCustomViews();
     if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
-    if (this.bIsYOffsetSetted) this.setViewPagerIndicatorYOffset(this.mYOffset);
 
     uiListedBaseContentData.setListedContentListener(listedContentListener);
     uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, imageLoader, authoritation);
@@ -213,10 +212,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (uiListedBaseContentData != null) {
       uiListedBaseContentData.showErrorView();
     } else if (appErrorView != null) {
-      appEmptyView.setVisibility(View.GONE);
       appErrorView.setVisibility(View.VISIBLE);
     } else if (errorView != null) {
-      appEmptyView.setVisibility(View.GONE);
       errorView.setVisibility(View.VISIBLE);
     }
   }
@@ -232,11 +229,10 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           DeviceUtils.calculateRealWidthDevice(context),
           DeviceUtils.calculateRealHeightDevice(context));
 
-      Glide.with(getContext()).load(imageUrl).into(new SimpleTarget<GlideDrawable>() {
+      Glide.with(this).load(imageUrl).into(new SimpleTarget<GlideDrawable>() {
         @Override public void onResourceReady(GlideDrawable resource,
             GlideAnimation<? super GlideDrawable> glideAnimation) {
           imageViewToExpandInDetail.setImageDrawable(resource);
-          clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
         }
 
         @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
@@ -313,23 +309,17 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   public boolean bIsSliderActive = false;
-  public boolean bIsYOffsetSetted = false;
   public int mTime = 0;
-  public float mYOffset = 0;
 
   public void setViewPagerAutoSlideTime(int time) {
-    this.mTime = time;
-    this.bIsSliderActive = true;
-    if (uiListedBaseContentData instanceof HorizontalViewPager) {
-      ((HorizontalViewPager) uiListedBaseContentData).setViewPagerAutoSlideTime(time);
-    }
-  }
-
-  public void setViewPagerIndicatorYOffset(float yOffset) {
-    this.mYOffset = yOffset;
-    this.bIsYOffsetSetted = true;
-    if (uiListedBaseContentData instanceof HorizontalViewPager) {
-      ((HorizontalViewPager) uiListedBaseContentData).setViewPagerIndicatorYOffset(yOffset);
+    if (time > 0) {
+      this.mTime = time;
+      this.bIsSliderActive = true;
+      if (uiListedBaseContentData instanceof HorizontalViewPager) {
+        ((HorizontalViewPager) uiListedBaseContentData).setViewPagerAutoSlideTime(time);
+      }
+    } else {
+      System.out.println("You must set positive value");
     }
   }
 }
