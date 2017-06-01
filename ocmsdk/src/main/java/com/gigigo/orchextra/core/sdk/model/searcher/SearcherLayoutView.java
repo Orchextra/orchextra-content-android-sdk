@@ -118,7 +118,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
 
   private void setAdapterDataViewHolders() {
     ElementsViewHolderFactory factory =
-        new ElementsViewHolderFactory(context, imageLoader, authoritation);
+        new ElementsViewHolderFactory(context, authoritation);
 
     recyclerView.setAdapterViewHolderFactory(factory);
 
