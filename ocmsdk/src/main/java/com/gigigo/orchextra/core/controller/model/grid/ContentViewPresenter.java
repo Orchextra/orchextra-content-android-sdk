@@ -3,13 +3,9 @@ package com.gigigo.orchextra.core.controller.model.grid;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import com.gigigo.interactorexecutor.base.Presenter;
-import com.gigigo.interactorexecutor.base.invoker.InteractorExecution;
-import com.gigigo.interactorexecutor.base.invoker.InteractorInvoker;
-import com.gigigo.interactorexecutor.base.invoker.InteractorResult;
-import com.gigigo.interactorexecutor.base.viewinjector.GenericViewInjector;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.multiplegridrecyclerview.entities.CellBlankElement;
+import com.gigigo.orchextra.control.presenters.base.Presenter;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
@@ -20,8 +16,6 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
-import com.gigigo.orchextra.core.domain.interactors.errors.GenericResponseDataError;
-import com.gigigo.orchextra.core.domain.interactors.errors.NoNetworkConnectionError;
 import com.gigigo.orchextra.core.domain.interactors.home.GetSectionDataInteractor;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -38,10 +32,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private List<Cell> listedCellContentDataList;
   private int padding;
 
-  public ContentViewPresenter(GenericViewInjector viewInjector, OcmController ocmController,
-      InteractorInvoker interactorInvoker, GetSectionDataInteractor getHomeDataInteractor,
+  public ContentViewPresenter(OcmController ocmController,
       Authoritation authoritation) {
-    super(viewInjector);
 
     this.ocmController = ocmController;
     this.authoritation = authoritation;
