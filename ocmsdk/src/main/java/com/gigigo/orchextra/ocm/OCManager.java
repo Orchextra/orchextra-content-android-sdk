@@ -229,7 +229,8 @@ public final class OCManager {
       Class notificationActivityClass) {
 
     OrchextraBuilder builder = new OrchextraBuilder(app);
-    builder.setApiKeyAndSecret(oxKey, oxSecret).setLogLevel(OrchextraLogLevel.NETWORK)
+    builder.setApiKeyAndSecret(oxKey, oxSecret)
+        .setLogLevel(OrchextraLogLevel.NETWORK)
         //.setGcmSenderId("117687721829")       //TODO Test sender Id nuborisar
           .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
         .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)

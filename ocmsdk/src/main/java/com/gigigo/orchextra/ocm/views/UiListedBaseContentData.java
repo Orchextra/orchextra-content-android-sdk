@@ -24,9 +24,7 @@ public abstract class UiListedBaseContentData extends LinearLayout {
 
   //4 carrusel
   public boolean bIsSliderActive = false;
-  public boolean bIsYOffsetSetted = false;
   public int mTime = 0;
-  public float mYOffset = 0;
 
   public UiListedBaseContentData(Context context) {
     super(context);
