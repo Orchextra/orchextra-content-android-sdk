@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -65,8 +66,10 @@ public class ScreenSlidePageFragment extends Fragment {
       contentView.setEmptyView(emptyViewLayout);
       contentView.setErrorView(emptyViewLayout);
 
-      ((com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView) contentView).setViewPagerAutoSlideTime(3000);
-
+      if (contentView instanceof ContentGridLayoutView) {
+        ((com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView) contentView).setViewPagerAutoSlideTime(
+            3000);
+      }
       getChildFragmentManager().beginTransaction()
           .replace(R.id.content_main_view, contentView)
           .commit();
