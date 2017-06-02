@@ -94,8 +94,22 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     //    return generateWebContentData(cachedElement.getRender().getUrl());
     //  }
     //}
+    ocmController.getDetails(false, viewId, new OcmController.GetDetailControllerCallback() {
+      @Override
+      public void onGetDetailLoaded(ElementCache elementCache) {
+          if (elementCache.getType() == ElementCacheType.WEBVIEW
+              && elementCache.getRender() != null) {
+            getSectionViewGeneratorCallback.onSectionViewLoaded(generateWebContentData(elementCache.getRender().getUrl()));
+          } else {
+            getSectionViewGeneratorCallback.onSectionViewLoaded(generateGridContentData(viewId, filter));
+          }
+      }
 
-    getSectionViewGeneratorCallback.onSectionViewLoaded(generateGridContentData(viewId, filter));
+      @Override
+      public void onGetDetailFails(Exception e) {
+        getSectionViewGeneratorCallback.onSectionViewFails(e);
+      }
+    });
   }
 
   private UiGridBaseContentData generateWebContentData(String url) {
