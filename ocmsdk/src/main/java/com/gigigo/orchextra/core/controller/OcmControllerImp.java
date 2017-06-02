@@ -72,15 +72,7 @@ public class OcmControllerImp implements OcmController {
   @Override public ElementCache getCachedElement(final String elementUrl) {
     try {
       String slug = getSlug(elementUrl);
-      ElementCache elementCache = gridElementsInteractorInvocator.getElementById(slug);
-      /*ElementCache elementCache = gridElementsInteractorInvocator.getElementById(elementUrl);
-
-      if (elementCache == null) {
-        String slug = getSlug(elementUrl);
-        elementCache = gridElementsInteractorInvocator.getElementById(slug);
-      }
-*/
-      return elementCache;
+      return gridElementsInteractorInvocator.getElementById(slug);
     } catch (Exception e) {
       return null;
     }

@@ -46,7 +46,6 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
       mainLayout.getViewTreeObserver()
           .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override public boolean onPreDraw() {
-
               byte[] imageByteArray = Base64.decode(sectionView.getImageThumb(), Base64.DEFAULT);
 
               String generatedImageUrl =

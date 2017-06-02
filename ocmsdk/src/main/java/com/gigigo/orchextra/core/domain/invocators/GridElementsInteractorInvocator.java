@@ -43,7 +43,6 @@ public class GridElementsInteractorInvocator {
 
   private void getElementByIdInBackground(String slug) {
     try {
-System.out.println("getElementByIdInBackground\n\n");
       final CountDownLatch countDownLatch = new CountDownLatch(1);
 
       getElementByIdInteractor.setElementId(slug);

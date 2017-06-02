@@ -2,8 +2,9 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 
 import android.content.Context;
 import android.util.Base64;
-import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
@@ -12,12 +13,14 @@ import com.gigigo.ui.imageloader.ImageLoader;
 
 public class ArticleImageView extends ArticleBaseView<ArticleImageElement> {
 
+  private final Context context;
   private ImageView articleImagePlaceholder;
   private ImageLoader imageLoader;
 
   public ArticleImageView(Context context, ArticleImageElement articleElement,
       ImageLoader imageLoader) {
     super(context, articleElement);
+    this.context = context;
     this.imageLoader = imageLoader;
   }
 
@@ -34,20 +37,24 @@ public class ArticleImageView extends ArticleBaseView<ArticleImageElement> {
   }
 
   private void setImage(final String imageUrl, final String imageThumb) {
-    articleImagePlaceholder.getViewTreeObserver()
-        .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-          @Override public boolean onPreDraw() {
-            byte[] imageThumbBytes = Base64.decode(imageThumb, Base64.DEFAULT);
+    float ratioImage = ImageGenerator.getRatioImage(imageUrl);
 
-            String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl,
-                DeviceUtils.calculateRealWidthDevice(getContext()));
+    if (ratioImage != -1) {
+      int realWidthDevice = DeviceUtils.calculateRealWidthDevice(getContext());
+      int calculatedHeight = (int) (realWidthDevice / ratioImage);
 
-            imageLoader.load(generatedImageUrl).thumbnailByte(imageThumbBytes).into(articleImagePlaceholder);
+      FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(realWidthDevice, calculatedHeight);
+      articleImagePlaceholder.setLayoutParams(lp);
+    }
 
-            articleImagePlaceholder.getViewTreeObserver().removeOnPreDrawListener(this);
+    byte[] imageThumbBytes = Base64.decode(imageThumb, Base64.DEFAULT);
 
-            return true;
-          }
-        });
+    String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl,
+        DeviceUtils.calculateRealWidthDevice(getContext()));
+
+    Glide.with(context)
+        .load(generatedImageUrl)
+        .thumbnail(Glide.with(context).load(imageThumbBytes))
+        .into(articleImagePlaceholder);
   }
 }
