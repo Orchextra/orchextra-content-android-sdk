@@ -67,10 +67,9 @@ public class ScreenSlidePageFragment extends Fragment {
       contentView.setErrorView(emptyViewLayout);
 
       if (contentView instanceof ContentGridLayoutView) {
-        ((ContentGridLayoutView) contentView).setViewPagerIndicatorYOffset(172);
-        ((ContentGridLayoutView) contentView).setViewPagerAutoSlideTime(3000);
+        ((com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView) contentView).setViewPagerAutoSlideTime(
+            3000);
       }
-
       getChildFragmentManager().beginTransaction()
           .replace(R.id.content_main_view, contentView)
           .commit();

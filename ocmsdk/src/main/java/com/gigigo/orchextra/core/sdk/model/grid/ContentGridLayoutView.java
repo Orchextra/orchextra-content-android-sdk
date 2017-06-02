@@ -184,15 +184,11 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     uiListedBaseContentData = new HorizontalViewPager(context);
 
     setCustomViews();
-    if(this.bIsSliderActive)this.setViewPagerAutoSlideTime(this.mTime);
-    if(this.bIsYOffsetSetted)this.setViewPagerIndicatorYOffset(this.mYOffset);
+    if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
 
     uiListedBaseContentData.setListedContentListener(listedContentListener);
     uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, imageLoader, authoritation);
     uiListedBaseContentData.setData(cellDataList);
-
-
-
 
     listedDataContainer.removeAllViews();
     listedDataContainer.addView(uiListedBaseContentData);
@@ -310,24 +306,18 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     this.emotion = emotion;
   }
 
-
   public boolean bIsSliderActive = false;
-  public boolean bIsYOffsetSetted = false;
   public int mTime = 0;
-  public float mYOffset = 0;
-  public void setViewPagerAutoSlideTime(int time) {
-     this.mTime = time;
-    this.bIsSliderActive = true;
-    if (uiListedBaseContentData instanceof HorizontalViewPager) {
-      ((HorizontalViewPager) uiListedBaseContentData).setViewPagerAutoSlideTime(time);
-    }
-  }
 
-  public void setViewPagerIndicatorYOffset(float yOffset) {
-    this.mYOffset = yOffset;
-    this.bIsYOffsetSetted = true;
-    if (uiListedBaseContentData instanceof HorizontalViewPager) {
-      ((HorizontalViewPager) uiListedBaseContentData).setViewPagerIndicatorYOffset(yOffset);
+  public void setViewPagerAutoSlideTime(int time) {
+    if (time > 0) {
+      this.mTime = time;
+      this.bIsSliderActive = true;
+      if (uiListedBaseContentData instanceof HorizontalViewPager) {
+        ((HorizontalViewPager) uiListedBaseContentData).setViewPagerAutoSlideTime(time);
+      }
+    } else {
+      System.out.println("You must set positive value");
     }
   }
 }

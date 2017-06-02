@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.ocm.views.CircleIndicator;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
@@ -71,10 +70,8 @@ public class HorizontalViewPager extends UiListedBaseContentData {
       adapter.setItems(cellDataList);
       indicator.setViewPager(listedHorizontalViewPager);
 
-      if (bIsYOffsetSetted) this.setViewPagerIndicatorYOffset(mYOffset);
       if (bIsSliderActive) {
         mLoops = 20;
-
         this.setViewPagerAutoSlideTime(mTime);
         startSlider(mTime, cellDataList.size() * mLoops);
       } else {
@@ -82,7 +79,7 @@ public class HorizontalViewPager extends UiListedBaseContentData {
       }
       indicator.setLoops(mLoops);
       indicator.setRealSize(cellDataList.size());
-       adapter.setLoops(mLoops);
+      adapter.setLoops(mLoops);
     }
   }
 
@@ -111,7 +108,7 @@ public class HorizontalViewPager extends UiListedBaseContentData {
   }
 
   private static Handler mHandler = new Handler(Looper.getMainLooper());
-  static int currentPage = 0;
+  int currentPage = 0;
 
   public void setViewPagerAutoSlideTime(final int time) {
     bIsSliderActive = true;
@@ -134,23 +131,6 @@ public class HorizontalViewPager extends UiListedBaseContentData {
       @Override public void run() {
         mHandler.post(update);
       }
-    }, 2000, time);
-  }
-
-  public void setViewPagerIndicatorYOffset(float offset) {
-    try {
-      offset = dip2px(offset);
-      RelativeLayout.LayoutParams layoutParams =
-          (RelativeLayout.LayoutParams) indicator.getLayoutParams();
-      layoutParams.setMargins(0, (int) offset, 0, 0);
-      indicator.setLayoutParams(layoutParams);
-    } catch (Throwable tr) {
-      System.out.println(tr.toString());
-    }
-  }
-
-  public int dip2px(float dpValue) {
-    final float scale = getResources().getDisplayMetrics().density;
-    return (int) (dpValue * scale + 0.5f);
+    }, 500, time);
   }
 }
