@@ -85,7 +85,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return menuList;
   }
 
-  @Override public UiGridBaseContentData generateGridView(String viewId, String filter) {
+  @Override public void generateSectionView(String viewId, String filter, GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
     //ElementCache cachedElement = ocmController.getCachedElement(viewId);
     //
     //if (cachedElement != null) {
@@ -95,7 +95,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     //  }
     //}
 
-    return generateGridContentData(viewId, filter);
+    getSectionViewGeneratorCallback.onSectionViewLoaded(generateGridContentData(viewId, filter));
   }
 
   private UiGridBaseContentData generateWebContentData(String url) {

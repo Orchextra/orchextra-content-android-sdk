@@ -6,45 +6,53 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePrevie
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
-import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
+
 import java.util.List;
 
 public interface OcmViewGenerator {
 
-  UiGridBaseContentData generateGridView(String viewId, String filter);
+    void generateSectionView(String viewId, String filter, GetSectionViewGeneratorCallback getSectionViewGeneratorCallback);
 
-  UiDetailBaseContentData generateDetailView(String elementUrl);
+    UiDetailBaseContentData generateDetailView(String elementUrl);
 
-  UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share);
+    UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share);
 
-  UiBaseContentData generateDetailView(ElementCacheType type, ElementCacheRender elements);
+    UiBaseContentData generateDetailView(ElementCacheType type, ElementCacheRender elements);
 
-  void getImageUrl(String elementUrl, GetDetailImageViewGeneratorCallback getDetailImageViewGeneratorCallback);
+    void getImageUrl(String elementUrl, GetDetailImageViewGeneratorCallback getDetailImageViewGeneratorCallback);
 
-  UiSearchBaseContentData generateSearchView();
+    UiSearchBaseContentData generateSearchView();
 
-  UiBaseContentData generateCardDetailView(ElementCache cachedElement);
+    UiBaseContentData generateCardDetailView(ElementCache cachedElement);
 
-  UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
+    UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
 
-  void releaseImageLoader();
+    void releaseImageLoader();
 
 
-  void getMenu(GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
+    void getMenu(GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
 
-  // Callbacks
-  interface GetMenusViewGeneratorCallback {
-    void onGetMenusLoaded(List<UiMenu> menus);
-    void onGetMenusFails(Throwable e);
-  }
+    // Callbacks
+    interface GetMenusViewGeneratorCallback {
+        void onGetMenusLoaded(List<UiMenu> menus);
 
-  interface GetDetailImageViewGeneratorCallback {
-    void onGetImageLoaded(String imagePath);
-    void onGetImageError(Exception e);
-  }
+        void onGetMenusFails(Throwable e);
+    }
+
+    interface GetDetailImageViewGeneratorCallback {
+        void onGetImageLoaded(String imagePath);
+
+        void onGetImageError(Exception e);
+    }
+
+    interface GetSectionViewGeneratorCallback {
+        void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData);
+
+        void onSectionViewFails(Exception e);
+    }
 }
 

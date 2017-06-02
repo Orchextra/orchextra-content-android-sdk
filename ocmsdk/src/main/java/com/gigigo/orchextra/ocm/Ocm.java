@@ -66,9 +66,20 @@ public final class Ocm {
    *
    * @param viewId It is the content url returned in the menus call.
    * @param filter To filter the content by a word
+   * @param sectionCallbacks callback
    */
-  public static UiGridBaseContentData generateGridView(String viewId, String filter) {
-    return OCManager.generateGridView(viewId, filter);
+  public static void generateSectionView(String viewId, String filter, OcmCallbacks.Section sectionCallbacks) {
+    OCManager.generateSectionView(viewId, filter, new OCManagerCallbacks.Section() {
+      @Override
+      public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+        sectionCallbacks.onSectionLoaded(uiGridBaseContentData);
+      }
+
+      @Override
+      public void onSectionFails(Exception e) {
+        sectionCallbacks.onSectionFails(e);
+      }
+    });
   }
 
   /**

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.Ocm;
+import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 
 public class ScreenSlidePageFragment extends Fragment {
@@ -46,8 +47,17 @@ public class ScreenSlidePageFragment extends Fragment {
     if (arguments != null) {
       String section = arguments.getString(EXTRA_SCREEN_SLIDE_SECTION);
 
-      UiGridBaseContentData uiGridBaseContentData = Ocm.generateGridView(section, null);
-      setView(uiGridBaseContentData);
+      Ocm.generateSectionView(section, null, new OcmCallbacks.Section() {
+        @Override
+        public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+          setView(uiGridBaseContentData);
+        }
+
+        @Override
+        public void onSectionFails(Exception e) {
+          e.printStackTrace();
+        }
+      });
     }
   }
 

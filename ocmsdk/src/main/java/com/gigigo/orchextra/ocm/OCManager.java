@@ -99,8 +99,18 @@ public final class OCManager {
     }
   }
 
-  static UiGridBaseContentData generateGridView(String viewId, String filter) {
-    return instance.ocmViewGenerator.generateGridView(viewId, filter);
+  static void generateSectionView(String viewId, String filter, final OCManagerCallbacks.Section sectionCallback) {
+    instance.ocmViewGenerator.generateSectionView(viewId, filter, new OcmViewGenerator.GetSectionViewGeneratorCallback() {
+      @Override
+      public void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData) {
+        sectionCallback.onSectionLoaded(uiGridBaseContentData);
+      }
+
+      @Override
+      public void onSectionViewFails(Exception e) {
+        sectionCallback.onSectionFails(e);
+      }
+    });
   }
 
   static UiDetailBaseContentData generateDetailView(String elementUrl) {
