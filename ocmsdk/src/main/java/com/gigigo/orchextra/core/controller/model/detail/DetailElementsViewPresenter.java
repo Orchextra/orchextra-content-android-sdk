@@ -38,7 +38,6 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   @Override public void detachView(DetailElementsView view) {
     super.detachView(view);
     ocmViewGenerator.releaseImageLoader();
-   //  = null;
   }
 
   public void loadSection(String elementUrl) {
