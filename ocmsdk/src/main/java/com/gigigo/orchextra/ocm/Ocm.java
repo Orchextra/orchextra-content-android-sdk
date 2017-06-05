@@ -29,7 +29,7 @@ public final class Ocm {
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
-    OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass);
+    OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,ocmBuilder.getOxSenderId());
   }
 
   /**
@@ -133,6 +133,9 @@ public final class Ocm {
    */
   public static void start() {
     OCManager.start();
+  }
+  public static void stop() {
+    OCManager.stop();
   }
 
   public static void setOnCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {

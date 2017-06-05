@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.ocm;
 
 import android.app.Application;
-import com.gigigo.orchextra.CustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 
@@ -15,6 +14,8 @@ public final class OcmBuilder {
   private String contentLanguage;
   private OnRequiredLoginCallback onRequiredLoginCallback;
   private OnEventCallback onEventCallback;
+
+  private String oxSenderId;
 
   /**
    * Initialize the sdk with the Application context
@@ -58,6 +59,15 @@ public final class OcmBuilder {
    */
   public OcmBuilder setNotificationActivityClass(Class notificationActivityClass) {
     this.notificationActivityClass = notificationActivityClass;
+    return this;
+  }
+
+  public String getOxSenderId() {
+    return oxSenderId;
+  }
+
+  public OcmBuilder setOxSenderId(String oxSenderId) {
+    this.oxSenderId = oxSenderId;
     return this;
   }
 
