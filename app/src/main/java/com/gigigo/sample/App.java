@@ -19,8 +19,8 @@ public class App extends MultiDexApplication {
 
   public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";    //Woah project
   public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
-
-  //public static String API_KEY = "adfc8ba4340828a054bf061f692707a197af96cb";    //[UAT][CSE] - WOAH SITC project
+  //
+  //public static String API_KEY = "adfc8ba4340828a054bf061f692707a197af96cb";    //[UAT][CSE] - WOAH SITC project --- Staging
   //public static String API_SECRET = "677cf75a17aeec144ee402c281ad3a732d736a8a";
 
   //REPSOL RELEASE

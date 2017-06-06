@@ -164,10 +164,11 @@ public final class OCManager {
     }
   }
 
-  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass) {
+  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
+      String senderId) {
     if (OCManager.instance != null) {
       Application app = (Application) instance.ocmContextProvider.getApplicationContext();
-      OCManager.instance.initOrchextra(app, oxKey, oxSecret, notificationActivityClass);
+      OCManager.instance.initOrchextra(app, oxKey, oxSecret, notificationActivityClass, senderId);
     }
   }
 
@@ -243,13 +244,13 @@ public final class OCManager {
   }
 
   private void initOrchextra(Application app, String oxKey, String oxSecret,
-      Class notificationActivityClass) {
+      Class notificationActivityClass, String senderId) {
 
     OrchextraBuilder builder = new OrchextraBuilder(app);
     builder.setApiKeyAndSecret(oxKey, oxSecret)
         .setLogLevel(OrchextraLogLevel.NETWORK)
         //.setGcmSenderId("117687721829")       //TODO Test sender Id nuborisar
-          .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
+        .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
         .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
         .setOrchextraCompletionCallback(new OrchextraCompletionCallback() {
           @Override public void onSuccess() {
@@ -282,6 +283,9 @@ public final class OCManager {
     if (notificationActivityClass != null) {
       builder.setNotificationActivityClass(notificationActivityClass.toString());
     }
+    if (senderId != null && senderId != "") {
+      builder.setGcmSenderId(senderId);
+    }
 
     Orchextra.initialize(builder);
 
@@ -296,6 +300,10 @@ public final class OCManager {
 
   public static void start() {
     Orchextra.start();
+  }
+
+  public static void stop() {
+    Orchextra.stop();
   }
 
   public static void returnOcCustomSchemeCallback(String customScheme) {

@@ -24,8 +24,7 @@ public class OcmControllerImp implements OcmController {
   private final GetDetail getDetail;
   private final SearchElements searchElements;
 
-  public OcmControllerImp(
-      GetMenus getMenus, GetSection getSection, GetDetail getDetail,
+  public OcmControllerImp(GetMenus getMenus, GetSection getSection, GetDetail getDetail,
       SearchElements searchElements) {
 
     this.getMenus = getMenus;

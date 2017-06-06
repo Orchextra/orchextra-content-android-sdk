@@ -17,7 +17,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static junit.framework.TestCase.assertFalse;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.Is.isA;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class) public class RetrieveSectionUiMenuInteractorTest {
@@ -43,8 +48,8 @@ import static org.mockito.Mockito.when;
 
     InteractorResponse<MenuContentData> response = interactor.call();
 
-    assertThat(response.hasError()).isTrue();
-    assertThat(response.getError()).isExactlyInstanceOf(NoNetworkConnectionError.class);
+    assertTrue(response.hasError());
+    assertThat(response.getError(), is(instanceOf(NoNetworkConnectionError.class)));
   }
 
   @Ignore @Test public void shouldReturnValueListWhenHasConnectionAndRequestWasSuccessful()
@@ -57,8 +62,8 @@ import static org.mockito.Mockito.when;
 
     InteractorResponse<MenuContentData> response = interactor.call();
 
-    assertThat(response.hasError()).isFalse();
-    assertThat(response.getResult()).isEqualTo(fakeSuccessfulBoMenuContentData.getData());
+    assertFalse(response.hasError());
+    assertThat(response.getResult(), is(fakeSuccessfulBoMenuContentData.getData()));
   }
 
   @Ignore @Test public void shouldReturnGenericInteractorErrorWhenRequestFailed() throws Exception {
@@ -69,8 +74,8 @@ import static org.mockito.Mockito.when;
 
     InteractorResponse<MenuContentData> response = interactor.call();
 
-    assertThat(response.hasError()).isTrue();
-    assertThat(response.getError()).isExactlyInstanceOf(GenericResponseDataError.class);
+    assertTrue(response.hasError());
+    assertThat(response.getError(), is(instanceOf(GenericResponseDataError.class)));
   }
 
   private BusinessObject<MenuContentData> getFakeSuccessfulMenuContentData() {

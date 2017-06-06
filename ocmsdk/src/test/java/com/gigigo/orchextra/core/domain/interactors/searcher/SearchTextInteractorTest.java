@@ -14,7 +14,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -37,8 +41,8 @@ public class SearchTextInteractorTest {
 
     InteractorResponse<ContentData> response = searchTextInteractor.call();
 
-    assertThat(response.hasError()).isTrue();
-    assertThat(response.getError()).isExactlyInstanceOf(NoNetworkConnectionError.class);
+    assertTrue(response.hasError());
+    assertThat(response.getError(), is(instanceOf(NoNetworkConnectionError.class)));
   }
 
   @Test public void shouldRetrieveSomeItemsWhenSearchingWithARightText() throws Exception {
@@ -50,8 +54,8 @@ public class SearchTextInteractorTest {
 
     InteractorResponse<ContentData> response = searchTextInteractor.call();
 
-    assertThat(response.hasError()).isFalse();
-    assertThat(response.getResult()).isEqualTo(fakeBoContentData.getData());
+    assertFalse(response.hasError());
+    assertThat(response.getResult(), is(fakeBoContentData.getData()));
   }
 
   @Test public void shouldRetrieveGenericErrorWhenRequestFailed() throws Exception {
@@ -63,8 +67,8 @@ public class SearchTextInteractorTest {
 
     InteractorResponse<ContentData> response = searchTextInteractor.call();
 
-    assertThat(response.hasError()).isTrue();
-    assertThat(response.getError()).isExactlyInstanceOf(GenericResponseDataError.class);
+    assertTrue(response.hasError());
+    assertThat(response.getError(), is(instanceOf(GenericResponseDataError.class)));
   }
 
   private BusinessObject<ContentData> getFakeSuccessfulBoContentData() {

@@ -102,7 +102,6 @@ android {
 
   // true to publish all flavour artifacts
   publishNonDefault true
-  //  defaultPublishConfig "ocmStaging"
   //  defaultPublishConfig "ocmDebug"
  defaultPublishConfig "ocmRelease"
 }
@@ -118,6 +117,10 @@ configurations {
 }
 
 dependencies {
+  //TEST
+  testCompile project.testLibraries.junit
+  testCompile project.testLibraries.mockito
+
   compile fileTree(dir: 'libs', include: ['*.jar']) //youtube
 
   //google Support/CustomTabs/playServices
@@ -161,7 +164,7 @@ dependencies {
 
   //TEST
   testCompile project.testLibraries.junit
-  testCompile project.testLibraries.assertj
+//  testCompile project.testLibraries.assertj
   testCompile project.testLibraries.mockito
 }
 

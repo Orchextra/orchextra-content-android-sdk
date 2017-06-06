@@ -3,8 +3,8 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 import android.content.Context;
 import android.text.Html;
 import android.util.Base64;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
@@ -15,6 +15,7 @@ import com.gigigo.ui.imageloader.ImageLoader;
 
 public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
 
+  private final Context context;
   private ImageLoader imageLoader;
 
   private ImageView articleHeaderImage;
@@ -23,6 +24,8 @@ public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
   public ArticleHeaderView(Context context, ArticleHeaderElement articleElement,
       ImageLoader imageLoader) {
     super(context, articleElement);
+
+    this.context = context;
     this.imageLoader = imageLoader;
   }
 
@@ -35,23 +38,28 @@ public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
   }
 
   private void setImage(final String imageUrl, final String imageThumb) {
-    articleHeaderImage.getViewTreeObserver()
-        .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-          @Override public boolean onPreDraw() {
-            byte[] imageThumbBytes = Base64.decode(imageThumb, Base64.DEFAULT);
+    float ratioImage = ImageGenerator.getRatioImage(imageUrl);
 
-            String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl,
-                DeviceUtils.calculateRealWidthDevice(getContext()));
+    int realWidthDevice = DeviceUtils.calculateRealWidthDevice(getContext());
 
-            Glide.with(getContext()).load(generatedImageUrl)
-                .thumbnail(Glide.with(getContext()).load(imageThumbBytes))
-                .into(articleHeaderImage);
+    if (ratioImage != -1) {
+      int calculatedHeight = (int) (realWidthDevice / ratioImage);
 
-            articleHeaderImage.getViewTreeObserver().removeOnPreDrawListener(this);
+      RelativeLayout.LayoutParams lp =
+          new RelativeLayout.LayoutParams(realWidthDevice, calculatedHeight);
+      articleHeaderImage.setLayoutParams(lp);
+    }
 
-            return true;
-          }
-        });
+
+    byte[] imageThumbBytes = Base64.decode(imageThumb, Base64.DEFAULT);
+
+    String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, realWidthDevice);
+
+    Glide.with(context)
+        .load(generatedImageUrl)
+        .thumbnail(Glide.with(context).load(imageThumbBytes))
+        .dontAnimate()
+        .into(articleHeaderImage);
   }
 
   @Override protected void bindViews() {
