@@ -9,6 +9,7 @@ import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import io.reactivex.Observable;
 
@@ -24,20 +25,24 @@ import orchextra.javax.inject.Singleton;
 
   private final OcmApiService ocmApiService;
   private final OcmCache ocmCache;
+  private final OcmImageCache ocmImageCache;
 
-  @Inject
-  public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache) {
+  @Inject public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,
+      @NonNull OcmImageCache ocmImageCache) {
     this.ocmApiService = ocmApiService;
     this.ocmCache = ocmCache;
+    this.ocmImageCache = ocmImageCache;
   }
 
   @Override public Observable<ApiMenuContentData> getMenuEntity() {
-    return ocmApiService.getMenuDataRx().map(dataResponse -> dataResponse.getResult())
+    return ocmApiService.getMenuDataRx()
+        .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putMenus);
   }
 
   @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl) {
-    return ocmApiService.getSectionDataRx(elementUrl).map(dataResponse -> dataResponse.getResult())
+    return ocmApiService.getSectionDataRx(elementUrl)
+        .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
         .doOnNext(ocmCache::putSection);
   }
@@ -47,7 +52,8 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<ApiElementData> getElementById(String section) {
-    return ocmApiService.getElementByIdRx(section).map(dataResponse -> dataResponse.getResult())
+    return ocmApiService.getElementByIdRx(section)
+        .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putDetail);
   }
 }

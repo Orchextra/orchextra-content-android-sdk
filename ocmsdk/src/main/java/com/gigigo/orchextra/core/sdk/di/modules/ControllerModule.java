@@ -3,6 +3,8 @@ package com.gigigo.orchextra.core.sdk.di.modules;
 import com.gigigo.orchextra.core.controller.OcmControllerImp;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.OcmCacheImp;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCacheImp;
 import com.gigigo.orchextra.core.data.rxExecutor.JobExecutor;
 import com.gigigo.orchextra.core.data.rxRepository.OcmDataRepository;
 import com.gigigo.orchextra.core.domain.OcmController;
@@ -44,5 +46,9 @@ import orchextra.javax.inject.Singleton;
   @Provides @Singleton OcmCache provideCache(OcmContextProvider context) {
     return new OcmCacheImp(context.getApplicationContext(),
         context.getApplicationContext().getCacheDir().getPath());
+  }
+
+  @Provides @Singleton OcmImageCache provideImageCache(OcmContextProvider context) {
+    return new OcmImageCacheImp(context.getApplicationContext());
   }
 }
