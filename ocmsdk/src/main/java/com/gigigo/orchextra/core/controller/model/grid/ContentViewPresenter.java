@@ -82,11 +82,13 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
           if (listedCellContentDataList.size() != 0) {
             getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
+            getView().showEmptyView(false);
+            getView().showErrorView(false);
           } else {
-            getView().showEmptyView();
+            getView().showEmptyView(true);
           }
         } else {
-          getView().showEmptyView();
+          getView().showEmptyView(true);
         }
 
         getView().showProgressView(false);
@@ -95,14 +97,14 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       @Override public void onResult(NoNetworkConnectionError result) {
         getView().showProgressView(false);
         if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
-          getView().showErrorView();
+          getView().showErrorView(true);
         }
       }
     }).error(GenericResponseDataError.class, new InteractorResult<GenericResponseDataError>() {
       @Override public void onResult(GenericResponseDataError result) {
         getView().showProgressView(false);
         if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
-          getView().showErrorView();
+          getView().showErrorView(true);
         }
       }
     }).execute(interactorInvoker);
