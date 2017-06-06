@@ -7,6 +7,13 @@ import org.jetbrains.annotations.NotNull;
 public class ApiElementData implements Kacheable {
   private ApiElementCache element;
 
+  public ApiElementData() {
+  }
+
+  public ApiElementData(ApiElementCache element) {
+    this.element = element;
+  }
+
   public ApiElementCache getElement() {
     return element;
   }

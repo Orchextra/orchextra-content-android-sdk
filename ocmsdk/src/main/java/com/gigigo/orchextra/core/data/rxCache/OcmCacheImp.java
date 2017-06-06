@@ -11,6 +11,8 @@ import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.CacheDir;
 import com.mskn73.kache.Kache;
 import io.reactivex.Observable;
+import java.util.Iterator;
+import java.util.List;
 import javax.inject.Named;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
@@ -83,8 +85,7 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<ApiElementData> getDetail(String slug) {
     return Observable.create(emitter -> {
-      ApiElementData apiElementData =
-          (ApiElementData) kache.get(ApiElementData.class, slug);
+      ApiElementData apiElementData = (ApiElementData) kache.get(ApiElementData.class, slug);
 
       if (apiElementData != null) {
         emitter.onNext(apiElementData);
@@ -96,7 +97,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void putDetail(ApiElementData apiElementData) {
-    if (apiElementData!=null) kache.put(apiElementData);
+    if (apiElementData != null) kache.put(apiElementData);
   }
 
   @Override public boolean isDetailCached(String slug) {

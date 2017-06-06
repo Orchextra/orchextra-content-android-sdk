@@ -1,9 +1,12 @@
 package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
+import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
@@ -14,6 +17,9 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import io.reactivex.Observable;
 
 import io.reactivex.functions.Consumer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -44,7 +50,17 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.getSectionDataRx(elementUrl)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
-        .doOnNext(ocmCache::putSection);
+        .doOnNext(ocmCache::putSection)
+        .doOnNext(apiSectionContentData -> {
+          Iterator<ApiElement> iterator = apiSectionContentData.getContent().getElements().iterator();
+          while (iterator.hasNext()) {
+            ApiElement apiElement = iterator.next();
+            if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
+              ApiElementData apiElementData = new ApiElementData(apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
+              ocmCache.putDetail(apiElementData);
+            }
+          }
+        });
   }
 
   @Override public Observable<ApiSectionContentData> searchByText(String section) {
