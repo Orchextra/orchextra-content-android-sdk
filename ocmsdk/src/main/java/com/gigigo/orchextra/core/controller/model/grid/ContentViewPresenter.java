@@ -77,11 +77,13 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
       if (listedCellContentDataList.size() != 0) {
         getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
+        getView().showEmptyView(false);
+        getView().showErrorView(false);
       } else {
-        getView().showEmptyView();
+        getView().showEmptyView(true);
       }
     } else {
-      getView().showEmptyView();
+      getView().showEmptyView(true);
     }
 
     getView().showProgressView(false);
@@ -90,7 +92,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private void renderError() {
     getView().showProgressView(false);
     if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
-      getView().showErrorView();
+      getView().showErrorView(true);
     }
   }
 

@@ -12,9 +12,9 @@ public interface ContentView {
 
   void setData(List<Cell> cellGridContentDataList, ContentItemTypeLayout type);
 
-  void showEmptyView();
+  void showEmptyView(boolean isVisible);
 
-  void showErrorView();
+  void showErrorView(boolean isVisible);
 
   void navigateToDetailView(String elementUrl, String imageToExpand, AppCompatActivity activity,
       View view);

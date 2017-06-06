@@ -198,23 +198,23 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     listedDataContainer.addView(uiListedBaseContentData);
   }
 
-  @Override public void showEmptyView() {
-    if (uiListedBaseContentData != null) {
+  @Override public void showEmptyView(boolean isVisible) {
+    if (uiListedBaseContentData != null && isVisible) {
       uiListedBaseContentData.showEmptyView();
     } else if (appEmptyView != null) {
-      appEmptyView.setVisibility(View.VISIBLE);
+      appEmptyView.setVisibility(isVisible ? View.VISIBLE: View.GONE);
     } else if (emptyView != null) {
-      emptyView.setVisibility(View.VISIBLE);
+      emptyView.setVisibility(isVisible ? View.VISIBLE: View.GONE);
     }
   }
 
-  @Override public void showErrorView() {
-    if (uiListedBaseContentData != null) {
+  @Override public void showErrorView(boolean isVisible) {
+    if (uiListedBaseContentData != null && isVisible) {
       uiListedBaseContentData.showErrorView();
     } else if (appErrorView != null) {
-      appErrorView.setVisibility(View.VISIBLE);
+      appErrorView.setVisibility(isVisible ? View.VISIBLE: View.GONE);
     } else if (errorView != null) {
-      errorView.setVisibility(View.VISIBLE);
+      errorView.setVisibility(isVisible ? View.VISIBLE: View.GONE);
     }
   }
 
