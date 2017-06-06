@@ -50,7 +50,6 @@ public class OcmControllerImp implements OcmController {
 
   @Override public void getSection(final boolean forceReload, final String section,
       GetSectionControllerCallback getSectionControllerCallback) {
-
     getMenu(false, new GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(MenuContentData menus) {
         ElementCache elementCache = menus.getElementsCache().get(section);
