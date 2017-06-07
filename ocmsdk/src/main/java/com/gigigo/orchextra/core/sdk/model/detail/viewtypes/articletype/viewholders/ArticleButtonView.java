@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -89,7 +90,7 @@ public class ArticleButtonView extends ArticleBaseView<ArticleButtonElement> {
   private void bindImageButton(final ArticleButtonElement articleElement) {
     articleImageButton.setVisibility(VISIBLE);
 
-    Glide.with(getContext()).load(articleElement.getImageUrl()).into(articleImageButton);
+    Glide.with(getContext()).load(articleElement.getImageUrl()).priority(Priority.IMMEDIATE).into(articleImageButton);
 
     articleImageButton.setOnClickListener(new OnClickListener() {
       @Override public void onClick(View v) {

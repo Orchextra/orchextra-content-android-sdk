@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.model.detail.DetailPresenter;
 import com.gigigo.orchextra.core.controller.model.detail.DetailView;
@@ -133,7 +134,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     if (!TextUtils.isEmpty(url)) {
       String generateImageUrl = ImageGenerator.generateImageUrl(url, width, height);
 
-      Glide.with(this).load(generateImageUrl).override(width, height).into(animationImageView);
+      Glide.with(this).load(generateImageUrl).priority(Priority.IMMEDIATE).override(width, height).into(animationImageView);
     }
   }
 

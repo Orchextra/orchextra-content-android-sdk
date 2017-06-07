@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -202,9 +203,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (uiListedBaseContentData != null && isVisible) {
       uiListedBaseContentData.showEmptyView();
     } else if (appEmptyView != null) {
-      appEmptyView.setVisibility(isVisible ? View.VISIBLE: View.GONE);
+      appEmptyView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     } else if (emptyView != null) {
-      emptyView.setVisibility(isVisible ? View.VISIBLE: View.GONE);
+      emptyView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
   }
 
@@ -212,9 +213,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (uiListedBaseContentData != null && isVisible) {
       uiListedBaseContentData.showErrorView();
     } else if (appErrorView != null) {
-      appErrorView.setVisibility(isVisible ? View.VISIBLE: View.GONE);
+      appErrorView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     } else if (errorView != null) {
-      errorView.setVisibility(isVisible ? View.VISIBLE: View.GONE);
+      errorView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
   }
 
@@ -229,17 +230,20 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           DeviceUtils.calculateRealWidthDevice(context),
           DeviceUtils.calculateRealHeightDevice(context));
 
-      Glide.with(this).load(imageUrl).into(new SimpleTarget<GlideDrawable>() {
-        @Override public void onResourceReady(GlideDrawable resource,
-            GlideAnimation<? super GlideDrawable> glideAnimation) {
-          imageViewToExpandInDetail.setImageDrawable(resource);
-        }
+      Glide.with(this)
+          .load(imageUrl)
+          .priority(Priority.IMMEDIATE)
+          .into(new SimpleTarget<GlideDrawable>() {
+            @Override public void onResourceReady(GlideDrawable resource,
+                GlideAnimation<? super GlideDrawable> glideAnimation) {
+              imageViewToExpandInDetail.setImageDrawable(resource);
+            }
 
-        @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
-          super.onLoadFailed(e, errorDrawable);
-          clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
-        }
-      });
+            @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
+              super.onLoadFailed(e, errorDrawable);
+              clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
+            }
+          });
     }
 
     DetailActivity.open(activity, elementUrl, urlImageToExpand,
