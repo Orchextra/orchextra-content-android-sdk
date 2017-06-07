@@ -1,0 +1,28 @@
+#
+# Build configuration for Circle CI
+#
+# Runs tests and static code analysis. After that, collects the reports and artifacts
+#
+
+general:
+    artifacts:
+        - /home/ubuntu/orchextra-content-android-sdk/ocmsdk/build/reports/
+
+machine:
+    environment:
+        GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:MaxPermSize=2048m -Xms512m -XX:+HeapDumpOnOutOfMemoryError"'
+        ANDROID_HOME: /usr/local/android-sdk-linux
+
+dependencies:
+    pre:
+        - ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --all --filter tools,platform-tools,android-23,extra-google-m2repository,extra-android-support,extra-android-m2repository
+    override:
+        - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
+
+test:
+    override:
+        - (./gradlew check test -PdisablePreDex):
+            timeout: 360
+        - cp -r /home/ubuntu/orchextra-content-android-sdk/ocmsdk/build/test-results/ocmDebug/ $CIRCLE_TEST_REPORTS/junit/
+        - cp -r /home/ubuntu/orchextra-content-android-sdk/ocmsdk/build/test-results/ocmRelease/ $CIRCLE_TEST_REPORTS/junit/
+        - cp -r /home/ubuntu/orchextra-content-android-sdk/ocmsdk/build/test-results/ocmStaging/ $CIRCLE_TEST_REPORTS/junit/

@@ -10,28 +10,49 @@ import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
+
 import java.util.List;
 
 public interface OcmViewGenerator {
 
-  List<UiMenu> getMenu();
+    void generateSectionView(String viewId, String filter, GetSectionViewGeneratorCallback getSectionViewGeneratorCallback);
 
-  UiGridBaseContentData generateGridView(String viewId, String filter);
+    UiDetailBaseContentData generateDetailView(String elementUrl);
 
-  UiDetailBaseContentData generateDetailView(String elementUrl);
+    UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share);
 
-  UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share);
+    UiBaseContentData generateDetailView(ElementCacheType type, ElementCacheRender elements);
 
-  UiBaseContentData generateDetailView(ElementCacheType type, ElementCacheRender elements);
+    void getImageUrl(String elementUrl, GetDetailImageViewGeneratorCallback getDetailImageViewGeneratorCallback);
 
-  String getImageUrl(String elementUrl);
+    UiSearchBaseContentData generateSearchView();
 
-  UiSearchBaseContentData generateSearchView();
+    UiBaseContentData generateCardDetailView(ElementCache cachedElement);
 
-  UiBaseContentData generateCardDetailView(ElementCache cachedElement);
+    UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
 
-  UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
+    void releaseImageLoader();
 
-  void releaseImageLoader();
+
+    void getMenu(GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
+
+    // Callbacks
+    interface GetMenusViewGeneratorCallback {
+        void onGetMenusLoaded(List<UiMenu> menus);
+
+        void onGetMenusFails(Throwable e);
+    }
+
+    interface GetDetailImageViewGeneratorCallback {
+        void onGetImageLoaded(String imagePath);
+
+        void onGetImageError(Exception e);
+    }
+
+    interface GetSectionViewGeneratorCallback {
+        void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData);
+
+        void onSectionViewFails(Exception e);
+    }
 }
 

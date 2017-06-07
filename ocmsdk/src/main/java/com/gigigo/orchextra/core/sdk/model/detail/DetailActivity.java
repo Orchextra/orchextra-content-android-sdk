@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.model.detail.DetailPresenter;
 import com.gigigo.orchextra.core.controller.model.detail.DetailView;
@@ -21,7 +22,6 @@ import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 import orchextra.javax.inject.Inject;
 
 public class DetailActivity extends BaseInjectionActivity<DetailActivityComponent>
@@ -33,7 +33,6 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   private static final String EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL = "EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL";
 
   @Inject DetailPresenter presenter;
-  @Inject ImageLoader imageLoader;
 
   private ImageView animationImageView;
   private UiDetailBaseContentData uiContentView;
@@ -133,7 +132,8 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     if (!TextUtils.isEmpty(url)) {
       String generateImageUrl = ImageGenerator.generateImageUrl(url, width, height);
-      imageLoader.load(generateImageUrl).override(width, height).into(animationImageView);
+
+      Glide.with(this).load(generateImageUrl).override(width, height).into(animationImageView);
     }
   }
 
@@ -151,13 +151,10 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     System.out.println("----------------------------------------------destroyActivityview");
 
     if (presenter != null) {
-      presenter.detachView(this);
+      presenter.detachView();
     }
     if (animationImageView != null) animationImageView = null;
-    if (imageLoader != null) {
-      imageLoader.load("").clearPreviousData();
-      imageLoader = null;
-    }
+
     if (uiContentView != null) uiContentView = null;
 
     this.finish();

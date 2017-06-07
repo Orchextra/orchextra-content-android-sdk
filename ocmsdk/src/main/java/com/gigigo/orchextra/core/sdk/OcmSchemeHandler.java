@@ -21,40 +21,48 @@ public class OcmSchemeHandler {
     this.actionHandler = actionHandler;
   }
 
-  public void processScheme(String path) {
-
-    ElementCache cachedElement = ocmController.getCachedElement(path);
-
-    if (cachedElement != null) {
-
-      ElementCacheType type = cachedElement.getType();
-      ElementCacheRender render = cachedElement.getRender();
-
-      switch (type) {
-        case VUFORIA:
-          if (render != null) {
-            processImageRecognitionAction();
-          }
-          break;
-        case SCAN:
-          if (render != null) {
-            processScanAction();
-          }
-          break;
-        case EXTERNAL_BROWSER:
-          if (render != null) {
-            processExternalBrowser(render.getUrl());
-          }
-          break;
-        case DEEP_LINK:
-          if (render != null) {
-            processDeepLink(render.getUri());
-          }
-          break;
-        default:
-          openDetailActivity(path);
-          break;
+  public void processScheme(final String path) {
+    ocmController.getDetails(false, path, new OcmController.GetDetailControllerCallback() {
+      @Override public void onGetDetailLoaded(ElementCache elementCache) {
+        if (elementCache != null) {
+          executeAction(elementCache, path);
+        }
       }
+
+      @Override public void onGetDetailFails(Exception e) {
+        e.printStackTrace();
+      }
+    });
+  }
+
+  private void executeAction(ElementCache cachedElement, String path) {
+    ElementCacheType type = cachedElement.getType();
+    ElementCacheRender render = cachedElement.getRender();
+
+    switch (type) {
+      case VUFORIA:
+        if (render != null) {
+          processImageRecognitionAction();
+        }
+        break;
+      case SCAN:
+        if (render != null) {
+          processScanAction();
+        }
+        break;
+      case EXTERNAL_BROWSER:
+        if (render != null) {
+          processExternalBrowser(render.getUrl());
+        }
+        break;
+      case DEEP_LINK:
+        if (render != null) {
+          processDeepLink(render.getUri());
+        }
+        break;
+      default:
+        openDetailActivity(path);
+        break;
     }
   }
 

@@ -12,13 +12,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import orchextra.javax.inject.Inject;
+import orchextra.javax.inject.Singleton;
 
+@Singleton
 public class ApiMenuContentListResponseMapper
     implements ExternalClassToModelMapper<ApiMenuContentData, MenuContentData> {
 
   private final ApiMenuContentMapper apiMenuContentMapper;
   private final ApiElementCacheMapper apiElementCacheItemMapper;
 
+  @Inject
   public ApiMenuContentListResponseMapper(ApiMenuContentMapper apiMenuContentMapper,
       ApiElementCacheMapper apiElementCacheItemMapper ) {
     this.apiMenuContentMapper = apiMenuContentMapper;

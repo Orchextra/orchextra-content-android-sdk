@@ -6,9 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.Ocm;
+import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 
 public class ScreenSlidePageFragment extends Fragment {
@@ -17,6 +19,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
   private Bundle arguments;
   private View emptyViewLayout;
+  private View errorViewLayout;
 
   public static ScreenSlidePageFragment newInstance(String section) {
     ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
@@ -46,8 +49,17 @@ public class ScreenSlidePageFragment extends Fragment {
     if (arguments != null) {
       String section = arguments.getString(EXTRA_SCREEN_SLIDE_SECTION);
 
-      UiGridBaseContentData uiGridBaseContentData = Ocm.generateGridView(section, null);
-      setView(uiGridBaseContentData);
+      Ocm.generateSectionView(section, null, new OcmCallbacks.Section() {
+        @Override
+        public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+          setView(uiGridBaseContentData);
+        }
+
+        @Override
+        public void onSectionFails(Exception e) {
+          e.printStackTrace();
+        }
+      });
     }
   }
 
@@ -56,6 +68,7 @@ public class ScreenSlidePageFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
 
     emptyViewLayout = view.findViewById(R.id.emptyViewLayout);
+    errorViewLayout = view.findViewById(R.id.errorViewLayout);
 
     return view;
   }
@@ -64,12 +77,12 @@ public class ScreenSlidePageFragment extends Fragment {
     if (contentView != null) {
       contentView.setClipToPaddingBottomSize(ClipToPadding.PADDING_BIG);
       contentView.setEmptyView(emptyViewLayout);
-      contentView.setErrorView(emptyViewLayout);
+      contentView.setErrorView(errorViewLayout);
 
       if (contentView instanceof ContentGridLayoutView) {
-        ((com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView) contentView).setViewPagerAutoSlideTime(
-            3000);
+        ((ContentGridLayoutView) contentView).setViewPagerAutoSlideTime(3000);
       }
+
       getChildFragmentManager().beginTransaction()
           .replace(R.id.content_main_view, contentView)
           .commit();

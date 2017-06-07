@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
@@ -52,9 +53,19 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     this.imageLoader = imageLoader;
   }
 
-  public List<UiMenu> getMenu() {
-    MenuContentData menuContentData = ocmController.getMenu(false);
+  @Override public void getMenu(final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
+    ocmController.getMenu(false, new OcmController.GetMenusControllerCallback() {
+      @Override public void onGetMenusLoaded(MenuContentData menus) {
+        getMenusViewGeneratorCallback.onGetMenusLoaded(transformMenu(menus));
+      }
 
+      @Override public void onGetMenusFails(Exception e) {
+        getMenusViewGeneratorCallback.onGetMenusFails(new ApiMenuNotFoundException(e));
+      }
+    });
+  }
+
+  private List<UiMenu> transformMenu(MenuContentData menuContentData) {
     List<UiMenu> menuList = new ArrayList<>();
 
     if (menuContentData != null
@@ -74,17 +85,31 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return menuList;
   }
 
-  @Override public UiGridBaseContentData generateGridView(String viewId, String filter) {
-    ElementCache cachedElement = ocmController.getCachedElement(viewId);
-
-    if (cachedElement != null) {
-      if (cachedElement.getType() == ElementCacheType.WEBVIEW
-          && cachedElement.getRender() != null) {
-        return generateWebContentData(cachedElement.getRender().getUrl());
+  @Override public void generateSectionView(String viewId, String filter, GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
+    //ElementCache cachedElement = ocmController.getCachedElement(viewId);
+    //
+    //if (cachedElement != null) {
+    //  if (cachedElement.getType() == ElementCacheType.WEBVIEW
+    //      && cachedElement.getRender() != null) {
+    //    return generateWebContentData(cachedElement.getRender().getUrl());
+    //  }
+    //}
+    ocmController.getDetails(false, viewId, new OcmController.GetDetailControllerCallback() {
+      @Override
+      public void onGetDetailLoaded(ElementCache elementCache) {
+          if (elementCache.getType() == ElementCacheType.WEBVIEW
+              && elementCache.getRender() != null) {
+            getSectionViewGeneratorCallback.onSectionViewLoaded(generateWebContentData(elementCache.getRender().getUrl()));
+          } else {
+            getSectionViewGeneratorCallback.onSectionViewLoaded(generateGridContentData(viewId, filter));
+          }
       }
-    }
 
-    return generateGridContentData(viewId, filter);
+      @Override
+      public void onGetDetailFails(Exception e) {
+        getSectionViewGeneratorCallback.onSectionViewFails(e);
+      }
+    });
   }
 
   private UiGridBaseContentData generateWebContentData(String url) {
@@ -171,14 +196,19 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return null;
   }
 
-  @Override public String getImageUrl(String elementUrl) {
-    ElementCache cachedElement = ocmController.getCachedElement(elementUrl);
+  @Override public void getImageUrl(String elementUrl,
+      final GetDetailImageViewGeneratorCallback getDetailImageViewGeneratorCallback) {
+    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
+      @Override public void onGetDetailLoaded(ElementCache elementCache) {
+        if (elementCache != null && elementCache.getPreview() != null) {
+          getDetailImageViewGeneratorCallback.onGetImageLoaded(elementCache.getPreview().getImageUrl());
+        }
+      }
 
-    if (cachedElement != null && cachedElement.getPreview() != null) {
-      return cachedElement.getPreview().getImageUrl();
-    }
-
-    return null;
+      @Override public void onGetDetailFails(Exception e) {
+        e.printStackTrace();
+      }
+    });
   }
 
   private UiBaseContentData generateArticleDetailView(List<ArticleElement> elements) {

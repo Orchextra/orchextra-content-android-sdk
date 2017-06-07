@@ -49,8 +49,16 @@ public final class Ocm {
   /**
    * Get the app menus
    */
-  public static List<UiMenu> getMenus() {
-    return OCManager.getMenus();
+  public static void getMenus(OcmCallbacks.Menus menusCallback) {
+    OCManager.getMenus(new OCManagerCallbacks.Menus() {
+      @Override public void onMenusLoaded(List<UiMenu> menus) {
+        menusCallback.onMenusLoaded(menus);
+      }
+
+      @Override public void onMenusFails(Throwable e) {
+        menusCallback.onMenusFails(e);
+      }
+    });
   }
 
   /**
@@ -58,9 +66,20 @@ public final class Ocm {
    *
    * @param viewId It is the content url returned in the menus call.
    * @param filter To filter the content by a word
+   * @param sectionCallbacks callback
    */
-  public static UiGridBaseContentData generateGridView(String viewId, String filter) {
-    return OCManager.generateGridView(viewId, filter);
+  public static void generateSectionView(String viewId, String filter, OcmCallbacks.Section sectionCallbacks) {
+    OCManager.generateSectionView(viewId, filter, new OCManagerCallbacks.Section() {
+      @Override
+      public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+        sectionCallbacks.onSectionLoaded(uiGridBaseContentData);
+      }
+
+      @Override
+      public void onSectionFails(Exception e) {
+        sectionCallbacks.onSectionFails(e);
+      }
+    });
   }
 
   /**
@@ -119,13 +138,6 @@ public final class Ocm {
    */
   public static void bindUser(CrmUser crmUser) {
     OCManager.bindUser(crmUser);
-  }
-
-  /**
-   * Clear the cache of the sdk content
-   */
-  public static void clearCache() {
-    OCManager.clearCache();
   }
 
   /**
