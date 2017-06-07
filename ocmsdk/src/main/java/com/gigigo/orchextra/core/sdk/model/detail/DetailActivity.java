@@ -11,10 +11,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.model.detail.DetailPresenter;
 import com.gigigo.orchextra.core.controller.model.detail.DetailView;
-import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeWebviewActivity;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
@@ -34,7 +36,11 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
   private static final String EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL = "EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL";
 
   @Inject DetailPresenter presenter;
-
+  OnFinishViewListener onFinishViewListener = new OnFinishViewListener() {
+    @Override public void onFinish() {
+      finishView(isAppbarExpanded());
+    }
+  };
   private ImageView animationImageView;
   private UiDetailBaseContentData uiContentView;
 
@@ -134,7 +140,23 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
     if (!TextUtils.isEmpty(url)) {
       String generateImageUrl = ImageGenerator.generateImageUrl(url, width, height);
 
-      Glide.with(this).load(generateImageUrl).override(width, height).into(animationImageView);
+      supportPostponeEnterTransition();
+      
+      Glide.with(this).load(generateImageUrl).override(width, height).centerCrop()
+          .dontAnimate().listener(new RequestListener<String, GlideDrawable>() {
+        @Override
+        public boolean onException(Exception e, String model, Target<GlideDrawable> target,
+            boolean isFirstResource) {
+          supportStartPostponedEnterTransition();
+          return false;
+        }
+
+        @Override public boolean onResourceReady(GlideDrawable resource, String model,
+            Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+          supportStartPostponedEnterTransition();
+          return false;
+        }
+      }).into(animationImageView);
     }
   }
 
@@ -162,10 +184,4 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
 
     super.onDestroy();
   }
-
-  OnFinishViewListener onFinishViewListener = new OnFinishViewListener() {
-    @Override public void onFinish() {
-      finishView(isAppbarExpanded());
-    }
-  };
 }
