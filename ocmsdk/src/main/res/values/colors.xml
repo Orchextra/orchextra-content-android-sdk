@@ -2,8 +2,7 @@
 <resources>
   <color name="black">#000</color>
 
-  <color name="oc_button_color_pressed">#DFFF</color>
-  <color name="oc_button_color">#FFF</color>
+
 
   <!-- More content -->
   <color name="oc_background_more_content_layout">#807f7f</color>
