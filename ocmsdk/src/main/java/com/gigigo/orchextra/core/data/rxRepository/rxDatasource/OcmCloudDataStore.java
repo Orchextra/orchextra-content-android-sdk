@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
@@ -52,15 +53,41 @@ import orchextra.javax.inject.Singleton;
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
         .doOnNext(ocmCache::putSection)
         .doOnNext(apiSectionContentData -> {
-          Iterator<ApiElement> iterator = apiSectionContentData.getContent().getElements().iterator();
+          Iterator<ApiElement> iterator =
+              apiSectionContentData.getContent().getElements().iterator();
           while (iterator.hasNext()) {
             ApiElement apiElement = iterator.next();
             if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
-              ApiElementData apiElementData = new ApiElementData(apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
+              ApiElementData apiElementData = new ApiElementData(
+                  apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
+              //addImageToQueue(apiElementData);
               ocmCache.putDetail(apiElementData);
             }
           }
         });
+  }
+
+  private void addImageToQueue(ApiElementData apiElementData) {
+
+    if (apiElementData.getElement() != null) {
+      //Preview
+      if (apiElementData.getElement().getPreview() != null) {
+        ocmImageCache.add(apiElementData.getElement().getPreview().getImageUrl());
+      }
+      //Render
+      if (apiElementData.getElement().getRender() != null) {
+        Iterator<ApiArticleElement>
+            elementsIterator = apiElementData.getElement().getRender().getElements().iterator();
+        while (elementsIterator.hasNext()){
+          ApiArticleElement element = elementsIterator.next();
+          if (element.getRender()!=null && element.getRender().getImageUrl()!=null)
+            ocmImageCache.add(element.getRender().getImageUrl());
+        }
+      }
+    }
+
+
+    ocmImageCache.start();
   }
 
   @Override public Observable<ApiSectionContentData> searchByText(String section) {
