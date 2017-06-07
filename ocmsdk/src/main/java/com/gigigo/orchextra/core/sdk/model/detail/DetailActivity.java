@@ -17,6 +17,7 @@ import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeWebviewActivity;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.core.sdk.utils.swipeback.SwipeBackBaseInjectionActivity;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
@@ -24,7 +25,7 @@ import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 import orchextra.javax.inject.Inject;
 
-public class DetailActivity extends BaseInjectionActivity<DetailActivityComponent>
+public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivityComponent>
     implements DetailView {
 
   private static final String EXTRA_ELEMENT_URL = "EXTRA_ELEMENT_URL";
