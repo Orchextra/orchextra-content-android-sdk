@@ -77,6 +77,11 @@ public class ApiMapperModule {
         new ApiMenuContentListResponseMapper(apiMenuContentMapper, apiElementCacheItemMapper));
   }
 
+  @Singleton @Provides ApiContentDataResponseMapper provideApiContentDataResponseMapper(ApiContentItemMapper apiContentItemMapper,
+      ApiElementCacheMapper apiElementCacheMapper) {
+    return new ApiContentDataResponseMapper(apiContentItemMapper, apiElementCacheMapper);
+  }
+
   @Singleton @Provides ApiContentItemPatternMapper provideApiContentItemPatternMapper() {
     return new ApiContentItemPatternMapper();
   }

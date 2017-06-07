@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
@@ -49,8 +50,9 @@ public class HorizontalItemPageFragment extends Fragment {
 
   private void setImage() {
     if(cell!=null) {
+
       String imageUrl = cell.getData().getSectionView().getImageUrl();
-      imageLoader.load(imageUrl).into(horizontalItemImageView);
+      Glide.with(getContext()).load(imageUrl).into(horizontalItemImageView);
     }
   }
 

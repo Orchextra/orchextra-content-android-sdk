@@ -11,6 +11,7 @@
       android:layout_height="match_parent"
       android:orientation="vertical"
       android:layout_gravity="center"
+      android:visibility="gone"
       >
     <TextView
         android:layout_gravity="center"
@@ -19,6 +20,26 @@
         android:layout_margin="100dp"
         android:layout_height="match_parent"
         android:text="Empty View"
+        android:textSize="20dp"
+        android:textColor="#FFF"
+        />
+  </FrameLayout>
+
+  <FrameLayout
+      android:id="@+id/errorViewLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:layout_gravity="center"
+      android:visibility="gone"
+      >
+    <TextView
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_margin="100dp"
+        android:layout_height="match_parent"
+        android:text="Error getting content..."
         android:textSize="20dp"
         android:textColor="#FFF"
         />

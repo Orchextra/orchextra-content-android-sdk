@@ -85,15 +85,32 @@ public final class OCManager {
     }
   }
 
-  static List<UiMenu> getMenus() {
+  static void getMenus(final OCManagerCallbacks.Menus menusCallback) {
     if (instance != null) {
-      return instance.ocmViewGenerator.getMenu();
+      instance.ocmViewGenerator.getMenu(new OcmViewGenerator.GetMenusViewGeneratorCallback() {
+        @Override public void onGetMenusLoaded(List<UiMenu> menus) {
+          menusCallback.onMenusLoaded(menus);
+        }
+
+        @Override public void onGetMenusFails(Throwable e) {
+          menusCallback.onMenusFails(e);
+        }
+      });
     }
-    return null;
   }
 
-  static UiGridBaseContentData generateGridView(String viewId, String filter) {
-    return instance.ocmViewGenerator.generateGridView(viewId, filter);
+  static void generateSectionView(String viewId, String filter, final OCManagerCallbacks.Section sectionCallback) {
+    instance.ocmViewGenerator.generateSectionView(viewId, filter, new OcmViewGenerator.GetSectionViewGeneratorCallback() {
+      @Override
+      public void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData) {
+        sectionCallback.onSectionLoaded(uiGridBaseContentData);
+      }
+
+      @Override
+      public void onSectionViewFails(Exception e) {
+        sectionCallback.onSectionFails(e);
+      }
+    });
   }
 
   static UiDetailBaseContentData generateDetailView(String elementUrl) {
@@ -280,13 +297,6 @@ public final class OCManager {
       returnOcCustomSchemeCallback(customScheme);
     }
   };
-
-  public static void clearCache() {
-    OCManager instance = OCManager.instance;
-    if (instance != null) {
-      instance.ocmController.clearCache();
-    }
-  }
 
   public static void start() {
     Orchextra.start();

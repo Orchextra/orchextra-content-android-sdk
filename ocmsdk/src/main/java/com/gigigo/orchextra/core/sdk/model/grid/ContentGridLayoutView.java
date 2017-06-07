@@ -12,6 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.core.controller.model.grid.ContentView;
 import com.gigigo.orchextra.core.controller.model.grid.ContentViewPresenter;
@@ -225,19 +229,17 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           DeviceUtils.calculateRealWidthDevice(context),
           DeviceUtils.calculateRealHeightDevice(context));
 
-      imageLoader.load(imageUrl).into(new ImageLoaderCallback() {
-        @Override public void onSuccess(Bitmap bitmap) {
+      Glide.with(this).load(imageUrl).into(new SimpleTarget<GlideDrawable>() {
+        @Override public void onResourceReady(GlideDrawable resource,
+            GlideAnimation<? super GlideDrawable> glideAnimation) {
+          imageViewToExpandInDetail.setImageDrawable(resource);
+        }
+
+        @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
+          super.onLoadFailed(e, errorDrawable);
           clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
         }
-
-        @Override public void onError(Drawable drawable) {
-          clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
-        }
-
-        @Override public void onLoading() {
-
-        }
-      }, imageViewToExpandInDetail);
+      });
     }
 
     DetailActivity.open(activity, elementUrl, urlImageToExpand,

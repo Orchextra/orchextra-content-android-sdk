@@ -50,6 +50,7 @@ public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
       articleHeaderImage.setLayoutParams(lp);
     }
 
+
     byte[] imageThumbBytes = Base64.decode(imageThumb, Base64.DEFAULT);
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, realWidthDevice);

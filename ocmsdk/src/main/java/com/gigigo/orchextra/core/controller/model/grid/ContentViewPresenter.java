@@ -3,25 +3,19 @@ package com.gigigo.orchextra.core.controller.model.grid;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import com.gigigo.interactorexecutor.base.Presenter;
-import com.gigigo.interactorexecutor.base.invoker.InteractorExecution;
-import com.gigigo.interactorexecutor.base.invoker.InteractorInvoker;
-import com.gigigo.interactorexecutor.base.invoker.InteractorResult;
-import com.gigigo.interactorexecutor.base.viewinjector.GenericViewInjector;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.multiplegridrecyclerview.entities.CellBlankElement;
+import com.gigigo.orchextra.control.presenters.base.Presenter;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
-import com.gigigo.orchextra.core.domain.interactors.errors.GenericResponseDataError;
-import com.gigigo.orchextra.core.domain.interactors.errors.NoNetworkConnectionError;
-import com.gigigo.orchextra.core.domain.interactors.home.GetSectionDataInteractor;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import java.util.ArrayList;
@@ -29,8 +23,6 @@ import java.util.List;
 
 public class ContentViewPresenter extends Presenter<ContentView> {
 
-  private final InteractorInvoker interactorInvoker;
-  private final GetSectionDataInteractor getHomeDataInteractor;
   private final Authoritation authoritation;
   private final OcmController ocmController;
 
@@ -39,14 +31,10 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private List<Cell> listedCellContentDataList;
   private int padding;
 
-  public ContentViewPresenter(GenericViewInjector viewInjector, OcmController ocmController,
-      InteractorInvoker interactorInvoker, GetSectionDataInteractor getHomeDataInteractor,
+  public ContentViewPresenter(OcmController ocmController,
       Authoritation authoritation) {
-    super(viewInjector);
 
     this.ocmController = ocmController;
-    this.interactorInvoker = interactorInvoker;
-    this.getHomeDataInteractor = getHomeDataInteractor;
     this.authoritation = authoritation;
   }
 
@@ -68,46 +56,44 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private void loadSection(final boolean useCache) {
     getView().showProgressView(true);
 
-    getHomeDataInteractor.setSection(section);
-    getHomeDataInteractor.setUseCache(useCache);
-
-    new InteractorExecution<>(getHomeDataInteractor).result(new InteractorResult<ContentItem>() {
-
-      @Override public void onResult(ContentItem contentItem) {
-        if (contentItem != null
-            && contentItem.getLayout() != null
-            && contentItem.getElements() != null) {
-
-          listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
-
-          if (listedCellContentDataList.size() != 0) {
-            getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
-            getView().showEmptyView(false);
-            getView().showErrorView(false);
-          } else {
-            getView().showEmptyView(true);
-          }
-        } else {
-          getView().showEmptyView(true);
-        }
-
-        getView().showProgressView(false);
+    ocmController.getSection(!useCache, section, new OcmController.GetSectionControllerCallback() {
+      @Override public void onGetSectionLoaded(ContentData contentData) {
+        ContentItem contentItem = contentData.getContent();
+        renderContentItem(contentItem);
       }
-    }).error(NoNetworkConnectionError.class, new InteractorResult<NoNetworkConnectionError>() {
-      @Override public void onResult(NoNetworkConnectionError result) {
-        getView().showProgressView(false);
-        if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
-          getView().showErrorView(true);
-        }
+
+      @Override public void onGetSectionFails(Exception e) {
+        renderError();
       }
-    }).error(GenericResponseDataError.class, new InteractorResult<GenericResponseDataError>() {
-      @Override public void onResult(GenericResponseDataError result) {
-        getView().showProgressView(false);
-        if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
-          getView().showErrorView(true);
-        }
+    });
+  }
+
+  private void renderContentItem(ContentItem contentItem) {
+    if (contentItem != null
+        && contentItem.getLayout() != null
+        && contentItem.getElements() != null) {
+
+      listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
+
+      if (listedCellContentDataList.size() != 0) {
+        getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
+        getView().showEmptyView(false);
+        getView().showErrorView(false);
+      } else {
+        getView().showEmptyView(true);
       }
-    }).execute(interactorInvoker);
+    } else {
+      getView().showEmptyView(true);
+    }
+
+    getView().showProgressView(false);
+  }
+
+  private void renderError() {
+    getView().showProgressView(false);
+    if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
+      getView().showErrorView(true);
+    }
   }
 
   private List<Cell> checkTypeAndCalculateCelListedContent(ContentItem contentItem) {
@@ -195,20 +181,27 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
       Element element = (Element) listedCellContentDataList.get(position).getData();
 
-      ElementCache cachedElement = ocmController.getCachedElement(element.getElementUrl());
+      ocmController.getDetails(false, element.getElementUrl(),
+          new OcmController.GetDetailControllerCallback() {
+            @Override public void onGetDetailLoaded(ElementCache elementCache) {
+              String imageUrlToExpandInPreview = null;
+              if (elementCache != null && elementCache.getPreview() != null) {
+                imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
+              }
 
-      String imageUrlToExpandInPreview = null;
-      if (cachedElement != null && cachedElement.getPreview() != null) {
-        imageUrlToExpandInPreview = cachedElement.getPreview().getImageUrl();
-      }
+              if (element != null && checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
+                OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
+                getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
+                    activity, view);
+              } else {
+                getView().showAuthDialog();
+              }
+            }
 
-      if (element != null && checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
-        OCManager.notifyEvent(OcmEvent.CELL_CLICKED, cachedElement);
-        getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview, activity,
-            view);
-      } else {
-        getView().showAuthDialog();
-      }
+            @Override public void onGetDetailFails(Exception e) {
+              e.printStackTrace();
+            }
+          });
     }
   }
 

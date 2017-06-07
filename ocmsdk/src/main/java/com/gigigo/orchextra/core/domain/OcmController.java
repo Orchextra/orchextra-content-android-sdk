@@ -6,18 +6,38 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 
 public interface OcmController {
+  void getMenu(boolean forceReload, final GetMenusControllerCallback getMenusCallback);
 
-  MenuContentData getMenu(boolean useCache);
+  void getSection(boolean forceReload, final String section,
+      final GetSectionControllerCallback getSectionControllerCallback);
 
-  ElementCache getCachedElement(String elementUrl);
+  void getDetails(boolean forceReload, final String elementUrl,
+      final GetDetailControllerCallback getDetailControllerCallback);
 
-  ElementCache getElementCacheBySection(String section);
+  void search(String textToSearch, SearchControllerCallback searchControllerCallback);
 
-  String getContentUrlBySection(String section);
+  // Callbacks
+  interface GetMenusControllerCallback {
+    void onGetMenusLoaded(MenuContentData menus);
 
-  ContentItem getSectionContentById(String section);
+    void onGetMenusFails(Exception e);
+  }
 
-  void saveSectionContentData(String section, ContentData contentData);
+  interface GetSectionControllerCallback {
+    void onGetSectionLoaded(ContentData contentData);
 
-  void clearCache();
+    void onGetSectionFails(Exception e);
+  }
+
+  interface GetDetailControllerCallback {
+    void onGetDetailLoaded(ElementCache elementCache);
+
+    void onGetDetailFails(Exception e);
+  }
+
+  interface SearchControllerCallback {
+    void onSearchLoaded(ContentData contentData);
+
+    void onSearchFails(Exception e);
+  }
 }

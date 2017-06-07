@@ -110,3 +110,7 @@
 }
 
 -keepclasseswithmembernames interface * { @me.panavtec.threaddecoratedview.views.qualifiers.NotDecorated *; }
+
+#https://github.com/evant/gradle-retrolambda#proguard
+-dontwarn java.lang.invoke.*
+-dontwarn **$$Lambda$*

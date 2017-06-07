@@ -168,7 +168,7 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
 
     if (context instanceof Activity) {
       if (presenter != null) {
-        presenter.detachView(this);
+        presenter.detachView();
       }
       onFinishListener = null;
       ((Activity) context).finish();
