@@ -10,7 +10,7 @@ import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 
 //'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
 public abstract class SwipeBackBaseInjectionActivity<T> extends BaseInjectionActivity<T>
-    implements SwipeBackLayout.SwipeBackListener {
+    implements SwipeBackListener {
 
   private static final DragEdge DEFAULT_DRAG_EDGE = DragEdge.LEFT;
 
@@ -26,7 +26,7 @@ public abstract class SwipeBackBaseInjectionActivity<T> extends BaseInjectionAct
   private View getContainer() {
     RelativeLayout container = new RelativeLayout(this);
     swipeBackLayout = new SwipeBackLayout(this);
-    swipeBackLayout.setDragEdge(DEFAULT_DRAG_EDGE);
+    //swipeBackLayout.setDragEdge(DEFAULT_DRAG_EDGE);
     swipeBackLayout.setOnSwipeBackListener(this);
     ivShadow = new ImageView(this);
     //ivShadow.setBackgroundColor(getResources().getColor(R.color.black_p50));
@@ -41,7 +41,7 @@ public abstract class SwipeBackBaseInjectionActivity<T> extends BaseInjectionAct
   }
 
   public void setDragEdge(DragEdge dragEdge) {
-    swipeBackLayout.setDragEdge(dragEdge);
+    //swipeBackLayout.setDragEdge(dragEdge);
   }
 
   public SwipeBackLayout getSwipeBackLayout() {

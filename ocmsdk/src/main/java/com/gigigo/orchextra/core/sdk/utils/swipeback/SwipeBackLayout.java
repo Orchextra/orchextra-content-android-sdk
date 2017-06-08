@@ -2,6 +2,8 @@ package com.gigigo.orchextra.core.sdk.utils.swipeback;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.ViewDragHelper;
@@ -23,66 +25,30 @@ public class SwipeBackLayout extends ViewGroup {
 
   private static final float BACK_FACTOR = 0.5f;
 
-  private DragEdge dragEdge = DragEdge.TOP;
-
   private final ViewDragHelper viewDragHelper;
-
+  float lastY = 0;
+  float newY = 0;
+  float offsetY = 0;
+  float lastX = 0;
+  float newX = 0;
+  float offsetX = 0;
   private View target;
-
   private View scrollChild;
-
   private int verticalDragRange = 0;
-
   private int horizontalDragRange = 0;
-
   private int draggingState = 0;
-
   private int draggingOffset;
-
   private float firstX = -1, firstY = -1;
-
-  private boolean allowOnlyBorderSwipe = true;
-
   private float minPositionBorderSwipe = 200;
-
   /**
    * Whether allow to pull this layout.
    */
   private boolean enablePullToBack = true;
-
   /**
    * the anchor of calling finish.
    */
   private float finishAnchor = 300;
-
-  /**
-   * Set the anchor of calling finish.
-   */
-  public void setFinishAnchor(float offset) {
-    finishAnchor = offset;
-  }
-
-  private boolean enableFlingBack = true;
-
-  /**
-   * Whether allow to finish activity by fling the layout.
-   *
-   * @param b
-   */
-  public void setEnableFlingBack(boolean b) {
-    enableFlingBack = b;
-  }
-
   private SwipeBackListener swipeBackListener;
-
-  @Deprecated
-  public void setOnPullToBackListener(SwipeBackListener listener) {
-    swipeBackListener = listener;
-  }
-
-  public void setOnSwipeBackListener(SwipeBackListener listener) {
-    swipeBackListener = listener;
-  }
 
   public SwipeBackLayout(Context context) {
     this(context, null);
@@ -95,28 +61,17 @@ public class SwipeBackLayout extends ViewGroup {
     chkDragable();
   }
 
-  float lastY = 0;
-  float newY = 0;
-  float offsetY = 0;
-
-  float lastX = 0;
-  float newX = 0;
-  float offsetX = 0;
+  public void setOnSwipeBackListener(SwipeBackListener listener) {
+    swipeBackListener = listener;
+  }
 
   private void chkDragable() {
     setOnTouchListener(new View.OnTouchListener() {
-      @Override
-      public boolean onTouch(View view, MotionEvent motionEvent) {
+      @Override public boolean onTouch(View view, MotionEvent motionEvent) {
 
         if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
           lastX = motionEvent.getRawX();
           newY = motionEvent.getRawY();
-
-          /** 1- Added firstX and firstY to saved the down point */
-          if (firstX == -1 || firstY == -1) {
-            firstX = lastX;
-            firstY = lastY;
-          }
 
           offsetY = Math.abs(newY - lastY);
           lastY = newY;
@@ -124,15 +79,7 @@ public class SwipeBackLayout extends ViewGroup {
           offsetX = Math.abs(newX - lastX);
           lastX = newX;
 
-          switch (dragEdge) {
-            case TOP:
-            case BOTTOM:
-              setEnablePullToBack(offsetY > offsetX);
-            case LEFT:
-            case RIGHT:
-              setEnablePullToBack(offsetY < offsetX);
-              break;
-          }
+          setEnablePullToBack(offsetY < offsetX);
         } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
           firstX = -1;
           firstY = -1;
@@ -141,14 +88,6 @@ public class SwipeBackLayout extends ViewGroup {
         return false;
       }
     });
-  }
-
-  public void setScrollChild(View view) {
-    scrollChild = view;
-  }
-
-  public void setDragEdge(DragEdge dragEdge) {
-    this.dragEdge = dragEdge;
   }
 
   public void setEnablePullToBack(boolean b) {
@@ -169,15 +108,12 @@ public class SwipeBackLayout extends ViewGroup {
         } else {
           scrollChild = target;
         }
-
       }
     }
   }
 
   /**
    * Find out the scrollable child view from a ViewGroup.
-   *
-   * @param viewGroup
    */
   private void findScrollView(ViewGroup viewGroup) {
     scrollChild = viewGroup;
@@ -186,16 +122,21 @@ public class SwipeBackLayout extends ViewGroup {
       View child;
       for (int i = 0; i < count; i++) {
         child = viewGroup.getChildAt(i);
-        if (child instanceof AbsListView || child instanceof ScrollView || child instanceof ViewPager || child instanceof WebView) {
+        if (child instanceof AbsListView
+            || child instanceof ScrollView
+            || child instanceof ViewPager
+            || child instanceof WebView
+            || child instanceof CoordinatorLayout) {
           scrollChild = child;
           return;
+        } else if (scrollChild != null && child instanceof ViewGroup) {
+          findScrollView((ViewGroup) child);
         }
       }
     }
   }
 
-  @Override
-  protected void onLayout(boolean changed, int l, int t, int r, int b) {
+  @Override protected void onLayout(boolean changed, int l, int t, int r, int b) {
     int width = getMeasuredWidth();
     int height = getMeasuredHeight();
     if (getChildCount() == 0) return;
@@ -211,71 +152,84 @@ public class SwipeBackLayout extends ViewGroup {
     child.layout(childLeft, childTop, childRight, childBottom);
   }
 
-  @Override
-  protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+  @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
     super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     if (getChildCount() > 1) {
       throw new IllegalStateException("SwipeBackLayout must contains only one direct child.");
     }
 
     if (getChildCount() > 0) {
-      int measureWidth = MeasureSpec.makeMeasureSpec(getMeasuredWidth() - getPaddingLeft() - getPaddingRight(), MeasureSpec.EXACTLY);
-      int measureHeight = MeasureSpec.makeMeasureSpec(getMeasuredHeight() - getPaddingTop() - getPaddingBottom(), MeasureSpec.EXACTLY);
+      int measureWidth =
+          MeasureSpec.makeMeasureSpec(getMeasuredWidth() - getPaddingLeft() - getPaddingRight(),
+              MeasureSpec.EXACTLY);
+      int measureHeight =
+          MeasureSpec.makeMeasureSpec(getMeasuredHeight() - getPaddingTop() - getPaddingBottom(),
+              MeasureSpec.EXACTLY);
       getChildAt(0).measure(measureWidth, measureHeight);
     }
   }
 
-  @Override
-  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+  @Override protected void onSizeChanged(int w, int h, int oldw, int oldh) {
     super.onSizeChanged(w, h, oldw, oldh);
     verticalDragRange = h;
     horizontalDragRange = w;
 
-    switch (dragEdge) {
-      case TOP:
-      case BOTTOM:
-        finishAnchor = finishAnchor > 0 ? finishAnchor : verticalDragRange * BACK_FACTOR;
-        break;
-      case LEFT:
-      case RIGHT:
-        finishAnchor = finishAnchor > 0 ? finishAnchor : horizontalDragRange * BACK_FACTOR;
-        break;
-    }
+    finishAnchor = finishAnchor > 0 ? finishAnchor : horizontalDragRange * BACK_FACTOR;
   }
 
   private int getDragRange() {
-    switch (dragEdge) {
-      case TOP:
-      case BOTTOM:
-        return verticalDragRange;
-      case LEFT:
-      case RIGHT:
-        return horizontalDragRange;
-      default:
-        return verticalDragRange;
-    }
+    return horizontalDragRange;
   }
 
-  @Override
-  public boolean onInterceptTouchEvent(MotionEvent ev) {
+  @Override public boolean onInterceptTouchEvent(MotionEvent event) {
     boolean handled = false;
     ensureTarget();
     if (isEnabled()) {
-      handled = viewDragHelper.shouldInterceptTouchEvent(ev);
+      handled = viewDragHelper.shouldInterceptTouchEvent(event);
     } else {
       viewDragHelper.cancel();
     }
-    return !handled ? super.onInterceptTouchEvent(ev) : handled;
+
+    if (firstX == -1 || firstY == -1) {
+      firstX = event.getX();
+      firstY = event.getY();
+    }
+
+    boolean isSwipeInAxisX = Math.abs(event.getX() - firstX) > Math.abs(event.getY() - firstY);
+
+    if (event.getAction() == MotionEvent.ACTION_UP) {
+      firstX = -1;
+      firstY = -1;
+      return false;
+    }
+
+    if (event.getX() > minPositionBorderSwipe && isSwipeInAxisX) return false;
+
+    return handled || super.onInterceptTouchEvent(event);
   }
 
-  @Override
-  public boolean onTouchEvent(MotionEvent event) {
+  @Override public boolean onTouchEvent(MotionEvent event) {
     viewDragHelper.processTouchEvent(event);
+
+    if (firstX == -1 || firstY == -1) {
+      firstX = event.getX();
+      firstY = event.getY();
+    }
+
+    boolean isSwipeInAxisX = Math.abs(event.getX() - firstX) > Math.abs(event.getY() - firstY);
+
+    if (event.getAction() == MotionEvent.ACTION_UP) {
+      firstX = -1;
+      firstY = -1;
+      return false;
+    }
+
+    if (event.getX() > minPositionBorderSwipe && isSwipeInAxisX) return false;
+
     return true;
   }
 
-  @Override
-  public void computeScroll() {
+  @Override public void computeScroll() {
     if (viewDragHelper.continueSettling(true)) {
       ViewCompat.postInvalidateOnAnimation(this);
     }
@@ -283,10 +237,6 @@ public class SwipeBackLayout extends ViewGroup {
 
   public boolean canChildScrollUp() {
     return ViewCompat.canScrollVertically(scrollChild, -1);
-  }
-
-  public boolean canChildScrollDown() {
-    return ViewCompat.canScrollVertically(scrollChild, 1);
   }
 
   private boolean canChildScrollRight() {
@@ -305,83 +255,41 @@ public class SwipeBackLayout extends ViewGroup {
 
   private class ViewDragHelperCallBack extends ViewDragHelper.Callback {
 
-    @Override
-    public boolean tryCaptureView(View child, int pointerId) {
+    @Override public boolean tryCaptureView(View child, int pointerId) {
       return child == target && enablePullToBack;
     }
 
-    @Override
-    public int getViewVerticalDragRange(View child) {
+    @Override public int getViewVerticalDragRange(View child) {
       return verticalDragRange;
     }
 
-    @Override
-    public int getViewHorizontalDragRange(View child) {
+    @Override public int getViewHorizontalDragRange(View child) {
       return horizontalDragRange;
     }
 
-    @Override
-    public int clampViewPositionVertical(View child, int top, int dy) {
+    @Override public int clampViewPositionHorizontal(View child, int left, int dx) {
 
       int result = 0;
 
-      if (allowOnlyBorderSwipe) {
-        if (dragEdge == DragEdge.TOP) {
-          if (firstX > minPositionBorderSwipe) return result;
-        } else if (dragEdge == DragEdge.BOTTOM) {
-          if (firstX < verticalDragRange - minPositionBorderSwipe) return result;
-        }
-      }
-
-      int topBound;
-      int bottomBound;
-      if (dragEdge == DragEdge.TOP && !canChildScrollUp() && top > 0) {
-        topBound = getPaddingTop();
-        bottomBound = verticalDragRange;
-        result = Math.min(Math.max(top, topBound), bottomBound);
-      } else if (dragEdge == DragEdge.BOTTOM && !canChildScrollDown() && top < 0) {
-        topBound = -verticalDragRange;
-        bottomBound = getPaddingTop();
-        result = Math.min(Math.max(top, topBound), bottomBound);
-      }
-
-      return result;
-    }
-
-    @Override
-    public int clampViewPositionHorizontal(View child, int left, int dx) {
-
-      int result = 0;
-
-      if (allowOnlyBorderSwipe) {
-        if (dragEdge == DragEdge.LEFT) {
-          if (firstX > minPositionBorderSwipe) return result;
-        } else if (dragEdge == DragEdge.RIGHT) {
-          if (firstX < horizontalDragRange - minPositionBorderSwipe) return result;
-        }
-      }
+      if (firstX < 0 || firstX > minPositionBorderSwipe) return result;
 
       int leftBound;
       int rightBound;
-      if (dragEdge == DragEdge.LEFT && !canChildScrollRight() && left > 0) {
+      if (!canChildScrollRight() && left > 0) {
         leftBound = getPaddingLeft();
         rightBound = horizontalDragRange;
-        result = Math.min(Math.max(left, leftBound), rightBound);
-      } else if (dragEdge == DragEdge.RIGHT && !canChildScrollLeft() && left < 0) {
-        leftBound = -horizontalDragRange;
-        rightBound = getPaddingLeft();
         result = Math.min(Math.max(left, leftBound), rightBound);
       }
 
       return result;
     }
 
-    @Override
-    public void onViewDragStateChanged(int state) {
+    @Override public void onViewDragStateChanged(int state) {
       if (state == draggingState) return;
 
-      if ((draggingState == ViewDragHelper.STATE_DRAGGING || draggingState == ViewDragHelper.STATE_SETTLING) &&
-          state == ViewDragHelper.STATE_IDLE) {
+      if ((draggingState == ViewDragHelper.STATE_DRAGGING
+          || draggingState == ViewDragHelper.STATE_SETTLING)
+          && state == ViewDragHelper.STATE_IDLE) {
         // the view stopped from moving.
         if (draggingOffset == getDragRange()) {
           finish();
@@ -393,18 +301,7 @@ public class SwipeBackLayout extends ViewGroup {
 
     @Override
     public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
-      switch (dragEdge) {
-        case TOP:
-        case BOTTOM:
-          draggingOffset = Math.abs(top);
-          break;
-        case LEFT:
-        case RIGHT:
-          draggingOffset = Math.abs(left);
-          break;
-        default:
-          break;
-      }
+      draggingOffset = Math.abs(left);
 
       //The proportion of the sliding.
       float fractionAnchor = (float) draggingOffset / finishAnchor;
@@ -418,15 +315,14 @@ public class SwipeBackLayout extends ViewGroup {
       }
     }
 
-    @Override
-    public void onViewReleased(View releasedChild, float xvel, float yvel) {
+    @Override public void onViewReleased(View releasedChild, float xvel, float yvel) {
       if (draggingOffset == 0) return;
 
       if (draggingOffset == getDragRange()) return;
 
       boolean isBack = false;
 
-      if (enableFlingBack && backBySpeed(xvel, yvel)) {
+      if (backBySpeed(xvel, yvel)) {
         isBack = !canChildScrollUp();
       } else if (draggingOffset >= finishAnchor) {
         isBack = true;
@@ -434,70 +330,46 @@ public class SwipeBackLayout extends ViewGroup {
         isBack = false;
       }
 
-      int finalLeft;
-      int finalTop;
-      switch (dragEdge) {
-        case LEFT:
-          finalLeft = isBack ? horizontalDragRange : 0;
-          smoothScrollToX(finalLeft);
-          break;
-        case RIGHT:
-          finalLeft = isBack ? -horizontalDragRange : 0;
-          smoothScrollToX(finalLeft);
-          break;
-        case TOP:
-          finalTop = isBack ? verticalDragRange : 0;
-          smoothScrollToY(finalTop);
-          break;
-        case BOTTOM:
-          finalTop = isBack ? -verticalDragRange : 0;
-          smoothScrollToY(finalTop);
-          break;
+      int finalLeft = isBack ? horizontalDragRange : 0;
+      smoothScrollToX(finalLeft);
+
+      AppBarLayout appBarLayout = findAppBarLayout((ViewGroup) target);
+      if (appBarLayout != null && Math.abs(verticalDragRange) < appBarLayout.getTotalScrollRange()) {
+        if (Math.abs(verticalDragRange) / 2 >= appBarLayout.getTotalScrollRange()) {
+          appBarLayout.setExpanded(false, true);
+        } else {
+          appBarLayout.setExpanded(true, true);
+        }
       }
-
     }
-  }
 
-  private boolean backBySpeed(float xvel, float yvel) {
-    switch (dragEdge) {
-      case TOP:
-      case BOTTOM:
-        if (Math.abs(yvel) > Math.abs(xvel) && Math.abs(yvel) > AUTO_FINISHED_SPEED_LIMIT) {
-          return dragEdge == DragEdge.TOP ? !canChildScrollUp() : !canChildScrollDown();
+    private AppBarLayout findAppBarLayout(ViewGroup viewGroup) {
+      scrollChild = viewGroup;
+      if (viewGroup.getChildCount() > 0) {
+        int count = viewGroup.getChildCount();
+        View child;
+        for (int i = 0; i < count; i++) {
+          child = viewGroup.getChildAt(i);
+          if (child instanceof AppBarLayout) {
+            return (AppBarLayout) child;
+          } else if (scrollChild != null && child instanceof ViewGroup) {
+            return findAppBarLayout((ViewGroup) child);
+          }
         }
-        break;
-      case LEFT:
-      case RIGHT:
-        if (Math.abs(xvel) > Math.abs(yvel) && Math.abs(xvel) > AUTO_FINISHED_SPEED_LIMIT) {
-          return dragEdge == DragEdge.LEFT ? !canChildScrollLeft() : !canChildScrollRight();
-        }
-        break;
+      }
+      return null;
     }
-    return false;
-  }
 
-  private void smoothScrollToX(int finalLeft) {
-    if (viewDragHelper.settleCapturedViewAt(finalLeft, 0)) {
-      ViewCompat.postInvalidateOnAnimation(SwipeBackLayout.this);
+    private boolean backBySpeed(float xvel, float yvel) {
+      return Math.abs(xvel) > Math.abs(yvel)
+          && Math.abs(xvel) > AUTO_FINISHED_SPEED_LIMIT
+          && !canChildScrollLeft();
     }
-  }
 
-  private void smoothScrollToY(int finalTop) {
-    if (viewDragHelper.settleCapturedViewAt(0, finalTop)) {
-      ViewCompat.postInvalidateOnAnimation(SwipeBackLayout.this);
+    private void smoothScrollToX(int finalLeft) {
+      if (viewDragHelper.settleCapturedViewAt(finalLeft, 0)) {
+        ViewCompat.postInvalidateOnAnimation(SwipeBackLayout.this);
+      }
     }
   }
-
-  public interface SwipeBackListener {
-
-    /**
-     * Return scrolled fraction of the layout.
-     *
-     * @param fractionAnchor relative to the anchor.
-     * @param fractionScreen relative to the screen.
-     */
-    void onViewPositionChanged(float fractionAnchor, float fractionScreen);
-
-  }
-
 }
