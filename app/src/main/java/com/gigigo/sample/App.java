@@ -56,6 +56,7 @@ public class App extends MultiDexApplication {
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
         .setContentLanguage("EN")
+        .setOxSenderId("117687721829")
         .setOnDoRequiredLoginCallback(onDoRequiredLoginCallback)
         .setOnEventCallback(onEventCallback);
 
