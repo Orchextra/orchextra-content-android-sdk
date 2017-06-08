@@ -55,7 +55,7 @@ public class ArticleImageView extends ArticleBaseView<ArticleImageElement> {
 
     Glide.with(context)
         .load(generatedImageUrl)
-        .priority(Priority.IMMEDIATE)
+        .priority(Priority.NORMAL)
         .thumbnail(Glide.with(context).load(imageThumbBytes))
         .dontAnimate()
         .into(articleImagePlaceholder);

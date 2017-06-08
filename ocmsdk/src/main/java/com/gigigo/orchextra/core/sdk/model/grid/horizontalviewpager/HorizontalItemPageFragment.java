@@ -55,7 +55,7 @@ public class HorizontalItemPageFragment extends Fragment {
       String imageUrl = cell.getData().getSectionView().getImageUrl();
       Glide.with(getContext())
           .load(imageUrl)
-          .priority(Priority.IMMEDIATE)
+          .priority(Priority.NORMAL)
           .into(horizontalItemImageView);
     }
   }

@@ -70,7 +70,7 @@ public class CardImageDataView extends CardDataView {
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, widthDevice);
 
-    Glide.with(getContext()).load(generatedImageUrl).priority(Priority.IMMEDIATE).into(cardImagePlaceholder);
+    Glide.with(getContext()).load(generatedImageUrl).priority(Priority.NORMAL).into(cardImagePlaceholder);
   }
 
   public void setImageLoader(ImageLoader imageLoader) {

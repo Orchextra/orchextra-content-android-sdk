@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.util.Log;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -75,9 +76,17 @@ import orchextra.javax.inject.Singleton;
 
     private void downloadImage(final String url) {
       Log.v("START OcmImageCache -> ", url);
+      //Glide.with(mContext)
+      //    .load(url)
+      //    .priority(Priority.LOW)
+      //    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+      //    .skipMemoryCache(true)
+      //    .preload();
       Glide.with(mContext)
           .load(url)
           .priority(Priority.LOW)
+          .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+          .skipMemoryCache(true)
           .into(new SimpleTarget<GlideDrawable>() {
         @Override public void onResourceReady(GlideDrawable resource,
             GlideAnimation<? super GlideDrawable> glideAnimation) {

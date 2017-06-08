@@ -54,7 +54,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                       mainLayout.getHeight());
 
               Glide.with(context)
-                  .load(generatedImageUrl).priority(Priority.IMMEDIATE)
+                  .load(generatedImageUrl).priority(Priority.NORMAL)
                   .thumbnail(Glide.with(context).load(imageByteArray))
                   .dontAnimate()
                   .into(imageView);

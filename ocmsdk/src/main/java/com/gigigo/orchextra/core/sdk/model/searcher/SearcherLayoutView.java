@@ -184,7 +184,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
           DeviceUtils.calculateRealWidthDevice(context),
           DeviceUtils.calculateRealHeightDevice(context));
 
-      Glide.with(getContext()).load(imageUrl).priority(Priority.IMMEDIATE).into(imageViewToExpand);
+      Glide.with(getContext()).load(imageUrl).priority(Priority.NORMAL).into(imageViewToExpand);
     }
 
     DetailActivity.open(activity, elementUrl, imageUrl,

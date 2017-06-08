@@ -127,7 +127,7 @@ public class PreviewContentDataView extends LinearLayout {
         ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(context),
             DeviceUtils.calculateRealHeightDevice(context));
 
-    Glide.with(getContext()).load(generatedImageUrl).priority(Priority.IMMEDIATE).into(previewImage);
+    Glide.with(getContext()).load(generatedImageUrl).priority(Priority.NORMAL).into(previewImage);
   }
 
   private void setListeners() {

@@ -232,7 +232,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
       Glide.with(this)
           .load(imageUrl)
-          .priority(Priority.IMMEDIATE)
+          .priority(Priority.NORMAL)
           .into(new SimpleTarget<GlideDrawable>() {
             @Override public void onResourceReady(GlideDrawable resource,
                 GlideAnimation<? super GlideDrawable> glideAnimation) {

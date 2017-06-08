@@ -134,7 +134,7 @@ public class PreviewContentData extends UiBaseContentData {
               DeviceUtils.calculateRealHeightDevice(context));
       Log.v("imageurl",""+generatedImageUrl);
 
-      Glide.with(this).load(generatedImageUrl).priority(Priority.IMMEDIATE).into(previewImage);
+      Glide.with(this).load(generatedImageUrl).priority(Priority.NORMAL).into(previewImage);
     }
   }
 

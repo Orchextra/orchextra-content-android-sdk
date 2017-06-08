@@ -59,7 +59,7 @@ public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
     Glide.with(context)
         .load(generatedImageUrl)
         .thumbnail(Glide.with(context).load(imageThumbBytes))
-        .priority(Priority.IMMEDIATE)
+        .priority(Priority.NORMAL)
         .dontAnimate()
         .into(articleHeaderImage);
   }

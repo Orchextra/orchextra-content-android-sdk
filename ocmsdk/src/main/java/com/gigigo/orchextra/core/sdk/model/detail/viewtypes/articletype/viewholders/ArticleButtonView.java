@@ -90,7 +90,7 @@ public class ArticleButtonView extends ArticleBaseView<ArticleButtonElement> {
   private void bindImageButton(final ArticleButtonElement articleElement) {
     articleImageButton.setVisibility(VISIBLE);
 
-    Glide.with(getContext()).load(articleElement.getImageUrl()).priority(Priority.IMMEDIATE).into(articleImageButton);
+    Glide.with(getContext()).load(articleElement.getImageUrl()).priority(Priority.NORMAL).into(articleImageButton);
 
     articleImageButton.setOnClickListener(new OnClickListener() {
       @Override public void onClick(View v) {
