@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
@@ -69,7 +70,7 @@ public class CardImageDataView extends CardDataView {
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, widthDevice);
 
-    Glide.with(getContext()).load(generatedImageUrl).into(cardImagePlaceholder);
+    Glide.with(getContext()).load(generatedImageUrl).priority(Priority.NORMAL).into(cardImagePlaceholder);
   }
 
   public void setImageLoader(ImageLoader imageLoader) {

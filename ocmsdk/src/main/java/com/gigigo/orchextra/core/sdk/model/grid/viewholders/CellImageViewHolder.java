@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
@@ -53,7 +54,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                       mainLayout.getHeight());
 
               Glide.with(context)
-                  .load(generatedImageUrl)
+                  .load(generatedImageUrl).priority(Priority.NORMAL)
                   .thumbnail(Glide.with(context).load(imageByteArray))
                   .dontAnimate()
                   .into(imageView);

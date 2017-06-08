@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -118,8 +119,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   }
 
   private void setAdapterDataViewHolders() {
-    ElementsViewHolderFactory factory =
-        new ElementsViewHolderFactory(context, authoritation);
+    ElementsViewHolderFactory factory = new ElementsViewHolderFactory(context, authoritation);
 
     recyclerView.setAdapterViewHolderFactory(factory);
 
@@ -184,7 +184,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
           DeviceUtils.calculateRealWidthDevice(context),
           DeviceUtils.calculateRealHeightDevice(context));
 
-      Glide.with(getContext()).load(imageUrl).into(imageViewToExpand);
+      Glide.with(getContext()).load(imageUrl).priority(Priority.NORMAL).into(imageViewToExpand);
     }
 
     DetailActivity.open(activity, elementUrl, imageUrl,

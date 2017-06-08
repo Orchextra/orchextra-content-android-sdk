@@ -60,7 +60,7 @@ import orchextra.javax.inject.Singleton;
             if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
               ApiElementData apiElementData = new ApiElementData(
                   apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
-              //addImageToQueue(apiElementData);
+              addImageToQueue(apiElementData);
               ocmCache.putDetail(apiElementData);
             }
           }
@@ -75,19 +75,18 @@ import orchextra.javax.inject.Singleton;
         ocmImageCache.add(apiElementData.getElement().getPreview().getImageUrl());
       }
       //Render
-      if (apiElementData.getElement().getRender() != null) {
-        Iterator<ApiArticleElement>
-            elementsIterator = apiElementData.getElement().getRender().getElements().iterator();
-        while (elementsIterator.hasNext()){
+      if (apiElementData.getElement().getRender() != null
+          && apiElementData.getElement().getRender().getElements() != null) {
+        Iterator<ApiArticleElement> elementsIterator =
+            apiElementData.getElement().getRender().getElements().iterator();
+        while (elementsIterator.hasNext()) {
           ApiArticleElement element = elementsIterator.next();
-          if (element.getRender()!=null && element.getRender().getImageUrl()!=null)
+          if (element.getRender() != null && element.getRender().getImageUrl() != null) {
             ocmImageCache.add(element.getRender().getImageUrl());
+          }
         }
       }
     }
-
-
-    ocmImageCache.start();
   }
 
   @Override public Observable<ApiSectionContentData> searchByText(String section) {

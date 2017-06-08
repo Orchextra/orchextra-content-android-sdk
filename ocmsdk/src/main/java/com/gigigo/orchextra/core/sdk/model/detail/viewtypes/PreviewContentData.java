@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
@@ -133,7 +134,7 @@ public class PreviewContentData extends UiBaseContentData {
               DeviceUtils.calculateRealHeightDevice(context));
       Log.v("imageurl",""+generatedImageUrl);
 
-      Glide.with(this).load(generatedImageUrl).into(previewImage);
+      Glide.with(this).load(generatedImageUrl).priority(Priority.NORMAL).into(previewImage);
     }
   }
 

@@ -30,6 +30,9 @@ import orchextra.javax.inject.Singleton;
   public OcmDataStore getDataStoreForMenus(boolean force) {
     OcmDataStore ocmDataStore;
 
+    if (!connectionUtils.hasConnection())
+      return getDiskDataStore();
+
     if (force) {
       Log.i(TAG, "CLOUD - Menus");
       ocmDataStore = getCloudDataStore();

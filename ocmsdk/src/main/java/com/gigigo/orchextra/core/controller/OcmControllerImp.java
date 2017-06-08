@@ -69,6 +69,7 @@ public class OcmControllerImp implements OcmController {
 
       @Override public void onGetMenusFails(Exception e) {
         getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(e));
+        e.printStackTrace();
       }
     });
   }
@@ -102,6 +103,7 @@ public class OcmControllerImp implements OcmController {
 
     @Override public void onError(Throwable e) {
       getMenusCallback.onGetMenusFails(new ApiMenuNotFoundException(e));
+      e.printStackTrace();
     }
 
     @Override public void onNext(MenuContentData menuContentData) {
@@ -124,6 +126,7 @@ public class OcmControllerImp implements OcmController {
       if (getSectionControllerCallback != null) {
         getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(e));
       }
+      e.printStackTrace();
     }
 
     @Override public void onNext(ContentData contentData) {
@@ -153,6 +156,7 @@ public class OcmControllerImp implements OcmController {
       if (getDetailControllerCallback != null) {
         getDetailControllerCallback.onGetDetailFails(new ApiDetailNotFoundException(exception));
       }
+      exception.printStackTrace();
     }
   }
 
@@ -171,6 +175,7 @@ public class OcmControllerImp implements OcmController {
       if (searchControllerCallback != null) {
         searchControllerCallback.onSearchFails(new ApiSearchNotFoundException(e));
       }
+      e.printStackTrace();
     }
 
     @Override public void onNext(ContentData contentData) {
