@@ -17,9 +17,9 @@ project.ext {
                ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:2c184f2ed7',
                ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7',
 
-               orchextrasdkStaging        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1003Test:play10Staging@aar',
-               orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1003Test:play10Debug@aar',
-               orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1003Test:play10Release@aar',
+               orchextrasdkStaging        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1005Test:play10Staging@aar',
+               orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1005Test:play10Debug@aar',
+               orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1005Test:play10Release@aar',
 
                //               retrofit                   : "com.squareup.retrofit2:retrofit:2.0.2",
                //               okHttp                     : "com.squareup.okhttp3:okhttp:3.4.1",
