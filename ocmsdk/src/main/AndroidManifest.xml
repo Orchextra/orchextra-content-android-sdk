@@ -16,7 +16,7 @@
         android:name="com.gigigo.orchextra.core.sdk.model.detail.DetailActivity"
         android:configChanges="keyboard|keyboardHidden"
         android:screenOrientation="portrait"
-        android:theme="@style/OcmAppTheme"/>
+        android:theme="@style/DetailSwipeBackOcmAppTheme"/>
 
     <activity
         android:name="com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity"

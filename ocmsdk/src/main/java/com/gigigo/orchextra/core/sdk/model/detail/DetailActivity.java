@@ -12,20 +12,23 @@ import android.view.View;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.model.detail.DetailPresenter;
 import com.gigigo.orchextra.core.controller.model.detail.DetailView;
-import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeWebviewActivity;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.core.sdk.utils.swipeback.SwipeBackBaseInjectionActivity;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import orchextra.javax.inject.Inject;
 
-public class DetailActivity extends BaseInjectionActivity<DetailActivityComponent>
+public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivityComponent>
     implements DetailView {
 
   private static final String EXTRA_ELEMENT_URL = "EXTRA_ELEMENT_URL";
@@ -34,7 +37,11 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   private static final String EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL = "EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL";
 
   @Inject DetailPresenter presenter;
-
+  OnFinishViewListener onFinishViewListener = new OnFinishViewListener() {
+    @Override public void onFinish() {
+      finishView(isAppbarExpanded());
+    }
+  };
   private ImageView animationImageView;
   private UiDetailBaseContentData uiContentView;
 
@@ -134,7 +141,23 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     if (!TextUtils.isEmpty(url)) {
       String generateImageUrl = ImageGenerator.generateImageUrl(url, width, height);
 
-      Glide.with(this).load(generateImageUrl).priority(Priority.NORMAL).override(width, height).into(animationImageView);
+      supportPostponeEnterTransition();
+
+      Glide.with(this).load(generateImageUrl).override(width, height).centerCrop()
+          .dontAnimate().priority(Priority.NORMAL).listener(new RequestListener<String, GlideDrawable>() {
+        @Override
+        public boolean onException(Exception e, String model, Target<GlideDrawable> target,
+            boolean isFirstResource) {
+          supportStartPostponedEnterTransition();
+          return false;
+        }
+
+        @Override public boolean onResourceReady(GlideDrawable resource, String model,
+            Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+          supportStartPostponedEnterTransition();
+          return false;
+        }
+      }).into(animationImageView);
     }
   }
 
@@ -162,10 +185,4 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     super.onDestroy();
   }
-
-  OnFinishViewListener onFinishViewListener = new OnFinishViewListener() {
-    @Override public void onFinish() {
-      finishView(isAppbarExpanded());
-    }
-  };
 }

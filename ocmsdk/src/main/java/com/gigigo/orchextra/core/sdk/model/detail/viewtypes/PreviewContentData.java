@@ -1,13 +1,19 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.SharedElementCallback;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -15,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.request.animation.ViewPropertyAnimation;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
@@ -25,6 +32,7 @@ import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.views.MoreContentArrowView;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
+import java.util.List;
 
 public class PreviewContentData extends UiBaseContentData {
 
@@ -135,7 +143,30 @@ public class PreviewContentData extends UiBaseContentData {
       Log.v("imageurl",""+generatedImageUrl);
 
       Glide.with(this).load(generatedImageUrl).priority(Priority.NORMAL).into(previewImage);
+
+      animateAlphaBecauseOfCollapseEnterTransitionImage();
     }
+  }
+
+  private void animateAlphaBecauseOfCollapseEnterTransitionImage() {
+    previewImage.setAlpha(0f);
+    Animation animation = new AlphaAnimation(0.0f, 1.0f);
+    animation.setDuration(1000);
+    animation.setStartOffset(1000);
+    animation.setAnimationListener(new Animation.AnimationListener() {
+      @Override public void onAnimationStart(Animation animation) {
+
+      }
+
+      @Override public void onAnimationEnd(Animation animation) {
+        previewImage.setAlpha(1f);
+      }
+
+      @Override public void onAnimationRepeat(Animation animation) {
+
+      }
+    });
+    previewImage.startAnimation(animation);
   }
 
   private void setListeners() {

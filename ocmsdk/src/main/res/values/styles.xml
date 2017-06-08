@@ -36,4 +36,11 @@
     <item name="android:textAppearanceMedium">@style/TextAppearanceDialogMessage</item>
   </style>
 
+  <style name="DetailSwipeBackOcmAppTheme" parent="OcmAppTheme">
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="windowActionBar">false</item>
+    <item name="android:windowNoTitle">true</item>
+  </style>
+
 </resources>
