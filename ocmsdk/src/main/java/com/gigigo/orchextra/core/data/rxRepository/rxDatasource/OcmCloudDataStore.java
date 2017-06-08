@@ -64,8 +64,6 @@ import orchextra.javax.inject.Singleton;
               ocmCache.putDetail(apiElementData);
             }
           }
-
-          ocmImageCache.start();
         });
   }
 
