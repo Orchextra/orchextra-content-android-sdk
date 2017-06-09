@@ -79,6 +79,10 @@ public class ImageSaver implements Runnable {
     // Flush and close the output stream
     fos.flush();
     fos.close();
+
+    if (!bitmap.isRecycled())
+      bitmap.recycle();
+    bitmap = null;
   }
 
   private static String md5(String s) {

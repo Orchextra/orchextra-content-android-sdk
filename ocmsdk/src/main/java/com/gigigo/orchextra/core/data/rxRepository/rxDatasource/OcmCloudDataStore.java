@@ -9,6 +9,7 @@ import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
@@ -22,6 +23,8 @@ import io.reactivex.functions.Consumer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -53,20 +56,31 @@ import orchextra.javax.inject.Singleton;
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
         .doOnNext(ocmCache::putSection)
-        .doOnNext(apiSectionContentData -> {
-          Iterator<ApiElement> iterator =
-              apiSectionContentData.getContent().getElements().iterator();
-          while (iterator.hasNext()) {
-            ApiElement apiElement = iterator.next();
-            if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
-              ApiElementData apiElementData = new ApiElementData(
-                  apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
-              addImageToQueue(apiElementData);
-              ocmCache.putDetail(apiElementData);
-            }
-          }
-          ocmImageCache.start();
-        });
+        .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData));
+  }
+
+  private void addSectionsImagesToCache(ApiSectionContentData apiSectionContentData) {
+    Iterator<ApiElement> iterator =
+        apiSectionContentData.getContent().getElements().iterator();
+    while (iterator.hasNext()) {
+      ApiElement apiElement = iterator.next();
+      addImageToQueue(apiElement.getSectionView());
+      if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
+        ApiElementData apiElementData = new ApiElementData(
+            apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
+        addImageToQueue(apiElementData);
+        ocmCache.putDetail(apiElementData);
+      }
+    }
+    ocmImageCache.start();
+  }
+
+  private void addImageToQueue(ApiElementSectionView apiElementSectionView) {
+    if (apiElementSectionView != null) {
+      if (apiElementSectionView.getImageUrl()!=null){
+        ocmImageCache.add(new ImageData(apiElementSectionView.getImageUrl(), 9));
+      }
+    }
   }
 
   private void addImageToQueue(ApiElementData apiElementData) {
