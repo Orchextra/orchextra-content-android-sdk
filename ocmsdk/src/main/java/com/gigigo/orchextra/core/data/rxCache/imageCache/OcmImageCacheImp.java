@@ -69,7 +69,6 @@ import orchextra.javax.inject.Singleton;
     while (started && imageQueue.hasImages()) {
       executeAsynchronously(new ImageDownloader(imageQueue.getImage(), mContext));
     }
-    GGGLogImpl.log(totalDownloadSize / 1024 + "kb", LogLevel.WARN, "TOTAL DOWNLOAD");
   }
 
   private void executeMainThread(Runnable runnable) {
@@ -148,7 +147,8 @@ import orchextra.javax.inject.Singleton;
         //// closing streams
         //output.close();
         //input.close();
-        GGGLogImpl.log("GET <- " + imageData.getPath(), LogLevel.INFO, TAG);
+        GGGLogImpl.log("GET (" + total / 1024 + "kb) <- " + imageData.getPath(), LogLevel.INFO,
+            TAG);
       } catch (Exception e) {
         GGGLogImpl.log("ERROR <- " + imageData.getPath(), LogLevel.ERROR, TAG);
         e.printStackTrace();
@@ -170,6 +170,8 @@ import orchextra.javax.inject.Singleton;
           }
         }
       }
+
+      GGGLogImpl.log(totalDownloadSize / 1024 / 1024 + "MB", LogLevel.WARN, "TOTAL DOWNLOAD");
     }
 
     private String md5(String s) {
