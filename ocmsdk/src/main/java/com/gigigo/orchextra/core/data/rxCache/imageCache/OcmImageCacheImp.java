@@ -16,6 +16,17 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,6 +48,8 @@ import orchextra.javax.inject.Singleton;
   private final ImageQueue imageQueue;
   private boolean started = false;
 
+  private long totalDownloadSize = 0;
+
   @Inject public OcmImageCacheImp(Context mContext, ThreadExecutor executor) {
     this.mContext = mContext;
     this.threadExecutor = executor;
@@ -54,8 +67,9 @@ import orchextra.javax.inject.Singleton;
 
   private void downloadFirst() {
     while (started && imageQueue.hasImages()) {
-      executeMainThread(new ImageDownloader(imageQueue.getImage(), mContext));
+      executeAsynchronously(new ImageDownloader(imageQueue.getImage(), mContext));
     }
+    GGGLogImpl.log(totalDownloadSize / 1024 + "kb", LogLevel.WARN, "TOTAL DOWNLOAD");
   }
 
   private void executeMainThread(Runnable runnable) {
@@ -82,35 +96,98 @@ import orchextra.javax.inject.Singleton;
 
     private void downloadImage(final ImageData imageData) {
       Log.v("START OcmImageCache -> ", imageData.getPath());
+      String filename = md5(imageData.getPath());
+
       GGGLogImpl.log("GET -> " + imageData.getPath(), LogLevel.INFO, TAG);
-      Glide.with(mContext)
-          .load(imageData.getPath())
-          .asBitmap()
-          .priority(Priority.LOW)
-          .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-          .skipMemoryCache(true)
-          .into(new SimpleTarget<Bitmap>() {
-            @Override public void onResourceReady(Bitmap resource,
-                GlideAnimation<? super Bitmap> glideAnimation) {
-              GGGLogImpl.log("GET <- " + imageData.getPath(), LogLevel.INFO, TAG);
-              executeAsynchronously(new ImageSaver(imageData, resource, new ImageSaver.Callback() {
-                @Override public void onSuccess() {
 
-                }
+      // Create a path pointing to the system-recommended cache dir for the app, with sub-dir named
+      // thumbnails
+      File cacheDir = new File(mContext.getCacheDir(), "images");
+      // Create a path in that dir for a file, named by the default hash of the url
+      File cacheFile = new File(cacheDir, filename);
+      if (!cacheDir.exists()) cacheDir.mkdir();
+      if (cacheFile.exists()) {
+        GGGLogImpl.log("SKIPPED -> " + imageData.getPath(), LogLevel.INFO, TAG);
+        return;
+      }
+      int count;
+      InputStream input = null;
+      OutputStream output = null;
+      URLConnection conection = null;
+      try {
+        URL url = new URL(imageData.getPath());
+        conection = url.openConnection();
+        conection.connect();
+        // getting file length
+        int lenghtOfFile = conection.getContentLength();
 
-                @Override public void onError(ImageData imageData, Exception e) {
-                  e.printStackTrace();
-                  add(imageData);
-                }
-              }, mContext));
+        // input stream to read file - with 8k buffer
+        input = new BufferedInputStream(url.openStream(), 8192);
 
-            }
+        // Output stream to write file
+        output = new FileOutputStream(cacheFile);
 
-            @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
-              super.onLoadFailed(e, errorDrawable);
-              e.printStackTrace();
-            }
-          });
+        byte data[] = new byte[1024];
+
+        long total = 0;
+
+        while ((count = input.read(data)) != -1) {
+          total += count;
+          // publishing the progress....
+          // After this onProgressUpdate will be called
+          //publishProgress(""+(int)((total*100)/lenghtOfFile));
+
+          // writing data to file
+          output.write(data, 0, count);
+        }
+        totalDownloadSize += total;
+
+        //// flushing output
+        //output.flush();
+        //
+        //// closing streams
+        //output.close();
+        //input.close();
+        GGGLogImpl.log("GET <- " + imageData.getPath(), LogLevel.INFO, TAG);
+      } catch (Exception e) {
+        GGGLogImpl.log("ERROR <- " + imageData.getPath(), LogLevel.ERROR, TAG);
+        e.printStackTrace();
+        add(imageData);
+      } finally {
+        if (input != null) {
+          try {
+            input.close();
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+        if (output != null) {
+          try {
+            output.flush();
+            output.close();
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      }
+    }
+
+    private String md5(String s) {
+      try {
+        // Create MD5 Hash
+        MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+        digest.update(s.getBytes());
+        byte messageDigest[] = digest.digest();
+
+        // Create Hex String
+        StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < messageDigest.length; i++)
+          hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+        return hexString.toString();
+      } catch (NoSuchAlgorithmException e) {
+        e.printStackTrace();
+      }
+      return "";
     }
   }
 }

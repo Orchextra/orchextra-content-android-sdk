@@ -22,9 +22,7 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.logging.Handler;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -56,12 +54,13 @@ import orchextra.javax.inject.Singleton;
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
         .doOnNext(ocmCache::putSection)
-        .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData));
+        .doOnNext(apiSectionContentData -> {
+          addSectionsImagesToCache(apiSectionContentData);
+        });
   }
 
   private void addSectionsImagesToCache(ApiSectionContentData apiSectionContentData) {
-    Iterator<ApiElement> iterator =
-        apiSectionContentData.getContent().getElements().iterator();
+    Iterator<ApiElement> iterator = apiSectionContentData.getContent().getElements().iterator();
     while (iterator.hasNext()) {
       ApiElement apiElement = iterator.next();
       addImageToQueue(apiElement.getSectionView());
@@ -77,7 +76,7 @@ import orchextra.javax.inject.Singleton;
 
   private void addImageToQueue(ApiElementSectionView apiElementSectionView) {
     if (apiElementSectionView != null) {
-      if (apiElementSectionView.getImageUrl()!=null){
+      if (apiElementSectionView.getImageUrl() != null) {
         ocmImageCache.add(new ImageData(apiElementSectionView.getImageUrl(), 9));
       }
     }
