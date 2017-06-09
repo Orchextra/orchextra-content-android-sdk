@@ -71,17 +71,19 @@ public class ImageSaver implements Runnable {
     File cacheFile = new File(cacheDir, "" + url.hashCode());
     if (!cacheDir.exists()) cacheDir.mkdir();
 
-    // Create a file at the file path, and open it for writing obtaining the output stream
-    cacheFile.createNewFile();
-    FileOutputStream fos = new FileOutputStream(cacheFile);
-    // Write the bitmap to the output stream (and thus the file) in PNG format (lossless compression)
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-    // Flush and close the output stream
-    fos.flush();
-    fos.close();
-
-    if (!bitmap.isRecycled())
-      bitmap.recycle();
+    if (cacheFile.exists()) {
+      GGGLogImpl.log("SKIPPED -> " + url, LogLevel.INFO, TAG);
+    } else {
+      // Create a file at the file path, and open it for writing obtaining the output stream
+      cacheFile.createNewFile();
+      FileOutputStream fos = new FileOutputStream(cacheFile);
+      // Write the bitmap to the output stream (and thus the file) in PNG format (lossless compression)
+      bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+      // Flush and close the output stream
+      fos.flush();
+      fos.close();
+    }
+    if (!bitmap.isRecycled()) bitmap.recycle();
     bitmap = null;
   }
 
