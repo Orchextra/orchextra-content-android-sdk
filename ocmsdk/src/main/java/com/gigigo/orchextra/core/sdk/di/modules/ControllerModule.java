@@ -46,8 +46,7 @@ import orchextra.javax.inject.Singleton;
         context.getApplicationContext().getCacheDir().getPath());
   }
 
-  @Provides @Singleton OcmImageCache provideImageCache(OcmContextProvider context,
-      ThreadExecutor threadExecutor) {
-    return new OcmImageCacheImp(context.getApplicationContext(), threadExecutor);
+  @Provides @Singleton OcmImageCache provideImageCache(OcmContextProvider context) {
+    return new OcmImageCacheImp(context.getApplicationContext(), new JobExecutor());
   }
 }
