@@ -14,4 +14,6 @@ public interface OcmStyleUi {
   String getLightFontPath();
 
   boolean isEnabledTitleToolbarDetailView();
+
+  boolean isThumbnailEnabled();
 }

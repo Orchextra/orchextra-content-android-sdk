@@ -6,7 +6,8 @@ public final class OcmStyleUiBuilder {
   private String normalFonPath;
   private String mediumFontPath;
   private String lightFontPath;
-  private boolean enabledTitleToolbarDetailView;
+  private boolean enabledTitleToolbarDetailView = false;
+  private boolean thumbnailEnabled = true;
 
   /**
    * Path to the font to apply in titles of the app
@@ -62,5 +63,13 @@ public final class OcmStyleUiBuilder {
 
   public boolean isEnabledTitleToolbarDetailView() {
     return enabledTitleToolbarDetailView;
+  }
+
+  public void setThumbnailEnabled(boolean thumbnailEnabled) {
+    this.thumbnailEnabled = thumbnailEnabled;
+  }
+
+  public boolean isThumbnailEnabled() {
+    return thumbnailEnabled;
   }
 }

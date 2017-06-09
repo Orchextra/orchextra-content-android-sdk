@@ -9,6 +9,7 @@ public class OcmStyleUiImp implements OcmStyleUi {
   private String mediumFontPath;
   private String lightFontPath;
   private boolean isEnabledTitleToolbarDetailView;
+  private boolean isThumbnailEnabled;
 
   @Override public void setStyleUi(OcmStyleUiBuilder styleUi) {
     this.titleFontPath = styleUi.getTitleFontPath();
@@ -16,6 +17,7 @@ public class OcmStyleUiImp implements OcmStyleUi {
     this.mediumFontPath = styleUi.getMediumFontPath();
     this.lightFontPath = styleUi.getLightFontPath();
     this.isEnabledTitleToolbarDetailView = styleUi.isEnabledTitleToolbarDetailView();
+    this.isThumbnailEnabled = styleUi.isThumbnailEnabled();
   }
 
   @Override
@@ -41,5 +43,9 @@ public class OcmStyleUiImp implements OcmStyleUi {
   @Override
   public boolean isEnabledTitleToolbarDetailView() {
     return isEnabledTitleToolbarDetailView;
+  }
+
+  @Override public boolean isThumbnailEnabled() {
+    return isThumbnailEnabled;
   }
 }

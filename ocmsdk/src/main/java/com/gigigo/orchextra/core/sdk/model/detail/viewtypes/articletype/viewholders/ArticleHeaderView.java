@@ -6,28 +6,29 @@ import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
 
   private final Context context;
-  private ImageLoader imageLoader;
+  private final boolean thumbnailEnabled;
 
   private ImageView articleHeaderImage;
+
   private TextView articleHeaderText;
 
   public ArticleHeaderView(Context context, ArticleHeaderElement articleElement,
-      ImageLoader imageLoader) {
+      boolean thumbnailEnabled) {
     super(context, articleElement);
 
     this.context = context;
-    this.imageLoader = imageLoader;
+    this.thumbnailEnabled = thumbnailEnabled;
   }
 
   @Override protected void bindTo(final ArticleHeaderElement articleElement) {
@@ -51,17 +52,18 @@ public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
       articleHeaderImage.setLayoutParams(lp);
     }
 
-
     byte[] imageThumbBytes = Base64.decode(imageThumb, Base64.DEFAULT);
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, realWidthDevice);
 
-    Glide.with(context)
-        .load(generatedImageUrl)
-        .thumbnail(Glide.with(context).load(imageThumbBytes))
-        .priority(Priority.NORMAL)
-        .dontAnimate()
-        .into(articleHeaderImage);
+    DrawableRequestBuilder<String> requestBuilder =
+        Glide.with(context).load(generatedImageUrl).priority(Priority.NORMAL).dontAnimate();
+
+    if (thumbnailEnabled) {
+      requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageThumbBytes));
+    }
+
+    requestBuilder.into(articleHeaderImage);
   }
 
   @Override protected void bindViews() {

@@ -30,7 +30,6 @@ project.ext {
                playServicesLocation       : "com.google.android.gms:play-services-location:10.0.1",
                playServicesGcm            : "com.google.android.gms:play-services-gcm:10.0.1",
 
-               imageloaderGlide           : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide:2.05',
                imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 
                baserecycleradapter        : 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5',

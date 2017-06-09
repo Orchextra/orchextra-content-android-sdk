@@ -140,7 +140,6 @@ dependencies {
   compile project.libraries.dagger
 
   //Image Loader Glide/Blur
-  compile project.libraries.imageloaderGlide
   compile project.libraries.imageloaderGlideBlur
 
   //Orchextra

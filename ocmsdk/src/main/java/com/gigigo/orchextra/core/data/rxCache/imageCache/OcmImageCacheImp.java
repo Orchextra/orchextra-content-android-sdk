@@ -2,7 +2,6 @@ package com.gigigo.orchextra.core.data.rxCache.imageCache;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -13,11 +12,6 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -53,8 +47,6 @@ import orchextra.javax.inject.Singleton;
     }
   }
 
-
-
   private void executeAsynchronously(Runnable runnable) {
     Handler uiHandler = new Handler(Looper.getMainLooper());
     uiHandler.post(runnable);
@@ -88,16 +80,16 @@ import orchextra.javax.inject.Singleton;
           .diskCacheStrategy(DiskCacheStrategy.SOURCE)
           .skipMemoryCache(true)
           .into(new SimpleTarget<GlideDrawable>() {
-        @Override public void onResourceReady(GlideDrawable resource,
-            GlideAnimation<? super GlideDrawable> glideAnimation) {
-          Log.v("END  OcmImageCache -> ", url);
-        }
+            @Override public void onResourceReady(GlideDrawable resource,
+                GlideAnimation<? super GlideDrawable> glideAnimation) {
+              Log.v("END  OcmImageCache -> ", url);
+            }
 
-        @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
-          super.onLoadFailed(e, errorDrawable);
-          e.printStackTrace();
-        }
-      });
+            @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
+              super.onLoadFailed(e, errorDrawable);
+              e.printStackTrace();
+            }
+          });
     }
   }
 }

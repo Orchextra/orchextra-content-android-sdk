@@ -5,10 +5,8 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
@@ -21,14 +19,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
-import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
-import com.gigigo.ui.imageloader.ImageLoaderCallback;
-import com.gigigo.ui.imageloader.glide.GlideImageLoaderImp;
 import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -46,9 +43,11 @@ public class YoutubeFragment extends UiBaseContentData {
   private String youtubeId;
   private int orientation;
   private OnFullScreenListener onFullScreenModeListener;
-  private ImageLoaderCallback mImageCallback;
   private FragmentManager fragmentManager;
+  private BitmapImageViewTarget mImageCallback;
+
   private YouTubePlayer mPlayer;
+
   private YouTubePlayer.OnFullscreenListener onFullScreenListener =
       new YouTubePlayer.OnFullscreenListener() {
         @Override public void onFullscreen(boolean fullscreen) {
@@ -106,9 +105,10 @@ public class YoutubeFragment extends UiBaseContentData {
     youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
     fragmentManager = getChildFragmentManager();
     final ImageView imgBlurBackground = (ImageView) view.findViewById(R.id.imgBlurBackground);
-    mImageCallback = new ImageLoaderCallback() {
-      @Override public void onSuccess(Bitmap bitmap) {
+    mImageCallback = new BitmapImageViewTarget(imgBlurBackground) {
 
+      @Override
+      public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
         Bitmap resizedbitmap1 = Bitmap.createBitmap(bitmap, 0, 45, 480, 270);
         imgBlurBackground.setImageBitmap(resizedbitmap1);
         Bitmap bmp = bitmap;
@@ -145,12 +145,6 @@ public class YoutubeFragment extends UiBaseContentData {
           }
         }
       }
-
-      @Override public void onError(Drawable drawable) {
-      }
-
-      @Override public void onLoading() {
-      }
     };
     initViews(view);
 
@@ -177,11 +171,11 @@ public class YoutubeFragment extends UiBaseContentData {
     youtubeId = getArguments().getString(EXTRA_YOUTUBE_ID);
     orientation = getArguments().getInt(EXTRA_YOUTUBE_ORIENTARION);
 
-    ImageLoader glideImageLoaderImp =
-        new GlideImageLoaderImp(YoutubeFragment.this.getActivity().getApplicationContext());
     String strImgForBlur = "http://img.youtube.com/vi/" + youtubeId + "/hqdefault.jpg";
 
-    glideImageLoaderImp.load(strImgForBlur)
+    Glide.with(this)
+        .load(strImgForBlur)
+        .asBitmap()
         .transform(new BlurTransformation(YoutubeFragment.this.getActivity(), 20))
         .into(mImageCallback);
   }

@@ -31,8 +31,6 @@ public interface OcmViewGenerator {
 
     UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
 
-    void releaseImageLoader();
-
 
     void getMenu(GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
 

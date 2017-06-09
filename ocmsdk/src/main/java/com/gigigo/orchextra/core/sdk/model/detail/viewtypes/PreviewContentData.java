@@ -1,14 +1,8 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.SharedElementCallback;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,24 +15,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
-import com.bumptech.glide.request.animation.ViewPropertyAnimation;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.views.MoreContentArrowView;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
-import java.util.List;
 
 public class PreviewContentData extends UiBaseContentData {
 
   private Context context;
   private ElementCachePreview preview;
-  private ElementCacheShare share;
 
   private View previewContentMainLayout;
   private ImageView previewImage;
@@ -62,7 +51,6 @@ public class PreviewContentData extends UiBaseContentData {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.view_preview_item, container, false);
 
-
     init(view);
 
     return view;
@@ -74,27 +62,24 @@ public class PreviewContentData extends UiBaseContentData {
     bindTo();
     setListeners();
 
-    previewBackgroundShadow.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-      @Override public boolean onPreDraw() {
-        int width = DeviceUtils.calculateRealWidthDevice(context);
-        int height = DeviceUtils.calculateRealHeightDevice(context);
+    previewBackgroundShadow.getViewTreeObserver()
+        .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+          @Override public boolean onPreDraw() {
+            int width = DeviceUtils.calculateRealWidthDevice(context);
+            int height = DeviceUtils.calculateRealHeightDevice(context);
 
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
-        previewBackgroundShadow.setLayoutParams(lp);
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
+            previewBackgroundShadow.setLayoutParams(lp);
 
-        previewBackgroundShadow.getViewTreeObserver().removeOnPreDrawListener(this);
+            previewBackgroundShadow.getViewTreeObserver().removeOnPreDrawListener(this);
 
-        return true;
-      }
-    });
+            return true;
+          }
+        });
   }
 
   public void setPreview(ElementCachePreview preview) {
     this.preview = preview;
-  }
-
-  public void setShare(ElementCacheShare share) {
-    this.share = share;
   }
 
   private void init(View view) {
@@ -140,7 +125,6 @@ public class PreviewContentData extends UiBaseContentData {
       String generatedImageUrl =
           ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(context),
               DeviceUtils.calculateRealHeightDevice(context));
-      Log.v("imageurl",""+generatedImageUrl);
 
       Glide.with(this).load(generatedImageUrl).priority(Priority.NORMAL).into(previewImage);
 
@@ -191,9 +175,5 @@ public class PreviewContentData extends UiBaseContentData {
         .equals(ElementCacheBehaviour.CLICK)) {
       previewFuntionalityListener.disablePreviewScrolling();
     }
-  }
-
-  public void setImageLoader(ImageLoader imageLoader) {
-
   }
 }

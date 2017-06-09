@@ -17,7 +17,6 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class PreviewCardContentData extends UiBaseContentData {
 
@@ -25,9 +24,7 @@ public class PreviewCardContentData extends UiBaseContentData {
 
   private ViewPager cardViewPager;
   private PreviewCardPagerAdapter pagerAdapter;
-  private ImageLoader imageLoader;
   private ElementCachePreviewCard content;
-  private ElementCacheShare share;
 
   public static PreviewCardContentData newInstance() {
     return new PreviewCardContentData();
@@ -61,7 +58,7 @@ public class PreviewCardContentData extends UiBaseContentData {
   }
 
   private void initViewPager() {
-    pagerAdapter = new PreviewCardPagerAdapter(activity.getSupportFragmentManager(), imageLoader);
+    pagerAdapter = new PreviewCardPagerAdapter(activity.getSupportFragmentManager());
 
     cardViewPager.getViewTreeObserver()
         .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -83,19 +80,10 @@ public class PreviewCardContentData extends UiBaseContentData {
 
   private void setContentInViewPager() {
     pagerAdapter.setPreviewList(content);
-    pagerAdapter.setShareContent(share);
     cardViewPager.setAdapter(pagerAdapter);
-  }
-
-  public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = imageLoader;
   }
 
   public void setPreview(ElementCachePreviewCard content) {
     this.content = content;
-  }
-
-  public void setShare(ElementCacheShare share) {
-    this.share = share;
   }
 }

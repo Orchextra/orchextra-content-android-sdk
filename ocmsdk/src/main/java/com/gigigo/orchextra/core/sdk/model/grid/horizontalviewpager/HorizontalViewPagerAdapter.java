@@ -7,20 +7,17 @@ import android.view.View;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
-import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.List;
 
 public class HorizontalViewPagerAdapter extends FragmentStatePagerAdapter {
 
-  private final ImageLoader imageLoader;
   private final UiListedBaseContentData.ListedContentListener listedContentListener;
-  private List<Cell> cellDataList;
   int mLoops = 1;
+  private List<Cell> cellDataList;
 
-  public HorizontalViewPagerAdapter(FragmentManager fm, ImageLoader imageLoader,
+  public HorizontalViewPagerAdapter(FragmentManager fm,
       UiListedBaseContentData.ListedContentListener listedContentListener) {
     super(fm);
-    this.imageLoader = imageLoader;
     this.listedContentListener = listedContentListener;
   }
 
@@ -34,7 +31,6 @@ public class HorizontalViewPagerAdapter extends FragmentStatePagerAdapter {
     CellCarouselContentData cell = (CellCarouselContentData) cellDataList.get(finalPosition);
     HorizontalItemPageFragment horizontalItemPageFragment =
         HorizontalItemPageFragment.newInstance();
-    horizontalItemPageFragment.setImageLoader(imageLoader);
     horizontalItemPageFragment.setOnClickHorizontalItem(
         new HorizontalItemPageFragment.OnClickHorizontalItem() {
           @Override public void onClickItem(View view) {

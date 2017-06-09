@@ -4,25 +4,25 @@ import android.content.Context;
 import android.util.Base64;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class ArticleImageView extends ArticleBaseView<ArticleImageElement> {
 
   private final Context context;
   private ImageView articleImagePlaceholder;
-  private ImageLoader imageLoader;
+  private boolean thumbnailEnabled;
 
   public ArticleImageView(Context context, ArticleImageElement articleElement,
-      ImageLoader imageLoader) {
+      boolean thumbnailEnabled) {
     super(context, articleElement);
     this.context = context;
-    this.imageLoader = imageLoader;
+    this.thumbnailEnabled = thumbnailEnabled;
   }
 
   @Override protected int getViewLayout() {
@@ -53,11 +53,13 @@ public class ArticleImageView extends ArticleBaseView<ArticleImageElement> {
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl,
         DeviceUtils.calculateRealWidthDevice(getContext()));
 
-    Glide.with(context)
-        .load(generatedImageUrl)
-        .priority(Priority.NORMAL)
-        .thumbnail(Glide.with(context).load(imageThumbBytes))
-        .dontAnimate()
-        .into(articleImagePlaceholder);
+    DrawableRequestBuilder<String> requestBuilder =
+        Glide.with(context).load(generatedImageUrl).priority(Priority.NORMAL).dontAnimate();
+
+    if (thumbnailEnabled) {
+      requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageThumbBytes));
+    }
+
+    requestBuilder.into(articleImagePlaceholder);
   }
 }

@@ -14,11 +14,9 @@ import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class CardImageDataView extends CardDataView {
 
-  private ImageLoader imageLoader;
   private ImageView cardImagePlaceholder;
   private ArticleImageElement imageElement;
 
@@ -70,11 +68,10 @@ public class CardImageDataView extends CardDataView {
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, widthDevice);
 
-    Glide.with(getContext()).load(generatedImageUrl).priority(Priority.NORMAL).into(cardImagePlaceholder);
-  }
-
-  public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = imageLoader;
+    Glide.with(getContext())
+        .load(generatedImageUrl)
+        .priority(Priority.NORMAL)
+        .into(cardImagePlaceholder);
   }
 
   public void setImageElement(ArticleImageElement imageElement) {

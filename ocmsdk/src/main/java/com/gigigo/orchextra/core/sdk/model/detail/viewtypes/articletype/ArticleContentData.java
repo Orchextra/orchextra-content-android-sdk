@@ -8,14 +8,13 @@ import android.view.ViewGroup;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.List;
 
 public class ArticleContentData extends UiBaseContentData {
 
   private List<ArticleElement> articleElementList;
   private ArticleItemViewContainer articleItemViewContainer;
-  private ImageLoader imageLoader;
+  private boolean thumbnailEnabled;
 
   public static ArticleContentData newInstance() {
     return new ArticleContentData();
@@ -38,7 +37,7 @@ public class ArticleContentData extends UiBaseContentData {
   }
 
   private void init() {
-    articleItemViewContainer.setImageLoader(imageLoader);
+    articleItemViewContainer.setThumbnailEnabled(thumbnailEnabled);
     articleItemViewContainer.addArticleElementList(articleElementList);
   }
 
@@ -51,7 +50,7 @@ public class ArticleContentData extends UiBaseContentData {
     this.articleElementList = articleElementList;
   }
 
-  public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = imageLoader;
+  public void setThumbnailEnabled(boolean thumbnailEnabled) {
+    this.thumbnailEnabled = thumbnailEnabled;
   }
 }

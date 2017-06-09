@@ -29,14 +29,12 @@ import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.List;
 import orchextra.javax.inject.Inject;
 
 public class SearcherLayoutView extends UiSearchBaseContentData implements SearcherLayoutInterface {
 
   @Inject SearcherLayoutPresenter presenter;
-  @Inject ImageLoader imageLoader;
   @Inject Authoritation authoritation;
   @Inject OcmController ocmController;
 
@@ -45,6 +43,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   private MultipleGridRecyclerView recyclerView;
   private View emptyLayout;
   private View progressLayout;
+  private boolean thumbnailEnabled;
 
   public static SearcherLayoutView newInstance() {
     return new SearcherLayoutView();
@@ -71,6 +70,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
     Injector injector = OCManager.getInjector();
     if (injector != null) {
       injector.injectSearcherLayoutView(this);
+      thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
     }
   }
 
@@ -119,7 +119,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   }
 
   private void setAdapterDataViewHolders() {
-    ElementsViewHolderFactory factory = new ElementsViewHolderFactory(context, authoritation);
+    ElementsViewHolderFactory factory = new ElementsViewHolderFactory(context, authoritation, thumbnailEnabled);
 
     recyclerView.setAdapterViewHolderFactory(factory);
 
