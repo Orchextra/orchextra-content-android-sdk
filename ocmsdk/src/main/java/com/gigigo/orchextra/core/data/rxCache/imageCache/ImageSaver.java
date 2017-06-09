@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.util.Log;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -15,6 +17,7 @@ import com.gigigo.ggglogger.LogLevel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -22,48 +25,60 @@ import java.security.NoSuchAlgorithmException;
  * Created by francisco.hernandez on 8/6/17.
  */
 
-public class ImageSaver {
+public class ImageSaver implements Runnable {
   private static final String TAG = ImageSaver.class.getSimpleName();
 
-  public static void save(final ImageData imageData, final Callback callback,
-      final Context mContext) {
-    GGGLogImpl.log("GET -> " + imageData.getPath(), LogLevel.INFO, TAG);
-    Glide.with(mContext)
-        .load(imageData.getPath())
-        .priority(Priority.LOW)
-        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-        .skipMemoryCache(true)
-        .into(new SimpleTarget<GlideDrawable>() {
-          @Override public void onResourceReady(GlideDrawable resource,
-              GlideAnimation<? super GlideDrawable> glideAnimation) {
-            try {
-              writeInDisk(md5(imageData.getPath()), resource, mContext);
-              callback.onSuccess();
-              GGGLogImpl.log("GET <- " + imageData.getPath(), LogLevel.INFO, TAG);
-            } catch (Exception e) {
-              callback.onError(imageData, e);
-              GGGLogImpl.log("ERROR <- " + imageData.getPath(), LogLevel.ERROR, TAG);
-              e.printStackTrace();
-            }
-          }
+  private final ImageData imageData;
+  private final Callback callback;
+  private final Context mContext;
+  private WeakReference<Bitmap> bitmapWeakReference;
 
-          @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
-            super.onLoadFailed(e, errorDrawable);
-            callback.onError(imageData, e);
-            GGGLogImpl.log("ERROR <- " + imageData.getPath(), LogLevel.ERROR, TAG);
-            e.printStackTrace();
-          }
-        });
+  public ImageSaver(ImageData imageData, Bitmap bitmap, Callback callback, Context mContext) {
+    this.imageData = imageData;
+    this.callback = callback;
+    this.mContext = mContext;
+    bitmapWeakReference = new WeakReference<>(bitmap);
   }
 
-  private static void writeInDisk(final String filename, final GlideDrawable drawable,
-      final Context mContext) throws Exception {
-    Bitmap bm = ((BitmapDrawable) (Drawable) drawable).getBitmap();
-    File file = new File(mContext.getCacheDir(), "images/" + filename);
-    FileOutputStream outStream = new FileOutputStream(file);
-    bm.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-    outStream.flush();
-    outStream.close();
+  @Override public void run() {
+    save();
+  }
+
+  public void save() {
+    GGGLogImpl.log("SAVING -> " + imageData.getPath(), LogLevel.INFO, TAG);
+    if (bitmapWeakReference != null && bitmapWeakReference.get() != null) {
+      try {
+        putBitmapInDiskCache(imageData.getPath(), bitmapWeakReference.get(), mContext);
+        GGGLogImpl.log("SAVING <- " + imageData.getPath(), LogLevel.INFO, TAG);
+        callback.onSuccess();
+      } catch (Exception e) {
+        e.printStackTrace();
+        GGGLogImpl.log("ERROR <- " + imageData.getPath(), LogLevel.ERROR, TAG);
+        callback.onError(imageData, e);
+      }
+    }
+  }
+
+  /**
+   * Write bitmap associated with a url to disk cache
+   */
+  private void putBitmapInDiskCache(String url, Bitmap bitmap, final Context mContext)
+      throws Exception {
+    // Create a path pointing to the system-recommended cache dir for the app, with sub-dir named
+    // thumbnails
+    File cacheDir = new File(mContext.getCacheDir(), "images");
+    // Create a path in that dir for a file, named by the default hash of the url
+    File cacheFile = new File(cacheDir, "" + url.hashCode());
+    if (!cacheDir.exists()) cacheDir.mkdir();
+
+    // Create a file at the file path, and open it for writing obtaining the output stream
+    cacheFile.createNewFile();
+    FileOutputStream fos = new FileOutputStream(cacheFile);
+    // Write the bitmap to the output stream (and thus the file) in PNG format (lossless compression)
+    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+    // Flush and close the output stream
+    fos.flush();
+    fos.close();
   }
 
   private static String md5(String s) {

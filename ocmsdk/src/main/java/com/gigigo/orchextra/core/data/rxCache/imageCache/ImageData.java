@@ -4,7 +4,7 @@ package com.gigigo.orchextra.core.data.rxCache.imageCache;
  * Created by francisco.hernandez on 6/6/17.
  */
 
-class ImageData {
+public class ImageData {
 
   private final String path;
   private final int priority;

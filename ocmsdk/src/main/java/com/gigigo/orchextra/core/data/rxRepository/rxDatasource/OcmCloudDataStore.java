@@ -13,6 +13,7 @@ import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageData;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import io.reactivex.Observable;
@@ -64,6 +65,7 @@ import orchextra.javax.inject.Singleton;
               ocmCache.putDetail(apiElementData);
             }
           }
+          ocmImageCache.start();
         });
   }
 
@@ -72,7 +74,7 @@ import orchextra.javax.inject.Singleton;
     if (apiElementData.getElement() != null) {
       //Preview
       if (apiElementData.getElement().getPreview() != null) {
-        ocmImageCache.add(apiElementData.getElement().getPreview().getImageUrl());
+        ocmImageCache.add(new ImageData(apiElementData.getElement().getPreview().getImageUrl(), 0));
       }
       //Render
       if (apiElementData.getElement().getRender() != null
@@ -82,7 +84,7 @@ import orchextra.javax.inject.Singleton;
         while (elementsIterator.hasNext()) {
           ApiArticleElement element = elementsIterator.next();
           if (element.getRender() != null && element.getRender().getImageUrl() != null) {
-            ocmImageCache.add(element.getRender().getImageUrl());
+            ocmImageCache.add(new ImageData(element.getRender().getImageUrl(), 0));
           }
         }
       }

@@ -8,5 +8,5 @@ public interface OcmImageCache {
 
   void start();
 
-  void add(String url);
+  void add(ImageData imageData);
 }
