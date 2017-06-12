@@ -3,6 +3,8 @@ package com.gigigo.orchextra.core.data.rxCache.imageCache.loader;
 import android.content.Context;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import java.io.File;
@@ -24,6 +26,36 @@ public class OcmImageLoader {
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       Glide.with(mContext).load(url).into(into);
+    }
+  }
+
+  public static void load(Context mContext, String url, SimpleTarget<GlideDrawable> target) {
+    File cacheFile = getCacheFile(mContext, md5(url));
+    if (cacheFile.exists()) {
+      GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
+      Glide.with(mContext).load(cacheFile).into(target);
+    } else {
+      GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
+      Glide.with(mContext).load(url).into(target);
+    }
+  }
+
+  public static void load(Context mContext, byte[] thumbnail, String url, ImageView into) {
+    File cacheFile = getCacheFile(mContext, md5(url));
+    if (cacheFile.exists()) {
+      GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
+      Glide.with(mContext)
+          .load(cacheFile)
+          .thumbnail(Glide.with(mContext).load(thumbnail))
+          .dontAnimate()
+          .into(into);
+    } else {
+      GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
+      Glide.with(mContext)
+          .load(url)
+          .thumbnail(Glide.with(mContext).load(thumbnail))
+          .dontAnimate()
+          .into(into);
     }
   }
 

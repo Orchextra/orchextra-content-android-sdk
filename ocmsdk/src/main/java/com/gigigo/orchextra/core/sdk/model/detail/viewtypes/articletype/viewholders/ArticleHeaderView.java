@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
@@ -56,12 +57,7 @@ public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, realWidthDevice);
 
-    Glide.with(context)
-        .load(generatedImageUrl)
-        .thumbnail(Glide.with(context).load(imageThumbBytes))
-        .priority(Priority.NORMAL)
-        .dontAnimate()
-        .into(articleHeaderImage);
+    OcmImageLoader.load(getContext(), imageThumbBytes, generatedImageUrl,  articleHeaderImage);
   }
 
   @Override protected void bindViews() {

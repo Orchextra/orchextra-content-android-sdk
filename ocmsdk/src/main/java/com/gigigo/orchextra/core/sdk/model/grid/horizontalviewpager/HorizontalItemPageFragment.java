@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.ImageLoader;
 
@@ -53,10 +54,8 @@ public class HorizontalItemPageFragment extends Fragment {
     if (cell != null) {
 
       String imageUrl = cell.getData().getSectionView().getImageUrl();
-      Glide.with(getContext())
-          .load(imageUrl)
-          .priority(Priority.NORMAL)
-          .into(horizontalItemImageView);
+
+      OcmImageLoader.load(this.getActivity(), imageUrl, horizontalItemImageView);
     }
   }
 

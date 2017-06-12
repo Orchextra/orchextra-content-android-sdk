@@ -20,6 +20,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.core.controller.model.grid.ContentView;
 import com.gigigo.orchextra.core.controller.model.grid.ContentViewPresenter;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
@@ -230,20 +231,17 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           DeviceUtils.calculateRealWidthDevice(context),
           DeviceUtils.calculateRealHeightDevice(context));
 
-      Glide.with(this)
-          .load(imageUrl)
-          .priority(Priority.NORMAL)
-          .into(new SimpleTarget<GlideDrawable>() {
-            @Override public void onResourceReady(GlideDrawable resource,
-                GlideAnimation<? super GlideDrawable> glideAnimation) {
-              imageViewToExpandInDetail.setImageDrawable(resource);
-            }
+      OcmImageLoader.load(this.getActivity(), imageUrl, new SimpleTarget<GlideDrawable>() {
+        @Override public void onResourceReady(GlideDrawable resource,
+            GlideAnimation<? super GlideDrawable> glideAnimation) {
+          imageViewToExpandInDetail.setImageDrawable(resource);
+        }
 
-            @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
-              super.onLoadFailed(e, errorDrawable);
-              clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
-            }
-          });
+        @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
+          super.onLoadFailed(e, errorDrawable);
+          clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
+        }
+      });
     }
 
     DetailActivity.open(activity, elementUrl, urlImageToExpand,
