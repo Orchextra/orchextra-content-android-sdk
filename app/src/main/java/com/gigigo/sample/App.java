@@ -10,7 +10,6 @@ import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 
-
 //MultiDexApplication
 public class App extends MultiDexApplication {
 
@@ -62,12 +61,10 @@ public class App extends MultiDexApplication {
 
     Ocm.initialize(ocmBuilder);
 
-    OcmStyleUiBuilder ocmStyleUiBuilder = new OcmStyleUiBuilder();
-
-    ocmStyleUiBuilder.setTitleToolbarEnabled(true)
+    OcmStyleUiBuilder ocmStyleUiBuilder = new OcmStyleUiBuilder()
+        .setTitleToolbarEnabled(true)
         .setThumbnailEnabled(true)
         .setEnabledStatusBar(true);
-    ;
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
@@ -75,12 +72,9 @@ public class App extends MultiDexApplication {
   }
 
   private void enableStrictMode() {
-    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-        .detectAll()   // or .detectAll() for all detectable problems
-        .penaltyLog()
-        .build());
-    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-        .detectAll()
-        .build());
+    StrictMode.setThreadPolicy(
+        new StrictMode.ThreadPolicy.Builder().detectAll()   // or .detectAll() for all detectable problems
+            .penaltyLog().build());
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().build());
   }
 }
