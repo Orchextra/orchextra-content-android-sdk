@@ -18,6 +18,8 @@
 
 package com.gigigo.orchextra.core.sdk.di.injector;
 
+import com.gigigo.orchextra.core.receiver.DaggerWifiReceiverComponent;
+import com.gigigo.orchextra.core.receiver.WifiReceiverComponent;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.components.OcmComponent;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
@@ -32,6 +34,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.DaggerDetailActivityComponent;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.DaggerContentGridLayoutViewComponent;
 import com.gigigo.orchextra.core.sdk.model.searcher.DaggerSearcherLayoutViewComponent;
+import com.gigigo.orchextra.core.receiver.WifiReceiver;
 
 public class InjectorImpl implements Injector {
 
@@ -74,5 +77,10 @@ public class InjectorImpl implements Injector {
         DaggerDetailContentDataComponent.builder().ocmComponent(ocmComponent).build();
 
     detailContentDataComponent.injectDetailContentData(detailParentContentData);
+  }
+
+  @Override public void injectWifiBroadcastReceiver(WifiReceiver wifiReceiver) {
+    WifiReceiverComponent wifiReceiverComponent = DaggerWifiReceiverComponent.builder().ocmComponent(ocmComponent).build();
+    wifiReceiverComponent.injectWifiReceiver(wifiReceiver);
   }
 }

@@ -164,7 +164,7 @@ dependencies {
 
   //TEST
   testCompile project.testLibraries.junit
-//  testCompile project.testLibraries.assertj
+  testCompile project.testLibraries.assertj
   testCompile project.testLibraries.mockito
 }
 

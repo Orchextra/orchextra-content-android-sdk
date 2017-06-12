@@ -4,11 +4,12 @@
 
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.INTERNET"/>
 
   <uses-sdk tools:overrideLibrary="android.support.customtabs"/>
 
-  <application android:allowBackup="true"
+  <application
+      android:allowBackup="true"
       android:supportsRtl="true"
       >
 
@@ -20,7 +21,7 @@
 
     <activity
         android:name="com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity"
-android:screenOrientation="fullSensor"
+        android:screenOrientation="fullSensor"
         android:theme="@style/OcmAppTheme"/>
 
     <activity
@@ -28,6 +29,21 @@ android:screenOrientation="fullSensor"
         android:screenOrientation="landscape"
         android:theme="@style/OcmAppTheme"/>
 
+    <service
+        android:name="com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService"
+        android:process=":imagesDownloader"/>
+
+    <receiver
+        android:name="com.gigigo.orchextra.core.receiver.WifiReceiver"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+      </intent-filter>
+    </receiver>
+
+    <service
+        android:name="com.gigigo.orchextra.core.receiver.WifiReceiver$WifiActiveService"
+        android:exported="false"/>
   </application>
 
 </manifest>
