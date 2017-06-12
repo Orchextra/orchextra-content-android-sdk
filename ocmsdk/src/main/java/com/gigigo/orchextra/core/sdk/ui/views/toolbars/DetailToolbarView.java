@@ -69,7 +69,7 @@ public class DetailToolbarView extends FrameLayout {
   }
 
   private void setToolbarTitle() {
-    if (ocmStyleUi != null && ocmStyleUi.isEnabledTitleToolbarDetailView()) {
+    if (ocmStyleUi != null && ocmStyleUi.isTitleToolbarEnabled()) {
       detailTitleText.setText(title);
     }
   }

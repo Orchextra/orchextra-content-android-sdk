@@ -181,15 +181,15 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
     String imageUrl = null;
     if (urlImageToExpand != null) {
       imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
-          DeviceUtils.calculateRealWidthDevice(context),
-          DeviceUtils.calculateRealHeightDevice(context));
+          DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
+          DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
 
       Glide.with(getContext()).load(imageUrl).priority(Priority.NORMAL).into(imageViewToExpand);
     }
 
     DetailActivity.open(activity, elementUrl, imageUrl,
-        DeviceUtils.calculateRealWidthDevice(context),
-        DeviceUtils.calculateRealHeightDevice(context), imageViewToExpand);
+        DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
+        DeviceUtils.calculateHeightDeviceInImmersiveMode(context), imageViewToExpand);
   }
 
   @Override public void showAuthDialog() {

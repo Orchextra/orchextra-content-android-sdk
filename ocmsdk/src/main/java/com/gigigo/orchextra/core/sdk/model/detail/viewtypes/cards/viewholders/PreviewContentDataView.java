@@ -80,8 +80,8 @@ public class PreviewContentDataView extends LinearLayout {
     previewBackgroundShadow.getViewTreeObserver()
         .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
           @Override public boolean onPreDraw() {
-            int width = DeviceUtils.calculateRealWidthDevice(context);
-            int height = DeviceUtils.calculateRealHeightDevice(context);
+            int width = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context);
+            int height = DeviceUtils.calculateHeightDeviceInImmersiveMode(context);
 
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
             previewBackgroundShadow.setLayoutParams(lp);
@@ -119,8 +119,8 @@ public class PreviewContentDataView extends LinearLayout {
     String imageUrl = preview.getImageUrl();
 
     String generatedImageUrl =
-        ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(context),
-            DeviceUtils.calculateRealHeightDevice(context));
+        ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
+            DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
 
     Glide.with(getContext()).load(generatedImageUrl).priority(Priority.NORMAL).into(previewImage);
   }

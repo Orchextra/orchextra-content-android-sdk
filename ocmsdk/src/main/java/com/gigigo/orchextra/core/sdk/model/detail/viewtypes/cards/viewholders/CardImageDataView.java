@@ -64,7 +64,7 @@ public class CardImageDataView extends CardDataView {
   private void setImage(final String imageUrl, String imageThumb) {
     ImageGenerator.generateThumbImage(imageThumb, cardImagePlaceholder);
 
-    int widthDevice = DeviceUtils.calculateRealWidthDevice(getContext());
+    int widthDevice = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(getContext());
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, widthDevice);
 

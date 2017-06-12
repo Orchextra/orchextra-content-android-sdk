@@ -42,7 +42,7 @@ public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
   private void setImage(final String imageUrl, final String imageThumb) {
     float ratioImage = ImageGenerator.getRatioImage(imageUrl);
 
-    int realWidthDevice = DeviceUtils.calculateRealWidthDevice(getContext());
+    int realWidthDevice = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(getContext());
 
     if (ratioImage != -1) {
       int calculatedHeight = (int) (realWidthDevice / ratioImage);

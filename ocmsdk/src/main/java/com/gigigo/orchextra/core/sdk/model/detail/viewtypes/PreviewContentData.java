@@ -18,9 +18,11 @@ import com.bumptech.glide.Priority;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
+import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.MoreContentArrowView;
 import com.gigigo.orchextra.ocmsdk.R;
 
@@ -36,6 +38,7 @@ public class PreviewContentData extends UiBaseContentData {
   private View goToArticleButton;
 
   private PreviewFuntionalityListener previewFuntionalityListener;
+  private boolean statusBarEnabled;
 
   public static PreviewContentData newInstance() {
     return new PreviewContentData();
@@ -52,8 +55,16 @@ public class PreviewContentData extends UiBaseContentData {
     View view = inflater.inflate(R.layout.view_preview_item, container, false);
 
     init(view);
+    initDi();
 
     return view;
+  }
+
+  private void initDi() {
+    Injector injector = OCManager.getInjector();
+    if (injector != null) {
+      statusBarEnabled = injector.provideOcmStyleUi().isStatusBarEnabled();
+    }
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -61,21 +72,6 @@ public class PreviewContentData extends UiBaseContentData {
 
     bindTo();
     setListeners();
-
-    previewBackgroundShadow.getViewTreeObserver()
-        .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-          @Override public boolean onPreDraw() {
-            int width = DeviceUtils.calculateRealWidthDevice(context);
-            int height = DeviceUtils.calculateRealHeightDevice(context);
-
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
-            previewBackgroundShadow.setLayoutParams(lp);
-
-            previewBackgroundShadow.getViewTreeObserver().removeOnPreDrawListener(this);
-
-            return true;
-          }
-        });
   }
 
   public void setPreview(ElementCachePreview preview) {
@@ -99,6 +95,7 @@ public class PreviewContentData extends UiBaseContentData {
   public void bindTo() {
     if (preview != null) {
       setImage();
+      setBackgroundShadow();
 
       previewTitle.setText(preview.getText());
       if (preview.getText() == null || (preview.getText() != null && preview.getText().isEmpty())) {
@@ -113,6 +110,20 @@ public class PreviewContentData extends UiBaseContentData {
     }
   }
 
+  private void setBackgroundShadow() {
+    int width, height;
+    if (statusBarEnabled) {
+      width = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context);
+      height = DeviceUtils.calculateHeightDeviceInImmersiveMode(context);
+    } else {
+      width = DeviceUtils.calculateWidthDevice(context);
+      height = DeviceUtils.calculateHeightDevice(context);
+    }
+
+    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
+    previewBackgroundShadow.setLayoutParams(lp);
+  }
+
   private void setAnimations() {
     Animation animation = AnimationUtils.loadAnimation(context, R.anim.oc_settings_items);
     previewTitle.startAnimation(animation);
@@ -122,9 +133,17 @@ public class PreviewContentData extends UiBaseContentData {
     String imageUrl = preview.getImageUrl();
 
     if (imageUrl != null) {
-      String generatedImageUrl =
-          ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(context),
-              DeviceUtils.calculateRealHeightDevice(context));
+      int width, height;
+      if (statusBarEnabled) {
+        width = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context);
+        height = DeviceUtils.calculateHeightDeviceInImmersiveMode(context);
+      } else {
+        width = DeviceUtils.calculateWidthDevice(context);
+        height = DeviceUtils.calculateHeightDevice(context);
+        previewImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+      }
+
+      String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, width, height);
 
       Glide.with(this).load(generatedImageUrl).priority(Priority.NORMAL).into(previewImage);
 

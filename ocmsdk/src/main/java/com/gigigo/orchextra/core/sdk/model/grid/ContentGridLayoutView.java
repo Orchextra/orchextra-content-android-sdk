@@ -223,8 +223,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
     if (urlImageToExpand != null) {
       String imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
-          DeviceUtils.calculateRealWidthDevice(context),
-          DeviceUtils.calculateRealHeightDevice(context));
+          DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
+          DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
 
       Glide.with(this)
           .load(imageUrl)
@@ -243,8 +243,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
 
     DetailActivity.open(activity, elementUrl, urlImageToExpand,
-        DeviceUtils.calculateRealWidthDevice(context),
-        DeviceUtils.calculateRealHeightDevice(context), imageViewToExpandInDetail);
+        DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
+        DeviceUtils.calculateHeightDeviceInImmersiveMode(context), imageViewToExpandInDetail);
   }
 
   private void clearImageToExpandWhenAnimationEnds(final ImageView imageViewToExpandInDetail) {

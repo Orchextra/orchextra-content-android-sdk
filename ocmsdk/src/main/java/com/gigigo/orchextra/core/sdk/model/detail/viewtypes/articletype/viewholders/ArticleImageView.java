@@ -41,7 +41,7 @@ public class ArticleImageView extends ArticleBaseView<ArticleImageElement> {
     float ratioImage = ImageGenerator.getRatioImage(imageUrl);
 
     if (ratioImage != -1) {
-      int realWidthDevice = DeviceUtils.calculateRealWidthDevice(getContext());
+      int realWidthDevice = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(getContext());
       int calculatedHeight = (int) (realWidthDevice / ratioImage);
 
       FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(realWidthDevice, calculatedHeight);
@@ -51,7 +51,7 @@ public class ArticleImageView extends ArticleBaseView<ArticleImageElement> {
     byte[] imageThumbBytes = Base64.decode(imageThumb, Base64.DEFAULT);
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl,
-        DeviceUtils.calculateRealWidthDevice(getContext()));
+        DeviceUtils.calculateRealWidthDeviceInImmersiveMode(getContext()));
 
     DrawableRequestBuilder<String> requestBuilder =
         Glide.with(context).load(generatedImageUrl).priority(Priority.NORMAL).dontAnimate();

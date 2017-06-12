@@ -6,8 +6,9 @@ public final class OcmStyleUiBuilder {
   private String normalFonPath;
   private String mediumFontPath;
   private String lightFontPath;
-  private boolean enabledTitleToolbarDetailView = false;
+  private boolean titleToolbarEnabled = false;
   private boolean thumbnailEnabled = true;
+  private boolean statusBarEnabled = true;
 
   /**
    * Path to the font to apply in titles of the app
@@ -39,9 +40,18 @@ public final class OcmStyleUiBuilder {
     return this;
   }
 
-  public OcmStyleUiBuilder setEnabledTitleToolbarDetailView(boolean enabled) {
-    this.enabledTitleToolbarDetailView = enabled;
+  public OcmStyleUiBuilder setTitleToolbarEnabled(boolean enabled) {
+    this.titleToolbarEnabled = enabled;
     return this;
+  }
+
+  public OcmStyleUiBuilder setThumbnailEnabled(boolean thumbnailEnabled) {
+    this.thumbnailEnabled = thumbnailEnabled;
+    return this;
+  }
+
+  public void setEnabledStatusBar(boolean statusBarEnabled) {
+    this.statusBarEnabled = statusBarEnabled;
   }
 
   public String getTitleFontPath() {
@@ -61,15 +71,15 @@ public final class OcmStyleUiBuilder {
     return lightFontPath;
   }
 
-  public boolean isEnabledTitleToolbarDetailView() {
-    return enabledTitleToolbarDetailView;
-  }
-
-  public void setThumbnailEnabled(boolean thumbnailEnabled) {
-    this.thumbnailEnabled = thumbnailEnabled;
+  public boolean isTitleToolbarEnabled() {
+    return titleToolbarEnabled;
   }
 
   public boolean isThumbnailEnabled() {
     return thumbnailEnabled;
+  }
+
+  public boolean isStatusBarEnabled() {
+    return statusBarEnabled;
   }
 }

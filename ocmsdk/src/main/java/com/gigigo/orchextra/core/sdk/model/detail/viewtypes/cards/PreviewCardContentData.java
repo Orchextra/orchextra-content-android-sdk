@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -64,7 +63,7 @@ public class PreviewCardContentData extends UiBaseContentData {
         .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
           @TargetApi(Build.VERSION_CODES.JELLY_BEAN) @Override public void onGlobalLayout() {
             ViewGroup.LayoutParams layoutParams = cardViewPager.getLayoutParams();
-            layoutParams.height = DeviceUtils.calculateRealHeightDevice(activity);
+            layoutParams.height = DeviceUtils.calculateHeightDeviceInImmersiveMode(activity);
             cardViewPager.setLayoutParams(layoutParams);
 
             if (AndroidSdkVersion.hasJellyBean16()) {
