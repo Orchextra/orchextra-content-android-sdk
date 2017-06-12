@@ -50,8 +50,9 @@ public final class OcmStyleUiBuilder {
     return this;
   }
 
-  public void setEnabledStatusBar(boolean statusBarEnabled) {
+  public OcmStyleUiBuilder setEnabledStatusBar(boolean statusBarEnabled) {
     this.statusBarEnabled = statusBarEnabled;
+    return this;
   }
 
   public String getTitleFontPath() {

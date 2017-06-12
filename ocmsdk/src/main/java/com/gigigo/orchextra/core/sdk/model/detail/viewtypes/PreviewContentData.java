@@ -112,7 +112,7 @@ public class PreviewContentData extends UiBaseContentData {
 
   private void setBackgroundShadow() {
     int width, height;
-    if (statusBarEnabled) {
+    if (!statusBarEnabled) {
       width = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context);
       height = DeviceUtils.calculateHeightDeviceInImmersiveMode(context);
     } else {
@@ -134,7 +134,7 @@ public class PreviewContentData extends UiBaseContentData {
 
     if (imageUrl != null) {
       int width, height;
-      if (statusBarEnabled) {
+      if (!statusBarEnabled) {
         width = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context);
         height = DeviceUtils.calculateHeightDeviceInImmersiveMode(context);
       } else {
