@@ -34,7 +34,6 @@ import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
-import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 import orchextra.javax.inject.Provider;
@@ -43,14 +42,11 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
   private final OcmController ocmController;
   private final Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvider;
-  private final ImageLoader imageLoader;
 
   public OcmViewGeneratorImp(OcmController ocmController,
-      Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvider,
-      ImageLoader imageLoader) {
+      Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvider) {
     this.ocmController = ocmController;
     this.detailElementsViewPresenterProvider = detailElementsViewPresenterProvider;
-    this.imageLoader = imageLoader;
   }
 
   @Override public void getMenu(final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
@@ -85,7 +81,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return menuList;
   }
 
-  @Override public void generateSectionView(String viewId, String filter, GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
+  @Override public void generateSectionView(String viewId, String filter,
+      GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
     //ElementCache cachedElement = ocmController.getCachedElement(viewId);
     //
     //if (cachedElement != null) {
@@ -95,18 +92,18 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     //  }
     //}
     ocmController.getDetails(false, viewId, new OcmController.GetDetailControllerCallback() {
-      @Override
-      public void onGetDetailLoaded(ElementCache elementCache) {
-          if (elementCache.getType() == ElementCacheType.WEBVIEW
-              && elementCache.getRender() != null) {
-            getSectionViewGeneratorCallback.onSectionViewLoaded(generateWebContentData(elementCache.getRender().getUrl()));
-          } else {
-            getSectionViewGeneratorCallback.onSectionViewLoaded(generateGridContentData(viewId, filter));
-          }
+      @Override public void onGetDetailLoaded(ElementCache elementCache) {
+        if (elementCache.getType() == ElementCacheType.WEBVIEW
+            && elementCache.getRender() != null) {
+          getSectionViewGeneratorCallback.onSectionViewLoaded(
+              generateWebContentData(elementCache.getRender().getUrl()));
+        } else {
+          getSectionViewGeneratorCallback.onSectionViewLoaded(
+              generateGridContentData(viewId, filter));
+        }
       }
 
-      @Override
-      public void onGetDetailFails(Exception e) {
+      @Override public void onGetDetailFails(Exception e) {
         getSectionViewGeneratorCallback.onSectionViewFails(e);
       }
     });
@@ -142,18 +139,14 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     previewCard.setPreviewList(list);
 
     PreviewCardContentData previewCardContentData = PreviewCardContentData.newInstance();
-    previewCardContentData.setImageLoader(imageLoader);
     previewCardContentData.setPreview(previewCard);
-    previewCardContentData.setShare(share);
     return previewCardContentData;
   }
 
   @Override
   public UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share) {
     PreviewContentData previewContentData = PreviewContentData.newInstance();
-    previewContentData.setImageLoader(imageLoader);
     previewContentData.setPreview(preview);
-    previewContentData.setShare(share);
     return previewContentData;
   }
 
@@ -201,7 +194,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null && elementCache.getPreview() != null) {
-          getDetailImageViewGeneratorCallback.onGetImageLoaded(elementCache.getPreview().getImageUrl());
+          getDetailImageViewGeneratorCallback.onGetImageLoaded(
+              elementCache.getPreview().getImageUrl());
         }
       }
 
@@ -213,14 +207,12 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
   private UiBaseContentData generateArticleDetailView(List<ArticleElement> elements) {
     ArticleContentData articleContentData = ArticleContentData.newInstance();
-    articleContentData.setImageLoader(imageLoader);
     articleContentData.addItems(elements);
     return articleContentData;
   }
 
   @Override public UiBaseContentData generateCardDetailView(ElementCache elements) {
     CardContentData cardContentData = CardContentData.newInstance();
-    cardContentData.setImageLoader(imageLoader);
     cardContentData.addItems(elements);
     return cardContentData;
   }
@@ -251,10 +243,5 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
   private UiBaseContentData generateDeepLinkView(String uri) {
     return DeepLinkContentData.newInstance(uri);
-  }
-
-  @Override public void releaseImageLoader() {
-    //todo release imageview for avoid memory leak of detailactivity
-
   }
 }

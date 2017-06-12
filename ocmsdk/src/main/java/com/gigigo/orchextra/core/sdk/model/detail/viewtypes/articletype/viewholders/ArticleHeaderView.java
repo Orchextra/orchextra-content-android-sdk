@@ -6,6 +6,7 @@ import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
@@ -13,22 +14,22 @@ import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
 
   private final Context context;
-  private ImageLoader imageLoader;
+  private final boolean thumbnailEnabled;
 
   private ImageView articleHeaderImage;
+
   private TextView articleHeaderText;
 
   public ArticleHeaderView(Context context, ArticleHeaderElement articleElement,
-      ImageLoader imageLoader) {
+      boolean thumbnailEnabled) {
     super(context, articleElement);
 
     this.context = context;
-    this.imageLoader = imageLoader;
+    this.thumbnailEnabled = thumbnailEnabled;
   }
 
   @Override protected void bindTo(final ArticleHeaderElement articleElement) {
@@ -42,7 +43,7 @@ public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
   private void setImage(final String imageUrl, final String imageThumb) {
     float ratioImage = ImageGenerator.getRatioImage(imageUrl);
 
-    int realWidthDevice = DeviceUtils.calculateRealWidthDevice(getContext());
+    int realWidthDevice = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(getContext());
 
     if (ratioImage != -1) {
       int calculatedHeight = (int) (realWidthDevice / ratioImage);
@@ -52,12 +53,18 @@ public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
       articleHeaderImage.setLayoutParams(lp);
     }
 
-
     byte[] imageThumbBytes = Base64.decode(imageThumb, Base64.DEFAULT);
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, realWidthDevice);
 
-    OcmImageLoader.load(getContext(), imageThumbBytes, generatedImageUrl,  articleHeaderImage);
+    DrawableRequestBuilder<String> requestBuilder =
+        OcmImageLoader.load(context, generatedImageUrl).priority(Priority.NORMAL).dontAnimate();
+
+    if (thumbnailEnabled) {
+      requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageThumbBytes));
+    }
+
+    requestBuilder.into(articleHeaderImage);
   }
 
   @Override protected void bindViews() {

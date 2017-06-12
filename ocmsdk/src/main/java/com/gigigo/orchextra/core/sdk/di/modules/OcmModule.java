@@ -13,8 +13,6 @@ import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProviderImpl;
 import com.gigigo.orchextra.core.sdk.application.OcmSdkLifecycle;
-import com.gigigo.ui.imageloader.ImageLoader;
-import com.gigigo.ui.imageloader.glide.GlideImageLoaderImp;
 import orchextra.dagger.Module;
 import orchextra.dagger.Provides;
 import orchextra.javax.inject.Provider;
@@ -41,14 +39,9 @@ import orchextra.javax.inject.Singleton;
     return ocmSdkLifecycle;
   }
 
-  @Singleton @Provides ImageLoader provideImageLoader() {
-    return new GlideImageLoaderImp(app.getApplicationContext());
-  }
-
   @Singleton @Provides OcmViewGenerator provideOcmViewGenerator(OcmController ocmController,
-      Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvides,
-      ImageLoader imageLoader) {
-    return new OcmViewGeneratorImp(ocmController, detailElementsViewPresenterProvides, imageLoader);
+      Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvides) {
+    return new OcmViewGeneratorImp(ocmController, detailElementsViewPresenterProvides);
   }
 
   @Singleton @Provides Authoritation provideAuthoritation() {

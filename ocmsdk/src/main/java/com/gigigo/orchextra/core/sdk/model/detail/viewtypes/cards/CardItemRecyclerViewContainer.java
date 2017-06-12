@@ -4,12 +4,10 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageAndTextElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
@@ -25,7 +23,6 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.Ca
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardVideoView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.PreviewContentDataView;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.ArrayList;
 import views.gigigo.com.tviewpager.CallBackAdapterItemInstanciate;
 import views.gigigo.com.tviewpager.CustomHorizontalPagerAdapter;
@@ -37,14 +34,11 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
 
   private final Context context;
 
-  private ImageLoader imageLoader;
   private VerticalViewPager verticalViewPager;
-  private ElementCache elements;
   private Handler handler = new Handler();
   private ArrayList<ElementCachePreview> previewList;
   private ArrayList<ArticleElement> elementCacheList;
   private int verticalPosition;
-  private OnChangeVerticalPageListener onChangeVerticalPageListener;
 
   private Runnable switchPageRunnable = new Runnable() {
     @Override public void run() {
@@ -62,7 +56,6 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
 
           if (articleElement.getClass() == ArticleImageElement.class) {
             CardImageDataView cardImageViewHolder = new CardImageDataView(context);
-            cardImageViewHolder.setImageLoader(imageLoader);
             cardImageViewHolder.setImageElement((ArticleImageElement) articleElement);
             cardImageViewHolder.initialize();
 
@@ -104,9 +97,7 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
           ElementCachePreview elementCachePreview = previewList.get(index);
 
           PreviewContentDataView previewCardContentData = new PreviewContentDataView(context);
-          previewCardContentData.setImageLoader(imageLoader);
           previewCardContentData.setPreview(elementCachePreview);
-          previewCardContentData.setShare(elements.getShare());
           previewCardContentData.initialize();
 
           return previewCardContentData;
@@ -169,15 +160,7 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
     verticalViewPager = (VerticalViewPager) view.findViewById(R.id.verticalViewPager);
   }
 
-  public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = imageLoader;
-  }
-
   public void initialize() {
-    if (imageLoader == null) {
-      Log.e(getClass().getCanonicalName(), "ImageLoader and Fragment Manager can't be null");
-      return;
-    }
 
     initViewPager();
 
@@ -193,8 +176,6 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
   }
 
   public void addCards(ElementCache elements) {
-    this.elements = elements;
-
     ArrayList<ElementCachePreview> previewList = new ArrayList<>();
     for (int i = 0; i < 5; i++) {
       previewList.add(elements.getPreview());
@@ -223,14 +204,5 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
     stopSwitchingPageAutomatically();
 
     handler.postDelayed(startAutoSwipingWhenPositionIsZero, 1000);
-  }
-
-  public void setOnChangeVerticalPageListener(
-      OnChangeVerticalPageListener onChangeVerticalPageListener) {
-    this.onChangeVerticalPageListener = onChangeVerticalPageListener;
-  }
-
-  public interface OnChangeVerticalPageListener {
-    void onChangeVerticalPage(int numPage);
   }
 }

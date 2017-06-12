@@ -2,23 +2,17 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 class PreviewCardPagerAdapter extends FragmentStatePagerAdapter {
 
-  private final ImageLoader imageLoader;
   private ElementCachePreviewCard previewCard;
-  private ElementCacheShare shareContent;
 
-  public PreviewCardPagerAdapter(FragmentManager fm, ImageLoader imageLoader) {
+  public PreviewCardPagerAdapter(FragmentManager fm) {
     super(fm);
-    this.imageLoader = imageLoader;
   }
 
   @Override public int getCount() {
@@ -33,14 +27,8 @@ class PreviewCardPagerAdapter extends FragmentStatePagerAdapter {
     ElementCachePreview elementCachePreview = previewCard.getPreviewList().get(position);
 
     PreviewContentData previewContentData = PreviewContentData.newInstance();
-    previewContentData.setImageLoader(imageLoader);
     previewContentData.setPreview(elementCachePreview);
-    previewContentData.setShare(shareContent);
 
     return previewContentData;
-  }
-
-  public void setShareContent(ElementCacheShare shareContent) {
-    this.shareContent = shareContent;
   }
 }

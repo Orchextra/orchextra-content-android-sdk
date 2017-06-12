@@ -2,16 +2,15 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
-import com.gigigo.ui.imageloader.ImageLoaderCallback;
-import com.gigigo.ui.imageloader.glide.GlideImageLoaderImp;
 
 public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
 
@@ -46,23 +45,20 @@ public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
     imgThumb.setOnClickListener(onYoutubeThumbnailClickListener);
 
     String youtubeId = articleElement.getSource();
-    ImageLoader glideImageLoaderImp = new GlideImageLoaderImp(activity.getApplicationContext());
+
     String strImgForBlur = "http://img.youtube.com/vi/" + youtubeId + "/hqdefault.jpg";
 
-    glideImageLoaderImp.load(strImgForBlur).into(new ImageLoaderCallback() {
-      @Override public void onSuccess(Bitmap bitmap) {
-        //this is for prevent show only the play img when the video is down
+    Glide.with(activity).load(strImgForBlur).listener(new RequestListener<String, GlideDrawable>() {
+      @Override public boolean onException(Exception e, String model, Target<GlideDrawable> target,
+          boolean isFirstResource) {
+        return false;
+      }
+
+      @Override public boolean onResourceReady(GlideDrawable resource, String model,
+          Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
         imgPlay.setVisibility(VISIBLE);
-        imgThumb.setImageBitmap(bitmap);
+        return false;
       }
-
-      @Override public void onError(Drawable drawable) {
-
-      }
-
-      @Override public void onLoading() {
-
-      }
-    });
+    }).into(imgThumb);
   }
 }

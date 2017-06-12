@@ -16,7 +16,7 @@ import com.gigigo.orchextra.ocmsdk.R;
 public class DeviceUtils {
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-  public static int calculateRealHeightDevice(Context context) {
+  public static int calculateHeightDeviceInImmersiveMode(Context context) {
     WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
     DisplayMetrics metrics = new DisplayMetrics();
@@ -33,7 +33,7 @@ public class DeviceUtils {
   }
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-  public static int calculateRealWidthDevice(Context context) {
+  public static int calculateRealWidthDeviceInImmersiveMode(Context context) {
     WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
     DisplayMetrics metrics = new DisplayMetrics();
@@ -66,5 +66,21 @@ public class DeviceUtils {
         activity.startActivity(customTabsIntent.intent);
       }
     }
+  }
+
+  public static int calculateWidthDevice(Context context) {
+    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    Display display = wm.getDefaultDisplay();
+    Point size = new Point();
+    display.getSize(size);
+    return size.x;
+  }
+
+  public static int calculateHeightDevice(Context context) {
+    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    Display display = wm.getDefaultDisplay();
+    Point size = new Point();
+    display.getSize(size);
+    return size.y;
   }
 }

@@ -17,17 +17,14 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.Ca
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardRichTextDataView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.CardVideoView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders.PreviewContentDataView;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class VerticalPagerAdapter extends PagerAdapter {
 
   private final Context context;
-  private final ImageLoader imageLoader;
   private final ElementCache elementCache;
 
-  public VerticalPagerAdapter(Context context, ImageLoader imageLoader, ElementCache elementCache) {
+  public VerticalPagerAdapter(Context context, ElementCache elementCache) {
     this.context = context;
-    this.imageLoader = imageLoader;
     this.elementCache = elementCache;
   }
 
@@ -63,9 +60,7 @@ public class VerticalPagerAdapter extends PagerAdapter {
 
     if (elementCache.getPreview() != null && position == 0) {
       PreviewContentDataView previewCardContentData = new PreviewContentDataView(context);
-      previewCardContentData.setImageLoader(imageLoader);
       previewCardContentData.setPreview(elementCache.getPreview());
-      previewCardContentData.setShare(elementCache.getShare());
       previewCardContentData.initialize();
 
       container.addView(previewCardContentData);
@@ -84,7 +79,6 @@ public class VerticalPagerAdapter extends PagerAdapter {
       ArticleElement articleElement = elementCache.getRender().getElements().get(adapterPosition);
       if (articleElement.getClass() == ArticleImageElement.class) {
         CardImageDataView cardImageViewHolder = new CardImageDataView(context);
-        cardImageViewHolder.setImageLoader(imageLoader);
         cardImageViewHolder.setImageElement((ArticleImageElement) articleElement);
         cardImageViewHolder.initialize();
 

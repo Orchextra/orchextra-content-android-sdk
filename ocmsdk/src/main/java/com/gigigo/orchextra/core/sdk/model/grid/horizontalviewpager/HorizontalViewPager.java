@@ -59,7 +59,7 @@ public class HorizontalViewPager extends UiListedBaseContentData {
 
   private void initViewPager() {
     if (listedHorizontalViewPager != null) {
-      adapter = new HorizontalViewPagerAdapter(fragmentManager, imageLoader, listedContentListener);
+      adapter = new HorizontalViewPagerAdapter(fragmentManager, listedContentListener);
       listedHorizontalViewPager.setAdapter(adapter);
     }
   }

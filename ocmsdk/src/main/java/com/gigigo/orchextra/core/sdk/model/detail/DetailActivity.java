@@ -12,21 +12,24 @@ import android.view.View;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.model.detail.DetailPresenter;
 import com.gigigo.orchextra.core.controller.model.detail.DetailView;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
-import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeWebviewActivity;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.core.sdk.utils.swipeback.SwipeBackBaseInjectionActivity;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import orchextra.javax.inject.Inject;
 
-public class DetailActivity extends BaseInjectionActivity<DetailActivityComponent>
+public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivityComponent>
     implements DetailView {
 
   private static final String EXTRA_ELEMENT_URL = "EXTRA_ELEMENT_URL";
@@ -35,9 +38,14 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   private static final String EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL = "EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL";
 
   @Inject DetailPresenter presenter;
-
+  OnFinishViewListener onFinishViewListener = new OnFinishViewListener() {
+    @Override public void onFinish() {
+      finishView(isAppbarExpanded());
+    }
+  };
   private ImageView animationImageView;
   private UiDetailBaseContentData uiContentView;
+  private boolean statusBarEnabled;
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   public static void open(Activity activity, String elementUrl, String urlImageToExpand, int width,
@@ -75,14 +83,18 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   public void onWindowFocusChanged(boolean hasFocus) {
     super.onWindowFocusChanged(hasFocus);
     if (hasFocus) {
-      int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-          | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-          | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-          | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-          | View.SYSTEM_UI_FLAG_FULLSCREEN;
+      int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
 
-      if (AndroidSdkVersion.hasKitKat19()) {
-        flags = flags | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+      if (!statusBarEnabled) {
+        flags = flags
+            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_FULLSCREEN;
+
+        if (AndroidSdkVersion.hasKitKat19()) {
+          flags = flags | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
       }
 
       getWindow().getDecorView().setSystemUiVisibility(flags);
@@ -93,6 +105,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     Injector injector = OCManager.getInjector();
     if (injector != null) {
       injector.injectDetailActivity(this);
+      statusBarEnabled = injector.provideOcmStyleUi().isStatusBarEnabled();
     }
   }
 
@@ -135,7 +148,29 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     if (!TextUtils.isEmpty(url)) {
       String generateImageUrl = ImageGenerator.generateImageUrl(url, width, height);
 
-      OcmImageLoader.load(this, generateImageUrl, animationImageView);
+
+      supportPostponeEnterTransition();
+
+      OcmImageLoader.load(this, generateImageUrl)
+          .override(width, height)
+          .centerCrop()
+          .dontAnimate()
+          .priority(Priority.NORMAL)
+          .listener(new RequestListener<Object, GlideDrawable>() {
+                      @Override
+                      public boolean onException(Exception e, Object model, Target<GlideDrawable> target,
+                          boolean isFirstResource) {
+                        supportStartPostponedEnterTransition();
+                        return false;
+                      }
+
+                      @Override public boolean onResourceReady(GlideDrawable resource, Object model,
+                          Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        supportStartPostponedEnterTransition();
+                        return false;
+                      }
+                    })
+          .into(animationImageView);
     }
   }
 
@@ -163,10 +198,4 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     super.onDestroy();
   }
-
-  OnFinishViewListener onFinishViewListener = new OnFinishViewListener() {
-    @Override public void onFinish() {
-      finishView(isAppbarExpanded());
-    }
-  };
 }

@@ -15,11 +15,9 @@ import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class CardImageDataView extends CardDataView {
 
-  private ImageLoader imageLoader;
   private ImageView cardImagePlaceholder;
   private ArticleImageElement imageElement;
 
@@ -67,15 +65,13 @@ public class CardImageDataView extends CardDataView {
   private void setImage(final String imageUrl, String imageThumb) {
     ImageGenerator.generateThumbImage(imageThumb, cardImagePlaceholder);
 
-    int widthDevice = DeviceUtils.calculateRealWidthDevice(getContext());
+    int widthDevice = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(getContext());
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, widthDevice);
 
-    OcmImageLoader.load(getContext(), generatedImageUrl, cardImagePlaceholder);
-  }
-
-  public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = imageLoader;
+    OcmImageLoader.load(getContext(), generatedImageUrl)
+        .priority(Priority.NORMAL)
+        .into(cardImagePlaceholder);
   }
 
   public void setImageElement(ArticleImageElement imageElement) {

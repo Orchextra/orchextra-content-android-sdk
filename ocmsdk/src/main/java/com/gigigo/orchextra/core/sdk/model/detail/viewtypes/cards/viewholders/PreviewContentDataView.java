@@ -19,18 +19,15 @@ import com.bumptech.glide.Priority;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class PreviewContentDataView extends LinearLayout {
 
   private final Context context;
   private ElementCachePreview preview;
-  private ElementCacheShare share;
 
   private View previewContentMainLayout;
   private ImageView previewImage;
@@ -39,7 +36,6 @@ public class PreviewContentDataView extends LinearLayout {
   private View goToArticleButton;
 
   private PreviewFuntionalityListener previewFuntionalityListener;
-  private ImageLoader imageLoader;
 
   public PreviewContentDataView(@NonNull Context context) {
     super(context);
@@ -75,10 +71,6 @@ public class PreviewContentDataView extends LinearLayout {
     this.preview = preview;
   }
 
-  public void setShare(ElementCacheShare share) {
-    this.share = share;
-  }
-
   private void initViews(View view) {
     previewContentMainLayout = view.findViewById(R.id.previewContentMainLayout);
     previewImage = (ImageView) view.findViewById(R.id.preview_image);
@@ -86,19 +78,20 @@ public class PreviewContentDataView extends LinearLayout {
     previewTitle = (TextView) view.findViewById(R.id.preview_title);
     goToArticleButton = view.findViewById(R.id.go_to_article_button);
 
-    previewBackgroundShadow.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-      @Override public boolean onPreDraw() {
-        int width = DeviceUtils.calculateRealWidthDevice(context);
-        int height = DeviceUtils.calculateRealHeightDevice(context);
+    previewBackgroundShadow.getViewTreeObserver()
+        .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+          @Override public boolean onPreDraw() {
+            int width = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context);
+            int height = DeviceUtils.calculateHeightDeviceInImmersiveMode(context);
 
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
-        previewBackgroundShadow.setLayoutParams(lp);
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
+            previewBackgroundShadow.setLayoutParams(lp);
 
-        previewBackgroundShadow.getViewTreeObserver().removeOnPreDrawListener(this);
+            previewBackgroundShadow.getViewTreeObserver().removeOnPreDrawListener(this);
 
-        return true;
-      }
-    });
+            return true;
+          }
+        });
   }
 
   public void bindTo() {
@@ -106,7 +99,9 @@ public class PreviewContentDataView extends LinearLayout {
       setImage();
 
       previewTitle.setText(preview.getText());
-      if(preview.getText() == null || preview.getText().isEmpty()) previewBackgroundShadow.setVisibility(View.GONE);
+      if (preview.getText() == null || preview.getText().isEmpty()) {
+        previewBackgroundShadow.setVisibility(View.GONE);
+      }
 
       if (preview.getBehaviour().equals(ElementCacheBehaviour.SWIPE)) {
         goToArticleButton.setVisibility(View.VISIBLE);
@@ -125,8 +120,8 @@ public class PreviewContentDataView extends LinearLayout {
     String imageUrl = preview.getImageUrl();
 
     String generatedImageUrl =
-        ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(context),
-            DeviceUtils.calculateRealHeightDevice(context));
+        ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
+            DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
 
     OcmImageLoader.load(getContext(), generatedImageUrl, previewImage);
   }
@@ -154,10 +149,6 @@ public class PreviewContentDataView extends LinearLayout {
         .equals(ElementCacheBehaviour.CLICK)) {
       previewFuntionalityListener.disablePreviewScrolling();
     }
-  }
-
-  public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = imageLoader;
   }
 
   public void initialize() {

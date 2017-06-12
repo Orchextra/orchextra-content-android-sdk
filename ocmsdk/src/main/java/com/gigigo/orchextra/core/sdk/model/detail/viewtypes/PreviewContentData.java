@@ -3,11 +3,11 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -19,19 +19,18 @@ import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
+import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.MoreContentArrowView;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class PreviewContentData extends UiBaseContentData {
 
   private Context context;
   private ElementCachePreview preview;
-  private ElementCacheShare share;
 
   private View previewContentMainLayout;
   private ImageView previewImage;
@@ -40,6 +39,7 @@ public class PreviewContentData extends UiBaseContentData {
   private View goToArticleButton;
 
   private PreviewFuntionalityListener previewFuntionalityListener;
+  private boolean statusBarEnabled;
 
   public static PreviewContentData newInstance() {
     return new PreviewContentData();
@@ -55,10 +55,17 @@ public class PreviewContentData extends UiBaseContentData {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.view_preview_item, container, false);
 
-
     init(view);
+    initDi();
 
     return view;
+  }
+
+  private void initDi() {
+    Injector injector = OCManager.getInjector();
+    if (injector != null) {
+      statusBarEnabled = injector.provideOcmStyleUi().isStatusBarEnabled();
+    }
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -66,28 +73,10 @@ public class PreviewContentData extends UiBaseContentData {
 
     bindTo();
     setListeners();
-
-    previewBackgroundShadow.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-      @Override public boolean onPreDraw() {
-        int width = DeviceUtils.calculateRealWidthDevice(context);
-        int height = DeviceUtils.calculateRealHeightDevice(context);
-
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
-        previewBackgroundShadow.setLayoutParams(lp);
-
-        previewBackgroundShadow.getViewTreeObserver().removeOnPreDrawListener(this);
-
-        return true;
-      }
-    });
   }
 
   public void setPreview(ElementCachePreview preview) {
     this.preview = preview;
-  }
-
-  public void setShare(ElementCacheShare share) {
-    this.share = share;
   }
 
   private void init(View view) {
@@ -107,6 +96,7 @@ public class PreviewContentData extends UiBaseContentData {
   public void bindTo() {
     if (preview != null) {
       setImage();
+      setBackgroundShadow();
 
       previewTitle.setText(preview.getText());
       if (preview.getText() == null || (preview.getText() != null && preview.getText().isEmpty())) {
@@ -121,6 +111,20 @@ public class PreviewContentData extends UiBaseContentData {
     }
   }
 
+  private void setBackgroundShadow() {
+    int width, height;
+    if (!statusBarEnabled) {
+      width = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context);
+      height = DeviceUtils.calculateHeightDeviceInImmersiveMode(context);
+    } else {
+      width = DeviceUtils.calculateWidthDevice(context);
+      height = DeviceUtils.calculateHeightDevice(context);
+    }
+
+    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
+    previewBackgroundShadow.setLayoutParams(lp);
+  }
+
   private void setAnimations() {
     Animation animation = AnimationUtils.loadAnimation(context, R.anim.oc_settings_items);
     previewTitle.startAnimation(animation);
@@ -130,13 +134,43 @@ public class PreviewContentData extends UiBaseContentData {
     String imageUrl = preview.getImageUrl();
 
     if (imageUrl != null) {
-      String generatedImageUrl =
-          ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(context),
-              DeviceUtils.calculateRealHeightDevice(context));
-      Log.v("imageurl",""+generatedImageUrl);
+      int width, height;
+      if (!statusBarEnabled) {
+        width = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context);
+        height = DeviceUtils.calculateHeightDeviceInImmersiveMode(context);
+      } else {
+        width = DeviceUtils.calculateWidthDevice(context);
+        height = DeviceUtils.calculateHeightDevice(context);
+        previewImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+      }
 
-      OcmImageLoader.load(getContext(), generatedImageUrl, previewImage);
+      String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, width, height);
+
+      OcmImageLoader.load(this, generatedImageUrl).priority(Priority.NORMAL).into(previewImage);
+
+      animateAlphaBecauseOfCollapseEnterTransitionImage();
     }
+  }
+
+  private void animateAlphaBecauseOfCollapseEnterTransitionImage() {
+    previewImage.setAlpha(0f);
+    Animation animation = new AlphaAnimation(0.0f, 1.0f);
+    animation.setDuration(1000);
+    animation.setStartOffset(1000);
+    animation.setAnimationListener(new Animation.AnimationListener() {
+      @Override public void onAnimationStart(Animation animation) {
+
+      }
+
+      @Override public void onAnimationEnd(Animation animation) {
+        previewImage.setAlpha(1f);
+      }
+
+      @Override public void onAnimationRepeat(Animation animation) {
+
+      }
+    });
+    previewImage.startAnimation(animation);
   }
 
   private void setListeners() {
@@ -161,9 +195,5 @@ public class PreviewContentData extends UiBaseContentData {
         .equals(ElementCacheBehaviour.CLICK)) {
       previewFuntionalityListener.disablePreviewScrolling();
     }
-  }
-
-  public void setImageLoader(ImageLoader imageLoader) {
-
   }
 }

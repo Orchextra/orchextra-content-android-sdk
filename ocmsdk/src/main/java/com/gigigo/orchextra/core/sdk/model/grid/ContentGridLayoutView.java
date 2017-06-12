@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.core.sdk.model.grid;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,17 +33,15 @@ import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
-import com.gigigo.ui.imageloader.ImageLoaderCallback;
 import java.util.List;
 import orchextra.javax.inject.Inject;
 
 public class ContentGridLayoutView extends UiGridBaseContentData implements ContentView {
 
+  public boolean bIsSliderActive = false;
+  public int mTime = 0;
   @Inject ContentViewPresenter presenter;
-  @Inject ImageLoader imageLoader;
   @Inject Authoritation authoritation;
-
   UiListedBaseContentData.ListedContentListener listedContentListener =
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
@@ -59,7 +56,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           }
         }
       };
-
   private UiListedBaseContentData uiListedBaseContentData;
   private ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
   private Context context;
@@ -73,7 +69,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View appEmptyView;
   private View appErrorView;
   private FrameLayout listedDataContainer;
-
+  private boolean thumbnailEnabled;
   private View.OnClickListener onClickDiscoverMoreButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       if (onLoadMoreContentListener != null) {
@@ -81,7 +77,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       }
     }
   };
-
   private View.OnClickListener onClickRetryButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       if (presenter != null) {
@@ -117,6 +112,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     Injector injector = OCManager.getInjector();
     if (injector != null) {
       injector.injectContentGridLayoutView(this);
+      thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
     }
   }
 
@@ -179,7 +175,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
     setCustomViews();
     uiListedBaseContentData.setListedContentListener(listedContentListener);
-    uiListedBaseContentData.setParams(clipToPadding, imageLoader, authoritation);
+    uiListedBaseContentData.setParams(clipToPadding, authoritation, thumbnailEnabled);
     uiListedBaseContentData.setData(cellDataList);
 
     listedDataContainer.removeAllViews();
@@ -193,7 +189,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
 
     uiListedBaseContentData.setListedContentListener(listedContentListener);
-    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, imageLoader, authoritation);
+    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, authoritation, thumbnailEnabled);
     uiListedBaseContentData.setData(cellDataList);
 
     listedDataContainer.removeAllViews();
@@ -228,8 +224,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
     if (urlImageToExpand != null) {
       String imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
-          DeviceUtils.calculateRealWidthDevice(context),
-          DeviceUtils.calculateRealHeightDevice(context));
+          DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
+          DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
 
       OcmImageLoader.load(this.getActivity(), imageUrl, new SimpleTarget<GlideDrawable>() {
         @Override public void onResourceReady(GlideDrawable resource,
@@ -245,8 +241,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
 
     DetailActivity.open(activity, elementUrl, urlImageToExpand,
-        DeviceUtils.calculateRealWidthDevice(context),
-        DeviceUtils.calculateRealHeightDevice(context), imageViewToExpandInDetail);
+        DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
+        DeviceUtils.calculateHeightDeviceInImmersiveMode(context), imageViewToExpandInDetail);
   }
 
   private void clearImageToExpandWhenAnimationEnds(final ImageView imageViewToExpandInDetail) {
@@ -309,9 +305,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   public void setEmotion(String emotion) {
     this.emotion = emotion;
   }
-
-  public boolean bIsSliderActive = false;
-  public int mTime = 0;
 
   public void setViewPagerAutoSlideTime(int time) {
     if (time > 0) {

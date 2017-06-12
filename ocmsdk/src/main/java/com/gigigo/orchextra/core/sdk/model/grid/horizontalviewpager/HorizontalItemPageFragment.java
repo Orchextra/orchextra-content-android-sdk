@@ -12,16 +12,13 @@ import com.bumptech.glide.Priority;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class HorizontalItemPageFragment extends Fragment {
 
-  private ImageLoader imageLoader;
   private CellCarouselContentData cell;
   private ImageView horizontalItemImageView;
   private OnClickHorizontalItem onClickHorizontalItem;
   private View horizontalItemContainer;
-  private ImageView imageToExpandInDetail;
 
   public static HorizontalItemPageFragment newInstance() {
     return new HorizontalItemPageFragment();
@@ -40,7 +37,6 @@ public class HorizontalItemPageFragment extends Fragment {
   private void initViews(View view) {
     horizontalItemContainer = view.findViewById(R.id.horizontalItemContainer);
     horizontalItemImageView = (ImageView) view.findViewById(R.id.horizontalItemImageView);
-    imageToExpandInDetail = (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -67,10 +63,6 @@ public class HorizontalItemPageFragment extends Fragment {
         }
       }
     });
-  }
-
-  public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = imageLoader;
   }
 
   public void setCell(CellCarouselContentData cell) {

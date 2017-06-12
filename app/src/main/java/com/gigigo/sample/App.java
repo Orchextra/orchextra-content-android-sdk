@@ -10,7 +10,6 @@ import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 
-
 //MultiDexApplication
 public class App extends MultiDexApplication {
 
@@ -19,12 +18,12 @@ public class App extends MultiDexApplication {
 
   public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";    //Woah project
   public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
-  //
+
   //public static String API_KEY = "adfc8ba4340828a054bf061f692707a197af96cb";    //[UAT][CSE] - WOAH SITC project --- Staging
   //public static String API_SECRET = "677cf75a17aeec144ee402c281ad3a732d736a8a";
 
   //REPSOL RELEASE
-  //public static String API_KEY = "7bb9fa0f9b7a02846383fd6284d3c74b8155644c";    //[UAT][CSE] - DEMO CONTENT
+  //public static String API_KEY = "7bb9fa0f9b7a02846383fd6284d3c74b8155644c";
   //public static String API_SECRET = "3295dc8de90300e2977e6cec5b28b614fc644934";
 
   private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
@@ -56,27 +55,26 @@ public class App extends MultiDexApplication {
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
         .setContentLanguage("EN")
+        .setOxSenderId("117687721829")
         .setOnDoRequiredLoginCallback(onDoRequiredLoginCallback)
         .setOnEventCallback(onEventCallback);
 
     Ocm.initialize(ocmBuilder);
 
-    OcmStyleUiBuilder ocmStyleUiBuilder = new OcmStyleUiBuilder();
-
-    ocmStyleUiBuilder.setEnabledTitleToolbarDetailView(true);
+    OcmStyleUiBuilder ocmStyleUiBuilder = new OcmStyleUiBuilder()
+        .setTitleToolbarEnabled(true)
+        .setThumbnailEnabled(true)
+        .setEnabledStatusBar(true);
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
-    Ocm.setBusinessUnit("pl");
+    Ocm.setBusinessUnit("it");
   }
 
   private void enableStrictMode() {
-    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-        .detectAll()   // or .detectAll() for all detectable problems
-        .penaltyLog()
-        .build());
-    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-        .detectAll()
-        .build());
+    StrictMode.setThreadPolicy(
+        new StrictMode.ThreadPolicy.Builder().detectAll()   // or .detectAll() for all detectable problems
+            .penaltyLog().build());
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().build());
   }
 }

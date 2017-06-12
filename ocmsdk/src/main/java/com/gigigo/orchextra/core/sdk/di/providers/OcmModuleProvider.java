@@ -5,15 +5,12 @@ import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.application.OcmSdkLifecycle;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public interface OcmModuleProvider extends ControllerModuleProvider, PresentationModuleProvider {
 
   OcmContextProvider provideOcmContextProvider();
 
   OcmSdkLifecycle provideOcmSdkLifecycle();
-
-  ImageLoader provideImageLoader();
 
   Authoritation provideAuthoritation();
 
