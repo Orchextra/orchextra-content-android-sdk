@@ -1,8 +1,13 @@
 package com.gigigo.orchextra.core.data.rxCache.imageCache.loader;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
+import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.gigigo.ggglogger.GGGLogImpl;
@@ -18,6 +23,62 @@ import java.security.NoSuchAlgorithmException;
 public class OcmImageLoader {
   private static String TAG = OcmImageLoader.class.getSimpleName();
 
+  public static DrawableTypeRequest<?> load(Context mContext, String url) {
+    File cacheFile = getCacheFile(mContext, md5(url));
+    if (cacheFile.exists()) {
+      GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
+      return Glide.with(mContext).load(cacheFile);
+    } else {
+      GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
+      return Glide.with(mContext).load(url);
+    }
+  }
+
+  public static DrawableTypeRequest<?> load(Activity mActivity, String url) {
+    File cacheFile = getCacheFile(mActivity, md5(url));
+    if (cacheFile.exists()) {
+      GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
+      return Glide.with(mActivity).load(cacheFile);
+    } else {
+      GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
+      return Glide.with(mActivity).load(url);
+    }
+  }
+
+  public static DrawableTypeRequest<?> load(Fragment mFragment, String url) {
+    File cacheFile = getCacheFile(mFragment.getActivity().getApplicationContext(), md5(url));
+    if (cacheFile.exists()) {
+      GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
+      return Glide.with(mFragment).load(cacheFile);
+    } else {
+      GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
+      return Glide.with(mFragment).load(url);
+    }
+  }
+
+  public static DrawableTypeRequest<?> load(android.support.v4.app.Fragment mFragment, String url) {
+    File cacheFile = getCacheFile(mFragment.getActivity().getApplicationContext(), md5(url));
+    if (cacheFile.exists()) {
+      GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
+      return Glide.with(mFragment).load(cacheFile);
+    } else {
+      GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
+      return Glide.with(mFragment).load(url);
+    }
+  }
+
+  public static DrawableTypeRequest<?> load(FragmentActivity mFragmentActivity, String url) {
+    File cacheFile = getCacheFile(mFragmentActivity, md5(url));
+    if (cacheFile.exists()) {
+      GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
+      return Glide.with(mFragmentActivity).load(cacheFile);
+    } else {
+      GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
+      return Glide.with(mFragmentActivity).load(url);
+    }
+  }
+
+  // DELETE
   public static void load(Context mContext, String url, ImageView into) {
     File cacheFile = getCacheFile(mContext, md5(url));
     if (cacheFile.exists()) {
