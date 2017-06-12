@@ -148,7 +148,7 @@ import orchextra.javax.inject.Singleton;
         //// closing streams
         //output.close();
         //input.close();
-        GGGLogImpl.log("GET (" + total / 1024 + "kb) <- " + imageData.getPath(), LogLevel.INFO,
+        GGGLogImpl.log("GET (" + total / 1024 + "kb) <- " + imageData.getPath(), (total / 1024) > 2000 ? LogLevel.WARN : LogLevel.INFO,
             TAG);
       } catch (Exception e) {
         GGGLogImpl.log("ERROR <- " + imageData.getPath(), LogLevel.ERROR, TAG);
