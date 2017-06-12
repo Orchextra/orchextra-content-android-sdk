@@ -15,6 +15,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -95,15 +96,15 @@ import orchextra.javax.inject.Singleton;
 
     private void downloadImage(final ImageData imageData) {
       Log.v("START OcmImageCache -> ", imageData.getPath());
-      String filename = md5(imageData.getPath());
+      String filename = OcmImageLoader.md5(imageData.getPath());
 
       GGGLogImpl.log("GET -> " + imageData.getPath(), LogLevel.INFO, TAG);
 
       // Create a path pointing to the system-recommended cache dir for the app, with sub-dir named
       // thumbnails
-      File cacheDir = new File(mContext.getCacheDir(), "images");
+      File cacheDir = OcmImageLoader.getCacheDir(mContext);
       // Create a path in that dir for a file, named by the default hash of the url
-      File cacheFile = new File(cacheDir, filename);
+      File cacheFile = OcmImageLoader.getCacheFile(mContext, filename);
       if (!cacheDir.exists()) cacheDir.mkdir();
       if (cacheFile.exists()) {
         GGGLogImpl.log("SKIPPED -> " + imageData.getPath(), LogLevel.INFO, TAG);
@@ -174,22 +175,6 @@ import orchextra.javax.inject.Singleton;
       GGGLogImpl.log(totalDownloadSize / 1024 / 1024 + "MB", LogLevel.WARN, "TOTAL DOWNLOAD");
     }
 
-    private String md5(String s) {
-      try {
-        // Create MD5 Hash
-        MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-        digest.update(s.getBytes());
-        byte messageDigest[] = digest.digest();
 
-        // Create Hex String
-        StringBuffer hexString = new StringBuffer();
-        for (int i = 0; i < messageDigest.length; i++)
-          hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
-        return hexString.toString();
-      } catch (NoSuchAlgorithmException e) {
-        e.printStackTrace();
-      }
-      return "";
-    }
   }
 }
