@@ -61,7 +61,8 @@ import orchextra.javax.inject.Singleton;
 
   private void addSectionsImagesToCache(ApiSectionContentData apiSectionContentData) {
     Iterator<ApiElement> iterator = apiSectionContentData.getContent().getElements().iterator();
-    while (iterator.hasNext()) {
+    int i = 0;
+    while (iterator.hasNext() && i < 21) {
       ApiElement apiElement = iterator.next();
       addImageToQueue(apiElement.getSectionView());
       if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
@@ -70,6 +71,7 @@ import orchextra.javax.inject.Singleton;
         addImageToQueue(apiElementData);
         ocmCache.putDetail(apiElementData);
       }
+      i++;
     }
     ocmImageCache.start();
   }
