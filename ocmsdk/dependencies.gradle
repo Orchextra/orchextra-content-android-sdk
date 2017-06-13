@@ -21,19 +21,13 @@ project.ext {
                orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1005Test:play10Debug@aar',
                orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1005Test:play10Release@aar',
 
-               //               retrofit                   : "com.squareup.retrofit2:retrofit:2.0.2",
-               //               okHttp                     : "com.squareup.okhttp3:okhttp:3.4.1",
-               //               loggingInterceptor         : "com.squareup.okhttp3:logging-interceptor:3.4.1",
-               //               gson                       : "com.google.code.gson:gson:2.6.2",
-
                playServicesBase           : "com.google.android.gms:play-services-base:10.0.1",
                playServicesLocation       : "com.google.android.gms:play-services-location:10.0.1",
                playServicesGcm            : "com.google.android.gms:play-services-gcm:10.0.1",
 
                imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 
-               baserecycleradapter        : 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.5',
-               multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.2',
+               multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.3',
 
                oxvuforiaimplementation    : 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6',
 
