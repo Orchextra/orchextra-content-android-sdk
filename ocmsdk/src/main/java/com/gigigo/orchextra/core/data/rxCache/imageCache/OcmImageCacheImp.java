@@ -71,8 +71,23 @@ import orchextra.javax.inject.Singleton;
   }
 
   private void downloadFirst() {
-    while (started && imageQueue.hasImages()) {
-      executeAsynchronously(new ImageDownloader(imageQueue.getImage(), mContext));
+    if (started && imageQueue.hasImages()) {
+      executeAsynchronously(new ImageDownloader(imageQueue.getImage(), new Callback() {
+        @Override public void onSuccess(ImageData imageData) {
+          downloadFirst();
+        }
+
+        @Override public void onError(ImageData imageData, Exception e) {
+          imageData.consumeRetry();
+          if (imageData.getRetriesLeft() > 0) {
+            imageQueue.add(imageData);
+            GGGLogImpl.log(
+                "RETRIES LEFT (" + imageData.getRetriesLeft() + ") <- " + imageData.getPath(),
+                LogLevel.ERROR, TAG);
+          }
+          new Handler().postDelayed(() -> downloadFirst(), 30 * 1000);
+        }
+      }, mContext));
     }
   }
 
@@ -85,13 +100,21 @@ import orchextra.javax.inject.Singleton;
     this.threadExecutor.execute(runnable);
   }
 
+  interface Callback {
+    void onSuccess(ImageData imageData);
+
+    void onError(ImageData imageData, Exception e);
+  }
+
   private class ImageDownloader implements Runnable {
     private final ImageData imageData;
     private final Context mContext;
+    private final Callback callback;
 
-    public ImageDownloader(ImageData imageData, Context mContext) {
+    public ImageDownloader(ImageData imageData, Callback callback, Context mContext) {
       this.imageData = imageData;
       this.mContext = mContext;
+      this.callback = callback;
     }
 
     @Override public void run() {
@@ -154,10 +177,11 @@ import orchextra.javax.inject.Singleton;
         //input.close();
         GGGLogImpl.log("GET (" + total / 1024 + "kb) <- " + imageData.getPath(),
             (total / 1024) > 2000 ? LogLevel.WARN : LogLevel.INFO, TAG);
+        callback.onSuccess(imageData);
       } catch (Exception e) {
         GGGLogImpl.log("ERROR <- " + imageData.getPath(), LogLevel.ERROR, TAG);
         e.printStackTrace();
-        add(imageData);
+        callback.onError(imageData, e);
       } finally {
         if (input != null) {
           try {

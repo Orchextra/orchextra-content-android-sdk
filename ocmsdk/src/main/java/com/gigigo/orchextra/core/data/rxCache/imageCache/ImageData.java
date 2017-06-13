@@ -7,7 +7,8 @@ package com.gigigo.orchextra.core.data.rxCache.imageCache;
 public class ImageData {
 
   private final String path;
-  private final int priority;
+  private int priority;
+  private int retriesLeft = 30;
 
   public ImageData(String path, int priority) {
     this.path = path;
@@ -20,5 +21,14 @@ public class ImageData {
 
   public int getPriority() {
     return priority;
+  }
+
+  public int getRetriesLeft() {
+    return retriesLeft;
+  }
+
+  public void consumeRetry() {
+    priority++;
+    retriesLeft--;
   }
 }
