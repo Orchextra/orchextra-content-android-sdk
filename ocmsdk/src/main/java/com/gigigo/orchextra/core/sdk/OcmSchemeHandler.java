@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.sdk;
 
+import android.widget.ImageView;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
@@ -21,11 +22,11 @@ public class OcmSchemeHandler {
     this.actionHandler = actionHandler;
   }
 
-  public void processScheme(final String path) {
-    ocmController.getDetails(false, path, new OcmController.GetDetailControllerCallback() {
+  public void processElementUrl(final String elementUrl) {
+    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
-          executeAction(elementCache, path);
+          executeAction(elementCache, elementUrl, null, 0, 0, null);
         }
       }
 
@@ -35,7 +36,25 @@ public class OcmSchemeHandler {
     });
   }
 
-  private void executeAction(ElementCache cachedElement, String path) {
+  public void processElementUrl(String elementUrl, String urlImageToExpand, int widthScreen,
+      int heightScreen, ImageView imageViewToExpandInDetail) {
+
+    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
+      @Override public void onGetDetailLoaded(ElementCache elementCache) {
+        if (elementCache != null) {
+          executeAction(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
+              imageViewToExpandInDetail);
+        }
+      }
+
+      @Override public void onGetDetailFails(Exception e) {
+        e.printStackTrace();
+      }
+    });
+  }
+
+  private void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
+      int widthScreen, int heightScreen, ImageView imageViewToExpandInDetail) {
     ElementCacheType type = cachedElement.getType();
     ElementCacheRender render = cachedElement.getRender();
 
@@ -61,7 +80,8 @@ public class OcmSchemeHandler {
         }
         break;
       default:
-        openDetailActivity(path);
+        openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen,
+            imageViewToExpandInDetail);
         break;
     }
   }
@@ -82,7 +102,9 @@ public class OcmSchemeHandler {
     actionHandler.processDeepLink(uri);
   }
 
-  private void openDetailActivity(String path) {
-    DetailActivity.open(contextProvider.getCurrentActivity(), path, null, 0, 0, null);
+  private void openDetailActivity(String elementUrl, String urlImageToExpand, int widthScreen,
+      int heightScreen, ImageView imageViewToExpandInDetail) {
+    DetailActivity.open(contextProvider.getCurrentActivity(), elementUrl, urlImageToExpand,
+        widthScreen, heightScreen, imageViewToExpandInDetail);
   }
 }

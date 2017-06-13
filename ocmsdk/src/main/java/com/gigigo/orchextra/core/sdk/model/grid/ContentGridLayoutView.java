@@ -41,6 +41,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   public int mTime = 0;
   @Inject ContentViewPresenter presenter;
   @Inject Authoritation authoritation;
+
   UiListedBaseContentData.ListedContentListener listedContentListener =
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
@@ -242,7 +243,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           });
     }
 
-    DetailActivity.open(activity, elementUrl, urlImageToExpand,
+    OCManager.generateDetailView(elementUrl, urlImageToExpand,
         DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
         DeviceUtils.calculateHeightDeviceInImmersiveMode(context), imageViewToExpandInDetail);
   }
