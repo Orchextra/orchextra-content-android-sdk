@@ -18,8 +18,9 @@
 
 package com.gigigo.orchextra.core.sdk.di.injector;
 
-import com.gigigo.orchextra.core.receiver.DaggerWifiReceiverComponent;
-import com.gigigo.orchextra.core.receiver.WifiReceiverComponent;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
+import com.gigigo.orchextra.core.receiver.DaggerImagesServiceComponent;
+import com.gigigo.orchextra.core.receiver.ImagesServiceComponent;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.components.OcmComponent;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
@@ -79,8 +80,9 @@ public class InjectorImpl implements Injector {
     detailContentDataComponent.injectDetailContentData(detailParentContentData);
   }
 
-  @Override public void injectWifiBroadcastReceiver(WifiReceiver wifiReceiver) {
-    WifiReceiverComponent wifiReceiverComponent = DaggerWifiReceiverComponent.builder().ocmComponent(ocmComponent).build();
-    wifiReceiverComponent.injectWifiReceiver(wifiReceiver);
+  @Override public void injectImagesService(ImagesService imagesService) {
+    ImagesServiceComponent
+        imagesServiceComponent = DaggerImagesServiceComponent.builder().ocmComponent(ocmComponent).build();
+    imagesServiceComponent.injectImagesService(imagesService);
   }
 }

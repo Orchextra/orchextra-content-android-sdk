@@ -18,6 +18,7 @@
 
 package com.gigigo.orchextra.core.sdk.di.injector;
 
+import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailParentContentData;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
@@ -35,7 +36,7 @@ public interface Injector {
 
   void injectDetailContentData(DetailParentContentData detailParentContentData);
 
-  void injectWifiBroadcastReceiver(WifiReceiver wifiReceiver);
+  void injectImagesService(ImagesService imagesService);
 
   OcmStyleUi provideOcmStyleUi();
 }

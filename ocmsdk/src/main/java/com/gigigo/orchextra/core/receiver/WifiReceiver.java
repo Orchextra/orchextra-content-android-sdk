@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -41,26 +42,15 @@ public class WifiReceiver extends BroadcastReceiver {
 
   private final static String TAG = WifiReceiver.class.getSimpleName();
 
-  @Inject
-  OcmImageCache ocmImageCache;
-
   @Override
   public void onReceive(final Context context, final Intent intent) {
-    initDI();
     int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
     if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())
         && WifiManager.WIFI_STATE_ENABLED == wifiState) {
       if (Log.isLoggable(TAG, Log.VERBOSE)) {
         Log.v(TAG, "Wifi is now enabled");
       }
-      context.startService(new Intent(context, WifiActiveService.class));
-    }
-  }
-
-  private void initDI() {
-    Injector injector = OCManager.getInjector();
-    if (injector != null) {
-      injector.injectWifiBroadcastReceiver(this);
+      context.startService(new Intent(context, ImagesService.class));
     }
   }
 
