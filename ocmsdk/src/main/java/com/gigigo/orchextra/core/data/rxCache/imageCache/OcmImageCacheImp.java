@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -85,9 +86,16 @@ import orchextra.javax.inject.Singleton;
                 "RETRIES LEFT (" + imageData.getRetriesLeft() + ") <- " + imageData.getPath(),
                 LogLevel.ERROR, TAG);
           }
-          new Handler().postDelayed(() -> downloadFirst(), 30 * 1000);
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e1) {
+            e1.printStackTrace();
+          }
+          downloadFirst();
         }
       }, mContext));
+    } else {
+      GGGLogImpl.log("FINISHED", LogLevel.INFO, TAG);
     }
   }
 
@@ -135,6 +143,7 @@ import orchextra.javax.inject.Singleton;
       if (!cacheDir.exists()) cacheDir.mkdir();
       if (cacheFile.exists()) {
         GGGLogImpl.log("SKIPPED -> " + imageData.getPath(), LogLevel.INFO, TAG);
+        callback.onSuccess(imageData);
         return;
       }
       int count;
