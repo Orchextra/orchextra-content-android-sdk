@@ -104,8 +104,8 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
 
       CellGridContentData cell = new CellGridContentData();
       cell.setData(element);
-      cell.setColumn(pattern.get(i).getColumn());
-      cell.setRow(pattern.get(i).getRow());
+      cell.setColumn(pattern.get(indexPattern).getColumn());
+      cell.setRow(pattern.get(indexPattern).getRow());
 
       indexPattern = ++indexPattern % pattern.size();
 
