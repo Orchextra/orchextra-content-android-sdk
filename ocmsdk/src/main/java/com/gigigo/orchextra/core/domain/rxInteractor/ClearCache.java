@@ -11,7 +11,7 @@ import orchextra.javax.inject.Inject;
  * This class is an implementation of {@link UseCase} that represents a use case for
  * deleting stored data}.
  */
-public class ClearCache extends UseCase<ContentData, ClearCache.Params> {
+public class ClearCache extends UseCase<Void, ClearCache.Params> {
 
   private final OcmRepository ocmRepository;
 
@@ -21,9 +21,8 @@ public class ClearCache extends UseCase<ContentData, ClearCache.Params> {
     this.ocmRepository = ocmRepository;
   }
 
-  @Override Observable<ContentData> buildUseCaseObservable(Params params) {
-    //return this.ocmRepository.getSectionElements(params.forceReload, params.section);
-    return null;
+  @Override Observable<Void> buildUseCaseObservable(Params params) {
+    return this.ocmRepository.clear(params.images, params.data);
   }
 
   public static final class Params {
