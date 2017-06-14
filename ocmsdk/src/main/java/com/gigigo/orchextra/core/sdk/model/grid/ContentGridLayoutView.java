@@ -112,8 +112,12 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   private void initView(View view) {
-    emptyView = view.findViewById(R.id.ocm_empty_layout);
-    errorView = view.findViewById(R.id.ocm_error_layout);
+    if (emptyView != null) {
+      emptyView = view.findViewById(R.id.ocm_empty_layout);
+    }
+    if (errorView != null) {
+      errorView = view.findViewById(R.id.ocm_error_layout);
+    }
     retryButton = view.findViewById(R.id.ocm_retry_button);
     moreButton = view.findViewById(R.id.ocm_more_button);
     listedDataContainer = (FrameLayout) view.findViewById(R.id.listedDataContainer);
