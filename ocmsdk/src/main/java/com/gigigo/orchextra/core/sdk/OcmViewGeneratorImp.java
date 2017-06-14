@@ -83,14 +83,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
   @Override public void generateSectionView(String viewId, String filter,
       GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
-    //ElementCache cachedElement = ocmController.getCachedElement(viewId);
-    //
-    //if (cachedElement != null) {
-    //  if (cachedElement.getType() == ElementCacheType.WEBVIEW
-    //      && cachedElement.getRender() != null) {
-    //    return generateWebContentData(cachedElement.getRender().getUrl());
-    //  }
-    //}
+
     ocmController.getDetails(false, viewId, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache.getType() == ElementCacheType.WEBVIEW
