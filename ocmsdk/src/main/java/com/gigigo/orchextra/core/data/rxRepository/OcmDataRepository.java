@@ -7,6 +7,7 @@ import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
+import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDiskDataStore;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
@@ -59,5 +60,11 @@ import orchextra.javax.inject.Singleton;
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getCloudDataStore();
     return ocmDataStore.searchByText(textToSearch)
         .map(apiContentDataResponseMapper::externalClassToModel);
+  }
+
+  @Override public Observable<Void> clear(boolean images, boolean data) {
+    OcmDiskDataStore ocmDataStore = (OcmDiskDataStore) ocmDataStoreFactory.getDiskDataStore();
+    ocmDataStore.getOcmCache().evictAll();
+    return Observable.just(null);
   }
 }
