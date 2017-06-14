@@ -113,6 +113,21 @@ public final class OCManager {
         });
   }
 
+  public static void clearData(boolean images, boolean data,
+      final OCManagerCallbacks.Clear clearCallback) {
+    if (instance != null) {
+      instance.ocmController.clearCache(images, data, new OcmController.ClearCacheCallback() {
+        @Override public void onClearCacheSuccess() {
+          clearCallback.onDataClearedSuccessfull();
+        }
+
+        @Override public void onClearCacheFails(Exception e) {
+          clearCallback.onDataClearFails(e);
+        }
+      });
+    }
+  }
+
   public static UiDetailBaseContentData generateDetailView(String elementUrl) {
     return instance.ocmViewGenerator.generateDetailView(elementUrl);
   }

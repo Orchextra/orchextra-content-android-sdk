@@ -201,7 +201,7 @@ public class OcmControllerImp implements OcmController {
     }
 
     @Override public void onComplete() {
-
+      if (clearCacheCallback != null) clearCacheCallback.onClearCacheSuccess();
     }
 
     @Override public void onError(Throwable e) {
@@ -209,10 +209,6 @@ public class OcmControllerImp implements OcmController {
         clearCacheCallback.onClearCacheFails(new ClearCacheException(e));
       }
       e.printStackTrace();
-    }
-
-    @Override public void onNext(Void mVoid) {
-      if (clearCacheCallback != null) clearCacheCallback.onClearCacheSuccess();
     }
   }
   //end region

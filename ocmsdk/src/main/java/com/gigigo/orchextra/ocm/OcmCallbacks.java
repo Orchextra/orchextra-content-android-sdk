@@ -19,4 +19,9 @@ public interface OcmCallbacks {
     void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData);
     void onSectionFails(Exception e);
   }
+
+  interface ClearData {
+    void onDataClearSuccess();
+    void onDataClearFails(Exception e);
+  }
 }

@@ -62,6 +62,24 @@ public final class Ocm {
   }
 
   /**
+   * Clear cached data
+   * @param images
+   * @param data
+   * @param clear callback
+   */
+  public static void clearData(boolean images, boolean data, final OCManagerCallbacks.Clear clear) {
+    OCManager.clearData(images, data, new OCManagerCallbacks.Clear() {
+      @Override public void onDataClearedSuccessfull() {
+        clear.onDataClearedSuccessfull();
+      }
+
+      @Override public void onDataClearFails(Exception e) {
+        clear.onDataClearFails(e);
+      }
+    });
+  }
+
+  /**
    * Return a fragment which you can add to your views.
    *
    * @param viewId It is the content url returned in the menus call.

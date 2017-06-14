@@ -65,6 +65,6 @@ import orchextra.javax.inject.Singleton;
   @Override public Observable<Void> clear(boolean images, boolean data) {
     OcmDiskDataStore ocmDataStore = (OcmDiskDataStore) ocmDataStoreFactory.getDiskDataStore();
     ocmDataStore.getOcmCache().evictAll();
-    return Observable.just(null);
+    return Observable.empty();
   }
 }
