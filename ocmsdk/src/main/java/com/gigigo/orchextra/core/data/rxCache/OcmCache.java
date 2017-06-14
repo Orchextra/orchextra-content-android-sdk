@@ -34,4 +34,6 @@ public interface OcmCache {
   boolean isDetailCached(String slug);
 
   boolean isDetailExpired(String slug);
+
+  void evictAll();
 }

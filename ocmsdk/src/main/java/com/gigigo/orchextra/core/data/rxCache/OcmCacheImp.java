@@ -107,4 +107,8 @@ import orchextra.javax.inject.Singleton;
   @Override public boolean isDetailExpired(String slug) {
     return kache.isExpired(slug, ApiElementData.class);
   }
+
+  @Override public void evictAll() {
+    kache.evictAll();
+  }
 }
