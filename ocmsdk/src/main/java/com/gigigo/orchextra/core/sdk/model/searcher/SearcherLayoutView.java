@@ -133,12 +133,8 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
     recyclerView.showLoadingView(isVisible);
   }
 
-  @Override public void showEmptyView() {
-    recyclerView.showEmptyView();
-  }
-
-  @Override public void hideEmptyView() {
-    emptyLayout.setVisibility(View.GONE);
+  @Override public void showEmptyView(boolean isVisible) {
+    emptyLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
   }
 
   @Override public void setData(List<Cell> cellGridContentDataList) {

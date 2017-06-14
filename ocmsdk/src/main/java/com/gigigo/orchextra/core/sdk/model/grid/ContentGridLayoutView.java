@@ -22,7 +22,6 @@ import com.gigigo.orchextra.core.controller.model.grid.ContentViewPresenter;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
-import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalViewPager;
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
@@ -66,15 +65,11 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View emptyView;
   private View errorView;
   private View progressView;
-  private View appEmptyView;
-  private View appErrorView;
   private FrameLayout listedDataContainer;
   private boolean thumbnailEnabled;
-  private View.OnClickListener onClickDiscoverMoreButtonListener = new View.OnClickListener() {
-    @Override public void onClick(View v) {
-      if (onLoadMoreContentListener != null) {
-        onLoadMoreContentListener.onLoadMoreContent();
-      }
+  private View.OnClickListener onClickDiscoverMoreButtonListener = v -> {
+    if (onLoadMoreContentListener != null) {
+      onLoadMoreContentListener.onLoadMoreContent();
     }
   };
   private View.OnClickListener onClickRetryButtonListener = new View.OnClickListener() {
@@ -129,26 +124,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     moreButton.setOnClickListener(onClickDiscoverMoreButtonListener);
   }
 
-  private void setCustomViews() {
-    setEmptyViewLayout(appEmptyView != null ? appEmptyView : emptyView);
-    setErrorViewLayout(appErrorView != null ? appErrorView : errorView);
-    setLoadingViewLayout();
-  }
-
-  private void setEmptyViewLayout(View emptyView) {
-    uiListedBaseContentData.setEmptyViewLayout(emptyView);
-  }
-
-  private void setErrorViewLayout(View errorView) {
-    uiListedBaseContentData.setErrorViewLayout(errorView);
-  }
-
-  private void setLoadingViewLayout() {
-    if (progressView != null) {
-      uiListedBaseContentData.setLoadingViewLayout(progressView);
-    }
-  }
-
   public void setViewId(String viewId) {
     this.viewId = viewId;
   }
@@ -173,7 +148,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private void setDataGrid(List<Cell> cellDataList) {
     uiListedBaseContentData = new SpannedGridRecyclerView(context);
 
-    setCustomViews();
     uiListedBaseContentData.setListedContentListener(listedContentListener);
     uiListedBaseContentData.setParams(clipToPadding, authoritation, thumbnailEnabled);
     uiListedBaseContentData.setData(cellDataList);
@@ -185,7 +159,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private void setDataCarousel(List<Cell> cellDataList) {
     uiListedBaseContentData = new HorizontalViewPager(context);
 
-    setCustomViews();
     if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
 
     uiListedBaseContentData.setListedContentListener(listedContentListener);
@@ -197,21 +170,13 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void showEmptyView(boolean isVisible) {
-    if (uiListedBaseContentData != null && isVisible) {
-      uiListedBaseContentData.showEmptyView();
-    } else if (appEmptyView != null) {
-      appEmptyView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-    } else if (emptyView != null) {
+    if (emptyView != null) {
       emptyView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
   }
 
   @Override public void showErrorView(boolean isVisible) {
-    if (uiListedBaseContentData != null && isVisible) {
-      uiListedBaseContentData.showErrorView();
-    } else if (appErrorView != null) {
-      appErrorView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-    } else if (errorView != null) {
+    if (errorView != null) {
       errorView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
   }
@@ -261,12 +226,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void showProgressView(boolean isVisible) {
-    if (uiListedBaseContentData == null) {
-      if (progressView != null) {
-        progressView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-      }
-    } else {
-      uiListedBaseContentData.showProgressView(isVisible);
+    if (progressView != null) {
+      progressView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
   }
 
@@ -290,11 +251,11 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void setEmptyView(View emptyView) {
-    this.appEmptyView = emptyView;
+    this.emptyView = emptyView;
   }
 
   public void setErrorView(View errorView) {
-    this.appErrorView = errorView;
+    this.errorView = errorView;
   }
 
   @Override public void setProgressView(View progressView) {
@@ -319,5 +280,11 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     } else {
       System.out.println("You must set positive value");
     }
+  }
+
+  @Override public void onDestroy() {
+    presenter.detachView();
+
+    super.onDestroy();
   }
 }

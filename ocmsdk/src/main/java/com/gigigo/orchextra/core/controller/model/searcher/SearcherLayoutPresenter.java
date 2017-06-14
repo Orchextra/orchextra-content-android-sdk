@@ -44,8 +44,8 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
     this.textToSearch = textToSearch;
 
     if (TextUtils.isEmpty(textToSearch)) {
-      getView().hideEmptyView();
-      getView().setData(new ArrayList<Cell>());
+      getView().showEmptyView(false);
+      getView().setData(new ArrayList<>());
     } else {
       sendSearch(textToSearch);
     }
@@ -68,7 +68,7 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
 
   private void showEmptyView() {
     getView().showProgressView(false);
-    getView().showEmptyView();
+    getView().showEmptyView(true);
   }
 
   private void processResponse(ContentData response) {
