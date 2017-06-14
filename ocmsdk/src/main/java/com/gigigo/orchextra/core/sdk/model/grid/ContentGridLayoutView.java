@@ -22,7 +22,6 @@ import com.gigigo.orchextra.core.controller.model.grid.ContentViewPresenter;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
-import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalViewPager;
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
@@ -227,12 +226,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void showProgressView(boolean isVisible) {
-    if (uiListedBaseContentData == null) {
-      if (progressView != null) {
-        progressView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-      }
-    } else {
-      uiListedBaseContentData.showProgressView(isVisible);
+    if (progressView != null) {
+      progressView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
   }
 
