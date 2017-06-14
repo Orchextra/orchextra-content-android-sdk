@@ -19,4 +19,6 @@ public interface OcmRepository {
   Observable<ElementData> getDetail(boolean forceReload, String section);
 
   Observable<ContentData> doSearch(String textToSearch);
+
+  Observable<Void> clear(boolean images, boolean data);
 }

@@ -4,12 +4,14 @@ import com.gigigo.orchextra.core.data.rxException.ApiDetailNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSearchNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
+import com.gigigo.orchextra.core.data.rxException.ClearCacheException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
+import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
@@ -23,14 +25,16 @@ public class OcmControllerImp implements OcmController {
   private final GetSection getSection;
   private final GetDetail getDetail;
   private final SearchElements searchElements;
+  private final ClearCache clearCache;
 
   public OcmControllerImp(GetMenus getMenus, GetSection getSection, GetDetail getDetail,
-      SearchElements searchElements) {
+      SearchElements searchElements, ClearCache clearCache) {
 
     this.getMenus = getMenus;
     this.getSection = getSection;
     this.getDetail = getDetail;
     this.searchElements = searchElements;
+    this.clearCache = clearCache;
   }
 
   private String getSlug(String elementUrl) {
@@ -85,6 +89,12 @@ public class OcmControllerImp implements OcmController {
   public void search(String textToSearch, SearchControllerCallback searchControllerCallback) {
     searchElements.execute(new SearchObserver(searchControllerCallback),
         SearchElements.Params.forTextToSearch(true, textToSearch));
+  }
+
+  @Override public void clearCache(boolean images, boolean data,
+      final ClearCacheCallback clearCacheCallback) {
+    clearCache.execute(new ClearCacheObserver(clearCacheCallback),
+        ClearCache.Params.create(images, data));
   }
 
   //end region
@@ -180,6 +190,25 @@ public class OcmControllerImp implements OcmController {
 
     @Override public void onNext(ContentData contentData) {
       if (searchControllerCallback != null) searchControllerCallback.onSearchLoaded(contentData);
+    }
+  }
+
+  private final class ClearCacheObserver extends DefaultObserver<Void> {
+    private final ClearCacheCallback clearCacheCallback;
+
+    public ClearCacheObserver(ClearCacheCallback clearCacheCallback) {
+      this.clearCacheCallback = clearCacheCallback;
+    }
+
+    @Override public void onComplete() {
+      if (clearCacheCallback != null) clearCacheCallback.onClearCacheSuccess();
+    }
+
+    @Override public void onError(Throwable e) {
+      if (clearCacheCallback != null) {
+        clearCacheCallback.onClearCacheFails(new ClearCacheException(e));
+      }
+      e.printStackTrace();
     }
   }
   //end region
