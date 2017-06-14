@@ -112,10 +112,10 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   private void initView(View view) {
-    if (emptyView != null) {
+    if (emptyView == null) {
       emptyView = view.findViewById(R.id.ocm_empty_layout);
     }
-    if (errorView != null) {
+    if (errorView == null) {
       errorView = view.findViewById(R.id.ocm_error_layout);
     }
     retryButton = view.findViewById(R.id.ocm_retry_button);
