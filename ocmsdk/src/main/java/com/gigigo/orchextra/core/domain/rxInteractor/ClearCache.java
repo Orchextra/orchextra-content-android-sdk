@@ -35,8 +35,8 @@ public class ClearCache extends UseCase<Void, ClearCache.Params> {
       this.data = data;
     }
 
-    public static Params create(boolean forceReload, boolean section) {
-      return new Params(forceReload, section);
+    public static Params create(boolean images, boolean data) {
+      return new Params(images, data);
     }
   }
 }

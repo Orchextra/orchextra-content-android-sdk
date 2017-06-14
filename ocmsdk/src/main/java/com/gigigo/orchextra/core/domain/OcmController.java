@@ -16,7 +16,7 @@ public interface OcmController {
 
   void search(String textToSearch, SearchControllerCallback searchControllerCallback);
 
-  void clearCache(boolean images, boolean data);
+  void clearCache(boolean images, boolean data, final ClearCacheCallback clearCacheCallback);
 
   // Callbacks
   interface GetMenusControllerCallback {

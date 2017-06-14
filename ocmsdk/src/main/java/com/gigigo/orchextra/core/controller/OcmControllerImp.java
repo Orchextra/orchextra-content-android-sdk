@@ -4,6 +4,7 @@ import com.gigigo.orchextra.core.data.rxException.ApiDetailNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSearchNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
+import com.gigigo.orchextra.core.data.rxException.ClearCacheException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
@@ -88,6 +89,12 @@ public class OcmControllerImp implements OcmController {
   public void search(String textToSearch, SearchControllerCallback searchControllerCallback) {
     searchElements.execute(new SearchObserver(searchControllerCallback),
         SearchElements.Params.forTextToSearch(true, textToSearch));
+  }
+
+  @Override public void clearCache(boolean images, boolean data,
+      final ClearCacheCallback clearCacheCallback) {
+    clearCache.execute(new ClearCacheObserver(clearCacheCallback),
+        ClearCache.Params.create(images, data));
   }
 
   //end region
@@ -183,6 +190,29 @@ public class OcmControllerImp implements OcmController {
 
     @Override public void onNext(ContentData contentData) {
       if (searchControllerCallback != null) searchControllerCallback.onSearchLoaded(contentData);
+    }
+  }
+
+  private final class ClearCacheObserver extends DefaultObserver<Void> {
+    private final ClearCacheCallback clearCacheCallback;
+
+    public ClearCacheObserver(ClearCacheCallback clearCacheCallback) {
+      this.clearCacheCallback = clearCacheCallback;
+    }
+
+    @Override public void onComplete() {
+
+    }
+
+    @Override public void onError(Throwable e) {
+      if (clearCacheCallback != null) {
+        clearCacheCallback.onClearCacheFails(new ClearCacheException(e));
+      }
+      e.printStackTrace();
+    }
+
+    @Override public void onNext(Void mVoid) {
+      if (clearCacheCallback != null) clearCacheCallback.onClearCacheSuccess();
     }
   }
   //end region
