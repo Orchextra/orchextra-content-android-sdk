@@ -16,8 +16,7 @@ import orchextra.javax.inject.Singleton;
 
 @Singleton public class ImagesService extends Service {
 
-  @Inject
-  OcmImageCache ocmImageCache;
+  @Inject OcmImageCache ocmImageCache;
 
   public ImagesService() {
     initDI();
@@ -29,7 +28,7 @@ import orchextra.javax.inject.Singleton;
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     ocmImageCache.start();
-    return super.onStartCommand(intent, flags, startId);
+    return START_STICKY;
   }
 
   @Override public void onDestroy() {

@@ -1,19 +1,9 @@
 package com.gigigo.orchextra.core.data.rxCache.imageCache;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.SystemClock;
 import android.util.Log;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
@@ -24,16 +14,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -48,7 +30,7 @@ import orchextra.javax.inject.Singleton;
   private final Context mContext;
   private final ThreadExecutor threadExecutor;
   private final ImageQueue imageQueue;
-  private boolean started = false;
+  private boolean running = false;
 
   private long totalDownloadSize = 0;
 
@@ -59,12 +41,14 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void start() {
-    started = true;
+    if (running) return;
+
+    running = true;
     downloadFirst();
   }
 
   @Override public void stop() {
-    started = false;
+    running = false;
   }
 
   @Override public void add(ImageData imageData) {
@@ -72,7 +56,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   private void downloadFirst() {
-    if (started && imageQueue.hasImages()) {
+    if (running && imageQueue.hasImages()) {
       executeAsynchronously(new ImageDownloader(imageQueue.getImage(), new Callback() {
         @Override public void onSuccess(ImageData imageData) {
           downloadFirst();

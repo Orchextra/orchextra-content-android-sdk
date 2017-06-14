@@ -73,7 +73,7 @@ import orchextra.javax.inject.Singleton;
       }
       i++;
     }
-    //ocmImageCache.start();
+    ocmImageCache.start();
   }
 
   private void addImageToQueue(ApiElementSectionView apiElementSectionView) {

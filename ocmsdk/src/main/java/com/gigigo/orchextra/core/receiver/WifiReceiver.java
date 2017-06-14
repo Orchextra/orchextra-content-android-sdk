@@ -45,12 +45,15 @@ public class WifiReceiver extends BroadcastReceiver {
   @Override
   public void onReceive(final Context context, final Intent intent) {
     int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
+    Intent imagesServiceIntent = new Intent(context, ImagesService.class);
     if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())
         && WifiManager.WIFI_STATE_ENABLED == wifiState) {
       if (Log.isLoggable(TAG, Log.VERBOSE)) {
         Log.v(TAG, "Wifi is now enabled");
       }
-      context.startService(new Intent(context, ImagesService.class));
+      context.startService(imagesServiceIntent);
+    } else {
+      context.stopService(imagesServiceIntent);
     }
   }
 
