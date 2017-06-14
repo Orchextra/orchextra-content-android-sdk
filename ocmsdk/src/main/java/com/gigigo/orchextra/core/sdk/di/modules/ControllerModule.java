@@ -10,6 +10,7 @@ import com.gigigo.orchextra.core.data.rxRepository.OcmDataRepository;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
+import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
@@ -24,9 +25,9 @@ import orchextra.javax.inject.Singleton;
 @Module(includes = { DomainModule.class, InteractorModule.class }) public class ControllerModule {
 
   @Singleton @Provides OcmController provideOcmController(GetMenus getMenus, GetSection getSection,
-      GetDetail getDetail, SearchElements searchElements) {
+      GetDetail getDetail, SearchElements searchElements, ClearCache clearCache) {
 
-    return new OcmControllerImp(getMenus, getSection, getDetail, searchElements);
+    return new OcmControllerImp(getMenus, getSection, getDetail, searchElements, clearCache);
   }
 
   @Provides @Singleton ThreadExecutor provideThreadExecutor(JobExecutor jobExecutor) {

@@ -10,6 +10,7 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
+import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
@@ -23,14 +24,16 @@ public class OcmControllerImp implements OcmController {
   private final GetSection getSection;
   private final GetDetail getDetail;
   private final SearchElements searchElements;
+  private final ClearCache clearCache;
 
   public OcmControllerImp(GetMenus getMenus, GetSection getSection, GetDetail getDetail,
-      SearchElements searchElements) {
+      SearchElements searchElements, ClearCache clearCache) {
 
     this.getMenus = getMenus;
     this.getSection = getSection;
     this.getDetail = getDetail;
     this.searchElements = searchElements;
+    this.clearCache = clearCache;
   }
 
   private String getSlug(String elementUrl) {
