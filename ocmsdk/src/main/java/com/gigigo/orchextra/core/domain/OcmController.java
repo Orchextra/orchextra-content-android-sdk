@@ -16,6 +16,8 @@ public interface OcmController {
 
   void search(String textToSearch, SearchControllerCallback searchControllerCallback);
 
+  void clearCache(boolean images, boolean data);
+
   // Callbacks
   interface GetMenusControllerCallback {
     void onGetMenusLoaded(MenuContentData menus);
@@ -39,5 +41,10 @@ public interface OcmController {
     void onSearchLoaded(ContentData contentData);
 
     void onSearchFails(Exception e);
+  }
+
+  interface ClearCacheCallback {
+    void onClearCacheSuccess();
+    void onClearCacheFails(Exception e);
   }
 }
