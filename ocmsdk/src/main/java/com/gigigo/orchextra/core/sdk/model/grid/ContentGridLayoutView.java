@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -46,7 +44,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
           if (presenter != null) {
-            presenter.reloadSection();
+            presenter.reloadSectionFromNetwork();
           }
         }
 
@@ -69,6 +67,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View appEmptyView;
   private View appErrorView;
   private FrameLayout listedDataContainer;
+
+  private View newContentContainer;
+
   private boolean thumbnailEnabled;
   private View.OnClickListener onClickDiscoverMoreButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
@@ -80,7 +81,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View.OnClickListener onClickRetryButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       if (presenter != null) {
-        presenter.reloadSection();
+        presenter.reloadSectionFromNetwork();
       }
     }
   };
@@ -122,6 +123,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     retryButton = view.findViewById(R.id.ocm_retry_button);
     moreButton = view.findViewById(R.id.ocm_more_button);
     listedDataContainer = (FrameLayout) view.findViewById(R.id.listedDataContainer);
+    newContentContainer = view.findViewById(R.id.newContentContainer);
   }
 
   private void setListeners() {
@@ -156,8 +158,13 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   @Override public void initUi() {
     if (viewId != null) {
       presenter.setPadding(clipToPadding.getPadding());
-      presenter.loadSection(viewId, emotion);
+      //presenter.loadSection(viewId, emotion);
     }
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    presenter.loadSectionWithCacheAndAfterNetwork(viewId, emotion);
   }
 
   @Override public void setData(List<Cell> cellDataList, ContentItemTypeLayout type) {
@@ -299,7 +306,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void reloadSection() {
-    presenter.reloadSection();
+    presenter.reloadSectionFromNetwork();
   }
 
   public void setEmotion(String emotion) {
@@ -317,4 +324,16 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       System.out.println("You must set positive value");
     }
   }
+
+  @Override public void showNewExistingContent() {
+    newContentContainer.setVisibility(View.VISIBLE);
+    newContentContainer.setOnClickListener(onNewContentClickListener);
+  }
+
+  private final View.OnClickListener onNewContentClickListener = new View.OnClickListener() {
+    @Override public void onClick(View v) {
+      newContentContainer.setVisibility(View.GONE);
+      presenter.loadFromCache();
+    }
+  };
 }

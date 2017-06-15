@@ -24,7 +24,7 @@ public class ImageQueueImp implements ImageQueue {
     add(imageData);
   }
 
-  @Override public void add(ImageData imageData) {
+  @Override public synchronized void add(ImageData imageData) {
     queue.add(imageData);
     Collections.sort(queue, mComparator);
   }

@@ -49,8 +49,12 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     loadSection(true);
   }
 
-  public void reloadSection() {
+  public void reloadSectionFromNetwork() {
     loadSection(false);
+  }
+
+  public void loadFromCache() {
+    loadSection(true);
   }
 
   private void loadSection(final boolean useCache) {
@@ -67,6 +71,38 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       }
     });
   }
+
+  public void loadSectionWithCacheAndAfterNetwork(String viewId, String filter) {
+    this.section = viewId;
+    this.filter = filter;
+
+    getView().showProgressView(true);
+
+    ocmController.getSection(false, section, new OcmController.GetSectionControllerCallback() {
+      @Override public void onGetSectionLoaded(ContentData contentData) {
+        ContentItem contentItem = contentData.getContent();
+        renderContentItem(contentItem);
+
+        ocmController.getSection(true, section, new OcmController.GetSectionControllerCallback() {
+          @Override public void onGetSectionLoaded(ContentData contentData) {
+            ContentItem contentItem1 = contentData.getContent();
+            if (contentItem.getElements().size() != contentItem1.getElements().size()) {
+              getView().showNewExistingContent();
+            }
+          }
+
+          @Override public void onGetSectionFails(Exception e) {
+            renderError();
+          }
+        });
+      }
+
+      @Override public void onGetSectionFails(Exception e) {
+        renderError();
+      }
+    });
+  }
+
 
   private void renderContentItem(ContentItem contentItem) {
     if (contentItem != null
