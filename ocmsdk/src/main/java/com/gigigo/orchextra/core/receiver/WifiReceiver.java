@@ -30,9 +30,9 @@ import orchextra.javax.inject.Inject;
  * Put the following in your manifest
  *
  * <receiver android:name=".WifiReceiver" android:exported="false" >
- *   <intent-filter>
- *     <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
- *   </intent-filter>
+ * <intent-filter>
+ * <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+ * </intent-filter>
  * </receiver>
  * <service android:name=".WifiReceiver$WifiActiveService" android:exported="false" />
  *
@@ -41,19 +41,22 @@ import orchextra.javax.inject.Inject;
 public class WifiReceiver extends BroadcastReceiver {
 
   private final static String TAG = WifiReceiver.class.getSimpleName();
+  private static Intent intentService = null;
 
-  @Override
-  public void onReceive(final Context context, final Intent intent) {
+  @Override public void onReceive(final Context context, final Intent intent) {
     int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
-    Intent imagesServiceIntent = new Intent(context, ImagesService.class);
+    intentService = new Intent(context, ImagesService.class);
     if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())
         && WifiManager.WIFI_STATE_ENABLED == wifiState) {
       if (Log.isLoggable(TAG, Log.VERBOSE)) {
         Log.v(TAG, "Wifi is now enabled");
       }
-      context.startService(imagesServiceIntent);
+      context.startService(intentService);
     } else {
-      context.stopService(imagesServiceIntent);
+      if (intentService != null) {
+        context.stopService(intentService);
+        intentService = null;
+      }
     }
   }
 
@@ -70,14 +73,13 @@ public class WifiReceiver extends BroadcastReceiver {
 
     private final static String TAG = WifiActiveService.class.getSimpleName();
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-      final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+    @Override public int onStartCommand(Intent intent, int flags, int startId) {
+      final WifiManager wifiManager =
+          (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
       // Need to wait a bit for the SSID to get picked up;
       // if done immediately all we'll get is null
       new Handler().postDelayed(new Runnable() {
-        @Override
-        public void run() {
+        @Override public void run() {
           WifiInfo info = wifiManager.getConnectionInfo();
           String mac = info.getMacAddress();
           String ssid = info.getSSID();
@@ -91,8 +93,7 @@ public class WifiReceiver extends BroadcastReceiver {
       return START_NOT_STICKY;
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
+    @Override public IBinder onBind(Intent intent) {
       return null;
     }
 
@@ -100,15 +101,13 @@ public class WifiReceiver extends BroadcastReceiver {
      * Creates a notification displaying the SSID & MAC addr
      */
     private void createNotification(String ssid, String mac) {
-      Notification n = new NotificationCompat.Builder(this)
-          .setContentTitle("Wifi Connection")
+      Notification n = new NotificationCompat.Builder(this).setContentTitle("Wifi Connection")
           .setContentText("Connected to " + ssid)
-          .setStyle(new NotificationCompat.BigTextStyle()
-              .bigText("You're connected to " + ssid + " at " + mac))
+          .setStyle(new NotificationCompat.BigTextStyle().bigText(
+              "You're connected to " + ssid + " at " + mac))
           .setSmallIcon(R.drawable.ox_notification_alpha_small_icon)
           .build();
-      ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
-          .notify(0, n);
+      ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, n);
     }
   }
 }

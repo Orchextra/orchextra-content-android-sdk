@@ -71,7 +71,7 @@ import orchextra.javax.inject.Singleton;
                 LogLevel.ERROR, TAG);
           }
           try {
-            Thread.sleep(1000);
+            Thread.sleep(1000 * 10);
           } catch (InterruptedException e1) {
             e1.printStackTrace();
           }
