@@ -4,6 +4,7 @@ import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
@@ -33,15 +34,19 @@ import static org.mockito.Mockito.verify;
   @Mock private OcmCache mockOcmCache;
   @Mock private OcmImageCache mockImageCache;
 
-
   @Before public void setUp() {
     MockitoAnnotations.initMocks(this);
     ocmCloudDataStore = new OcmCloudDataStore(mockRestApi, mockOcmCache, mockImageCache);
   }
 
-  @Ignore
   @Test public void testGetMenuEntityFromApi() {
+    ApiMenuContentDataResponse fakeApiMenuContentDataResponse = new ApiMenuContentDataResponse();
+    Observable<ApiMenuContentDataResponse> fakeObservable =
+        Observable.just(fakeApiMenuContentDataResponse);
+    given(mockRestApi.getMenuDataRx()).willReturn(fakeObservable);
+
     ocmCloudDataStore.getMenuEntity();
+
     verify(mockRestApi).getMenuDataRx();
   }
 
