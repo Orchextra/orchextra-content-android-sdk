@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'jacoco-android'
+apply from: 'jacoco.gradle'
+apply from: 'sonarqube.gradle'
 
 apply from: 'common_methods.gradle'
 apply from: 'dependencies.gradle'
@@ -33,9 +34,11 @@ android {
   buildTypes {
     staging {
       debuggable true
+      testCoverageEnabled = true
     }
     debug {
       debuggable true
+      testCoverageEnabled = true
       //      testCoverageEnabled true
     }
     release {
@@ -80,7 +83,9 @@ android {
   }
 
   lintOptions {
+    quiet true
     abortOnError false
+    ignoreWarnings true
   }
 
   compileOptions {
@@ -89,11 +94,7 @@ android {
   }
 
   testOptions {
-    unitTests.all {
-      jacoco {
-        includeNoLocationClasses = true
-      }
-    }
+    unitTests.returnDefaultValues = true
   }
 
   productFlavors {
