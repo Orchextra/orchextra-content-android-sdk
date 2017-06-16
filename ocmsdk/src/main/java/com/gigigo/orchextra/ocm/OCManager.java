@@ -69,7 +69,7 @@ public final class OCManager {
   };
 
   static void initSdk(Application application) {
-    instance = new OCManager();
+    getInstance();
     instance.initOcm(application);
   }
 
@@ -286,6 +286,14 @@ public final class OCManager {
         currentActivity.finish();
       }
     }
+  }
+
+  public static synchronized OCManager getInstance() {
+    if (instance != null) {
+      return instance;
+    }
+
+    return new OCManager();
   }
 
   private void initOcm(Application app) {
