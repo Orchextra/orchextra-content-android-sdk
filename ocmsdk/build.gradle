@@ -48,27 +48,9 @@ android {
     }
   }
 
-  productFlavors.whenObjectAdded { flavor ->
-    def version = project[flavor.name].version
-
-    flavor.versionCode generateAutoVersionCode()
-    flavor.versionName generateVersionName(version.major, version.minor, version.patch)
-  }
-
   project.android.libraryVariants.all { variant ->
 
     variant.productFlavors.each { flavor ->
-
-      def flavorData = project[flavor.name]
-      def appName = flavorData.appName
-
-      println("--**************************OCMSDK**************************--")
-      println("-------------" + appName +
-          " - " +
-          flavor.name +
-          "." +
-          variant.buildType.name +
-          "-------------")
 
       setVariantBuildConfigField(variant, project.apiOcm, API_URL, STRING)
       setVariantBuildConfigField(variant, project.ocmSdkVersion, OCM_SDK_VERSION, STRING)

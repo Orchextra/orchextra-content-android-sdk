@@ -11,6 +11,7 @@ import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmCloudDataStore;
 import io.reactivex.Observable;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -37,6 +38,7 @@ import static org.mockito.Mockito.verify;
     ocmCloudDataStore = new OcmCloudDataStore(mockRestApi, mockOcmCache, mockOcmImageCache);
   }
 
+  @Ignore
   @Test public void testGetMenuEntityFromApi() {
     ocmCloudDataStore.getMenuEntity();
     verify(mockRestApi).getMenuDataRx();
