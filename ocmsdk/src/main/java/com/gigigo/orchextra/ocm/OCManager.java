@@ -293,7 +293,8 @@ public final class OCManager {
       return instance;
     }
 
-    return new OCManager();
+    instance = new OCManager();
+    return instance;
   }
 
   private void initOcm(Application app) {
