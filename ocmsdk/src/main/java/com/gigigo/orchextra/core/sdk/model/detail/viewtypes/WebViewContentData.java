@@ -169,8 +169,9 @@ public class WebViewContentData extends UiBaseContentData {
       try {
         this.latch.await(1L, TimeUnit.SECONDS);
         return this.returnValue;
-      } catch (InterruptedException var5) {
-        Log.e("JsHandler", "Interrupted", var5);
+      } catch (InterruptedException e) {
+        Log.e("JsHandler", "Interrupted", e);
+        Thread.currentThread().interrupt();
         return null;
       }
     }
