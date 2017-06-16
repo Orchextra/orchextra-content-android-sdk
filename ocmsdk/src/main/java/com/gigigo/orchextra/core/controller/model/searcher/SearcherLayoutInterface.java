@@ -9,13 +9,11 @@ public interface SearcherLayoutInterface {
 
   void initUi();
 
+  void setData(List<Cell> cellGridContentDataList);
+
   void showProgressView(boolean isVisible);
 
-  void showEmptyView();
-
-  void hideEmptyView();
-
-  void setData(List<Cell> cellGridContentDataList);
+  void showEmptyView(boolean isVisible);
 
   void navigateToDetailView(String elementUrl, String imageUrl, AppCompatActivity activity, View view);
 

@@ -3,6 +3,7 @@ package com.gigigo.orchextra.ocm;
 import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
+import android.widget.ImageView;
 import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.CustomSchemeReceiver;
 import com.gigigo.orchextra.Orchextra;
@@ -61,6 +62,11 @@ public final class OCManager {
   private OcmCredentialCallback ocmCredentialCallback;
 
   private OnCustomSchemeReceiver onCustomSchemeReceiver;
+  private CustomSchemeReceiver onOxCustomSchemeReceiver = new CustomSchemeReceiver() {
+    @Override public void onReceive(String customScheme) {
+      returnOcCustomSchemeCallback(customScheme);
+    }
+  };
 
   static void initSdk(Application application) {
     instance = new OCManager();
@@ -79,12 +85,6 @@ public final class OCManager {
     }
   }
 
-  static void setContentLanguage(String language) {
-    if (instance != null) {
-      instance.language = language;
-    }
-  }
-
   static void getMenus(final OCManagerCallbacks.Menus menusCallback) {
     if (instance != null) {
       instance.ocmViewGenerator.getMenu(new OcmViewGenerator.GetMenusViewGeneratorCallback() {
@@ -99,22 +99,46 @@ public final class OCManager {
     }
   }
 
-  static void generateSectionView(String viewId, String filter, final OCManagerCallbacks.Section sectionCallback) {
-    instance.ocmViewGenerator.generateSectionView(viewId, filter, new OcmViewGenerator.GetSectionViewGeneratorCallback() {
-      @Override
-      public void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData) {
-        sectionCallback.onSectionLoaded(uiGridBaseContentData);
-      }
+  static void generateSectionView(String viewId, String filter,
+      final OCManagerCallbacks.Section sectionCallback) {
+    instance.ocmViewGenerator.generateSectionView(viewId, filter,
+        new OcmViewGenerator.GetSectionViewGeneratorCallback() {
+          @Override public void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData) {
+            sectionCallback.onSectionLoaded(uiGridBaseContentData);
+          }
 
-      @Override
-      public void onSectionViewFails(Exception e) {
-        sectionCallback.onSectionFails(e);
-      }
-    });
+          @Override public void onSectionViewFails(Exception e) {
+            sectionCallback.onSectionFails(e);
+          }
+        });
   }
 
-  static UiDetailBaseContentData generateDetailView(String elementUrl) {
+  public static void clearData(boolean images, boolean data,
+      final OCManagerCallbacks.Clear clearCallback) {
+    if (instance != null) {
+      instance.ocmController.clearCache(images, data, new OcmController.ClearCacheCallback() {
+        @Override public void onClearCacheSuccess() {
+          clearCallback.onDataClearedSuccessfull();
+        }
+
+        @Override public void onClearCacheFails(Exception e) {
+          clearCallback.onDataClearFails(e);
+        }
+      });
+    }
+  }
+
+  public static UiDetailBaseContentData generateDetailView(String elementUrl) {
     return instance.ocmViewGenerator.generateDetailView(elementUrl);
+  }
+
+  public static void generateDetailView(String elementUrl, String urlImageToExpand, int widthScreen,
+      int heightScreen, ImageView imageViewToExpandInDetail) {
+
+    if (instance != null) {
+      instance.schemeHandler.processElementUrl(elementUrl, urlImageToExpand, widthScreen,
+          heightScreen, imageViewToExpandInDetail);
+    }
   }
 
   static UiSearchBaseContentData generateSearchView() {
@@ -135,7 +159,7 @@ public final class OCManager {
 
   static void processDeepLinks(String path) {
     if (instance != null) {
-      instance.schemeHandler.processScheme(path);
+      instance.schemeHandler.processElementUrl(path);
     }
   }
 
@@ -220,8 +244,48 @@ public final class OCManager {
     return instance.language;
   }
 
+  static void setContentLanguage(String language) {
+    if (instance != null) {
+      instance.language = language;
+    }
+  }
+
   public static void setOnCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {
     OCManager.instance.onCustomSchemeReceiver = onCustomSchemeReceiver;
+  }
+
+  public static void start() {
+    Orchextra.start();
+  }
+
+  //endregion
+
+  public static void stop() {
+    Orchextra.stop();
+  }
+
+  public static void returnOcCustomSchemeCallback(String customScheme) {
+    if (instance.onCustomSchemeReceiver != null) {
+      instance.onCustomSchemeReceiver.onReceive(customScheme);
+    }
+  }
+
+  public static OcmContextProvider getOcmContextProvider() {
+    OCManager instance = OCManager.instance;
+    if (instance == null) {
+      return null;
+    }
+    return OCManager.instance.ocmContextProvider;
+  }
+
+  static void closeDetailView() {
+    OCManager instance = OCManager.instance;
+    if (instance != null && instance.ocmContextProvider != null) {
+      Activity currentActivity = instance.ocmContextProvider.getCurrentActivity();
+      if (currentActivity != null && currentActivity instanceof DetailActivity) {
+        currentActivity.finish();
+      }
+    }
   }
 
   private void initOcm(Application app) {
@@ -237,11 +301,11 @@ public final class OCManager {
     ocmComponent.injectOcm(OCManager.instance);
   }
 
-  //endregion
-
   private void initLifecyle(Application app) {
     app.registerActivityLifecycleCallbacks(ocmSdkLifecycle);
   }
+
+  //endregion
 
   private void initOrchextra(Application app, String oxKey, String oxSecret,
       Class notificationActivityClass, String senderId) {
@@ -290,45 +354,5 @@ public final class OCManager {
     Orchextra.initialize(builder);
 
     Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
-  }
-
-  private CustomSchemeReceiver onOxCustomSchemeReceiver = new CustomSchemeReceiver() {
-    @Override public void onReceive(String customScheme) {
-      returnOcCustomSchemeCallback(customScheme);
-    }
-  };
-
-  public static void start() {
-    Orchextra.start();
-  }
-
-  public static void stop() {
-    Orchextra.stop();
-  }
-
-  public static void returnOcCustomSchemeCallback(String customScheme) {
-    if (instance.onCustomSchemeReceiver != null) {
-      instance.onCustomSchemeReceiver.onReceive(customScheme);
-    }
-  }
-
-  public static OcmContextProvider getOcmContextProvider() {
-    OCManager instance = OCManager.instance;
-    if (instance == null) {
-      return null;
-    }
-    return OCManager.instance.ocmContextProvider;
-  }
-
-  //endregion
-
-  static void closeDetailView() {
-    OCManager instance = OCManager.instance;
-    if (instance != null && instance.ocmContextProvider != null) {
-      Activity currentActivity = instance.ocmContextProvider.getCurrentActivity();
-      if (currentActivity != null && currentActivity instanceof DetailActivity) {
-        currentActivity.finish();
-      }
-    }
   }
 }

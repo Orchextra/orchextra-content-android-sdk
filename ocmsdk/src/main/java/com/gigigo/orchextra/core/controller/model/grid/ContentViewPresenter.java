@@ -31,8 +31,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private List<Cell> listedCellContentDataList;
   private int padding;
 
-  public ContentViewPresenter(OcmController ocmController,
-      Authoritation authoritation) {
+  public ContentViewPresenter(OcmController ocmController, Authoritation authoritation) {
 
     this.ocmController = ocmController;
     this.authoritation = authoritation;
@@ -79,16 +78,13 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     getView().showProgressView(true);
 
     ocmController.getSection(false, section, new OcmController.GetSectionControllerCallback() {
-      @Override public void onGetSectionLoaded(ContentData contentData) {
-        ContentItem contentItem = contentData.getContent();
+      @Override public void onGetSectionLoaded(ContentData contentData) {ContentItem contentItem = contentData.getContent();
         renderContentItem(contentItem);
 
         ocmController.getSection(true, section, new OcmController.GetSectionControllerCallback() {
           @Override public void onGetSectionLoaded(ContentData contentData) {
             ContentItem contentItem1 = contentData.getContent();
-            if (contentItem.getElements().size() != contentItem1.getElements().size()) {
-              getView().showNewExistingContent();
-            }
+            checkNewContent(contentItem.getElements(), contentItem1.getElements());
           }
 
           @Override public void onGetSectionFails(Exception e) {
@@ -103,6 +99,12 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     });
   }
 
+  private void checkNewContent(List<Element> cachedElements, List<Element> newElements) {
+    if (cachedElements == null || newElements == null) return;
+    if (cachedElements.size() != newElements.size()) {
+      getView().showNewExistingContent();
+    }
+  }
 
   private void renderContentItem(ContentItem contentItem) {
     if (contentItem != null
@@ -257,5 +259,9 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   public int getChildCount() {
     return listedCellContentDataList != null ? listedCellContentDataList.size() : 0;
+  }
+
+  @Override public void detachView() {
+    super.detachView();
   }
 }
