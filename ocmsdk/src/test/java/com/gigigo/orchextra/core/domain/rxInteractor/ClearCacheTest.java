@@ -22,7 +22,9 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class) public class ClearCacheTest {
 
-  private static final boolean FORCE_RELOAD = false;
+  private static final boolean FAKE_IMAGES = false;
+  private static final boolean FAKE_DATA = false;
+
 
   private ClearCache clearCache;
 
@@ -37,9 +39,9 @@ import static org.mockito.Mockito.verifyZeroInteractions;
   }
 
   @Test public void testClearCacheUseCaseObservableHappyCase() {
-    clearCache.buildUseCaseObservable(ClearCache.Params.create(true, true));
+    clearCache.buildUseCaseObservable(ClearCache.Params.create(FAKE_IMAGES, FAKE_DATA));
 
-    verify(mockOcmRepository).clear(true, true);
+    verify(mockOcmRepository).clear(FAKE_IMAGES, FAKE_DATA);
     verifyNoMoreInteractions(mockOcmRepository);
     verifyZeroInteractions(mockPostExecutionThread);
     verifyZeroInteractions(mockThreadExecutor);
