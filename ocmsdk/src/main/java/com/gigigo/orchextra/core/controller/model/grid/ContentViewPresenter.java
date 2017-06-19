@@ -78,7 +78,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     getView().showProgressView(true);
 
     ocmController.getSection(false, section, new OcmController.GetSectionControllerCallback() {
-      @Override public void onGetSectionLoaded(ContentData contentData) {ContentItem contentItem = contentData.getContent();
+      @Override public void onGetSectionLoaded(ContentData contentData) {
+        ContentItem contentItem = contentData.getContent();
         renderContentItem(contentItem);
 
         ocmController.getSection(true, section, new OcmController.GetSectionControllerCallback() {
@@ -128,9 +129,11 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   }
 
   private void renderError() {
-    getView().showProgressView(false);
-    if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
-      getView().showErrorView(true);
+    if (getView() != null) {
+      getView().showProgressView(false);
+      if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
+        getView().showErrorView(true);
+      }
     }
   }
 
