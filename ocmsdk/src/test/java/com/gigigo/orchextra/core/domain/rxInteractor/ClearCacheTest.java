@@ -36,7 +36,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
     clearCache = new ClearCache(mockOcmRepository, mockThreadExecutor, mockPostExecutionThread);
   }
 
-  @Test public void testGetUserDetailsUseCaseObservableHappyCase() {
+  @Test public void testClearCacheUseCaseObservableHappyCase() {
     clearCache.buildUseCaseObservable(ClearCache.Params.create(true, true));
 
     verify(mockOcmRepository).clear(true, true);
