@@ -71,7 +71,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
       UiBaseContentData detailContentData =
           generateDetailView(cachedElement.getType(), cachedElement.getRender());
 
-      if (previewContentData != null && detailContentData != null) {
+      if (previewContentData != null && detailContentData != null && getView() != null) {
         getView().renderDetailViewWithPreview(previewContentData, detailContentData,
             detailViewInfo);
 
