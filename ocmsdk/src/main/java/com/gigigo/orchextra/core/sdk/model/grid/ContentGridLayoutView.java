@@ -139,12 +139,12 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (viewId != null) {
       presenter.setPadding(clipToPadding.getPadding());
       //presenter.loadSection(viewId, emotion);
+      presenter.loadSectionWithCacheAndAfterNetwork(viewId, emotion);
     }
   }
 
   @Override public void onResume() {
     super.onResume();
-    presenter.loadSectionWithCacheAndAfterNetwork(viewId, emotion);
   }
 
   @Override public void setData(List<Cell> cellDataList, ContentItemTypeLayout type) {
