@@ -88,7 +88,7 @@ public class OcmControllerImp implements OcmController {
   @Override
   public void search(String textToSearch, SearchControllerCallback searchControllerCallback) {
     searchElements.execute(new SearchObserver(searchControllerCallback),
-        SearchElements.Params.forTextToSearch(true, textToSearch));
+        SearchElements.Params.forTextToSearch(textToSearch));
   }
 
   @Override public void clearCache(boolean images, boolean data,
