@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
   private static final boolean FORCE_RELOAD = false;
 
-  private GetMenus getMenus;
+  private ClearCache clearCache;
 
   @Mock private OcmRepository mockOcmRepository;
   @Mock private ThreadExecutor mockThreadExecutor;
@@ -33,13 +33,13 @@ import static org.mockito.Mockito.verifyZeroInteractions;
   @Rule public ExpectedException expectedException = ExpectedException.none();
 
   @Before public void setUp() {
-    getMenus = new GetMenus(mockOcmRepository, mockThreadExecutor, mockPostExecutionThread);
+    clearCache = new ClearCache(mockOcmRepository, mockThreadExecutor, mockPostExecutionThread);
   }
 
   @Test public void testGetUserDetailsUseCaseObservableHappyCase() {
-    getMenus.buildUseCaseObservable(GetMenus.Params.forForceReload(FORCE_RELOAD));
+    clearCache.buildUseCaseObservable(ClearCache.Params.create(true, true));
 
-    verify(mockOcmRepository).getMenu(FORCE_RELOAD);
+    verify(mockOcmRepository).clear(true, true);
     verifyNoMoreInteractions(mockOcmRepository);
     verifyZeroInteractions(mockPostExecutionThread);
     verifyZeroInteractions(mockThreadExecutor);
@@ -47,6 +47,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
   @Test public void testShouldFailWhenNoOrEmptyParameters() {
     expectedException.expect(NullPointerException.class);
-    getMenus.buildUseCaseObservable(null);
+    clearCache.buildUseCaseObservable(null);
   }
 }
