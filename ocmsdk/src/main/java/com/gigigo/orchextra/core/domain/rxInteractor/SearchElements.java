@@ -27,16 +27,14 @@ public class SearchElements extends UseCase<ContentData, SearchElements.Params> 
 
   public static final class Params {
 
-    private final boolean forceReload;
     private final String textToSearch;
 
-    private Params(boolean forceReload, String textToSearch) {
-      this.forceReload = forceReload;
+    private Params(String textToSearch) {
       this.textToSearch = textToSearch;
     }
 
-    public static Params forTextToSearch(boolean forceReload, String textToSearch) {
-      return new Params(forceReload, textToSearch);
+    public static Params forTextToSearch(String textToSearch) {
+      return new Params(textToSearch);
     }
   }
 }
