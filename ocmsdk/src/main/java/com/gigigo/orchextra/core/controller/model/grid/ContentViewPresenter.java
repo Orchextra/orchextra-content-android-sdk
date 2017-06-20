@@ -75,7 +75,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
       listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
 
-      if (listedCellContentDataList.size() != 0) {
+      if (listedCellContentDataList.size() != 0 && this.getView()!=null) {
         getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
         getView().showEmptyView(false);
         getView().showErrorView(false);
