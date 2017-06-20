@@ -1,6 +1,7 @@
-package com.gigigo.orchextra.core.domain;
+package com.gigigo.orchextra.core.controller;
 
 import com.gigigo.orchextra.core.controller.OcmControllerImp;
+import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
 import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;

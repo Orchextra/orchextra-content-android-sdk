@@ -41,7 +41,7 @@ import orchextra.javax.inject.Inject;
 public class WifiReceiver extends BroadcastReceiver {
 
   private final static String TAG = WifiReceiver.class.getSimpleName();
-  private static Intent intentService = null;
+  public static Intent intentService = null;
 
   @Override public void onReceive(final Context context, final Intent intent) {
     int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
