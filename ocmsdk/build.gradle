@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.neenbedankt.android-apt'
 apply from: 'jacoco.gradle'
 apply from: 'sonarqube.gradle'
 
@@ -119,8 +118,8 @@ dependencies {
   compile project.libraries.gggJavaLib
 
   //Dagger
-  apt project.libraries.daggerCompiler
   compile project.libraries.dagger
+  annotationProcessor project.libraries.daggerCompiler
 
   //Image Loader Glide/Blur
   compile project.libraries.imageloaderGlideBlur
