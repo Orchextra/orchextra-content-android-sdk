@@ -70,7 +70,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private void renderContentItem(ContentItem contentItem) {
     if (contentItem != null
         && contentItem.getLayout() != null
-        && contentItem.getElements() != null) {
+        && contentItem.getElements() != null
+        && getView() != null) {
 
       listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
       if (this.getView() != null) {
@@ -90,9 +91,11 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   }
 
   private void renderError() {
+    if( getView() != null){
     getView().showProgressView(false);
     if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
       getView().showErrorView(true);
+    }
     }
   }
 
