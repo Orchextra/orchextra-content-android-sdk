@@ -39,7 +39,7 @@ project.ext {
                rxRetrofit                 : 'com.squareup.retrofit2:adapter-rxjava2:2.3.0',
                arrow                      : 'com.fernandocejas:arrow:1.0.0',
 
-               kache                      : 'com.github.mskn73:kache:0.3']
+               kache                      : 'com.github.mskn73:kache:0.4']
 
   testLibraries = [mockito          : 'org.mockito:mockito-core:2.0.31-beta',
                    junit            : 'junit:junit:4.12',
