@@ -19,11 +19,11 @@ public class OcmSdkLifecycle implements Application.ActivityLifecycleCallbacks {
   }
 
   @Override public void onActivityResumed(Activity activity) {
-    activityStack.peek().setIsPaused(false);
+    if (!activityStack.isEmpty()) activityStack.peek().setIsPaused(false);
   }
 
   @Override public void onActivityPaused(Activity activity) {
-    activityStack.peek().setIsPaused(true);
+    if (!activityStack.isEmpty()) activityStack.peek().setIsPaused(true);
   }
 
   @Override public void onActivityStopped(Activity activity) {

@@ -23,11 +23,11 @@ android {
     abortOnError false
   }
 
-  //buildToolsVersion '25.0.0'
+
 }
 
 dependencies {
-  //compile 'com.android.support:appcompat-v7:25.1.0'
+  compile 'com.android.support:appcompat-v7:24.2.1'
   compile project(path: ':ocmsdk')
 //  compile 'com.squareup.leakcanary:leakcanary-android:1.5'
   compile 'com.android.support:multidex:1.0.1'
