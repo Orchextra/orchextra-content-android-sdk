@@ -31,8 +31,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private List<Cell> listedCellContentDataList;
   private int padding;
 
-  public ContentViewPresenter(OcmController ocmController,
-      Authoritation authoritation) {
+  public ContentViewPresenter(OcmController ocmController, Authoritation authoritation) {
 
     this.ocmController = ocmController;
     this.authoritation = authoritation;
@@ -74,19 +73,20 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         && contentItem.getElements() != null) {
 
       listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
-
-      if (listedCellContentDataList.size() != 0 && this.getView()!=null) {
-        getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
-        getView().showEmptyView(false);
-        getView().showErrorView(false);
+      if (this.getView() != null) {
+        if (listedCellContentDataList.size() != 0) {
+          getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
+          getView().showEmptyView(false);
+          getView().showErrorView(false);
+        } else {
+          getView().showEmptyView(true);
+        }
       } else {
         getView().showEmptyView(true);
       }
-    } else {
-      getView().showEmptyView(true);
-    }
 
-    getView().showProgressView(false);
+      getView().showProgressView(false);
+    }
   }
 
   private void renderError() {
