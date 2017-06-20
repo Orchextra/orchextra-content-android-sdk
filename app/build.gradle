@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
   compileSdkVersion 24
-  buildToolsVersion "24.0.3"
+  buildToolsVersion '25.0.0'
 
   defaultConfig {
     applicationId "com.gigigo.sample"
@@ -12,6 +12,10 @@ android {
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
+
+    jackOptions {
+      enabled true
+    }
   }
   buildTypes {
     release {
@@ -23,11 +27,14 @@ android {
     abortOnError false
   }
 
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 
 }
 
 dependencies {
-  compile 'com.android.support:appcompat-v7:24.2.1'
   compile project(path: ':ocmsdk')
 //  compile 'com.squareup.leakcanary:leakcanary-android:1.5'
   compile 'com.android.support:multidex:1.0.1'
