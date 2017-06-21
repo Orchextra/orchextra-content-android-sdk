@@ -80,6 +80,7 @@ import orchextra.javax.inject.Singleton;
       }, mContext));
     } else {
       GGGLogImpl.log("FINISHED", LogLevel.INFO, TAG);
+      running = false;
     }
   }
 

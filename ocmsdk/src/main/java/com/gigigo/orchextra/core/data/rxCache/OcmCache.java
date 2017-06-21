@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.data.rxCache;
 
+import android.content.Context;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
@@ -36,4 +37,6 @@ public interface OcmCache {
   boolean isDetailExpired(String slug);
 
   void evictAll(boolean images, boolean data);
+
+  Context getContext();
 }

@@ -146,4 +146,9 @@ import orchextra.javax.inject.Singleton;
     GGGLogImpl.log((deleted + " -> ").toUpperCase() + dir.getPath(), LogLevel.INFO, "CLEAR-CACHE");
     return deleted;
   }
+
+  @Override
+  public Context getContext() {
+    return mContext;
+  }
 }
