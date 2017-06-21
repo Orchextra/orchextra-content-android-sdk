@@ -98,7 +98,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
     initView(view);
     setListeners();
-    presenter.attachView(this);
+    if (presenter != null) presenter.attachView(this);
 
     return view;
   }
@@ -133,7 +133,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void initUi() {
-    if (viewId != null) {
+    if (viewId != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
       presenter.loadSection(viewId, emotion);
     }
@@ -220,7 +220,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private void clearImageToExpandWhenAnimationEnds(final ImageView imageViewToExpandInDetail) {
     new Handler().postDelayed(new Runnable() {
       @Override public void run() {
-        imageViewToExpandInDetail.setImageDrawable(null);
+        if (imageViewToExpandInDetail != null) imageViewToExpandInDetail.setImageDrawable(null);
       }
     }, 750);
   }
@@ -267,7 +267,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void reloadSection() {
-    presenter.reloadSection();
+    if (presenter != null) presenter.reloadSection();
   }
 
   public void setEmotion(String emotion) {
@@ -287,7 +287,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void onDestroy() {
-    presenter.detachView();
+    if (presenter != null) presenter.detachView();
 
     super.onDestroy();
   }

@@ -54,7 +54,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   private void loadSection(final boolean useCache) {
     getView().showProgressView(true);
-
+    if (ocmController != null){
     ocmController.getSection(!useCache, section, new OcmController.GetSectionControllerCallback() {
       @Override public void onGetSectionLoaded(ContentData contentData) {
         ContentItem contentItem = contentData.getContent();
@@ -66,6 +66,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       }
     });
   }
+
+}
 
   private void renderContentItem(ContentItem contentItem) {
     if (contentItem != null
@@ -91,11 +93,11 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   }
 
   private void renderError() {
-    if( getView() != null){
-    getView().showProgressView(false);
-    if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
-      getView().showErrorView(true);
-    }
+    if (getView() != null) {
+      getView().showProgressView(false);
+      if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
+        getView().showErrorView(true);
+      }
     }
   }
 
