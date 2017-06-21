@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
@@ -15,8 +16,10 @@ import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageData;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
+import com.gigigo.orchextra.core.receiver.WifiReceiver;
 import io.reactivex.Observable;
 
 import io.reactivex.functions.Consumer;
@@ -73,7 +76,10 @@ import orchextra.javax.inject.Singleton;
       }
       i++;
     }
-    ocmImageCache.start();
+
+    Intent intent = new Intent(ocmCache.getContext(), ImagesService.class);
+    WifiReceiver.intentService = intent;
+    ocmCache.getContext().startService(intent);
   }
 
   private void addImageToQueue(ApiElementSectionView apiElementSectionView) {
