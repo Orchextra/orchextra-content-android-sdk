@@ -1,1 +1,1 @@
-include ':ocmsdk' //,':app'
+include ':ocmsdk' ,':app'

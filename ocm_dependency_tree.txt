@@ -1,0 +1,854 @@
+Starting a Gradle Daemon, 2 incompatible Daemons could not be reused, use --status for details
+NDK is missing a "platforms" directory.
+If you are using NDK, verify the ndk.dir is set to a valid NDK directory.  It is currently set to /Users/claudia.brito/Library/Android/sdk/ndk-bundle.
+If you are not using NDK, unset the NDK variable from ANDROID_NDK_HOME or local.properties to remove this warning.
+
+NDK is missing a "platforms" directory.
+If you are using NDK, verify the ndk.dir is set to a valid NDK directory.  It is currently set to /Users/claudia.brito/Library/Android/sdk/ndk-bundle.
+If you are not using NDK, unset the NDK variable from ANDROID_NDK_HOME or local.properties to remove this warning.
+
+BuildConfig -> String:API_URL = "https://cm.q.orchextra.io/"
+BuildConfig -> String:OCM_SDK_VERSION = "ANDROID_1.0.0"
+BuildConfig -> int:CONCURRENT_INTERACTORS = 3
+BuildConfig -> boolean:RETROFIT_LOG = true
+BuildConfig -> String:YOUTUBE_DEVELOPER_KEY = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
+--**********************************************************--
+BuildConfig -> String:API_URL = "https://cm.orchextra.io/"
+not defined explicit param value for 'OCM_SDK_VERSION' in 'release' configuration. Using first value founded
+BuildConfig -> String:OCM_SDK_VERSION = "ANDROID_1.0.0"
+BuildConfig -> int:CONCURRENT_INTERACTORS = 3
+BuildConfig -> boolean:RETROFIT_LOG = true
+BuildConfig -> String:YOUTUBE_DEVELOPER_KEY = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
+--**********************************************************--
+BuildConfig -> String:API_URL = "https://cm.s.orchextra.io/"
+not defined explicit param value for 'OCM_SDK_VERSION' in 'staging' configuration. Using first value founded
+BuildConfig -> String:OCM_SDK_VERSION = "ANDROID_1.0.0"
+BuildConfig -> int:CONCURRENT_INTERACTORS = 3
+not defined explicit param value for 'RETROFIT_LOG' in 'staging' configuration. Using first value founded
+BuildConfig -> boolean:RETROFIT_LOG = true
+not defined explicit param value for 'YOUTUBE_DEVELOPER_KEY' in 'staging' configuration. Using first value founded
+BuildConfig -> String:YOUTUBE_DEVELOPER_KEY = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
+--**********************************************************--
+:app:dependencies
+
+------------------------------------------------------------
+Project :app
+------------------------------------------------------------
+
+_debugAndroidTestAnnotationProcessor - ## Internal use, do not manually configure ##
+No dependencies
+
+_debugAndroidTestApk - ## Internal use, do not manually configure ##
+\--- com.android.support:multidex-instrumentation:1.0.1
+     \--- com.android.support:multidex:1.0.1
+
+_debugAndroidTestCompile - ## Internal use, do not manually configure ##
+\--- com.android.support:multidex-instrumentation:1.0.1
+     \--- com.android.support:multidex:1.0.1
+
+_debugAndroidTestJackPlugin - ## Internal use, do not manually configure ##
+No dependencies
+
+_debugAnnotationProcessor - ## Internal use, do not manually configure ##
+No dependencies
+
+_debugApk - ## Internal use, do not manually configure ##
++--- com.android.support:multidex:1.0.1
+\--- project :ocmsdk
+     +--- com.android.support:design:24.2.1
+     |    +--- com.android.support:support-v4:24.2.1
+     |    |    +--- com.android.support:support-compat:24.2.1
+     |    |    |    \--- com.android.support:support-annotations:24.2.1
+     |    |    +--- com.android.support:support-media-compat:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    +--- com.android.support:support-core-utils:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    +--- com.android.support:support-core-ui:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    \--- com.android.support:support-fragment:24.2.1
+     |    |         +--- com.android.support:support-compat:24.2.1 (*)
+     |    |         +--- com.android.support:support-media-compat:24.2.1 (*)
+     |    |         +--- com.android.support:support-core-ui:24.2.1 (*)
+     |    |         \--- com.android.support:support-core-utils:24.2.1 (*)
+     |    +--- com.android.support:appcompat-v7:24.2.1
+     |    |    +--- com.android.support:support-v4:24.2.1 (*)
+     |    |    +--- com.android.support:support-vector-drawable:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    \--- com.android.support:animated-vector-drawable:24.2.1
+     |    |         \--- com.android.support:support-vector-drawable:24.2.1 (*)
+     |    \--- com.android.support:recyclerview-v7:24.2.1
+     |         +--- com.android.support:support-annotations:24.2.1
+     |         +--- com.android.support:support-compat:24.2.1 (*)
+     |         \--- com.android.support:support-core-ui:24.2.1 (*)
+     +--- com.android.support:customtabs:24.2.1
+     |    +--- com.android.support:support-compat:24.2.1 (*)
+     |    \--- com.android.support:support-annotations:24.2.1
+     +--- com.google.android.gms:play-services-base:10.0.1
+     |    +--- com.google.android.gms:play-services-basement:10.0.1
+     |    |    \--- com.android.support:support-v4:24.0.0 -> 24.2.1 (*)
+     |    \--- com.google.android.gms:play-services-tasks:10.0.1
+     |         \--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     +--- com.google.android.gms:play-services-location:10.0.1
+     |    +--- com.google.android.gms:play-services-base:10.0.1 (*)
+     |    +--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     |    \--- com.google.android.gms:play-services-tasks:10.0.1 (*)
+     +--- com.google.android.gms:play-services-gcm:10.0.1
+     |    +--- com.google.android.gms:play-services-base:10.0.1 (*)
+     |    +--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     |    \--- com.google.android.gms:play-services-iid:10.0.1
+     |         +--- com.google.android.gms:play-services-base:10.0.1 (*)
+     |         \--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7 -> 3.9
+     |    +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.9
+     |    +--- com.github.GigigoGreenLabs:permissionsModule:2.3
+     |    +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.9
+     |    +--- com.squareup.retrofit2:converter-gson:2.0.2 -> 2.3.0
+     |    |    +--- com.squareup.retrofit2:retrofit:2.3.0
+     |    |    |    \--- com.squareup.okhttp3:okhttp:3.8.0
+     |    |    |         \--- com.squareup.okio:okio:1.13.0
+     |    |    \--- com.google.code.gson:gson:2.7
+     |    \--- com.squareup.retrofit2:retrofit:2.0.2 -> 2.3.0 (*)
+     +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:2c184f2ed7 -> 3.9
+     +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2
+     |    \--- com.google.dagger:dagger:2.9
+     |         \--- javax.inject:javax.inject:1
+     +--- com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01
+     |    +--- com.android.support:appcompat-v7:23.3.0 -> 24.2.1 (*)
+     |    +--- com.github.bumptech.glide:glide:3.7.0
+     |    +--- com.github.bumptech.glide:okhttp-integration:1.4.0
+     |    |    +--- com.github.bumptech.glide:glide:3.7.0
+     |    |    \--- com.squareup.okhttp:okhttp:2.2.0
+     |    |         \--- com.squareup.okio:okio:1.2.0 -> 1.13.0
+     |    +--- jp.wasabeef:glide-transformations:2.0.2
+     |    |    \--- com.github.bumptech.glide:glide:3.7.0
+     |    \--- com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader:2.01
+     +--- com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6
+     |    +--- com.github.GigigoGreenLabs.imgRecogModule:vuforiacore:2.6
+     |    |    \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.9 (*)
+     |    \--- com.github.GigigoGreenLabs.imgRecogModule:imagerecognitioninterface:2.6
+     +--- com.github.nuborisar:customViewPager:0.8RC
+     |    \--- com.android.support:appcompat-v7:24.2.1 (*)
+     +--- com.github.GigigoGreenLabs:AutoFitTextView:0.7RC
+     |    \--- com.android.support:appcompat-v7:24.2.1 (*)
+     +--- com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.3
+     |    +--- com.android.support:appcompat-v7:24.2.1 (*)
+     |    +--- com.android.support:design:24.2.1 (*)
+     |    +--- com.android.support:recyclerview-v7:24.2.1 (*)
+     |    \--- com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.6
+     |         +--- com.android.support:appcompat-v7:23.3.0 -> 24.2.1 (*)
+     |         \--- com.android.support:recyclerview-v7:23.3.0 -> 24.2.1 (*)
+     +--- io.reactivex.rxjava2:rxandroid:2.0.1
+     |    \--- io.reactivex.rxjava2:rxjava:2.0.1 -> 2.1.0
+     |         \--- org.reactivestreams:reactive-streams:1.0.0
+     +--- io.reactivex.rxjava2:rxjava:2.1.0 (*)
+     +--- com.squareup.retrofit2:adapter-rxjava2:2.3.0
+     |    +--- com.squareup.retrofit2:retrofit:2.3.0 (*)
+     |    \--- io.reactivex.rxjava2:rxjava:2.0.0 -> 2.1.0 (*)
+     +--- com.fernandocejas:arrow:1.0.0
+     |    \--- org.jetbrains:annotations:13.0
+     +--- com.github.nuborisar:kache:0.4
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.2
+     |    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.2
+     |    |         \--- org.jetbrains:annotations:13.0
+     |    +--- com.google.code.gson:gson:2.4 -> 2.7
+     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:0.15
+     |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.2 (*)
+     \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk:1032Test
+          +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+          +--- com.squareup.okhttp3:logging-interceptor:3.8.0
+          |    \--- com.squareup.okhttp3:okhttp:3.8.0 (*)
+          +--- org.altbeacon:android-beacon-library:2.9.2
+          +--- me.dm7.barcodescanner:zbar:1.8.4
+          |    \--- me.dm7.barcodescanner:core:1.8.4
+          +--- com.github.GigigoGreenLabs.imgRecogModule:imagerecognitioninterface:2.6
+          +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-control:1032Test
+          |    +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-domain:1032Test
+          |    |    \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:2c184f2ed7 -> 3.9
+          |    \--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+          \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-data:1032Test
+               +--- io.realm:realm-annotations:1.0.0
+               +--- io.realm:realm-android-library:1.0.0
+               |    +--- io.realm:realm-annotations:1.0.0
+               |    \--- com.getkeepsafe.relinker:relinker:1.2.1
+               +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+               +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-dataprovision:1032Test
+               |    \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-domain:1032Test (*)
+               \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7 -> 3.9 (*)
+
+_debugCompile - ## Internal use, do not manually configure ##
++--- com.android.support:multidex:1.0.1
+\--- project :ocmsdk
+     +--- com.android.support:design:24.2.1
+     |    +--- com.android.support:support-v4:24.2.1
+     |    |    +--- com.android.support:support-compat:24.2.1
+     |    |    |    \--- com.android.support:support-annotations:24.2.1
+     |    |    +--- com.android.support:support-media-compat:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    +--- com.android.support:support-core-utils:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    +--- com.android.support:support-core-ui:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    \--- com.android.support:support-fragment:24.2.1
+     |    |         +--- com.android.support:support-compat:24.2.1 (*)
+     |    |         +--- com.android.support:support-media-compat:24.2.1 (*)
+     |    |         +--- com.android.support:support-core-ui:24.2.1 (*)
+     |    |         \--- com.android.support:support-core-utils:24.2.1 (*)
+     |    +--- com.android.support:appcompat-v7:24.2.1
+     |    |    +--- com.android.support:support-v4:24.2.1 (*)
+     |    |    +--- com.android.support:support-vector-drawable:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    \--- com.android.support:animated-vector-drawable:24.2.1
+     |    |         \--- com.android.support:support-vector-drawable:24.2.1 (*)
+     |    \--- com.android.support:recyclerview-v7:24.2.1
+     |         +--- com.android.support:support-annotations:24.2.1
+     |         +--- com.android.support:support-compat:24.2.1 (*)
+     |         \--- com.android.support:support-core-ui:24.2.1 (*)
+     +--- com.android.support:customtabs:24.2.1
+     |    +--- com.android.support:support-compat:24.2.1 (*)
+     |    \--- com.android.support:support-annotations:24.2.1
+     +--- com.google.android.gms:play-services-base:10.0.1
+     |    +--- com.google.android.gms:play-services-basement:10.0.1
+     |    |    \--- com.android.support:support-v4:24.0.0 -> 24.2.1 (*)
+     |    \--- com.google.android.gms:play-services-tasks:10.0.1
+     |         \--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     +--- com.google.android.gms:play-services-location:10.0.1
+     |    +--- com.google.android.gms:play-services-base:10.0.1 (*)
+     |    +--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     |    \--- com.google.android.gms:play-services-tasks:10.0.1 (*)
+     +--- com.google.android.gms:play-services-gcm:10.0.1
+     |    +--- com.google.android.gms:play-services-base:10.0.1 (*)
+     |    +--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     |    \--- com.google.android.gms:play-services-iid:10.0.1
+     |         +--- com.google.android.gms:play-services-base:10.0.1 (*)
+     |         \--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7 -> 3.9
+     |    +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.9
+     |    +--- com.github.GigigoGreenLabs:permissionsModule:2.3
+     |    +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.9
+     |    +--- com.squareup.retrofit2:converter-gson:2.0.2 -> 2.3.0
+     |    |    +--- com.squareup.retrofit2:retrofit:2.3.0
+     |    |    |    \--- com.squareup.okhttp3:okhttp:3.8.0
+     |    |    |         \--- com.squareup.okio:okio:1.13.0
+     |    |    \--- com.google.code.gson:gson:2.7
+     |    \--- com.squareup.retrofit2:retrofit:2.0.2 -> 2.3.0 (*)
+     +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:2c184f2ed7 -> 3.9
+     +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2
+     |    \--- com.google.dagger:dagger:2.9
+     |         \--- javax.inject:javax.inject:1
+     +--- com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01
+     |    +--- com.android.support:appcompat-v7:23.3.0 -> 24.2.1 (*)
+     |    +--- com.github.bumptech.glide:glide:3.7.0
+     |    +--- com.github.bumptech.glide:okhttp-integration:1.4.0
+     |    |    +--- com.github.bumptech.glide:glide:3.7.0
+     |    |    \--- com.squareup.okhttp:okhttp:2.2.0
+     |    |         \--- com.squareup.okio:okio:1.2.0 -> 1.13.0
+     |    +--- jp.wasabeef:glide-transformations:2.0.2
+     |    |    \--- com.github.bumptech.glide:glide:3.7.0
+     |    \--- com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader:2.01
+     +--- com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6
+     |    +--- com.github.GigigoGreenLabs.imgRecogModule:vuforiacore:2.6
+     |    |    \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.9 (*)
+     |    \--- com.github.GigigoGreenLabs.imgRecogModule:imagerecognitioninterface:2.6
+     +--- com.github.nuborisar:customViewPager:0.8RC
+     |    \--- com.android.support:appcompat-v7:24.2.1 (*)
+     +--- com.github.GigigoGreenLabs:AutoFitTextView:0.7RC
+     |    \--- com.android.support:appcompat-v7:24.2.1 (*)
+     +--- com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.3
+     |    +--- com.android.support:appcompat-v7:24.2.1 (*)
+     |    +--- com.android.support:design:24.2.1 (*)
+     |    +--- com.android.support:recyclerview-v7:24.2.1 (*)
+     |    \--- com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.6
+     |         +--- com.android.support:appcompat-v7:23.3.0 -> 24.2.1 (*)
+     |         \--- com.android.support:recyclerview-v7:23.3.0 -> 24.2.1 (*)
+     +--- io.reactivex.rxjava2:rxandroid:2.0.1
+     |    \--- io.reactivex.rxjava2:rxjava:2.0.1 -> 2.1.0
+     |         \--- org.reactivestreams:reactive-streams:1.0.0
+     +--- io.reactivex.rxjava2:rxjava:2.1.0 (*)
+     +--- com.squareup.retrofit2:adapter-rxjava2:2.3.0
+     |    +--- com.squareup.retrofit2:retrofit:2.3.0 (*)
+     |    \--- io.reactivex.rxjava2:rxjava:2.0.0 -> 2.1.0 (*)
+     +--- com.fernandocejas:arrow:1.0.0
+     |    \--- org.jetbrains:annotations:13.0
+     +--- com.github.nuborisar:kache:0.4
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.2
+     |    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.2
+     |    |         \--- org.jetbrains:annotations:13.0
+     |    +--- com.google.code.gson:gson:2.4 -> 2.7
+     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:0.15
+     |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.2 (*)
+     \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk:1032Test
+          +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+          +--- com.squareup.okhttp3:logging-interceptor:3.8.0
+          |    \--- com.squareup.okhttp3:okhttp:3.8.0 (*)
+          +--- org.altbeacon:android-beacon-library:2.9.2
+          +--- me.dm7.barcodescanner:zbar:1.8.4
+          |    \--- me.dm7.barcodescanner:core:1.8.4
+          +--- com.github.GigigoGreenLabs.imgRecogModule:imagerecognitioninterface:2.6
+          +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-control:1032Test
+          |    +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-domain:1032Test
+          |    |    \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:2c184f2ed7 -> 3.9
+          |    \--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+          \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-data:1032Test
+               +--- io.realm:realm-annotations:1.0.0
+               +--- io.realm:realm-android-library:1.0.0
+               |    +--- io.realm:realm-annotations:1.0.0
+               |    \--- com.getkeepsafe.relinker:relinker:1.2.1
+               +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+               +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-dataprovision:1032Test
+               |    \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-domain:1032Test (*)
+               \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7 -> 3.9 (*)
+
+_debugJackPlugin - ## Internal use, do not manually configure ##
+No dependencies
+
+_debugUnitTestAnnotationProcessor - ## Internal use, do not manually configure ##
+No dependencies
+
+_debugUnitTestApk - ## Internal use, do not manually configure ##
+No dependencies
+
+_debugUnitTestCompile - ## Internal use, do not manually configure ##
+No dependencies
+
+_debugUnitTestJackPlugin - ## Internal use, do not manually configure ##
+No dependencies
+
+_releaseAnnotationProcessor - ## Internal use, do not manually configure ##
+No dependencies
+
+_releaseApk - ## Internal use, do not manually configure ##
++--- com.android.support:multidex:1.0.1
+\--- project :ocmsdk
+     +--- com.android.support:design:24.2.1
+     |    +--- com.android.support:support-v4:24.2.1
+     |    |    +--- com.android.support:support-compat:24.2.1
+     |    |    |    \--- com.android.support:support-annotations:24.2.1
+     |    |    +--- com.android.support:support-media-compat:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    +--- com.android.support:support-core-utils:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    +--- com.android.support:support-core-ui:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    \--- com.android.support:support-fragment:24.2.1
+     |    |         +--- com.android.support:support-compat:24.2.1 (*)
+     |    |         +--- com.android.support:support-media-compat:24.2.1 (*)
+     |    |         +--- com.android.support:support-core-ui:24.2.1 (*)
+     |    |         \--- com.android.support:support-core-utils:24.2.1 (*)
+     |    +--- com.android.support:appcompat-v7:24.2.1
+     |    |    +--- com.android.support:support-v4:24.2.1 (*)
+     |    |    +--- com.android.support:support-vector-drawable:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    \--- com.android.support:animated-vector-drawable:24.2.1
+     |    |         \--- com.android.support:support-vector-drawable:24.2.1 (*)
+     |    \--- com.android.support:recyclerview-v7:24.2.1
+     |         +--- com.android.support:support-annotations:24.2.1
+     |         +--- com.android.support:support-compat:24.2.1 (*)
+     |         \--- com.android.support:support-core-ui:24.2.1 (*)
+     +--- com.android.support:customtabs:24.2.1
+     |    +--- com.android.support:support-compat:24.2.1 (*)
+     |    \--- com.android.support:support-annotations:24.2.1
+     +--- com.google.android.gms:play-services-base:10.0.1
+     |    +--- com.google.android.gms:play-services-basement:10.0.1
+     |    |    \--- com.android.support:support-v4:24.0.0 -> 24.2.1 (*)
+     |    \--- com.google.android.gms:play-services-tasks:10.0.1
+     |         \--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     +--- com.google.android.gms:play-services-location:10.0.1
+     |    +--- com.google.android.gms:play-services-base:10.0.1 (*)
+     |    +--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     |    \--- com.google.android.gms:play-services-tasks:10.0.1 (*)
+     +--- com.google.android.gms:play-services-gcm:10.0.1
+     |    +--- com.google.android.gms:play-services-base:10.0.1 (*)
+     |    +--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     |    \--- com.google.android.gms:play-services-iid:10.0.1
+     |         +--- com.google.android.gms:play-services-base:10.0.1 (*)
+     |         \--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7 -> 3.9
+     |    +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.9
+     |    +--- com.github.GigigoGreenLabs:permissionsModule:2.3
+     |    +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.9
+     |    +--- com.squareup.retrofit2:converter-gson:2.0.2 -> 2.3.0
+     |    |    +--- com.squareup.retrofit2:retrofit:2.3.0
+     |    |    |    \--- com.squareup.okhttp3:okhttp:3.8.0
+     |    |    |         \--- com.squareup.okio:okio:1.13.0
+     |    |    \--- com.google.code.gson:gson:2.7
+     |    \--- com.squareup.retrofit2:retrofit:2.0.2 -> 2.3.0 (*)
+     +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:2c184f2ed7 -> 3.9
+     +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2
+     |    \--- com.google.dagger:dagger:2.9
+     |         \--- javax.inject:javax.inject:1
+     +--- com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01
+     |    +--- com.android.support:appcompat-v7:23.3.0 -> 24.2.1 (*)
+     |    +--- com.github.bumptech.glide:glide:3.7.0
+     |    +--- com.github.bumptech.glide:okhttp-integration:1.4.0
+     |    |    +--- com.github.bumptech.glide:glide:3.7.0
+     |    |    \--- com.squareup.okhttp:okhttp:2.2.0
+     |    |         \--- com.squareup.okio:okio:1.2.0 -> 1.13.0
+     |    +--- jp.wasabeef:glide-transformations:2.0.2
+     |    |    \--- com.github.bumptech.glide:glide:3.7.0
+     |    \--- com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader:2.01
+     +--- com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6
+     |    +--- com.github.GigigoGreenLabs.imgRecogModule:vuforiacore:2.6
+     |    |    \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.9 (*)
+     |    \--- com.github.GigigoGreenLabs.imgRecogModule:imagerecognitioninterface:2.6
+     +--- com.github.nuborisar:customViewPager:0.8RC
+     |    \--- com.android.support:appcompat-v7:24.2.1 (*)
+     +--- com.github.GigigoGreenLabs:AutoFitTextView:0.7RC
+     |    \--- com.android.support:appcompat-v7:24.2.1 (*)
+     +--- com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.3
+     |    +--- com.android.support:appcompat-v7:24.2.1 (*)
+     |    +--- com.android.support:design:24.2.1 (*)
+     |    +--- com.android.support:recyclerview-v7:24.2.1 (*)
+     |    \--- com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.6
+     |         +--- com.android.support:appcompat-v7:23.3.0 -> 24.2.1 (*)
+     |         \--- com.android.support:recyclerview-v7:23.3.0 -> 24.2.1 (*)
+     +--- io.reactivex.rxjava2:rxandroid:2.0.1
+     |    \--- io.reactivex.rxjava2:rxjava:2.0.1 -> 2.1.0
+     |         \--- org.reactivestreams:reactive-streams:1.0.0
+     +--- io.reactivex.rxjava2:rxjava:2.1.0 (*)
+     +--- com.squareup.retrofit2:adapter-rxjava2:2.3.0
+     |    +--- com.squareup.retrofit2:retrofit:2.3.0 (*)
+     |    \--- io.reactivex.rxjava2:rxjava:2.0.0 -> 2.1.0 (*)
+     +--- com.fernandocejas:arrow:1.0.0
+     |    \--- org.jetbrains:annotations:13.0
+     +--- com.github.nuborisar:kache:0.4
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.2
+     |    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.2
+     |    |         \--- org.jetbrains:annotations:13.0
+     |    +--- com.google.code.gson:gson:2.4 -> 2.7
+     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:0.15
+     |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.2 (*)
+     \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk:1032Test
+          +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+          +--- com.squareup.okhttp3:logging-interceptor:3.8.0
+          |    \--- com.squareup.okhttp3:okhttp:3.8.0 (*)
+          +--- org.altbeacon:android-beacon-library:2.9.2
+          +--- me.dm7.barcodescanner:zbar:1.8.4
+          |    \--- me.dm7.barcodescanner:core:1.8.4
+          +--- com.github.GigigoGreenLabs.imgRecogModule:imagerecognitioninterface:2.6
+          +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-control:1032Test
+          |    +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-domain:1032Test
+          |    |    \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:2c184f2ed7 -> 3.9
+          |    \--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+          \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-data:1032Test
+               +--- io.realm:realm-annotations:1.0.0
+               +--- io.realm:realm-android-library:1.0.0
+               |    +--- io.realm:realm-annotations:1.0.0
+               |    \--- com.getkeepsafe.relinker:relinker:1.2.1
+               +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+               +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-dataprovision:1032Test
+               |    \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-domain:1032Test (*)
+               \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7 -> 3.9 (*)
+
+_releaseCompile - ## Internal use, do not manually configure ##
++--- com.android.support:multidex:1.0.1
+\--- project :ocmsdk
+     +--- com.android.support:design:24.2.1
+     |    +--- com.android.support:support-v4:24.2.1
+     |    |    +--- com.android.support:support-compat:24.2.1
+     |    |    |    \--- com.android.support:support-annotations:24.2.1
+     |    |    +--- com.android.support:support-media-compat:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    +--- com.android.support:support-core-utils:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    +--- com.android.support:support-core-ui:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    \--- com.android.support:support-fragment:24.2.1
+     |    |         +--- com.android.support:support-compat:24.2.1 (*)
+     |    |         +--- com.android.support:support-media-compat:24.2.1 (*)
+     |    |         +--- com.android.support:support-core-ui:24.2.1 (*)
+     |    |         \--- com.android.support:support-core-utils:24.2.1 (*)
+     |    +--- com.android.support:appcompat-v7:24.2.1
+     |    |    +--- com.android.support:support-v4:24.2.1 (*)
+     |    |    +--- com.android.support:support-vector-drawable:24.2.1
+     |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+     |    |    \--- com.android.support:animated-vector-drawable:24.2.1
+     |    |         \--- com.android.support:support-vector-drawable:24.2.1 (*)
+     |    \--- com.android.support:recyclerview-v7:24.2.1
+     |         +--- com.android.support:support-annotations:24.2.1
+     |         +--- com.android.support:support-compat:24.2.1 (*)
+     |         \--- com.android.support:support-core-ui:24.2.1 (*)
+     +--- com.android.support:customtabs:24.2.1
+     |    +--- com.android.support:support-compat:24.2.1 (*)
+     |    \--- com.android.support:support-annotations:24.2.1
+     +--- com.google.android.gms:play-services-base:10.0.1
+     |    +--- com.google.android.gms:play-services-basement:10.0.1
+     |    |    \--- com.android.support:support-v4:24.0.0 -> 24.2.1 (*)
+     |    \--- com.google.android.gms:play-services-tasks:10.0.1
+     |         \--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     +--- com.google.android.gms:play-services-location:10.0.1
+     |    +--- com.google.android.gms:play-services-base:10.0.1 (*)
+     |    +--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     |    \--- com.google.android.gms:play-services-tasks:10.0.1 (*)
+     +--- com.google.android.gms:play-services-gcm:10.0.1
+     |    +--- com.google.android.gms:play-services-base:10.0.1 (*)
+     |    +--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     |    \--- com.google.android.gms:play-services-iid:10.0.1
+     |         +--- com.google.android.gms:play-services-base:10.0.1 (*)
+     |         \--- com.google.android.gms:play-services-basement:10.0.1 (*)
+     +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7 -> 3.9
+     |    +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.9
+     |    +--- com.github.GigigoGreenLabs:permissionsModule:2.3
+     |    +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.9
+     |    +--- com.squareup.retrofit2:converter-gson:2.0.2 -> 2.3.0
+     |    |    +--- com.squareup.retrofit2:retrofit:2.3.0
+     |    |    |    \--- com.squareup.okhttp3:okhttp:3.8.0
+     |    |    |         \--- com.squareup.okio:okio:1.13.0
+     |    |    \--- com.google.code.gson:gson:2.7
+     |    \--- com.squareup.retrofit2:retrofit:2.0.2 -> 2.3.0 (*)
+     +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:2c184f2ed7 -> 3.9
+     +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2
+     |    \--- com.google.dagger:dagger:2.9
+     |         \--- javax.inject:javax.inject:1
+     +--- com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01
+     |    +--- com.android.support:appcompat-v7:23.3.0 -> 24.2.1 (*)
+     |    +--- com.github.bumptech.glide:glide:3.7.0
+     |    +--- com.github.bumptech.glide:okhttp-integration:1.4.0
+     |    |    +--- com.github.bumptech.glide:glide:3.7.0
+     |    |    \--- com.squareup.okhttp:okhttp:2.2.0
+     |    |         \--- com.squareup.okio:okio:1.2.0 -> 1.13.0
+     |    +--- jp.wasabeef:glide-transformations:2.0.2
+     |    |    \--- com.github.bumptech.glide:glide:3.7.0
+     |    \--- com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader:2.01
+     +--- com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6
+     |    +--- com.github.GigigoGreenLabs.imgRecogModule:vuforiacore:2.6
+     |    |    \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.9 (*)
+     |    \--- com.github.GigigoGreenLabs.imgRecogModule:imagerecognitioninterface:2.6
+     +--- com.github.nuborisar:customViewPager:0.8RC
+     |    \--- com.android.support:appcompat-v7:24.2.1 (*)
+     +--- com.github.GigigoGreenLabs:AutoFitTextView:0.7RC
+     |    \--- com.android.support:appcompat-v7:24.2.1 (*)
+     +--- com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.3
+     |    +--- com.android.support:appcompat-v7:24.2.1 (*)
+     |    +--- com.android.support:design:24.2.1 (*)
+     |    +--- com.android.support:recyclerview-v7:24.2.1 (*)
+     |    \--- com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.6
+     |         +--- com.android.support:appcompat-v7:23.3.0 -> 24.2.1 (*)
+     |         \--- com.android.support:recyclerview-v7:23.3.0 -> 24.2.1 (*)
+     +--- io.reactivex.rxjava2:rxandroid:2.0.1
+     |    \--- io.reactivex.rxjava2:rxjava:2.0.1 -> 2.1.0
+     |         \--- org.reactivestreams:reactive-streams:1.0.0
+     +--- io.reactivex.rxjava2:rxjava:2.1.0 (*)
+     +--- com.squareup.retrofit2:adapter-rxjava2:2.3.0
+     |    +--- com.squareup.retrofit2:retrofit:2.3.0 (*)
+     |    \--- io.reactivex.rxjava2:rxjava:2.0.0 -> 2.1.0 (*)
+     +--- com.fernandocejas:arrow:1.0.0
+     |    \--- org.jetbrains:annotations:13.0
+     +--- com.github.nuborisar:kache:0.4
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.2
+     |    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.2
+     |    |         \--- org.jetbrains:annotations:13.0
+     |    +--- com.google.code.gson:gson:2.4 -> 2.7
+     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:0.15
+     |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.2 (*)
+     \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk:1032Test
+          +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+          +--- com.squareup.okhttp3:logging-interceptor:3.8.0
+          |    \--- com.squareup.okhttp3:okhttp:3.8.0 (*)
+          +--- org.altbeacon:android-beacon-library:2.9.2
+          +--- me.dm7.barcodescanner:zbar:1.8.4
+          |    \--- me.dm7.barcodescanner:core:1.8.4
+          +--- com.github.GigigoGreenLabs.imgRecogModule:imagerecognitioninterface:2.6
+          +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-control:1032Test
+          |    +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-domain:1032Test
+          |    |    \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:2c184f2ed7 -> 3.9
+          |    \--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+          \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-data:1032Test
+               +--- io.realm:realm-annotations:1.0.0
+               +--- io.realm:realm-android-library:1.0.0
+               |    +--- io.realm:realm-annotations:1.0.0
+               |    \--- com.getkeepsafe.relinker:relinker:1.2.1
+               +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+               +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-dataprovision:1032Test
+               |    \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-domain:1032Test (*)
+               \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7 -> 3.9 (*)
+
+_releaseJackPlugin - ## Internal use, do not manually configure ##
+No dependencies
+
+_releaseUnitTestAnnotationProcessor - ## Internal use, do not manually configure ##
+No dependencies
+
+_releaseUnitTestApk - ## Internal use, do not manually configure ##
+No dependencies
+
+_releaseUnitTestCompile - ## Internal use, do not manually configure ##
+No dependencies
+
+_releaseUnitTestJackPlugin - ## Internal use, do not manually configure ##
+No dependencies
+
+androidJacocoAgent - The Jacoco agent to use to get coverage data.
+\--- org.jacoco:org.jacoco.agent:0.7.5.201505241946
+
+androidJacocoAnt - The Jacoco ant tasks to use to get execute Gradle tasks.
+\--- org.jacoco:org.jacoco.ant:0.7.5.201505241946
+     +--- org.jacoco:org.jacoco.core:0.7.5.201505241946
+     |    \--- org.ow2.asm:asm-debug-all:5.0.1
+     +--- org.jacoco:org.jacoco.report:0.7.5.201505241946
+     |    +--- org.jacoco:org.jacoco.core:0.7.5.201505241946 (*)
+     |    \--- org.ow2.asm:asm-debug-all:5.0.1
+     \--- org.jacoco:org.jacoco.agent:0.7.5.201505241946
+
+androidTestAnnotationProcessor - Classpath for the annotation processor for 'androidTest'.
+No dependencies
+
+androidTestApk - Classpath packaged with the compiled 'androidTest' classes.
+No dependencies
+
+androidTestCompile - Classpath for compiling the androidTest sources.
+No dependencies
+
+androidTestJackPlugin - Classpath for the 'androidTest' Jack plugins.
+No dependencies
+
+androidTestProvided - Classpath for only compiling the androidTest sources.
+No dependencies
+
+androidTestWearApp - Link to a wear app to embed for object 'androidTest'.
+No dependencies
+
+annotationProcessor - Classpath for the annotation processor for 'main'.
+No dependencies
+
+apk - Classpath packaged with the compiled 'main' classes.
+No dependencies
+
+archives - Configuration for archive artifacts.
+No dependencies
+
+compile - Classpath for compiling the main sources.
++--- project :ocmsdk
+|    +--- com.android.support:design:24.2.1
+|    |    +--- com.android.support:support-v4:24.2.1
+|    |    |    +--- com.android.support:support-compat:24.2.1
+|    |    |    |    \--- com.android.support:support-annotations:24.2.1
+|    |    |    +--- com.android.support:support-media-compat:24.2.1
+|    |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+|    |    |    +--- com.android.support:support-core-utils:24.2.1
+|    |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+|    |    |    +--- com.android.support:support-core-ui:24.2.1
+|    |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+|    |    |    \--- com.android.support:support-fragment:24.2.1
+|    |    |         +--- com.android.support:support-compat:24.2.1 (*)
+|    |    |         +--- com.android.support:support-media-compat:24.2.1 (*)
+|    |    |         +--- com.android.support:support-core-ui:24.2.1 (*)
+|    |    |         \--- com.android.support:support-core-utils:24.2.1 (*)
+|    |    +--- com.android.support:appcompat-v7:24.2.1
+|    |    |    +--- com.android.support:support-v4:24.2.1 (*)
+|    |    |    +--- com.android.support:support-vector-drawable:24.2.1
+|    |    |    |    \--- com.android.support:support-compat:24.2.1 (*)
+|    |    |    \--- com.android.support:animated-vector-drawable:24.2.1
+|    |    |         \--- com.android.support:support-vector-drawable:24.2.1 (*)
+|    |    \--- com.android.support:recyclerview-v7:24.2.1
+|    |         +--- com.android.support:support-annotations:24.2.1
+|    |         +--- com.android.support:support-compat:24.2.1 (*)
+|    |         \--- com.android.support:support-core-ui:24.2.1 (*)
+|    +--- com.android.support:customtabs:24.2.1
+|    |    +--- com.android.support:support-compat:24.2.1 (*)
+|    |    \--- com.android.support:support-annotations:24.2.1
+|    +--- com.google.android.gms:play-services-base:10.0.1
+|    |    +--- com.google.android.gms:play-services-basement:10.0.1
+|    |    |    \--- com.android.support:support-v4:24.0.0 -> 24.2.1 (*)
+|    |    \--- com.google.android.gms:play-services-tasks:10.0.1
+|    |         \--- com.google.android.gms:play-services-basement:10.0.1 (*)
+|    +--- com.google.android.gms:play-services-location:10.0.1
+|    |    +--- com.google.android.gms:play-services-base:10.0.1 (*)
+|    |    +--- com.google.android.gms:play-services-basement:10.0.1 (*)
+|    |    \--- com.google.android.gms:play-services-tasks:10.0.1 (*)
+|    +--- com.google.android.gms:play-services-gcm:10.0.1
+|    |    +--- com.google.android.gms:play-services-base:10.0.1 (*)
+|    |    +--- com.google.android.gms:play-services-basement:10.0.1 (*)
+|    |    \--- com.google.android.gms:play-services-iid:10.0.1
+|    |         +--- com.google.android.gms:play-services-base:10.0.1 (*)
+|    |         \--- com.google.android.gms:play-services-basement:10.0.1 (*)
+|    +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7 -> 3.9
+|    |    +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:3.9
+|    |    +--- com.github.GigigoGreenLabs:permissionsModule:2.3
+|    |    +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:3.9
+|    |    +--- com.squareup.retrofit2:converter-gson:2.0.2 -> 2.3.0
+|    |    |    +--- com.squareup.retrofit2:retrofit:2.3.0
+|    |    |    |    \--- com.squareup.okhttp3:okhttp:3.8.0
+|    |    |    |         \--- com.squareup.okio:okio:1.13.0
+|    |    |    \--- com.google.code.gson:gson:2.7
+|    |    \--- com.squareup.retrofit2:retrofit:2.0.2 -> 2.3.0 (*)
+|    +--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:2c184f2ed7 -> 3.9
+|    +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2
+|    |    \--- com.google.dagger:dagger:2.9
+|    |         \--- javax.inject:javax.inject:1
+|    +--- com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01
+|    |    +--- com.android.support:appcompat-v7:23.3.0 -> 24.2.1 (*)
+|    |    +--- com.github.bumptech.glide:glide:3.7.0
+|    |    +--- com.github.bumptech.glide:okhttp-integration:1.4.0
+|    |    |    +--- com.github.bumptech.glide:glide:3.7.0
+|    |    |    \--- com.squareup.okhttp:okhttp:2.2.0
+|    |    |         \--- com.squareup.okio:okio:1.2.0 -> 1.13.0
+|    |    +--- jp.wasabeef:glide-transformations:2.0.2
+|    |    |    \--- com.github.bumptech.glide:glide:3.7.0
+|    |    \--- com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader:2.01
+|    +--- com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6
+|    |    +--- com.github.GigigoGreenLabs.imgRecogModule:vuforiacore:2.6
+|    |    |    \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:3.9 (*)
+|    |    \--- com.github.GigigoGreenLabs.imgRecogModule:imagerecognitioninterface:2.6
+|    +--- com.github.nuborisar:customViewPager:0.8RC
+|    |    \--- com.android.support:appcompat-v7:24.2.1 (*)
+|    +--- com.github.GigigoGreenLabs:AutoFitTextView:0.7RC
+|    |    \--- com.android.support:appcompat-v7:24.2.1 (*)
+|    +--- com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.3
+|    |    +--- com.android.support:appcompat-v7:24.2.1 (*)
+|    |    +--- com.android.support:design:24.2.1 (*)
+|    |    +--- com.android.support:recyclerview-v7:24.2.1 (*)
+|    |    \--- com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:1.4.6
+|    |         +--- com.android.support:appcompat-v7:23.3.0 -> 24.2.1 (*)
+|    |         \--- com.android.support:recyclerview-v7:23.3.0 -> 24.2.1 (*)
+|    +--- io.reactivex.rxjava2:rxandroid:2.0.1
+|    |    \--- io.reactivex.rxjava2:rxjava:2.0.1 -> 2.1.0
+|    |         \--- org.reactivestreams:reactive-streams:1.0.0
+|    +--- io.reactivex.rxjava2:rxjava:2.1.0 (*)
+|    +--- com.squareup.retrofit2:adapter-rxjava2:2.3.0
+|    |    +--- com.squareup.retrofit2:retrofit:2.3.0 (*)
+|    |    \--- io.reactivex.rxjava2:rxjava:2.0.0 -> 2.1.0 (*)
+|    +--- com.fernandocejas:arrow:1.0.0
+|    |    \--- org.jetbrains:annotations:13.0
+|    +--- com.github.nuborisar:kache:0.4
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.2
+|    |    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.2
+|    |    |         \--- org.jetbrains:annotations:13.0
+|    |    +--- com.google.code.gson:gson:2.4 -> 2.7
+|    |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:0.15
+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.2 (*)
+|    \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk:1032Test
+|         +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+|         +--- com.squareup.okhttp3:logging-interceptor:3.8.0
+|         |    \--- com.squareup.okhttp3:okhttp:3.8.0 (*)
+|         +--- org.altbeacon:android-beacon-library:2.9.2
+|         +--- me.dm7.barcodescanner:zbar:1.8.4
+|         |    \--- me.dm7.barcodescanner:core:1.8.4
+|         +--- com.github.GigigoGreenLabs.imgRecogModule:imagerecognitioninterface:2.6
+|         +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-control:1032Test
+|         |    +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-domain:1032Test
+|         |    |    \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:2c184f2ed7 -> 3.9
+|         |    \--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+|         \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-data:1032Test
+|              +--- io.realm:realm-annotations:1.0.0
+|              +--- io.realm:realm-android-library:1.0.0
+|              |    +--- io.realm:realm-annotations:1.0.0
+|              |    \--- com.getkeepsafe.relinker:relinker:1.2.1
+|              +--- com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2 (*)
+|              +--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-dataprovision:1032Test
+|              |    \--- com.github.Orchextra.orchextra-android-sdk:orchextrasdk-domain:1032Test (*)
+|              \--- com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7 -> 3.9 (*)
+\--- com.android.support:multidex:1.0.1
+
+debugAnnotationProcessor - Classpath for the annotation processor for 'debug'.
+No dependencies
+
+debugApk - Classpath packaged with the compiled 'debug' classes.
+No dependencies
+
+debugCompile - Classpath for compiling the debug sources.
+No dependencies
+
+debugJackPlugin - Classpath for the 'debug' Jack plugins.
+No dependencies
+
+debugProvided - Classpath for only compiling the debug sources.
+No dependencies
+
+debugWearApp - Link to a wear app to embed for object 'debug'.
+No dependencies
+
+default - Configuration for default artifacts.
+No dependencies
+
+default-mapping - Configuration for default mapping artifacts.
+No dependencies
+
+default-metadata - Metadata for the produced APKs.
+No dependencies
+
+jackPlugin - Classpath for the 'main' Jack plugins.
+No dependencies
+
+provided - Classpath for only compiling the main sources.
+No dependencies
+
+releaseAnnotationProcessor - Classpath for the annotation processor for 'release'.
+No dependencies
+
+releaseApk - Classpath packaged with the compiled 'release' classes.
+No dependencies
+
+releaseCompile - Classpath for compiling the release sources.
+No dependencies
+
+releaseJackPlugin - Classpath for the 'release' Jack plugins.
+No dependencies
+
+releaseProvided - Classpath for only compiling the release sources.
+No dependencies
+
+releaseWearApp - Link to a wear app to embed for object 'release'.
+No dependencies
+
+testAnnotationProcessor - Classpath for the annotation processor for 'test'.
+No dependencies
+
+testApk - Classpath packaged with the compiled 'test' classes.
+No dependencies
+
+testCompile - Classpath for compiling the test sources.
+No dependencies
+
+testDebugAnnotationProcessor - Classpath for the annotation processor for 'testDebug'.
+No dependencies
+
+testDebugApk - Classpath packaged with the compiled 'testDebug' classes.
+No dependencies
+
+testDebugCompile - Classpath for compiling the testDebug sources.
+No dependencies
+
+testDebugJackPlugin - Classpath for the 'testDebug' Jack plugins.
+No dependencies
+
+testDebugProvided - Classpath for only compiling the testDebug sources.
+No dependencies
+
+testDebugWearApp - Link to a wear app to embed for object 'testDebug'.
+No dependencies
+
+testJackPlugin - Classpath for the 'test' Jack plugins.
+No dependencies
+
+testProvided - Classpath for only compiling the test sources.
+No dependencies
+
+testReleaseAnnotationProcessor - Classpath for the annotation processor for 'testRelease'.
+No dependencies
+
+testReleaseApk - Classpath packaged with the compiled 'testRelease' classes.
+No dependencies
+
+testReleaseCompile - Classpath for compiling the testRelease sources.
+No dependencies
+
+testReleaseJackPlugin - Classpath for the 'testRelease' Jack plugins.
+No dependencies
+
+testReleaseProvided - Classpath for only compiling the testRelease sources.
+No dependencies
+
+testReleaseWearApp - Link to a wear app to embed for object 'testRelease'.
+No dependencies
+
+testWearApp - Link to a wear app to embed for object 'test'.
+No dependencies
+
+wearApp - Link to a wear app to embed for object 'main'.
+No dependencies
+
+(*) - dependencies omitted (listed previously)
+
+BUILD SUCCESSFUL
+
+Total time: 18.232 secs
