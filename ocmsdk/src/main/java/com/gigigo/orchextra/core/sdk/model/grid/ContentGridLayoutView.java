@@ -67,7 +67,12 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private FrameLayout listedDataContainer;
 
   private View newContentContainer;
-
+  private final View.OnClickListener onNewContentClickListener = new View.OnClickListener() {
+    @Override public void onClick(View v) {
+      newContentContainer.setVisibility(View.GONE);
+      presenter.loadFromCache();
+    }
+  };
   private boolean thumbnailEnabled;
   private View.OnClickListener onClickDiscoverMoreButtonListener = v -> {
     if (onLoadMoreContentListener != null) {
@@ -158,14 +163,20 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   private void setDataGrid(List<Cell> cellDataList) {
-    uiListedBaseContentData = new SpannedGridRecyclerView(context);
 
-    uiListedBaseContentData.setListedContentListener(listedContentListener);
-    uiListedBaseContentData.setParams(clipToPadding, authoritation, thumbnailEnabled);
-    uiListedBaseContentData.setData(cellDataList);
+    if (uiListedBaseContentData == null) {
 
-    listedDataContainer.removeAllViews();
-    listedDataContainer.addView(uiListedBaseContentData);
+      uiListedBaseContentData = new SpannedGridRecyclerView(context);
+
+      uiListedBaseContentData.setListedContentListener(listedContentListener);
+      uiListedBaseContentData.setParams(clipToPadding, authoritation, thumbnailEnabled);
+      uiListedBaseContentData.setData(cellDataList);
+
+      listedDataContainer.removeAllViews();
+      listedDataContainer.addView(uiListedBaseContentData);
+    } else {
+      uiListedBaseContentData.setData(cellDataList);
+    }
   }
 
   private void setDataCarousel(List<Cell> cellDataList) {
@@ -295,13 +306,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     newContentContainer.setVisibility(View.VISIBLE);
     newContentContainer.setOnClickListener(onNewContentClickListener);
   }
-
-  private final View.OnClickListener onNewContentClickListener = new View.OnClickListener() {
-    @Override public void onClick(View v) {
-      newContentContainer.setVisibility(View.GONE);
-      presenter.loadFromCache();
-    }
-  };
 
   @Override public void onDestroy() {
     presenter.detachView();

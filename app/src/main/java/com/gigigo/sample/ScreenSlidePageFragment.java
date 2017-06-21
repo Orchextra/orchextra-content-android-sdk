@@ -20,6 +20,7 @@ public class ScreenSlidePageFragment extends Fragment {
   private Bundle arguments;
   private View emptyViewLayout;
   private View errorViewLayout;
+  private UiGridBaseContentData contentView;
 
   public static ScreenSlidePageFragment newInstance(String section) {
     ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
@@ -75,6 +76,8 @@ public class ScreenSlidePageFragment extends Fragment {
 
   public void setView(UiGridBaseContentData contentView) {
     if (contentView != null) {
+      this.contentView = contentView;
+
       contentView.setClipToPaddingBottomSize(ClipToPadding.PADDING_BIG);
       contentView.setEmptyView(emptyViewLayout);
       contentView.setErrorView(errorViewLayout);
@@ -86,6 +89,12 @@ public class ScreenSlidePageFragment extends Fragment {
       getChildFragmentManager().beginTransaction()
           .replace(R.id.content_main_view, contentView)
           .commit();
+    }
+  }
+
+  public void reloadSection() {
+    if (contentView != null) {
+      contentView.reloadSection();
     }
   }
 }
