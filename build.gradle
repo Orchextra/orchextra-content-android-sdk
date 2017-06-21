@@ -30,6 +30,10 @@ allprojects {
     mavenCentral()
     maven { url "https://jitpack.io" }
   }
+  tasks.withType(JavaCompile) {
+    sourceCompatibility = "1.7"
+    targetCompatibility = "1.7"
+  }
 }
 
 sonarqube {
