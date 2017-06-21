@@ -35,5 +35,5 @@ public interface OcmCache {
 
   boolean isDetailExpired(String slug);
 
-  void evictAll();
+  void evictAll(boolean images, boolean data);
 }
