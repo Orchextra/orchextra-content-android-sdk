@@ -70,7 +70,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private final View.OnClickListener onNewContentClickListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       newContentContainer.setVisibility(View.GONE);
-      presenter.loadFromCache();
+      if (presenter != null) {
+        presenter.loadFromCache();
+      }
     }
   };
   private boolean thumbnailEnabled;
@@ -141,7 +143,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void initUi() {
-    if (viewId != null) {
+    if (viewId != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
       //presenter.loadSection(viewId, emotion);
       presenter.loadSectionWithCacheAndAfterNetwork(viewId, emotion);
@@ -310,7 +312,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void onDestroy() {
-    presenter.detachView();
+    if (presenter != null) {
+      presenter.detachView();
+    }
 
     super.onDestroy();
   }

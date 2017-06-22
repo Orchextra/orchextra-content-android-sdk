@@ -230,7 +230,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                 imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
               }
 
-              if (element != null && checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
+              if (getView() != null && checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
                 OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
                 getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
                     activity, view);
@@ -253,7 +253,9 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   public void setFilter(String filter) {
     this.filter = filter;
-    if (getView() != null) loadSection(false);
+    if (getView() != null) {
+      loadSection(false);
+    }
   }
 
   public void setPadding(int padding) {
