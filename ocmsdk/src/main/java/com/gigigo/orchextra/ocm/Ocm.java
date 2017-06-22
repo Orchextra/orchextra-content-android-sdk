@@ -18,7 +18,7 @@ public final class Ocm {
 
     String oxKey = "novalidKey";
     String oxSecret = "novalidSecret";
-   // Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
+    Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
 
     OCManager.initSdk(app);
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());

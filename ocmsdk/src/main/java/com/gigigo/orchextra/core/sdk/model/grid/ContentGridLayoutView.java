@@ -222,9 +222,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private void clearImageToExpandWhenAnimationEnds(final ImageView imageViewToExpandInDetail) {
     new Handler().postDelayed(new Runnable() {
       @Override public void run() {
-          if (imageViewToExpandInDetail != null) {
-            imageViewToExpandInDetail.setImageDrawable(null);
-          }
+        if (imageViewToExpandInDetail != null) {
+          imageViewToExpandInDetail.setImageDrawable(null);
         }
       }
     }, 750);
