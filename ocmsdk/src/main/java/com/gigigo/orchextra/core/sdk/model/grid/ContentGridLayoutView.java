@@ -283,7 +283,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void reloadSection() {
-    presenter.reloadSectionFromNetwork();
+    presenter.loadSectionWithCacheAndAfterNetwork(viewId, emotion);
   }
 
   public void setEmotion(String emotion) {
