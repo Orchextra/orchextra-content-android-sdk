@@ -133,7 +133,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void initUi() {
-    if (viewId != null) {
+    if (viewId != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
       presenter.loadSection(viewId, emotion);
     }
@@ -267,7 +267,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void reloadSection() {
-    presenter.reloadSection();
+    if (presenter != null) {
+      presenter.reloadSection();
+    }
   }
 
   public void setEmotion(String emotion) {
@@ -287,7 +289,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void onDestroy() {
-    presenter.detachView();
+    if (presenter != null) {
+      presenter.detachView();
+    }
 
     super.onDestroy();
   }

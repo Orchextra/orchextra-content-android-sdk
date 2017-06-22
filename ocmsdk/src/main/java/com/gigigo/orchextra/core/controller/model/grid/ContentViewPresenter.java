@@ -31,8 +31,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private List<Cell> listedCellContentDataList;
   private int padding;
 
-  public ContentViewPresenter(OcmController ocmController,
-      Authoritation authoritation) {
+  public ContentViewPresenter(OcmController ocmController, Authoritation authoritation) {
 
     this.ocmController = ocmController;
     this.authoritation = authoritation;
@@ -59,7 +58,9 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     ocmController.getSection(!useCache, section, new OcmController.GetSectionControllerCallback() {
       @Override public void onGetSectionLoaded(ContentData contentData) {
         ContentItem contentItem = contentData.getContent();
-        renderContentItem(contentItem);
+        if (getView() != null) {
+          renderContentItem(contentItem);
+        }
       }
 
       @Override public void onGetSectionFails(Exception e) {
@@ -189,12 +190,15 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                 imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
               }
 
-              if (element != null && checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
-                OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
-                getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
-                    activity, view);
-              } else {
-                getView().showAuthDialog();
+              if (getView() != null) {
+                if (element != null && checkLoginAuth(
+                    element.getSegmentation().getRequiredAuth())) {
+                  OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
+                  getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
+                      activity, view);
+                } else {
+                  getView().showAuthDialog();
+                }
               }
             }
 
@@ -212,7 +216,9 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   public void setFilter(String filter) {
     this.filter = filter;
-    if (getView() != null) loadSection(false);
+    if (getView() != null) {
+      loadSection(false);
+    }
   }
 
   public void setPadding(int padding) {
