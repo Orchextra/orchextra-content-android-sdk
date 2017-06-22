@@ -54,7 +54,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   private void loadSection(final boolean useCache) {
     getView().showProgressView(true);
-
+    if (ocmController != null){
     ocmController.getSection(!useCache, section, new OcmController.GetSectionControllerCallback() {
       @Override public void onGetSectionLoaded(ContentData contentData) {
         ContentItem contentItem = contentData.getContent();
@@ -69,31 +69,37 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     });
   }
 
+}
+
   private void renderContentItem(ContentItem contentItem) {
     if (contentItem != null
         && contentItem.getLayout() != null
-        && contentItem.getElements() != null) {
+        && contentItem.getElements() != null
+        && getView() != null) {
 
       listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
-
-      if (listedCellContentDataList.size() != 0) {
-        getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
-        getView().showEmptyView(false);
-        getView().showErrorView(false);
+      if (this.getView() != null) {
+        if (listedCellContentDataList.size() != 0) {
+          getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
+          getView().showEmptyView(false);
+          getView().showErrorView(false);
+        } else {
+          getView().showEmptyView(true);
+        }
       } else {
         getView().showEmptyView(true);
       }
-    } else {
-      getView().showEmptyView(true);
-    }
 
-    getView().showProgressView(false);
+      getView().showProgressView(false);
+    }
   }
 
   private void renderError() {
-    getView().showProgressView(false);
-    if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
-      getView().showErrorView(true);
+    if (getView() != null) {
+      getView().showProgressView(false);
+      if (listedCellContentDataList == null || listedCellContentDataList.size() == 0) {
+        getView().showErrorView(true);
+      }
     }
   }
 

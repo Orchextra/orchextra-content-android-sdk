@@ -98,7 +98,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
     initView(view);
     setListeners();
-    presenter.attachView(this);
+    if (presenter != null) {
+      presenter.attachView(this);
+    }
 
     return view;
   }
@@ -220,7 +222,10 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private void clearImageToExpandWhenAnimationEnds(final ImageView imageViewToExpandInDetail) {
     new Handler().postDelayed(new Runnable() {
       @Override public void run() {
-        imageViewToExpandInDetail.setImageDrawable(null);
+          if (imageViewToExpandInDetail != null) {
+            imageViewToExpandInDetail.setImageDrawable(null);
+          }
+        }
       }
     }, 750);
   }
