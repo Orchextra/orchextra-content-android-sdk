@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import java.util.List;
 
-public class ScreenSlidePagerAdapter  extends FragmentPagerAdapter {
+public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
 
   private List<UiMenu> menuContent;
 

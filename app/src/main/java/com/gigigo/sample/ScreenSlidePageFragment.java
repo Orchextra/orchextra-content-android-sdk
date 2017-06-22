@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.Ocm;
@@ -50,13 +49,11 @@ public class ScreenSlidePageFragment extends Fragment {
       String section = arguments.getString(EXTRA_SCREEN_SLIDE_SECTION);
 
       Ocm.generateSectionView(section, null, new OcmCallbacks.Section() {
-        @Override
-        public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+        @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
           setView(uiGridBaseContentData);
         }
 
-        @Override
-        public void onSectionFails(Exception e) {
+        @Override public void onSectionFails(Exception e) {
           e.printStackTrace();
         }
       });
