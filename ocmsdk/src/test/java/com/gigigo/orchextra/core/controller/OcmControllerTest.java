@@ -59,6 +59,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
     ocmController.getDetails(true, FAKE_DETAIL, null);
 
     verify(mockGetDetail).execute(any(DisposableObserver.class), any(GetDetail.Params.class));
+    verifyNoMoreInteractions(mockGetDetail);
   }
 
   @Test public void testGetSection() {
@@ -80,5 +81,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
     verify(mockSearchElements).execute(any(DisposableObserver.class),
         any(SearchElements.Params.class));
+
+    verifyNoMoreInteractions(mockSearchElements);
   }
 }
