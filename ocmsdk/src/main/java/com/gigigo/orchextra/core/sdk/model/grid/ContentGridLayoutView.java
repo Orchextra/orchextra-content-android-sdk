@@ -67,7 +67,14 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private FrameLayout listedDataContainer;
 
   private View newContentContainer;
-
+  private final View.OnClickListener onNewContentClickListener = new View.OnClickListener() {
+    @Override public void onClick(View v) {
+      newContentContainer.setVisibility(View.GONE);
+      if (presenter != null) {
+        presenter.loadFromCache();
+      }
+    }
+  };
   private boolean thumbnailEnabled;
   private View.OnClickListener onClickDiscoverMoreButtonListener = v -> {
     if (onLoadMoreContentListener != null) {
@@ -136,7 +143,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void initUi() {
-    if (viewId != null) {
+    if (viewId != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
       //presenter.loadSection(viewId, emotion);
       presenter.loadSectionWithCacheAndAfterNetwork(viewId, emotion);
@@ -158,14 +165,20 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   private void setDataGrid(List<Cell> cellDataList) {
-    uiListedBaseContentData = new SpannedGridRecyclerView(context);
 
-    uiListedBaseContentData.setListedContentListener(listedContentListener);
-    uiListedBaseContentData.setParams(clipToPadding, authoritation, thumbnailEnabled);
-    uiListedBaseContentData.setData(cellDataList);
+    if (uiListedBaseContentData == null) {
 
-    listedDataContainer.removeAllViews();
-    listedDataContainer.addView(uiListedBaseContentData);
+      uiListedBaseContentData = new SpannedGridRecyclerView(context);
+
+      uiListedBaseContentData.setListedContentListener(listedContentListener);
+      uiListedBaseContentData.setParams(clipToPadding, authoritation, thumbnailEnabled);
+      uiListedBaseContentData.setData(cellDataList);
+
+      listedDataContainer.removeAllViews();
+      listedDataContainer.addView(uiListedBaseContentData);
+    } else {
+      uiListedBaseContentData.setData(cellDataList);
+    }
   }
 
   private void setDataCarousel(List<Cell> cellDataList) {
@@ -272,7 +285,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void reloadSection() {
-    presenter.reloadSectionFromNetwork();
+    if (presenter != null) {
+      presenter.loadSectionWithCacheAndAfterNetwork(viewId, emotion);
+    }
   }
 
   public void setEmotion(String emotion) {
@@ -296,15 +311,10 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     newContentContainer.setOnClickListener(onNewContentClickListener);
   }
 
-  private final View.OnClickListener onNewContentClickListener = new View.OnClickListener() {
-    @Override public void onClick(View v) {
-      newContentContainer.setVisibility(View.GONE);
-      presenter.loadFromCache();
-    }
-  };
-
   @Override public void onDestroy() {
-    presenter.detachView();
+    if (presenter != null) {
+      presenter.detachView();
+    }
 
     super.onDestroy();
   }
