@@ -120,7 +120,6 @@ import orchextra.javax.inject.Singleton;
         callback.onSuccess(imageData);
         return;
       }
-      Log.v("START OcmImageCache -> ", imageData.getPath());
       String filename = OcmImageLoader.md5(imageData.getPath());
 
       GGGLogImpl.log("GET -> " + imageData.getPath(), LogLevel.INFO, TAG);
@@ -175,7 +174,7 @@ import orchextra.javax.inject.Singleton;
         //output.close();
         //input.close();
         GGGLogImpl.log("GET (" + total / 1024 + "kb) <- " + imageData.getPath(),
-            (total / 1024) > 2000 ? LogLevel.WARN : LogLevel.INFO, TAG);
+            (total / 1024) > 150 ? LogLevel.WARN : LogLevel.INFO, TAG);
         callback.onSuccess(imageData);
       } catch (Exception e) {
         GGGLogImpl.log("ERROR <- " + imageData.getPath(), LogLevel.ERROR, TAG);
@@ -199,7 +198,7 @@ import orchextra.javax.inject.Singleton;
         }
       }
 
-      GGGLogImpl.log(totalDownloadSize / 1024 / 1024 + "MB", LogLevel.WARN, "TOTAL DOWNLOAD");
+      GGGLogImpl.log(totalDownloadSize / 1024 / 1024 + "MB", LogLevel.ASSERT, "TOTAL DOWNLOAD");
     }
   }
 }
