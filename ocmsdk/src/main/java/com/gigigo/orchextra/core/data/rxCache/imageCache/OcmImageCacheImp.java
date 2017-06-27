@@ -115,6 +115,11 @@ import orchextra.javax.inject.Singleton;
     }
 
     private void downloadImage(final ImageData imageData) {
+      if (imageData==null || imageData.getPath() == null) {
+        GGGLogImpl.log("ERROR | URL IMAGE IS NULL :S", LogLevel.ERROR, TAG);
+        callback.onSuccess(imageData);
+        return;
+      }
       Log.v("START OcmImageCache -> ", imageData.getPath());
       String filename = OcmImageLoader.md5(imageData.getPath());
 
