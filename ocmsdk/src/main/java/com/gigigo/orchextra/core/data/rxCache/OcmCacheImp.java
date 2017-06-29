@@ -51,7 +51,10 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void putMenus(ApiMenuContentData apiMenuContentData) {
-    if (apiMenuContentData != null) kache.put(apiMenuContentData);
+    if (apiMenuContentData != null) {
+      kache.evict(MENU_KEY);
+      kache.put(apiMenuContentData);
+    }
   }
 
   @Override public boolean isMenuCached() {
@@ -77,7 +80,10 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void putSection(ApiSectionContentData apiSectionContentData) {
-    if (apiSectionContentData != null) kache.put(apiSectionContentData);
+    if (apiSectionContentData != null) {
+      kache.evict(apiSectionContentData.getKey());
+      kache.put(apiSectionContentData);
+    }
   }
 
   @Override public boolean isSectionCached(String elementUrl) {
@@ -102,7 +108,10 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void putDetail(ApiElementData apiElementData) {
-    if (apiElementData != null) kache.put(apiElementData);
+    if (apiElementData != null) {
+      kache.evict(apiElementData.getKey());
+      kache.put(apiElementData);
+    }
   }
 
   @Override public boolean isDetailCached(String slug) {
@@ -147,8 +156,7 @@ import orchextra.javax.inject.Singleton;
     return deleted;
   }
 
-  @Override
-  public Context getContext() {
+  @Override public Context getContext() {
     return mContext;
   }
 }
