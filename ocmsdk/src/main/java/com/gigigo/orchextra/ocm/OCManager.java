@@ -2,6 +2,7 @@ package com.gigigo.orchextra.ocm;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.pm.PackageManager;
 import android.util.Log;
 import android.widget.ImageView;
 import com.gigigo.orchextra.CrmUser;
@@ -33,11 +34,12 @@ import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
-//import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import orchextra.javax.inject.Inject;
+
+//import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
 
 //import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
 
@@ -323,7 +325,7 @@ public final class OCManager {
     builder.setApiKeyAndSecret(oxKey, oxSecret)
         .setLogLevel(OrchextraLogLevel.NETWORK)
         //.setGcmSenderId("117687721829")       //TODO Test sender Id nuborisar
-       // .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
+        // .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
         .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
         .setOrchextraCompletionCallback(new OrchextraCompletionCallback() {
           @Override public void onSuccess() {
@@ -363,5 +365,24 @@ public final class OCManager {
     Orchextra.initialize(builder);
 
     Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
+  }
+
+  public static boolean isCustomTabsAvailable() {
+    boolean installed = false;
+    String packageName = "com.android.chrome";
+    if (OCManager.instance != null
+        && OCManager.instance.ocmContextProvider != null
+        && OCManager.instance.ocmContextProvider.getApplicationContext() != null) {
+      //todo check nulls
+      PackageManager pm =
+          OCManager.instance.ocmContextProvider.getApplicationContext().getPackageManager();
+      try {
+        pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+        installed = true;
+      } catch (PackageManager.NameNotFoundException e) {
+        installed = false;
+      }
+    }
+    return installed;
   }
 }
