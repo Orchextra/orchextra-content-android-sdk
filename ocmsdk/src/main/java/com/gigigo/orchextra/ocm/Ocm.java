@@ -27,8 +27,6 @@ public final class Ocm {
     OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, ocmBuilder.getOxSenderId());
   }
 
-
-
   /**
    * Initialize the sdk. This method must be initialized in the onCreate method of the Application
    * class
@@ -45,7 +43,13 @@ public final class Ocm {
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
-    OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, ocmBuilder.getOxSenderId());
+    if (ocmBuilder.getVuforiaImpl() != null) {
+      OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
+          ocmBuilder.getOxSenderId(), ocmBuilder.getVuforiaImpl());
+    } else {
+      OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
+          ocmBuilder.getOxSenderId());
+    }
   }
 
   /**
@@ -79,8 +83,7 @@ public final class Ocm {
 
   /**
    * Clear cached data
-   * @param images
-   * @param data
+   *
    * @param clear callback
    */
   public static void clearData(boolean images, boolean data, final OCManagerCallbacks.Clear clear) {
@@ -102,15 +105,14 @@ public final class Ocm {
    * @param filter To filter the content by a word
    * @param sectionCallbacks callback
    */
-  public static void generateSectionView(String viewId, String filter, OcmCallbacks.Section sectionCallbacks) {
+  public static void generateSectionView(String viewId, String filter,
+      OcmCallbacks.Section sectionCallbacks) {
     OCManager.generateSectionView(viewId, filter, new OCManagerCallbacks.Section() {
-      @Override
-      public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+      @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
         sectionCallbacks.onSectionLoaded(uiGridBaseContentData);
       }
 
-      @Override
-      public void onSectionFails(Exception e) {
+      @Override public void onSectionFails(Exception e) {
         sectionCallbacks.onSectionFails(e);
       }
     });
