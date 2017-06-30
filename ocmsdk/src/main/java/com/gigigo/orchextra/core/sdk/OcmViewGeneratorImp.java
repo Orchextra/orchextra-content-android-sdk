@@ -165,11 +165,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         }
       case BROWSER:
         if (render != null) {
-          if (OCManager.isCustomTabsAvailable())
-          {
+          if (!OCManager.isCustomTabsNotAvailable()) {
             return generateCustomTabsDetailView(render.getUrl());
-          } else {
-            return generateBrowserDetailView(render.getUrl());
+          } else { //if device no chrome installed, open in webview
+            return generateWebViewDetailView(render.getUrl());
           }
         }
       case EXTERNAL_BROWSER:

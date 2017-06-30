@@ -367,13 +367,13 @@ public final class OCManager {
     Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
   }
 
-  public static boolean isCustomTabsAvailable() {
+  public static boolean isCustomTabsNotAvailable() {
     boolean installed = false;
     String packageName = "com.android.chrome";
     if (OCManager.instance != null
         && OCManager.instance.ocmContextProvider != null
         && OCManager.instance.ocmContextProvider.getApplicationContext() != null) {
-      //todo check nulls
+
       PackageManager pm =
           OCManager.instance.ocmContextProvider.getApplicationContext().getPackageManager();
       try {
