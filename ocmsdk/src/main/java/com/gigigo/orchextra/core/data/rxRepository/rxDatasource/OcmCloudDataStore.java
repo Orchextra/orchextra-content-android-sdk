@@ -38,6 +38,8 @@ import orchextra.javax.inject.Singleton;
   private final OcmApiService ocmApiService;
   private final OcmCache ocmCache;
   private final OcmImageCache ocmImageCache;
+  private static final int MAX_ARTICLE_IMAGES = 10;
+  private static final int MAX_ARTICLES = Integer.MAX_VALUE;
 
   @Inject public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,
       @NonNull OcmImageCache ocmImageCache) {
@@ -65,13 +67,13 @@ import orchextra.javax.inject.Singleton;
   private void addSectionsImagesToCache(ApiSectionContentData apiSectionContentData) {
     Iterator<ApiElement> iterator = apiSectionContentData.getContent().getElements().iterator();
     int i = 0;
-    while (iterator.hasNext() && i < 21) {
+    while (iterator.hasNext() && i < MAX_ARTICLES) {
       ApiElement apiElement = iterator.next();
       addImageToQueue(apiElement.getSectionView());
       if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
         ApiElementData apiElementData = new ApiElementData(
             apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
-        addImageToQueue(apiElementData);
+        if (i < MAX_ARTICLE_IMAGES) addImageToQueue(apiElementData);
         ocmCache.putDetail(apiElementData);
       }
       i++;
