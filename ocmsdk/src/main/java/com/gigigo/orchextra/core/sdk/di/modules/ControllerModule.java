@@ -16,6 +16,7 @@ import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
 import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
+import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.ocm.UIThread;
 import orchextra.dagger.Module;
@@ -47,7 +48,7 @@ import orchextra.javax.inject.Singleton;
         context.getApplicationContext().getCacheDir().getPath());
   }
 
-  @Provides @Singleton OcmImageCache provideImageCache(OcmContextProvider context) {
-    return new OcmImageCacheImp(context.getApplicationContext(), new JobExecutor());
+  @Provides @Singleton OcmImageCache provideImageCache(OcmContextProvider context, ConnectionUtils connectionUtils) {
+    return new OcmImageCacheImp(context.getApplicationContext(), new JobExecutor(), connectionUtils);
   }
 }

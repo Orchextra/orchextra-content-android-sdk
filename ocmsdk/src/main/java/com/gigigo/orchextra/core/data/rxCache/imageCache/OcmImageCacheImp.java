@@ -8,6 +8,7 @@ import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
+import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,14 +30,17 @@ import orchextra.javax.inject.Singleton;
 
   private final Context mContext;
   private final ThreadExecutor threadExecutor;
+  private final ConnectionUtils connectionUtils;
   private final ImageQueue imageQueue;
   private boolean running = false;
 
   private long totalDownloadSize = 0;
 
-  @Inject public OcmImageCacheImp(Context mContext, ThreadExecutor executor) {
+  @Inject public OcmImageCacheImp(Context mContext, ThreadExecutor executor,
+      ConnectionUtils connectionUtils) {
     this.mContext = mContext;
     this.threadExecutor = executor;
+    this.connectionUtils = connectionUtils;
     this.imageQueue = new ImageQueueImp(mContext);
   }
 
@@ -56,6 +60,10 @@ import orchextra.javax.inject.Singleton;
   }
 
   private void downloadFirst() {
+    if (connectionUtils.isConnectedMobile()) {
+      running = false;
+      return;
+    }
     if (running && imageQueue.hasImages()) {
       executeAsynchronously(new ImageDownloader(imageQueue.getImage(), new Callback() {
         @Override public void onSuccess(ImageData imageData) {
@@ -115,7 +123,7 @@ import orchextra.javax.inject.Singleton;
     }
 
     private void downloadImage(final ImageData imageData) {
-      if (imageData==null || imageData.getPath() == null) {
+      if (imageData == null || imageData.getPath() == null) {
         GGGLogImpl.log("ERROR | URL IMAGE IS NULL :S", LogLevel.ERROR, TAG);
         callback.onSuccess(imageData);
         return;
@@ -179,6 +187,7 @@ import orchextra.javax.inject.Singleton;
       } catch (Exception e) {
         GGGLogImpl.log("ERROR <- " + imageData.getPath(), LogLevel.ERROR, TAG);
         e.printStackTrace();
+        if (cacheFile.exists()) cacheFile.delete();
         callback.onError(imageData, e);
       } finally {
         if (input != null) {
