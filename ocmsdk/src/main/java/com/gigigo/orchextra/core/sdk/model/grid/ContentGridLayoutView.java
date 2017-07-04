@@ -217,7 +217,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
           DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
 
-      OcmImageLoader.load(this.getActivity(), imageUrl, new SimpleTarget<GlideDrawable>() {
+      OcmImageLoader.load(this, imageUrl).load(imageUrl).into(new SimpleTarget<GlideDrawable>() {
         @Override public void onResourceReady(GlideDrawable resource,
             GlideAnimation<? super GlideDrawable> glideAnimation) {
           imageViewToExpandInDetail.setImageDrawable(resource);

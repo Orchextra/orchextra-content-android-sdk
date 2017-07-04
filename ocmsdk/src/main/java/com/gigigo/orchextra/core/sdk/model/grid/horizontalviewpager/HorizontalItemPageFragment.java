@@ -51,7 +51,7 @@ public class HorizontalItemPageFragment extends Fragment {
 
       String imageUrl = cell.getData().getSectionView().getImageUrl();
 
-      OcmImageLoader.load(this.getActivity(), imageUrl, horizontalItemImageView);
+      OcmImageLoader.load(this, imageUrl).into(horizontalItemImageView);
     }
   }
 

@@ -123,7 +123,7 @@ public class PreviewContentDataView extends LinearLayout {
         ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
             DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
 
-    OcmImageLoader.load(getContext(), generatedImageUrl, previewImage);
+    OcmImageLoader.load(getContext(), generatedImageUrl).into(previewImage);
   }
 
   private void setListeners() {

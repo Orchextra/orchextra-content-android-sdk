@@ -3,15 +3,25 @@ package com.gigigo.orchextra.core.data.rxCache.imageCache.loader;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
+import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.signature.StringSignature;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
+import com.gigigo.orchextra.ocmsdk.R;
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,48 +32,69 @@ import java.security.NoSuchAlgorithmException;
 
 public class OcmImageLoader {
   private static String TAG = OcmImageLoader.class.getSimpleName();
+  public static boolean DEBUG = true;
 
-  public static DrawableTypeRequest<String> load(Context mContext, String url) {
+  public static DrawableRequestBuilder<String> load(Context mContext, String url) {
     File cacheFile = getCacheFile(mContext, md5(url));
     if (cacheFile.exists()) {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
-      return Glide.with(mContext).load(cacheFile.getPath());
+      return Glide.with(mContext)
+          .load(cacheFile.getPath())
+          .transform(new CacheTransformation(mContext, false));
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
-      return Glide.with(mContext).load(url);
+      return Glide.with(mContext)
+          .load(url)
+          .transform(new CacheTransformation(mContext, true))
+          .signature(new StringSignature("a"));
     }
   }
 
-  public static DrawableTypeRequest<String> load(Activity mActivity, String url) {
+  public static DrawableRequestBuilder<String> load(Activity mActivity, String url) {
     File cacheFile = getCacheFile(mActivity, md5(url));
     if (cacheFile.exists()) {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
-      return Glide.with(mActivity).load(cacheFile.getPath());
+      return Glide.with(mActivity)
+          .load(cacheFile.getPath())
+          .transform(new CacheTransformation(mActivity.getApplicationContext(), false));
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
-      return Glide.with(mActivity).load(url);
+      return Glide.with(mActivity)
+          .load(url)
+          .transform(new CacheTransformation(mActivity.getApplicationContext(), true));
     }
   }
 
-  public static DrawableTypeRequest<String> load(Fragment mFragment, String url) {
+  public static DrawableRequestBuilder<String> load(Fragment mFragment, String url) {
     File cacheFile = getCacheFile(mFragment.getActivity().getApplicationContext(), md5(url));
     if (cacheFile.exists()) {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
-      return Glide.with(mFragment).load(cacheFile.getPath());
+      return Glide.with(mFragment)
+          .load(cacheFile.getPath())
+          .transform(
+              new CacheTransformation(mFragment.getActivity().getApplicationContext(), true));
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
-      return Glide.with(mFragment).load(url);
+      return Glide.with(mFragment)
+          .load(url)
+          .transform(
+              new CacheTransformation(mFragment.getActivity().getApplicationContext(), true));
     }
   }
 
-  public static DrawableTypeRequest<String> load(android.support.v4.app.Fragment mFragment, String url) {
+  public static DrawableRequestBuilder<String> load(android.support.v4.app.Fragment mFragment,
+      String url) {
     File cacheFile = getCacheFile(mFragment.getActivity().getApplicationContext(), md5(url));
     if (cacheFile.exists()) {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
-      return Glide.with(mFragment).load(cacheFile.getPath());
+      return Glide.with(mFragment)
+          .load(cacheFile.getPath())
+          .transform(new CacheTransformation(mFragment.getContext(), false));
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
-      return Glide.with(mFragment).load(url);
+      return Glide.with(mFragment)
+          .load(url)
+          .transform(new CacheTransformation(mFragment.getContext(), true));
     }
   }
 
@@ -75,48 +106,6 @@ public class OcmImageLoader {
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragmentActivity).load(url);
-    }
-  }
-
-  // DELETE
-  public static void load(Context mContext, String url, ImageView into) {
-    File cacheFile = getCacheFile(mContext, md5(url));
-    if (cacheFile.exists()) {
-      GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
-      Glide.with(mContext).load(cacheFile).into(into);
-    } else {
-      GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
-      Glide.with(mContext).load(url).into(into);
-    }
-  }
-
-  public static void load(Context mContext, String url, SimpleTarget<GlideDrawable> target) {
-    File cacheFile = getCacheFile(mContext, md5(url));
-    if (cacheFile.exists()) {
-      GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
-      Glide.with(mContext).load(cacheFile).into(target);
-    } else {
-      GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
-      Glide.with(mContext).load(url).into(target);
-    }
-  }
-
-  public static void load(Context mContext, byte[] thumbnail, String url, ImageView into) {
-    File cacheFile = getCacheFile(mContext, md5(url));
-    if (cacheFile.exists()) {
-      GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
-      Glide.with(mContext)
-          .load(cacheFile)
-          .thumbnail(Glide.with(mContext).load(thumbnail))
-          .dontAnimate()
-          .into(into);
-    } else {
-      GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
-      Glide.with(mContext)
-          .load(url)
-          .thumbnail(Glide.with(mContext).load(thumbnail))
-          .dontAnimate()
-          .into(into);
     }
   }
 
@@ -152,5 +141,41 @@ public class OcmImageLoader {
   public static File getCacheFile(Context mContext, String filename) {
     File cacheFile = new File(getCacheDir(mContext), filename);
     return cacheFile;
+  }
+
+  private static class CacheTransformation extends BitmapTransformation {
+    private final boolean fromCloud;
+    private final Context mContext;
+
+    public CacheTransformation(Context context, boolean fromCloud) {
+      super(context);
+      this.fromCloud = fromCloud;
+      this.mContext = context;
+    }
+
+    @Override
+    protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
+
+      Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(),
+          R.drawable.ox_notification_alpha_small_icon);
+
+      int w = toTransform.getWidth();
+      int h = toTransform.getHeight();
+      double ratio = (double) w / (double) h;
+      Bitmap result = Bitmap.createBitmap(w, h, toTransform.getConfig());
+
+      Canvas canvas = new Canvas(result);
+      canvas.drawBitmap(toTransform, 0, 0, null);
+
+      if (!fromCloud) canvas.drawBitmap(icon, (int) (150 * ratio), (int) (100 * ratio), null);
+
+      toTransform.recycle();
+      return result;
+    }
+
+    @Override public String getId() {
+      // Return some id that uniquely identifies your transformation.
+      return getClass().getSimpleName();
+    }
   }
 }

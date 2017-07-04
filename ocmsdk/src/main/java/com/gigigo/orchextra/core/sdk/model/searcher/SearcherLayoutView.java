@@ -181,7 +181,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
           DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
           DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
 
-      OcmImageLoader.load(getActivity(), imageUrl, imageViewToExpand);
+      OcmImageLoader.load(this, imageUrl).into(imageViewToExpand);
     }
 
     DetailActivity.open(activity, elementUrl, imageUrl,
