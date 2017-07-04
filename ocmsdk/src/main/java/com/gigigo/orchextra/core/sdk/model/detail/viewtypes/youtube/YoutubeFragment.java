@@ -36,8 +36,10 @@ public class YoutubeFragment extends UiBaseContentData {
   private static final String EXTRA_YOUTUBE_ID = "EXTRA_YOUTUBE_ID";
   private static final String EXTRA_YOUTUBE_ORIENTARION = "EXTRA_YOUTUBE_ORIENTARION";
   private static final String EXTRA_PLAYED_VIDEO = "EXTRA_PLAYED_VIDEO";
+  private static final String EXTRA_IS_PLAYING = "EXTRA_IS_PLAYING";
 
   private int playedVideo;
+  private boolean isPlaying;
   private YouTubePlayerSupportFragment youTubePlayerFragment;
   private View mview;
   private String youtubeId;
@@ -186,6 +188,7 @@ public class YoutubeFragment extends UiBaseContentData {
     if (savedInstanceState != null) {
       //Restore the fragment's state here
       playedVideo = savedInstanceState.getInt(EXTRA_PLAYED_VIDEO);
+      isPlaying = savedInstanceState.getBoolean(EXTRA_IS_PLAYING);
     }
 
     initYoutubeFragment();
@@ -218,7 +221,11 @@ public class YoutubeFragment extends UiBaseContentData {
     player.setFullscreen(false);
     player.setShowFullscreenButton(true);
     player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-    player.loadVideo(youtubeId, playedVideo);
+    if (playedVideo == 0 || isPlaying) {
+      player.loadVideo(youtubeId, playedVideo);
+    } else {
+      player.cueVideo(youtubeId, playedVideo);
+    }
   }
 
   @Override public void onResume() {
@@ -234,6 +241,7 @@ public class YoutubeFragment extends UiBaseContentData {
 
     if (mPlayer != null) {
       outState.putInt(EXTRA_PLAYED_VIDEO, mPlayer.getCurrentTimeMillis());
+      outState.putBoolean(EXTRA_IS_PLAYING, mPlayer.isPlaying());
     }
   }
 
