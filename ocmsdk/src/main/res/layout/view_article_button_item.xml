@@ -1,36 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_marginTop="@dimen/oc_spacing_16"
-    android:layout_marginBottom="@dimen/oc_spacing_16"
-    >
-
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:layout_marginBottom="20dp"
+  android:layout_marginTop="20dp"
+  android:orientation="vertical">
+  <!--IOS 20dp-->
   <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmNormalTextView
-      android:id="@+id/articleTextButton"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/oc_button_article_size"
-      android:layout_gravity="center"
-      android:gravity="center"
-      android:visibility="gone"
-      tools:background="@color/oc_background_retry_content_layout"
-      tools:text="Pulsa el boton"
-      tools:textColor="@color/oc_retry_content_text1_color"
-      tools:visibility="visible"
-      />
+    android:id="@+id/articleTextButton"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/oc_button_article_size"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:visibility="gone"
+    tools:background="@color/oc_background_retry_content_layout"
+    tools:text="Pulsa el boton"
+    tools:textColor="@color/oc_retry_content_text1_color"
+    tools:visibility="visible" />
 
   <ImageView
-      android:id="@+id/articleImageButton"
-      android:layout_width="wrap_content"
-      android:layout_height="160dp"
-      android:layout_gravity="center"
-      android:adjustViewBounds="true"
-      android:gravity="center"
-      android:visibility="gone"
-      tools:src="@drawable/oc_bg_button"
-      tools:visibility="visible"
-      />
+    android:id="@+id/articleImageButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="@dimen/oc_spacing_12"
+    android:layout_marginRight="@dimen/oc_spacing_12"
+    android:adjustViewBounds="true"
+    android:gravity="center"
+    android:visibility="gone"
+    tools:src="@drawable/oc_bg_button"
+    tools:visibility="visible" />
 </FrameLayout>
