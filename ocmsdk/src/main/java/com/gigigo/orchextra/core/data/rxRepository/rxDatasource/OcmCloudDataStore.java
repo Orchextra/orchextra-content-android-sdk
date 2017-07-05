@@ -18,6 +18,7 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import io.reactivex.Observable;
 
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

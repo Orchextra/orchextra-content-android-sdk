@@ -1,11 +1,11 @@
 package com.gigigo.orchextra.core.data.api.mappers.contentdata;
 
+import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiContentItem;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
-import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,8 @@ public class ApiContentItemMapper
   private final ApiContentItemLayoutMapper apiContentItemLayoutMapper;
   private final ApiElementMapper apiElementMapper;
 
-  public ApiContentItemMapper(ApiContentItemLayoutMapper apiContentItemLayoutMapper, ApiElementMapper apiElementMapper) {
+  public ApiContentItemMapper(ApiContentItemLayoutMapper apiContentItemLayoutMapper,
+      ApiElementMapper apiElementMapper) {
     this.apiContentItemLayoutMapper = apiContentItemLayoutMapper;
     this.apiElementMapper = apiElementMapper;
   }
@@ -40,7 +41,9 @@ public class ApiContentItemMapper
     if (data.getElements() != null) {
       for (ApiElement apiElement : data.getElements()) {
         Element element = apiElementMapper.externalClassToModel(apiElement);
-        elementList.add(element);
+        if (element != null) {
+          elementList.add(element);
+        }
       }
     }
     model.setElements(elementList);
