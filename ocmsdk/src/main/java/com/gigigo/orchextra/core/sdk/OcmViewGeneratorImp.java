@@ -30,7 +30,6 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeConte
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.webview.ContentWebViewGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
-import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -165,11 +164,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         }
       case BROWSER:
         if (render != null) {
-          if (!OCManager.isCustomTabsNotAvailable()) {
-            return generateCustomTabsDetailView(render.getUrl());
-          } else { //if device no chrome installed, open in webview
-            return generateWebViewDetailView(render.getUrl());
-          }
+          return generateCustomTabsDetailView(render.getUrl());
         }
       case EXTERNAL_BROWSER:
         if (render != null) {
