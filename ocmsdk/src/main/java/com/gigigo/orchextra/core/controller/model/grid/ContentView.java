@@ -24,4 +24,6 @@ public interface ContentView {
   void showProgressView(boolean isVisible);
 
   void showNewExistingContent();
+
+  void contentNotAvailable();
 }

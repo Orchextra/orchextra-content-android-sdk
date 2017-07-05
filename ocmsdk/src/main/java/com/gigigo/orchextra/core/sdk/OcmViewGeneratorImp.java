@@ -99,6 +99,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
       @Override public void onGetDetailFails(Exception e) {
         getSectionViewGeneratorCallback.onSectionViewFails(e);
       }
+
+      @Override public void onGetDetailNoAvailable(Exception e) {
+        getSectionViewGeneratorCallback.onSectionViewFails(e);
+      }
     });
   }
 
@@ -193,6 +197,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
       }
 
       @Override public void onGetDetailFails(Exception e) {
+        e.printStackTrace();
+      }
+
+      @Override public void onGetDetailNoAvailable(Exception e) {
         e.printStackTrace();
       }
     });

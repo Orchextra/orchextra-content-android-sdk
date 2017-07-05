@@ -32,6 +32,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
   private final String FAKE_SECTION = "FAKE_SECTION";
   private final String FAKE_DETAIL = "FAKE_DETAIL";
   private final String FAKE_TEXT = "FAKE_TEXT";
+  private final int FAKE_IMAGES = 5;
 
   @Mock private ClearCache mockClearCache;
   @Mock private OcmController.ClearCacheCallback mockClearCacheCallback;
@@ -63,7 +64,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
   }
 
   @Test public void testGetSection() {
-    ocmController.getSection(true, FAKE_SECTION, null);
+    ocmController.getSection(true, FAKE_SECTION, FAKE_IMAGES, null);
 
     verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class));
     verifyNoMoreInteractions(mockGetMenus);

@@ -35,6 +35,8 @@ public interface OcmController {
     void onGetDetailLoaded(ElementCache elementCache);
 
     void onGetDetailFails(Exception e);
+
+    void onGetDetailNoAvailable(Exception e);
   }
 
   interface SearchControllerCallback {
@@ -45,6 +47,7 @@ public interface OcmController {
 
   interface ClearCacheCallback {
     void onClearCacheSuccess();
+
     void onClearCacheFails(Exception e);
   }
 }

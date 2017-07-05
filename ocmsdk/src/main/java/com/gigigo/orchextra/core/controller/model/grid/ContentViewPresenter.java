@@ -247,6 +247,11 @@ public class ContentViewPresenter extends Presenter<ContentView> {
             @Override public void onGetDetailFails(Exception e) {
               e.printStackTrace();
             }
+
+            @Override public void onGetDetailNoAvailable(Exception e) {
+              e.printStackTrace();
+              getView().contentNotAvailable();
+            }
           });
     }
   }
