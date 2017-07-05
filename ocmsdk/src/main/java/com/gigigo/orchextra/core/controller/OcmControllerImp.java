@@ -52,7 +52,7 @@ public class OcmControllerImp implements OcmController {
         GetMenus.Params.forForceReload(forceReload));
   }
 
-  @Override public void getSection(final boolean forceReload, final String section,
+  @Override public void getSection(final boolean forceReload, final String section, int imagesToDownload,
       GetSectionControllerCallback getSectionControllerCallback) {
     getMenu(false, new GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(MenuContentData menus) {
@@ -63,7 +63,7 @@ public class OcmControllerImp implements OcmController {
           String url = elementCache.getRender().getContentUrl();
           if (url != null) {
             getSection.execute(new SectionObserver(getSectionControllerCallback),
-                GetSection.Params.forSection(forceReload, url));
+                GetSection.Params.forSection(forceReload, url, imagesToDownload));
           } else {
             getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(
                 "elementCache.getRender().getContentUrl() IS NULL"));

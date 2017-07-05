@@ -20,6 +20,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class) public class OcmCloudDataStoreTest {
@@ -55,7 +56,7 @@ import static org.mockito.Mockito.verify;
     Observable<ApiSectionContentDataResponse> fakeObservable = Observable.just(fakeApiSection);
     given(mockRestApi.getSectionDataRx(FAKE_SECTION)).willReturn(fakeObservable);
 
-    ocmCloudDataStore.getSectionEntity(FAKE_SECTION);
+    ocmCloudDataStore.getSectionEntity(FAKE_SECTION, anyInt());
 
     verify(mockRestApi).getSectionDataRx(FAKE_SECTION);
   }

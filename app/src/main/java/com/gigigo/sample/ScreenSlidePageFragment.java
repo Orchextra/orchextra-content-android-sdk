@@ -16,17 +16,19 @@ import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 public class ScreenSlidePageFragment extends Fragment {
 
   private static final String EXTRA_SCREEN_SLIDE_SECTION = "EXTRA_SCREEN_SLIDE_SECTION";
+  private static final String EXTRA_IMAGES_TO_DOWNLOAD = "EXTRA_IMAGES_TO_DOWNLOAD";
 
   private Bundle arguments;
   private View emptyViewLayout;
   private View errorViewLayout;
   private UiGridBaseContentData contentView;
 
-  public static ScreenSlidePageFragment newInstance(String section) {
+  public static ScreenSlidePageFragment newInstance(String section, int imagesToDownload) {
     ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
 
     Bundle args = new Bundle();
     args.putString(EXTRA_SCREEN_SLIDE_SECTION, section);
+    args.putInt(EXTRA_IMAGES_TO_DOWNLOAD, imagesToDownload);
     fragment.setArguments(args);
 
     return fragment;
@@ -49,15 +51,14 @@ public class ScreenSlidePageFragment extends Fragment {
   private void loadArguments() {
     if (arguments != null) {
       String section = arguments.getString(EXTRA_SCREEN_SLIDE_SECTION);
+      int imagesToDownload = arguments.getInt(EXTRA_IMAGES_TO_DOWNLOAD);
 
-      Ocm.generateSectionView(section, null, new OcmCallbacks.Section() {
-        @Override
-        public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+      Ocm.generateSectionView(section, null, imagesToDownload, new OcmCallbacks.Section() {
+        @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
           setView(uiGridBaseContentData);
         }
 
-        @Override
-        public void onSectionFails(Exception e) {
+        @Override public void onSectionFails(Exception e) {
           e.printStackTrace();
         }
       });

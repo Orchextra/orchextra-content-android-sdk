@@ -60,6 +60,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View retryButton;
   private View moreButton;
   private String viewId;
+  private int imagesToDownload;
   private String emotion;
   private View emptyView;
   private View errorView;
@@ -138,13 +139,15 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     moreButton.setOnClickListener(onClickDiscoverMoreButtonListener);
   }
 
-  public void setViewId(String viewId) {
+  public void setViewId(String viewId, int imagesToDownload) {
     this.viewId = viewId;
+    this.imagesToDownload = imagesToDownload;
   }
 
   @Override public void initUi() {
     if (viewId != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
+      presenter.setImagesToDownload(imagesToDownload);
       //presenter.loadSection(viewId, emotion);
       presenter.loadSectionWithCacheAndAfterNetwork(viewId, emotion);
     }

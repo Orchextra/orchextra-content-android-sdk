@@ -8,7 +8,7 @@ import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 public interface OcmController {
   void getMenu(boolean forceReload, final GetMenusControllerCallback getMenusCallback);
 
-  void getSection(boolean forceReload, final String section,
+  void getSection(boolean forceReload, final String section, int imagesToDownload,
       final GetSectionControllerCallback getSectionControllerCallback);
 
   void getDetails(boolean forceReload, final String elementUrl,

@@ -44,10 +44,11 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override
-  public Observable<ContentData> getSectionElements(boolean forceReload, String elementUrl) {
+  public Observable<ContentData> getSectionElements(boolean forceReload, String elementUrl,
+      int numberOfElementsToDownload) {
     OcmDataStore ocmDataStore =
         ocmDataStoreFactory.getDataStoreForSections(forceReload, elementUrl);
-    return ocmDataStore.getSectionEntity(elementUrl)
+    return ocmDataStore.getSectionEntity(elementUrl, numberOfElementsToDownload)
         .map(apiContentDataResponseMapper::externalClassToModel);
   }
 

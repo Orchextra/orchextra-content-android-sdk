@@ -54,17 +54,17 @@ import orchextra.javax.inject.Singleton;
         .doOnNext(ocmCache::putMenus);
   }
 
-  @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl) {
+  @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl, final int numberOfElementsToDownload) {
     return ocmApiService.getSectionDataRx(elementUrl)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
         .doOnNext(ocmCache::putSection)
         .doOnNext(apiSectionContentData -> {
-          addSectionsImagesToCache(apiSectionContentData);
+          addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload);
         });
   }
 
-  private void addSectionsImagesToCache(ApiSectionContentData apiSectionContentData) {
+  private void addSectionsImagesToCache(ApiSectionContentData apiSectionContentData, int imagestodownload) {
     Iterator<ApiElement> iterator = apiSectionContentData.getContent().getElements().iterator();
     int i = 0;
     while (iterator.hasNext() && i < MAX_ARTICLES) {
@@ -73,7 +73,7 @@ import orchextra.javax.inject.Singleton;
       if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
         ApiElementData apiElementData = new ApiElementData(
             apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
-        if (i < MAX_ARTICLE_IMAGES) addImageToQueue(apiElementData);
+        if (i < imagestodownload) addImageToQueue(apiElementData);
         ocmCache.putDetail(apiElementData);
       }
       i++;

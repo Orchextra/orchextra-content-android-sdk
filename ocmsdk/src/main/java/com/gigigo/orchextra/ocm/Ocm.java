@@ -63,8 +63,7 @@ public final class Ocm {
 
   /**
    * Clear cached data
-   * @param images
-   * @param data
+   *
    * @param clear callback
    */
   public static void clearData(boolean images, boolean data, final OCManagerCallbacks.Clear clear) {
@@ -84,20 +83,21 @@ public final class Ocm {
    *
    * @param viewId It is the content url returned in the menus call.
    * @param filter To filter the content by a word
+   * @param imagesToDownload Number of images that we can to download for caching
    * @param sectionCallbacks callback
    */
-  public static void generateSectionView(String viewId, String filter, OcmCallbacks.Section sectionCallbacks) {
-    OCManager.generateSectionView(viewId, filter, new OCManagerCallbacks.Section() {
-      @Override
-      public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
-        sectionCallbacks.onSectionLoaded(uiGridBaseContentData);
-      }
+  public static void generateSectionView(String viewId, String filter, int imagesToDownload,
+      OcmCallbacks.Section sectionCallbacks) {
+    OCManager.generateSectionView(viewId, filter, imagesToDownload,
+        new OCManagerCallbacks.Section() {
+          @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+            sectionCallbacks.onSectionLoaded(uiGridBaseContentData);
+          }
 
-      @Override
-      public void onSectionFails(Exception e) {
-        sectionCallbacks.onSectionFails(e);
-      }
-    });
+          @Override public void onSectionFails(Exception e) {
+            sectionCallbacks.onSectionFails(e);
+          }
+        });
   }
 
   /**

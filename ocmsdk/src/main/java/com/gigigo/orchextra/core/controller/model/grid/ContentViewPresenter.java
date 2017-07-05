@@ -27,6 +27,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private final OcmController ocmController;
 
   private String section;
+  private int imagesToDownload = 21;
   private String filter;
   private List<Cell> listedCellContentDataList;
   private int padding;
@@ -59,16 +60,17 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private void loadSection(final boolean useCache) {
     getView().showProgressView(true);
 
-    ocmController.getSection(!useCache, section, new OcmController.GetSectionControllerCallback() {
-      @Override public void onGetSectionLoaded(ContentData contentData) {
-        ContentItem contentItem = contentData.getContent();
-        renderContentItem(contentItem);
-      }
+    ocmController.getSection(!useCache, section, imagesToDownload,
+        new OcmController.GetSectionControllerCallback() {
+          @Override public void onGetSectionLoaded(ContentData contentData) {
+            ContentItem contentItem = contentData.getContent();
+            renderContentItem(contentItem);
+          }
 
-      @Override public void onGetSectionFails(Exception e) {
-        renderError();
-      }
-    });
+          @Override public void onGetSectionFails(Exception e) {
+            renderError();
+          }
+        });
   }
 
   public void loadSectionWithCacheAndAfterNetwork(String viewId, String filter) {
@@ -77,27 +79,29 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
     getView().showProgressView(true);
 
-    ocmController.getSection(false, section, new OcmController.GetSectionControllerCallback() {
-      @Override public void onGetSectionLoaded(ContentData contentData) {
-        ContentItem contentItem = contentData.getContent();
-        renderContentItem(contentItem);
-
-        ocmController.getSection(true, section, new OcmController.GetSectionControllerCallback() {
+    ocmController.getSection(false, section, imagesToDownload,
+        new OcmController.GetSectionControllerCallback() {
           @Override public void onGetSectionLoaded(ContentData contentData) {
-            ContentItem contentItem1 = contentData.getContent();
-            checkNewContent(contentItem.getElements(), contentItem1.getElements());
+            ContentItem contentItem = contentData.getContent();
+            renderContentItem(contentItem);
+
+            ocmController.getSection(true, section, imagesToDownload,
+                new OcmController.GetSectionControllerCallback() {
+                  @Override public void onGetSectionLoaded(ContentData contentData) {
+                    ContentItem contentItem1 = contentData.getContent();
+                    checkNewContent(contentItem.getElements(), contentItem1.getElements());
+                  }
+
+                  @Override public void onGetSectionFails(Exception e) {
+                    renderError();
+                  }
+                });
           }
 
           @Override public void onGetSectionFails(Exception e) {
             renderError();
           }
         });
-      }
-
-      @Override public void onGetSectionFails(Exception e) {
-        renderError();
-      }
-    });
   }
 
   private void checkNewContent(List<Element> cachedElements, List<Element> newElements) {
@@ -230,7 +234,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                 imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
               }
 
-              if (getView() != null && checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
+              if (getView() != null && checkLoginAuth(
+                  element.getSegmentation().getRequiredAuth())) {
                 OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
                 getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
                     activity, view);
@@ -268,5 +273,9 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   @Override public void detachView() {
     super.detachView();
+  }
+
+  public void setImagesToDownload(int imagesToDownload) {
+    this.imagesToDownload = imagesToDownload;
   }
 }
