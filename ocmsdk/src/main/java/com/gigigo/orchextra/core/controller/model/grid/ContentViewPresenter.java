@@ -106,9 +106,22 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   private void checkNewContent(List<Element> cachedElements, List<Element> newElements) {
     if (cachedElements == null || newElements == null) return;
-    if (cachedElements.size() != newElements.size()) {
+    if (checkDifferents(cachedElements, newElements)) {
       getView().showNewExistingContent();
     }
+  }
+
+  private boolean checkDifferents(List<Element> cachedElements, List<Element> newElements) {
+    if (cachedElements.size() != newElements.size()) {
+      return true;
+    } else {
+      for (int i = 0; i < cachedElements.size(); i++) {
+        if (!cachedElements.get(i).getSlug().equalsIgnoreCase(newElements.get(i).getSlug())) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private void renderContentItem(ContentItem contentItem) {
