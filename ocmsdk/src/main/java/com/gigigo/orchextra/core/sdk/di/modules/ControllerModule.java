@@ -26,9 +26,11 @@ import orchextra.javax.inject.Singleton;
 @Module(includes = { DomainModule.class, InteractorModule.class }) public class ControllerModule {
 
   @Singleton @Provides OcmController provideOcmController(GetMenus getMenus, GetSection getSection,
-      GetDetail getDetail, SearchElements searchElements, ClearCache clearCache, ConnectionUtils connectionUtils) {
+      GetDetail getDetail, SearchElements searchElements, ClearCache clearCache,
+      ConnectionUtils connectionUtils) {
 
-    return new OcmControllerImp(getMenus, getSection, getDetail, searchElements, clearCache, connectionUtils);
+    return new OcmControllerImp(getMenus, getSection, getDetail, searchElements, clearCache,
+        connectionUtils);
   }
 
   @Provides @Singleton ThreadExecutor provideThreadExecutor(JobExecutor jobExecutor) {
@@ -48,7 +50,8 @@ import orchextra.javax.inject.Singleton;
         context.getApplicationContext().getCacheDir().getPath());
   }
 
-  @Provides @Singleton OcmImageCache provideImageCache(OcmContextProvider context, ConnectionUtils connectionUtils) {
-    return new OcmImageCacheImp(context.getApplicationContext(), new JobExecutor(), connectionUtils);
+  @Provides @Singleton OcmImageCache provideImageCache(OcmContextProvider context,
+      ThreadExecutor threadExecutor, ConnectionUtils connectionUtils) {
+    return new OcmImageCacheImp(context.getApplicationContext(), threadExecutor, connectionUtils);
   }
 }
