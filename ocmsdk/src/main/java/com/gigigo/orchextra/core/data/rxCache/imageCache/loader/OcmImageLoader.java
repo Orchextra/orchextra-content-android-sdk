@@ -40,13 +40,14 @@ public class OcmImageLoader {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
       return Glide.with(mContext)
           .load(cacheFile.getPath())
-          .transform(new CacheTransformation(mContext, false));
+          //.transform(new CacheTransformation(mContext, false))
+          ;
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mContext)
           .load(url)
-          .transform(new CacheTransformation(mContext, true))
-          .signature(new StringSignature("a"));
+          //.transform(new CacheTransformation(mContext, true))
+          ;
     }
   }
 
@@ -56,12 +57,14 @@ public class OcmImageLoader {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
       return Glide.with(mActivity)
           .load(cacheFile.getPath())
-          .transform(new CacheTransformation(mActivity.getApplicationContext(), false));
+          //.transform(new CacheTransformation(mActivity.getApplicationContext(), false))
+          ;
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mActivity)
           .load(url)
-          .transform(new CacheTransformation(mActivity.getApplicationContext(), true));
+          //.transform(new CacheTransformation(mActivity.getApplicationContext(), true))
+          ;
     }
   }
 
@@ -71,14 +74,16 @@ public class OcmImageLoader {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragment)
           .load(cacheFile.getPath())
-          .transform(
-              new CacheTransformation(mFragment.getActivity().getApplicationContext(), true));
+          //.transform(
+          //    new CacheTransformation(mFragment.getActivity().getApplicationContext(), true))
+          ;
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragment)
           .load(url)
-          .transform(
-              new CacheTransformation(mFragment.getActivity().getApplicationContext(), true));
+          //.transform(
+          //    new CacheTransformation(mFragment.getActivity().getApplicationContext(), true))
+          ;
     }
   }
 
@@ -89,12 +94,14 @@ public class OcmImageLoader {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragment)
           .load(cacheFile.getPath())
-          .transform(new CacheTransformation(mFragment.getContext(), false));
+          //.transform(new CacheTransformation(mFragment.getContext(), false))
+          ;
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragment)
           .load(url)
-          .transform(new CacheTransformation(mFragment.getContext(), true));
+          //.transform(new CacheTransformation(mFragment.getContext(), true))
+          ;
     }
   }
 
@@ -128,7 +135,7 @@ public class OcmImageLoader {
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
     }
-    return "";
+    return s;
   }
 
   public static File getCacheDir(Context mContext) {
