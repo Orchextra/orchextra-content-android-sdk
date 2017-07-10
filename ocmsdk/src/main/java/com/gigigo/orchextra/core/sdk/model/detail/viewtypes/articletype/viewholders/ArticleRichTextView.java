@@ -67,7 +67,7 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
         } else {
           View rootView = ((ViewGroup) ocmContextProvider.getCurrentActivity()
               .findViewById(android.R.id.content)).getChildAt(0);
-          Snackbar.make(rootView, "Unavalible content", Toast.LENGTH_SHORT).show();
+          Snackbar.make(rootView, R.string.oc_error_content_not_available_without_internet, Toast.LENGTH_SHORT).show();
 
         }
       }

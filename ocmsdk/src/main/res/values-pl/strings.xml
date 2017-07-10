@@ -10,4 +10,5 @@
   <string name="oc_more_content_text2">""</string>
   <string name="oc_more_content_button_text">CHCESZ WIĘCEJ?</string>
 
+  <string name="oc_error_content_not_available_without_internet">Connect to the Internet to enjoy all the content of OCM</string>
 </resources>

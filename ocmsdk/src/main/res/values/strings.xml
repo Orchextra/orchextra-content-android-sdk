@@ -11,4 +11,7 @@
 
   <string name="oc_preview_down_arrow_text">SLIDE DOWN</string>
 
+  <string name="oc_error_content_not_available_without_internet">Connect to the Internet to enjoy all the content of OCM</string>
+
+
 </resources>

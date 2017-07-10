@@ -324,6 +324,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void contentNotAvailable() {
-    Snackbar.make(listedDataContainer, "Not available", Snackbar.LENGTH_SHORT).show();
+    Snackbar.make(listedDataContainer, R.string.oc_error_content_not_available_without_internet, Snackbar.LENGTH_SHORT).show();
   }
 }

@@ -49,7 +49,7 @@ public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
           YoutubeContentDataActivity.open(activity, articleElement.getSource());
         } else {
           //TODO:
-          Snackbar.make(imgThumb, "Not available", Toast.LENGTH_SHORT).show();
+          Snackbar.make(imgThumb, R.string.oc_error_content_not_available_without_internet, Toast.LENGTH_SHORT).show();
         }
       }
     };
