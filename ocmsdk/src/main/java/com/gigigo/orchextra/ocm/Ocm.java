@@ -13,6 +13,20 @@ import java.util.Map;
 
 public final class Ocm {
 
+  public static void initialize(Application app) {
+    OcmBuilder ocmBuilder = new OcmBuilder(app);
+
+    String oxKey = "novalidKey";
+    String oxSecret = "novalidSecret";
+    Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
+
+    OCManager.initSdk(app);
+    OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
+    OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
+    OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
+    OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, ocmBuilder.getOxSenderId());
+  }
+
   /**
    * Initialize the sdk. This method must be initialized in the onCreate method of the Application
    * class
@@ -29,7 +43,13 @@ public final class Ocm {
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
-    OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, ocmBuilder.getOxSenderId());
+    if (ocmBuilder.getVuforiaImpl() != null) {
+      OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
+          ocmBuilder.getOxSenderId(), ocmBuilder.getVuforiaImpl());
+    } else {
+      OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
+          ocmBuilder.getOxSenderId());
+    }
   }
 
   /**

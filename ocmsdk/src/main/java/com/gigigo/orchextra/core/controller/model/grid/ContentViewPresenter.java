@@ -247,13 +247,15 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                 imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
               }
 
-              if (getView() != null && checkLoginAuth(
-                  element.getSegmentation().getRequiredAuth())) {
-                OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
-                getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
-                    activity, view);
-              } else {
-                getView().showAuthDialog();
+              if (getView() != null) {
+                if (element != null && checkLoginAuth(
+                    element.getSegmentation().getRequiredAuth())) {
+                  OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
+                  getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
+                      activity, view);
+                } else {
+                  getView().showAuthDialog();
+                }
               }
             }
 

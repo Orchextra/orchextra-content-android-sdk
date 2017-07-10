@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.ocm;
 
 import android.app.Application;
+import com.gigigo.imagerecognitioninterface.ImageRecognition;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 
@@ -16,6 +17,19 @@ public final class OcmBuilder {
   private OnEventCallback onEventCallback;
 
   private String oxSenderId;
+  private ImageRecognition vuforiaImpl;
+
+  /**
+   * setter for do vuforia optional in ocm, setted from intetragion app
+   */
+  public OcmBuilder setVuforiaImpl(ImageRecognition vuforiaImpl) {
+    this.vuforiaImpl = vuforiaImpl;
+    return this;
+  }
+
+  public ImageRecognition getVuforiaImpl() {
+    return vuforiaImpl;
+  }
 
   /**
    * Initialize the sdk with the Application context

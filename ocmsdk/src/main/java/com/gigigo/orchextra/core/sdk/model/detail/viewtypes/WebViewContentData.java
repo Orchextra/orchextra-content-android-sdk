@@ -147,7 +147,6 @@ public class WebViewContentData extends UiBaseContentData {
   }
 
   private class JsHandler {
-    String TAG = "JsHandler";
     WeakReference<WebView> webView;
     private CountDownLatch latch = null;
     private String returnValue;
