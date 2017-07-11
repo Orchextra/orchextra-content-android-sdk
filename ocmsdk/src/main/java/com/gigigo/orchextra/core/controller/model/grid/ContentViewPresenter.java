@@ -59,18 +59,21 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   private void loadSection(final boolean useCache) {
     getView().showProgressView(true);
+    if (ocmController != null) {
+      ocmController.getSection(!useCache, section, imagesToDownload,
+          new OcmController.GetSectionControllerCallback() {
+            @Override public void onGetSectionLoaded(ContentData contentData) {
+              ContentItem contentItem = contentData.getContent();
+              if (getView() != null) {
+                renderContentItem(contentItem);
+              }
+            }
 
-    ocmController.getSection(!useCache, section, imagesToDownload,
-        new OcmController.GetSectionControllerCallback() {
-          @Override public void onGetSectionLoaded(ContentData contentData) {
-            ContentItem contentItem = contentData.getContent();
-            renderContentItem(contentItem);
-          }
-
-          @Override public void onGetSectionFails(Exception e) {
-            renderError();
-          }
-        });
+            @Override public void onGetSectionFails(Exception e) {
+              renderError();
+            }
+          });
+    }
   }
 
   public void loadSectionWithCacheAndAfterNetwork(String viewId, String filter) {
@@ -239,6 +242,14 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
       Element element = (Element) listedCellContentDataList.get(position).getData();
 
+      if (element == null) {
+        return;
+      }
+
+      if (checkElementNeedAuthUser(element)) {
+        getView().showAuthDialog();
+      }
+
       ocmController.getDetails(false, element.getElementUrl(),
           new OcmController.GetDetailControllerCallback() {
             @Override public void onGetDetailLoaded(ElementCache elementCache) {
@@ -248,14 +259,9 @@ public class ContentViewPresenter extends Presenter<ContentView> {
               }
 
               if (getView() != null) {
-                if (element != null && checkLoginAuth(
-                    element.getSegmentation().getRequiredAuth())) {
-                  OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
-                  getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
-                      activity, view);
-                } else {
-                  getView().showAuthDialog();
-                }
+                OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
+                getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
+                    activity, view);
               }
             }
 
@@ -271,7 +277,12 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     }
   }
 
-  private boolean checkLoginAuth(RequiredAuthoritation requiredAuthoritation) {
+  private boolean checkElementNeedAuthUser(Element element) {
+    return !checkUserHasPermissionsToShowElement(element.getSegmentation().getRequiredAuth());
+  }
+
+  private boolean checkUserHasPermissionsToShowElement(
+      RequiredAuthoritation requiredAuthoritation) {
     return authoritation.isAuthorizatedUser() || !requiredAuthoritation.equals(
         RequiredAuthoritation.LOGGED);
   }
