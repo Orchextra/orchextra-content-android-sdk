@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     >
 
   <FrameLayout
@@ -22,4 +23,6 @@
       android:visibility="gone"
       />
 
+
+  <include layout="@layout/ocm_new_content" />
 </FrameLayout>

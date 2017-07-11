@@ -27,6 +27,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private final OcmController ocmController;
 
   private String section;
+  private int imagesToDownload = 21;
   private String filter;
   private List<Cell> listedCellContentDataList;
   private int padding;
@@ -48,50 +49,100 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     loadSection(true);
   }
 
-  public void reloadSection() {
+  public void reloadSectionFromNetwork() {
     loadSection(false);
+  }
+
+  public void loadFromCache() {
+    loadSection(true);
   }
 
   private void loadSection(final boolean useCache) {
     getView().showProgressView(true);
-    if (ocmController != null){
-    ocmController.getSection(!useCache, section, new OcmController.GetSectionControllerCallback() {
-      @Override public void onGetSectionLoaded(ContentData contentData) {
-        ContentItem contentItem = contentData.getContent();
-        if (getView() != null) {
-          renderContentItem(contentItem);
-        }
-      }
 
-      @Override public void onGetSectionFails(Exception e) {
-        renderError();
-      }
-    });
+    ocmController.getSection(!useCache, section, imagesToDownload,
+        new OcmController.GetSectionControllerCallback() {
+          @Override public void onGetSectionLoaded(ContentData contentData) {
+            ContentItem contentItem = contentData.getContent();
+            renderContentItem(contentItem);
+          }
+
+          @Override public void onGetSectionFails(Exception e) {
+            renderError();
+          }
+        });
   }
 
-}
+  public void loadSectionWithCacheAndAfterNetwork(String viewId, String filter) {
+    this.section = viewId;
+    this.filter = filter;
+
+    getView().showProgressView(true);
+
+    ocmController.getSection(false, section, imagesToDownload,
+        new OcmController.GetSectionControllerCallback() {
+          @Override public void onGetSectionLoaded(ContentData contentData) {
+            ContentItem contentItem = contentData.getContent();
+            renderContentItem(contentItem);
+
+            ocmController.getSection(true, section, imagesToDownload,
+                new OcmController.GetSectionControllerCallback() {
+                  @Override public void onGetSectionLoaded(ContentData contentData) {
+                    ContentItem contentItem1 = contentData.getContent();
+                    checkNewContent(contentItem.getElements(), contentItem1.getElements());
+                  }
+
+                  @Override public void onGetSectionFails(Exception e) {
+                    renderError();
+                  }
+                });
+          }
+
+          @Override public void onGetSectionFails(Exception e) {
+            renderError();
+          }
+        });
+  }
+
+  private void checkNewContent(List<Element> cachedElements, List<Element> newElements) {
+    if (cachedElements == null || newElements == null) return;
+    if (checkDifferents(cachedElements, newElements)) {
+      getView().showNewExistingContent();
+    }
+  }
+
+  private boolean checkDifferents(List<Element> cachedElements, List<Element> newElements) {
+    if (cachedElements.size() != newElements.size()) {
+      return true;
+    } else {
+      for (int i = 0; i < cachedElements.size(); i++) {
+        if (!cachedElements.get(i).getSlug().equalsIgnoreCase(newElements.get(i).getSlug())) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   private void renderContentItem(ContentItem contentItem) {
     if (contentItem != null
         && contentItem.getLayout() != null
-        && contentItem.getElements() != null
-        && getView() != null) {
+        && contentItem.getElements() != null) {
 
       listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
-      if (this.getView() != null) {
-        if (listedCellContentDataList.size() != 0) {
-          getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
-          getView().showEmptyView(false);
-          getView().showErrorView(false);
-        } else {
-          getView().showEmptyView(true);
-        }
+
+      if (listedCellContentDataList.size() != 0) {
+        getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
+        getView().showEmptyView(false);
+        getView().showErrorView(false);
       } else {
         getView().showEmptyView(true);
       }
-
-      getView().showProgressView(false);
+    } else {
+      getView().showEmptyView(true);
     }
+
+    getView().showProgressView(false);
   }
 
   private void renderError() {
@@ -211,6 +262,11 @@ public class ContentViewPresenter extends Presenter<ContentView> {
             @Override public void onGetDetailFails(Exception e) {
               e.printStackTrace();
             }
+
+            @Override public void onGetDetailNoAvailable(Exception e) {
+              e.printStackTrace();
+              getView().contentNotAvailable();
+            }
           });
     }
   }
@@ -233,5 +289,13 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   public int getChildCount() {
     return listedCellContentDataList != null ? listedCellContentDataList.size() : 0;
+  }
+
+  @Override public void detachView() {
+    super.detachView();
+  }
+
+  public void setImagesToDownload(int imagesToDownload) {
+    this.imagesToDownload = imagesToDownload;
   }
 }

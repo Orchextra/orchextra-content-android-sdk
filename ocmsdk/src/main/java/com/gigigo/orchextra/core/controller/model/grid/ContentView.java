@@ -22,4 +22,8 @@ public interface ContentView {
   void showAuthDialog();
 
   void showProgressView(boolean isVisible);
+
+  void showNewExistingContent();
+
+  void contentNotAvailable();
 }

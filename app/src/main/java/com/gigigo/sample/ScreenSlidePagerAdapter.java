@@ -9,6 +9,7 @@ import java.util.List;
 public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
 
   private List<UiMenu> menuContent;
+  private boolean reloadSections = false;
 
   public ScreenSlidePagerAdapter(FragmentManager fm) {
     super(fm);
@@ -17,7 +18,8 @@ public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
   @Override public Fragment getItem(int position) {
     UiMenu menu = menuContent.get(position);
 
-    return ScreenSlidePageFragment.newInstance(menu.getElementUrl());
+    return ScreenSlidePageFragment.newInstance(menu.getElementUrl(),
+        getNumberOfImagesToDownload(position));
   }
 
   public void setDataItems(List<UiMenu> menuContent) {
@@ -26,10 +28,30 @@ public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
   }
 
   @Override public int getItemPosition(Object object) {
+    if (object instanceof ScreenSlidePageFragment) {
+
+      if (reloadSections) {
+        ((ScreenSlidePageFragment) object).reloadSection();
+        reloadSections = false;
+      }
+    }
     return super.getItemPosition(object);
   }
 
   @Override public int getCount() {
     return (menuContent != null) ? menuContent.size() : 0;
+  }
+
+  public void reloadSections() {
+    this.reloadSections = true;
+    notifyDataSetChanged();
+  }
+
+  private int getNumberOfImagesToDownload(int position) {
+    int number = 12;
+    if (position == 0) {
+      number = 12;
+    } else if (position == 1 || position == 2) number = 6;
+    return number;
   }
 }

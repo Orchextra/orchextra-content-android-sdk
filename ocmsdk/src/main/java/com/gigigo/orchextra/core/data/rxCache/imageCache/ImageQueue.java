@@ -8,8 +8,8 @@ public interface ImageQueue {
 
   void add(String url, int priority);
 
-  void add(String url);
+  void add(ImageData imageData);
 
-  String getUrl();
+  ImageData getImage();
 
   boolean hasImages();}

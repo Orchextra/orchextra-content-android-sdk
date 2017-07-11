@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
@@ -145,7 +146,7 @@ public class PreviewContentData extends UiBaseContentData {
 
       String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, width, height);
 
-      Glide.with(this).load(generatedImageUrl).priority(Priority.NORMAL).into(previewImage);
+      OcmImageLoader.load(this, generatedImageUrl).priority(Priority.NORMAL).into(previewImage);
 
       animateAlphaBecauseOfCollapseEnterTransitionImage();
     }

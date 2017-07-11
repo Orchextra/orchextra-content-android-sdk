@@ -114,3 +114,11 @@
 #https://github.com/evant/gradle-retrolambda#proguard
 -dontwarn java.lang.invoke.*
 -dontwarn **$$Lambda$*
+
+
+-keepnames com.gigigo.orchextra.ocm.core.data.rxCache.imageCache.loader.MyGlideModule
+# or more generally:
+#-keep public class * implements com.bumptech.glide.module.GlideModule
+
+# for DexGuard only
+-keepresourcexmlelements manifest/application/meta-data@value=GlideModule

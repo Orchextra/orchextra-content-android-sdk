@@ -31,7 +31,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
     getMenus = new GetMenus(mockOcmRepository, mockThreadExecutor, mockPostExecutionThread);
   }
 
-  @Test public void testGetUserDetailsUseCaseObservableHappyCase() {
+  @Test public void testGetMenusUseCaseObservableHappyCase() {
     getMenus.buildUseCaseObservable(GetMenus.Params.forForceReload(FORCE_RELOAD));
 
     verify(mockOcmRepository).getMenu(FORCE_RELOAD);

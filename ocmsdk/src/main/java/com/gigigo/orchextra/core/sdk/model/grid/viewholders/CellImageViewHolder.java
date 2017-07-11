@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementSectionView;
 import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
@@ -55,7 +56,9 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                       mainLayout.getHeight());
 
               DrawableRequestBuilder<String> requestBuilder =
-                  Glide.with(context).load(generatedImageUrl).priority(Priority.NORMAL).dontAnimate();
+                  OcmImageLoader.load(context, generatedImageUrl)
+                      .priority(Priority.NORMAL)
+                      .dontAnimate();
 
               if (thumbnailEnabled) {
                 requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageByteArray));

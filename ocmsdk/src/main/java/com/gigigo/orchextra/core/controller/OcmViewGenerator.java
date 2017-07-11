@@ -15,42 +15,43 @@ import java.util.List;
 
 public interface OcmViewGenerator {
 
-    void generateSectionView(String viewId, String filter, GetSectionViewGeneratorCallback getSectionViewGeneratorCallback);
+  void generateSectionView(String viewId, String filter, int imagesToDownload,
+      GetSectionViewGeneratorCallback getSectionViewGeneratorCallback);
 
-    UiDetailBaseContentData generateDetailView(String elementUrl);
+  UiDetailBaseContentData generateDetailView(String elementUrl);
 
-    UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share);
+  UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share);
 
-    UiBaseContentData generateDetailView(ElementCacheType type, ElementCacheRender elements);
+  UiBaseContentData generateDetailView(ElementCacheType type, ElementCacheRender elements);
 
-    void getImageUrl(String elementUrl, GetDetailImageViewGeneratorCallback getDetailImageViewGeneratorCallback);
+  void getImageUrl(String elementUrl,
+      GetDetailImageViewGeneratorCallback getDetailImageViewGeneratorCallback);
 
-    UiSearchBaseContentData generateSearchView();
+  UiSearchBaseContentData generateSearchView();
 
-    UiBaseContentData generateCardDetailView(ElementCache cachedElement);
+  UiBaseContentData generateCardDetailView(ElementCache cachedElement);
 
-    UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
+  UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
 
+  void getMenu(GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
 
-    void getMenu(GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
+  // Callbacks
+  interface GetMenusViewGeneratorCallback {
+    void onGetMenusLoaded(List<UiMenu> menus);
 
-    // Callbacks
-    interface GetMenusViewGeneratorCallback {
-        void onGetMenusLoaded(List<UiMenu> menus);
+    void onGetMenusFails(Throwable e);
+  }
 
-        void onGetMenusFails(Throwable e);
-    }
+  interface GetDetailImageViewGeneratorCallback {
+    void onGetImageLoaded(String imagePath);
 
-    interface GetDetailImageViewGeneratorCallback {
-        void onGetImageLoaded(String imagePath);
+    void onGetImageError(Exception e);
+  }
 
-        void onGetImageError(Exception e);
-    }
+  interface GetSectionViewGeneratorCallback {
+    void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData);
 
-    interface GetSectionViewGeneratorCallback {
-        void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData);
-
-        void onSectionViewFails(Exception e);
-    }
+    void onSectionViewFails(Exception e);
+  }
 }
 

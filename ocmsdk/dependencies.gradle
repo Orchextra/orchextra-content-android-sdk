@@ -39,8 +39,7 @@ project.ext {
                rxRetrofit                 : 'com.squareup.retrofit2:adapter-rxjava2:2.3.0',
                arrow                      : 'com.fernandocejas:arrow:1.0.0',
 
-               kache                      : 'com.github.mskn73:kache:0.3'
-  ]
+               kache                      : 'com.github.mskn73:kache:0.4']
 
   testLibraries = [mockito          : 'org.mockito:mockito-core:2.0.31-beta',
                    junit            : 'junit:junit:4.12',
@@ -48,5 +47,6 @@ project.ext {
                    androidTestRunner: 'com.android.support.test:runner:0.4.1',
                    androidTestRules : 'com.android.support.test:rules:0.4.1',
                    espresso         : 'com.android.support.test.espresso:espresso-core:2.2.1',
-                   mockWebServer    : 'com.squareup.okhttp:mockwebserver:2.6.0']
+                   mockWebServer    : 'com.squareup.okhttp:mockwebserver:2.6.0',
+                   assertj : 'org.assertj:assertj-core:1.7.1']
 }

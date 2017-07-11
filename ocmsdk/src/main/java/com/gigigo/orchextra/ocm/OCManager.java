@@ -102,9 +102,9 @@ public final class OCManager {
     }
   }
 
-  static void generateSectionView(String viewId, String filter,
+  static void generateSectionView(String viewId, String filter, int imagesToDownload,
       final OCManagerCallbacks.Section sectionCallback) {
-    instance.ocmViewGenerator.generateSectionView(viewId, filter,
+    instance.ocmViewGenerator.generateSectionView(viewId, filter, imagesToDownload,
         new OcmViewGenerator.GetSectionViewGeneratorCallback() {
           @Override public void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData) {
             sectionCallback.onSectionLoaded(uiGridBaseContentData);

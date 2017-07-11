@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.Ocm;
@@ -15,16 +16,19 @@ import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 public class ScreenSlidePageFragment extends Fragment {
 
   private static final String EXTRA_SCREEN_SLIDE_SECTION = "EXTRA_SCREEN_SLIDE_SECTION";
+  private static final String EXTRA_IMAGES_TO_DOWNLOAD = "EXTRA_IMAGES_TO_DOWNLOAD";
 
   private Bundle arguments;
   private View emptyViewLayout;
   private View errorViewLayout;
+  private UiGridBaseContentData contentView;
 
-  public static ScreenSlidePageFragment newInstance(String section) {
+  public static ScreenSlidePageFragment newInstance(String section, int imagesToDownload) {
     ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
 
     Bundle args = new Bundle();
     args.putString(EXTRA_SCREEN_SLIDE_SECTION, section);
+    args.putInt(EXTRA_IMAGES_TO_DOWNLOAD, imagesToDownload);
     fragment.setArguments(args);
 
     return fragment;
@@ -47,8 +51,9 @@ public class ScreenSlidePageFragment extends Fragment {
   private void loadArguments() {
     if (arguments != null) {
       String section = arguments.getString(EXTRA_SCREEN_SLIDE_SECTION);
+      int imagesToDownload = arguments.getInt(EXTRA_IMAGES_TO_DOWNLOAD);
 
-      Ocm.generateSectionView(section, null, new OcmCallbacks.Section() {
+      Ocm.generateSectionView(section, null, imagesToDownload, new OcmCallbacks.Section() {
         @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
           setView(uiGridBaseContentData);
         }
@@ -72,6 +77,8 @@ public class ScreenSlidePageFragment extends Fragment {
 
   public void setView(UiGridBaseContentData contentView) {
     if (contentView != null) {
+      this.contentView = contentView;
+
       contentView.setClipToPaddingBottomSize(ClipToPadding.PADDING_BIG);
       contentView.setEmptyView(emptyViewLayout);
       contentView.setErrorView(errorViewLayout);
@@ -83,6 +90,12 @@ public class ScreenSlidePageFragment extends Fragment {
       getChildFragmentManager().beginTransaction()
           .replace(R.id.content_main_view, contentView)
           .commit();
+    }
+  }
+
+  public void reloadSection() {
+    if (contentView != null) {
+      contentView.reloadSection();
     }
   }
 }

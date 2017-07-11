@@ -5,20 +5,20 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.core.controller.model.grid.ContentView;
 import com.gigigo.orchextra.core.controller.model.grid.ContentViewPresenter;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
@@ -45,7 +45,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
           if (presenter != null) {
-            presenter.reloadSection();
+            presenter.reloadSectionFromNetwork();
           }
         }
 
@@ -61,11 +61,22 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View retryButton;
   private View moreButton;
   private String viewId;
+  private int imagesToDownload;
   private String emotion;
   private View emptyView;
   private View errorView;
   private View progressView;
   private FrameLayout listedDataContainer;
+
+  private View newContentContainer;
+  private final View.OnClickListener onNewContentClickListener = new View.OnClickListener() {
+    @Override public void onClick(View v) {
+      newContentContainer.setVisibility(View.GONE);
+      if (presenter != null) {
+        presenter.loadFromCache();
+      }
+    }
+  };
   private boolean thumbnailEnabled;
   private View.OnClickListener onClickDiscoverMoreButtonListener = v -> {
     if (onLoadMoreContentListener != null) {
@@ -75,7 +86,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View.OnClickListener onClickRetryButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       if (presenter != null) {
-        presenter.reloadSection();
+        presenter.reloadSectionFromNetwork();
       }
     }
   };
@@ -98,9 +109,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
     initView(view);
     setListeners();
-    if (presenter != null) {
-      presenter.attachView(this);
-    }
+    presenter.attachView(this);
 
     return view;
   }
@@ -123,6 +132,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     retryButton = view.findViewById(R.id.ocm_retry_button);
     moreButton = view.findViewById(R.id.ocm_more_button);
     listedDataContainer = (FrameLayout) view.findViewById(R.id.listedDataContainer);
+    newContentContainer = view.findViewById(R.id.newContentContainer);
   }
 
   private void setListeners() {
@@ -130,15 +140,22 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     moreButton.setOnClickListener(onClickDiscoverMoreButtonListener);
   }
 
-  public void setViewId(String viewId) {
+  public void setViewId(String viewId, int imagesToDownload) {
     this.viewId = viewId;
+    this.imagesToDownload = imagesToDownload;
   }
 
   @Override public void initUi() {
     if (viewId != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
-      presenter.loadSection(viewId, emotion);
+      presenter.setImagesToDownload(imagesToDownload);
+      //presenter.loadSection(viewId, emotion);
+      presenter.loadSectionWithCacheAndAfterNetwork(viewId, emotion);
     }
+  }
+
+  @Override public void onResume() {
+    super.onResume();
   }
 
   @Override public void setData(List<Cell> cellDataList, ContentItemTypeLayout type) {
@@ -152,14 +169,20 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   private void setDataGrid(List<Cell> cellDataList) {
-    uiListedBaseContentData = new SpannedGridRecyclerView(context);
 
-    uiListedBaseContentData.setListedContentListener(listedContentListener);
-    uiListedBaseContentData.setParams(clipToPadding, authoritation, thumbnailEnabled);
-    uiListedBaseContentData.setData(cellDataList);
+    if (uiListedBaseContentData == null) {
 
-    listedDataContainer.removeAllViews();
-    listedDataContainer.addView(uiListedBaseContentData);
+      uiListedBaseContentData = new SpannedGridRecyclerView(context);
+
+      uiListedBaseContentData.setListedContentListener(listedContentListener);
+      uiListedBaseContentData.setParams(clipToPadding, authoritation, thumbnailEnabled);
+      uiListedBaseContentData.setData(cellDataList);
+
+      listedDataContainer.removeAllViews();
+      listedDataContainer.addView(uiListedBaseContentData);
+    } else {
+      uiListedBaseContentData.setData(cellDataList);
+    }
   }
 
   private void setDataCarousel(List<Cell> cellDataList) {
@@ -198,20 +221,17 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
           DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
 
-      Glide.with(this)
-          .load(imageUrl)
-          .priority(Priority.NORMAL)
-          .into(new SimpleTarget<GlideDrawable>() {
-            @Override public void onResourceReady(GlideDrawable resource,
-                GlideAnimation<? super GlideDrawable> glideAnimation) {
-              imageViewToExpandInDetail.setImageDrawable(resource);
-            }
+      OcmImageLoader.load(this, imageUrl).load(imageUrl).into(new SimpleTarget<GlideDrawable>() {
+        @Override public void onResourceReady(GlideDrawable resource,
+            GlideAnimation<? super GlideDrawable> glideAnimation) {
+          imageViewToExpandInDetail.setImageDrawable(resource);
+        }
 
-            @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
-              super.onLoadFailed(e, errorDrawable);
-              clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
-            }
-          });
+        @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
+          super.onLoadFailed(e, errorDrawable);
+          clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
+        }
+      });
     }
 
     OCManager.generateDetailView(elementUrl, urlImageToExpand,
@@ -222,9 +242,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private void clearImageToExpandWhenAnimationEnds(final ImageView imageViewToExpandInDetail) {
     new Handler().postDelayed(new Runnable() {
       @Override public void run() {
-        if (imageViewToExpandInDetail != null) {
-          imageViewToExpandInDetail.setImageDrawable(null);
-        }
+        imageViewToExpandInDetail.setImageDrawable(null);
       }
     }, 750);
   }
@@ -272,7 +290,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
   @Override public void reloadSection() {
     if (presenter != null) {
-      presenter.reloadSection();
+      presenter.loadSectionWithCacheAndAfterNetwork(viewId, emotion);
     }
   }
 
@@ -292,11 +310,20 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
   }
 
+  @Override public void showNewExistingContent() {
+    newContentContainer.setVisibility(View.VISIBLE);
+    newContentContainer.setOnClickListener(onNewContentClickListener);
+  }
+
   @Override public void onDestroy() {
     if (presenter != null) {
       presenter.detachView();
     }
 
     super.onDestroy();
+  }
+
+  @Override public void contentNotAvailable() {
+    Snackbar.make(listedDataContainer, R.string.oc_error_content_not_available_without_internet, Snackbar.LENGTH_SHORT).show();
   }
 }

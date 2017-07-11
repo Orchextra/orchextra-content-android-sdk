@@ -33,6 +33,10 @@ public class OcmSchemeHandler {
       @Override public void onGetDetailFails(Exception e) {
         e.printStackTrace();
       }
+
+      @Override public void onGetDetailNoAvailable(Exception e) {
+        e.printStackTrace();
+      }
     });
   }
 
@@ -48,6 +52,10 @@ public class OcmSchemeHandler {
       }
 
       @Override public void onGetDetailFails(Exception e) {
+        e.printStackTrace();
+      }
+
+      @Override public void onGetDetailNoAvailable(Exception e) {
         e.printStackTrace();
       }
     });

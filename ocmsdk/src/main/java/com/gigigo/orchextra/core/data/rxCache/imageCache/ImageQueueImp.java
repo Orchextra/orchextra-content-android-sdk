@@ -24,12 +24,7 @@ public class ImageQueueImp implements ImageQueue {
     add(imageData);
   }
 
-  @Override public void add(String url) {
-    ImageData imageData = new ImageData(url, 0);
-    add(imageData);
-  }
-
-  private void add(ImageData imageData) {
+  @Override public synchronized void add(ImageData imageData) {
     queue.add(imageData);
     Collections.sort(queue, mComparator);
   }
@@ -37,13 +32,13 @@ public class ImageQueueImp implements ImageQueue {
   private final Comparator mComparator =
       (Comparator<ImageData>) (o1, o2) -> o1.getPriority() - o2.getPriority();
 
-  @Override public synchronized String getUrl() {
+  @Override public ImageData getImage() {
     if (hasImages()) {
       ImageData imageData = queue.get(0);
       queue.remove(0);
-      return imageData.getPath();
+      return imageData;
     }
-    return "";
+    return null;
   }
 
   @Override public boolean hasImages() {

@@ -16,6 +16,7 @@ import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
 import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
+import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.ocm.UIThread;
 import orchextra.dagger.Module;
@@ -25,9 +26,11 @@ import orchextra.javax.inject.Singleton;
 @Module(includes = { DomainModule.class, InteractorModule.class }) public class ControllerModule {
 
   @Singleton @Provides OcmController provideOcmController(GetMenus getMenus, GetSection getSection,
-      GetDetail getDetail, SearchElements searchElements, ClearCache clearCache) {
+      GetDetail getDetail, SearchElements searchElements, ClearCache clearCache,
+      ConnectionUtils connectionUtils) {
 
-    return new OcmControllerImp(getMenus, getSection, getDetail, searchElements, clearCache);
+    return new OcmControllerImp(getMenus, getSection, getDetail, searchElements, clearCache,
+        connectionUtils);
   }
 
   @Provides @Singleton ThreadExecutor provideThreadExecutor(JobExecutor jobExecutor) {
@@ -48,7 +51,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Provides @Singleton OcmImageCache provideImageCache(OcmContextProvider context,
-      ThreadExecutor threadExecutor) {
-    return new OcmImageCacheImp(context.getApplicationContext(), threadExecutor);
+      ThreadExecutor threadExecutor, ConnectionUtils connectionUtils) {
+    return new OcmImageCacheImp(context.getApplicationContext(), threadExecutor, connectionUtils);
   }
 }

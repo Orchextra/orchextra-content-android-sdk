@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.ocm.Ocm;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
   private TabLayout tabLayout;
   private ViewPager viewpager;
   private ScreenSlidePagerAdapter adapter;
+  private View fabReload;
 
   private List<UiMenu> uiMenu;
 
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         }
       };
 
+
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -47,6 +51,12 @@ public class MainActivity extends AppCompatActivity {
   private void initViews() {
     tabLayout = (TabLayout) findViewById(R.id.tabLayout);
     viewpager = (ViewPager) findViewById(R.id.viewpager);
+    fabReload = findViewById(R.id.fabReload);
+    fabReload.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        adapter.reloadSections();
+      }
+    });
 
     adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
     viewpager.setAdapter(adapter);

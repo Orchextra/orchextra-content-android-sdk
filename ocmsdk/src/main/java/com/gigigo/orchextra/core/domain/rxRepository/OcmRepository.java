@@ -14,7 +14,8 @@ import io.reactivex.Observable;
 public interface OcmRepository {
   Observable<MenuContentData> getMenu(boolean forceReload);
 
-  Observable<ContentData> getSectionElements(boolean forceReload, String elementUrl);
+  Observable<ContentData> getSectionElements(boolean forceReload, String elementUrl,
+      int numberOfElementsToDownload);
 
   Observable<ElementData> getDetail(boolean forceReload, String section);
 

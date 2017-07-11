@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
@@ -54,7 +55,7 @@ public class ArticleImageView extends ArticleBaseView<ArticleImageElement> {
         DeviceUtils.calculateRealWidthDeviceInImmersiveMode(getContext()));
 
     DrawableRequestBuilder<String> requestBuilder =
-        Glide.with(context).load(generatedImageUrl).priority(Priority.NORMAL).dontAnimate();
+        OcmImageLoader.load(context, generatedImageUrl).priority(Priority.NORMAL).dontAnimate();
 
     if (thumbnailEnabled) {
       requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageThumbBytes));

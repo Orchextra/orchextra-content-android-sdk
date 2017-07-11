@@ -81,7 +81,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return menuList;
   }
 
-  @Override public void generateSectionView(String viewId, String filter,
+  @Override public void generateSectionView(String viewId, String filter, final int imagesToDownload,
       GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
 
     ocmController.getDetails(false, viewId, new OcmController.GetDetailControllerCallback() {
@@ -92,11 +92,15 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
               generateWebContentData(elementCache.getRender().getUrl()));
         } else {
           getSectionViewGeneratorCallback.onSectionViewLoaded(
-              generateGridContentData(viewId, filter));
+              generateGridContentData(viewId, imagesToDownload, filter));
         }
       }
 
       @Override public void onGetDetailFails(Exception e) {
+        getSectionViewGeneratorCallback.onSectionViewFails(e);
+      }
+
+      @Override public void onGetDetailNoAvailable(Exception e) {
         getSectionViewGeneratorCallback.onSectionViewFails(e);
       }
     });
@@ -106,9 +110,9 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return ContentWebViewGridLayoutView.newInstance(url);
   }
 
-  @NonNull private UiGridBaseContentData generateGridContentData(String viewId, String filter) {
+  @NonNull private UiGridBaseContentData generateGridContentData(String viewId, int imagesToDownload, String filter) {
     ContentGridLayoutView contentGridLayoutView = ContentGridLayoutView.newInstance();
-    contentGridLayoutView.setViewId(viewId);
+    contentGridLayoutView.setViewId(viewId, imagesToDownload);
     contentGridLayoutView.setEmotion(filter);
     return contentGridLayoutView;
   }
@@ -193,6 +197,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
       }
 
       @Override public void onGetDetailFails(Exception e) {
+        e.printStackTrace();
+      }
+
+      @Override public void onGetDetailNoAvailable(Exception e) {
         e.printStackTrace();
       }
     });

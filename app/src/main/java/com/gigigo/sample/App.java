@@ -72,7 +72,7 @@ public class App extends MultiDexApplication {
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
-    Ocm.setBusinessUnit("es");
+    Ocm.setBusinessUnit("it");
   }
 
   private void enableStrictMode() {

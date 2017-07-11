@@ -149,6 +149,10 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
         @Override public void onGetDetailFails(Exception e) {
           e.printStackTrace();
         }
+
+        @Override public void onGetDetailNoAvailable(Exception e) {
+          e.printStackTrace();
+        }
       });
     }
   }

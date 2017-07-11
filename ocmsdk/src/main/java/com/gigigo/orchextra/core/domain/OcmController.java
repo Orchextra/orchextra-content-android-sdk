@@ -8,7 +8,7 @@ import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 public interface OcmController {
   void getMenu(boolean forceReload, final GetMenusControllerCallback getMenusCallback);
 
-  void getSection(boolean forceReload, final String section,
+  void getSection(boolean forceReload, final String section, int imagesToDownload,
       final GetSectionControllerCallback getSectionControllerCallback);
 
   void getDetails(boolean forceReload, final String elementUrl,
@@ -35,6 +35,8 @@ public interface OcmController {
     void onGetDetailLoaded(ElementCache elementCache);
 
     void onGetDetailFails(Exception e);
+
+    void onGetDetailNoAvailable(Exception e);
   }
 
   interface SearchControllerCallback {
@@ -45,6 +47,7 @@ public interface OcmController {
 
   interface ClearCacheCallback {
     void onClearCacheSuccess();
+
     void onClearCacheFails(Exception e);
   }
 }

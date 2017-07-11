@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
@@ -9,18 +10,22 @@ import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageData;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
+import com.gigigo.orchextra.core.receiver.WifiReceiver;
 import io.reactivex.Observable;
 
 import io.reactivex.functions.Consumer;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.logging.Handler;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -33,6 +38,8 @@ import orchextra.javax.inject.Singleton;
   private final OcmApiService ocmApiService;
   private final OcmCache ocmCache;
   private final OcmImageCache ocmImageCache;
+  private static final int MAX_ARTICLE_IMAGES = 10;
+  private static final int MAX_ARTICLES = Integer.MAX_VALUE;
 
   @Inject public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,
       @NonNull OcmImageCache ocmImageCache) {
@@ -47,24 +54,42 @@ import orchextra.javax.inject.Singleton;
         .doOnNext(ocmCache::putMenus);
   }
 
-  @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl) {
+  @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl, final int numberOfElementsToDownload) {
     return ocmApiService.getSectionDataRx(elementUrl)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
         .doOnNext(ocmCache::putSection)
         .doOnNext(apiSectionContentData -> {
-          Iterator<ApiElement> iterator =
-              apiSectionContentData.getContent().getElements().iterator();
-          while (iterator.hasNext()) {
-            ApiElement apiElement = iterator.next();
-            if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
-              ApiElementData apiElementData = new ApiElementData(
-                  apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
-              addImageToQueue(apiElementData);
-              ocmCache.putDetail(apiElementData);
-            }
-          }
+          addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload);
         });
+  }
+
+  private void addSectionsImagesToCache(ApiSectionContentData apiSectionContentData, int imagestodownload) {
+    Iterator<ApiElement> iterator = apiSectionContentData.getContent().getElements().iterator();
+    int i = 0;
+    while (iterator.hasNext() && i < MAX_ARTICLES) {
+      ApiElement apiElement = iterator.next();
+      addImageToQueue(apiElement.getSectionView());
+      if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
+        ApiElementData apiElementData = new ApiElementData(
+            apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
+        if (i < imagestodownload) addImageToQueue(apiElementData);
+        ocmCache.putDetail(apiElementData);
+      }
+      i++;
+    }
+
+    Intent intent = new Intent(ocmCache.getContext(), ImagesService.class);
+    WifiReceiver.intentService = intent;
+    ocmCache.getContext().startService(intent);
+  }
+
+  private void addImageToQueue(ApiElementSectionView apiElementSectionView) {
+    if (apiElementSectionView != null) {
+      if (apiElementSectionView.getImageUrl() != null) {
+        ocmImageCache.add(new ImageData(apiElementSectionView.getImageUrl(), 9));
+      }
+    }
   }
 
   private void addImageToQueue(ApiElementData apiElementData) {
@@ -72,7 +97,7 @@ import orchextra.javax.inject.Singleton;
     if (apiElementData.getElement() != null) {
       //Preview
       if (apiElementData.getElement().getPreview() != null) {
-        ocmImageCache.add(apiElementData.getElement().getPreview().getImageUrl());
+        ocmImageCache.add(new ImageData(apiElementData.getElement().getPreview().getImageUrl(), 0));
       }
       //Render
       if (apiElementData.getElement().getRender() != null
@@ -82,7 +107,7 @@ import orchextra.javax.inject.Singleton;
         while (elementsIterator.hasNext()) {
           ApiArticleElement element = elementsIterator.next();
           if (element.getRender() != null && element.getRender().getImageUrl() != null) {
-            ocmImageCache.add(element.getRender().getImageUrl());
+            ocmImageCache.add(new ImageData(element.getRender().getImageUrl(), 0));
           }
         }
       }
