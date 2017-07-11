@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.neenbedankt.android-apt'
 apply from: 'jacoco.gradle'
 apply from: 'sonarqube.gradle'
 
@@ -86,6 +85,7 @@ android {
   publishNonDefault true
   //  defaultPublishConfig "ocmDebug"
  defaultPublishConfig "ocmRelease"
+  buildToolsVersion '25.0.0'
 }
 
 jacocoAndroidUnitTestReport {
@@ -118,14 +118,15 @@ dependencies {
   compile project.libraries.gggJavaLib
 
   //Dagger
-  apt project.libraries.daggerCompiler
   compile project.libraries.dagger
+  annotationProcessor project.libraries.daggerCompiler
 
   //Image Loader Glide/Blur
   compile project.libraries.imageloaderGlideBlur
 
   //Orchextra
-//  compile project.libraries.oxvuforiaimplementation
+
+  compile project.libraries.oxvuforiaimplementation
   ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true }
   ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true }
   ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true }
@@ -149,4 +150,3 @@ dependencies {
   testCompile project.testLibraries.assertj
   testCompile project.testLibraries.mockito
 }
-

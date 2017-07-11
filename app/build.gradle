@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
   compileSdkVersion 24
-  buildToolsVersion "24.0.3"
+  buildToolsVersion "25.0.3"
 
   defaultConfig {
     applicationId "com.gigigo.sample"
@@ -23,12 +23,10 @@ android {
     abortOnError false
   }
 
-
 }
 
 dependencies {
   compile project(path: ':ocmsdk')
-//  compile 'com.squareup.leakcanary:leakcanary-android:1.5'
   compile 'com.android.support:multidex:1.0.1'
   compile 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
 }
