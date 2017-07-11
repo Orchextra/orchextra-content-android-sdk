@@ -12,6 +12,7 @@ import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
+import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import java.util.List;
 
@@ -39,13 +40,18 @@ public class MainActivity extends AppCompatActivity {
         }
       };
 
-
+  private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
+    @Override public void doRequiredLogin() {
+      Toast.makeText(getApplicationContext(), "Item needs permissions", Toast.LENGTH_SHORT).show();
+    }
+  };
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     initViews();
     startCredentials();
+    Ocm.setOnDoRequiredLoginCallback(onDoRequiredLoginCallback);
   }
 
   private void initViews() {

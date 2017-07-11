@@ -41,6 +41,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
   @Mock private GetSection mockGetSection;
   @Mock private SearchElements mockSearchElements;
 
+
   @Rule public ExpectedException expectedException = ExpectedException.none();
 
   @Before public void setUp() {

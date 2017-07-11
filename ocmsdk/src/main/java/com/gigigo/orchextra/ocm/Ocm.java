@@ -4,6 +4,7 @@ import android.app.Application;
 import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
+import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -195,5 +196,10 @@ public final class Ocm {
 
   public static void closeDetailView() {
     OCManager.closeDetailView();
+  }
+
+  public static void setOnDoRequiredLoginCallback(
+      OnRequiredLoginCallback onDoRequiredLoginCallback) {
+    OCManager.setDoRequiredLoginCallback(onDoRequiredLoginCallback);
   }
 }

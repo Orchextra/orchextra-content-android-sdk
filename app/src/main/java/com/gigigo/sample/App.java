@@ -3,6 +3,7 @@ package com.gigigo.sample;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import android.widget.Toast;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -26,13 +27,17 @@ public class App extends MultiDexApplication {
   public static String API_KEY = "ef08c4dccb7649b9956296a863db002a68240be2";    //Woah project
   public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
 
+  //[UAT][CSE] - WOAH SITC -- Q
+  public static String API_KEY = "b65910721cdc73000b9c528e660ff050b553c2db";
+  public static String API_SECRET = "e460fa2f55b6d18860de8300a4b96493c5909019";
+
   //REPSOL RELEASE
   //public static String API_KEY = "7bb9fa0f9b7a02846383fd6284d3c74b8155644c";
   //public static String API_SECRET = "3295dc8de90300e2977e6cec5b28b614fc644934";
 
   private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {
-
+      Toast.makeText(getApplicationContext(), "Item needs permissions", Toast.LENGTH_SHORT).show();
     }
   };
   private OnEventCallback onEventCallback = new OnEventCallback() {
@@ -61,7 +66,6 @@ public class App extends MultiDexApplication {
         .setContentLanguage("EN")
         .setVuforiaImpl(new ImageRecognitionVuforiaImpl()) //VUFORIA
         .setOxSenderId("117687721829")
-        .setOnDoRequiredLoginCallback(onDoRequiredLoginCallback)
         .setOnEventCallback(onEventCallback);
 
     Ocm.initialize(ocmBuilder);
@@ -73,6 +77,8 @@ public class App extends MultiDexApplication {
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
     Ocm.setBusinessUnit("it");
+
+    Ocm.setOnDoRequiredLoginCallback(onDoRequiredLoginCallback);
   }
 
   private void enableStrictMode() {
