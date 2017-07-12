@@ -2,6 +2,8 @@ package com.gigigo.orchextra.ocm;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import android.widget.ImageView;
@@ -71,9 +73,17 @@ public final class OCManager {
     }
   };
 
+  //cambio para el inicio selectivo, MEJORAR,
+  //necesitamos un contexto para q la funcion setNewOrchextracredentials pueda comprobar las preferences
+  //lo suyo es no guardarlo en las preferences, de momneto así y una mejora sencilla seria añadir el contexto a
+  //la funcion de setNewOrchextracredentials, para no mantener el application cuando no es necesario
+
+  static Application mApplication;
+
   static void initSdk(Application application) {
     getInstance();
     instance.initOcm(application);
+    mApplication = application;//
   }
 
   static void setDoRequiredLoginCallback(OnRequiredLoginCallback onRequiredLoginCallback) {
@@ -213,10 +223,26 @@ public final class OCManager {
 
     instance.ocmCredentialCallback = ocmCredentialCallback;
 
-    Orchextra.start();
+    SharedPreferences prefs = OCManager.instance.mApplication.
+        getSharedPreferences("OCMpreferencez", Context.MODE_PRIVATE);
+    Boolean IsCredentialsChanged = prefs.getBoolean("ChangeCredentialsDONE", false);
 
-    //Some case the start() and changeCredentials() method has concurrency problems
-    Orchextra.changeCredentials(apiKey, apiSecret);
+   // if(!IsCredentialsChanged) {
+      //region antigua
+     // Orchextra.start();
+      //Some case the start() and changeCredentials() method has concurrency problems
+     // Orchextra.changeCredentials(apiKey, apiSecret);
+      //endregion
+   // }
+    //region nueva
+    Orchextra.updateSDKCredentials(apiKey, apiSecret);
+    //OrchextraManager.saveApiKeyAndSecret(apiKey, apiSecret);
+
+    //Orchextra.start();
+
+    //prefs.edit().putBoolean("ChangeCredentialsDONE",true);
+    //prefs.edit().commit();
+    //endregion
   }
 
   static void bindUser(CrmUser crmUser) {
@@ -343,6 +369,9 @@ public final class OCManager {
 
           @Override public void onInit(String s) {
             Log.d("WOAH", "onInit: " + s);
+            //asvox aki es cuando se va a background , en estepunto ox ya ha recuperado la config anterior(buena)
+            //y cuando llega a onSuccess se rompio del todo
+
           }
 
           @Override public void onConfigurationReceive(String accessToken) {
@@ -350,7 +379,7 @@ public final class OCManager {
 
             instance.oxSession.setToken(accessToken);
 
-            if (instance.ocmCredentialCallback != null) {
+            if (instance.ocmCredentialCallback != null) { //asv esto indica q se hace el changecredentials
               ocmCredentialCallback.onCredentialReceiver(accessToken);
             }
           }
@@ -415,7 +444,6 @@ public final class OCManager {
     Orchextra.initialize(builder);
 
     Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
-
   }
 
   static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,

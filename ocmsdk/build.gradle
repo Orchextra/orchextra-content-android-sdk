@@ -26,9 +26,9 @@ android {
     targetSdkVersion project.androidTargetSdkVersion
     versionCode 1
     versionName "1.0"
-    ndk {
-      abiFilters "armeabi-v7a"
-    }
+//    ndk {
+//      abiFilters "armeabi-v7a"
+//    }
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
   buildTypes {
@@ -41,7 +41,7 @@ android {
       testCoverageEnabled = true
     }
     release {
-      debuggable false
+      debuggable true
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
     }
@@ -70,8 +70,8 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
   }
 
   testOptions {
@@ -119,6 +119,7 @@ dependencies {
 
   //Dagger
   apt project.libraries.daggerCompiler
+
   compile project.libraries.dagger
 
   //Image Loader Glide/Blur
@@ -126,10 +127,11 @@ dependencies {
 
   //Orchextra
 //  compile project.libraries.oxvuforiaimplementation
-  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true }
-  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true }
-  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true }
-
+//  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true }
+//  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true }
+//  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true }
+compile ('com.github.Orchextra.orchextra-android-sdk:orchextrasdk:502Test:play10Release@aar')
+    { transitive = true }
   //customs Views
   compile project.libraries.doubleViewPager
   compile project.libraries.autofitTextView

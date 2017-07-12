@@ -1,7 +1,10 @@
 package com.gigigo.orchextra.ocm;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import com.gigigo.orchextra.CrmUser;
+import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -14,17 +17,82 @@ import java.util.Map;
 public final class Ocm {
 
   public static void initialize(Application app) {
-    OcmBuilder ocmBuilder = new OcmBuilder(app);
 
-    String oxKey = "novalidKey";
-    String oxSecret = "novalidSecret";
+     OcmBuilder ocmBuilder = new OcmBuilder(app);
+    String oxKey = "45179249c53cda327421e242e1fa4830484c9a94";
+    String oxSecret = "e8473653b5d479a173c53bf3831670275b3a0364";
     Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
 
-    OCManager.initSdk(app);
+    OCManager.initSdk(ocmBuilder.getApp());
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
-    OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, ocmBuilder.getOxSenderId());
+
+    SharedPreferences prefs =
+        ocmBuilder.getApp().getSharedPreferences("OCMpreferencez", Context.MODE_PRIVATE);
+    //asv la vaina sería meter este validator en el initiliaze, el put to true en el changecredentialas de orchextra y el get en el initialize
+    Boolean IsCredentialsChanged = prefs.getBoolean("ChangeCredentialsDONE", false);
+
+    if(!IsCredentialsChanged) {
+      OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, ocmBuilder.getOxSenderId());
+      Orchextra.start();
+    }
+    else
+    {
+        String API_KEY = "7bb9fa0f9b7a02846383fd6284d3c74b8155644c";
+        String API_SECRET = "3295dc8de90300e2977e6cec5b28b614fc644934";
+
+      //probar a pillar las apikeyy ecret del preferences
+    //  OCManager.initOrchextra(API_KEY, API_SECRET, notificationActivityClass, ocmBuilder.getOxSenderId());
+
+    }
+  }
+
+
+  public static void initializeWithChangeCredentials(OcmBuilder ocmBuilder) {
+
+   // OcmBuilder ocmBuilder = new OcmBuilder(app);
+   // String oxKey = "45179249c53cda327421e242e1fa4830484c9a94";
+   // String oxSecret = "e8473653b5d479a173c53bf3831670275b3a0364";
+
+    String oxKey = "30a2d1032d623dadd345db6c7631fbaac704af45";
+    String oxSecret = "329e98d088e0cfaac1a190ee9fafb44cbea92b59";
+
+    Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
+
+    OCManager.initSdk(ocmBuilder.getApp());
+    OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
+    OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
+    OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
+
+    //SharedPreferences prefs =
+    //    ocmBuilder.getApp().getSharedPreferences("OCMpreferencez", Context.MODE_PRIVATE);
+    //asv la vaina sería meter este validator en el initiliaze, el put to true en el changecredentialas de orchextra y el get en el initialize
+   // Boolean IsCredentialsChanged = prefs.getBoolean("ChangeCredentialsDONE", false);
+
+    //if(!IsCredentialsChanged) {
+
+      System.out.println("PRIMERA VEZ SOLO UNA VEZ");
+      OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, ocmBuilder.getOxSenderId());
+
+    /*}
+    else
+    {
+      System.out.println("PRIMERA ahora no debe hacer nada");
+      System.out.println("**********************************************************************************************");
+      System.out.println("\n\n\n\n\n\nINICIO DOS\n\n\n\n\n\n");
+      System.out.println("**********************************************************************************************");
+      System.out.println("**********************************************************************************************");
+      System.out.println("**********************************************************************************************");
+      System.out.println("**********************************************************************************************");
+
+      String API_KEY = "7bb9fa0f9b7a02846383fd6284d3c74b8155644c";
+      String API_SECRET = "3295dc8de90300e2977e6cec5b28b614fc644934";
+      OCManager.initOrchextra(API_KEY, API_SECRET, notificationActivityClass, ocmBuilder.getOxSenderId());
+      //Ocm.start();
+    }*/
+
+    Ocm.start();
   }
 
   /**

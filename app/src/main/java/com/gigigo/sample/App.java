@@ -10,6 +10,7 @@ import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
+
 //MultiDexApplication
 public class App extends MultiDexApplication {
 
@@ -23,12 +24,17 @@ public class App extends MultiDexApplication {
   //public static String API_SECRET = "677cf75a17aeec144ee402c281ad3a732d736a8a";
 
   //WOAH MARKETS
-  public static String API_KEY = "ef08c4dccb7649b9956296a863db002a68240be2";    //Woah project
-  public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
+  //public static String API_KEY = "ef08c4dccb7649b9956296a863db002a68240be2";    //Woah project
+  //public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
 
   //REPSOL RELEASE
   //public static String API_KEY = "7bb9fa0f9b7a02846383fd6284d3c74b8155644c";
   //public static String API_SECRET = "3295dc8de90300e2977e6cec5b28b614fc644934";
+
+
+  //[UAT][INTERNAL] DEMO APP
+  public static String API_KEY = "338d65a6572be208f25a9a5815861543adaa4abb";
+  public static String API_SECRET = "b29dac01598f9d8e2102aef73ac816c0786843ef";
 
   private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {
@@ -44,7 +50,7 @@ public class App extends MultiDexApplication {
   };
 
   @Override public void onCreate() {
-    enableStrictMode();
+    //  enableStrictMode();
     super.onCreate();
     // if (LeakCanary.isInAnalyzerProcess(this)) {
     //   //This process is dedicated to LeakCanary for heap analysis.
@@ -55,12 +61,19 @@ public class App extends MultiDexApplication {
     //// Normal app init code...
 
     MultiDex.install(this);
+    //region test antiguos
+   /* SharedPreferences prefs =
+        getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
+
+    String apikey = prefs.getString("apikey", "fakekey");
+    String apisecret = prefs.getString("apisecret", "fakesecret");
+
 
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
-        .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
+        .setOrchextraCredentials(apikey, apisecret)
         .setContentLanguage("EN")
         .setVuforiaImpl(new ImageRecognitionVuforiaImpl()) //VUFORIA
-        .setOxSenderId("117687721829")
+        .setOxSenderId("")
         .setOnDoRequiredLoginCallback(onDoRequiredLoginCallback)
         .setOnEventCallback(onEventCallback);
 
@@ -72,7 +85,36 @@ public class App extends MultiDexApplication {
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
-    Ocm.setBusinessUnit("es");
+    Ocm.setBusinessUnit("it");
+    Ocm.start();//asv con claves desde el ppio y este start el background sigue funcionando, esto es si changecredentials
+    */
+    //endregion
+
+    System.out.println(
+        "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\nON create Application\n\n\n\n\n\n\n\n++++++++++++++++++++++++++++++++\n\n+\n\n");
+
+    //new mode
+    //test previo Ocm.initialize(this);
+    // Ocm.start();
+
+    OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
+        .setContentLanguage("EN")
+        .setVuforiaImpl(new ImageRecognitionVuforiaImpl()) //VUFORIA
+        .setOxSenderId("")
+        .setOnDoRequiredLoginCallback(onDoRequiredLoginCallback)
+        .setOnEventCallback(onEventCallback);
+
+    Ocm.initializeWithChangeCredentials(ocmBuilder);
+
+    OcmStyleUiBuilder ocmStyleUiBuilder = new OcmStyleUiBuilder().setTitleToolbarEnabled(true)
+        .setThumbnailEnabled(true)
+        .setEnabledStatusBar(true);
+
+    Ocm.setStyleUi(ocmStyleUiBuilder);
+
+    Ocm.setBusinessUnit("it");
+    //Ocm.start();
+
   }
 
   private void enableStrictMode() {
