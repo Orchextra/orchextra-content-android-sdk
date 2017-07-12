@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.core.data.api.mappers.elements;
 
+import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
-import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +19,10 @@ public class ApiElementMapper implements ExternalClassToModelMapper<ApiElement, 
 
   @Override public Element externalClassToModel(ApiElement data) {
     Element model = new Element();
+
+    if (data.getSlug() == null || data.getSectionView() == null || data.getElementUrl() == null) {
+      return null;
+    }
 
     model.setSlug(data.getSlug());
     model.setElementUrl(data.getElementUrl());
@@ -39,7 +43,6 @@ public class ApiElementMapper implements ExternalClassToModelMapper<ApiElement, 
       }
     }
     model.setTags(tagList);
-
 
     return model;
   }

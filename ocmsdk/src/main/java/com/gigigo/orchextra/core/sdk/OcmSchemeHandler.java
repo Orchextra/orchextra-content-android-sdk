@@ -58,32 +58,28 @@ public class OcmSchemeHandler {
     ElementCacheType type = cachedElement.getType();
     ElementCacheRender render = cachedElement.getRender();
 
-    switch (type) {
-      case VUFORIA:
-        if (render != null) {
+    if (render != null) {
+      switch (type) {
+        case VUFORIA:
           processImageRecognitionAction();
-        }
-        break;
-      case SCAN:
-        if (render != null) {
+          return;
+        case SCAN:
           processScanAction();
-        }
-        break;
-      case EXTERNAL_BROWSER:
-        if (render != null) {
+          return;
+        case EXTERNAL_BROWSER:
           processExternalBrowser(render.getUrl());
-        }
-        break;
-      case DEEP_LINK:
-        if (render != null) {
+          return;
+        case BROWSER:
+          processBrowser(render.getUrl());
+          return;
+        case DEEP_LINK:
           processDeepLink(render.getUri());
-        }
-        break;
-      default:
-        openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen,
-            imageViewToExpandInDetail);
-        break;
+          return;
+      }
     }
+
+    openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen,
+        imageViewToExpandInDetail);
   }
 
   private void processImageRecognitionAction() {
@@ -96,6 +92,10 @@ public class OcmSchemeHandler {
 
   private void processExternalBrowser(String url) {
     actionHandler.launchExternalBrowser(url);
+  }
+
+  private void processBrowser(String url) {
+    actionHandler.launchCustomTabs(url);
   }
 
   private void processDeepLink(String uri) {
