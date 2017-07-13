@@ -2,8 +2,6 @@ package com.gigigo.orchextra.ocm;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import android.widget.ImageView;
@@ -223,9 +221,9 @@ public final class OCManager {
 
     instance.ocmCredentialCallback = ocmCredentialCallback;
 
-    SharedPreferences prefs = OCManager.instance.mApplication.
-        getSharedPreferences("OCMpreferencez", Context.MODE_PRIVATE);
-    Boolean IsCredentialsChanged = prefs.getBoolean("ChangeCredentialsDONE", false);
+    //SharedPreferences prefs = OCManager.instance.mApplication.
+    //    getSharedPreferences("OCMpreferencez", Context.MODE_PRIVATE);
+    //Boolean IsCredentialsChanged = prefs.getBoolean("ChangeCredentialsDONE", false);
 
    // if(!IsCredentialsChanged) {
       //region antigua

@@ -130,7 +130,7 @@ dependencies {
 //  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true }
 //  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true }
 //  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true }
-compile ('com.github.Orchextra.orchextra-android-sdk:orchextrasdk:502Test:play10Release@aar')
+compile (project.libraries.orchextrasdkRelease)
     { transitive = true }
   //customs Views
   compile project.libraries.doubleViewPager
