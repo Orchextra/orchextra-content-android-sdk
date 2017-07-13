@@ -64,13 +64,6 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void startCredentials() {
-    //SharedPreferences prefs =
-    //    getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
-    //
-    //prefs.edit().putString("apikey",App.API_KEY);
-    //prefs.edit().putString("apisecret", App.API_SECRET);
-    //prefs.edit().commit();
-
     Ocm.startWithCredentials(App.API_KEY, App.API_SECRET, new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
 
@@ -79,23 +72,7 @@ public class MainActivity extends AppCompatActivity {
           @Override public void run() {
             if (uiMenu == null || uiMenu.size() == 0) {
               getContent();
-              //Ocm.start();//sin esto da un 403
-              //Orchextra.reStart(MainActivity.this);
 
-              //Orchextra.start();
-            /*  new Handler().postDelayed(new Runnable() {
-                @Override public void run() {
-                  Orchextra.start();
-                 // Orchextra.changeCredentials(App.API_KEY, App.API_SECRET);
-                }
-              }, 1000);
-              new Handler().postDelayed(new Runnable() {
-                @Override public void run() {
-                  OrchextraManager.saveApiKeyAndSecret(App.API_KEY,
-                      App.API_SECRET);
-                //  Orchextra.changeCredentials(App.API_KEY, App.API_SECRET);
-                }
-              }, 2000);*/
             }
           }
         });
