@@ -8,6 +8,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
+import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 
 public class OcmSchemeHandler {
 
@@ -77,6 +78,11 @@ public class OcmSchemeHandler {
           processScanAction();
         }
         break;
+      case BROWSER:
+        if (render != null) {
+          processCustomTabs(render.getUrl());
+        }
+        break;
       case EXTERNAL_BROWSER:
         if (render != null) {
           processExternalBrowser(render.getUrl());
@@ -92,6 +98,10 @@ public class OcmSchemeHandler {
             imageViewToExpandInDetail);
         break;
     }
+  }
+
+  private void processCustomTabs(String url) {
+    DeviceUtils.openChromeTabs(contextProvider.getCurrentActivity(), url);
   }
 
   private void processImageRecognitionAction() {
