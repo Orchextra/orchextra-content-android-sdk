@@ -13,13 +13,13 @@ project.ext {
                daggerCompiler             : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
                dagger                     : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
 
-               gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:4.3',
-               ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:4.3',
-               ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:4.3',
+               gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:4.4',
+               ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:4.4',
+               ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:4.4',
 
-               orchextrasdkStaging        : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:503Test:play10Staging@aar',
-               orchextrasdkDebug          : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:503Test:play10Debug@aar',
-               orchextrasdkRelease        : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:503Test:play10Release@aar',
+               orchextrasdkStaging        : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:504Test:play10Staging@aar',
+               orchextrasdkDebug          : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:504Test:play10Debug@aar',
+               orchextrasdkRelease        : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:504Test:play10Release@aar',
 
                playServicesBase           : "com.google.android.gms:play-services-base:10.0.1",
                playServicesLocation       : "com.google.android.gms:play-services-location:10.0.1",
