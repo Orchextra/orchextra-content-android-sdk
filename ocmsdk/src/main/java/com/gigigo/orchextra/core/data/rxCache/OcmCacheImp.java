@@ -108,7 +108,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void putDetail(ApiElementData apiElementData) {
-    if (apiElementData != null) {
+    if (apiElementData != null && apiElementData.getKey() != null) {
       kache.evict(apiElementData.getKey());
       kache.put(apiElementData);
     }
