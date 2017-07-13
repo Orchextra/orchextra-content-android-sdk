@@ -248,6 +248,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
       if (checkElementNeedAuthUser(element)) {
         getView().showAuthDialog();
+        return;
       }
 
       ocmController.getDetails(false, element.getElementUrl(),
