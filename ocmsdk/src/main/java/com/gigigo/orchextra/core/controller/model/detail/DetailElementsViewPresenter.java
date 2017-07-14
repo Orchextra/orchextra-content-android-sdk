@@ -66,29 +66,31 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
     detailViewInfo.setShareable(cachedElement.getShare() != null);
     detailViewInfo.setNameArticle(cachedElement.getName());
 
-    if (cachedElement.getType() == ElementCacheType.CARDS) {
-      UiBaseContentData contentData = generateCardView(cachedElement);
-      getView().renderDetailView(contentData, detailViewInfo);
-    } else {
-      UiBaseContentData previewContentData =
-          generatePreview(cachedElement.getPreview(), cachedElement.getShare());
-
-      UiBaseContentData detailContentData =
-          generateDetailView(cachedElement.getType(), cachedElement.getRender());
-
-      if (previewContentData != null && detailContentData != null && getView() != null) {
-        getView().renderDetailViewWithPreview(previewContentData, detailContentData,
-            detailViewInfo);
-
-        getView().showEmptyView(false);
-      } else if (previewContentData != null) {
-        getView().renderPreview(previewContentData, detailViewInfo);
-        getView().showEmptyView(false);
-      } else if (detailContentData != null) {
-        getView().renderDetailView(detailContentData, detailViewInfo);
-        getView().showEmptyView(false);
+    if (getView() != null) {
+      if (cachedElement.getType() == ElementCacheType.CARDS) {
+        UiBaseContentData contentData = generateCardView(cachedElement);
+        getView().renderDetailView(contentData, detailViewInfo);
       } else {
-        getView().showEmptyView(true);
+        UiBaseContentData previewContentData =
+            generatePreview(cachedElement.getPreview(), cachedElement.getShare());
+
+        UiBaseContentData detailContentData =
+            generateDetailView(cachedElement.getType(), cachedElement.getRender());
+
+        if (previewContentData != null && detailContentData != null && getView() != null) {
+          getView().renderDetailViewWithPreview(previewContentData, detailContentData,
+              detailViewInfo);
+
+          getView().showEmptyView(false);
+        } else if (previewContentData != null) {
+          getView().renderPreview(previewContentData, detailViewInfo);
+          getView().showEmptyView(false);
+        } else if (detailContentData != null) {
+          getView().renderDetailView(detailContentData, detailViewInfo);
+          getView().showEmptyView(false);
+        } else {
+          getView().showEmptyView(true);
+        }
       }
     }
   }
