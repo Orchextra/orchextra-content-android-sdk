@@ -53,13 +53,14 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   public static void open(Activity activity, String elementUrl, String urlImageToExpand, int width,
       int height, final View view) {
-    final Intent intent = new Intent(activity, DetailActivity.class);
-    intent.putExtra(DetailActivity.EXTRA_ELEMENT_URL, elementUrl);
-    intent.putExtra(DetailActivity.EXTRA_IMAGE_TO_EXPAND_URL, urlImageToExpand);
-    intent.putExtra(DetailActivity.EXTRA_WIDTH_IMAGE_TO_EXPAND_URL, width);
-    intent.putExtra(DetailActivity.EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL, height);
 
     if (activity != null) {
+      Intent intent = new Intent(activity, DetailActivity.class);
+      intent.putExtra(DetailActivity.EXTRA_ELEMENT_URL, elementUrl);
+      intent.putExtra(DetailActivity.EXTRA_IMAGE_TO_EXPAND_URL, urlImageToExpand);
+      intent.putExtra(DetailActivity.EXTRA_WIDTH_IMAGE_TO_EXPAND_URL, width);
+      intent.putExtra(DetailActivity.EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL, height);
+
       if (view != null && urlImageToExpand != null) {
         ActivityOptionsCompat optionsCompat =
             ActivityOptionsCompat.makeSceneTransitionAnimation(activity, view, "thumbnail");
