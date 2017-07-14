@@ -39,7 +39,7 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    if (uiBaseContentData != null) {
+    if (uiBaseContentData != null && isAdded()) {
       if (!checkIfOxActionAndExecute(uiBaseContentData)) {
         ((AppCompatActivity) getContext()).getSupportFragmentManager()
             .beginTransaction()
