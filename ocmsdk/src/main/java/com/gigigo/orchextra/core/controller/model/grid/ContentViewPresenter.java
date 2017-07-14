@@ -128,24 +128,26 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   }
 
   private void renderContentItem(ContentItem contentItem) {
-    if (contentItem != null
-        && contentItem.getLayout() != null
-        && contentItem.getElements() != null) {
+    if (getView() != null) {
+      if (contentItem != null
+          && contentItem.getLayout() != null
+          && contentItem.getElements() != null) {
 
-      listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
+        listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
 
-      if (listedCellContentDataList.size() != 0) {
-        getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
-        getView().showEmptyView(false);
-        getView().showErrorView(false);
+        if (listedCellContentDataList.size() != 0) {
+          getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
+          getView().showEmptyView(false);
+          getView().showErrorView(false);
+        } else {
+          getView().showEmptyView(true);
+        }
       } else {
         getView().showEmptyView(true);
       }
-    } else {
-      getView().showEmptyView(true);
-    }
 
-    getView().showProgressView(false);
+      getView().showProgressView(false);
+    }
   }
 
   private void renderError() {
