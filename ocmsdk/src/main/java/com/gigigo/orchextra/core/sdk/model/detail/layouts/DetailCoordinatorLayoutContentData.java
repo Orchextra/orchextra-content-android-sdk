@@ -92,7 +92,7 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    if (previewContentData != null && detailContentData != null) {
+    if (previewContentData != null && detailContentData != null && isAdded()) {
       ((AppCompatActivity) getContext()).getSupportFragmentManager()
           .beginTransaction()
           .replace(R.id.previewDetailContentLayout, previewContentData)
