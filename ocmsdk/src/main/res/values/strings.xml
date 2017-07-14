@@ -1,5 +1,7 @@
 <resources>
 
+  <string name="app_name">Orchextra Content Android Sdk</string>
+
   <string name="oc_retry_content_button_text">RETRY</string>
 
   <string name="oc_retry_content_text1">Ups!</string>

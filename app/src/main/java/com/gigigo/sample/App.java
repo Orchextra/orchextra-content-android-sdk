@@ -10,7 +10,6 @@ import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
-import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
 //MultiDexApplication
 public class App extends MultiDexApplication {
 
@@ -24,8 +23,8 @@ public class App extends MultiDexApplication {
   //public static String API_SECRET = "677cf75a17aeec144ee402c281ad3a732d736a8a";
 
   //WOAH MARKETS
-  public static String API_KEY = "ef08c4dccb7649b9956296a863db002a68240be2";    //Woah project
-  public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
+  //public static String API_KEY = "ef08c4dccb7649b9956296a863db002a68240be2";    //Woah project
+  //public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
 
   //[UAT][CSE] - WOAH SITC -- Q
   public static String API_KEY = "b65910721cdc73000b9c528e660ff050b553c2db";
@@ -64,8 +63,8 @@ public class App extends MultiDexApplication {
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
         .setContentLanguage("EN")
-        .setVuforiaImpl(new ImageRecognitionVuforiaImpl()) //VUFORIA
-        .setOxSenderId("117687721829")
+      //  .setVuforiaImpl(new ImageRecognitionVuforiaImpl()) //VUFORIA
+        //.setOxSenderId("117687721829")
         .setOnEventCallback(onEventCallback);
 
     Ocm.initialize(ocmBuilder);

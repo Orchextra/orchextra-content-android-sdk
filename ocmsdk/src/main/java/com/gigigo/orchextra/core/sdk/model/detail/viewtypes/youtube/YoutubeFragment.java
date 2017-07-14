@@ -65,7 +65,12 @@ public class YoutubeFragment extends UiBaseContentData {
         public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
             boolean wasRestored) {
           mPlayer = player;
-
+          Log.e("+++", "+++++++++++++++++\n\n\n\n\n\n\n onInitializationSuccess +++++++++++++++"
+              + "++++++++++++++"
+              + "provider"
+              + provider.toString()
+              + " wasRestored"
+              + wasRestored);
           if (!wasRestored) {
             setYouTubePlayer(mPlayer);
           }
@@ -73,17 +78,20 @@ public class YoutubeFragment extends UiBaseContentData {
 
         @Override public void onInitializationFailure(YouTubePlayer.Provider provider,
             YouTubeInitializationResult error) {
-          Log.d("errorMessage:", error.toString());
+          //asv quizas solucione  mPlayer = null;
+          Log.e("+++:","onInitializationFailure" + error.toString());
         }
       };
 
   public static YoutubeFragment newInstance(String youtubeId, int orientation) {
     YoutubeFragment youtubeElements = new YoutubeFragment();
 
+    Log.e("+++", "YoutubeFragment newInstance" + youtubeId + "orientation" + orientation);
+
     Bundle bundle = new Bundle();
-    if (youtubeId.equals("eq8ggWSHIgo")) {
-      youtubeId = "17uHCHfgs60";//madmax trailer--> "ikO91fQBsTQ";
-    }
+    //if (youtubeId.equals("eq8ggWSHIgo")) {
+    //  youtubeId = "17uHCHfgs60";//madmax trailer--> "ikO91fQBsTQ";
+    //}
     bundle.putString(EXTRA_YOUTUBE_ID, youtubeId);
     bundle.putInt(EXTRA_YOUTUBE_ORIENTARION, orientation);
     youtubeElements.setArguments(bundle);
@@ -132,8 +140,10 @@ public class YoutubeFragment extends UiBaseContentData {
 
         youtubeId = getArguments().getString(EXTRA_YOUTUBE_ID);
         orientation = getArguments().getInt(EXTRA_YOUTUBE_ORIENTARION);
-        if (!TextUtils.isEmpty(youtubeId)) {
+        Log.e("+++", "onResourceReady " + youtubeId + "orientation" + orientation);
 
+        if (!TextUtils.isEmpty(youtubeId)) {
+          Log.e("+++", "TextUtils.isEmpty(youtubeId) " + youtubeId + "orientation" + orientation);
           if (isBlack || orientation == Configuration.ORIENTATION_LANDSCAPE) {
             //Toast.makeText(YoutubeFragment.this.getActivity(), "ES VERTICAL", Toast.LENGTH_LONG).show();
             setYoutubeFragmentToView(LinearLayout.LayoutParams.MATCH_PARENT);
@@ -174,7 +184,7 @@ public class YoutubeFragment extends UiBaseContentData {
     orientation = getArguments().getInt(EXTRA_YOUTUBE_ORIENTARION);
 
     String strImgForBlur = "http://img.youtube.com/vi/" + youtubeId + "/hqdefault.jpg";
-
+    Log.e("+++", "initViews " + youtubeId + "orientation" + orientation);
     Glide.with(this)
         .load(strImgForBlur)
         .asBitmap()
@@ -189,8 +199,10 @@ public class YoutubeFragment extends UiBaseContentData {
       //Restore the fragment's state here
       playedVideo = savedInstanceState.getInt(EXTRA_PLAYED_VIDEO);
       isPlaying = savedInstanceState.getBoolean(EXTRA_IS_PLAYING);
+      Log.e("+++",
+          "onActivityCreated savedInstanceState !=null" + youtubeId + "orientation" + orientation);
     }
-
+    Log.e("+++", "onActivityCreated playedVideo" + playedVideo + "isplayed" + isPlaying);
     initYoutubeFragment();
   }
 
@@ -214,17 +226,55 @@ public class YoutubeFragment extends UiBaseContentData {
 
   private void initYoutubeFragment() {
     youTubePlayerFragment.initialize(BuildConfig.YOUTUBE_DEVELOPER_KEY, onInitializedListener);
+    Log.e("+++",
+        "+++++++++++++++++++++++++++++\n\n\n\n\n\n\n initYoutubeFragment +++++++++++++++++++++++++++++");
   }
 
   public void setYouTubePlayer(final YouTubePlayer player) {
-    player.setOnFullscreenListener(onFullScreenListener);
-    player.setFullscreen(false);
-    player.setShowFullscreenButton(true);
-    player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-    if (playedVideo == 0 || isPlaying) {
-      player.loadVideo(youtubeId, playedVideo);
+
+    try{
+    if (player != null) {
+      Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer player != null \n\n\n\n\n\n\n\n" + player);
+      Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer \n\n\n\n\n\n\n\n" );
     } else {
-      player.cueVideo(youtubeId, playedVideo);
+      Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer PLAYER NULL \n\n\n\n\n\n\n\n");
+    }
+    player.setOnFullscreenListener(onFullScreenListener);
+      Log.e("+++", "**** 1");
+    player.setFullscreen(false);
+      Log.e("+++", "**** 2");
+    player.setShowFullscreenButton(true);
+      Log.e("+++", "**** 3");
+    player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+      Log.e("+++", "**** 4");
+    if (playedVideo == 0 || isPlaying) {
+      try {
+        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to load \n\n\n\n\n\n\n\n");
+        player.loadVideo(youtubeId, playedVideo);
+      } catch (Throwable tr) {
+        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN loadVideon \n\n\n\n\n\n\n\n"
+            + tr.toString());
+      }
+    } else {
+      try {
+        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to cueVideo sin playedvideo\n\n\n\n\n\n\n\n" + youtubeId +"played"+playedVideo);
+        player.cueVideo(youtubeId);
+        //Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to cueVideo  con played \n\n\n\n\n\n\n\n" + youtubeId +"played"+playedVideo);
+        //player.cueVideo(youtubeId, playedVideo);
+      } catch (IllegalArgumentException e)
+      {
+        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN IllegalArgumentException cueVideon \n\n\n\n\n\n\n\n"
+            + e.toString());
+
+      }
+      catch (Throwable tr) {
+        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN cueVideon \n\n\n\n\n\n\n\n"
+            + tr.toString());
+      }
+    }}
+    catch (Throwable tr) {
+      Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN setYouTubePlayer antes de load y todo \n\n\n\n\n\n\n\n"
+          + tr.toString());
     }
   }
 
@@ -237,17 +287,22 @@ public class YoutubeFragment extends UiBaseContentData {
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
 
     if (mPlayer != null) {
       outState.putInt(EXTRA_PLAYED_VIDEO, mPlayer.getCurrentTimeMillis());
       outState.putBoolean(EXTRA_IS_PLAYING, mPlayer.isPlaying());
+      Log.e("+++", "onSaveInstanceState mPlayer != null");
     }
+
+    super.onSaveInstanceState(outState);
+    Log.e("+++", "onSaveInstanceState");
   }
 
   @Override public void onDestroy() {
+    Log.e("+++", "onDestroy");
     if (mPlayer != null) {
       mPlayer.release();
+      Log.e("+++", "onDestroy mPlayer ");
     }
     super.onDestroy();
   }
