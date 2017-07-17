@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.data.rxCache.imageCache;
 
 import android.content.Context;
+import com.gigigo.ggglogger.GGGLogImpl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,8 +26,8 @@ public class ImageQueueImp implements ImageQueue {
   }
 
   @Override public synchronized void add(ImageData imageData) {
-    queue.add(imageData);
-    Collections.sort(queue, mComparator);
+      queue.add(imageData);
+    //Collections.sort(queue, mComparator);
   }
 
   private final Comparator mComparator =
