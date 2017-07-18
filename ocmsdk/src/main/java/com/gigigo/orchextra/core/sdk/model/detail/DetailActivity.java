@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -152,8 +153,8 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
     if (!TextUtils.isEmpty(url)) {
       String generateImageUrl = ImageGenerator.generateImageUrl(url, width, height);
 
-
       supportPostponeEnterTransition();
+      new Handler().postDelayed(this::supportStartPostponedEnterTransition, 1000);
 
       OcmImageLoader.load(this, generateImageUrl)
           .override(width, height)
