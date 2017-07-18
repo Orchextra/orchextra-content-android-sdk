@@ -27,7 +27,7 @@ project.ext {
 
                imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 
-               multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.3',
+               multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.4',
 
                oxvuforiaimplementation    : 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6',
 
@@ -48,5 +48,5 @@ project.ext {
                    androidTestRules : 'com.android.support.test:rules:0.4.1',
                    espresso         : 'com.android.support.test.espresso:espresso-core:2.2.1',
                    mockWebServer    : 'com.squareup.okhttp:mockwebserver:2.6.0',
-                   assertj : 'org.assertj:assertj-core:1.7.1']
+                   assertj          : 'org.assertj:assertj-core:1.7.1']
 }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.model.detail.DetailPresenter;
 import com.gigigo.orchextra.core.controller.model.detail.DetailView;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
+import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeWebviewActivity;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
@@ -33,7 +35,7 @@ import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import orchextra.javax.inject.Inject;
 
-public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivityComponent>
+public class DetailActivity extends BaseInjectionActivity<DetailActivityComponent>
     implements DetailView {
 
   private static final String EXTRA_ELEMENT_URL = "EXTRA_ELEMENT_URL";
@@ -84,7 +86,7 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
     presenter.attachView(this);
   }
 
-  @TargetApi(Build.VERSION_CODES.KITKAT) @Override
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP) @Override
   public void onWindowFocusChanged(boolean hasFocus) {
     super.onWindowFocusChanged(hasFocus);
     if (hasFocus) {
@@ -103,6 +105,10 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
       }
 
       getWindow().getDecorView().setSystemUiVisibility(flags);
+
+      if (AndroidSdkVersion.hasLollipop21()) {
+        getWindow().setStatusBarColor(getResources().getColor(R.color.oc_status_bar_color));
+      }
     }
   }
 
