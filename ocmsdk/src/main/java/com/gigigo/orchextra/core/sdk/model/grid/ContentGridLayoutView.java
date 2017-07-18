@@ -255,6 +255,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (progressView != null) {
       progressView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
+    if (uiListedBaseContentData != null) {
+      uiListedBaseContentData.showProgressView(isVisible);
+    }
   }
 
   @Override public void setFilter(String filter) {
