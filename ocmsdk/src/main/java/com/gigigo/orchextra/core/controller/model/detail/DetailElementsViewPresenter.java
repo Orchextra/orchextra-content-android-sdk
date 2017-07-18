@@ -40,14 +40,16 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
     ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
-        if (elementCache != null) {
-          renderView(elementCache);
-          OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, elementCache);
-        } else {
-          getView().finishView();
-        }
+        if (getView() != null) {
+          if (elementCache != null) {
+            renderView(elementCache);
+            OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, elementCache);
+          } else {
+            getView().finishView();
+          }
 
-        getView().showProgressView(false);
+          getView().showProgressView(false);
+        }
       }
 
       @Override public void onGetDetailFails(Exception e) {
