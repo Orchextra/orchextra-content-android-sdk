@@ -22,6 +22,7 @@ import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
+import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalViewPager;
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
@@ -41,6 +42,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   @Inject ContentViewPresenter presenter;
   @Inject Authoritation authoritation;
 
+  private boolean onClickItem = false;
+
   UiListedBaseContentData.ListedContentListener listedContentListener =
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
@@ -50,7 +53,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
         }
 
         @Override public void onItemClicked(int position, View view) {
-          if (presenter != null) {
+          if (presenter != null && !onClickItem) {
             presenter.onItemClicked(position, (AppCompatActivity) getActivity(), view);
           }
         }
@@ -237,6 +240,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     OCManager.generateDetailView(elementUrl, urlImageToExpand,
         DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
         DeviceUtils.calculateHeightDeviceInImmersiveMode(context), imageViewToExpandInDetail);
+
+    blockGrid(false);
   }
 
   private void clearImageToExpandWhenAnimationEnds(final ImageView imageViewToExpandInDetail) {
@@ -328,5 +333,14 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
   @Override public void contentNotAvailable() {
     Snackbar.make(listedDataContainer, R.string.oc_error_content_not_available_without_internet, Snackbar.LENGTH_SHORT).show();
+  }
+
+  @Override public void blockGrid(boolean blocked) {
+    onClickItem = blocked;
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+    blockGrid(false);
   }
 }

@@ -13,10 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -97,18 +94,20 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            | View.SYSTEM_UI_FLAG_FULLSCREEN;
+            | View.SYSTEM_UI_FLAG_FULLSCREEN
 
         if (AndroidSdkVersion.hasKitKat19()) {
           flags = flags | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
+      } else {
+        if (AndroidSdkVersion.hasLollipop21()) {
+          getWindow().setStatusBarColor(getResources().getColor(R.color.oc_status_bar_color));
         }
       }
 
       getWindow().getDecorView().setSystemUiVisibility(flags);
 
-      if (AndroidSdkVersion.hasLollipop21()) {
-        getWindow().setStatusBarColor(getResources().getColor(R.color.oc_status_bar_color));
-      }
+
     }
   }
 
@@ -159,28 +158,28 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     if (!TextUtils.isEmpty(url)) {
       String generateImageUrl = ImageGenerator.generateImageUrl(url, width, height);
 
-      supportPostponeEnterTransition();
-      new Handler().postDelayed(this::supportStartPostponedEnterTransition, 1000);
+      //supportPostponeEnterTransition();
+      //new Handler().postDelayed(this::supportStartPostponedEnterTransition, 1000);
 
       OcmImageLoader.load(this, generateImageUrl)
           .override(width, height)
           .centerCrop()
           .dontAnimate()
-          .priority(Priority.NORMAL)
+          .priority(Priority.HIGH)
           .listener(new RequestListener<Object, GlideDrawable>() {
-                      @Override
-                      public boolean onException(Exception e, Object model, Target<GlideDrawable> target,
-                          boolean isFirstResource) {
-                        supportStartPostponedEnterTransition();
-                        return false;
-                      }
+            @Override
+            public boolean onException(Exception e, Object model, Target<GlideDrawable> target,
+                boolean isFirstResource) {
+              //supportStartPostponedEnterTransition();
+              return false;
+            }
 
-                      @Override public boolean onResourceReady(GlideDrawable resource, Object model,
-                          Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        supportStartPostponedEnterTransition();
-                        return false;
-                      }
-                    })
+            @Override public boolean onResourceReady(GlideDrawable resource, Object model,
+                Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+              //supportStartPostponedEnterTransition();
+              return false;
+            }
+          })
           .into(animationImageView);
     }
   }
