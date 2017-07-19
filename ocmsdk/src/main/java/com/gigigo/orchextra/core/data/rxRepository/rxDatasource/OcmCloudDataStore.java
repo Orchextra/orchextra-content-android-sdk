@@ -2,30 +2,22 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
+import com.gigigo.ggglogger.GGGLogImpl;
+import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
-import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
-import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
-import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageData;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
-import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.receiver.WifiReceiver;
 import io.reactivex.Observable;
-
-import io.reactivex.functions.Consumer;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Handler;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -88,6 +80,7 @@ import orchextra.javax.inject.Singleton;
     if (apiElementSectionView != null) {
       if (apiElementSectionView.getImageUrl() != null) {
         ocmImageCache.add(new ImageData(apiElementSectionView.getImageUrl(), 9));
+        GGGLogImpl.log("ocmImageCache.add 3 ");
       }
     }
   }
@@ -98,6 +91,7 @@ import orchextra.javax.inject.Singleton;
       //Preview
       if (apiElementData.getElement().getPreview() != null) {
         ocmImageCache.add(new ImageData(apiElementData.getElement().getPreview().getImageUrl(), 0));
+        GGGLogImpl.log("ocmImageCache.add 1 ");
       }
       //Render
       if (apiElementData.getElement().getRender() != null
@@ -108,6 +102,7 @@ import orchextra.javax.inject.Singleton;
           ApiArticleElement element = elementsIterator.next();
           if (element.getRender() != null && element.getRender().getImageUrl() != null) {
             ocmImageCache.add(new ImageData(element.getRender().getImageUrl(), 0));
+            GGGLogImpl.log("ocmImageCache.add 2 ");
           }
         }
       }
