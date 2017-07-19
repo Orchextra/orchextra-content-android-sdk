@@ -106,8 +106,6 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
       }
 
       getWindow().getDecorView().setSystemUiVisibility(flags);
-
-
     }
   }
 
