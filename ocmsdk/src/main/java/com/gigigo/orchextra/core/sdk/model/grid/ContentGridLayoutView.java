@@ -41,8 +41,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   @Inject ContentViewPresenter presenter;
   @Inject Authoritation authoritation;
 
-  private boolean onClickItem = false;
-
   UiListedBaseContentData.ListedContentListener listedContentListener =
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
@@ -52,7 +50,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
         }
 
         @Override public void onItemClicked(int position, View view) {
-          if (presenter != null && !onClickItem) {
+          if (presenter != null) {
             presenter.onItemClicked(position, (AppCompatActivity) getActivity(), view);
           }
         }
@@ -331,14 +329,5 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   @Override public void contentNotAvailable() {
     Snackbar.make(listedDataContainer, R.string.oc_error_content_not_available_without_internet,
         Snackbar.LENGTH_SHORT).show();
-  }
-
-  @Override public void blockGrid(boolean blocked) {
-    onClickItem = blocked;
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-    blockGrid(false);
   }
 }
