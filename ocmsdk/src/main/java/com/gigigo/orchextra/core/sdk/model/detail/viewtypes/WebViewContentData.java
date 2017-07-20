@@ -150,7 +150,7 @@ public class WebViewContentData extends UiBaseContentData {
   }
 
   private void setCidLocalStorage() {
-    if (!localStorageUpdated) {
+    if (!localStorageUpdated && webView != null) {
       Map<String, String> cidLocalStorage = OCManager.getLocalStorage();
       if (cidLocalStorage != null) {
         for (Map.Entry<String, String> element : cidLocalStorage.entrySet()) {
