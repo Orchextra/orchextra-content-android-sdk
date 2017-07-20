@@ -26,6 +26,4 @@ public interface ContentView {
   void showNewExistingContent();
 
   void contentNotAvailable();
-
-  void blockGrid(boolean blocked);
 }

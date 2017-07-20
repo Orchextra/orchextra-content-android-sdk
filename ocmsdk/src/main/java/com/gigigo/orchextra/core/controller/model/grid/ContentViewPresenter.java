@@ -253,8 +253,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         return;
       }
 
-      getView().blockGrid(true);
-
       ocmController.getDetails(false, element.getElementUrl(),
           new OcmController.GetDetailControllerCallback() {
             @Override public void onGetDetailLoaded(ElementCache elementCache) {
