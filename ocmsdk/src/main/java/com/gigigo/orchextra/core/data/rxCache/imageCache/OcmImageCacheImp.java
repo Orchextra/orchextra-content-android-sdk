@@ -3,7 +3,6 @@ package com.gigigo.orchextra.core.data.rxCache.imageCache;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
@@ -86,6 +85,7 @@ import orchextra.javax.inject.Singleton;
           downloadFirst();
         }
       }, mContext));
+      GGGLogImpl.log("FINISHED downloadFirst Ejecutando hilo ", LogLevel.INFO, TAG);
     } else {
       GGGLogImpl.log("FINISHED", LogLevel.INFO, TAG);
       running = false;
