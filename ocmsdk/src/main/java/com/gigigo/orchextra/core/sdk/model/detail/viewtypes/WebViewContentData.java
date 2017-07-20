@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 public class WebViewContentData extends UiBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
-
+  View mView;
   private WebView webView;
   private ProgressBar progress;
   private JsHandler jsInterface;
@@ -48,8 +48,6 @@ public class WebViewContentData extends UiBaseContentData {
 
     return webViewElements;
   }
-
-  View mView;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -170,7 +168,9 @@ public class WebViewContentData extends UiBaseContentData {
   }
 
   private void showProgressView(boolean visible) {
-    progress.setVisibility(visible ? View.VISIBLE : View.GONE);
+    if (progress != null) {
+      progress.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
   }
 
   private void loadUrl() {
