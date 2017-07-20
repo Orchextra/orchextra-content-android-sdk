@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -196,4 +195,41 @@ public class PreviewContentData extends UiBaseContentData {
       previewFuntionalityListener.disablePreviewScrolling();
     }
   }
+
+  @Override public void onDestroy() {
+
+
+
+    if (previewContentMainLayout != null) {
+      unbindDrawables(previewContentMainLayout);
+      System.gc();
+
+      Glide.get(this.getContext()).clearMemory();
+      previewImage = null;
+      previewBackgroundShadow = null;
+      goToArticleButton = null;
+      ((ViewGroup) previewContentMainLayout).removeAllViews();
+      Glide.get(this.getContext()).clearMemory();
+
+
+      previewContentMainLayout = null;
+    }
+
+    super.onDestroy();
+  }
+
+  private void unbindDrawables(View view) {
+    System.gc();
+    Runtime.getRuntime().gc();
+    if (view.getBackground() != null) {
+      view.getBackground().setCallback(null);
+    }
+    if (view instanceof ViewGroup) {
+      for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        unbindDrawables(((ViewGroup) view).getChildAt(i));
+      }
+      ((ViewGroup) view).removeAllViews();
+    }
+  }
+
 }
