@@ -3,13 +3,13 @@ package com.gigigo.sample;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-import android.widget.Toast;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
 //MultiDexApplication
 public class App extends MultiDexApplication {
 
@@ -23,12 +23,8 @@ public class App extends MultiDexApplication {
   //public static String API_SECRET = "677cf75a17aeec144ee402c281ad3a732d736a8a";
 
   //WOAH MARKETS
-  //public static String API_KEY = "ef08c4dccb7649b9956296a863db002a68240be2";    //Woah project
-  //public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
-
-  //[UAT][CSE] - WOAH SITC -- Q
-  public static String API_KEY = "b65910721cdc73000b9c528e660ff050b553c2db";
-  public static String API_SECRET = "e460fa2f55b6d18860de8300a4b96493c5909019";
+  public static String API_KEY = "ef08c4dccb7649b9956296a863db002a68240be2";    //Woah project
+  public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
 
   //REPSOL RELEASE
   //public static String API_KEY = "7bb9fa0f9b7a02846383fd6284d3c74b8155644c";
@@ -36,7 +32,7 @@ public class App extends MultiDexApplication {
 
   private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {
-      Toast.makeText(getApplicationContext(), "Item needs permissions", Toast.LENGTH_SHORT).show();
+
     }
   };
   private OnEventCallback onEventCallback = new OnEventCallback() {
@@ -63,21 +59,20 @@ public class App extends MultiDexApplication {
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
         .setContentLanguage("EN")
-      //  .setVuforiaImpl(new ImageRecognitionVuforiaImpl()) //VUFORIA
-        //.setOxSenderId("117687721829")
+        .setVuforiaImpl(new ImageRecognitionVuforiaImpl()) //VUFORIA
+        .setOxSenderId("117687721829")
+        .setOnDoRequiredLoginCallback(onDoRequiredLoginCallback)
         .setOnEventCallback(onEventCallback);
 
     Ocm.initialize(ocmBuilder);
 
     OcmStyleUiBuilder ocmStyleUiBuilder = new OcmStyleUiBuilder().setTitleToolbarEnabled(true)
-        .setThumbnailEnabled(true)
-        .setEnabledStatusBar(false);
+        .setThumbnailEnabled(false)
+        .setEnabledStatusBar(true);
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
     Ocm.setBusinessUnit("it");
-
-    Ocm.setOnDoRequiredLoginCallback(onDoRequiredLoginCallback);
   }
 
   private void enableStrictMode() {
