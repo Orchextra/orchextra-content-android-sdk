@@ -79,7 +79,7 @@ public class YoutubeFragment extends UiBaseContentData {
         @Override public void onInitializationFailure(YouTubePlayer.Provider provider,
             YouTubeInitializationResult error) {
           //asv quizas solucione  mPlayer = null;
-          Log.e("+++:","onInitializationFailure" + error.toString());
+          Log.e("+++:", "onInitializationFailure" + error.toString());
         }
       };
 
@@ -232,49 +232,55 @@ public class YoutubeFragment extends UiBaseContentData {
 
   public void setYouTubePlayer(final YouTubePlayer player) {
 
-    try{
-    if (player != null) {
-      Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer player != null \n\n\n\n\n\n\n\n" + player);
-      Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer \n\n\n\n\n\n\n\n" );
-    } else {
-      Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer PLAYER NULL \n\n\n\n\n\n\n\n");
-    }
-    player.setOnFullscreenListener(onFullScreenListener);
+    try {
+      if (player != null) {
+        Log.e("+++",
+            "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer player != null \n\n\n\n\n\n\n\n" + player);
+        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer \n\n\n\n\n\n\n\n");
+      } else {
+        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer PLAYER NULL \n\n\n\n\n\n\n\n");
+      }
+      player.setOnFullscreenListener(onFullScreenListener);
       Log.e("+++", "**** 1");
-    player.setFullscreen(false);
+      player.setFullscreen(false);
       Log.e("+++", "**** 2");
-    player.setShowFullscreenButton(true);
+      player.setShowFullscreenButton(true);
       Log.e("+++", "**** 3");
-    player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+      player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
       Log.e("+++", "**** 4");
-    if (playedVideo == 0 || isPlaying) {
-      try {
-        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to load \n\n\n\n\n\n\n\n");
-        player.loadVideo(youtubeId, playedVideo);
-      } catch (Throwable tr) {
-        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN loadVideon \n\n\n\n\n\n\n\n"
-            + tr.toString());
+      if (playedVideo >= 0) {
+        if (playedVideo == 0 || isPlaying) {
+          try {
+            Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to load \n\n\n\n\n\n\n\n");
+            player.loadVideo(youtubeId, playedVideo);
+          } catch (Throwable tr) {
+            Log.e("+++",
+                "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN loadVideon \n\n\n\n\n\n\n\n"
+                    + tr.toString());
+          }
+        } else {
+          try {
+            Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to cueVideo sin playedvideo\n\n\n\n\n\n\n\n"
+                + youtubeId
+                + "played"
+                + playedVideo);
+            player.cueVideo(youtubeId, playedVideo);
+            //Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to cueVideo  con played \n\n\n\n\n\n\n\n" + youtubeId +"played"+playedVideo);
+            //player.cueVideo(youtubeId, playedVideo);
+          } catch (IllegalArgumentException e) {
+            Log.e("+++",
+                "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN IllegalArgumentException cueVideon \n\n\n\n\n\n\n\n"
+                    + e.toString());
+          } catch (Throwable tr) {
+            Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN cueVideon \n\n\n\n\n\n\n\n"
+                + tr.toString());
+          }
+        }
       }
-    } else {
-      try {
-        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to cueVideo sin playedvideo\n\n\n\n\n\n\n\n" + youtubeId +"played"+playedVideo);
-        player.cueVideo(youtubeId);
-        //Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to cueVideo  con played \n\n\n\n\n\n\n\n" + youtubeId +"played"+playedVideo);
-        //player.cueVideo(youtubeId, playedVideo);
-      } catch (IllegalArgumentException e)
-      {
-        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN IllegalArgumentException cueVideon \n\n\n\n\n\n\n\n"
-            + e.toString());
-
-      }
-      catch (Throwable tr) {
-        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN cueVideon \n\n\n\n\n\n\n\n"
-            + tr.toString());
-      }
-    }}
-    catch (Throwable tr) {
-      Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN setYouTubePlayer antes de load y todo \n\n\n\n\n\n\n\n"
-          + tr.toString());
+    } catch (Throwable tr) {
+      Log.e("+++",
+          "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN setYouTubePlayer antes de load y todo \n\n\n\n\n\n\n\n"
+              + tr.toString());
     }
   }
 
