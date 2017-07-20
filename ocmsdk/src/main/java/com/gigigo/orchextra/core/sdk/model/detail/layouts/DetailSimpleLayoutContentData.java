@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
+import com.bumptech.glide.Glide;
+import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 
 public class DetailSimpleLayoutContentData extends DetailParentContentData {
 
@@ -17,8 +19,7 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
     return new DetailSimpleLayoutContentData();
   }
 
-  @Override
-  protected void initViews(View view) {
+  @Override protected void initViews(View view) {
     contentMainLayout = view.findViewById(R.id.contentMainLayout);
   }
 
@@ -52,7 +53,6 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
           detailToolbarView.switchBetweenButtonAndToolbar(true);
           setPaddingTop();
         }
-
       } else {
         closeView();
       }
@@ -67,5 +67,40 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
     int dimension =
         (int) getContext().getResources().getDimension(R.dimen.ocm_height_detail_toolbar);
     contentMainLayout.setPadding(0, dimension, 0, 0);
+  }
+
+  @Override public void onDestroy() {
+    //private UiBaseContentData uiBaseContentData;
+    //private View contentMainLayout;
+    System.out.println(
+        "----onDestroy------------------------------------------artivcle coordinator content data");
+    if (contentMainLayout != null) unbindDrawables(contentMainLayout);
+
+    ((ViewGroup) contentMainLayout).removeAllViews();
+    System.gc();
+
+    Glide.get(this.getContext()).clearMemory();
+
+    uiBaseContentData.onDestroy();
+    uiBaseContentData = null;
+    contentMainLayout = null;
+
+    Glide.get(this.getContext()).clearMemory();
+
+    super.onDestroy();
+  }
+
+  private void unbindDrawables(View view) {
+    System.gc();
+    Runtime.getRuntime().gc();
+    if (view.getBackground() != null) {
+      view.getBackground().setCallback(null);
+    }
+    if (view instanceof ViewGroup) {
+      for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        unbindDrawables(((ViewGroup) view).getChildAt(i));
+      }
+      ((ViewGroup) view).removeAllViews();
+    }
   }
 }

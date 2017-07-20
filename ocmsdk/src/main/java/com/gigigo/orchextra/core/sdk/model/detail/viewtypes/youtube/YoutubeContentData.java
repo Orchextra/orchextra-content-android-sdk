@@ -31,4 +31,5 @@ public class YoutubeContentData extends UiBaseContentData {
   public String getUrl() {
     return getArguments().getString(EXTRA_URL, null);
   }
+
 }

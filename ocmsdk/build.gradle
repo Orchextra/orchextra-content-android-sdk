@@ -127,9 +127,10 @@ dependencies {
   //Orchextra
 
   compile project.libraries.oxvuforiaimplementation
-  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true }
-  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true }
-  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true }
+//  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true }
+//  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true }
+  //  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true }
+  compile(project.libraries.orchextrasdkRelease) { transitive = true }
 
   //customs Views
   compile project.libraries.doubleViewPager

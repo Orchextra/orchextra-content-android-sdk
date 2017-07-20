@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.dto.DetailViewInfo;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsView;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
@@ -170,6 +171,7 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
     System.out.println("----------------------------------------------destroyview");
 
     if (context instanceof Activity) {
+
       if (presenter != null) {
         presenter.detachView();
       }
@@ -177,6 +179,8 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
       ((Activity) context).finish();
     }
     this.context = null;
+    Glide.get(this.getContext()).clearMemory();
     super.onDestroyView();
   }
+
 }

@@ -2,17 +2,18 @@ package com.gigigo.orchextra.core.sdk.model.detail;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -25,7 +26,6 @@ import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeWebviewActivity;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
-import com.gigigo.orchextra.core.sdk.utils.swipeback.SwipeBackBaseInjectionActivity;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
@@ -49,6 +49,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   private ImageView animationImageView;
   private UiDetailBaseContentData uiContentView;
   private boolean statusBarEnabled;
+  private FrameLayout parentContainer;
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   public static void open(Activity activity, String elementUrl, String urlImageToExpand, int width,
@@ -118,6 +119,8 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   }
 
   @Override public void initUi() {
+    parentContainer = (FrameLayout) findViewById(R.id.parentContainer);
+
     presenter.setOnFinishViewListener(onFinishViewListener);
 
     setAnimationImageView();
@@ -193,17 +196,41 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
   @Override protected void onDestroy() {
 
-    System.out.println("----------------------------------------------destroyActivityview");
 
+    System.out.println("----onDestroy------------------------------------------article activity");
+
+
+    unbindDrawables(parentContainer);
+    System.gc();
+    Glide.get((Context) presenter.getView()).clearMemory();
+    if (animationImageView != null) animationImageView = null;
+
+    if (uiContentView != null) {
+      uiContentView = null;
+    }
+    parentContainer.removeAllViews();
+    Glide.get((Context) presenter.getView()).clearMemory();
     if (presenter != null) {
       presenter.detachView();
     }
-    if (animationImageView != null) animationImageView = null;
 
-    if (uiContentView != null) uiContentView = null;
 
     this.finish();
 
     super.onDestroy();
+  }
+
+  private void unbindDrawables(View view) {
+    System.gc();
+    Runtime.getRuntime().gc();
+    if (view.getBackground() != null) {
+      view.getBackground().setCallback(null);
+    }
+    if (view instanceof ViewGroup) {
+      for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        unbindDrawables(((ViewGroup) view).getChildAt(i));
+      }
+      ((ViewGroup) view).removeAllViews();
+    }
   }
 }

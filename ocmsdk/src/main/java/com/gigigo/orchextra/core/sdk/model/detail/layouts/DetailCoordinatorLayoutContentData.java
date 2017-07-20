@@ -7,7 +7,9 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
@@ -159,5 +161,47 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
       appbarLayout.setExpanded(false, false);
     }
     isFirstTime = false;
+  }
+
+  @Override public void onDestroy() {
+
+    System.out.println(
+        "----onDestroy------------------------------------------artivcle coordinator content data");
+    if (collapsingToolbar != null) unbindDrawables(collapsingToolbar);
+    if (appbarLayout != null) unbindDrawables(appbarLayout);
+    if (coordinatorLayout != null) unbindDrawables(coordinatorLayout);
+    System.gc();
+
+    Glide.get(this.getContext()).clearMemory();
+    coordinatorLayout.removeAllViews();
+    appbarLayout.removeAllViews();
+    collapsingToolbar.removeAllViews();
+    previewContentData.onDestroy();
+    detailContentData.onDestroy();
+
+    Glide.get(this.getContext()).clearMemory();
+
+    coordinatorLayout = null;
+    appbarLayout = null;
+    collapsingToolbar = null;
+    previewContentData = null;
+    detailContentData = null;
+    Glide.get(this.getContext()).clearMemory();
+
+    super.onDestroy();
+  }
+
+  private void unbindDrawables(View view) {
+    System.gc();
+    Runtime.getRuntime().gc();
+    if (view.getBackground() != null) {
+      view.getBackground().setCallback(null);
+    }
+    if (view instanceof ViewGroup) {
+      for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        unbindDrawables(((ViewGroup) view).getChildAt(i));
+      }
+      ((ViewGroup) view).removeAllViews();
+    }
   }
 }

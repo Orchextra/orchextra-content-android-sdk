@@ -12,4 +12,9 @@ public interface ImageQueue {
 
   ImageData getImage();
 
-  boolean hasImages();}
+  boolean hasImages();
+
+  int size();
+
+  void reset();
+}
