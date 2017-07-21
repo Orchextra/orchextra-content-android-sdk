@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
@@ -49,7 +50,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
       mainLayout.getViewTreeObserver()
           .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override public boolean onPreDraw() {
-              byte[] imageByteArray = Base64.decode(sectionView.getImageThumb(), Base64.DEFAULT);
+              //byte[] imageByteArray = Base64.decode(sectionView.getImageThumb(), Base64.DEFAULT);
 
               String generatedImageUrl =
                   ImageGenerator.generateImageUrl(sectionView.getImageUrl(), mainLayout.getWidth(),
@@ -57,12 +58,12 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
 
               DrawableRequestBuilder<String> requestBuilder =
                   OcmImageLoader.load(context, generatedImageUrl)
-                      .priority(Priority.NORMAL)
+                      .priority(Priority.NORMAL).diskCacheStrategy(DiskCacheStrategy.ALL)
                       .dontAnimate();
 
-              if (thumbnailEnabled) {
-                requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageByteArray));
-              }
+              //if (thumbnailEnabled) {
+                //requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageByteArray));
+              //}
 
               requestBuilder.into(imageView);
 
