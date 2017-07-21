@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -20,6 +21,8 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.ocmsdk.R;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetailCoordinatorLayoutContentData extends DetailParentContentData {
 
@@ -167,8 +170,8 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
 
     System.out.println(
         "----onDestroy------------------------------------------artivcle coordinator content data");
-    if (collapsingToolbar != null) unbindDrawables(collapsingToolbar);
-    if (appbarLayout != null) unbindDrawables(appbarLayout);
+    //if (collapsingToolbar != null) unbindDrawables(collapsingToolbar);
+    //if (appbarLayout != null) unbindDrawables(appbarLayout);
     if (coordinatorLayout != null) unbindDrawables(coordinatorLayout);
     System.gc();
 
@@ -191,17 +194,41 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
     super.onDestroy();
   }
 
+  private int count;
   private void unbindDrawables(View view) {
-    System.gc();
-    Runtime.getRuntime().gc();
-    if (view.getBackground() != null) {
-      view.getBackground().setCallback(null);
-    }
-    if (view instanceof ViewGroup) {
-      for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-        unbindDrawables(((ViewGroup) view).getChildAt(i));
+
+    List<View> viewList = new ArrayList<>();
+
+    viewList.add(view);
+    for (int i = 0; i < viewList.size(); i++) {
+      View child = viewList.get(i);
+      if (child instanceof ViewGroup) {
+        ViewGroup viewGroup = (ViewGroup) child;
+        for (int j = 0; j < viewGroup.getChildCount(); j++) {
+          viewList.add(viewGroup.getChildAt(j));
+        }
       }
-      ((ViewGroup) view).removeAllViews();
     }
+
+    for (int i = viewList.size() - 1; i >= 0; i--) {
+      View child = viewList.get(i);
+      if (child.getBackground() != null) {
+        child.getBackground().setCallback(null);
+      }
+      if (child instanceof ViewGroup) {
+        ((ViewGroup) child).removeAllViews();
+      }
+    }
+
+    //if (view.getBackground() != null) {
+    //  view.getBackground().setCallback(null);
+    //}
+    //if (view instanceof ViewGroup) {
+    //  for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+    //    unbindDrawables(((ViewGroup) view).getChildAt(i));
+    //  }
+    //  ((ViewGroup) view).removeAllViews();
+    //}
+    //Log.i("TAG", "Count Coordinator: " + count++);
   }
 }
