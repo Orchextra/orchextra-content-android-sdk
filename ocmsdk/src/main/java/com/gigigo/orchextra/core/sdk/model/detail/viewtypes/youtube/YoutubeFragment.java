@@ -294,11 +294,13 @@ public class YoutubeFragment extends UiBaseContentData {
 
   @Override public void onSaveInstanceState(Bundle outState) {
 
-    if (mPlayer != null) {
-      outState.putInt(EXTRA_PLAYED_VIDEO, mPlayer.getCurrentTimeMillis());
-      outState.putBoolean(EXTRA_IS_PLAYING, mPlayer.isPlaying());
-      Log.e("+++", "onSaveInstanceState mPlayer != null");
-    }
+    try {
+      if (mPlayer != null) {
+        outState.putInt(EXTRA_PLAYED_VIDEO, mPlayer.getCurrentTimeMillis());
+        outState.putBoolean(EXTRA_IS_PLAYING, mPlayer.isPlaying());
+        Log.e("+++", "onSaveInstanceState mPlayer != null");
+      }
+    } catch (Exception ignored) {}
 
     super.onSaveInstanceState(outState);
     Log.e("+++", "onSaveInstanceState");
