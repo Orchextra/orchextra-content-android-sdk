@@ -31,6 +31,7 @@ import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
+import java.lang.ref.WeakReference;
 import java.util.List;
 import orchextra.javax.inject.Inject;
 

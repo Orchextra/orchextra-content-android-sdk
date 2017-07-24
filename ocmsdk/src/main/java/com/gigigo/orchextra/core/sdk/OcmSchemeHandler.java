@@ -9,6 +9,7 @@ import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
+import java.lang.ref.WeakReference;
 
 public class OcmSchemeHandler {
 
@@ -44,11 +45,14 @@ public class OcmSchemeHandler {
   public void processElementUrl(String elementUrl, String urlImageToExpand, int widthScreen,
       int heightScreen, ImageView imageViewToExpandInDetail) {
 
+    WeakReference<ImageView> imageViewWeakReference =
+        new WeakReference<>(imageViewToExpandInDetail);
+
     ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           executeAction(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
-              imageViewToExpandInDetail);
+              imageViewWeakReference);
         }
       }
 
@@ -63,7 +67,10 @@ public class OcmSchemeHandler {
   }
 
   private void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
-      int widthScreen, int heightScreen, ImageView imageViewToExpandInDetail) {
+      int widthScreen, int heightScreen, WeakReference<ImageView> imageViewToExpandInDetail) {
+
+    ImageView imageView = imageViewToExpandInDetail.get();
+
     ElementCacheType type = cachedElement.getType();
     ElementCacheRender render = cachedElement.getRender();
 
@@ -95,7 +102,7 @@ public class OcmSchemeHandler {
         break;
       default:
         openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen,
-            imageViewToExpandInDetail);
+            imageView);
         break;
     }
   }
