@@ -27,7 +27,7 @@ project.ext {
 
                imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 
-               multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.4',
+               multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.5',
 
                oxvuforiaimplementation    : 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6',
 
