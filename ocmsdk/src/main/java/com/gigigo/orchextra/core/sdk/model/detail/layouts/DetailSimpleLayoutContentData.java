@@ -90,9 +90,9 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
 
       Glide.get(this.getContext()).clearMemory();
 
-      super.onDestroy();
     } catch (Exception ignore) {
     }
+    super.onDestroy();
   }
 
   private void unbindDrawables(View view) {
