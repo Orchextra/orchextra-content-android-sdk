@@ -70,28 +70,29 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
   }
 
   @Override public void onDestroy() {
+
+    //private UiBaseContentData uiBaseContentData;
+    //private View contentMainLayout;
+    System.out.println(
+        "----onDestroy------------------------------------------artivcle coordinator content data");
+    if (contentMainLayout != null) unbindDrawables(contentMainLayout);
+
+    ((ViewGroup) contentMainLayout).removeAllViews();
+    System.gc();
+
+    Glide.get(this.getContext()).clearMemory();
+
     try {
-      //private UiBaseContentData uiBaseContentData;
-      //private View contentMainLayout;
-      System.out.println(
-          "----onDestroy------------------------------------------artivcle coordinator content data");
-      if (contentMainLayout != null) unbindDrawables(contentMainLayout);
-
-      ((ViewGroup) contentMainLayout).removeAllViews();
-      System.gc();
-
-      Glide.get(this.getContext()).clearMemory();
-
       if (uiBaseContentData != null) {
         uiBaseContentData.onDestroy();
-        uiBaseContentData = null;
-        contentMainLayout = null;
       }
-
-      Glide.get(this.getContext()).clearMemory();
-
     } catch (Exception ignore) {
     }
+    uiBaseContentData = null;
+    contentMainLayout = null;
+
+    Glide.get(this.getContext()).clearMemory();
+
     super.onDestroy();
   }
 
