@@ -36,6 +36,8 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
     this.authoritation = authoritation;
     this.thumbnailEnabled = thumbnailEnabled;
 
+    new WeakReference<>(itemView);
+
     imageViewWeakReference =
         new WeakReference<>((ImageView) itemView.findViewById(R.id.cell_image_view));
     padlockViewWeakReference = new WeakReference<>(itemView.findViewById(R.id.padlock_layout));
