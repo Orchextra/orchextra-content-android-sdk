@@ -81,9 +81,11 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
 
     Glide.get(this.getContext()).clearMemory();
 
-    uiBaseContentData.onDestroy();
-    uiBaseContentData = null;
-    contentMainLayout = null;
+    if (uiBaseContentData != null) {
+      uiBaseContentData.onDestroy();
+      uiBaseContentData = null;
+      contentMainLayout = null;
+    }
 
     Glide.get(this.getContext()).clearMemory();
 
