@@ -31,7 +31,6 @@ import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
-import java.lang.ref.WeakReference;
 import java.util.List;
 import orchextra.javax.inject.Inject;
 
@@ -52,7 +51,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
         @Override public void onItemClicked(int position, View view) {
           if (presenter != null) {
-            presenter.onItemClicked(position, (AppCompatActivity) getActivity(), view);
+            presenter.onItemClicked(position, view);
           }
         }
       };
@@ -211,13 +210,13 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
   }
 
-  @Override public void navigateToDetailView(String elementUrl, String urlImageToExpand,
-      AppCompatActivity activity, View view) {
+  @Override
+  public void navigateToDetailView(String elementUrl, String urlImageToExpand, View view) {
 
     final ImageView imageViewToExpandInDetail =
         (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
 
-    if (urlImageToExpand != null) {
+    if (urlImageToExpand != null && imageViewToExpandInDetail != null) {
       String imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
           DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
           DeviceUtils.calculateHeightDeviceInImmersiveMode(context));

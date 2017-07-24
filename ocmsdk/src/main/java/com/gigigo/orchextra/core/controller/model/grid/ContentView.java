@@ -16,8 +16,7 @@ public interface ContentView {
 
   void showErrorView(boolean isVisible);
 
-  void navigateToDetailView(String elementUrl, String imageToExpand, AppCompatActivity activity,
-      View view);
+  void navigateToDetailView(String elementUrl, String imageToExpand, View view);
 
   void showAuthDialog();
 

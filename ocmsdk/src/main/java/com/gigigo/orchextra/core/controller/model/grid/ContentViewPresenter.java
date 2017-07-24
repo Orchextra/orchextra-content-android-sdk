@@ -18,6 +18,7 @@ import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -239,7 +240,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     return cellGridContentDataList;
   }
 
-  public void onItemClicked(int position, AppCompatActivity activity, View view) {
+  public void onItemClicked(int position, View view) {
     if (position < listedCellContentDataList.size()) {
 
       Element element = (Element) listedCellContentDataList.get(position).getData();
@@ -253,6 +254,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         return;
       }
 
+      WeakReference<View> viewWeakReference = new WeakReference<>(view);
+
       ocmController.getDetails(false, element.getElementUrl(),
           new OcmController.GetDetailControllerCallback() {
             @Override public void onGetDetailLoaded(ElementCache elementCache) {
@@ -264,7 +267,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
               if (getView() != null) {
                 OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
                 getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
-                    activity, view);
+                    viewWeakReference.get());
               }
             }
 
