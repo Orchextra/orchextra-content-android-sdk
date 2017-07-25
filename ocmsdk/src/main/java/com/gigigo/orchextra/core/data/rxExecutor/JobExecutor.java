@@ -47,11 +47,15 @@ import orchextra.javax.inject.Singleton;
     //}
 
     INITIAL_POOL_SIZE = 2;
+
     try {
-      MAX_POOL_SIZE = Runtime.getRuntime().availableProcessors() - 1 <= 0 ? 1
-          : Runtime.getRuntime().availableProcessors() - 1;
+      if (Runtime.getRuntime().availableProcessors() - 1 < 2) {
+        MAX_POOL_SIZE = 2;
+      } else {
+        MAX_POOL_SIZE = Runtime.getRuntime().availableProcessors() - 1;
+      }
     } catch (IllegalArgumentException exception) {
-      MAX_POOL_SIZE = 1;
+      MAX_POOL_SIZE = 2;
     }
   }
 
