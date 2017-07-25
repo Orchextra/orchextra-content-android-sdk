@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -212,31 +211,32 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
   @Override
   public void navigateToDetailView(String elementUrl, String urlImageToExpand, View view) {
+    if (view != null) {
+      final ImageView imageViewToExpandInDetail =
+          (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
 
-    final ImageView imageViewToExpandInDetail =
-        (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
+      if (urlImageToExpand != null && imageViewToExpandInDetail != null) {
+        String imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
+            DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
+            DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
 
-    if (urlImageToExpand != null && imageViewToExpandInDetail != null) {
-      String imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
+        OcmImageLoader.load(this, imageUrl).load(imageUrl).into(new SimpleTarget<GlideDrawable>() {
+          @Override public void onResourceReady(GlideDrawable resource,
+              GlideAnimation<? super GlideDrawable> glideAnimation) {
+            imageViewToExpandInDetail.setImageDrawable(resource);
+          }
+
+          @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
+            super.onLoadFailed(e, errorDrawable);
+            clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
+          }
+        });
+      }
+
+      OCManager.generateDetailView(elementUrl, urlImageToExpand,
           DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
-          DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
-
-      OcmImageLoader.load(this, imageUrl).load(imageUrl).into(new SimpleTarget<GlideDrawable>() {
-        @Override public void onResourceReady(GlideDrawable resource,
-            GlideAnimation<? super GlideDrawable> glideAnimation) {
-          imageViewToExpandInDetail.setImageDrawable(resource);
-        }
-
-        @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
-          super.onLoadFailed(e, errorDrawable);
-          clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
-        }
-      });
+          DeviceUtils.calculateHeightDeviceInImmersiveMode(context), imageViewToExpandInDetail);
     }
-
-    OCManager.generateDetailView(elementUrl, urlImageToExpand,
-        DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
-        DeviceUtils.calculateHeightDeviceInImmersiveMode(context), imageViewToExpandInDetail);
   }
 
   private void clearImageToExpandWhenAnimationEnds(final ImageView imageViewToExpandInDetail) {
