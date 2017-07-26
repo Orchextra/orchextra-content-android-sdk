@@ -80,7 +80,6 @@ import orchextra.javax.inject.Singleton;
     if (apiElementSectionView != null) {
       if (apiElementSectionView.getImageUrl() != null) {
         ocmImageCache.add(new ImageData(apiElementSectionView.getImageUrl(), 9));
-        GGGLogImpl.log("ocmImageCache.add 3 ");
       }
     }
   }
@@ -91,7 +90,6 @@ import orchextra.javax.inject.Singleton;
       //Preview
       if (apiElementData.getElement().getPreview() != null) {
         ocmImageCache.add(new ImageData(apiElementData.getElement().getPreview().getImageUrl(), 0));
-        GGGLogImpl.log("ocmImageCache.add 1 ");
       }
       //Render
       if (apiElementData.getElement().getRender() != null
@@ -102,7 +100,6 @@ import orchextra.javax.inject.Singleton;
           ApiArticleElement element = elementsIterator.next();
           if (element.getRender() != null && element.getRender().getImageUrl() != null) {
             ocmImageCache.add(new ImageData(element.getRender().getImageUrl(), 0));
-            GGGLogImpl.log("ocmImageCache.add 2 ");
           }
         }
       }

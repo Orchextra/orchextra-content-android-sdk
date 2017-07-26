@@ -25,7 +25,6 @@ public class ImageQueueImp implements ImageQueue {
 
   @Override public synchronized void add(ImageData imageData) {
     queue.add(imageData);
-    System.out.println("ocmImageCache size: " + queue.size());
     //Collections.sort(queue, mComparator);
   }
 
@@ -43,17 +42,6 @@ public class ImageQueueImp implements ImageQueue {
 
   @Override public boolean hasImages() {
     return queue != null && queue.size() > 0;
-  }
-
-  @Override public int size() {
-
-    if (queue != null) {
-      return queue.size();
-    } else
-
-    {
-      return 0;
-    }
   }
 
   @Override public void reset() {

@@ -69,41 +69,42 @@ public class OcmSchemeHandler {
   private void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
       int widthScreen, int heightScreen, WeakReference<ImageView> imageViewToExpandInDetail) {
 
-    ImageView imageView = imageViewToExpandInDetail.get();
+      ElementCacheType type = cachedElement.getType();
+      ElementCacheRender render = cachedElement.getRender();
 
-    ElementCacheType type = cachedElement.getType();
-    ElementCacheRender render = cachedElement.getRender();
-
-    switch (type) {
-      case VUFORIA:
-        if (render != null) {
-          processImageRecognitionAction();
-        }
-        break;
-      case SCAN:
-        if (render != null) {
-          processScanAction();
-        }
-        break;
-      case BROWSER:
-        if (render != null) {
-          processCustomTabs(render.getUrl());
-        }
-        break;
-      case EXTERNAL_BROWSER:
-        if (render != null) {
-          processExternalBrowser(render.getUrl());
-        }
-        break;
-      case DEEP_LINK:
-        if (render != null) {
-          processDeepLink(render.getUri());
-        }
-        break;
-      default:
-        openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen,
-            imageView);
-        break;
+      switch (type) {
+        case VUFORIA:
+          if (render != null) {
+            processImageRecognitionAction();
+          }
+          break;
+        case SCAN:
+          if (render != null) {
+            processScanAction();
+          }
+          break;
+        case BROWSER:
+          if (render != null) {
+            processCustomTabs(render.getUrl());
+          }
+          break;
+        case EXTERNAL_BROWSER:
+          if (render != null) {
+            processExternalBrowser(render.getUrl());
+          }
+          break;
+        case DEEP_LINK:
+          if (render != null) {
+            processDeepLink(render.getUri());
+          }
+          break;
+        default:
+          ImageView imageView = null;
+          if (imageViewToExpandInDetail != null) {
+            imageView = imageViewToExpandInDetail.get();
+          }
+          openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen, imageView);
+          break;
     }
   }
 

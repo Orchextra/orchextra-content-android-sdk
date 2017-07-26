@@ -14,7 +14,5 @@ public interface ImageQueue {
 
   boolean hasImages();
 
-  int size();
-
   void reset();
 }

@@ -199,9 +199,6 @@ public class PreviewContentData extends UiBaseContentData {
   }
 
   @Override public void onDestroy() {
-
-
-
     if (previewContentMainLayout != null) {
       unbindDrawables(previewContentMainLayout);
       System.gc();

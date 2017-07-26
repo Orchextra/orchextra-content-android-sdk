@@ -24,8 +24,6 @@ import orchextra.javax.inject.Singleton;
   private final ImageQueue imageQueue;
   private boolean running = false;
 
-  private long totalDownloadSize = 0;
-
   @Inject public OcmImageCacheImp(Context mContext, ThreadExecutor executor,
       ConnectionUtils connectionUtils) {
     this.mContext = mContext;
@@ -80,9 +78,6 @@ import orchextra.javax.inject.Singleton;
     } else {
       GGGLogImpl.log("FINISHED", LogLevel.INFO, TAG);
       running = false;
-
-      System.out.println("ocmImageCache FINISHED " + imageQueue.size());
-      
     }
   }
 
