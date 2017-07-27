@@ -33,11 +33,11 @@ android {
   buildTypes {
     staging {
       debuggable true
-      testCoverageEnabled = true
+//      testCoverageEnabled = true
     }
     debug {
       debuggable true
-      testCoverageEnabled = true
+//      testCoverageEnabled = true
     }
     release {
       debuggable false
@@ -83,9 +83,9 @@ android {
 
   // true to publish all flavour artifacts
   publishNonDefault true
-  //  defaultPublishConfig "ocmDebug"
- defaultPublishConfig "ocmRelease"
-  buildToolsVersion '25.0.0'
+//    defaultPublishConfig "ocmStaging"
+//  defaultPublishConfig "ocmDebug"
+   defaultPublishConfig "ocmRelease"
 }
 
 jacocoAndroidUnitTestReport {
@@ -125,12 +125,10 @@ dependencies {
   compile project.libraries.imageloaderGlideBlur
 
   //Orchextra
-
   compile project.libraries.oxvuforiaimplementation
-//  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true }
-//  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true }
-  //  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true }
-  compile(project.libraries.orchextrasdkRelease) { transitive = true }
+  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true }
+  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true }
+  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true }
 
   //customs Views
   compile project.libraries.doubleViewPager
@@ -144,7 +142,6 @@ dependencies {
   compile project.libraries.arrow
 
   compile project.libraries.kache
-
 
   //TEST
   testCompile project.testLibraries.junit
