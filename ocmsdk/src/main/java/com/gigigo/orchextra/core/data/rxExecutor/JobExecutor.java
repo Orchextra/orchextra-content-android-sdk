@@ -1,8 +1,13 @@
 package com.gigigo.orchextra.core.data.rxExecutor;
 
+import android.util.Log;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageDownloader;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.LowPriorityRunnable;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
+import java.util.Comparator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +31,19 @@ import orchextra.javax.inject.Singleton;
 
   @Inject public JobExecutor() {
     initCores();
-    this.workQueue = new LinkedBlockingQueue<>();
+    this.workQueue = new PriorityBlockingQueue<>(INITIAL_POOL_SIZE, new Comparator<Runnable>() {
+      @Override public int compare(Runnable o1, Runnable o2) {
+        Log.v("Priority-o1", o1.getClass().getName() + " | " + (o1 instanceof LowPriorityRunnable));
+        Log.v("Priority-o2", o2.getClass().getName() + " | " + (o2 instanceof LowPriorityRunnable));
+
+        int priority1 = 0;
+        int priority2 = 0;
+        if (o1 instanceof LowPriorityRunnable) priority1 = 1;
+        if (o2 instanceof LowPriorityRunnable) priority2 = 1;
+
+        return priority1 - priority2;
+      }
+    });
     this.threadFactory = new JobThreadFactory();
     this.threadPoolExecutor =
         new ThreadPoolExecutor(INITIAL_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME,

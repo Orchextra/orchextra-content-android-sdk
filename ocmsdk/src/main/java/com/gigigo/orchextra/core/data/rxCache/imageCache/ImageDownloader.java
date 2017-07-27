@@ -19,7 +19,7 @@ import java.net.URLConnection;
 
 //asv jajaja no me jodas, las inner class a no ser q sea static conservan una instancia del fader,
 // así = x esta chuminá se va de memoria
-public class ImageDownloader implements Runnable {
+public class ImageDownloader implements LowPriorityRunnable {
   private final ImageData imageData;
   private final Context mContext;
   private final OcmImageCacheImp.Callback callback;

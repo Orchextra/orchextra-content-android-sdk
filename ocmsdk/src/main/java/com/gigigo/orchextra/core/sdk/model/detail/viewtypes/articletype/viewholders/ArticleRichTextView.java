@@ -72,6 +72,7 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
         }
       }
     };
+
     strBuilder.setSpan(clickable, start, end, flags);
     strBuilder.removeSpan(span);
   }
