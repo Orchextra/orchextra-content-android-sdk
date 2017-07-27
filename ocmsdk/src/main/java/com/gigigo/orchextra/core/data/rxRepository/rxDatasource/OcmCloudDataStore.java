@@ -30,7 +30,6 @@ import orchextra.javax.inject.Singleton;
   private final OcmApiService ocmApiService;
   private final OcmCache ocmCache;
   private final OcmImageCache ocmImageCache;
-  private static final int MAX_ARTICLE_IMAGES = 10;
   private static final int MAX_ARTICLES = Integer.MAX_VALUE;
 
   @Inject public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,

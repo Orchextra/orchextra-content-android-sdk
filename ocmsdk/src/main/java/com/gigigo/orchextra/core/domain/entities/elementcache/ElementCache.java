@@ -11,6 +11,7 @@ public class ElementCache {
   private ElementCacheRender render;
   private ElementCacheShare share;
   private String name;
+  private long updateAt;
 
   public String getSlug() {
     return slug;
@@ -66,5 +67,13 @@ public class ElementCache {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public void setUpdateAt(long updateAt) {
+    this.updateAt = updateAt;
+  }
+
+  public long getUpdateAt() {
+    return updateAt;
   }
 }
