@@ -68,7 +68,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                 DrawableRequestBuilder<String> requestBuilder =
                     OcmImageLoader.load(context, generatedImageUrl)
                         .priority(Priority.NORMAL)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .dontAnimate();
 
                 //if (thumbnailEnabled) {

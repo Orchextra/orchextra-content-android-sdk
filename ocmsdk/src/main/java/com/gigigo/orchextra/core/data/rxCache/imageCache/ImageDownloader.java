@@ -6,6 +6,7 @@ import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +25,7 @@ public class ImageDownloader implements LowPriorityRunnable {
   private final Context mContext;
   private final OcmImageCacheImp.Callback callback;
 
-    ImageDownloader(ImageData imageData, OcmImageCacheImp.Callback callback, Context mContext) {
+  ImageDownloader(ImageData imageData, OcmImageCacheImp.Callback callback, Context mContext) {
     this.imageData = imageData;
     this.mContext = mContext;
     this.callback = callback;
@@ -38,23 +39,25 @@ public class ImageDownloader implements LowPriorityRunnable {
 
   private void downloadImage(final ImageData imageData) {
     if (imageData == null || imageData.getPath() == null) {
-      GGGLogImpl.log("ERROR | URL IMAGE IS NULL :S", LogLevel.ERROR );
+      GGGLogImpl.log("ERROR | URL IMAGE IS NULL :S", LogLevel.ERROR);
       callback.onSuccess(imageData);
       return;
     }
     String filename = OcmImageLoader.md5(imageData.getPath());
 
-    GGGLogImpl.log("GET -> " + imageData.getPath(), LogLevel.INFO );
+    GGGLogImpl.log("GET -> " + imageData.getPath(), LogLevel.INFO);
 
     // Create a path pointing to the system-recommended cache dir for the app, with sub-dir named
     // thumbnails
     File cacheDir = OcmImageLoader.getCacheDir(mContext);
     // Create a path in that dir for a file, named by the default hash of the url
-    File cacheFile = OcmImageLoader.getCacheFile(mContext, filename);
+    final File cacheFile = OcmImageLoader.getCacheFile(mContext, filename);
+    final File tempCacheFile = OcmImageLoader.getCacheFile(mContext, filename + ".temp");
     if (!cacheDir.exists()) cacheDir.mkdir();
     if (cacheFile.exists()) {
-      GGGLogImpl.log("SKIPPED -> " + imageData.getPath(), LogLevel.INFO );
-      callback.onSuccess(imageData);//asv se supone q si lo tiene bajao, riau ya no lo vuelve a bajar
+      GGGLogImpl.log("SKIPPED -> " + imageData.getPath(), LogLevel.INFO);
+      callback.onSuccess(
+          imageData);//asv se supone q si lo tiene bajao, riau ya no lo vuelve a bajar
       return;
     }
     int count;
@@ -67,12 +70,12 @@ public class ImageDownloader implements LowPriorityRunnable {
       conection.connect();
       // getting file length
       int lenghtOfFile = conection.getContentLength();
-//asv
+      //asv
       // input stream to read file - with 8k buffer
       input = new BufferedInputStream(url.openStream(), 8192);
 
       // Output stream to write file
-      output = new FileOutputStream(cacheFile);
+      output = new FileOutputStream(tempCacheFile);
 
       byte data[] = new byte[1024];
 
@@ -87,7 +90,7 @@ public class ImageDownloader implements LowPriorityRunnable {
         // writing data to file
         output.write(data, 0, count);
       }
-     // totalDownloadSize += total;
+      // totalDownloadSize += total;
 
       //// flushing output
       //output.flush();
@@ -96,14 +99,17 @@ public class ImageDownloader implements LowPriorityRunnable {
       //output.close();
       //input.close();
       GGGLogImpl.log("GET (" + total / 1024 + "kb) <- " + imageData.getPath(),
-          (total / 1024) > 150 ? LogLevel.WARN : LogLevel.INFO );
+          (total / 1024) > 150 ? LogLevel.WARN : LogLevel.INFO);
+
+      copy(tempCacheFile, cacheFile);
       callback.onSuccess(imageData);
     } catch (Exception e) {
-      GGGLogImpl.log("ERROR <- " + imageData.getPath(), LogLevel.ERROR );
+      GGGLogImpl.log("ERROR <- " + imageData.getPath(), LogLevel.ERROR);
       e.printStackTrace();
       if (cacheFile.exists()) cacheFile.delete();
       callback.onError(imageData, e);
     } finally {
+      if (tempCacheFile.exists()) tempCacheFile.delete();
       if (input != null) {
         try {
           input.close();
@@ -123,5 +129,22 @@ public class ImageDownloader implements LowPriorityRunnable {
     }
 
     //GGGLogImpl.log(OcmImageCacheImp.totalDownloadSize / 1024 / 1024 + "MB", LogLevel.ASSERT, "TOTAL DOWNLOAD");
+  }
+
+  private void copy(File source, File target) throws IOException {
+
+    InputStream in = new FileInputStream(source);
+    OutputStream out = new FileOutputStream(target);
+
+    // Copy the bits from instream to outstream
+    byte[] buf = new byte[1024];
+    int len;
+
+    while ((len = in.read(buf)) > 0) {
+      out.write(buf, 0, len);
+    }
+
+    in.close();
+    out.close();
   }
 }
