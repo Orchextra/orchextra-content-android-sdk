@@ -33,7 +33,7 @@ public interface OcmViewGenerator {
 
   UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
 
-  void getMenu(GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
+  void getMenu(boolean forceReload, GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
 
   // Callbacks
   interface GetMenusViewGeneratorCallback {
