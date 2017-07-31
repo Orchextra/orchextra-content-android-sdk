@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
         if (uiMenu == null) {
           Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
         } else {
-          uiMenu.remove(0);
           viewpager.setOffscreenPageLimit(uiMenu.size());
           onGoDetailView(uiMenu);
           adapter.setDataItems(uiMenu);
