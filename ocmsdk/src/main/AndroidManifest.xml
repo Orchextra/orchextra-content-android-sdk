@@ -45,9 +45,6 @@
       </intent-filter>
     </receiver>
 
-    <service
-        android:name="com.gigigo.orchextra.core.receiver.WifiReceiver$WifiActiveService"
-        android:exported="false"/>
     <activity
         android:name="com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity"
         android:screenOrientation="portrait"

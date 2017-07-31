@@ -34,14 +34,14 @@ public class OcmImageLoader {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
       return Glide.with(mContext)
 
-          .load(cacheFile.getPath()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+          .load(cacheFile.getPath()).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
           .thumbnail(Glide.with(mContext).load(R.drawable.thumbnail).centerCrop())
           //.transform(new CacheTransformation(mContext, false))
           ;
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mContext)
-          .load(url).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+          .load(url).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
           .thumbnail(Glide.with(mContext).load(R.drawable.thumbnail).centerCrop())
           //.transform(new CacheTransformation(mContext, true))
           ;
@@ -53,14 +53,14 @@ public class OcmImageLoader {
     if (cacheFile.exists()) {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
       return Glide.with(mActivity)
-          .load(cacheFile.getPath()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+          .load(cacheFile.getPath()).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
           .thumbnail(Glide.with(mActivity).load(R.drawable.thumbnail).centerCrop())
           //.transform(new CacheTransformation(mActivity.getApplicationContext(), false))
           ;
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mActivity)
-          .load(url).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+          .load(url).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
           .thumbnail(Glide.with(mActivity).load(R.drawable.thumbnail).centerCrop())
           //.transform(new CacheTransformation(mActivity.getApplicationContext(), true))
           ;
@@ -72,7 +72,7 @@ public class OcmImageLoader {
     if (cacheFile.exists()) {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragment)
-          .load(cacheFile.getPath()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+          .load(cacheFile.getPath()).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
           .thumbnail(Glide.with(mFragment).load(R.drawable.thumbnail).centerCrop())
           //.transform(
           //    new CacheTransformation(mFragment.getActivity().getApplicationContext(), true))
@@ -80,7 +80,7 @@ public class OcmImageLoader {
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragment)
-          .load(url).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+          .load(url).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
           .thumbnail(Glide.with(mFragment).load(R.drawable.thumbnail).centerCrop())
           //.transform(
           //    new CacheTransformation(mFragment.getActivity().getApplicationContext(), true))
@@ -94,14 +94,14 @@ public class OcmImageLoader {
     if (cacheFile.exists()) {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragment)
-          .load(cacheFile.getPath()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+          .load(cacheFile.getPath()).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
           .thumbnail(Glide.with(mFragment).load(R.drawable.thumbnail).centerCrop())
           //.transform(new CacheTransformation(mFragment.getContext(), false))
           ;
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragment)
-          .load(url).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+          .load(url).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
           .thumbnail(Glide.with(mFragment).load(R.drawable.thumbnail).centerCrop())
           //.transform(new CacheTransformation(mFragment.getContext(), true))
           ;

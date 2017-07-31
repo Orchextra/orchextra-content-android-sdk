@@ -31,19 +31,7 @@ import orchextra.javax.inject.Singleton;
 
   @Inject public JobExecutor() {
     initCores();
-    this.workQueue = new PriorityBlockingQueue<>(INITIAL_POOL_SIZE, new Comparator<Runnable>() {
-      @Override public int compare(Runnable o1, Runnable o2) {
-        Log.v("Priority-o1", o1.getClass().getName() + " | " + (o1 instanceof LowPriorityRunnable));
-        Log.v("Priority-o2", o2.getClass().getName() + " | " + (o2 instanceof LowPriorityRunnable));
-
-        int priority1 = 0;
-        int priority2 = 0;
-        if (o1 instanceof LowPriorityRunnable) priority1 = 1;
-        if (o2 instanceof LowPriorityRunnable) priority2 = 1;
-
-        return priority1 - priority2;
-      }
-    });
+    this.workQueue = new PriorityBlockingQueue<>(INITIAL_POOL_SIZE, comparator);
     this.threadFactory = new JobThreadFactory();
     this.threadPoolExecutor =
         new ThreadPoolExecutor(INITIAL_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME,
@@ -91,4 +79,15 @@ import orchextra.javax.inject.Singleton;
       return new Thread(runnable, THREAD_NAME + counter++);
     }
   }
+
+  private final Comparator<Runnable> comparator = new Comparator<Runnable>() {
+    @Override public int compare(Runnable o1, Runnable o2) {
+      int priority1 = 0;
+      int priority2 = 0;
+      if (o1 instanceof LowPriorityRunnable) priority1 = 1;
+      if (o2 instanceof LowPriorityRunnable) priority2 = 1;
+
+      return priority1 - priority2;
+    }
+  };
 }

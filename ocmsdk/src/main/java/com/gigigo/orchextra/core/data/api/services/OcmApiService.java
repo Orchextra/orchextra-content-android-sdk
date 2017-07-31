@@ -19,17 +19,6 @@ public interface OcmApiService {
   String SEARCH = "search";
   String ELEMENT = "element/{elementId}";
 
-  @GET(MENUS) Call<ApiMenuContentDataResponse> getMenuData();
-
-  @GET(SECTION) Call<ApiSectionContentDataResponse> getSectionData(
-      @Path(value = "section", encoded = true) String section);
-
-  @GET(SEARCH) Call<ApiSectionContentDataResponse> search(@Query("search") String textToSearch);
-
-  @GET(ELEMENT) Call<ApiElementDataResponse> getElementById(@Path(value = "elementId", encoded = true) String elementId);
-
-
-
   @GET(MENUS) Observable<ApiMenuContentDataResponse> getMenuDataRx();
 
   @GET(SECTION) Observable<ApiSectionContentDataResponse> getSectionDataRx(

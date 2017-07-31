@@ -92,12 +92,6 @@ public class ImageDownloader implements LowPriorityRunnable {
       }
       // totalDownloadSize += total;
 
-      //// flushing output
-      //output.flush();
-      //
-      //// closing streams
-      //output.close();
-      //input.close();
       GGGLogImpl.log("GET (" + total / 1024 + "kb) <- " + imageData.getPath(),
           (total / 1024) > 150 ? LogLevel.WARN : LogLevel.INFO);
 

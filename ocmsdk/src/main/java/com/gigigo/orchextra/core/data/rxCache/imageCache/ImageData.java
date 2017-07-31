@@ -27,7 +27,7 @@ public class ImageData {
     return retriesLeft;
   }
 
-  public void consumeRetry() {
+  public synchronized void consumeRetry() {
     priority++;
     retriesLeft--;
   }

@@ -74,16 +74,10 @@ import orchextra.javax.inject.Singleton;
           downloadFirst();
         }
       }, mContext));
-      GGGLogImpl.log("FINISHED downloadFirst Ejecutando hilo ", LogLevel.INFO, TAG);
     } else {
       GGGLogImpl.log("FINISHED", LogLevel.INFO, TAG);
       running = false;
     }
-  }
-
-  private void executeMainThread(Runnable runnable) {
-    Handler uiHandler = new Handler(Looper.getMainLooper());
-    uiHandler.post(runnable);
   }
 
   private void executeAsynchronously(Runnable runnable) {
