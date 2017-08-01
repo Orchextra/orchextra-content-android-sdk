@@ -53,7 +53,7 @@ public class WebViewContentData extends UiBaseContentData {
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    mView = inflater.inflate(R.layout.view_webview_elements_item, container, false);
+    mView = inflater.inflate(R.layout.view_webview_detail_item, container, false);
 
     webView = (TouchyWebView) mView.findViewById(R.id.ocm_webView);
     progress = (ProgressBar) mView.findViewById(R.id.webview_progress);
