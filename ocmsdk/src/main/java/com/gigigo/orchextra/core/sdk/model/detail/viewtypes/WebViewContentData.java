@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.lang.ref.WeakReference;
@@ -34,7 +35,7 @@ public class WebViewContentData extends UiBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
   View mView;
-  private WebView webView;
+  private TouchyWebView webView;
   private ProgressBar progress;
   private JsHandler jsInterface;
   private boolean localStorageUpdated;
@@ -54,7 +55,7 @@ public class WebViewContentData extends UiBaseContentData {
       @Nullable Bundle savedInstanceState) {
     mView = inflater.inflate(R.layout.view_webview_elements_item, container, false);
 
-    webView = (WebView) mView.findViewById(R.id.ocm_webView);
+    webView = (TouchyWebView) mView.findViewById(R.id.ocm_webView);
     progress = (ProgressBar) mView.findViewById(R.id.webview_progress);
 
     return mView;
