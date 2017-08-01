@@ -112,7 +112,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         || cachedContentData.getContent() == null
         || newContentData.getContent() == null
         || cachedContentData.getContent().getElements() == null
-        || newContentData.getContent().getElements() == null) {
+        || newContentData.getContent().getElements() == null
+        || getView() == null) {
       return;
     }
     if (checkDifferents(cachedContentData, newContentData)) {
