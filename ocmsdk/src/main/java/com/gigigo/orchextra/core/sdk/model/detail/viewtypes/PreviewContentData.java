@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -15,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
@@ -145,7 +146,8 @@ public class PreviewContentData extends UiBaseContentData {
 
       String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, width, height);
 
-      Glide.with(this).load(generatedImageUrl).priority(Priority.NORMAL).into(previewImage);
+      OcmImageLoader.load(this, generatedImageUrl).priority(Priority.NORMAL).diskCacheStrategy(
+          DiskCacheStrategy.ALL).into(previewImage);
 
       animateAlphaBecauseOfCollapseEnterTransitionImage();
     }
@@ -195,4 +197,38 @@ public class PreviewContentData extends UiBaseContentData {
       previewFuntionalityListener.disablePreviewScrolling();
     }
   }
+
+  @Override public void onDestroy() {
+    if (previewContentMainLayout != null) {
+      unbindDrawables(previewContentMainLayout);
+      System.gc();
+
+      Glide.get(this.getContext()).clearMemory();
+      previewImage = null;
+      previewBackgroundShadow = null;
+      goToArticleButton = null;
+      ((ViewGroup) previewContentMainLayout).removeAllViews();
+      Glide.get(this.getContext()).clearMemory();
+
+
+      previewContentMainLayout = null;
+    }
+
+    super.onDestroy();
+  }
+
+  private void unbindDrawables(View view) {
+    System.gc();
+    Runtime.getRuntime().gc();
+    if (view.getBackground() != null) {
+      view.getBackground().setCallback(null);
+    }
+    if (view instanceof ViewGroup) {
+      for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        unbindDrawables(((ViewGroup) view).getChildAt(i));
+      }
+      ((ViewGroup) view).removeAllViews();
+    }
+  }
+
 }

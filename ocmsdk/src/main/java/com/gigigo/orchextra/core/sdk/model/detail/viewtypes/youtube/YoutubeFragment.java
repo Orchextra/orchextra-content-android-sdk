@@ -79,7 +79,7 @@ public class YoutubeFragment extends UiBaseContentData {
         @Override public void onInitializationFailure(YouTubePlayer.Provider provider,
             YouTubeInitializationResult error) {
           //asv quizas solucione  mPlayer = null;
-          Log.e("+++:","onInitializationFailure" + error.toString());
+          Log.e("+++:", "onInitializationFailure" + error.toString());
         }
       };
 
@@ -232,10 +232,11 @@ public class YoutubeFragment extends UiBaseContentData {
 
   public void setYouTubePlayer(final YouTubePlayer player) {
 
-    try{
+    try {
       if (player != null) {
-        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer player != null \n\n\n\n\n\n\n\n" + player);
-        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer \n\n\n\n\n\n\n\n" );
+        Log.e("+++",
+            "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer player != null \n\n\n\n\n\n\n\n" + player);
+        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer \n\n\n\n\n\n\n\n");
       } else {
         Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer PLAYER NULL \n\n\n\n\n\n\n\n");
       }
@@ -247,34 +248,39 @@ public class YoutubeFragment extends UiBaseContentData {
       Log.e("+++", "**** 3");
       player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
       Log.e("+++", "**** 4");
-      if (playedVideo == 0 || isPlaying) {
-        try {
-          Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to load \n\n\n\n\n\n\n\n");
-          player.loadVideo(youtubeId, playedVideo);
-        } catch (Throwable tr) {
-          Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN loadVideon \n\n\n\n\n\n\n\n"
+      if (playedVideo >= 0) {
+        if (playedVideo == 0 || isPlaying) {
+          try {
+            Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to load \n\n\n\n\n\n\n\n");
+            player.loadVideo(youtubeId, playedVideo);
+          } catch (Throwable tr) {
+            Log.e("+++",
+                "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN loadVideon \n\n\n\n\n\n\n\n"
+                    + tr.toString());
+          }
+        } else {
+          try {
+            Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to cueVideo sin playedvideo\n\n\n\n\n\n\n\n"
+                + youtubeId
+                + "played"
+                + playedVideo);
+            player.cueVideo(youtubeId, playedVideo);
+            //Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to cueVideo  con played \n\n\n\n\n\n\n\n" + youtubeId +"played"+playedVideo);
+            //player.cueVideo(youtubeId, playedVideo);
+          } catch (IllegalArgumentException e) {
+            Log.e("+++",
+                "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN IllegalArgumentException cueVideon \n\n\n\n\n\n\n\n"
+                    + e.toString());
+          } catch (Throwable tr) {
+            Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN cueVideon \n\n\n\n\n\n\n\n"
+                + tr.toString());
+          }
+        }
+      }
+    } catch (Throwable tr) {
+      Log.e("+++",
+          "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN setYouTubePlayer antes de load y todo \n\n\n\n\n\n\n\n"
               + tr.toString());
-        }
-      } else {
-        try {
-          Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to cueVideo sin playedvideo\n\n\n\n\n\n\n\n" + youtubeId +"played"+playedVideo);
-          player.cueVideo(youtubeId);
-          //Log.e("+++", "\n \n\n\n\n\n\n\n\n\n try to cueVideo  con played \n\n\n\n\n\n\n\n" + youtubeId +"played"+playedVideo);
-          //player.cueVideo(youtubeId, playedVideo);
-        } catch (IllegalArgumentException e)
-        {
-          Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN IllegalArgumentException cueVideon \n\n\n\n\n\n\n\n"
-              + e.toString());
-
-        }
-        catch (Throwable tr) {
-          Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN cueVideon \n\n\n\n\n\n\n\n"
-              + tr.toString());
-        }
-      }}
-    catch (Throwable tr) {
-      Log.e("+++", "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN setYouTubePlayer antes de load y todo \n\n\n\n\n\n\n\n"
-          + tr.toString());
     }
   }
 
@@ -288,11 +294,13 @@ public class YoutubeFragment extends UiBaseContentData {
 
   @Override public void onSaveInstanceState(Bundle outState) {
 
-    if (mPlayer != null) {
-      outState.putInt(EXTRA_PLAYED_VIDEO, mPlayer.getCurrentTimeMillis());
-      outState.putBoolean(EXTRA_IS_PLAYING, mPlayer.isPlaying());
-      Log.e("+++", "onSaveInstanceState mPlayer != null");
-    }
+    try {
+      if (mPlayer != null) {
+        outState.putInt(EXTRA_PLAYED_VIDEO, mPlayer.getCurrentTimeMillis());
+        outState.putBoolean(EXTRA_IS_PLAYING, mPlayer.isPlaying());
+        Log.e("+++", "onSaveInstanceState mPlayer != null");
+      }
+    } catch (Exception ignored) {}
 
     super.onSaveInstanceState(outState);
     Log.e("+++", "onSaveInstanceState");

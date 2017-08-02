@@ -8,6 +8,8 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
+import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
+import java.lang.ref.WeakReference;
 
 public class OcmSchemeHandler {
 
@@ -33,53 +35,81 @@ public class OcmSchemeHandler {
       @Override public void onGetDetailFails(Exception e) {
         e.printStackTrace();
       }
+
+      @Override public void onGetDetailNoAvailable(Exception e) {
+        e.printStackTrace();
+      }
     });
   }
 
   public void processElementUrl(String elementUrl, String urlImageToExpand, int widthScreen,
       int heightScreen, ImageView imageViewToExpandInDetail) {
 
+    WeakReference<ImageView> imageViewWeakReference =
+        new WeakReference<>(imageViewToExpandInDetail);
+
     ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           executeAction(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
-              imageViewToExpandInDetail);
+              imageViewWeakReference);
         }
       }
 
       @Override public void onGetDetailFails(Exception e) {
         e.printStackTrace();
       }
+
+      @Override public void onGetDetailNoAvailable(Exception e) {
+        e.printStackTrace();
+      }
     });
   }
 
   private void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
-      int widthScreen, int heightScreen, ImageView imageViewToExpandInDetail) {
-    ElementCacheType type = cachedElement.getType();
-    ElementCacheRender render = cachedElement.getRender();
+      int widthScreen, int heightScreen, WeakReference<ImageView> imageViewToExpandInDetail) {
 
-    if (render != null) {
+      ElementCacheType type = cachedElement.getType();
+      ElementCacheRender render = cachedElement.getRender();
+
       switch (type) {
         case VUFORIA:
-          processImageRecognitionAction();
-          return;
+          if (render != null) {
+            processImageRecognitionAction();
+          }
+          break;
         case SCAN:
-          processScanAction();
-          return;
-        case EXTERNAL_BROWSER:
-          processExternalBrowser(render.getUrl());
-          return;
+          if (render != null) {
+            processScanAction();
+          }
+          break;
         case BROWSER:
-          processBrowser(render.getUrl());
-          return;
+          if (render != null) {
+            processCustomTabs(render.getUrl());
+          }
+          break;
+        case EXTERNAL_BROWSER:
+          if (render != null) {
+            processExternalBrowser(render.getUrl());
+          }
+          break;
         case DEEP_LINK:
-          processDeepLink(render.getUri());
-          return;
-      }
+          if (render != null) {
+            processDeepLink(render.getUri());
+          }
+          break;
+        default:
+          ImageView imageView = null;
+          if (imageViewToExpandInDetail != null) {
+            imageView = imageViewToExpandInDetail.get();
+          }
+          openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen, imageView);
+          break;
     }
+  }
 
-    openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen,
-        imageViewToExpandInDetail);
+  private void processCustomTabs(String url) {
+    DeviceUtils.openChromeTabs(contextProvider.getCurrentActivity(), url);
   }
 
   private void processImageRecognitionAction() {
@@ -92,10 +122,6 @@ public class OcmSchemeHandler {
 
   private void processExternalBrowser(String url) {
     actionHandler.launchExternalBrowser(url);
-  }
-
-  private void processBrowser(String url) {
-    actionHandler.launchCustomTabs(url);
   }
 
   private void processDeepLink(String uri) {

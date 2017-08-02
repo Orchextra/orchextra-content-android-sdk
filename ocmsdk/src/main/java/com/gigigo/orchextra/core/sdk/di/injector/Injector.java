@@ -18,11 +18,13 @@
 
 package com.gigigo.orchextra.core.sdk.di.injector;
 
+import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailParentContentData;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
+import com.gigigo.orchextra.core.receiver.WifiReceiver;
 
 public interface Injector {
 
@@ -33,6 +35,8 @@ public interface Injector {
   void injectSearcherLayoutView(SearcherLayoutView searcherLayoutView);
 
   void injectDetailContentData(DetailParentContentData detailParentContentData);
+
+  void injectImagesService(ImagesService imagesService);
 
   OcmStyleUi provideOcmStyleUi();
 }

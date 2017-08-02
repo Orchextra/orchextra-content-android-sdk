@@ -53,6 +53,9 @@ import orchextra.javax.inject.Singleton;
   public OcmDataStore getDataStoreForSections(boolean force, String section) {
     OcmDataStore ocmDataStore;
 
+    if (!connectionUtils.hasConnection())
+      return getDiskDataStore();
+
     if (force) {
       Log.i(TAG, "CLOUD - Sections");
       ocmDataStore = getCloudDataStore();
@@ -72,6 +75,9 @@ import orchextra.javax.inject.Singleton;
 
   public OcmDataStore getDataStoreForDetail(boolean force, String slug) {
     OcmDataStore ocmDataStore;
+
+    if (!connectionUtils.hasConnection())
+      return getDiskDataStore();
 
     if (force) {
       Log.i(TAG, "CLOUD - Detail");

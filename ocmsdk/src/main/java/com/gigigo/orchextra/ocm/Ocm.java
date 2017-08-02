@@ -7,6 +7,7 @@ import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
+import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -137,8 +138,8 @@ public final class Ocm {
   /**
    * Get the app menus
    */
-  public static void getMenus(OcmCallbacks.Menus menusCallback) {
-    OCManager.getMenus(new OCManagerCallbacks.Menus() {
+  public static void getMenus(boolean forceReload, OcmCallbacks.Menus menusCallback) {
+    OCManager.getMenus(forceReload, new OCManagerCallbacks.Menus() {
       @Override public void onMenusLoaded(List<UiMenu> menus) {
         menusCallback.onMenusLoaded(menus);
       }
@@ -171,19 +172,21 @@ public final class Ocm {
    *
    * @param viewId It is the content url returned in the menus call.
    * @param filter To filter the content by a word
+   * @param imagesToDownload Number of images that we can to download for caching
    * @param sectionCallbacks callback
    */
-  public static void generateSectionView(String viewId, String filter,
+  public static void generateSectionView(String viewId, String filter, int imagesToDownload,
       OcmCallbacks.Section sectionCallbacks) {
-    OCManager.generateSectionView(viewId, filter, new OCManagerCallbacks.Section() {
-      @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
-        sectionCallbacks.onSectionLoaded(uiGridBaseContentData);
-      }
+    OCManager.generateSectionView(viewId, filter, imagesToDownload,
+        new OCManagerCallbacks.Section() {
+          @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+            sectionCallbacks.onSectionLoaded(uiGridBaseContentData);
+          }
 
-      @Override public void onSectionFails(Exception e) {
-        sectionCallbacks.onSectionFails(e);
-      }
-    });
+          @Override public void onSectionFails(Exception e) {
+            sectionCallbacks.onSectionFails(e);
+          }
+        });
   }
 
   /**
@@ -261,5 +264,10 @@ public final class Ocm {
 
   public static void closeDetailView() {
     OCManager.closeDetailView();
+  }
+
+  public static void setOnDoRequiredLoginCallback(
+      OnRequiredLoginCallback onDoRequiredLoginCallback) {
+    OCManager.setDoRequiredLoginCallback(onDoRequiredLoginCallback);
   }
 }

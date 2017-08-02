@@ -1,5 +1,7 @@
 <resources>
 
+  <string name="app_name" translatable="false">Orchextra Content Android Sdk</string>
+
   <string name="oc_retry_content_button_text">RETRY</string>
 
   <string name="oc_retry_content_text1">Ups!</string>
@@ -10,5 +12,8 @@
   <string name="oc_more_content_button_text">DISCOVER MORE</string>
 
   <string name="oc_preview_down_arrow_text">SLIDE DOWN</string>
+
+  <string name="oc_error_content_not_available_without_internet">Connect to the Internet to enjoy all the content of OCM</string>
+
 
 </resources>

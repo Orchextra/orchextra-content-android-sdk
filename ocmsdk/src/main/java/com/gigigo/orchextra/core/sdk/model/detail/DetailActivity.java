@@ -2,13 +2,17 @@ package com.gigigo.orchextra.core.sdk.model.detail;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -18,17 +22,20 @@ import com.bumptech.glide.request.target.Target;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.model.detail.DetailPresenter;
 import com.gigigo.orchextra.core.controller.model.detail.DetailView;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
+import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeWebviewActivity;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
-import com.gigigo.orchextra.core.sdk.utils.swipeback.SwipeBackBaseInjectionActivity;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
+import java.util.ArrayList;
+import java.util.List;
 import orchextra.javax.inject.Inject;
 
-public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivityComponent>
+public class DetailActivity extends BaseInjectionActivity<DetailActivityComponent>
     implements DetailView {
 
   private static final String EXTRA_ELEMENT_URL = "EXTRA_ELEMENT_URL";
@@ -45,17 +52,19 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
   private ImageView animationImageView;
   private UiDetailBaseContentData uiContentView;
   private boolean statusBarEnabled;
+  private FrameLayout parentContainer;
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   public static void open(Activity activity, String elementUrl, String urlImageToExpand, int width,
       int height, final View view) {
-    final Intent intent = new Intent(activity, DetailActivity.class);
-    intent.putExtra(DetailActivity.EXTRA_ELEMENT_URL, elementUrl);
-    intent.putExtra(DetailActivity.EXTRA_IMAGE_TO_EXPAND_URL, urlImageToExpand);
-    intent.putExtra(DetailActivity.EXTRA_WIDTH_IMAGE_TO_EXPAND_URL, width);
-    intent.putExtra(DetailActivity.EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL, height);
 
     if (activity != null) {
+      Intent intent = new Intent(activity, DetailActivity.class);
+      intent.putExtra(DetailActivity.EXTRA_ELEMENT_URL, elementUrl);
+      intent.putExtra(DetailActivity.EXTRA_IMAGE_TO_EXPAND_URL, urlImageToExpand);
+      intent.putExtra(DetailActivity.EXTRA_WIDTH_IMAGE_TO_EXPAND_URL, width);
+      intent.putExtra(DetailActivity.EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL, height);
+
       if (view != null && urlImageToExpand != null) {
         ActivityOptionsCompat optionsCompat =
             ActivityOptionsCompat.makeSceneTransitionAnimation(activity, view, "thumbnail");
@@ -78,7 +87,7 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
     presenter.attachView(this);
   }
 
-  @TargetApi(Build.VERSION_CODES.KITKAT) @Override
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP) @Override
   public void onWindowFocusChanged(boolean hasFocus) {
     super.onWindowFocusChanged(hasFocus);
     if (hasFocus) {
@@ -93,6 +102,10 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
 
         if (AndroidSdkVersion.hasKitKat19()) {
           flags = flags | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
+      } else {
+        if (AndroidSdkVersion.hasLollipop21()) {
+          getWindow().setStatusBarColor(getResources().getColor(R.color.oc_status_bar_color));
         }
       }
 
@@ -109,6 +122,8 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
   }
 
   @Override public void initUi() {
+    parentContainer = (FrameLayout) findViewById(R.id.parentContainer);
+
     presenter.setOnFinishViewListener(onFinishViewListener);
 
     setAnimationImageView();
@@ -147,25 +162,25 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
     if (!TextUtils.isEmpty(url)) {
       String generateImageUrl = ImageGenerator.generateImageUrl(url, width, height);
 
-      supportPostponeEnterTransition();
+      //supportPostponeEnterTransition();
+      //new Handler().postDelayed(this::supportStartPostponedEnterTransition, 1000);
 
-      Glide.with(this)
-          .load(generateImageUrl)
+      OcmImageLoader.load(this, generateImageUrl)
           .override(width, height)
           .centerCrop()
           .dontAnimate()
-          .priority(Priority.NORMAL)
-          .listener(new RequestListener<String, GlideDrawable>() {
+          .priority(Priority.HIGH)
+          .listener(new RequestListener<Object, GlideDrawable>() {
             @Override
-            public boolean onException(Exception e, String model, Target<GlideDrawable> target,
+            public boolean onException(Exception e, Object model, Target<GlideDrawable> target,
                 boolean isFirstResource) {
-              supportStartPostponedEnterTransition();
+              //supportStartPostponedEnterTransition();
               return false;
             }
 
-            @Override public boolean onResourceReady(GlideDrawable resource, String model,
+            @Override public boolean onResourceReady(GlideDrawable resource, Object model,
                 Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-              supportStartPostponedEnterTransition();
+              //supportStartPostponedEnterTransition();
               return false;
             }
           })
@@ -184,17 +199,63 @@ public class DetailActivity extends SwipeBackBaseInjectionActivity<DetailActivit
 
   @Override protected void onDestroy() {
 
-    System.out.println("----------------------------------------------destroyActivityview");
 
+    System.out.println("----onDestroy------------------------------------------article activity");
+
+
+    unbindDrawables(parentContainer);
+    System.gc();
+    Glide.get((Context) presenter.getView()).clearMemory();
+    if (animationImageView != null) animationImageView = null;
+
+    if (uiContentView != null) {
+      uiContentView = null;
+    }
+    parentContainer.removeAllViews();
+    Glide.get((Context) presenter.getView()).clearMemory();
     if (presenter != null) {
       presenter.detachView();
     }
-    if (animationImageView != null) animationImageView = null;
 
-    if (uiContentView != null) uiContentView = null;
 
     this.finish();
 
     super.onDestroy();
+  }
+
+  private void unbindDrawables(View view) {
+
+    List<View> viewList = new ArrayList<>();
+
+    viewList.add(view);
+    for (int i = 0; i < viewList.size(); i++) {
+      View child = viewList.get(i);
+      if (child instanceof ViewGroup) {
+        ViewGroup viewGroup = (ViewGroup) child;
+        for (int j = 0; j < viewGroup.getChildCount(); j++) {
+          viewList.add(viewGroup.getChildAt(j));
+        }
+      }
+    }
+
+    for (int i = viewList.size() - 1; i >= 0; i--) {
+      View child = viewList.get(i);
+      if (child.getBackground() != null) {
+        child.getBackground().setCallback(null);
+      }
+      if (child instanceof ViewGroup) {
+        ((ViewGroup) child).removeAllViews();
+      }
+    }
+
+    //if (view.getBackground() != null) {
+    //  view.getBackground().setCallback(null);
+    //}
+    //if (view instanceof ViewGroup) {
+    //  for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+    //    unbindDrawables(((ViewGroup) view).getChildAt(i));
+    //  }
+    //  ((ViewGroup) view).removeAllViews();
+    //}
   }
 }

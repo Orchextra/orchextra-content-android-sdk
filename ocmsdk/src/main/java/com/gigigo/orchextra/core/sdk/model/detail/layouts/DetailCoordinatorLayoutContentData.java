@@ -6,8 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
@@ -18,6 +21,8 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.ocmsdk.R;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetailCoordinatorLayoutContentData extends DetailParentContentData {
 
@@ -92,7 +97,7 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    if (previewContentData != null && detailContentData != null) {
+    if (previewContentData != null && detailContentData != null && isAdded()) {
       ((AppCompatActivity) getContext()).getSupportFragmentManager()
           .beginTransaction()
           .replace(R.id.previewDetailContentLayout, previewContentData)
@@ -159,5 +164,71 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
       appbarLayout.setExpanded(false, false);
     }
     isFirstTime = false;
+  }
+
+  @Override public void onDestroy() {
+
+    System.out.println(
+        "----onDestroy------------------------------------------artivcle coordinator content data");
+    //if (collapsingToolbar != null) unbindDrawables(collapsingToolbar);
+    //if (appbarLayout != null) unbindDrawables(appbarLayout);
+    if (coordinatorLayout != null) unbindDrawables(coordinatorLayout);
+    System.gc();
+
+    Glide.get(this.getContext()).clearMemory();
+    coordinatorLayout.removeAllViews();
+    appbarLayout.removeAllViews();
+    collapsingToolbar.removeAllViews();
+    previewContentData.onDestroy();
+    detailContentData.onDestroy();
+
+    Glide.get(this.getContext()).clearMemory();
+
+    coordinatorLayout = null;
+    appbarLayout = null;
+    collapsingToolbar = null;
+    previewContentData = null;
+    detailContentData = null;
+    Glide.get(this.getContext()).clearMemory();
+
+    super.onDestroy();
+  }
+
+  private int count;
+  private void unbindDrawables(View view) {
+
+    List<View> viewList = new ArrayList<>();
+
+    viewList.add(view);
+    for (int i = 0; i < viewList.size(); i++) {
+      View child = viewList.get(i);
+      if (child instanceof ViewGroup) {
+        ViewGroup viewGroup = (ViewGroup) child;
+        for (int j = 0; j < viewGroup.getChildCount(); j++) {
+          viewList.add(viewGroup.getChildAt(j));
+        }
+      }
+    }
+
+    for (int i = viewList.size() - 1; i >= 0; i--) {
+      View child = viewList.get(i);
+      if (child.getBackground() != null) {
+        child.getBackground().setCallback(null);
+      }
+      if (child instanceof ViewGroup) {
+        ((ViewGroup) child).removeAllViews();
+      }
+    }
+
+    //if (view.getBackground() != null) {
+    //  view.getBackground().setCallback(null);
+    //}
+    //if (view instanceof ViewGroup) {
+    //  for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+    //    unbindDrawables(((ViewGroup) view).getChildAt(i));
+    //  }
+    //  ((ViewGroup) view).removeAllViews();
+    //}
+    //Log.i("TAG", "Count Coordinator: " + count++);
   }
 }

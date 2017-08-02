@@ -2,7 +2,7 @@ project.ext {
 
   androidCompileSdkVersion = 24
   androidMinSdkVersion = 14
-  androidBuildToolsVersion = '24.0.3'
+  androidBuildToolsVersion = '25.0.3'
   androidTargetSdkVersion = 23
   supportVersion = '24.2.1'
 
@@ -10,16 +10,16 @@ project.ext {
   libraries = [androidSupportDesign       : "com.android.support:design:${supportVersion}",
                androidCustomtabs          : "com.android.support:customtabs:${supportVersion}",
 
-               daggerCompiler             : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
-               dagger                     : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
+               daggerCompiler             : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:3.2",
+               dagger                     : "com.github.GigigoGreenLabs.repackagedLibs:dagger:3.2",
 
-               gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:4.4',
-               ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:4.4',
-               ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:4.4',
+               gggJavaLib                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:2c184f2ed7', //2c184f2ed7
+               ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:2c184f2ed7',
+               ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7',
 
-               orchextrasdkStaging        : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:506Test:play10Staging@aar',
-               orchextrasdkDebug          : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:506Test:play10Debug@aar',
-               orchextrasdkRelease        : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:506Test:play10Release@aar',
+               orchextrasdkStaging        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1035Test:play10Staging@aar',
+               orchextrasdkDebug          : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1035Test:play10Debug@aar',
+               orchextrasdkRelease        : 'com.github.orchextra.Orchextra-android-sdk:orchextrasdk:1035Test:play10Release@aar',
 
                playServicesBase           : "com.google.android.gms:play-services-base:10.0.1",
                playServicesLocation       : "com.google.android.gms:play-services-location:10.0.1",
@@ -27,7 +27,7 @@ project.ext {
 
                imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 
-               multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.3',
+               multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.5',
 
                oxvuforiaimplementation    : 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6',
 
@@ -39,8 +39,7 @@ project.ext {
                rxRetrofit                 : 'com.squareup.retrofit2:adapter-rxjava2:2.3.0',
                arrow                      : 'com.fernandocejas:arrow:1.0.0',
 
-               kache                      : 'com.github.mskn73:kache:0.3'
-  ]
+               kache                      : 'com.github.mskn73:kache:0.4']
 
   testLibraries = [mockito          : 'org.mockito:mockito-core:2.0.31-beta',
                    junit            : 'junit:junit:4.12',
@@ -48,5 +47,6 @@ project.ext {
                    androidTestRunner: 'com.android.support.test:runner:0.4.1',
                    androidTestRules : 'com.android.support.test:rules:0.4.1',
                    espresso         : 'com.android.support.test.espresso:espresso-core:2.2.1',
-                   mockWebServer    : 'com.squareup.okhttp:mockwebserver:2.6.0']
+                   mockWebServer    : 'com.squareup.okhttp:mockwebserver:2.6.0',
+                   assertj          : 'org.assertj:assertj-core:1.7.1']
 }

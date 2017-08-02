@@ -47,6 +47,7 @@ public final class OcmBuilder {
   /**
    * Callback to know when the user need to be logged in the app.
    */
+  @Deprecated
   public OcmBuilder setOnDoRequiredLoginCallback(OnRequiredLoginCallback onRequiredLoginCallback) {
     this.onRequiredLoginCallback = onRequiredLoginCallback;
     return this;
@@ -97,6 +98,7 @@ public final class OcmBuilder {
     return oxSecret;
   }
 
+  @Deprecated
   OnRequiredLoginCallback getOnRequiredLoginCallback() {
     return onRequiredLoginCallback;
   }

@@ -18,6 +18,7 @@ import com.gigigo.multiplegridrecyclerview.viewholder.CellBlankViewHolder;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutInterface;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutPresenter;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
@@ -180,7 +181,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
           DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
           DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
 
-      Glide.with(getContext()).load(imageUrl).priority(Priority.NORMAL).into(imageViewToExpand);
+      OcmImageLoader.load(this, imageUrl).into(imageViewToExpand);
     }
 
     DetailActivity.open(activity, elementUrl, imageUrl,

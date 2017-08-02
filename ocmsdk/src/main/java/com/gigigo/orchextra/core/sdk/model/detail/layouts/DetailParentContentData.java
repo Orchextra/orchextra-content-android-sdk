@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
@@ -18,7 +19,6 @@ import com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
-import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import orchextra.javax.inject.Inject;
 
@@ -30,17 +30,18 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   protected OnShareListener onShareListener;
   protected DetailToolbarView detailToolbarView;
   private String nameArticle;
+  View mView;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(getDetailLayout(), container, false);
+    mView = inflater.inflate(getDetailLayout(), container, false);
 
     initDi();
-    initDetailViews(view);
+    initDetailViews(mView);
     setData();
 
-    return view;
+    return mView;
   }
 
   private void initDi() {
@@ -158,5 +159,38 @@ public abstract class DetailParentContentData extends UiBaseContentData {
 
   public interface OnShareListener {
     void onShare();
+  }
+
+  @Override public void onDestroy() {
+
+    System.out.println(
+        "----onDestroy------------------------------------------artivcle coordinator content data");
+    if (mView != null) unbindDrawables(mView);
+
+    ((ViewGroup) mView).removeAllViews();
+    System.gc();
+
+    Glide.get(this.getContext()).clearMemory();
+
+    onFinishListener = null;
+    onShareListener = null;
+    detailToolbarView = null;
+    Glide.get(this.getContext()).clearMemory();
+
+    super.onDestroy();
+  }
+
+  private void unbindDrawables(View view) {
+    System.gc();
+    Runtime.getRuntime().gc();
+    if (view.getBackground() != null) {
+      view.getBackground().setCallback(null);
+    }
+    if (view instanceof ViewGroup) {
+      for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        unbindDrawables(((ViewGroup) view).getChildAt(i));
+      }
+      ((ViewGroup) view).removeAllViews();
+    }
   }
 }

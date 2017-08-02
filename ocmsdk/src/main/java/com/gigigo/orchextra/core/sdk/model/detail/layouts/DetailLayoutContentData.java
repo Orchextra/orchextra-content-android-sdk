@@ -9,15 +9,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.dto.DetailViewInfo;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsView;
+import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
+import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
-import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
+import com.gigigo.orchextra.ocmsdk.R;
 
 public class DetailLayoutContentData extends UiDetailBaseContentData implements DetailElementsView {
 
@@ -106,11 +107,13 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
         .commit();
   }
 
-  @Override public void renderDetailView(UiBaseContentData detailContentData, DetailViewInfo detailViewInfo) {
+  @Override
+  public void renderDetailView(UiBaseContentData detailContentData, DetailViewInfo detailViewInfo) {
     addLayoutToView(detailContentData, detailViewInfo);
   }
 
-  @Override public void renderPreview(UiBaseContentData previewContentData, DetailViewInfo detailViewInfo) {
+  @Override
+  public void renderPreview(UiBaseContentData previewContentData, DetailViewInfo detailViewInfo) {
     addLayoutToView(previewContentData, detailViewInfo);
   }
 
@@ -142,21 +145,22 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
   }
 
   private void addLayoutToView(UiBaseContentData uiBaseContentData, DetailViewInfo detailViewInfo) {
+    if (isAdded()) {
+      DetailSimpleLayoutContentData detailSimpleLayoutContentData =
+          DetailSimpleLayoutContentData.newInstance();
 
-    DetailSimpleLayoutContentData detailSimpleLayoutContentData =
-        DetailSimpleLayoutContentData.newInstance();
+      detailSimpleLayoutContentData.setViews(uiBaseContentData);
+      detailSimpleLayoutContentData.setOnFinishListener(onFinishListener);
+      detailSimpleLayoutContentData.setArticleName(detailViewInfo.getNameArticle());
+      if (detailViewInfo.isShareable()) {
+        detailSimpleLayoutContentData.setOnShareListener(onShareListener);
+      }
 
-    detailSimpleLayoutContentData.setViews(uiBaseContentData);
-    detailSimpleLayoutContentData.setOnFinishListener(onFinishListener);
-    detailSimpleLayoutContentData.setArticleName(detailViewInfo.getNameArticle());
-    if (detailViewInfo.isShareable()) {
-      detailSimpleLayoutContentData.setOnShareListener(onShareListener);
+      ((AppCompatActivity) context).getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.detail_container_layout, detailSimpleLayoutContentData)
+          .commit();
     }
-
-    ((AppCompatActivity) context).getSupportFragmentManager()
-        .beginTransaction()
-        .replace(R.id.detail_container_layout, detailSimpleLayoutContentData)
-        .commit();
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -167,14 +171,15 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
     System.out.println("----------------------------------------------destroyview");
 
     if (context instanceof Activity) {
+
       if (presenter != null) {
         presenter.detachView();
       }
       onFinishListener = null;
       ((Activity) context).finish();
-
     }
     this.context = null;
+    Glide.get(this.getContext()).clearMemory();
     super.onDestroyView();
   }
 

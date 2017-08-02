@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.customtabs.CustomTabsIntent;
+import android.support.design.widget.Snackbar;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -13,7 +14,11 @@ import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
+import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
@@ -28,8 +33,11 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
 
   private OcmContextProvider ocmContextProvider;
 
+  private ConnectionUtils connectionUtils;
+
   public ArticleRichTextView(Context context, ArticleRichTextElement articleElement) {
     super(context, articleElement);
+    connectionUtils = new ConnectionUtilsImp(context);
   }
 
   @Override protected int getViewLayout() {
@@ -54,9 +62,17 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
     int flags = strBuilder.getSpanFlags(span);
     ClickableSpan clickable = new ClickableSpan() {
       public void onClick(View view) {
-        DeviceUtils.openChromeTabs(ocmContextProvider.getCurrentActivity(), span.getURL());
+        if (connectionUtils.hasConnection()) {
+          DeviceUtils.openChromeTabs(ocmContextProvider.getCurrentActivity(), span.getURL());
+        } else {
+          View rootView = ((ViewGroup) ocmContextProvider.getCurrentActivity()
+              .findViewById(android.R.id.content)).getChildAt(0);
+          Snackbar.make(rootView, R.string.oc_error_content_not_available_without_internet, Toast.LENGTH_SHORT).show();
+
+        }
       }
     };
+
     strBuilder.setSpan(clickable, start, end, flags);
     strBuilder.removeSpan(span);
   }

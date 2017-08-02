@@ -40,18 +40,25 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
     ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
-        if (elementCache != null) {
-          renderView(elementCache);
-          OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, elementCache);
-        } else {
-          getView().finishView();
-        }
+        if (getView() != null) {
+          if (elementCache != null) {
+            renderView(elementCache);
+            OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, elementCache);
+          } else {
+            getView().finishView();
+          }
 
-        getView().showProgressView(false);
+          getView().showProgressView(false);
+        }
       }
 
       @Override public void onGetDetailFails(Exception e) {
         getView().showProgressView(false);
+      }
+
+      @Override public void onGetDetailNoAvailable(Exception e) {
+        getView().showProgressView(false);
+        e.printStackTrace();
       }
     });
   }
@@ -61,33 +68,31 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
     detailViewInfo.setShareable(cachedElement.getShare() != null);
     detailViewInfo.setNameArticle(cachedElement.getName());
 
-    if (cachedElement.getType() == ElementCacheType.CARDS) {
-      UiBaseContentData contentData = generateCardView(cachedElement);
-      getView().renderDetailView(contentData, detailViewInfo);
-    } else {
-      UiBaseContentData previewContentData =
-          generatePreview(cachedElement.getPreview(), cachedElement.getShare());
-
-      UiBaseContentData detailContentData =
-          generateDetailView(cachedElement.getType(), cachedElement.getRender());
-
-      if (getView() == null) {
-        return;
-      }
-
-      if (previewContentData != null && detailContentData != null) {
-        getView().renderDetailViewWithPreview(previewContentData, detailContentData,
-            detailViewInfo);
-
-        getView().showEmptyView(false);
-      } else if (previewContentData != null) {
-        getView().renderPreview(previewContentData, detailViewInfo);
-        getView().showEmptyView(false);
-      } else if (detailContentData != null) {
-        getView().renderDetailView(detailContentData, detailViewInfo);
-        getView().showEmptyView(false);
+    if (getView() != null) {
+      if (cachedElement.getType() == ElementCacheType.CARDS) {
+        UiBaseContentData contentData = generateCardView(cachedElement);
+        getView().renderDetailView(contentData, detailViewInfo);
       } else {
-        getView().showEmptyView(true);
+        UiBaseContentData previewContentData =
+            generatePreview(cachedElement.getPreview(), cachedElement.getShare());
+
+        UiBaseContentData detailContentData =
+            generateDetailView(cachedElement.getType(), cachedElement.getRender());
+
+        if (previewContentData != null && detailContentData != null && getView() != null) {
+          getView().renderDetailViewWithPreview(previewContentData, detailContentData,
+              detailViewInfo);
+
+          getView().showEmptyView(false);
+        } else if (previewContentData != null) {
+          getView().renderPreview(previewContentData, detailViewInfo);
+          getView().showEmptyView(false);
+        } else if (detailContentData != null) {
+          getView().renderDetailView(detailContentData, detailViewInfo);
+          getView().showEmptyView(false);
+        } else {
+          getView().showEmptyView(true);
+        }
       }
     }
   }
@@ -118,6 +123,10 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
       }
 
       @Override public void onGetDetailFails(Exception e) {
+        e.printStackTrace();
+      }
+
+      @Override public void onGetDetailNoAvailable(Exception e) {
         e.printStackTrace();
       }
     });

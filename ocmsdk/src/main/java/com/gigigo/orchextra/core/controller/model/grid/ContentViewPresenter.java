@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.controller.model.grid;
 
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -18,6 +17,7 @@ import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +27,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private final OcmController ocmController;
 
   private String section;
+  private int imagesToDownload = 21;
   private String filter;
   private List<Cell> listedCellContentDataList;
   private int padding;
@@ -48,37 +49,114 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     loadSection(true);
   }
 
-  public void reloadSection() {
+  public void reloadSectionFromNetwork() {
     loadSection(false);
+  }
+
+  public void loadFromCache() {
+    loadSection(true);
   }
 
   private void loadSection(final boolean useCache) {
     getView().showProgressView(true);
-    if (ocmController != null){
-    ocmController.getSection(!useCache, section, new OcmController.GetSectionControllerCallback() {
-      @Override public void onGetSectionLoaded(ContentData contentData) {
-        ContentItem contentItem = contentData.getContent();
-        if (getView() != null) {
-          renderContentItem(contentItem);
-        }
-      }
+    if (ocmController != null) {
+      ocmController.getSection(!useCache, section, imagesToDownload,
+          new OcmController.GetSectionControllerCallback() {
+            @Override public void onGetSectionLoaded(ContentData contentData) {
+              ContentItem contentItem = contentData.getContent();
+              if (getView() != null) {
+                renderContentItem(contentItem);
+              }
+            }
 
-      @Override public void onGetSectionFails(Exception e) {
-        renderError();
-      }
-    });
+            @Override public void onGetSectionFails(Exception e) {
+              renderError();
+            }
+          });
+    }
   }
 
-}
+  public void loadSectionWithCacheAndAfterNetwork(String viewId, String filter) {
+    this.section = viewId;
+    this.filter = filter;
+
+    getView().showProgressView(true);
+
+    ocmController.getSection(false, section, imagesToDownload,
+        new OcmController.GetSectionControllerCallback() {
+          @Override public void onGetSectionLoaded(ContentData contentData) {
+            ContentItem contentItem = contentData.getContent();
+            renderContentItem(contentItem);
+
+            ocmController.getSection(true, section, imagesToDownload,
+                new OcmController.GetSectionControllerCallback() {
+                  @Override public void onGetSectionLoaded(ContentData contentData1) {
+                    checkNewContent(contentData, contentData1);
+                  }
+
+                  @Override public void onGetSectionFails(Exception e) {
+                    renderError();
+                  }
+                });
+          }
+
+          @Override public void onGetSectionFails(Exception e) {
+            renderError();
+          }
+        });
+  }
+
+  private void checkNewContent(ContentData cachedContentData, ContentData newContentData) {
+    if (cachedContentData == null
+        || newContentData == null
+        || cachedContentData.getContent() == null
+        || newContentData.getContent() == null
+        || cachedContentData.getContent().getElements() == null
+        || newContentData.getContent().getElements() == null
+        || getView() == null) {
+      return;
+    }
+    if (checkDifferents(cachedContentData, newContentData)) {
+      getView().showNewExistingContent();
+    }
+  }
+
+  private boolean checkDifferents(ContentData cachedContentData, ContentData newContentData) {
+    List<Element> cachedElements = cachedContentData.getContent().getElements();
+    List<Element> newElements = newContentData.getContent().getElements();
+
+    if (cachedElements.size() != newElements.size()) {
+      return true;
+    } else {
+      for (int i = 0; i < cachedElements.size(); i++) {
+        if (!cachedElements.get(i).getSlug().equalsIgnoreCase(newElements.get(i).getSlug())) {
+          return true;
+        } else {
+          ElementCache cachedElementCache =
+              cachedContentData.getElementsCache().get(cachedElements.get(i).getElementUrl());
+
+          ElementCache newElementCache =
+              newContentData.getElementsCache().get(newElements.get(i).getElementUrl());
+
+          if (cachedElementCache != null
+              && newElementCache != null
+              && cachedElementCache.getUpdateAt() != newElementCache.getUpdateAt()) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
 
   private void renderContentItem(ContentItem contentItem) {
-    if (contentItem != null
-        && contentItem.getLayout() != null
-        && contentItem.getElements() != null
-        && getView() != null) {
+    if (getView() != null) {
+      if (contentItem != null
+          && contentItem.getLayout() != null
+          && contentItem.getElements() != null) {
 
-      listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
-      if (this.getView() != null) {
+        listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
+
         if (listedCellContentDataList.size() != 0) {
           getView().setData(listedCellContentDataList, contentItem.getLayout().getType());
           getView().showEmptyView(false);
@@ -183,10 +261,21 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     return cellGridContentDataList;
   }
 
-  public void onItemClicked(int position, AppCompatActivity activity, View view) {
+  public void onItemClicked(int position, View view) {
     if (position < listedCellContentDataList.size()) {
 
       Element element = (Element) listedCellContentDataList.get(position).getData();
+
+      if (element == null) {
+        return;
+      }
+
+      if (checkElementNeedAuthUser(element)) {
+        getView().showAuthDialog();
+        return;
+      }
+
+      WeakReference<View> viewWeakReference = new WeakReference<>(view);
 
       ocmController.getDetails(false, element.getElementUrl(),
           new OcmController.GetDetailControllerCallback() {
@@ -197,25 +286,30 @@ public class ContentViewPresenter extends Presenter<ContentView> {
               }
 
               if (getView() != null) {
-                if (element != null && checkLoginAuth(
-                    element.getSegmentation().getRequiredAuth())) {
-                  OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
-                  getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
-                      activity, view);
-                } else {
-                  getView().showAuthDialog();
-                }
+                OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
+                getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
+                    viewWeakReference.get());
               }
             }
 
             @Override public void onGetDetailFails(Exception e) {
               e.printStackTrace();
             }
+
+            @Override public void onGetDetailNoAvailable(Exception e) {
+              e.printStackTrace();
+              getView().contentNotAvailable();
+            }
           });
     }
   }
 
-  private boolean checkLoginAuth(RequiredAuthoritation requiredAuthoritation) {
+  private boolean checkElementNeedAuthUser(Element element) {
+    return !checkUserHasPermissionsToShowElement(element.getSegmentation().getRequiredAuth());
+  }
+
+  private boolean checkUserHasPermissionsToShowElement(
+      RequiredAuthoritation requiredAuthoritation) {
     return authoritation.isAuthorizatedUser() || !requiredAuthoritation.equals(
         RequiredAuthoritation.LOGGED);
   }
@@ -233,5 +327,13 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   public int getChildCount() {
     return listedCellContentDataList != null ? listedCellContentDataList.size() : 0;
+  }
+
+  @Override public void detachView() {
+    super.detachView();
+  }
+
+  public void setImagesToDownload(int imagesToDownload) {
+    this.imagesToDownload = imagesToDownload;
   }
 }

@@ -20,10 +20,12 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
+import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -32,8 +34,8 @@ import java.util.concurrent.TimeUnit;
 public class WebViewContentData extends UiBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
-
-  private WebView webView;
+  View mView;
+  private TouchyWebView webView;
   private ProgressBar progress;
   private JsHandler jsInterface;
   private boolean localStorageUpdated;
@@ -51,18 +53,51 @@ public class WebViewContentData extends UiBaseContentData {
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.view_webview_elements_item, container, false);
+    mView = inflater.inflate(R.layout.view_webview_detail_item, container, false);
 
-    webView = (WebView) view.findViewById(R.id.ocm_webView);
-    progress = (ProgressBar) view.findViewById(R.id.webview_progress);
+    webView = (TouchyWebView) mView.findViewById(R.id.ocm_webView);
+    progress = (ProgressBar) mView.findViewById(R.id.webview_progress);
 
-    return view;
+    return mView;
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
     init();
+  }
+
+  @Override public void onDestroy() {
+
+    if (mView != null) {
+      unbindDrawables(mView);
+      System.gc();
+      Glide.get(this.getContext()).clearMemory();
+      webView = null;
+      progress = null;
+
+      ((ViewGroup) mView).removeAllViews();
+      Glide.get(this.getContext()).clearMemory();
+
+      mView = null;
+      System.gc();
+    }
+
+    super.onDestroy();
+  }
+
+  private void unbindDrawables(View view) {
+    System.gc();
+    Runtime.getRuntime().gc();
+    if (view.getBackground() != null) {
+      view.getBackground().setCallback(null);
+    }
+    if (view instanceof ViewGroup) {
+      for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        unbindDrawables(((ViewGroup) view).getChildAt(i));
+      }
+      ((ViewGroup) view).removeAllViews();
+    }
   }
 
   private void init() {
@@ -108,8 +143,7 @@ public class WebViewContentData extends UiBaseContentData {
     });
 
     webView.setDownloadListener(new DownloadListener() {
-      @Override
-      public void onDownloadStart(String url, String userAgent, String contentDisposition,
+      @Override public void onDownloadStart(String url, String userAgent, String contentDisposition,
           String mimetype, long contentLength) {
         getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
       }
@@ -117,7 +151,7 @@ public class WebViewContentData extends UiBaseContentData {
   }
 
   private void setCidLocalStorage() {
-    if (!localStorageUpdated) {
+    if (!localStorageUpdated && webView != null) {
       Map<String, String> cidLocalStorage = OCManager.getLocalStorage();
       if (cidLocalStorage != null) {
         for (Map.Entry<String, String> element : cidLocalStorage.entrySet()) {
@@ -135,7 +169,9 @@ public class WebViewContentData extends UiBaseContentData {
   }
 
   private void showProgressView(boolean visible) {
-    progress.setVisibility(visible ? View.VISIBLE : View.GONE);
+    if (progress != null) {
+      progress.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
   }
 
   private void loadUrl() {

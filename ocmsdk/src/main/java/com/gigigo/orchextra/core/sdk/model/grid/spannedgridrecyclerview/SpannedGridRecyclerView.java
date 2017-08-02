@@ -57,8 +57,11 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
     //TODO Resolve clip to padding flashing when last row is 3 items 1x1. Remove logic in presenter
     int padding = (clipToPadding != null) ? clipToPadding.getPadding()
         : ClipToPadding.PADDING_NONE.getPadding();
+
     multipleGridRecyclerView.setGridColumns(
         clipToPadding == ClipToPadding.PADDING_NONE ? 3 : 3 * padding);
+
+    multipleGridRecyclerView.setMillis(1500);
 
     multipleGridRecyclerView.setOnRefreshListener(new MultipleGridRecyclerView.OnRefreshListener() {
       @Override public void onRefresh() {
