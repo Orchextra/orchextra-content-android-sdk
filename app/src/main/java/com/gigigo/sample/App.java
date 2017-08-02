@@ -9,11 +9,8 @@ import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
-import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
-
 import com.squareup.leakcanary.LeakCanary;
 
-//MultiDexApplication
 public class App extends MultiDexApplication {
 
   //public static String API_KEY = "a2966ba69f4ead1a4f1550bfda450e9fd07e6762";   //Asv project
@@ -44,8 +41,8 @@ public class App extends MultiDexApplication {
   //public static String API_SECRET = "e1d718aefde8aab04621a7acf1771dfbf5884fef";
 
   //[UAT][INTERNAL] DEMO APP
-  public static String API_KEY = "338d65a6572be208f25a9a5815861543adaa4abb";
-  public static String API_SECRET = "b29dac01598f9d8e2102aef73ac816c0786843ef";
+  //public static String API_KEY = "338d65a6572be208f25a9a5815861543adaa4abb";
+  //public static String API_SECRET = "b29dac01598f9d8e2102aef73ac816c0786843ef";
 
   private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {
@@ -86,7 +83,7 @@ public class App extends MultiDexApplication {
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
-    Ocm.setBusinessUnit("it");
+    Ocm.setBusinessUnit("pl");
   }
 
   private void enableStrictMode() {

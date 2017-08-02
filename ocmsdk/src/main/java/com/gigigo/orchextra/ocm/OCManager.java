@@ -2,7 +2,6 @@ package com.gigigo.orchextra.ocm;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.pm.PackageManager;
 import android.util.Log;
 import android.widget.ImageView;
 import com.gigigo.imagerecognitioninterface.ImageRecognition;
@@ -40,14 +39,10 @@ import java.util.List;
 import java.util.Map;
 import orchextra.javax.inject.Inject;
 
-//import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
-
-//import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
-
 public final class OCManager {
 
+  static Application mApplication;
   private static OCManager instance;
-
   @Inject OcmSdkLifecycle ocmSdkLifecycle;
   @Inject OcmContextProvider ocmContextProvider;
   @Inject OcmViewGenerator ocmViewGenerator;
@@ -56,27 +51,23 @@ public final class OCManager {
   @Inject OcmSchemeHandler schemeHandler;
   @Inject OcmStyleUi ocmStyleUi;
   @Inject OcmController ocmController;
-
   private OnRequiredLoginCallback onRequiredLoginCallback;
   private OnEventCallback onEventCallback;
   private String language;
   private InjectorImpl injector;
   private Map<String, String> localStorage;
   private OcmCredentialCallback ocmCredentialCallback;
-
   private OnCustomSchemeReceiver onCustomSchemeReceiver;
-  private CustomSchemeReceiver onOxCustomSchemeReceiver = new CustomSchemeReceiver() {
-    @Override public void onReceive(String customScheme) {
-      returnOcCustomSchemeCallback(customScheme);
-    }
-  };
 
   //cambio para el inicio selectivo, MEJORAR,
   //necesitamos un contexto para q la funcion setNewOrchextracredentials pueda comprobar las preferences
   //lo suyo es no guardarlo en las preferences, de momneto así y una mejora sencilla seria añadir el contexto a
   //la funcion de setNewOrchextracredentials, para no mantener el application cuando no es necesario
-
-  static Application mApplication;
+  private CustomSchemeReceiver onOxCustomSchemeReceiver = new CustomSchemeReceiver() {
+    @Override public void onReceive(String customScheme) {
+      returnOcCustomSchemeCallback(customScheme);
+    }
+  };
 
   static void initSdk(Application application) {
     getInstance();
@@ -98,15 +89,16 @@ public final class OCManager {
 
   static void getMenus(boolean forceReload, final OCManagerCallbacks.Menus menusCallback) {
     if (instance != null) {
-      instance.ocmViewGenerator.getMenu(forceReload, new OcmViewGenerator.GetMenusViewGeneratorCallback() {
-        @Override public void onGetMenusLoaded(List<UiMenu> menus) {
-          menusCallback.onMenusLoaded(menus);
-        }
+      instance.ocmViewGenerator.getMenu(forceReload,
+          new OcmViewGenerator.GetMenusViewGeneratorCallback() {
+            @Override public void onGetMenusLoaded(List<UiMenu> menus) {
+              menusCallback.onMenusLoaded(menus);
+            }
 
-        @Override public void onGetMenusFails(Throwable e) {
-          menusCallback.onMenusFails(e);
-        }
-      });
+            @Override public void onGetMenusFails(Throwable e) {
+              menusCallback.onMenusFails(e);
+            }
+          });
     }
   }
 
@@ -221,26 +213,10 @@ public final class OCManager {
 
     instance.ocmCredentialCallback = ocmCredentialCallback;
 
-    //SharedPreferences prefs = OCManager.instance.mApplication.
-    //    getSharedPreferences("OCMpreferencez", Context.MODE_PRIVATE);
-    //Boolean IsCredentialsChanged = prefs.getBoolean("ChangeCredentialsDONE", false);
+    Orchextra.start();
 
-   // if(!IsCredentialsChanged) {
-      //region antigua
-     // Orchextra.start();
-      //Some case the start() and changeCredentials() method has concurrency problems
-     // Orchextra.changeCredentials(apiKey, apiSecret);
-      //endregion
-   // }
-    //region nueva
-    Orchextra.updateSDKCredentials(apiKey, apiSecret);
-    //OrchextraManager.saveApiKeyAndSecret(apiKey, apiSecret);
-
-    //Orchextra.start();
-
-    //prefs.edit().putBoolean("ChangeCredentialsDONE",true);
-    //prefs.edit().commit();
-    //endregion
+    //Some case the start() and changeCredentials() method has concurrency problems
+    Orchextra.changeCredentials(apiKey, apiSecret);
   }
 
   static void bindUser(CrmUser crmUser) {
@@ -324,10 +300,25 @@ public final class OCManager {
     return instance;
   }
 
+  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
+      String senderId, ImageRecognition vuforia) {
+    if (OCManager.instance != null) {
+      Application app = (Application) instance.ocmContextProvider.getApplicationContext();
+      OCManager.instance.initOrchextra(app, oxKey, oxSecret, notificationActivityClass, senderId,
+          vuforia);
+    }
+  }
+
+  public static void showIconNewContent() {
+
+  }
+
   private void initOcm(Application app) {
     initDependencyInjection(app);
     initLifecyle(app);
   }
+
+  //endregion
 
   private void initDependencyInjection(Application app) {
     OcmComponent ocmComponent = DaggerOcmComponent.builder().ocmModule(new OcmModule(app)).build();
@@ -340,8 +331,6 @@ public final class OCManager {
   private void initLifecyle(Application app) {
     app.registerActivityLifecycleCallbacks(ocmSdkLifecycle);
   }
-
-  //endregion
 
   private void initOrchextra(Application app, String oxKey, String oxSecret,
       Class notificationActivityClass, String senderId) {
@@ -377,7 +366,8 @@ public final class OCManager {
 
             instance.oxSession.setToken(accessToken);
 
-            if (instance.ocmCredentialCallback != null) { //asv esto indica q se hace el changecredentials
+            if (instance.ocmCredentialCallback
+                != null) { //asv esto indica q se hace el changecredentials
               ocmCredentialCallback.onCredentialReceiver(accessToken);
             }
           }
@@ -442,18 +432,5 @@ public final class OCManager {
     Orchextra.initialize(builder);
 
     Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
-  }
-
-  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
-      String senderId, ImageRecognition vuforia) {
-    if (OCManager.instance != null) {
-      Application app = (Application) instance.ocmContextProvider.getApplicationContext();
-      OCManager.instance.initOrchextra(app, oxKey, oxSecret, notificationActivityClass, senderId,
-          vuforia);
-    }
-  }
-
-  public static void showIconNewContent() {
-
   }
 }
