@@ -3,13 +3,14 @@ package com.gigigo.sample;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.view.ViewGroup;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import java.util.List;
 
 public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
 
   private List<UiMenu> menuContent;
-  private boolean reloadSections = false;
 
   public ScreenSlidePagerAdapter(FragmentManager fm) {
     super(fm);
@@ -29,11 +30,7 @@ public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
 
   @Override public int getItemPosition(Object object) {
     if (object instanceof ScreenSlidePageFragment) {
-
-      if (reloadSections) {
-        ((ScreenSlidePageFragment) object).reloadSection();
-        reloadSections = false;
-      }
+      ((ScreenSlidePageFragment) object).reloadSection();
     }
     return super.getItemPosition(object);
   }
@@ -43,7 +40,6 @@ public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
   }
 
   public void reloadSections() {
-    this.reloadSections = true;
     notifyDataSetChanged();
   }
 

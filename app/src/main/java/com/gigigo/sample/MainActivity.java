@@ -21,9 +21,7 @@ public class MainActivity extends AppCompatActivity {
   private TabLayout tabLayout;
   private ViewPager viewpager;
   private ScreenSlidePagerAdapter adapter;
-  private View fabReload;
-
-  private List<UiMenu> uiMenu;
+  private View newContentMainContainer;
 
   private TabLayout.OnTabSelectedListener onTabSelectedListener =
       new TabLayout.OnTabSelectedListener() {
@@ -57,7 +55,10 @@ public class MainActivity extends AppCompatActivity {
   private void initViews() {
     tabLayout = (TabLayout) findViewById(R.id.tabLayout);
     viewpager = (ViewPager) findViewById(R.id.viewpager);
-    fabReload = findViewById(R.id.fabReload);
+    View fabReload = findViewById(R.id.fabReload);
+
+    newContentMainContainer = findViewById(R.id.newContentMainContainer);
+
     fabReload.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         adapter.reloadSections();
@@ -75,9 +76,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO Fix in Orchextra
         runOnUiThread(new Runnable() {
           @Override public void run() {
-            if (uiMenu == null || uiMenu.size() == 0) {
-              getContent();
-            }
+            getContent();
           }
         });
       }
@@ -97,23 +96,60 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void getContent() {
-
-    Ocm.getMenus(new OcmCallbacks.Menus() {
-      @Override public void onMenusLoaded(List<UiMenu> menus) {
-        uiMenu = menus;
+    Ocm.getMenus(false, new OcmCallbacks.Menus() {
+      @Override public void onMenusLoaded(List<UiMenu> uiMenu) {
         if (uiMenu == null) {
           Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
         } else {
           viewpager.setOffscreenPageLimit(uiMenu.size());
           onGoDetailView(uiMenu);
           adapter.setDataItems(uiMenu);
+          checkIfMenuHasChanged(uiMenu);
         }
       }
 
       @Override public void onMenusFails(Throwable e) {
-        if (uiMenu == null) {
-          Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+      }
+    });
+  }
+
+  private void checkIfMenuHasChanged(final List<UiMenu> oldMenus) {
+    Ocm.getMenus(true, new OcmCallbacks.Menus() {
+      @Override public void onMenusLoaded(List<UiMenu> newMenus) {
+        if (oldMenus == null || newMenus == null) {
+          return;
         }
+        if (oldMenus.size() != newMenus.size()) {
+          showIconNewContent(newMenus);
+        } else {
+          for (int i = 0; i < newMenus.size(); i++) {
+            if (oldMenus.get(i).getUpdateAt() != newMenus.get(i).getUpdateAt()) {
+              showIconNewContent(newMenus);
+              return;
+            }
+          }
+        }
+      }
+
+      @Override public void onMenusFails(Throwable e) {
+      }
+    });
+  }
+
+  private void showIconNewContent(final List<UiMenu> newMenus) {
+    newContentMainContainer.setVisibility(View.VISIBLE);
+    newContentMainContainer.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        newContentMainContainer.setVisibility(View.GONE);
+
+        adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        adapter.setDataItems(newMenus);
+        viewpager.removeAllViews();
+        viewpager.setAdapter(adapter);
+
+        tabLayout.removeAllTabs();
+        onGoDetailView(newMenus);
       }
     });
   }

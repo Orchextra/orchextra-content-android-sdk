@@ -49,8 +49,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     this.detailElementsViewPresenterProvider = detailElementsViewPresenterProvider;
   }
 
-  @Override public void getMenu(final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
-    ocmController.getMenu(false, new OcmController.GetMenusControllerCallback() {
+  @Override public void getMenu(boolean forceReload, final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
+    ocmController.getMenu(forceReload, new OcmController.GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(MenuContentData menus) {
         getMenusViewGeneratorCallback.onGetMenusLoaded(transformMenu(menus));
       }
@@ -67,12 +67,20 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     if (menuContentData != null
         && menuContentData.getMenuContentList() != null
         && menuContentData.getMenuContentList().size() > 0) {
+
       for (Element element : menuContentData.getMenuContentList().get(0).getElements()) {
         UiMenu uiMenu = new UiMenu();
 
         uiMenu.setSlug(element.getSlug());
         uiMenu.setText(element.getSectionView().getText());
         uiMenu.setElementUrl(element.getElementUrl());
+
+        if (menuContentData.getElementsCache() != null) {
+          ElementCache elementCache = menuContentData.getElementsCache().get(element.getElementUrl());
+          if (elementCache != null) {
+            uiMenu.setUpdateAt(elementCache.getUpdateAt());
+          }
+        }
 
         menuList.add(uiMenu);
       }

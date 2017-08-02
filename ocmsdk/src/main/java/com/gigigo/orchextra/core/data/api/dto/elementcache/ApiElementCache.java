@@ -11,6 +11,7 @@ public class ApiElementCache {
   private ApiElementCacheRender render;
   private ApiElementCacheShare share;
   private String name;
+  private long updatedAt;
 
   public String getSlug() {
     return slug;
@@ -38,5 +39,13 @@ public class ApiElementCache {
 
   public String getName() {
     return name;
+  }
+
+  public long getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(long updatedAt) {
+    this.updatedAt = updatedAt;
   }
 }

@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.controller.model.grid;
 
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -91,9 +90,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
             ocmController.getSection(true, section, imagesToDownload,
                 new OcmController.GetSectionControllerCallback() {
-                  @Override public void onGetSectionLoaded(ContentData contentData) {
-                    ContentItem contentItem1 = contentData.getContent();
-                    checkNewContent(contentItem.getElements(), contentItem1.getElements());
+                  @Override public void onGetSectionLoaded(ContentData contentData1) {
+                    checkNewContent(contentData, contentData1);
                   }
 
                   @Override public void onGetSectionFails(Exception e) {
@@ -108,20 +106,43 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         });
   }
 
-  private void checkNewContent(List<Element> cachedElements, List<Element> newElements) {
-    if (cachedElements == null || newElements == null) return;
-    if (checkDifferents(cachedElements, newElements)) {
+  private void checkNewContent(ContentData cachedContentData, ContentData newContentData) {
+    if (cachedContentData == null
+        || newContentData == null
+        || cachedContentData.getContent() == null
+        || newContentData.getContent() == null
+        || cachedContentData.getContent().getElements() == null
+        || newContentData.getContent().getElements() == null
+        || getView() == null) {
+      return;
+    }
+    if (checkDifferents(cachedContentData, newContentData)) {
       getView().showNewExistingContent();
     }
   }
 
-  private boolean checkDifferents(List<Element> cachedElements, List<Element> newElements) {
+  private boolean checkDifferents(ContentData cachedContentData, ContentData newContentData) {
+    List<Element> cachedElements = cachedContentData.getContent().getElements();
+    List<Element> newElements = newContentData.getContent().getElements();
+
     if (cachedElements.size() != newElements.size()) {
       return true;
     } else {
       for (int i = 0; i < cachedElements.size(); i++) {
         if (!cachedElements.get(i).getSlug().equalsIgnoreCase(newElements.get(i).getSlug())) {
           return true;
+        } else {
+          ElementCache cachedElementCache =
+              cachedContentData.getElementsCache().get(cachedElements.get(i).getElementUrl());
+
+          ElementCache newElementCache =
+              newContentData.getElementsCache().get(newElements.get(i).getElementUrl());
+
+          if (cachedElementCache != null
+              && newElementCache != null
+              && cachedElementCache.getUpdateAt() != newElementCache.getUpdateAt()) {
+            return true;
+          }
         }
       }
     }

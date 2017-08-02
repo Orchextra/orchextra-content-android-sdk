@@ -29,6 +29,7 @@ public class ApiElementCacheMapper
     model.setSlug(data.getSlug());
     model.setType(ElementCacheType.convertStringToEnum(data.getType()));
     model.setName(data.getName());
+    model.setUpdateAt(data.getUpdatedAt());
 
     List<String> tagList = new ArrayList<>();
     if (data.getTags() != null) {

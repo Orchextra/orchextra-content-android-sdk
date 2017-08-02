@@ -88,9 +88,9 @@ public final class OCManager {
     }
   }
 
-  static void getMenus(final OCManagerCallbacks.Menus menusCallback) {
+  static void getMenus(boolean forceReload, final OCManagerCallbacks.Menus menusCallback) {
     if (instance != null) {
-      instance.ocmViewGenerator.getMenu(new OcmViewGenerator.GetMenusViewGeneratorCallback() {
+      instance.ocmViewGenerator.getMenu(forceReload, new OcmViewGenerator.GetMenusViewGeneratorCallback() {
         @Override public void onGetMenusLoaded(List<UiMenu> menus) {
           menusCallback.onMenusLoaded(menus);
         }
@@ -427,22 +427,7 @@ public final class OCManager {
     }
   }
 
-  //public static boolean isCustomTabsNotAvailable() {
-  //  boolean installed = false;
-  //  String packageName = "com.android.chrome";
-  //  if (OCManager.instance != null
-  //      && OCManager.instance.ocmContextProvider != null
-  //      && OCManager.instance.ocmContextProvider.getApplicationContext() != null) {
-  //
-  //    PackageManager pm =
-  //        OCManager.instance.ocmContextProvider.getApplicationContext().getPackageManager();
-  //    try {
-  //      pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
-  //      installed = true;
-  //    } catch (PackageManager.NameNotFoundException e) {
-  //      installed = false;
-  //    }
-  //  }
-  //  return installed;
-  //}
+  public static void showIconNewContent() {
+
+  }
 }
