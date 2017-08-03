@@ -23,8 +23,10 @@ import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -34,17 +36,19 @@ import java.util.concurrent.TimeUnit;
 public class WebViewContentData extends UiBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
+  private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
   View mView;
   private TouchyWebView webView;
   private ProgressBar progress;
   private JsHandler jsInterface;
   private boolean localStorageUpdated;
 
-  public static WebViewContentData newInstance(String url) {
+  public static WebViewContentData newInstance(ElementCacheRender render) {
     WebViewContentData webViewElements = new WebViewContentData();
 
     Bundle bundle = new Bundle();
-    bundle.putString(EXTRA_URL, url);
+    bundle.putString(EXTRA_URL, render.getUrl());
+    bundle.putBoolean(EXTRA_FEDERATED_AUTH, render.isFederatedAuth());
     webViewElements.setArguments(bundle);
 
     return webViewElements;
@@ -177,6 +181,10 @@ public class WebViewContentData extends UiBaseContentData {
   private void loadUrl() {
     showProgressView(true);
     String url = getArguments().getString(EXTRA_URL);
+    boolean federatedAuth = getArguments().getBoolean(EXTRA_FEDERATED_AUTH);
+    if (federatedAuth && Ocm.getQueryStringGenerator() != null) {
+      url = url + "?" + Ocm.getQueryStringGenerator().getQueryString();
+    }
     if (!TextUtils.isEmpty(url)) {
       webView.loadUrl(url);
     }
