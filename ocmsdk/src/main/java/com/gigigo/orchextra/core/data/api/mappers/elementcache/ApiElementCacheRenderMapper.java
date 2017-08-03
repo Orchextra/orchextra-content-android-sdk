@@ -53,6 +53,8 @@ public class ApiElementCacheRenderMapper
       //articleElementList.add(articleButtonElement);
     }
 
+    model.setFederatedAuth(data.isFederatedAuth());
+
     model.setElements(articleElementList);
 
     return model;
