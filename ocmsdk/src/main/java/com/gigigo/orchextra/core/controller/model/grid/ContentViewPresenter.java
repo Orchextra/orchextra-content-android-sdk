@@ -116,21 +116,30 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         || getView() == null) {
       return;
     }
-    if (checkDifferents(cachedContentData, newContentData)) {
-      getView().showNewExistingContent();
+    UpdateAtType updateAtType = checkDifferents(cachedContentData, newContentData);
+    switch (updateAtType) {
+      case NEW_CONTENT:
+        getView().showNewExistingContent();
+        break;
+      case REFRESH:
+        loadFromCache();
+        break;
     }
   }
 
-  private boolean checkDifferents(ContentData cachedContentData, ContentData newContentData) {
+  private UpdateAtType checkDifferents(ContentData cachedContentData, ContentData newContentData) {
     List<Element> cachedElements = cachedContentData.getContent().getElements();
     List<Element> newElements = newContentData.getContent().getElements();
 
-    if (cachedElements.size() != newElements.size()) {
-      return true;
+    if (cachedElements.size() > newElements.size()) {
+      return UpdateAtType.REFRESH;
+      //Refresh
+    } else if (cachedElements.size() < newElements.size()) {
+      return UpdateAtType.NEW_CONTENT;
     } else {
       for (int i = 0; i < cachedElements.size(); i++) {
         if (!cachedElements.get(i).getSlug().equalsIgnoreCase(newElements.get(i).getSlug())) {
-          return true;
+          return UpdateAtType.NEW_CONTENT;
         } else {
           ElementCache cachedElementCache =
               cachedContentData.getElementsCache().get(cachedElements.get(i).getElementUrl());
@@ -141,12 +150,13 @@ public class ContentViewPresenter extends Presenter<ContentView> {
           if (cachedElementCache != null
               && newElementCache != null
               && cachedElementCache.getUpdateAt() != newElementCache.getUpdateAt()) {
-            return true;
+            //Refresh
+            return UpdateAtType.REFRESH;
           }
         }
       }
     }
-    return false;
+    return UpdateAtType.NONE;
   }
 
   private void renderContentItem(ContentItem contentItem) {
