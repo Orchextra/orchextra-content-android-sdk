@@ -16,6 +16,7 @@ public class ApiElementCacheRender {
 
   private String source;
   private String format;
+  private boolean federatedAuth;
 
   public String getContentUrl() {
     return contentUrl;
@@ -43,5 +44,13 @@ public class ApiElementCacheRender {
 
   public String getFormat() {
     return format;
+  }
+
+  public boolean isFederatedAuth() {
+    return federatedAuth;
+  }
+
+  public void setFederatedAuth(boolean federatedAuth) {
+    this.federatedAuth = federatedAuth;
   }
 }

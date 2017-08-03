@@ -17,9 +17,11 @@ import java.util.Map;
 
 public final class Ocm {
 
+  private static QueryStringGenerator queryStringGenerator;
+
   public static void initialize(Application app) {
 
-     OcmBuilder ocmBuilder = new OcmBuilder(app);
+    OcmBuilder ocmBuilder = new OcmBuilder(app);
     String oxKey = "45179249c53cda327421e242e1fa4830484c9a94";
     String oxSecret = "e8473653b5d479a173c53bf3831670275b3a0364";
     Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
@@ -34,27 +36,24 @@ public final class Ocm {
     //asv la vaina sería meter este validator en el initiliaze, el put to true en el changecredentialas de orchextra y el get en el initialize
     Boolean IsCredentialsChanged = prefs.getBoolean("ChangeCredentialsDONE", false);
 
-    if(!IsCredentialsChanged) {
+    if (!IsCredentialsChanged) {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, ocmBuilder.getOxSenderId());
       Orchextra.start();
-    }
-    else
-    {
-        String API_KEY = "7bb9fa0f9b7a02846383fd6284d3c74b8155644c";
-        String API_SECRET = "3295dc8de90300e2977e6cec5b28b614fc644934";
+    } else {
+      String API_KEY = "7bb9fa0f9b7a02846383fd6284d3c74b8155644c";
+      String API_SECRET = "3295dc8de90300e2977e6cec5b28b614fc644934";
 
       //probar a pillar las apikeyy ecret del preferences
-    //  OCManager.initOrchextra(API_KEY, API_SECRET, notificationActivityClass, ocmBuilder.getOxSenderId());
+      //  OCManager.initOrchextra(API_KEY, API_SECRET, notificationActivityClass, ocmBuilder.getOxSenderId());
 
     }
   }
 
-
   public static void initializeWithChangeCredentials(OcmBuilder ocmBuilder) {
 
-   // OcmBuilder ocmBuilder = new OcmBuilder(app);
-   // String oxKey = "45179249c53cda327421e242e1fa4830484c9a94";
-   // String oxSecret = "e8473653b5d479a173c53bf3831670275b3a0364";
+    // OcmBuilder ocmBuilder = new OcmBuilder(app);
+    // String oxKey = "45179249c53cda327421e242e1fa4830484c9a94";
+    // String oxSecret = "e8473653b5d479a173c53bf3831670275b3a0364";
 
     String oxKey = "30a2d1032d623dadd345db6c7631fbaac704af45";
     String oxSecret = "329e98d088e0cfaac1a190ee9fafb44cbea92b59";
@@ -69,12 +68,12 @@ public final class Ocm {
     //SharedPreferences prefs =
     //    ocmBuilder.getApp().getSharedPreferences("OCMpreferencez", Context.MODE_PRIVATE);
     //asv la vaina sería meter este validator en el initiliaze, el put to true en el changecredentialas de orchextra y el get en el initialize
-   // Boolean IsCredentialsChanged = prefs.getBoolean("ChangeCredentialsDONE", false);
+    // Boolean IsCredentialsChanged = prefs.getBoolean("ChangeCredentialsDONE", false);
 
     //if(!IsCredentialsChanged) {
 
-      System.out.println("PRIMERA VEZ SOLO UNA VEZ");
-      OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, ocmBuilder.getOxSenderId());
+    System.out.println("PRIMERA VEZ SOLO UNA VEZ");
+    OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, ocmBuilder.getOxSenderId());
 
     /*}
     else
@@ -269,5 +268,13 @@ public final class Ocm {
   public static void setOnDoRequiredLoginCallback(
       OnRequiredLoginCallback onDoRequiredLoginCallback) {
     OCManager.setDoRequiredLoginCallback(onDoRequiredLoginCallback);
+  }
+
+  public static void setQueryStringGenerator(QueryStringGenerator queryStringGenerator) {
+    Ocm.queryStringGenerator = queryStringGenerator;
+  }
+
+  public static QueryStringGenerator getQueryStringGenerator() {
+    return Ocm.queryStringGenerator;
   }
 }

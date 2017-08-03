@@ -172,7 +172,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         }
       case WEBVIEW:
         if (render != null) {
-          return generateWebViewDetailView(render.getUrl());
+          return generateWebViewDetailView(render);
         }
       case BROWSER:
         if (render != null) {
@@ -226,8 +226,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return cardContentData;
   }
 
-  private UiBaseContentData generateWebViewDetailView(String url) {
-    return WebViewContentData.newInstance(url);
+  private UiBaseContentData generateWebViewDetailView(ElementCacheRender render) {
+    return WebViewContentData.newInstance(render);
   }
 
   private UiBaseContentData generateCustomTabsDetailView(String url) {
