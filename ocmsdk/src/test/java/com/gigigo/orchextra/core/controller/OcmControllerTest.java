@@ -1,15 +1,12 @@
 package com.gigigo.orchextra.core.controller;
 
-import com.gigigo.orchextra.core.controller.OcmControllerImp;
 import com.gigigo.orchextra.core.domain.OcmController;
-import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
-import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
 import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
 import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
-import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
+import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import io.reactivex.observers.DisposableObserver;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,12 +15,10 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.reactivestreams.Subscriber;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class) public class OcmControllerTest {
 
@@ -40,6 +35,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
   @Mock private GetMenus mockGetMenus;
   @Mock private GetSection mockGetSection;
   @Mock private SearchElements mockSearchElements;
+  @Mock private ConnectionUtils mockConnectionUtils;
 
 
   @Rule public ExpectedException expectedException = ExpectedException.none();
@@ -47,7 +43,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
   @Before public void setUp() {
     ocmController =
         new OcmControllerImp(mockGetMenus, mockGetSection, mockGetDetail, mockSearchElements,
-            mockClearCache);
+            mockClearCache, mockConnectionUtils);
   }
 
   @Test public void testClearCache() {

@@ -33,9 +33,9 @@ import static org.mockito.Mockito.verifyZeroInteractions;
   }
 
   @Test public void testGetSectionUseCaseObservableHappyCase() {
-    getSection.buildUseCaseObservable(GetSection.Params.forSection(FORCE_RELOAD, FAKE_SECTION));
+    getSection.buildUseCaseObservable(GetSection.Params.forSection(FORCE_RELOAD, FAKE_SECTION, 12));
 
-    verify(mockOcmRepository).getSectionElements(FORCE_RELOAD, FAKE_SECTION);
+    verify(mockOcmRepository).getSectionElements(FORCE_RELOAD, FAKE_SECTION, 12);
     verifyNoMoreInteractions(mockOcmRepository);
     verifyZeroInteractions(mockPostExecutionThread);
     verifyZeroInteractions(mockThreadExecutor);

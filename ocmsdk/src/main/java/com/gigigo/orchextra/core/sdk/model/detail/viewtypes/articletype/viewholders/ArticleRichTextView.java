@@ -1,10 +1,6 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -12,20 +8,18 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
-import android.text.util.Linkify;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
-import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
-import javax.inject.Inject;
 
 public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement> {
 
@@ -63,7 +57,9 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
     ClickableSpan clickable = new ClickableSpan() {
       public void onClick(View view) {
         if (connectionUtils.hasConnection()) {
-          DeviceUtils.openChromeTabs(ocmContextProvider.getCurrentActivity(), span.getURL());
+          String url = Ocm.getQueryStringGenerator() != null && Ocm.getQueryStringGenerator().getQueryString() != null
+              ? span.getURL() + Ocm.getQueryStringGenerator().getQueryString() : span.getURL();
+          DeviceUtils.openChromeTabs(ocmContextProvider.getCurrentActivity(), url);
         } else {
           View rootView = ((ViewGroup) ocmContextProvider.getCurrentActivity()
               .findViewById(android.R.id.content)).getChildAt(0);

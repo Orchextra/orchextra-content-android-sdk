@@ -54,6 +54,16 @@ public class WebViewContentData extends UiBaseContentData {
     return webViewElements;
   }
 
+  public static WebViewContentData newInstance(String url) {
+    WebViewContentData webViewElements = new WebViewContentData();
+
+    Bundle bundle = new Bundle();
+    bundle.putString(EXTRA_URL, url);
+    webViewElements.setArguments(bundle);
+
+    return webViewElements;
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -181,7 +191,7 @@ public class WebViewContentData extends UiBaseContentData {
   private void loadUrl() {
     showProgressView(true);
     String url = getArguments().getString(EXTRA_URL);
-    boolean federatedAuth = getArguments().getBoolean(EXTRA_FEDERATED_AUTH);
+    boolean federatedAuth = getArguments().getBoolean(EXTRA_FEDERATED_AUTH, false);
     if (federatedAuth && Ocm.getQueryStringGenerator() != null) {
       url = url + "?" + Ocm.getQueryStringGenerator().getQueryString();
     }
