@@ -80,8 +80,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     this.section = viewId;
     this.filter = filter;
 
-    getView().showProgressView(true);
-
     ocmController.getSection(false, section, imagesToDownload,
         new OcmController.GetSectionControllerCallback() {
           @Override public void onGetSectionLoaded(ContentData contentData) {
