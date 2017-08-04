@@ -131,13 +131,12 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
     if (cachedElements.size() > newElements.size()) {
       return UpdateAtType.REFRESH;
-      //Refresh
     } else if (cachedElements.size() < newElements.size()) {
       return UpdateAtType.NEW_CONTENT;
     } else {
       for (int i = 0; i < cachedElements.size(); i++) {
         if (!cachedElements.get(i).getSlug().equalsIgnoreCase(newElements.get(i).getSlug())) {
-          return UpdateAtType.NEW_CONTENT;
+          return UpdateAtType.REFRESH;
         } else {
           ElementCache cachedElementCache =
               cachedContentData.getElementsCache().get(cachedElements.get(i).getElementUrl());
