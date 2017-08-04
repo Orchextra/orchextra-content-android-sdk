@@ -147,7 +147,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
           if (cachedElementCache != null
               && newElementCache != null
               && cachedElementCache.getUpdateAt() != newElementCache.getUpdateAt()) {
-            //Refresh
             return UpdateAtType.REFRESH;
           }
         }
