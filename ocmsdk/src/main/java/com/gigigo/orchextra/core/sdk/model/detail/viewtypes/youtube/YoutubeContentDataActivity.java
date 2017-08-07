@@ -1,11 +1,10 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.Display;
 import com.gigigo.orchextra.core.sdk.di.base.BaseActivity;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -13,20 +12,14 @@ import com.gigigo.orchextra.ocmsdk.R;
 public class YoutubeContentDataActivity extends BaseActivity {
 
   private static final String EXTRA_YOUTUBE_VIDEO_ID = "EXTRA_YOUTUBE_VIDEO_ID";
-  public static final int RESULT_CODE_YOUTUBE_PLAYER = 6189;
   private static final String TAG_RETAINED_FRAGMENT = "TAG_RETAINED_FRAGMENT";
-  private YoutubeFragment youtubeElementsFragment;
 
-  public static void open(Activity activity, String videoId) {
+  public static void open(Context context, String videoId) {
 
-    if (!activity.isFinishing()) {
-      Intent intent = new Intent(activity, YoutubeContentDataActivity.class);
-      intent.putExtra(EXTRA_YOUTUBE_VIDEO_ID, videoId);
-      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      activity.startActivityForResult(intent, RESULT_CODE_YOUTUBE_PLAYER);
-    } else {
-      Log.e("+++", "++++++++++++++++++++++++++++++++++++++++++++FINISHING");
-    }
+    Intent intent = new Intent(context, YoutubeContentDataActivity.class);
+    intent.putExtra(EXTRA_YOUTUBE_VIDEO_ID, videoId);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    context.startActivity(intent);
   }
 
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -34,7 +27,7 @@ public class YoutubeContentDataActivity extends BaseActivity {
     setContentView(R.layout.activity_youtube_main_container_layout);
 
     FragmentManager fm = getSupportFragmentManager();
-    youtubeElementsFragment =
+    YoutubeFragment youtubeElementsFragment =
         (YoutubeFragment) fm.findFragmentByTag(TAG_RETAINED_FRAGMENT);
 
     // create the fragment and data the first time
@@ -44,8 +37,9 @@ public class YoutubeContentDataActivity extends BaseActivity {
       // videoId = "17uHCHfgs60";//"ikO91fQBsTQ";
       youtubeElementsFragment = YoutubeFragment.newInstance(videoId, getScreenOrientation());
       FragmentManager fragmentManager = getSupportFragmentManager();
-      fragmentManager.beginTransaction().replace(R.id.youtube_main_container,
-          youtubeElementsFragment, TAG_RETAINED_FRAGMENT).commit();
+      fragmentManager.beginTransaction()
+          .replace(R.id.youtube_main_container, youtubeElementsFragment, TAG_RETAINED_FRAGMENT)
+          .commit();
     }
   }
 
@@ -64,14 +58,16 @@ public class YoutubeContentDataActivity extends BaseActivity {
     return orientation;
   }
 
-  @Override
-  public void onPause() {
+  @Override public void onPause() {
     super.onPause();
 
     // this means that this activity will not be recreated now, user is leaving it
     // or the activity is otherwise finishing
-    if(isFinishing()) {
+    if (isFinishing()) {
       FragmentManager fm = getSupportFragmentManager();
+
+      YoutubeFragment youtubeElementsFragment =
+          (YoutubeFragment) fm.findFragmentByTag(TAG_RETAINED_FRAGMENT);
       // we will not need this fragment anymore, this may also be a good place to signal
       // to the retained fragment object to perform its own cleanup.
       fm.beginTransaction().remove(youtubeElementsFragment).commit();

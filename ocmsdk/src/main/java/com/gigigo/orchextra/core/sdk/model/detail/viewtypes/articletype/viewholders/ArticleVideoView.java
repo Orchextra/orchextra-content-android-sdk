@@ -19,15 +19,12 @@ import orchextra.javax.inject.Inject;
 
 public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
 
-  private final Activity activity;
-
   private ImageView imgPlay;
   private ImageView imgThumb;
   private final ConnectionUtils connectionUtils;
 
   public ArticleVideoView(Context context, ArticleVideoElement articleElement) {
     super(context, articleElement);
-    this.activity = (Activity) context;
     connectionUtils = new ConnectionUtilsImp(getContext());
   }
 
@@ -46,7 +43,7 @@ public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
     View.OnClickListener onYoutubeThumbnailClickListener = new View.OnClickListener() {
       @Override public void onClick(View v) {
         if (connectionUtils.hasConnection()) {
-          YoutubeContentDataActivity.open(activity, articleElement.getSource());
+          YoutubeContentDataActivity.open(getContext().getApplicationContext(), articleElement.getSource());
         } else {
           //TODO:
           Snackbar.make(imgThumb, R.string.oc_error_content_not_available_without_internet, Toast.LENGTH_SHORT).show();
@@ -60,7 +57,7 @@ public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
 
     String strImgForBlur = "http://img.youtube.com/vi/" + youtubeId + "/hqdefault.jpg";
 
-    Glide.with(activity).load(strImgForBlur).listener(new RequestListener<String, GlideDrawable>() {
+    Glide.with(getContext().getApplicationContext()).load(strImgForBlur).listener(new RequestListener<String, GlideDrawable>() {
       @Override public boolean onException(Exception e, String model, Target<GlideDrawable> target,
           boolean isFirstResource) {
         return false;

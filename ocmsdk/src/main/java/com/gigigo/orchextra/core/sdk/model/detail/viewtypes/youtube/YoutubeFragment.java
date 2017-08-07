@@ -41,7 +41,6 @@ public class YoutubeFragment extends UiBaseContentData {
   private int playedVideo;
   private boolean isPlaying;
   private YouTubePlayerSupportFragment youTubePlayerFragment;
-  private View mview;
   private String youtubeId;
   private int orientation;
   private FragmentManager fragmentManager;
@@ -101,11 +100,10 @@ public class YoutubeFragment extends UiBaseContentData {
       @Nullable Bundle savedInstanceState) {
     Log.e("+++",
         "+++++++++++++++++++++++++++++\n\n\n\n\n\n\n createview +++++++++++++++++++++++++++++");
-    View view = inflater.inflate(R.layout.view_youtube_elements_item, container, false);
-    mview = view;
+    View mView = inflater.inflate(R.layout.view_youtube_elements_item, container, false);
     youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
     fragmentManager = getChildFragmentManager();
-    final ImageView imgBlurBackground = (ImageView) view.findViewById(R.id.imgBlurBackground);
+    final ImageView imgBlurBackground = (ImageView) mView.findViewById(R.id.imgBlurBackground);
     mImageCallback = new BitmapImageViewTarget(imgBlurBackground) {
 
       @Override
@@ -137,21 +135,22 @@ public class YoutubeFragment extends UiBaseContentData {
           Log.e("+++", "TextUtils.isEmpty(youtubeId) " + youtubeId + "orientation" + orientation);
           if (isBlack || orientation == Configuration.ORIENTATION_LANDSCAPE) {
             //Toast.makeText(YoutubeFragment.this.getActivity(), "ES VERTICAL", Toast.LENGTH_LONG).show();
-            setYoutubeFragmentToView(LinearLayout.LayoutParams.MATCH_PARENT);
+            setYoutubeFragmentToView(mView, LinearLayout.LayoutParams.MATCH_PARENT);
             if (isBlack) {
               YoutubeFragment.this.getActivity()
                   .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
           } else {
             //Toast.makeText(YoutubeFragment.this.getActivity(), "ES HORIZONTAL", Toast.LENGTH_LONG).show();
-            setYoutubeFragmentToView(LinearLayout.LayoutParams.WRAP_CONTENT);
+            setYoutubeFragmentToView(mView, LinearLayout.LayoutParams.WRAP_CONTENT);
           }
         }
       }
     };
-    initViews(view);
+    initViews(mView);
 
-    return view;
+
+    return mView;
   }
 
   private void initViews(View view) {
@@ -183,8 +182,8 @@ public class YoutubeFragment extends UiBaseContentData {
         .into(mImageCallback);
   }
 
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
+  @Override public void onViewCreated(View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
     if (savedInstanceState != null) {
       //Restore the fragment's state here
@@ -197,10 +196,10 @@ public class YoutubeFragment extends UiBaseContentData {
     initYoutubeFragment();
   }
 
-  private void setYoutubeFragmentToView(int h) {
+  private void setYoutubeFragmentToView(View mView, int h) {
 
     // Gets linearlayout
-    FrameLayout layout = (FrameLayout) mview.findViewById(R.id.youtubePlayerFragmentContent);
+    FrameLayout layout = (FrameLayout) mView.findViewById(R.id.youtubePlayerFragmentContent);
     // Gets the layout params that will allow you to resize the layout
     ViewGroup.LayoutParams params = layout.getLayoutParams();
     Log.e("***", "************************\n\n\n\n\n\n\n PASO************************");
@@ -227,7 +226,7 @@ public class YoutubeFragment extends UiBaseContentData {
       if (player == null) {
         return;
       }
-      
+
       player.setFullscreen(false);
       player.setShowFullscreenButton(true);
       player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
@@ -282,12 +281,12 @@ public class YoutubeFragment extends UiBaseContentData {
     Log.e("+++", "onSaveInstanceState");
   }
 
-  @Override public void onDestroy() {
+  @Override public void onDestroyView() {
     Log.e("+++", "onDestroy");
     if (mPlayer != null) {
       mPlayer.release();
       Log.e("+++", "onDestroy mPlayer ");
     }
-    super.onDestroy();
+    super.onDestroyView();
   }
 }
