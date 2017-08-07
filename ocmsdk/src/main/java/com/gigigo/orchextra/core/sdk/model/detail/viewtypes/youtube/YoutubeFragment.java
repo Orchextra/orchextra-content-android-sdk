@@ -47,6 +47,7 @@ public class YoutubeFragment extends UiBaseContentData {
   private OnFullScreenListener onFullScreenModeListener;
   private FragmentManager fragmentManager;
   private BitmapImageViewTarget mImageCallback;
+  private boolean isDestroyed = true;
 
   private YouTubePlayer mPlayer;
 
@@ -64,6 +65,7 @@ public class YoutubeFragment extends UiBaseContentData {
         @Override
         public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
             boolean wasRestored) {
+          isDestroyed = false;
           mPlayer = player;
           Log.e("+++", "+++++++++++++++++\n\n\n\n\n\n\n onInitializationSuccess +++++++++++++++"
               + "++++++++++++++"
@@ -233,21 +235,15 @@ public class YoutubeFragment extends UiBaseContentData {
   public void setYouTubePlayer(final YouTubePlayer player) {
 
     try {
-      if (player != null) {
-        Log.e("+++",
-            "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer player != null \n\n\n\n\n\n\n\n" + player);
-        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer \n\n\n\n\n\n\n\n");
-      } else {
-        Log.e("+++", "\n \n\n\n\n\n\n\n\n\n setYouTubePlayer PLAYER NULL \n\n\n\n\n\n\n\n");
+      if (player == null || isDestroyed) {
+        return;
       }
+
       player.setOnFullscreenListener(onFullScreenListener);
-      Log.e("+++", "**** 1");
       player.setFullscreen(false);
-      Log.e("+++", "**** 2");
       player.setShowFullscreenButton(true);
-      Log.e("+++", "**** 3");
       player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-      Log.e("+++", "**** 4");
+
       if (playedVideo >= 0) {
         if (playedVideo == 0 || isPlaying) {
           try {
@@ -277,10 +273,10 @@ public class YoutubeFragment extends UiBaseContentData {
           }
         }
       }
-    } catch (Throwable tr) {
+    } catch (Exception exception) {
       Log.e("+++",
           "\n \n\n\n\n\n\n\n\n\n YUUUPI CAPTURADO PETE EN setYouTubePlayer antes de load y todo \n\n\n\n\n\n\n\n"
-              + tr.toString());
+              + exception.toString());
     }
   }
 
@@ -295,7 +291,7 @@ public class YoutubeFragment extends UiBaseContentData {
   @Override public void onSaveInstanceState(Bundle outState) {
 
     try {
-      if (mPlayer != null) {
+      if (mPlayer != null && !isDestroyed) {
         outState.putInt(EXTRA_PLAYED_VIDEO, mPlayer.getCurrentTimeMillis());
         outState.putBoolean(EXTRA_IS_PLAYING, mPlayer.isPlaying());
         Log.e("+++", "onSaveInstanceState mPlayer != null");
@@ -304,6 +300,12 @@ public class YoutubeFragment extends UiBaseContentData {
 
     super.onSaveInstanceState(outState);
     Log.e("+++", "onSaveInstanceState");
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+
+    isDestroyed = true;
   }
 
   @Override public void onDestroy() {
