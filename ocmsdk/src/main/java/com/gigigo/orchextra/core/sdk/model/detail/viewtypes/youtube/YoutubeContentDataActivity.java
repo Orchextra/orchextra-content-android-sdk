@@ -35,27 +35,12 @@ public class YoutubeContentDataActivity extends BaseActivity {
 
       String videoId = getIntent().getStringExtra(EXTRA_YOUTUBE_VIDEO_ID);
       // videoId = "17uHCHfgs60";//"ikO91fQBsTQ";
-      youtubeElementsFragment = YoutubeFragment.newInstance(videoId, getScreenOrientation());
+      youtubeElementsFragment = YoutubeFragment.newInstance(videoId);
       FragmentManager fragmentManager = getSupportFragmentManager();
       fragmentManager.beginTransaction()
           .replace(R.id.youtube_main_container, youtubeElementsFragment, TAG_RETAINED_FRAGMENT)
           .commit();
     }
-  }
-
-  public int getScreenOrientation() {
-    Display getOrient = getWindowManager().getDefaultDisplay();
-    int orientation;
-    if (getOrient.getWidth() == getOrient.getHeight()) {
-      orientation = Configuration.ORIENTATION_SQUARE;
-    } else {
-      if (getOrient.getWidth() < getOrient.getHeight()) {
-        orientation = Configuration.ORIENTATION_PORTRAIT;
-      } else {
-        orientation = Configuration.ORIENTATION_LANDSCAPE;
-      }
-    }
-    return orientation;
   }
 
   @Override public void onPause() {

@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -29,6 +28,7 @@ import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
+import java.lang.ref.WeakReference;
 
 public class YoutubeFragment extends UiBaseContentData {
 
@@ -36,10 +36,11 @@ public class YoutubeFragment extends UiBaseContentData {
   private static final String EXTRA_IS_PLAYING = "EXTRA_IS_PLAYING";
   private static final String YOUTUBE_FRAGMENT = "YOUTUBE_FRAGMENT";
   private static final String EXTRA_YOUTUBE_ID = "EXTRA_YOUTUBE_ID";
-  private static final String EXTRA_YOUTUBE_ORIENTARION = "EXTRA_YOUTUBE_ORIENTARION";
+
+  private RelativeLayout youtubeLayoutContainer;
+  private ImageView imgBlurBackground;
 
   private String youtubeId;
-  private int orientation;
   private BitmapImageViewTarget mImageCallback;
   private int playedVideo;
   private boolean isPlaying;
@@ -58,18 +59,14 @@ public class YoutubeFragment extends UiBaseContentData {
 
         @Override public void onInitializationFailure(YouTubePlayer.Provider provider,
             YouTubeInitializationResult error) {
-          Log.e("+++:", "onInitializationFailure" + error.toString());
         }
       };
 
-  public static YoutubeFragment newInstance(String youtubeId, int orientation) {
+  public static YoutubeFragment newInstance(String youtubeId) {
     YoutubeFragment youtubeElements = new YoutubeFragment();
-
-    Log.e("+++", "YoutubeFragment newInstance" + youtubeId + "orientation" + orientation);
 
     Bundle bundle = new Bundle();
     bundle.putString(EXTRA_YOUTUBE_ID, youtubeId);
-    bundle.putInt(EXTRA_YOUTUBE_ORIENTARION, orientation);
     youtubeElements.setArguments(bundle);
 
     return youtubeElements;
@@ -85,58 +82,30 @@ public class YoutubeFragment extends UiBaseContentData {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
 
-    Log.e("+++",
-        "+++++++++++++++++++++++++++++\n\n\n\n\n\n\n createview +++++++++++++++++++++++++++++");
     View mView = inflater.inflate(R.layout.view_youtube_elements_item, container, false);
-    final ImageView imgBlurBackground = (ImageView) mView.findViewById(R.id.imgBlurBackground);
+
+    initViews(mView);
+
     mImageCallback = new BitmapImageViewTarget(imgBlurBackground) {
 
       @Override
       public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-        Bitmap resizedbitmap1 = Bitmap.createBitmap(bitmap, 0, 45, 480, 270);
-        imgBlurBackground.setImageBitmap(resizedbitmap1);
-
-        boolean isBlack = false;
-        int midleImage = bitmap.getHeight() / 2;
-        for (int i = 0; i < 20; i++) {
-          int pixel = bitmap.getPixel(i, midleImage);
-          int r = Color.red(pixel);
-          int g = Color.green(pixel);
-          int b = Color.blue(pixel);
-          if (r == 0 && g == 0 && b == 0) {
-            isBlack = true;
-          } else {
-            isBlack = false;
-            break;
-          }
-        }
-
-        youtubeId = getArguments().getString(EXTRA_YOUTUBE_ID);
-        orientation = getArguments().getInt(EXTRA_YOUTUBE_ORIENTARION);
-
-        if (!TextUtils.isEmpty(youtubeId)) {
-          if (isBlack || orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            setYoutubeFragmentToView(mView, LinearLayout.LayoutParams.MATCH_PARENT, true);
-            if (isBlack) {
-              YoutubeFragment.this.getActivity()
-                  .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            }
-          } else {
-            setYoutubeFragmentToView(mView, LinearLayout.LayoutParams.WRAP_CONTENT, false);
-          }
-        }
+        WeakReference<Bitmap> resizedbitmap = new WeakReference<>(Bitmap.createBitmap(bitmap, 0, 45, 480, 270));
+        imgBlurBackground.setImageBitmap(resizedbitmap.get());
       }
     };
 
-    initViews(mView);
+    initThumbnail();
     initYoutubeFragment();
 
     return mView;
   }
 
   private void initViews(View view) {
-    final RelativeLayout youtubeLayoutContainer =
-        (RelativeLayout) view.findViewById(R.id.youtubeLayoutContainer);
+    youtubeLayoutContainer = (RelativeLayout) view.findViewById(R.id.youtubeLayoutContainer);
+
+    imgBlurBackground = (ImageView) view.findViewById(R.id.imgBlurBackground);
+
     youtubeLayoutContainer.getViewTreeObserver()
         .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
           @TargetApi(Build.VERSION_CODES.JELLY_BEAN) @Override public void onGlobalLayout() {
@@ -150,12 +119,12 @@ public class YoutubeFragment extends UiBaseContentData {
             }
           }
         });
+  }
 
+  private void initThumbnail() {
     youtubeId = getArguments().getString(EXTRA_YOUTUBE_ID);
-    orientation = getArguments().getInt(EXTRA_YOUTUBE_ORIENTARION);
 
     String strImgForBlur = "http://img.youtube.com/vi/" + youtubeId + "/hqdefault.jpg";
-    Log.e("+++", "initViews " + youtubeId + "orientation" + orientation);
     Glide.with(this)
         .load(strImgForBlur)
         .asBitmap()
@@ -163,20 +132,9 @@ public class YoutubeFragment extends UiBaseContentData {
         .into(mImageCallback);
   }
 
-  private void setYoutubeFragmentToView(View mView, int height, boolean hideOtherViews) {
-    FrameLayout layout = (FrameLayout) mView.findViewById(R.id.youtubePlayerFragmentContent);
-    ViewGroup.LayoutParams params = layout.getLayoutParams();
-    params.height = height; //LinearLayout.LayoutParams.WRAP_CONTENT.;
-    params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
-    layout.setLayoutParams(params);
-
-    mView.findViewById(R.id.imgBlurBackground)
-        .setVisibility(hideOtherViews ? View.GONE : View.VISIBLE);
-  }
-
   private void initYoutubeFragment() {
     try {
-      YouTubePlayerFragment2 youTubePlayerFragment2 = YouTubePlayerFragment2.newInstance();
+      YouTubePlayerFragment youTubePlayerFragment2 = YouTubePlayerFragment.newInstance();
       youTubePlayerFragment2.initialize(BuildConfig.YOUTUBE_DEVELOPER_KEY, onInitializedListener);
 
       if (this.getActivity() != null && !this.getActivity().isFinishing()) {
@@ -194,7 +152,6 @@ public class YoutubeFragment extends UiBaseContentData {
         return;
       }
 
-      player.setFullscreen(false);
       player.setShowFullscreenButton(true);
       player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
 
@@ -205,8 +162,22 @@ public class YoutubeFragment extends UiBaseContentData {
           player.cueVideo(youtubeId, playedVideo);
         }
       }
+
       int screenOrientation = getScreenOrientation();
       player.setFullscreen(screenOrientation == Configuration.ORIENTATION_LANDSCAPE);
+      //player.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener() {
+      //  @Override public void onFullscreen(boolean isOnFullScreen) {
+      //    if (isFullScreen != isOnFullScreen) {
+      //      isFullScreen = isOnFullScreen;
+      //      boolean isLandscapeOrientation =
+      //          getScreenOrientation() == Configuration.ORIENTATION_LANDSCAPE;
+      //      player.setFullscreen(isOnFullScreen);
+      //      YoutubeFragment.this.getActivity()
+      //          .setRequestedOrientation(isOnFullScreen ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+      //              : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+      //    }
+      //  }
+      //});
     } catch (Exception ignored) {
     }
   }
@@ -226,7 +197,6 @@ public class YoutubeFragment extends UiBaseContentData {
     super.onViewCreated(view, savedInstanceState);
 
     if (savedInstanceState != null) {
-      //Restore the fragment's state here
       playedVideo = savedInstanceState.getInt(EXTRA_PLAYED_VIDEO);
       isPlaying = savedInstanceState.getBoolean(EXTRA_IS_PLAYING);
     }
@@ -234,28 +204,17 @@ public class YoutubeFragment extends UiBaseContentData {
 
   @Override public void onSaveInstanceState(Bundle outState) {
     try {
-      YouTubePlayerFragment2 youTubePlayerSupportFragment =
-          (YouTubePlayerFragment2) getChildFragmentManager().findFragmentByTag(YOUTUBE_FRAGMENT);
+      YouTubePlayerFragment youTubePlayerSupportFragment =
+          (YouTubePlayerFragment) getChildFragmentManager().findFragmentByTag(YOUTUBE_FRAGMENT);
       YouTubePlayer mPlayer = youTubePlayerSupportFragment.getPlayer();
 
       if (mPlayer != null) {
         outState.putInt(EXTRA_PLAYED_VIDEO, mPlayer.getCurrentTimeMillis());
         outState.putBoolean(EXTRA_IS_PLAYING, mPlayer.isPlaying());
-        Log.e("+++", "onSaveInstanceState mPlayer != null");
       }
     } catch (Exception ignored) {
     }
 
     super.onSaveInstanceState(outState);
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-  }
-
-  @Override public void onDestroyView() {
-    Log.e("+++", "onDestroy");
-
-    super.onDestroyView();
   }
 }

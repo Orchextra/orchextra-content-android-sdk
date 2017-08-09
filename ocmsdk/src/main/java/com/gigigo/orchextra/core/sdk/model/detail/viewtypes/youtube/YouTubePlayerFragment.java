@@ -1,15 +1,22 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube;
 
+import android.os.Bundle;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
-public class YouTubePlayerFragment2 extends YouTubePlayerSupportFragment {
+public class YouTubePlayerFragment extends YouTubePlayerSupportFragment {
 
   private YouTubePlayer mPlayer;
 
-  public static YouTubePlayerFragment2 newInstance() {
-    return new YouTubePlayerFragment2();
+  public static YouTubePlayerFragment newInstance() {
+    return new YouTubePlayerFragment();
+  }
+
+  @Override public void onCreate(Bundle bundle) {
+    super.onCreate(bundle);
+
+    setRetainInstance(true);
   }
 
   @Override
