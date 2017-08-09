@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class WebViewContentData extends UiBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
-  private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
+  private static final String EXTRA_FEDERATED_AUTH_ACTIVE = "EXTRA_FEDERATED_AUTH_ACTIVE";
   View mView;
   private TouchyWebView webView;
   private ProgressBar progress;
@@ -48,7 +48,9 @@ public class WebViewContentData extends UiBaseContentData {
 
     Bundle bundle = new Bundle();
     bundle.putString(EXTRA_URL, render.getUrl());
-    bundle.putBoolean(EXTRA_FEDERATED_AUTH, render.isFederatedAuth());
+    boolean isFederatedAuthActive = render != null && render.getFederatedAuth() != null
+        ? render.getFederatedAuth().isActive() : false;
+    bundle.putBoolean(EXTRA_FEDERATED_AUTH_ACTIVE, isFederatedAuthActive);
     webViewElements.setArguments(bundle);
 
     return webViewElements;
@@ -191,7 +193,7 @@ public class WebViewContentData extends UiBaseContentData {
   private void loadUrl() {
     showProgressView(true);
     String url = getArguments().getString(EXTRA_URL);
-    boolean federatedAuth = getArguments().getBoolean(EXTRA_FEDERATED_AUTH, false);
+    boolean federatedAuth = getArguments().getBoolean(EXTRA_FEDERATED_AUTH_ACTIVE, false);
     if (federatedAuth && Ocm.getQueryStringGenerator() != null) {
       url = url + "?" + Ocm.getQueryStringGenerator().getQueryString();
     }
