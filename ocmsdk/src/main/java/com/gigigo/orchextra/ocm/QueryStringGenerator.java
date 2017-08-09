@@ -2,5 +2,5 @@ package com.gigigo.orchextra.ocm;
 
 public interface QueryStringGenerator {
 
-  String getQueryString();
+  void createQueryString(String siteName, OCManagerCallbacks.FederatedAuthorization callback);
 }
