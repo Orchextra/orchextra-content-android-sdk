@@ -2,10 +2,8 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.view.Display;
 import com.gigigo.orchextra.core.sdk.di.base.BaseActivity;
 import com.gigigo.orchextra.ocmsdk.R;
 
@@ -35,7 +33,7 @@ public class YoutubeContentDataActivity extends BaseActivity {
 
       String videoId = getIntent().getStringExtra(EXTRA_YOUTUBE_VIDEO_ID);
       // videoId = "17uHCHfgs60";//"ikO91fQBsTQ";
-      youtubeElementsFragment = YoutubeFragment.newInstance(videoId, getScreenOrientation());
+      youtubeElementsFragment = YoutubeFragment.newInstance(videoId);
       FragmentManager fragmentManager = getSupportFragmentManager();
       fragmentManager.beginTransaction()
           .replace(R.id.youtube_main_container, youtubeElementsFragment, TAG_RETAINED_FRAGMENT)
@@ -43,33 +41,15 @@ public class YoutubeContentDataActivity extends BaseActivity {
     }
   }
 
-  public int getScreenOrientation() {
-    Display getOrient = getWindowManager().getDefaultDisplay();
-    int orientation;
-    if (getOrient.getWidth() == getOrient.getHeight()) {
-      orientation = Configuration.ORIENTATION_SQUARE;
-    } else {
-      if (getOrient.getWidth() < getOrient.getHeight()) {
-        orientation = Configuration.ORIENTATION_PORTRAIT;
-      } else {
-        orientation = Configuration.ORIENTATION_LANDSCAPE;
-      }
-    }
-    return orientation;
-  }
-
   @Override public void onPause() {
     super.onPause();
 
-    // this means that this activity will not be recreated now, user is leaving it
-    // or the activity is otherwise finishing
     if (isFinishing()) {
       FragmentManager fm = getSupportFragmentManager();
 
       YoutubeFragment youtubeElementsFragment =
           (YoutubeFragment) fm.findFragmentByTag(TAG_RETAINED_FRAGMENT);
-      // we will not need this fragment anymore, this may also be a good place to signal
-      // to the retained fragment object to perform its own cleanup.
+
       fm.beginTransaction().remove(youtubeElementsFragment).commit();
     }
   }
