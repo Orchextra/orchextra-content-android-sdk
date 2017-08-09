@@ -13,9 +13,12 @@ public class ApiElementCacheRenderMapper
     implements ExternalClassToModelMapper<ApiElementCacheRender, ElementCacheRender> {
 
   private final ApiArticleElementMapper apiArticleElementMapper;
+  private final FederatedAuthorizationDataMapper federatedAuthorizationDataMapper;
 
-  public ApiElementCacheRenderMapper(ApiArticleElementMapper apiArticleElementMapper) {
+  public ApiElementCacheRenderMapper(ApiArticleElementMapper apiArticleElementMapper,
+      FederatedAuthorizationDataMapper federatedAuthorizationDataMapper) {
     this.apiArticleElementMapper = apiArticleElementMapper;
+    this.federatedAuthorizationDataMapper = federatedAuthorizationDataMapper;
   }
 
   @Override public ElementCacheRender externalClassToModel(ApiElementCacheRender data) {
@@ -53,7 +56,7 @@ public class ApiElementCacheRenderMapper
       //articleElementList.add(articleButtonElement);
     }
 
-    model.setFederatedAuth(data.isFederatedAuth());
+    model.setFederatedAuth(federatedAuthorizationDataMapper.externalClassToModel(data.getFederatedAuth()));
 
     model.setElements(articleElementList);
 

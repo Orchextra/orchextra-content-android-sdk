@@ -16,7 +16,7 @@ public class ApiElementCacheRender {
 
   private String source;
   private String format;
-  private boolean federatedAuth;
+  private FederatedAuthorizationData federatedAuth;
 
   public String getContentUrl() {
     return contentUrl;
@@ -46,11 +46,11 @@ public class ApiElementCacheRender {
     return format;
   }
 
-  public boolean isFederatedAuth() {
+  public FederatedAuthorizationData getFederatedAuth() {
     return federatedAuth;
   }
 
-  public void setFederatedAuth(boolean federatedAuth) {
+  public void setFederatedAuth(FederatedAuthorizationData federatedAuth) {
     this.federatedAuth = federatedAuth;
   }
 }

@@ -17,7 +17,7 @@ public class ElementCacheRender {
 
   private String schemeUri;
 
-  private boolean federatedAuth;
+  private FederatedAuthorization federatedAuth;
 
   public String getContentUrl() {
     return contentUrl;
@@ -75,11 +75,11 @@ public class ElementCacheRender {
     this.schemeUri = schemeUri;
   }
 
-  public boolean isFederatedAuth() {
+  public FederatedAuthorization getFederatedAuth() {
     return federatedAuth;
   }
 
-  public void setFederatedAuth(boolean federatedAuth) {
+  public void setFederatedAuth(FederatedAuthorization federatedAuth) {
     this.federatedAuth = federatedAuth;
   }
 }

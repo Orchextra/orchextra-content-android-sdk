@@ -10,6 +10,8 @@ import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentItemPatt
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCachePreviewMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheRenderMapper;
+import com.gigigo.orchextra.core.data.api.mappers.elementcache.CidKeyDataMapper;
+import com.gigigo.orchextra.core.data.api.mappers.elementcache.FederatedAuthorizationDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheShareMapper;
@@ -48,9 +50,18 @@ public class ApiMapperModule {
     return new ApiArticleElementMapper();
   }
 
+  @Singleton @Provides CidKeyDataMapper provideCidKeyDataMapper() {
+    return new CidKeyDataMapper();
+  }
+
+  @Singleton @Provides FederatedAuthorizationDataMapper provideFederatedAuthorizationDataMapper(CidKeyDataMapper cidKeyDataMapper) {
+    return new FederatedAuthorizationDataMapper(cidKeyDataMapper);
+  }
+
   @Singleton @Provides ApiElementCacheRenderMapper provideApiElementCacheRenderMapper(
-      ApiArticleElementMapper apiArticleElementMapper) {
-    return new ApiElementCacheRenderMapper(apiArticleElementMapper);
+      ApiArticleElementMapper apiArticleElementMapper, FederatedAuthorizationDataMapper
+      federatedAuthorizationDataMapper) {
+    return new ApiElementCacheRenderMapper(apiArticleElementMapper, federatedAuthorizationDataMapper);
   }
 
   @Singleton @Provides ApiElementCachePreviewMapper provideApiElementCachePreviewMapper() {
