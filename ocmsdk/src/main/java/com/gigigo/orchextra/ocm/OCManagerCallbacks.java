@@ -24,4 +24,8 @@ public interface OCManagerCallbacks {
     void onDataClearedSuccessfull();
     void onDataClearFails(Exception e);
   }
+
+  interface FederatedAuthorization {
+    void onFederatedAuthorizationFinished(String token);
+  }
 }
