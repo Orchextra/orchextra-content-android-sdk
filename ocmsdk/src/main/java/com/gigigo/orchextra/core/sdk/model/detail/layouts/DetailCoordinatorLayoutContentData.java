@@ -179,8 +179,13 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
     coordinatorLayout.removeAllViews();
     appbarLayout.removeAllViews();
     collapsingToolbar.removeAllViews();
-    previewContentData.onDestroy();
-    detailContentData.onDestroy();
+    
+    if (previewContentData != null) {
+      previewContentData.onDestroy();
+    }
+    if (detailContentData != null) {
+      detailContentData.onDestroy();
+    }
 
     Glide.get(this.getContext()).clearMemory();
 
