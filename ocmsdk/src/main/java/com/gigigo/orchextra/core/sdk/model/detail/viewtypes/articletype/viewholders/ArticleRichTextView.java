@@ -18,7 +18,6 @@ import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocmsdk.R;
 
 public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement> {
@@ -57,9 +56,7 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
     ClickableSpan clickable = new ClickableSpan() {
       public void onClick(View view) {
         if (connectionUtils.hasConnection()) {
-          String url = Ocm.getQueryStringGenerator() != null && Ocm.getQueryStringGenerator().getQueryString() != null
-              ? span.getURL() + Ocm.getQueryStringGenerator().getQueryString() : span.getURL();
-          DeviceUtils.openChromeTabs(ocmContextProvider.getCurrentActivity(), url);
+          DeviceUtils.openChromeTabs(ocmContextProvider.getCurrentActivity(), span.getURL());
         } else {
           View rootView = ((ViewGroup) ocmContextProvider.getCurrentActivity()
               .findViewById(android.R.id.content)).getChildAt(0);

@@ -37,6 +37,7 @@ public class WebViewContentData extends UiBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
   private static final String EXTRA_FEDERATED_AUTH_ACTIVE = "EXTRA_FEDERATED_AUTH_ACTIVE";
+  private static final String EXTRA_SITE_NAME = "EXTRA_SITE_NAME";
   View mView;
   private TouchyWebView webView;
   private ProgressBar progress;
@@ -51,6 +52,10 @@ public class WebViewContentData extends UiBaseContentData {
     boolean isFederatedAuthActive = render != null && render.getFederatedAuth() != null
         ? render.getFederatedAuth().isActive() : false;
     bundle.putBoolean(EXTRA_FEDERATED_AUTH_ACTIVE, isFederatedAuthActive);
+    String siteName = render != null && render.getFederatedAuth() != null
+        && render.getFederatedAuth().getKeys() != null
+        ? render.getFederatedAuth().getKeys().getSiteName() : null;
+    bundle.putString(EXTRA_SITE_NAME, siteName);
     webViewElements.setArguments(bundle);
 
     return webViewElements;
@@ -194,11 +199,17 @@ public class WebViewContentData extends UiBaseContentData {
     showProgressView(true);
     String url = getArguments().getString(EXTRA_URL);
     boolean federatedAuth = getArguments().getBoolean(EXTRA_FEDERATED_AUTH_ACTIVE, false);
+    String siteName = getArguments().getString(EXTRA_SITE_NAME);
     if (federatedAuth && Ocm.getQueryStringGenerator() != null) {
-      url = url + "?" + Ocm.getQueryStringGenerator().getQueryString();
-    }
-    if (!TextUtils.isEmpty(url)) {
-      webView.loadUrl(url);
+      Ocm.getQueryStringGenerator().createQueryString(siteName, token -> {
+        if (token != null && !TextUtils.isEmpty(getArguments().getString(EXTRA_URL))) {
+          webView.loadUrl(getArguments().getString(EXTRA_URL) + "?" + token);
+        }
+      });
+    } else {
+      if (!TextUtils.isEmpty(url)) {
+        webView.loadUrl(url);
+      }
     }
   }
 
