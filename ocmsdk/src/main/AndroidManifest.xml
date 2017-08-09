@@ -25,7 +25,8 @@
 
     <activity
         android:name="com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity"
-        android:screenOrientation="fullSensor"
+        android:screenOrientation="sensor"
+        android:configChanges="keyboardHidden|orientation|screenSize"
         android:theme="@style/OcmAppTheme"/>
 
     <activity

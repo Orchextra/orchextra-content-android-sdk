@@ -2,10 +2,8 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.view.Display;
 import com.gigigo.orchextra.core.sdk.di.base.BaseActivity;
 import com.gigigo.orchextra.ocmsdk.R;
 
@@ -46,15 +44,12 @@ public class YoutubeContentDataActivity extends BaseActivity {
   @Override public void onPause() {
     super.onPause();
 
-    // this means that this activity will not be recreated now, user is leaving it
-    // or the activity is otherwise finishing
     if (isFinishing()) {
       FragmentManager fm = getSupportFragmentManager();
 
       YoutubeFragment youtubeElementsFragment =
           (YoutubeFragment) fm.findFragmentByTag(TAG_RETAINED_FRAGMENT);
-      // we will not need this fragment anymore, this may also be a good place to signal
-      // to the retained fragment object to perform its own cleanup.
+
       fm.beginTransaction().remove(youtubeElementsFragment).commit();
     }
   }
