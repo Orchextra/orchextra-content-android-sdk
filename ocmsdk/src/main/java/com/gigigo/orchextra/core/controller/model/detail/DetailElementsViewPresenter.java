@@ -137,7 +137,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
     String shareText = retrieveShareText(shareElement);
 
-    if (!TextUtils.isEmpty(shareText)) {
+    if (!TextUtils.isEmpty(shareText) && getView() != null) {
       getView().shareElement(shareText);
       OCManager.notifyEvent(OcmEvent.SHARE, cachedElement);
     }
