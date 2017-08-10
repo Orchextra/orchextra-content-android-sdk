@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.support.v4.app.FragmentActivity;
 import com.bumptech.glide.DrawableRequestBuilder;
-import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
@@ -17,6 +16,7 @@ import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -25,8 +25,8 @@ import java.security.NoSuchAlgorithmException;
  */
 
 public class OcmImageLoader {
-  private static String TAG = OcmImageLoader.class.getSimpleName();
   public static boolean DEBUG = true;
+  private static String TAG = OcmImageLoader.class.getSimpleName();
 
   public static DrawableRequestBuilder<String> load(Context mContext, String url) {
     File cacheFile = getCacheFile(mContext, md5(url));
@@ -34,14 +34,18 @@ public class OcmImageLoader {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
       return Glide.with(mContext)
 
-          .load(cacheFile.getPath()).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
+          .load(cacheFile.getPath())
+          .diskCacheStrategy(DiskCacheStrategy.RESULT)
+          .skipMemoryCache(true)
           .thumbnail(Glide.with(mContext).load(R.drawable.thumbnail).centerCrop())
           //.transform(new CacheTransformation(mContext, false))
           ;
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mContext)
-          .load(url).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
+          .load(url)
+          .diskCacheStrategy(DiskCacheStrategy.RESULT)
+          .skipMemoryCache(true)
           .thumbnail(Glide.with(mContext).load(R.drawable.thumbnail).centerCrop())
           //.transform(new CacheTransformation(mContext, true))
           ;
@@ -53,14 +57,18 @@ public class OcmImageLoader {
     if (cacheFile.exists()) {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
       return Glide.with(mActivity)
-          .load(cacheFile.getPath()).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
+          .load(cacheFile.getPath())
+          .diskCacheStrategy(DiskCacheStrategy.RESULT)
+          .skipMemoryCache(true)
           .thumbnail(Glide.with(mActivity).load(R.drawable.thumbnail).centerCrop())
           //.transform(new CacheTransformation(mActivity.getApplicationContext(), false))
           ;
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mActivity)
-          .load(url).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
+          .load(url)
+          .diskCacheStrategy(DiskCacheStrategy.RESULT)
+          .skipMemoryCache(true)
           .thumbnail(Glide.with(mActivity).load(R.drawable.thumbnail).centerCrop())
           //.transform(new CacheTransformation(mActivity.getApplicationContext(), true))
           ;
@@ -72,7 +80,9 @@ public class OcmImageLoader {
     if (cacheFile.exists()) {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragment)
-          .load(cacheFile.getPath()).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
+          .load(cacheFile.getPath())
+          .diskCacheStrategy(DiskCacheStrategy.RESULT)
+          .skipMemoryCache(true)
           .thumbnail(Glide.with(mFragment).load(R.drawable.thumbnail).centerCrop())
           //.transform(
           //    new CacheTransformation(mFragment.getActivity().getApplicationContext(), true))
@@ -80,7 +90,9 @@ public class OcmImageLoader {
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragment)
-          .load(url).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
+          .load(url)
+          .diskCacheStrategy(DiskCacheStrategy.RESULT)
+          .skipMemoryCache(true)
           .thumbnail(Glide.with(mFragment).load(R.drawable.thumbnail).centerCrop())
           //.transform(
           //    new CacheTransformation(mFragment.getActivity().getApplicationContext(), true))
@@ -94,29 +106,36 @@ public class OcmImageLoader {
     if (cacheFile.exists()) {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragment)
-          .load(cacheFile.getPath()).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
+          .load(cacheFile.getPath())
+          .diskCacheStrategy(DiskCacheStrategy.RESULT)
+          .skipMemoryCache(true)
           .thumbnail(Glide.with(mFragment).load(R.drawable.thumbnail).centerCrop())
           //.transform(new CacheTransformation(mFragment.getContext(), false))
           ;
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
       return Glide.with(mFragment)
-          .load(url).diskCacheStrategy(DiskCacheStrategy.RESULT).skipMemoryCache(true)
+          .load(url)
+          .diskCacheStrategy(DiskCacheStrategy.RESULT)
+          .skipMemoryCache(true)
           .thumbnail(Glide.with(mFragment).load(R.drawable.thumbnail).centerCrop())
           //.transform(new CacheTransformation(mFragment.getContext(), true))
           ;
     }
   }
 
-  public static DrawableRequestBuilder<String> load(FragmentActivity mFragmentActivity, String url) {
+  public static DrawableRequestBuilder<String> load(FragmentActivity mFragmentActivity,
+      String url) {
     File cacheFile = getCacheFile(mFragmentActivity, md5(url));
     if (cacheFile.exists()) {
       GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
-      return Glide.with(mFragmentActivity).load(cacheFile.getPath())
+      return Glide.with(mFragmentActivity)
+          .load(cacheFile.getPath())
           .thumbnail(Glide.with(mFragmentActivity).load(R.drawable.thumbnail).centerCrop());
     } else {
       GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
-      return Glide.with(mFragmentActivity).load(url)
+      return Glide.with(mFragmentActivity)
+          .load(url)
           .thumbnail(Glide.with(mFragmentActivity).load(R.drawable.thumbnail).centerCrop());
     }
   }
@@ -171,18 +190,22 @@ public class OcmImageLoader {
       Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(),
           R.drawable.ox_notification_alpha_small_icon);
 
+      WeakReference<Bitmap> iconWeakReference = new WeakReference<>(icon);
+
       int w = toTransform.getWidth();
       int h = toTransform.getHeight();
       double ratio = (double) w / (double) h;
       Bitmap result = Bitmap.createBitmap(w, h, toTransform.getConfig());
 
-      Canvas canvas = new Canvas(result);
+      WeakReference<Bitmap> resultWeakReference = new WeakReference<>(result);
+
+      Canvas canvas = new Canvas(resultWeakReference.get());
       canvas.drawBitmap(toTransform, 0, 0, null);
 
-      if (!fromCloud) canvas.drawBitmap(icon, (int) (150 * ratio), (int) (100 * ratio), null);
+      if (!fromCloud) canvas.drawBitmap(iconWeakReference.get(), (int) (150 * ratio), (int) (100 * ratio), null);
 
       toTransform.recycle();
-      return result;
+      return resultWeakReference.get();
     }
 
     @Override public String getId() {

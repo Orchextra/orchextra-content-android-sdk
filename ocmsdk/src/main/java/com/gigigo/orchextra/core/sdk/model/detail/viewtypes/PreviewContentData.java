@@ -146,8 +146,10 @@ public class PreviewContentData extends UiBaseContentData {
 
       String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, width, height);
 
-      OcmImageLoader.load(this, generatedImageUrl).priority(Priority.NORMAL).diskCacheStrategy(
-          DiskCacheStrategy.ALL).into(previewImage);
+      OcmImageLoader.load(this, generatedImageUrl)
+          .priority(Priority.NORMAL)
+          .diskCacheStrategy(DiskCacheStrategy.ALL)
+          .into(previewImage);
 
       animateAlphaBecauseOfCollapseEnterTransitionImage();
     }
@@ -199,22 +201,23 @@ public class PreviewContentData extends UiBaseContentData {
   }
 
   @Override public void onDestroy() {
-    if (previewContentMainLayout != null) {
-      unbindDrawables(previewContentMainLayout);
-      System.gc();
+    if (isAdded()) {
+      if (previewContentMainLayout != null) {
+        unbindDrawables(previewContentMainLayout);
+        System.gc();
 
-      Glide.get(this.getContext()).clearMemory();
-      previewImage = null;
-      previewBackgroundShadow = null;
-      goToArticleButton = null;
-      ((ViewGroup) previewContentMainLayout).removeAllViews();
-      Glide.get(this.getContext()).clearMemory();
+        Glide.get(this.getContext()).clearMemory();
+        previewImage = null;
+        previewBackgroundShadow = null;
+        goToArticleButton = null;
+        ((ViewGroup) previewContentMainLayout).removeAllViews();
+        Glide.get(this.getContext()).clearMemory();
 
+        previewContentMainLayout = null;
+      }
 
-      previewContentMainLayout = null;
+      super.onDestroy();
     }
-
-    super.onDestroy();
   }
 
   private void unbindDrawables(View view) {
@@ -230,5 +233,4 @@ public class PreviewContentData extends UiBaseContentData {
       ((ViewGroup) view).removeAllViews();
     }
   }
-
 }
