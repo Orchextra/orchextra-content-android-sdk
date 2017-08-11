@@ -39,29 +39,15 @@ import orchextra.javax.inject.Singleton;
   }
 
   private void initCores() {
-    //// Check if we're running on Android 5.0 or higher
-    //if (Build.VERSION.SDK_INT >= 21) {
-    //  // Call some material design APIs here
-    //  INITIAL_POOL_SIZE = 2;
-    //  MAX_POOL_SIZE = Runtime.getRuntime().availableProcessors() - 1 <= 0 ? 1
-    //      : Runtime.getRuntime().availableProcessors() - 1;
-    //} else {
-    //  // Implement this feature without material design
-    //  INITIAL_POOL_SIZE = 1;
-    //  MAX_POOL_SIZE = 1;
-    //}
-
-    INITIAL_POOL_SIZE = 2;
+    INITIAL_POOL_SIZE = 1;
+    MAX_POOL_SIZE = 1;
 
     try {
-      if (Runtime.getRuntime().availableProcessors() - 1 < 2) {
-        MAX_POOL_SIZE = 2;
-      } else {
+      if (Runtime.getRuntime().availableProcessors() > 2) {
+        INITIAL_POOL_SIZE = 2;
         MAX_POOL_SIZE = Runtime.getRuntime().availableProcessors() - 1;
       }
-    } catch (IllegalArgumentException exception) {
-      MAX_POOL_SIZE = 2;
-    }
+    } catch (Exception ignored) { }
   }
 
   @Override public void execute(Runnable runnable) {
