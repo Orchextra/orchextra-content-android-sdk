@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.domain.entities.elementcache;
 
-public class FederatedAuthorization {
+import java.io.Serializable;
+
+public class FederatedAuthorization implements Serializable {
 
   private boolean active;
   private String type;
