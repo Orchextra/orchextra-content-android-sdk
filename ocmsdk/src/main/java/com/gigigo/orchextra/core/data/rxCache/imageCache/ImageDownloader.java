@@ -32,9 +32,7 @@ public class ImageDownloader implements LowPriorityRunnable {
   }
 
   @Override public void run() {
-
     downloadImage(imageData);
-    //downloadImage(null);
   }
 
   private void downloadImage(final ImageData imageData) {

@@ -39,13 +39,13 @@ import orchextra.javax.inject.Singleton;
   }
 
   private void initCores() {
-    INITIAL_POOL_SIZE = 1;
     MAX_POOL_SIZE = 1;
+    INITIAL_POOL_SIZE = 1;
 
     try {
       if (Runtime.getRuntime().availableProcessors() > 2) {
-        INITIAL_POOL_SIZE = 2;
         MAX_POOL_SIZE = Runtime.getRuntime().availableProcessors() - 1;
+        INITIAL_POOL_SIZE = 2;
       }
     } catch (Exception ignored) { }
   }

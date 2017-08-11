@@ -3,7 +3,6 @@ package com.gigigo.orchextra.core.data.rxCache.imageCache;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -16,6 +15,8 @@ import orchextra.javax.inject.Singleton;
 
 @Singleton public class ImagesService extends Service {
 
+  public static final int MIN_RAM_MEMORY = 256;
+
   @Inject OcmImageCache ocmImageCache;
 
   public ImagesService() {
@@ -27,8 +28,24 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    ocmImageCache.start();
-    return START_STICKY;
+    if (checkDeviceHasEnoughRamMemory()) {
+      ocmImageCache.start();
+      return START_STICKY;
+    }
+    return START_STICKY_COMPATIBILITY;
+  }
+
+  private boolean checkDeviceHasEnoughRamMemory() {
+    try {
+      final Runtime runtime = Runtime.getRuntime();
+      final long usedMemInMB = (runtime.totalMemory() - runtime.freeMemory()) / 1048576L;
+      final long maxHeapSizeInMB = runtime.maxMemory() / 1048576L;
+      final long availHeapSizeInMB = maxHeapSizeInMB - usedMemInMB;
+
+      return availHeapSizeInMB > MIN_RAM_MEMORY;
+    } catch (Exception e) {
+      return true;
+    }
   }
 
   @Override public void onDestroy() {
