@@ -60,16 +60,18 @@ public class ImageDownloader implements LowPriorityRunnable {
           imageData);//asv se supone q si lo tiene bajao, riau ya no lo vuelve a bajar
       return;
     }
+
     int count;
     InputStream input = null;
     OutputStream output = null;
-    URLConnection conection = null;
+
     try {
       URL url = new URL(imageData.getPath());
-      conection = url.openConnection();
-      conection.connect();
+      URLConnection connection = url.openConnection();
+      connection.connect();
+
       // getting file length
-      int lenghtOfFile = conection.getContentLength();
+      int lenghtOfFile = connection.getContentLength();
       //asv
       // input stream to read file - with 8k buffer
       input = new BufferedInputStream(url.openStream(), 8192);
@@ -115,6 +117,10 @@ public class ImageDownloader implements LowPriorityRunnable {
       if (output != null) {
         try {
           output.flush();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        try {
           output.close();
         } catch (IOException e) {
           e.printStackTrace();
