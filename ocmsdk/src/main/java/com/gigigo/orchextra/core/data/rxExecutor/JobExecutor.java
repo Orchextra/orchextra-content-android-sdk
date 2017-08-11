@@ -1,12 +1,10 @@
 package com.gigigo.orchextra.core.data.rxExecutor;
 
-import android.util.Log;
-import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageDownloader;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.LowPriorityRunnable;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
+import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import java.util.Comparator;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -28,6 +26,16 @@ import orchextra.javax.inject.Singleton;
   private final ThreadPoolExecutor threadPoolExecutor;
 
   private final ThreadFactory threadFactory;
+  private final Comparator<Runnable> comparator = new Comparator<Runnable>() {
+    @Override public int compare(Runnable o1, Runnable o2) {
+      int priority1 = 0;
+      int priority2 = 0;
+      if (o1 instanceof LowPriorityRunnable) priority1 = 1;
+      if (o2 instanceof LowPriorityRunnable) priority2 = 1;
+
+      return priority1 - priority2;
+    }
+  };
 
   @Inject public JobExecutor() {
     initCores();
@@ -43,11 +51,13 @@ import orchextra.javax.inject.Singleton;
     INITIAL_POOL_SIZE = 1;
 
     try {
-      if (Runtime.getRuntime().availableProcessors() > 2) {
+      if (Runtime.getRuntime().availableProcessors() > 2
+          && DeviceUtils.checkDeviceHasEnoughRamMemory()) {
         MAX_POOL_SIZE = Runtime.getRuntime().availableProcessors() - 1;
         INITIAL_POOL_SIZE = 2;
       }
-    } catch (Exception ignored) { }
+    } catch (Exception ignored) {
+    }
   }
 
   @Override public void execute(Runnable runnable) {
@@ -65,15 +75,4 @@ import orchextra.javax.inject.Singleton;
       return new Thread(runnable, THREAD_NAME + counter++);
     }
   }
-
-  private final Comparator<Runnable> comparator = new Comparator<Runnable>() {
-    @Override public int compare(Runnable o1, Runnable o2) {
-      int priority1 = 0;
-      int priority2 = 0;
-      if (o1 instanceof LowPriorityRunnable) priority1 = 1;
-      if (o2 instanceof LowPriorityRunnable) priority2 = 1;
-
-      return priority1 - priority2;
-    }
-  };
 }
