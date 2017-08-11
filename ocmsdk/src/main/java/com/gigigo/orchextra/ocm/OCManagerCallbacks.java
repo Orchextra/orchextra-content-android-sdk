@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.ocm;
 
+import android.util.Pair;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
-
 import java.util.List;
 
 /**
@@ -25,7 +25,7 @@ public interface OCManagerCallbacks {
     void onDataClearFails(Exception e);
   }
 
-  interface FederatedAuthorization {
-    void onFederatedAuthorizationFinished(String token);
+  interface QueryParams {
+    void onQueryParamsCreated(List<Pair<String, String>> queryString);
   }
 }
