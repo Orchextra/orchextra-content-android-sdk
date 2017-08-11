@@ -7,8 +7,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +24,16 @@ import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
+import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.lang.ref.WeakReference;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -36,26 +41,23 @@ import java.util.concurrent.TimeUnit;
 public class WebViewContentData extends UiBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
-  private static final String EXTRA_FEDERATED_AUTH_ACTIVE = "EXTRA_FEDERATED_AUTH_ACTIVE";
-  private static final String EXTRA_SITE_NAME = "EXTRA_SITE_NAME";
+  private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
   View mView;
   private TouchyWebView webView;
   private ProgressBar progress;
   private JsHandler jsInterface;
   private boolean localStorageUpdated;
 
+  private static final String URL_START_QUERY_DELIMITER = "?";
+  private static final String URL_CONCAT_QUERY_DELIMITER = "&";
+  private static final String URL_QUERY_VALUE_DELIMITER = "=";
+
   public static WebViewContentData newInstance(ElementCacheRender render) {
     WebViewContentData webViewElements = new WebViewContentData();
 
     Bundle bundle = new Bundle();
     bundle.putString(EXTRA_URL, render.getUrl());
-    boolean isFederatedAuthActive = render != null && render.getFederatedAuth() != null
-        ? render.getFederatedAuth().isActive() : false;
-    bundle.putBoolean(EXTRA_FEDERATED_AUTH_ACTIVE, isFederatedAuthActive);
-    String siteName = render != null && render.getFederatedAuth() != null
-        && render.getFederatedAuth().getKeys() != null
-        ? render.getFederatedAuth().getKeys().getSiteName() : null;
-    bundle.putString(EXTRA_SITE_NAME, siteName);
+    bundle.putSerializable(EXTRA_FEDERATED_AUTH, render.getFederatedAuth());
     webViewElements.setArguments(bundle);
 
     return webViewElements;
@@ -195,19 +197,53 @@ public class WebViewContentData extends UiBaseContentData {
     }
   }
 
+  private String getQueryDelimiter(String url) {
+    try {
+      return new URL(url).getQuery() != null ? URL_CONCAT_QUERY_DELIMITER
+          : URL_START_QUERY_DELIMITER;
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private String addQueryParamsToUrl(List<Pair<String, String>> queryParams, String url) {
+    if (getQueryDelimiter(url) != null) {
+      url = url + getQueryDelimiter(url);
+
+      Iterator<Pair<String, String>> iterator = queryParams.iterator();
+      while (iterator.hasNext()) {
+        Pair<String, String> pair = iterator.next();
+        url = url + pair.first + URL_QUERY_VALUE_DELIMITER + pair.second + URL_CONCAT_QUERY_DELIMITER;
+      }
+
+      return url.substring(0, url.length() - 2);
+    } else {
+      return null;
+    }
+  }
+
   private void loadUrl() {
     showProgressView(true);
+
     String url = getArguments().getString(EXTRA_URL);
-    boolean federatedAuth = getArguments().getBoolean(EXTRA_FEDERATED_AUTH_ACTIVE, false);
-    String siteName = getArguments().getString(EXTRA_SITE_NAME);
-    if (federatedAuth && Ocm.getQueryStringGenerator() != null) {
-      Ocm.getQueryStringGenerator().createQueryString(siteName, token -> {
-        if (token != null && !TextUtils.isEmpty(getArguments().getString(EXTRA_URL))) {
-          webView.loadUrl(getArguments().getString(EXTRA_URL) + "?" + token);
-        }
-      });
-    } else {
-      if (!TextUtils.isEmpty(url)) {
+    if (!url.isEmpty()) {
+      FederatedAuthorization federatedAuthorization =
+          (FederatedAuthorization) getArguments().getSerializable(EXTRA_FEDERATED_AUTH);
+
+      if (federatedAuthorization.isActive() && Ocm.getQueryStringGenerator() != null) {
+        Ocm.getQueryStringGenerator().createQueryString(federatedAuthorization, queryString -> {
+          if (queryString != null && !queryString.isEmpty()) {
+            String urlWithQueryParams =
+                addQueryParamsToUrl(queryString, url);
+            if (urlWithQueryParams != null) {
+              webView.loadUrl(urlWithQueryParams);
+            }
+          } else {
+            webView.loadUrl(url);
+          }
+        });
+      } else {
         webView.loadUrl(url);
       }
     }
