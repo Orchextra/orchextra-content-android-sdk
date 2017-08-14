@@ -24,13 +24,12 @@ import orchextra.javax.inject.Inject;
 
 public abstract class DetailParentContentData extends UiBaseContentData {
 
-  @Inject ActionHandler actionHandler;
-
   protected OnFinishViewListener onFinishListener;
   protected OnShareListener onShareListener;
   protected DetailToolbarView detailToolbarView;
-  private String nameArticle;
+  @Inject ActionHandler actionHandler;
   View mView;
+  private String nameArticle;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -157,10 +156,6 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     this.nameArticle = nameArticle;
   }
 
-  public interface OnShareListener {
-    void onShare();
-  }
-
   @Override public void onDestroy() {
 
     System.out.println(
@@ -177,7 +172,9 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     detailToolbarView = null;
     Glide.get(this.getContext()).clearMemory();
 
-    super.onDestroy();
+    if (getHost() != null) {
+      super.onDestroy();
+    }
   }
 
   private void unbindDrawables(View view) {
@@ -192,5 +189,9 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       }
       ((ViewGroup) view).removeAllViews();
     }
+  }
+
+  public interface OnShareListener {
+    void onShare();
   }
 }

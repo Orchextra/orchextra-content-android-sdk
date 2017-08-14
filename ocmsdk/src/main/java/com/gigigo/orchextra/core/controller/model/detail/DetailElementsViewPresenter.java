@@ -53,12 +53,15 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
       }
 
       @Override public void onGetDetailFails(Exception e) {
-        getView().showProgressView(false);
+        if (getView() != null) {
+          getView().showProgressView(false);
+        }
       }
 
       @Override public void onGetDetailNoAvailable(Exception e) {
-        getView().showProgressView(false);
-        e.printStackTrace();
+        if (getView() != null) {
+          getView().showProgressView(false);
+        }
       }
     });
   }

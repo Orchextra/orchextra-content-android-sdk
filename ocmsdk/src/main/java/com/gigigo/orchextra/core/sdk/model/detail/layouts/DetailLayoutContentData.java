@@ -91,21 +91,24 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
   private void addLayoutToCoordinatorLayoutView(UiBaseContentData previewContentData,
       UiBaseContentData detailContentData, DetailViewInfo detailViewInfo) {
 
-    if (isAdded()) {
-      DetailCoordinatorLayoutContentData detailCoordinatorLayoutContentData =
-          DetailCoordinatorLayoutContentData.newInstance();
+    try {
+      if (isAdded()) {
+        DetailCoordinatorLayoutContentData detailCoordinatorLayoutContentData =
+            DetailCoordinatorLayoutContentData.newInstance();
 
-      detailCoordinatorLayoutContentData.setViews(previewContentData, detailContentData);
-      detailCoordinatorLayoutContentData.setOnFinishListener(onFinishListener);
-      detailCoordinatorLayoutContentData.setArticleName(detailViewInfo.getNameArticle());
-      if (detailViewInfo.isShareable()) {
-        detailCoordinatorLayoutContentData.setOnShareListener(onShareListener);
+        detailCoordinatorLayoutContentData.setViews(previewContentData, detailContentData);
+        detailCoordinatorLayoutContentData.setOnFinishListener(onFinishListener);
+        detailCoordinatorLayoutContentData.setArticleName(detailViewInfo.getNameArticle());
+        if (detailViewInfo.isShareable()) {
+          detailCoordinatorLayoutContentData.setOnShareListener(onShareListener);
+        }
+
+        ((AppCompatActivity) context).getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.detail_container_layout, detailCoordinatorLayoutContentData)
+            .commit();
       }
-
-      ((AppCompatActivity) context).getSupportFragmentManager()
-          .beginTransaction()
-          .replace(R.id.detail_container_layout, detailCoordinatorLayoutContentData)
-          .commit();
+    } catch (Exception ignored) {
     }
   }
 
@@ -147,21 +150,23 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
   }
 
   private void addLayoutToView(UiBaseContentData uiBaseContentData, DetailViewInfo detailViewInfo) {
-    if (isAdded()) {
-      DetailSimpleLayoutContentData detailSimpleLayoutContentData =
-          DetailSimpleLayoutContentData.newInstance();
+    try {
+      if (isAdded()) {
+        DetailSimpleLayoutContentData detailSimpleLayoutContentData = DetailSimpleLayoutContentData.newInstance();
 
-      detailSimpleLayoutContentData.setViews(uiBaseContentData);
-      detailSimpleLayoutContentData.setOnFinishListener(onFinishListener);
-      detailSimpleLayoutContentData.setArticleName(detailViewInfo.getNameArticle());
-      if (detailViewInfo.isShareable()) {
-        detailSimpleLayoutContentData.setOnShareListener(onShareListener);
+        detailSimpleLayoutContentData.setViews(uiBaseContentData);
+        detailSimpleLayoutContentData.setOnFinishListener(onFinishListener);
+        detailSimpleLayoutContentData.setArticleName(detailViewInfo.getNameArticle());
+        if (detailViewInfo.isShareable()) {
+          detailSimpleLayoutContentData.setOnShareListener(onShareListener);
+        }
+
+        ((AppCompatActivity) context).getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.detail_container_layout, detailSimpleLayoutContentData)
+            .commit();
       }
-
-      ((AppCompatActivity) context).getSupportFragmentManager()
-          .beginTransaction()
-          .replace(R.id.detail_container_layout, detailSimpleLayoutContentData)
-          .commit();
+    } catch (Exception ignored) {
     }
   }
 
