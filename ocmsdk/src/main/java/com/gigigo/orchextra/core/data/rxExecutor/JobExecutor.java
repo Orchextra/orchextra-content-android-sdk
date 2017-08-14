@@ -21,29 +21,32 @@ import orchextra.javax.inject.Singleton;
   //Runtime.getRuntime().availableProcessors() - 1 <= 0 ? 1 : Runtime.getRuntime().availableProcessors() - 1;
   private static int INITIAL_POOL_SIZE = 1;
   private static int MAX_POOL_SIZE = 1;
-  private final BlockingQueue<Runnable> workQueue;
 
   private final ThreadPoolExecutor threadPoolExecutor;
 
-  private final ThreadFactory threadFactory;
-  private final Comparator<Runnable> comparator = new Comparator<Runnable>() {
+  private Comparator<Runnable> comparator = new Comparator<Runnable>() {
     @Override public int compare(Runnable o1, Runnable o2) {
       int priority1 = 0;
       int priority2 = 0;
       if (o1 instanceof LowPriorityRunnable) priority1 = 1;
       if (o2 instanceof LowPriorityRunnable) priority2 = 1;
 
-      return priority1 - priority2;
+      if (priority2 == 0) {
+        return -1;
+      } else {
+        return priority1 - priority2;
+      }
     }
   };
 
   @Inject public JobExecutor() {
     initCores();
-    this.workQueue = new PriorityBlockingQueue<>(INITIAL_POOL_SIZE, comparator);
-    this.threadFactory = new JobThreadFactory();
+
+    BlockingQueue<Runnable> workQueue = new PriorityBlockingQueue<>(INITIAL_POOL_SIZE, comparator);
+    ThreadFactory threadFactory = new JobThreadFactory();
     this.threadPoolExecutor =
         new ThreadPoolExecutor(INITIAL_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME,
-            KEEP_ALIVE_TIME_UNIT, this.workQueue, this.threadFactory);
+            KEEP_ALIVE_TIME_UNIT, workQueue, threadFactory);
   }
 
   private void initCores() {
