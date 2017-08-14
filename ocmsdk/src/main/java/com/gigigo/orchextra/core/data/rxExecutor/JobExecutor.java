@@ -24,25 +24,25 @@ import orchextra.javax.inject.Singleton;
 
   private final ThreadPoolExecutor threadPoolExecutor;
 
-  private Comparator<Runnable> comparator = new Comparator<Runnable>() {
-    @Override public int compare(Runnable o1, Runnable o2) {
-      int priority1 = 0;
-      int priority2 = 0;
-      if (o1 instanceof LowPriorityRunnable) priority1 = 1;
-      if (o2 instanceof LowPriorityRunnable) priority2 = 1;
-
-      if (priority2 == 0) {
-        return -1;
-      } else {
-        return priority1 - priority2;
-      }
-    }
-  };
-
   @Inject public JobExecutor() {
     initCores();
 
-    BlockingQueue<Runnable> workQueue = new PriorityBlockingQueue<>(INITIAL_POOL_SIZE, comparator);
+    Comparator<Runnable> comparator = new Comparator<Runnable>() {
+      @Override public int compare(Runnable o1, Runnable o2) {
+        int priority1 = 0;
+        int priority2 = 0;
+        if (o1 instanceof LowPriorityRunnable) priority1 = 1;
+        if (o2 instanceof LowPriorityRunnable) priority2 = 1;
+
+        if (priority2 == 0) {
+          return -1;
+        } else {
+          return priority1 - priority2;
+        }
+      }
+    };
+    PriorityBlockingQueue workQueue = new PriorityBlockingQueue<>(INITIAL_POOL_SIZE, comparator);
+
     ThreadFactory threadFactory = new JobThreadFactory();
     this.threadPoolExecutor =
         new ThreadPoolExecutor(INITIAL_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME,
