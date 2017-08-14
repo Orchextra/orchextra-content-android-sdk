@@ -91,20 +91,22 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
   private void addLayoutToCoordinatorLayoutView(UiBaseContentData previewContentData,
       UiBaseContentData detailContentData, DetailViewInfo detailViewInfo) {
 
-    DetailCoordinatorLayoutContentData detailCoordinatorLayoutContentData =
-        DetailCoordinatorLayoutContentData.newInstance();
+    if (isAdded()) {
+      DetailCoordinatorLayoutContentData detailCoordinatorLayoutContentData =
+          DetailCoordinatorLayoutContentData.newInstance();
 
-    detailCoordinatorLayoutContentData.setViews(previewContentData, detailContentData);
-    detailCoordinatorLayoutContentData.setOnFinishListener(onFinishListener);
-    detailCoordinatorLayoutContentData.setArticleName(detailViewInfo.getNameArticle());
-    if (detailViewInfo.isShareable()) {
-      detailCoordinatorLayoutContentData.setOnShareListener(onShareListener);
+      detailCoordinatorLayoutContentData.setViews(previewContentData, detailContentData);
+      detailCoordinatorLayoutContentData.setOnFinishListener(onFinishListener);
+      detailCoordinatorLayoutContentData.setArticleName(detailViewInfo.getNameArticle());
+      if (detailViewInfo.isShareable()) {
+        detailCoordinatorLayoutContentData.setOnShareListener(onShareListener);
+      }
+
+      ((AppCompatActivity) context).getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.detail_container_layout, detailCoordinatorLayoutContentData)
+          .commit();
     }
-
-    ((AppCompatActivity) context).getSupportFragmentManager()
-        .beginTransaction()
-        .replace(R.id.detail_container_layout, detailCoordinatorLayoutContentData)
-        .commit();
   }
 
   @Override
