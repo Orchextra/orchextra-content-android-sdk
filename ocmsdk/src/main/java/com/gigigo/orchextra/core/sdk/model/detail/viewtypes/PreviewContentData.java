@@ -201,21 +201,21 @@ public class PreviewContentData extends UiBaseContentData {
   }
 
   @Override public void onDestroy() {
-    if (isAdded()) {
-      if (previewContentMainLayout != null) {
-        unbindDrawables(previewContentMainLayout);
-        System.gc();
+    if (previewContentMainLayout != null) {
+      unbindDrawables(previewContentMainLayout);
+      System.gc();
 
-        Glide.get(this.getContext()).clearMemory();
-        previewImage = null;
-        previewBackgroundShadow = null;
-        goToArticleButton = null;
-        ((ViewGroup) previewContentMainLayout).removeAllViews();
-        Glide.get(this.getContext()).clearMemory();
+      Glide.get(this.getContext()).clearMemory();
+      previewImage = null;
+      previewBackgroundShadow = null;
+      goToArticleButton = null;
+      ((ViewGroup) previewContentMainLayout).removeAllViews();
+      Glide.get(this.getContext()).clearMemory();
 
-        previewContentMainLayout = null;
-      }
+      previewContentMainLayout = null;
+    }
 
+    if (getHost() != null) {
       super.onDestroy();
     }
   }

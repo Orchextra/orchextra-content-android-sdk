@@ -38,8 +38,8 @@ public class ArticleContentData extends UiBaseContentData {
   }
 
   @Override public void onDestroy() {
-
-    System.out.println("----onDestroy------------------------------------------artivcle content data");
+    System.out.println(
+        "----onDestroy------------------------------------------artivcle content data");
     if (articleItemViewContainer != null) {
       unbindDrawables(articleItemViewContainer);
       System.gc();
@@ -52,7 +52,9 @@ public class ArticleContentData extends UiBaseContentData {
       articleElementList = null;
     }
 
-    super.onDestroy();
+    if (getHost() != null) {
+      super.onDestroy();
+    }
   }
 
   private void unbindDrawables(View view) {
