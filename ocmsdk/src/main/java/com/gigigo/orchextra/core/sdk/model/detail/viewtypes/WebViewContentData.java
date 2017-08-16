@@ -38,6 +38,8 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.android.gms.internal.zzs.TAG;
+
 public class WebViewContentData extends UiBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
@@ -236,6 +238,7 @@ public class WebViewContentData extends UiBaseContentData {
           if (queryString != null && !queryString.isEmpty()) {
             String urlWithQueryParams =
                 addQueryParamsToUrl(queryString, url);
+            Log.d(TAG, "federatedAuth url: " + urlWithQueryParams);
             if (urlWithQueryParams != null) {
               webView.loadUrl(urlWithQueryParams);
             }
