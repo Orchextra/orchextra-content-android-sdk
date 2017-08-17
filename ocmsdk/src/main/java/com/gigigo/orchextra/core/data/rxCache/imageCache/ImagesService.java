@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
@@ -15,8 +14,6 @@ import orchextra.javax.inject.Singleton;
  */
 
 @Singleton public class ImagesService extends Service {
-
-
 
   @Inject OcmImageCache ocmImageCache;
 
@@ -29,14 +26,9 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    if (DeviceUtils.checkDeviceHasEnoughRamMemory()) {
-      ocmImageCache.start();
-      return START_STICKY;
-    }
-    return START_STICKY_COMPATIBILITY;
+    ocmImageCache.start();
+    return START_STICKY;
   }
-
-
 
   @Override public void onDestroy() {
     ocmImageCache.stop();

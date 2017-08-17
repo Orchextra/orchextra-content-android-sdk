@@ -19,11 +19,11 @@ import io.reactivex.schedulers.Schedulers;
  */
 public abstract class UseCase<T, Params> {
 
-  private final ThreadExecutor threadExecutor;
+  private final PriorityScheduler threadExecutor;
   private final PostExecutionThread postExecutionThread;
   private final CompositeDisposable disposables;
 
-  protected UseCase(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+  protected UseCase(PriorityScheduler threadExecutor, PostExecutionThread postExecutionThread) {
     this.threadExecutor = threadExecutor;
     this.postExecutionThread = postExecutionThread;
     this.disposables = new CompositeDisposable();
@@ -41,10 +41,11 @@ public abstract class UseCase<T, Params> {
    * by {@link #buildUseCaseObservable(Params)} ()} method.
    * @param params Parameters (Optional) used to build/execute this use case.
    */
-  public void execute(DisposableObserver<T> observer, Params params) {
+  public void execute(DisposableObserver<T> observer, Params params, PriorityScheduler.Priority priority) {
     Preconditions.checkNotNull(observer);
+
     final Observable<T> observable = this.buildUseCaseObservable(params)
-        .subscribeOn(Schedulers.from(threadExecutor))
+        .subscribeOn(threadExecutor.priority(priority.getPriority()))
         .observeOn(postExecutionThread.getScheduler());
     addDisposable(observable.subscribeWith(observer));
   }

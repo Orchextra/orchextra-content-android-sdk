@@ -7,6 +7,7 @@ import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
+import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -55,7 +56,9 @@ import orchextra.javax.inject.Singleton;
     if (running && imageQueue.hasImages()) {
       executeAsynchronously(new ImageDownloader(imageQueue.getImage(), new Callback() {
         @Override public void onSuccess(ImageData imageData) {
-          downloadFirst();
+          if (DeviceUtils.checkDeviceHasEnoughRamMemory()) {
+            downloadFirst();
+          }
         }
 
         @Override public void onError(ImageData imageData, Exception e) {

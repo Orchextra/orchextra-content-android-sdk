@@ -1,10 +1,9 @@
 package com.gigigo.orchextra.core.data.rxExecutor;
 
+import android.support.annotation.NonNull;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.LowPriorityRunnable;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import java.util.Comparator;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -18,7 +17,6 @@ import orchextra.javax.inject.Singleton;
   private static final int KEEP_ALIVE_TIME = 10;
   // Sets the Time Unit to seconds
   private static final TimeUnit KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS;
-  //Runtime.getRuntime().availableProcessors() - 1 <= 0 ? 1 : Runtime.getRuntime().availableProcessors() - 1;
   private static int INITIAL_POOL_SIZE = 1;
   private static int MAX_POOL_SIZE = 1;
 
@@ -27,21 +25,19 @@ import orchextra.javax.inject.Singleton;
   @Inject public JobExecutor() {
     initCores();
 
-    Comparator<Runnable> comparator = new Comparator<Runnable>() {
-      @Override public int compare(Runnable o1, Runnable o2) {
-        int priority1 = 0;
-        int priority2 = 0;
-        if (o1 instanceof LowPriorityRunnable) priority1 = 1;
-        if (o2 instanceof LowPriorityRunnable) priority2 = 1;
+    Comparator<Runnable> comparator = (o1, o2) -> {
 
-        if (priority2 == 0) {
-          return -1;
-        } else {
-          return priority1 - priority2;
-        }
-      }
+      int priority1 = 0;
+      int priority2 = 0;
+
+      if (o1 instanceof LowPriorityRunnable) priority1 = 1;
+      if (o2 instanceof LowPriorityRunnable) priority2 = 1;
+
+      return priority1 - priority2;
     };
-    PriorityBlockingQueue workQueue = new PriorityBlockingQueue<>(INITIAL_POOL_SIZE, comparator);
+
+    PriorityBlockingQueue<Runnable> workQueue =
+        new PriorityBlockingQueue<>(INITIAL_POOL_SIZE, comparator);
 
     ThreadFactory threadFactory = new JobThreadFactory();
     this.threadPoolExecutor =
@@ -52,21 +48,9 @@ import orchextra.javax.inject.Singleton;
   private void initCores() {
     MAX_POOL_SIZE = 1;
     INITIAL_POOL_SIZE = 1;
-
-    try {
-      if (Runtime.getRuntime().availableProcessors() > 2
-          && DeviceUtils.checkDeviceHasEnoughRamMemory()) {
-        MAX_POOL_SIZE = Runtime.getRuntime().availableProcessors() - 1;
-        INITIAL_POOL_SIZE = 2;
-      }
-    } catch (Exception ignored) {
-    }
   }
 
-  @Override public void execute(Runnable runnable) {
-    if (runnable == null) {
-      throw new IllegalArgumentException("Runnable to execute cannot be null");
-    }
+  @Override public void execute(@NonNull Runnable runnable) {
     this.threadPoolExecutor.execute(runnable);
   }
 
@@ -74,7 +58,7 @@ import orchextra.javax.inject.Singleton;
     private static final String THREAD_NAME = "android_";
     private int counter = 0;
 
-    @Override public Thread newThread(Runnable runnable) {
+    @Override public Thread newThread(@NonNull Runnable runnable) {
       return new Thread(runnable, THREAD_NAME + counter++);
     }
   }

@@ -22,7 +22,7 @@ import static org.mockito.BDDMockito.given;
 
   private TestDisposableObserver<Object> testObserver;
 
-  @Mock private ThreadExecutor mockThreadExecutor;
+  @Mock private PriorityScheduler mockThreadExecutor;
   @Mock private PostExecutionThread mockPostExecutionThread;
 
   @Rule public ExpectedException expectedException = ExpectedException.none();
@@ -34,13 +34,13 @@ import static org.mockito.BDDMockito.given;
   }
 
   @Test public void testBuildUseCaseObservableReturnCorrectResult() {
-    useCase.execute(testObserver, Params.EMPTY);
+    useCase.execute(testObserver, Params.EMPTY, 1);
 
     assertThat(testObserver.valuesCount).isZero();
   }
 
   @Test public void testSubscriptionWhenExecutingUseCase() {
-    useCase.execute(testObserver, Params.EMPTY);
+    useCase.execute(testObserver, Params.EMPTY, 1);
     useCase.dispose();
 
     assertThat(testObserver.isDisposed()).isTrue();
@@ -48,12 +48,12 @@ import static org.mockito.BDDMockito.given;
 
   @Test public void testShouldFailWhenExecuteWithNullObserver() {
     expectedException.expect(NullPointerException.class);
-    useCase.execute(null, Params.EMPTY);
+    useCase.execute(null, Params.EMPTY, 1);
   }
 
   private static class UseCaseTestClass extends UseCase<Object, Params> {
 
-    UseCaseTestClass(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+    UseCaseTestClass(PriorityScheduler threadExecutor, PostExecutionThread postExecutionThread) {
       super(threadExecutor, postExecutionThread);
     }
 
@@ -61,8 +61,8 @@ import static org.mockito.BDDMockito.given;
       return Observable.empty();
     }
 
-    @Override public void execute(DisposableObserver<Object> observer, Params params) {
-      super.execute(observer, params);
+    @Override public void execute(DisposableObserver<Object> observer, Params params, int priority) {
+      super.execute(observer, params, priority);
     }
   }
 

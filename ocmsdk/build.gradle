@@ -135,7 +135,6 @@ dependencies {
   compile project.libraries.autofitTextView
   compile project.libraries.multipleGridRecyclerView
 
-
   compile project.libraries.rxAndroid
   compile project.libraries.rxJava
   compile project.libraries.rxRetrofit

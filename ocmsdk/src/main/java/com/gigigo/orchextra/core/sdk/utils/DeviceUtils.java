@@ -88,12 +88,13 @@ public class DeviceUtils {
     return size.y;
   }
 
-  private static final int MIN_RAM_MEMORY = 256;
+  private static final int MIN_RAM_MEMORY = 100;
+  private static final long ONE_MB_INTO_KB = 1048576L;
   public static boolean checkDeviceHasEnoughRamMemory() {
     try {
       final Runtime runtime = Runtime.getRuntime();
-      final long usedMemInMB = (runtime.totalMemory() - runtime.freeMemory()) / 1048576L;
-      final long maxHeapSizeInMB = runtime.maxMemory() / 1048576L;
+      final long usedMemInMB = (runtime.totalMemory() - runtime.freeMemory()) / ONE_MB_INTO_KB;
+      final long maxHeapSizeInMB = runtime.maxMemory() / ONE_MB_INTO_KB;
       final long availHeapSizeInMB = maxHeapSizeInMB - usedMemInMB;
 
       return availHeapSizeInMB > MIN_RAM_MEMORY;

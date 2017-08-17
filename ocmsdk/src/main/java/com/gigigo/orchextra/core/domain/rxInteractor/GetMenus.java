@@ -15,7 +15,7 @@ public class GetMenus extends UseCase<MenuContentData, GetMenus.Params> {
 
   private final OcmRepository ocmRepository;
 
-  @Inject GetMenus(OcmRepository ocmRepository, ThreadExecutor threadExecutor,
+  @Inject GetMenus(OcmRepository ocmRepository, PriorityScheduler threadExecutor,
       PostExecutionThread postExecutionThread) {
     super(threadExecutor, postExecutionThread);
     this.ocmRepository = ocmRepository;

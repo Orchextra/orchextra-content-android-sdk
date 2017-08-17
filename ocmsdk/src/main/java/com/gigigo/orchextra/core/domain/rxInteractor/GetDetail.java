@@ -16,7 +16,7 @@ public class GetDetail extends UseCase<ElementData, GetDetail.Params> {
 
   private final OcmRepository ocmRepository;
 
-  @Inject GetDetail(OcmRepository ocmRepository, ThreadExecutor threadExecutor,
+  @Inject GetDetail(OcmRepository ocmRepository, PriorityScheduler threadExecutor,
       PostExecutionThread postExecutionThread) {
     super(threadExecutor, postExecutionThread);
     this.ocmRepository = ocmRepository;

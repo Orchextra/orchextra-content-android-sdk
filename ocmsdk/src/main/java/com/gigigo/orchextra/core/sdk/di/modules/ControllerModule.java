@@ -14,6 +14,7 @@ import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
+import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
@@ -35,6 +36,10 @@ import orchextra.javax.inject.Singleton;
 
   @Provides @Singleton ThreadExecutor provideThreadExecutor(JobExecutor jobExecutor) {
     return jobExecutor;
+  }
+
+  @Provides @Singleton PriorityScheduler providePriorityScheduler() {
+    return PriorityScheduler.create();
   }
 
   @Provides @Singleton PostExecutionThread providePostExecutionThread(UIThread uiThread) {

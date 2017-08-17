@@ -49,28 +49,28 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   @Test public void testClearCache() {
     ocmController.clearCache(true, true, null);
 
-    verify(mockClearCache).execute(any(DisposableObserver.class), any(ClearCache.Params.class));
+    verify(mockClearCache).execute(any(DisposableObserver.class), any(ClearCache.Params.class), 0);
     verifyNoMoreInteractions(mockClearCache);
   }
 
   @Test public void testGetDetail() {
     ocmController.getDetails(true, FAKE_DETAIL, null);
 
-    verify(mockGetDetail).execute(any(DisposableObserver.class), any(GetDetail.Params.class));
+    verify(mockGetDetail).execute(any(DisposableObserver.class), any(GetDetail.Params.class), 1);
     verifyNoMoreInteractions(mockGetDetail);
   }
 
   @Test public void testGetSection() {
     ocmController.getSection(true, FAKE_SECTION, FAKE_IMAGES, null);
 
-    verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class));
+    verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class), 1);
     verifyNoMoreInteractions(mockGetMenus);
   }
 
   @Test public void testGetMenus() {
     ocmController.getMenu(true, null);
 
-    verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class));
+    verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class), 3);
     verifyNoMoreInteractions(mockGetMenus);
   }
 
@@ -78,7 +78,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
     ocmController.search(FAKE_TEXT, null);
 
     verify(mockSearchElements).execute(any(DisposableObserver.class),
-        any(SearchElements.Params.class));
+        any(SearchElements.Params.class), 2);
 
     verifyNoMoreInteractions(mockSearchElements);
   }

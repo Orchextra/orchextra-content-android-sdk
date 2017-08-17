@@ -8,7 +8,6 @@ import com.gigigo.orchextra.core.data.rxException.ClearCacheException;
 import com.gigigo.orchextra.core.data.rxException.NetworkConnectionException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
-import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
@@ -18,11 +17,23 @@ import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
+import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
-import java.util.Map;
 
 public class OcmControllerImp implements OcmController {
+  private static final PriorityScheduler.Priority PRIORITY_MENUS = PriorityScheduler.Priority.LOW;
+
+  private static final PriorityScheduler.Priority PRIORITY_SECTIONS =
+      PriorityScheduler.Priority.MEDIUM;
+
+  private static final PriorityScheduler.Priority PRIORITY_DETAIL =
+      PriorityScheduler.Priority.HIGHEST;
+
+  private static final PriorityScheduler.Priority PRIORITY_SEARCH =
+      PriorityScheduler.Priority.MEDIUM;
+
+  private static final PriorityScheduler.Priority PRIORITY_CLEAR = PriorityScheduler.Priority.LOW;
 
   private final GetMenus getMenus;
   private final GetSection getSection;
@@ -55,7 +66,7 @@ public class OcmControllerImp implements OcmController {
   //region new
   @Override public void getMenu(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
     getMenus.execute(new MenuObserver(getMenusCallback),
-        GetMenus.Params.forForceReload(forceReload));
+        GetMenus.Params.forForceReload(forceReload), PRIORITY_MENUS);
   }
 
   @Override
@@ -70,7 +81,8 @@ public class OcmControllerImp implements OcmController {
           String url = elementCache.getRender().getContentUrl();
           if (url != null) {
             getSection.execute(new SectionObserver(getSectionControllerCallback),
-                GetSection.Params.forSection(forceReload, url, imagesToDownload));
+                GetSection.Params.forSection(forceReload, url, imagesToDownload),
+                PRIORITY_SECTIONS);
           } else {
             getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(
                 "elementCache.getRender().getContentUrl() IS NULL"));
@@ -89,19 +101,19 @@ public class OcmControllerImp implements OcmController {
       GetDetailControllerCallback getDetailControllerCallback) {
     String slug = getSlug(elementUrl);
     getDetail.execute(new DetailObserver(getDetailControllerCallback),
-        GetDetail.Params.forDetail(forceReload, slug));
+        GetDetail.Params.forDetail(forceReload, slug), PRIORITY_DETAIL);
   }
 
   @Override
   public void search(String textToSearch, SearchControllerCallback searchControllerCallback) {
     searchElements.execute(new SearchObserver(searchControllerCallback),
-        SearchElements.Params.forTextToSearch(textToSearch));
+        SearchElements.Params.forTextToSearch(textToSearch), PRIORITY_SEARCH);
   }
 
   @Override public void clearCache(boolean images, boolean data,
       final ClearCacheCallback clearCacheCallback) {
     clearCache.execute(new ClearCacheObserver(clearCacheCallback),
-        ClearCache.Params.create(images, data));
+        ClearCache.Params.create(images, data), PRIORITY_CLEAR);
   }
 
   //end region
@@ -165,7 +177,7 @@ public class OcmControllerImp implements OcmController {
         if (!connectionUtils.hasConnection() && (elementData.getElement().getType()
             == ElementCacheType.WEBVIEW
             || elementData.getElement().getType() == ElementCacheType.VIDEO)) {
-            getDetailControllerCallback.onGetDetailNoAvailable(new NetworkConnectionException());
+          getDetailControllerCallback.onGetDetailNoAvailable(new NetworkConnectionException());
         } else {
           getDetailControllerCallback.onGetDetailLoaded(elementData.getElement());
         }

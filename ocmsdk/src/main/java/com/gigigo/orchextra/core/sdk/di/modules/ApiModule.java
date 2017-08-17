@@ -77,7 +77,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
   @Provides @Singleton @GsonConverterFactoryObject
   GsonConverterFactory provideGsonConverterFactory() {
-    return retrofit2.converter.gson.GsonConverterFactory.create();
+    return GsonConverterFactory.create();
   }
 
   @Provides @Singleton @RetrofitOcm Retrofit provideOcmRetrofitObject(@EndpointOcm String enpoint,

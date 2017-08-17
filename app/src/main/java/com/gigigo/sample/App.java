@@ -16,9 +16,9 @@ public class App extends MultiDexApplication {
   //public static String API_KEY = "a2966ba69f4ead1a4f1550bfda450e9fd07e6762";   //Asv project
   //public static String API_SECRET = "f79713d7e9b0fcd69fedfb94f471106cb85d8ca4";
 
-  //WOAH PRELAUNCH RELEASE
-  //public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
-  //public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
+  //WOAH RELEASE
+  public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
+  public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
 
   //[UAT][CSE] - WOAH SITC STAGING
   //public static String API_KEY = "adfc8ba4340828a054bf061f692707a197af96cb";
@@ -29,8 +29,8 @@ public class App extends MultiDexApplication {
   //public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
 
   //WOAH QA RELEASE
-  public static String API_KEY = "ad46332237cbb9fd38ad38470a9bee6d4892d770";    //Woah project
-  public static String API_SECRET = "f5e2dd3ba0de46964775fc1b48c4895c73d263c5";
+  //public static String API_KEY = "ad46332237cbb9fd38ad38470a9bee6d4892d770";    //Woah project
+  //public static String API_SECRET = "f5e2dd3ba0de46964775fc1b48c4895c73d263c5";
 
   //REPSOL RELEASE
   //public static String API_KEY = "7bb9fa0f9b7a02846383fd6284d3c74b8155644c";
@@ -83,7 +83,7 @@ public class App extends MultiDexApplication {
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
-    Ocm.setBusinessUnit("pl");
+    Ocm.setBusinessUnit("it");
   }
 
   private void enableStrictMode() {

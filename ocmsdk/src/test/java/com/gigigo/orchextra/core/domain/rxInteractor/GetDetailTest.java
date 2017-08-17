@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
   private GetDetail getDetail;
 
   @Mock private OcmRepository mockOcmRepository;
-  @Mock private ThreadExecutor mockThreadExecutor;
+  @Mock private PriorityScheduler mockThreadExecutor;
   @Mock private PostExecutionThread mockPostExecutionThread;
 
   @Rule public ExpectedException expectedException = ExpectedException.none();

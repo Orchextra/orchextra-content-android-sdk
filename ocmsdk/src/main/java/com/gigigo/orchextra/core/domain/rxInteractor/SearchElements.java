@@ -15,7 +15,7 @@ public class SearchElements extends UseCase<ContentData, SearchElements.Params> 
 
   private final OcmRepository ocmRepository;
 
-  @Inject SearchElements(OcmRepository ocmRepository, ThreadExecutor threadExecutor,
+  @Inject SearchElements(OcmRepository ocmRepository, PriorityScheduler threadExecutor,
       PostExecutionThread postExecutionThread) {
     super(threadExecutor, postExecutionThread);
     this.ocmRepository = ocmRepository;

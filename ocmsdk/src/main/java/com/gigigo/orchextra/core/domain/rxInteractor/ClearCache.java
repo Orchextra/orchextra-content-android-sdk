@@ -15,7 +15,7 @@ public class ClearCache extends UseCase<Void, ClearCache.Params> {
 
   private final OcmRepository ocmRepository;
 
-  @Inject ClearCache(OcmRepository ocmRepository, ThreadExecutor threadExecutor,
+  @Inject ClearCache(OcmRepository ocmRepository, PriorityScheduler threadExecutor,
       PostExecutionThread postExecutionThread) {
     super(threadExecutor, postExecutionThread);
     this.ocmRepository = ocmRepository;
