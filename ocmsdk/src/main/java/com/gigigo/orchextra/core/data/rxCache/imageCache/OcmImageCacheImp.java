@@ -1,8 +1,6 @@
 package com.gigigo.orchextra.core.data.rxCache.imageCache;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
@@ -53,12 +51,10 @@ import orchextra.javax.inject.Singleton;
       running = false;
       return;
     }
-    if (running && imageQueue.hasImages()) {
+    if (running && imageQueue.hasImages() && DeviceUtils.checkDeviceHasEnoughRamMemory()) {
       executeAsynchronously(new ImageDownloader(imageQueue.getImage(), new Callback() {
         @Override public void onSuccess(ImageData imageData) {
-          if (DeviceUtils.checkDeviceHasEnoughRamMemory()) {
-            downloadFirst();
-          }
+          downloadFirst();
         }
 
         @Override public void onError(ImageData imageData, Exception e) {
@@ -92,5 +88,4 @@ import orchextra.javax.inject.Singleton;
 
     void onError(ImageData imageData, Exception e);
   }
-
 }
