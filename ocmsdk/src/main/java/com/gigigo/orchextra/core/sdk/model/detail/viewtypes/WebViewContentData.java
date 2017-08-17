@@ -236,6 +236,7 @@ public class WebViewContentData extends UiBaseContentData {
           if (queryString != null && !queryString.isEmpty()) {
             String urlWithQueryParams =
                 addQueryParamsToUrl(queryString, url);
+            Log.d(WebViewContentData.class.getSimpleName(), "federatedAuth url: " + urlWithQueryParams);
             if (urlWithQueryParams != null) {
               webView.loadUrl(urlWithQueryParams);
             }
