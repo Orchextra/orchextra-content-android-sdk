@@ -216,7 +216,7 @@ public final class OCManager {
     Orchextra.start();
 
     //Some case the start() and changeCredentials() method has concurrency problems
-    Orchextra.changeCredentials(apiKey, apiSecret);
+    Orchextra.updateSDKCredentials(apiKey, apiSecret);
   }
 
   static void bindUser(CrmUser crmUser) {
