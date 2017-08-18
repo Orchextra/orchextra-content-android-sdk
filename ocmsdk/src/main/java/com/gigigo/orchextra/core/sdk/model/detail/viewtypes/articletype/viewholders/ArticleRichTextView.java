@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
@@ -20,7 +21,7 @@ import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.R;
 
-public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement> {
+public class ArticleRichTextView extends BaseViewHolder<ArticleRichTextElement> {
 
   private TextView articleRichText;
 
@@ -28,28 +29,16 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
 
   private ConnectionUtils connectionUtils;
 
-  public ArticleRichTextView(Context context, ArticleRichTextElement articleElement) {
-    super(context, articleElement);
+  public ArticleRichTextView(Context context, ViewGroup parent) {
+    super(context, parent, R.layout.view_article_rich_text_item);
+
     connectionUtils = new ConnectionUtilsImp(context);
-  }
 
-  @Override protected int getViewLayout() {
-    return R.layout.view_article_rich_text_item;
-  }
-
-  @Override protected void bindViews() {
     articleRichText = (TextView) itemView.findViewById(R.id.article_rich_text);
     ocmContextProvider = OCManager.getOcmContextProvider();
   }
 
-
-  @Override protected void bindTo(ArticleRichTextElement articleElement) {
-    if (!TextUtils.isEmpty(articleElement.getHtml())) {
-      setTextViewHTML(articleRichText, articleElement.getHtml());
-    }
-  }
-
-  protected void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span) {
+  private void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span) {
     int start = strBuilder.getSpanStart(span);
     int end = strBuilder.getSpanEnd(span);
     int flags = strBuilder.getSpanFlags(span);
@@ -70,7 +59,7 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
     strBuilder.removeSpan(span);
   }
 
-  protected void setTextViewHTML(TextView text, String html) {
+  private void setTextViewHTML(TextView text, String html) {
     CharSequence sequence = Html.fromHtml(html);
     SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
     URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
@@ -81,5 +70,9 @@ public class ArticleRichTextView extends ArticleBaseView<ArticleRichTextElement>
     text.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
-
+  @Override public void bindTo(ArticleRichTextElement richTextElement, int position) {
+    if (!TextUtils.isEmpty(richTextElement.getHtml())) {
+      setTextViewHTML(articleRichText, richTextElement.getHtml());
+    }
+  }
 }

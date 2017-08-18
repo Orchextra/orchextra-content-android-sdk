@@ -13,19 +13,16 @@ import com.gigigo.orchextra.core.sdk.model.grid.viewholders.CellImageViewHolder;
 public class ElementsViewHolderFactory extends BaseViewHolderFactory {
 
   private final Authoritation authoritation;
-  private final boolean thumbnailEnabled;
 
-  public ElementsViewHolderFactory(Context context, Authoritation authoritation,
-      boolean thumbnailEnabled) {
+  public ElementsViewHolderFactory(Context context, Authoritation authoritation) {
     super(context);
     this.authoritation = authoritation;
-    this.thumbnailEnabled = thumbnailEnabled;
   }
 
   @Override public BaseViewHolder create(Class valueClass, ViewGroup parent) {
     if (valueClass == CellGridContentData.class) {
 
-      return new CellImageViewHolder(context, parent, authoritation, thumbnailEnabled);
+      return new CellImageViewHolder(context, parent, authoritation);
     } else if (valueClass == CellBlankElement.class) {
       return new CellBlankViewHolder(context, parent);
     } else {
