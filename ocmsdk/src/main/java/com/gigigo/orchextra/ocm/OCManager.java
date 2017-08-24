@@ -213,10 +213,11 @@ public final class OCManager {
 
     instance.ocmCredentialCallback = ocmCredentialCallback;
 
-    Orchextra.start();
+   // Orchextra.start();
 
     //Some case the start() and changeCredentials() method has concurrency problems
     Orchextra.updateSDKCredentials(apiKey, apiSecret);
+
   }
 
   static void bindUser(CrmUser crmUser) {
