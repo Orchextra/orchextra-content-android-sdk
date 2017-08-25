@@ -213,6 +213,7 @@ public final class OCManager {
 
     instance.ocmCredentialCallback = ocmCredentialCallback;
 
+    //Orchextra.start(); //this is new for repsol, mejor eliminarlo, xq esto chuta de casualidad, ya q el start si q tiene el callback informado
 
     //Some case the start() and changeCredentials() method has concurrency problems
     Orchextra.updateSDKCredentials(apiKey, apiSecret,true);
