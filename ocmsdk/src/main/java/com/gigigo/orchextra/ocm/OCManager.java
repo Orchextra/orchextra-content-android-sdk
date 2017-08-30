@@ -216,6 +216,7 @@ public final class OCManager {
 
     instance.ocmCredentialCallback = ocmCredentialCallback;
 
+    Orchextra.start(); //this is new for repsol, esto hace q el primer changecredentials pase por el 401 y llege el token
 
     //Some case the start() and changeCredentials() method has concurrency problems
     Orchextra.updateSDKCredentials(apiKey, apiSecret,true);
