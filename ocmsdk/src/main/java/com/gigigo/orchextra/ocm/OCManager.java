@@ -2,11 +2,8 @@ package com.gigigo.orchextra.ocm;
 
 import android.app.Activity;
 import android.app.Application;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 import com.gigigo.imagerecognitioninterface.ImageRecognition;
 import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.CustomSchemeReceiver;
@@ -216,7 +213,7 @@ public final class OCManager {
 
     instance.ocmCredentialCallback = ocmCredentialCallback;
 
-    Orchextra.start(); //this is new for repsol, esto hace q el primer changecredentials pase por el 401 y llege el token
+    Orchextra.start(); //this is new for repsol, esto hace q el primer changecredentials pase por el 401 y llege correctamente el token
 
     //Some case the start() and changeCredentials() method has concurrency problems
     Orchextra.updateSDKCredentials(apiKey, apiSecret,true);
@@ -343,11 +340,11 @@ public final class OCManager {
 
   @Override public void onError(String error) {
     Log.d("WOAH", "onError: " + error);
-    new Handler(Looper.getMainLooper()).post(new Runnable() {
-      @Override public void run() {
-        Toast.makeText(mApplication, "onError:  app" + error, Toast.LENGTH_LONG).show();
-      }
-    });
+    //new Handler(Looper.getMainLooper()).post(new Runnable() {
+    //  @Override public void run() {
+    //    Toast.makeText(mApplication, "onError:  app" + error, Toast.LENGTH_LONG).show();
+    //  }
+    //});
     if (error.equals("401") && instance.ocmCredentialCallback != null) {
       instance.ocmCredentialCallback.onCredentailError(error);
     }
@@ -362,11 +359,11 @@ public final class OCManager {
 
   @Override public void onConfigurationReceive(String accessToken) {
     Log.d("WOAH", "onConfigurationReceive: " + accessToken);
-    new Handler(Looper.getMainLooper()).post(new Runnable() {
-      @Override public void run() {
-        Toast.makeText(mApplication, "onConfigurationReceive:  app" + accessToken, Toast.LENGTH_LONG).show();
-      }
-    });
+    //new Handler(Looper.getMainLooper()).post(new Runnable() {
+    //  @Override public void run() {
+    //    Toast.makeText(mApplication, "onConfigurationReceive:  app" + accessToken, Toast.LENGTH_LONG).show();
+    //  }
+    //});
     instance.oxSession.setToken(accessToken);
 
     if (instance.ocmCredentialCallback
@@ -378,25 +375,7 @@ public final class OCManager {
   private void initOrchextra(Application app, String oxKey, String oxSecret,
       Class notificationActivityClass, String senderId) {
     initOrchextra(app,oxKey,oxSecret,notificationActivityClass,senderId,null);
-    //
-    //OrchextraBuilder builder = new OrchextraBuilder(app);
-    //builder.setApiKeyAndSecret(oxKey, oxSecret)
-    //    .setLogLevel(OrchextraLogLevel.NETWORK)
-    //    //.setGcmSenderId("117687721829")       //TODO Test sender Id nuborisar
-    //    // .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
-    //    .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
-    //    .setOrchextraCompletionCallback( mOrchextraCompletionCallback);
-    //
-    //if (notificationActivityClass != null) {
-    //  builder.setNotificationActivityClass(notificationActivityClass.toString());
-    //}
-    //if (senderId != null && senderId != "") {
-    //  builder.setGcmSenderId(senderId);
-    //}
-    //
-    //Orchextra.initialize(builder);
-    //
-    //Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
+
   }
 
   private void initOrchextra(Application app, String oxKey, String oxSecret,
