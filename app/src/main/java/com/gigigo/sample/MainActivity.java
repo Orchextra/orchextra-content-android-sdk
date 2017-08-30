@@ -8,12 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 import com.gigigo.orchextra.Orchextra;
+import com.gigigo.orchextra.ocm.OCManagerCallbacks;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
+import java.io.File;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     initViews();
 
-    startCredentials();
     Ocm.setOnDoRequiredLoginCallback(onDoRequiredLoginCallback);
   }
 
@@ -57,6 +58,20 @@ public class MainActivity extends AppCompatActivity {
     tabLayout = (TabLayout) findViewById(R.id.tabLayout);
     viewpager = (ViewPager) findViewById(R.id.viewpager);
     View fabReload = findViewById(R.id.fabReload);
+    View fabChange = findViewById(R.id.fabChange);
+    View fabClean = findViewById(R.id.fabClean);
+
+    fabChange.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        startCredentials();
+      }
+    });
+
+    fabClean.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        clearDataAndGoToChangeCountryView();
+      }
+    });
 
     newContentMainContainer = findViewById(R.id.newContentMainContainer);
 
@@ -71,7 +86,15 @@ public class MainActivity extends AppCompatActivity {
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
   }
 
+  static String country = "it";
+
   private void startCredentials() {
+    Ocm.setBusinessUnit(country);
+    if (country.equals("pl")) {
+      country = "it";
+    } else {
+      country = "pl";
+    }
     Ocm.startWithCredentials(App.API_KEY, App.API_SECRET, new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
         //TODO Fix in Orchextra
@@ -94,6 +117,48 @@ public class MainActivity extends AppCompatActivity {
         Orchextra.startScannerActivity();
       }
     });
+    Ocm.start();//likewoah
+  }
+
+  private void clearDataAndGoToChangeCountryView() {
+    clearApplicationData();
+    Orchextra.stop(); //asv V.I.Code
+    Ocm.clearData(true, true, new OCManagerCallbacks.Clear() {
+      @Override public void onDataClearedSuccessfull() {
+
+      }
+
+      @Override public void onDataClearFails(Exception e) {
+
+      }
+    });
+  }
+
+  public void clearApplicationData() {
+    File cache = getCacheDir();
+    File appDir = new File(cache.getParent());
+    if (appDir.exists()) {
+      String[] children = appDir.list();
+      for (String s : children) {
+        if (!s.equals("lib")) {
+          deleteDir(new File(appDir, s));
+        }
+      }
+    }
+  }
+
+  public static boolean deleteDir(File dir) {
+    if (dir != null && dir.isDirectory()) {
+      String[] children = dir.list();
+      for (int i = 0; i < children.length; i++) {
+        boolean success = deleteDir(new File(dir, children[i]));
+        if (!success) {
+          return false;
+        }
+      }
+    }
+
+    return dir.delete();
   }
 
   private void getContent() {

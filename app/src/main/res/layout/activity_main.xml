@@ -40,6 +40,22 @@
       android:src="@android:drawable/ic_menu_rotate"
       />
 
+
+  <android.support.design.widget.FloatingActionButton
+    android:id="@+id/fabClean"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_gravity="bottom|left"
+    android:src="@android:drawable/ic_delete"
+    />
+
+  <android.support.design.widget.FloatingActionButton
+    android:id="@+id/fabChange"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_gravity=""
+    android:src="@android:drawable/ic_menu_revert"
+    />
   <ProgressBar
       android:id="@+id/progressbar"
       android:layout_width="wrap_content"

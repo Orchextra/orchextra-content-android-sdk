@@ -2,8 +2,11 @@ package com.gigigo.orchextra.ocm;
 
 import android.app.Activity;
 import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 import com.gigigo.imagerecognitioninterface.ImageRecognition;
 import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.CustomSchemeReceiver;
@@ -213,7 +216,6 @@ public final class OCManager {
 
     instance.ocmCredentialCallback = ocmCredentialCallback;
 
-    //Orchextra.start(); //this is new for repsol, mejor eliminarlo, xq esto chuta de casualidad, ya q el start si q tiene el callback informado
 
     //Some case the start() and changeCredentials() method has concurrency problems
     Orchextra.updateSDKCredentials(apiKey, apiSecret,true);
@@ -333,57 +335,67 @@ public final class OCManager {
     app.registerActivityLifecycleCallbacks(ocmSdkLifecycle);
   }
 
+  static OrchextraCompletionCallback mOrchextraCompletionCallback = new OrchextraCompletionCallback(){
+  @Override public void onSuccess() {
+    Log.d("WOAH", "Orchextra initialized successfully");
+  }
+
+  @Override public void onError(String error) {
+    Log.d("WOAH", "onError: " + error);
+    new Handler(Looper.getMainLooper()).post(new Runnable() {
+      @Override public void run() {
+        Toast.makeText(mApplication, "onError:  app" + error, Toast.LENGTH_LONG).show();
+      }
+    });
+    if (error.equals("401") && instance.ocmCredentialCallback != null) {
+      instance.ocmCredentialCallback.onCredentailError(error);
+    }
+  }
+
+  @Override public void onInit(String s) {
+    Log.d("WOAH", "onInit: " + s);
+    //asvox aki es cuando se va a background , en estepunto ox ya ha recuperado la config anterior(buena)
+    //y cuando llega a onSuccess se rompio del todo
+
+  }
+
+  @Override public void onConfigurationReceive(String accessToken) {
+    Log.d("WOAH", "onConfigurationReceive: " + accessToken);
+    new Handler(Looper.getMainLooper()).post(new Runnable() {
+      @Override public void run() {
+        Toast.makeText(mApplication, "onConfigurationReceive:  app" + accessToken, Toast.LENGTH_LONG).show();
+      }
+    });
+    instance.oxSession.setToken(accessToken);
+
+    if (instance.ocmCredentialCallback
+        != null) { //asv esto indica q se hace el changecredentials
+      instance.ocmCredentialCallback.onCredentialReceiver(accessToken);
+    }
+  }
+};
   private void initOrchextra(Application app, String oxKey, String oxSecret,
       Class notificationActivityClass, String senderId) {
-
-    OrchextraBuilder builder = new OrchextraBuilder(app);
-    builder.setApiKeyAndSecret(oxKey, oxSecret)
-        .setLogLevel(OrchextraLogLevel.NETWORK)
-        //.setGcmSenderId("117687721829")       //TODO Test sender Id nuborisar
-        // .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
-        .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
-        .setOrchextraCompletionCallback(new OrchextraCompletionCallback() {
-          @Override public void onSuccess() {
-            Log.d("WOAH", "Orchextra initialized successfully");
-          }
-
-          @Override public void onError(String error) {
-            Log.d("WOAH", "onError: " + error);
-
-            if (error.equals("401") && instance.ocmCredentialCallback != null) {
-              ocmCredentialCallback.onCredentailError(error);
-            }
-          }
-
-          @Override public void onInit(String s) {
-            Log.d("WOAH", "onInit: " + s);
-            //asvox aki es cuando se va a background , en estepunto ox ya ha recuperado la config anterior(buena)
-            //y cuando llega a onSuccess se rompio del todo
-
-          }
-
-          @Override public void onConfigurationReceive(String accessToken) {
-            Log.d("WOAH", "onConfigurationReceive: " + accessToken);
-
-            instance.oxSession.setToken(accessToken);
-
-            if (instance.ocmCredentialCallback
-                != null) { //asv esto indica q se hace el changecredentials
-              ocmCredentialCallback.onCredentialReceiver(accessToken);
-            }
-          }
-        });
-
-    if (notificationActivityClass != null) {
-      builder.setNotificationActivityClass(notificationActivityClass.toString());
-    }
-    if (senderId != null && senderId != "") {
-      builder.setGcmSenderId(senderId);
-    }
-
-    Orchextra.initialize(builder);
-
-    Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
+    initOrchextra(app,oxKey,oxSecret,notificationActivityClass,senderId,null);
+    //
+    //OrchextraBuilder builder = new OrchextraBuilder(app);
+    //builder.setApiKeyAndSecret(oxKey, oxSecret)
+    //    .setLogLevel(OrchextraLogLevel.NETWORK)
+    //    //.setGcmSenderId("117687721829")       //TODO Test sender Id nuborisar
+    //    // .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
+    //    .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
+    //    .setOrchextraCompletionCallback( mOrchextraCompletionCallback);
+    //
+    //if (notificationActivityClass != null) {
+    //  builder.setNotificationActivityClass(notificationActivityClass.toString());
+    //}
+    //if (senderId != null && senderId != "") {
+    //  builder.setGcmSenderId(senderId);
+    //}
+    //
+    //Orchextra.initialize(builder);
+    //
+    //Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
   }
 
   private void initOrchextra(Application app, String oxKey, String oxSecret,
@@ -393,33 +405,7 @@ public final class OCManager {
     builder.setApiKeyAndSecret(oxKey, oxSecret)
         .setLogLevel(OrchextraLogLevel.NETWORK)
         .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
-        .setOrchextraCompletionCallback(new OrchextraCompletionCallback() {
-          @Override public void onSuccess() {
-            Log.d("WOAH", "Orchextra initialized successfully");
-          }
-
-          @Override public void onError(String error) {
-            Log.d("WOAH", "onError: " + error);
-
-            if (error.equals("401") && instance.ocmCredentialCallback != null) {
-              ocmCredentialCallback.onCredentailError(error);
-            }
-          }
-
-          @Override public void onInit(String s) {
-            Log.d("WOAH", "onInit: " + s);
-          }
-
-          @Override public void onConfigurationReceive(String accessToken) {
-            Log.d("WOAH", "onConfigurationReceive: " + accessToken);
-
-            instance.oxSession.setToken(accessToken);
-
-            if (instance.ocmCredentialCallback != null) {
-              ocmCredentialCallback.onCredentialReceiver(accessToken);
-            }
-          }
-        });
+        .setOrchextraCompletionCallback(mOrchextraCompletionCallback);
 
     if (notificationActivityClass != null) {
       builder.setNotificationActivityClass(notificationActivityClass.toString());

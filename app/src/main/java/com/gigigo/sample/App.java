@@ -70,7 +70,8 @@ public class App extends MultiDexApplication {
 
     MultiDex.install(this);
 
-    OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
+    OcmBuilder ocmBuilder = new OcmBuilder(this)
+        .setNotificationActivityClass(MainActivity.class)
         .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
         .setContentLanguage("EN")
         .setOnEventCallback(onEventCallback);
