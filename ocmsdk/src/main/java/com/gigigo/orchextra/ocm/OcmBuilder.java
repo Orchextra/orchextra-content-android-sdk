@@ -18,6 +18,7 @@ public final class OcmBuilder {
 
   private String oxSenderId;
   private ImageRecognition vuforiaImpl;
+  private boolean showReadedArticlesInGrayScale = false;
 
   /**
    * setter for do vuforia optional in ocm, setted from intetragion app
@@ -29,6 +30,16 @@ public final class OcmBuilder {
 
   public ImageRecognition getVuforiaImpl() {
     return vuforiaImpl;
+  }
+
+  public OcmBuilder setShowReadedArticlesInGrayScale(boolean isShowReadedArticlesInGrayScale) {
+    this.showReadedArticlesInGrayScale = isShowReadedArticlesInGrayScale;
+
+    return this;
+  }
+
+  public boolean getShowReadedArticlesInGrayScale() {
+    return showReadedArticlesInGrayScale;
   }
 
   /**
@@ -47,8 +58,8 @@ public final class OcmBuilder {
   /**
    * Callback to know when the user need to be logged in the app.
    */
-  @Deprecated
-  public OcmBuilder setOnDoRequiredLoginCallback(OnRequiredLoginCallback onRequiredLoginCallback) {
+  @Deprecated public OcmBuilder setOnDoRequiredLoginCallback(
+      OnRequiredLoginCallback onRequiredLoginCallback) {
     this.onRequiredLoginCallback = onRequiredLoginCallback;
     return this;
   }
@@ -98,8 +109,7 @@ public final class OcmBuilder {
     return oxSecret;
   }
 
-  @Deprecated
-  OnRequiredLoginCallback getOnRequiredLoginCallback() {
+  @Deprecated OnRequiredLoginCallback getOnRequiredLoginCallback() {
     return onRequiredLoginCallback;
   }
 

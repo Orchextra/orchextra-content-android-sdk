@@ -214,7 +214,8 @@ public class WebViewContentData extends UiBaseContentData {
       Iterator<Pair<String, String>> iterator = queryParams.iterator();
       while (iterator.hasNext()) {
         Pair<String, String> pair = iterator.next();
-        url = url + pair.first + URL_QUERY_VALUE_DELIMITER + pair.second + URL_CONCAT_QUERY_DELIMITER;
+        url =
+            url + pair.first + URL_QUERY_VALUE_DELIMITER + pair.second + URL_CONCAT_QUERY_DELIMITER;
       }
 
       return url.substring(0, url.length() - 2);
@@ -234,9 +235,10 @@ public class WebViewContentData extends UiBaseContentData {
       if (federatedAuthorization.isActive() && Ocm.getQueryStringGenerator() != null) {
         Ocm.getQueryStringGenerator().createQueryString(federatedAuthorization, queryString -> {
           if (queryString != null && !queryString.isEmpty()) {
-            String urlWithQueryParams =
-                addQueryParamsToUrl(queryString, url);
-            Log.d(WebViewContentData.class.getSimpleName(), "federatedAuth url: " + urlWithQueryParams);
+            String urlWithQueryParams = addQueryParamsToUrl(queryString, url);
+          //no es necesario  OCManager.saveFedexAuth(url);
+            Log.d(WebViewContentData.class.getSimpleName(),
+                "federatedAuth url: " + urlWithQueryParams);
             if (urlWithQueryParams != null) {
               webView.loadUrl(urlWithQueryParams);
             }

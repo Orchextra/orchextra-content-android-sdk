@@ -15,8 +15,10 @@ import com.gigigo.orchextra.core.domain.entities.elements.ElementSectionView;
 import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.lang.ref.WeakReference;
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
 public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
 
@@ -64,13 +66,20 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                 String generatedImageUrl =
                     ImageGenerator.generateImageUrl(sectionView.getImageUrl(),
                         mainLayout.getWidth(), mainLayout.getHeight());
+                DrawableRequestBuilder<String> requestBuilder;
 
-                DrawableRequestBuilder<String> requestBuilder =
-                    OcmImageLoader.load(context, generatedImageUrl)
-                        .priority(Priority.NORMAL)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .dontAnimate();
-
+                if (!OCManager.isThisArticleReaded(item.getData().getSlug())) {
+                  requestBuilder = OcmImageLoader.load(context, generatedImageUrl)
+                      .priority(Priority.NORMAL)
+                      .diskCacheStrategy(DiskCacheStrategy.ALL)
+                      .dontAnimate();
+                } else {
+                  requestBuilder = OcmImageLoader.load(context, generatedImageUrl)
+                      .priority(Priority.NORMAL)
+                      .diskCacheStrategy(DiskCacheStrategy.ALL)
+                      .bitmapTransform(new GrayscaleTransformation(context))
+                      .dontAnimate();
+                }
                 //if (thumbnailEnabled) {
                 //requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageByteArray));
                 //}

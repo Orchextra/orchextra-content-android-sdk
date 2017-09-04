@@ -8,9 +8,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.GeolocationPermissions;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -68,6 +71,22 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
         showProgressView(false);
       }
     });
+    webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+
+    if (AndroidSdkVersion.hasJellyBean16()) {
+      webView.getSettings().setAllowFileAccessFromFileURLs(true);
+      webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+      webView.getSettings().setAllowContentAccess(true);
+      webView.getSettings().setAllowFileAccess(true);
+      webView.getSettings().setDatabaseEnabled(true);
+      webView.getSettings().setDomStorageEnabled(true);
+    }
+    webView.setWebChromeClient(new WebChromeClient() {
+      public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+        callback.invoke(origin, true, false);
+      }
+    });
+
   }
 
   private void showProgressView(boolean visible) {

@@ -6,8 +6,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.WebStorage;
 import android.widget.Toast;
 import com.gigigo.orchextra.Orchextra;
+import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OCManagerCallbacks;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
@@ -46,6 +48,17 @@ public class MainActivity extends AppCompatActivity {
     }
   };
 
+  @Override protected void onResume() {
+    super.onResume();
+    //ReadedArticles
+    if (OCManager.getShowReadedArticlesInGrayScale() && adapter != null) {
+      adapter.reloadSections();
+      Toast.makeText(this, "Refresh grid from integratied app if readed articles are enabled"
+          + OCManager.getShowReadedArticlesInGrayScale(), Toast.LENGTH_LONG).show();
+    }
+
+  }
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -69,7 +82,9 @@ public class MainActivity extends AppCompatActivity {
 
     fabClean.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        clearDataAndGoToChangeCountryView();
+        Toast.makeText(MainActivity.this, "Delete all data webStorage", Toast.LENGTH_LONG).show();
+        WebStorage.getInstance().deleteAllData();
+        // clearDataAndGoToChangeCountryView();
       }
     });
 
@@ -86,15 +101,16 @@ public class MainActivity extends AppCompatActivity {
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
   }
 
-  static String country = "it";
+  static String country = "ro";
 
   private void startCredentials() {
+    //test change bu
     Ocm.setBusinessUnit(country);
-    if (country.equals("pl")) {
-      country = "it";
-    } else {
-      country = "pl";
-    }
+    //if (country.equals("ro")) {
+    //  country = "it";
+    //} else {
+    //  country = "pl";
+    //}
     Ocm.startWithCredentials(App.API_KEY, App.API_SECRET, new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
         //TODO Fix in Orchextra

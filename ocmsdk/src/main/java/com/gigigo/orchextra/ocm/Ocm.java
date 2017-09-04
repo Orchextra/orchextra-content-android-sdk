@@ -19,6 +19,12 @@ public final class Ocm {
 
   private static QueryStringGenerator queryStringGenerator;
 
+  public static final String OCM_PREFERENCES = "OCMpreferencez";
+  public static final String OCM_CHANGE_CREDENTIALS_DONE = "ChangeCredentialsDONE";
+  // public static final String OCM_FEDEX_AUTH_URL="urlfedexauthforcookies";
+  public static final String OCM_READED_ARTICLES = "arrayreadedarticles4putitgrayscale";
+  public static final String OCM_SHOW_READED_ARTICLES_ENABLED = "OCM_SHOW_READED_ARTICLES_ENABLED";
+
   public static void initialize(Application app) {
 
     OcmBuilder ocmBuilder = new OcmBuilder(app);
@@ -31,13 +37,16 @@ public final class Ocm {
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
 
+    OCManager.setShowReadedArticlesInGrayScale(ocmBuilder.getShowReadedArticlesInGrayScale());
+
+
     SharedPreferences prefs =
-        ocmBuilder.getApp().getSharedPreferences("OCMpreferencez", Context.MODE_PRIVATE);
-    //asv la vaina sería meter este validator en el initiliaze, el put to true en el changecredentialas de orchextra y el get en el initialize
-    boolean IsCredentialsChanged = prefs.getBoolean("ChangeCredentialsDONE", false);
+        ocmBuilder.getApp().getSharedPreferences(OCM_PREFERENCES, Context.MODE_PRIVATE);
+    boolean IsCredentialsChanged = prefs.getBoolean(OCM_CHANGE_CREDENTIALS_DONE, false);
 
     if (!IsCredentialsChanged) {
-      OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, ocmBuilder.getOxSenderId());
+      OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
+          ocmBuilder.getOxSenderId());
       Orchextra.start();
     }
   }
@@ -52,6 +61,8 @@ public final class Ocm {
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
+
+    OCManager.setShowReadedArticlesInGrayScale(ocmBuilder.getShowReadedArticlesInGrayScale());
 
     if (ocmBuilder.getVuforiaImpl() != null) {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
@@ -80,6 +91,9 @@ public final class Ocm {
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
+
+    OCManager.setShowReadedArticlesInGrayScale(ocmBuilder.getShowReadedArticlesInGrayScale());
+
     if (ocmBuilder.getVuforiaImpl() != null) {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
           ocmBuilder.getOxSenderId(), ocmBuilder.getVuforiaImpl());
