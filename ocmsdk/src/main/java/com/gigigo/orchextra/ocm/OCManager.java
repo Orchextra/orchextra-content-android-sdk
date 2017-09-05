@@ -125,7 +125,7 @@ public final class OCManager {
 
       instance.ocmController.clearCache(images, data, new OcmController.ClearCacheCallback() {
         @Override public void onClearCacheSuccess() {
-          clearCookiesFedexAuth();
+         // clearCookiesFedexAuth();
           clearCallback.onDataClearedSuccessfull();
         }
 
@@ -407,7 +407,7 @@ public final class OCManager {
   }
 
   //region cookies FedexAuth
-  private static void clearCookiesFedexAuth() {
+  public static void clearCookiesFedexAuth() {
 
     //if (instance != null) {
     WebStorage.getInstance().deleteAllData();
