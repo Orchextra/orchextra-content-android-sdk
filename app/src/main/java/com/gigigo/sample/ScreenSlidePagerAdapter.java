@@ -3,8 +3,6 @@ package com.gigigo.sample;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.view.ViewGroup;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import java.util.List;
 

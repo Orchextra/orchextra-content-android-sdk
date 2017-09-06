@@ -6,7 +6,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.webkit.WebStorage;
 import android.widget.Toast;
 import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -31,14 +30,17 @@ public class MainActivity extends AppCompatActivity {
       new TabLayout.OnTabSelectedListener() {
         @Override public void onTabSelected(TabLayout.Tab tab) {
           viewpager.setCurrentItem(tab.getPosition());
+          ScreenSlidePageFragment frag=  ((ScreenSlidePageFragment)adapter.getItem(viewpager.getCurrentItem()));
+          frag.reloadSection();
         }
 
         @Override public void onTabUnselected(TabLayout.Tab tab) {
-
         }
 
         @Override public void onTabReselected(TabLayout.Tab tab) {
           viewpager.setCurrentItem(tab.getPosition());
+          ((ScreenSlidePageFragment)adapter.getItem(viewpager.getCurrentItem())).reloadSection();
+
         }
       };
 
@@ -83,8 +85,7 @@ public class MainActivity extends AppCompatActivity {
     fabClean.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         Toast.makeText(MainActivity.this, "Delete all data webStorage", Toast.LENGTH_LONG).show();
-        WebStorage.getInstance().deleteAllData();
-        // clearDataAndGoToChangeCountryView();
+         clearDataAndGoToChangeCountryView();
       }
     });
 
@@ -101,16 +102,10 @@ public class MainActivity extends AppCompatActivity {
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
   }
 
-  static String country = "ro";
+  static String country = "it";
 
   private void startCredentials() {
-    //test change bu
     Ocm.setBusinessUnit(country);
-    //if (country.equals("ro")) {
-    //  country = "it";
-    //} else {
-    //  country = "pl";
-    //}
     Ocm.startWithCredentials(App.API_KEY, App.API_SECRET, new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
         //TODO Fix in Orchextra
@@ -122,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
       }
 
       @Override public void onCredentailError(String code) {
-        Snackbar.make(tabLayout, "No Internet Connection: " + code, Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(tabLayout, "No Internet Connection: " + code +"\n check Credentials-Enviroment", Snackbar.LENGTH_INDEFINITE)
             .show();
       }
     });
@@ -136,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
     Ocm.start();//likewoah
   }
 
+  //region clear all data
   private void clearDataAndGoToChangeCountryView() {
     clearApplicationData();
     Orchextra.stop(); //asv V.I.Code
@@ -176,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
     return dir.delete();
   }
+  //endregion
 
   private void getContent() {
     Ocm.getMenus(false, new OcmCallbacks.Menus() {

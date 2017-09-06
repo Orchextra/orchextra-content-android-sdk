@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.Html;
 import android.util.Base64;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
@@ -48,8 +48,8 @@ public class ArticleHeaderView extends ArticleBaseView<ArticleHeaderElement> {
     if (ratioImage != -1) {
       int calculatedHeight = (int) (realWidthDevice / ratioImage);
 
-      RelativeLayout.LayoutParams lp =
-          new RelativeLayout.LayoutParams(realWidthDevice, calculatedHeight);
+      LinearLayout.LayoutParams lp =
+          new LinearLayout.LayoutParams(realWidthDevice, calculatedHeight);
       articleHeaderImage.setLayoutParams(lp);
     }
 

@@ -72,7 +72,7 @@ public class App extends MultiDexApplication {
 
     OcmBuilder ocmBuilder = new OcmBuilder(this)
         .setNotificationActivityClass(MainActivity.class)
-        .setShowReadedArticlesInGrayScale(true)
+        .setShowReadedArticlesInGrayScale(false)
        // .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
         .setOrchextraCredentials(API_KEY, API_SECRET)
         .setContentLanguage("EN")
