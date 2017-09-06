@@ -100,10 +100,14 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         if (elementCache.getType() == ElementCacheType.WEBVIEW
             && elementCache.getRender() != null) {
 
+         if (elementCache.getRender().getFederatedAuth() != null
+              && elementCache.getRender().getFederatedAuth().isActive()) {
             getSectionViewGeneratorCallback.onSectionViewLoaded(
                 generateWebContentDataWithFederated(elementCache.getRender()));
+          } else {
             getSectionViewGeneratorCallback.onSectionViewLoaded(
                 generateWebContentData(elementCache.getRender().getUrl()));
+          }
         } else {
           getSectionViewGeneratorCallback.onSectionViewLoaded(
               generateGridContentData(viewId, imagesToDownload, filter));
