@@ -45,7 +45,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
   @Provides @Singleton @HttpLoggingInterceptorOcm
   HttpLoggingInterceptor provideLoggingInterceptor() {
     HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-    interceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
     return interceptor;
   }
 

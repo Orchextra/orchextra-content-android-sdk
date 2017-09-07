@@ -23,8 +23,8 @@ import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.WebViewContentData;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
+import com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -43,7 +43,7 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
   private static final String EXTRA_URL = "EXTRA_URL";
   private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
 
-  private WebView webView;
+  private TouchyWebView webView;
   private View progress;
   View mView;//for onDestroy
   private JsHandler jsInterface;
@@ -69,7 +69,7 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
     return null;
   }
 
-   public static ContentWebViewGridLayoutView newInstance(String url) {
+  public static ContentWebViewGridLayoutView newInstance(String url) {
     ContentWebViewGridLayoutView fragment = new ContentWebViewGridLayoutView();
 
     Bundle args = new Bundle();
@@ -91,7 +91,6 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
 
     webView = (WebView) mView.findViewById(R.id.ocm_webView);
     progress = mView.findViewById(R.id.webview_progress);
-
 
     return mView;
   }
@@ -195,16 +194,21 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
       }
     });
   }
+
   private void setCidLocalStorage() {
+
+    System.out.println("Main gridwebview setCidLocalStorage");
     if (!localStorageUpdated && webView != null) {
       Map<String, String> cidLocalStorage = OCManager.getLocalStorage();
       if (cidLocalStorage != null) {
+        System.out.println("Main gridwebview setCidLocalStorage cidLocalStorages");
         for (Map.Entry<String, String> element : cidLocalStorage.entrySet()) {
           final String key = element.getKey();
           final String value = element.getValue();
           String script = "window.localStorage.setItem(\'%1s\',\'%2s\')";
           //String result = jsInterface.getJSValue(this, String.format(script, new Object[]{key, value}));
           jsInterface.javaFnCall(String.format(script, new Object[] { key, value }));
+          System.out.println("Main gridwebview setCidLocalStorage call js");
         }
       }
 
@@ -212,6 +216,7 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
       webView.reload();
     }
   }
+
   private void showProgressView(boolean visible) {
     progress.setVisibility(visible ? View.VISIBLE : View.GONE);
   }
@@ -257,20 +262,23 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
 
   private void loadUrl() {
     showProgressView(true);
-
+    System.out.println("Main ContentWebViewGridLayout loadUrl  "  );
     String url = getArguments().getString(EXTRA_URL);
     if (!url.isEmpty()) {
       FederatedAuthorization federatedAuthorization =
           (FederatedAuthorization) getArguments().getSerializable(EXTRA_FEDERATED_AUTH);
 
-      if (federatedAuthorization!=null && federatedAuthorization.isActive() && Ocm.getQueryStringGenerator() != null) {
+      if (federatedAuthorization != null
+          && federatedAuthorization.isActive()
+          && Ocm.getQueryStringGenerator() != null) {
+        System.out.println("Main ContentWebViewGridLayout federatedAuthorization ok  "  );
+
         Ocm.getQueryStringGenerator().createQueryString(federatedAuthorization, queryString -> {
           if (queryString != null && !queryString.isEmpty()) {
             String urlWithQueryParams = addQueryParamsToUrl(queryString, url);
             //no es necesario  OCManager.saveFedexAuth(url);
 
-            Log.d(WebViewContentData.class.getSimpleName(),
-                "federatedAuth url: " + urlWithQueryParams);
+            System.out.println("Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
             if (urlWithQueryParams != null) {
               webView.loadUrl(urlWithQueryParams);
             }
@@ -283,7 +291,6 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
       }
     }
   }
-
 
   @Override public void setFilter(String filter) {
 
