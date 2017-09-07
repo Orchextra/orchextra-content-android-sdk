@@ -91,14 +91,14 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
 
     webView = (TouchyWebView) mView.findViewById(R.id.ocm_webView);
     progress = mView.findViewById(R.id.webview_progress);
-
+    init();
     return mView;
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    init();
+
   }
 
   //region Ondestroy, new
@@ -142,57 +142,61 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
   }
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN) private void initWebView() {
-    webView.setClickable(true);
+    if (webView != null) {
+      jsInterface = new JsHandler(webView);
+      webView.setClickable(true);
 
-    webView.getSettings().setJavaScriptEnabled(true);
-    webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-    webView.getSettings().setDomStorageEnabled(true);
-    webView.getSettings().setSupportZoom(false);//new
-    webView.getSettings().setAppCacheEnabled(false);
+      webView.getSettings().setJavaScriptEnabled(true);
+      webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+      webView.getSettings().setDomStorageEnabled(true);
+      webView.getSettings().setSupportZoom(false);//new
+      webView.getSettings().setAppCacheEnabled(false);
 
-    //webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-    webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-    webView.getSettings().setDatabaseEnabled(true);
+      //webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+      webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+      webView.getSettings().setDatabaseEnabled(true);
 
-    if (AndroidSdkVersion.hasJellyBean16()) {
-      webView.getSettings().setAllowFileAccessFromFileURLs(true);
-      webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
-      webView.getSettings().setAllowContentAccess(true);
-      webView.getSettings().setAllowFileAccess(true);
+      if (AndroidSdkVersion.hasJellyBean16()) {
+        webView.getSettings().setAllowFileAccessFromFileURLs(true);
+        webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        webView.getSettings().setAllowContentAccess(true);
+        webView.getSettings().setAllowFileAccess(true);
+      }
+
+      //region database
+      String databasePath = this.getContext().getDir("databases", Context.MODE_PRIVATE).getPath();
+      webView.getSettings().setDatabasePath(databasePath);
+      webView.getSettings().setGeolocationDatabasePath(getContext().getFilesDir().getPath());
+      //endregion
+
+      //region jsInterface
+
+      webView.addJavascriptInterface(jsInterface, "JsHandler");
+
+      //endregion
+      webView.setWebChromeClient(new WebChromeClient() {
+        public void onGeolocationPermissionsShowPrompt(String origin,
+            GeolocationPermissions.Callback callback) {
+          callback.invoke(origin, true, false);
+        }
+      });
+      webView.setWebViewClient(new WebViewClient() {
+        @Override public void onPageFinished(WebView view, String url) {
+          super.onPageFinished(view, url);
+          showProgressView(false);
+
+          setCidLocalStorage();
+        }
+      });
+
+      webView.setDownloadListener(new DownloadListener() {
+        @Override
+        public void onDownloadStart(String url, String userAgent, String contentDisposition,
+            String mimetype, long contentLength) {
+          getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        }
+      });
     }
-
-    //region database
-    String databasePath = this.getContext().getDir("databases", Context.MODE_PRIVATE).getPath();
-    webView.getSettings().setDatabasePath(databasePath);
-    webView.getSettings().setGeolocationDatabasePath(getContext().getFilesDir().getPath());
-    //endregion
-
-    //region jsInterface
-    jsInterface = new JsHandler(webView);
-    webView.addJavascriptInterface(jsInterface, "JsHandler");
-
-    //endregion
-    webView.setWebChromeClient(new WebChromeClient() {
-      public void onGeolocationPermissionsShowPrompt(String origin,
-          GeolocationPermissions.Callback callback) {
-        callback.invoke(origin, true, false);
-      }
-    });
-    webView.setWebViewClient(new WebViewClient() {
-      @Override public void onPageFinished(WebView view, String url) {
-        super.onPageFinished(view, url);
-        showProgressView(false);
-
-        setCidLocalStorage();
-      }
-    });
-
-    webView.setDownloadListener(new DownloadListener() {
-      @Override public void onDownloadStart(String url, String userAgent, String contentDisposition,
-          String mimetype, long contentLength) {
-        getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-      }
-    });
   }
 
   private void setCidLocalStorage() {
@@ -262,7 +266,7 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
 
   private void loadUrl() {
     showProgressView(true);
-    System.out.println("Main ContentWebViewGridLayout loadUrl  "  );
+    System.out.println("Main ContentWebViewGridLayout loadUrl  ");
     String url = getArguments().getString(EXTRA_URL);
     if (!url.isEmpty()) {
       FederatedAuthorization federatedAuthorization =
@@ -271,14 +275,15 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
       if (federatedAuthorization != null
           && federatedAuthorization.isActive()
           && Ocm.getQueryStringGenerator() != null) {
-        System.out.println("Main ContentWebViewGridLayout federatedAuthorization ok  "  );
+        System.out.println("Main ContentWebViewGridLayout federatedAuthorization ok  ");
 
         Ocm.getQueryStringGenerator().createQueryString(federatedAuthorization, queryString -> {
           if (queryString != null && !queryString.isEmpty()) {
             String urlWithQueryParams = addQueryParamsToUrl(queryString, url);
             //no es necesario  OCManager.saveFedexAuth(url);
 
-            System.out.println("Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
+            System.out.println(
+                "Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
             if (urlWithQueryParams != null) {
               webView.loadUrl(urlWithQueryParams);
             }
