@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.sdk.model.grid.webview;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,7 +20,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
@@ -78,11 +78,7 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
 
     return fragment;
   }
-/* asv veremos si esto debe estar presente, aunk never un reload, tenga q recalcular el token
-  @Override public void onResume() {
-    super.onResume();
-    if (webView != null) webView.reload();
-  }*/
+
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -95,6 +91,10 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
     return mView;
   }
 
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+  }
+
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
@@ -102,38 +102,38 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
   }
 
   //region Ondestroy, new
-  @Override public void onDestroy() {
+  //@Override public void onDestroy() {
+  //
+  //  if (mView != null) {
+  //    unbindDrawables(mView);
+  //    System.gc();
+  //    Glide.get(this.getContext()).clearMemory();
+  //    webView = null;
+  //    progress = null;
+  //
+  //    ((ViewGroup) mView).removeAllViews();
+  //    Glide.get(this.getContext()).clearMemory();
+  //
+  //    mView = null;
+  //    System.gc();
+  //  }
+  //
+  //  super.onDestroy();
+  //}
 
-    if (mView != null) {
-      unbindDrawables(mView);
-      System.gc();
-      Glide.get(this.getContext()).clearMemory();
-      webView = null;
-      progress = null;
-
-      ((ViewGroup) mView).removeAllViews();
-      Glide.get(this.getContext()).clearMemory();
-
-      mView = null;
-      System.gc();
-    }
-
-    super.onDestroy();
-  }
-
-  private void unbindDrawables(View view) {
-    System.gc();
-    Runtime.getRuntime().gc();
-    if (view.getBackground() != null) {
-      view.getBackground().setCallback(null);
-    }
-    if (view instanceof ViewGroup) {
-      for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-        unbindDrawables(((ViewGroup) view).getChildAt(i));
-      }
-      ((ViewGroup) view).removeAllViews();
-    }
-  }
+  //private void unbindDrawables(View view) {
+  //  System.gc();
+  //  Runtime.getRuntime().gc();
+  //  if (view.getBackground() != null) {
+  //    view.getBackground().setCallback(null);
+  //  }
+  //  if (view instanceof ViewGroup) {
+  //    for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+  //      unbindDrawables(((ViewGroup) view).getChildAt(i));
+  //    }
+  //    ((ViewGroup) view).removeAllViews();
+  //  }
+  //}
   //endregion
 
   private void init() {
@@ -143,6 +143,7 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN) private void initWebView() {
     if (webView != null) {
+
       jsInterface = new JsHandler(webView);
       webView.setClickable(true);
 
@@ -217,8 +218,7 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
       }
 
       localStorageUpdated = true;
-      loadUrl();
-     //webView.reload();
+     webView.reload();
     }
   }
 
