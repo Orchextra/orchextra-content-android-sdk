@@ -89,7 +89,7 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
       @Nullable Bundle savedInstanceState) {
     mView = inflater.inflate(R.layout.view_webview_elements_item, container, false);
 
-    webView = (WebView) mView.findViewById(R.id.ocm_webView);
+    webView = (TouchyWebView) mView.findViewById(R.id.ocm_webView);
     progress = mView.findViewById(R.id.webview_progress);
 
     return mView;
