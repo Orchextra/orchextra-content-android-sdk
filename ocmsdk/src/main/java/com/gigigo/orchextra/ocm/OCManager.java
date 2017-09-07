@@ -125,7 +125,7 @@ public final class OCManager {
 
       instance.ocmController.clearCache(images, data, new OcmController.ClearCacheCallback() {
         @Override public void onClearCacheSuccess() {
-         // clearCookiesFedexAuth();
+          // clearCookiesFedexAuth();
           clearCallback.onDataClearedSuccessfull();
         }
 
@@ -233,7 +233,11 @@ public final class OCManager {
 
   public static Map<String, String> getLocalStorage() {
     if (instance == null) {
+      System.out.println("main getLocalStorageinstance ==null");
       return null;
+    } else
+    {
+      System.out.println("main getLocalStorageinstance!==null");
     }
     return instance.localStorage;
   }
@@ -242,6 +246,9 @@ public final class OCManager {
   public static void setLocalStorage(Map<String, String> localStorage) {
     if (instance != null) {
       instance.localStorage = localStorage;
+      System.out.println("main setLocalStorage we have localstorage");
+    } else {
+      System.out.println("main setLocalStorage we have NOT localstorage");
     }
   }
 
