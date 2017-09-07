@@ -174,15 +174,22 @@ public class WebViewContentData extends UiBaseContentData {
   }
 
   private void setCidLocalStorage() {
+
+    System.out.println("Main webview setCidLocalStorage");
     if (!localStorageUpdated && webView != null) {
       Map<String, String> cidLocalStorage = OCManager.getLocalStorage();
       if (cidLocalStorage != null) {
+        System.out.println("Main  webview setCidLocalStorage cidLocalStorages");
+
         for (Map.Entry<String, String> element : cidLocalStorage.entrySet()) {
           final String key = element.getKey();
           final String value = element.getValue();
           String script = "window.localStorage.setItem(\'%1s\',\'%2s\')";
           //String result = jsInterface.getJSValue(this, String.format(script, new Object[]{key, value}));
           jsInterface.javaFnCall(String.format(script, new Object[] { key, value }));
+
+          System.out.println("Main webview setCidLocalStorage call js key:"+key+"value:"+value);
+
         }
       }
 

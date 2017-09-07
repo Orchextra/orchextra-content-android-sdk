@@ -217,7 +217,8 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
       }
 
       localStorageUpdated = true;
-      webView.reload();
+      loadUrl();
+     //webView.reload();
     }
   }
 
