@@ -239,7 +239,7 @@ public class WebViewContentData extends UiBaseContentData {
       FederatedAuthorization federatedAuthorization =
           (FederatedAuthorization) getArguments().getSerializable(EXTRA_FEDERATED_AUTH);
 
-      if (federatedAuthorization.isActive() && Ocm.getQueryStringGenerator() != null) {
+      if (federatedAuthorization!=null && federatedAuthorization.isActive() && Ocm.getQueryStringGenerator() != null) {
         Ocm.getQueryStringGenerator().createQueryString(federatedAuthorization, queryString -> {
           if (queryString != null && !queryString.isEmpty()) {
             String urlWithQueryParams = addQueryParamsToUrl(queryString, url);
