@@ -25,18 +25,15 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
   private final WeakReference<View> mainLayoutWeakReference;
   private final WeakReference<View> padlockViewWeakReference;
   private final Context context;
-  private final boolean thumbnailEnabled;
 
   private WeakReference<ImageView> imageViewWeakReference;
   private Authoritation authoritation;
 
-  public CellImageViewHolder(Context context, ViewGroup parent, Authoritation authoritation,
-      boolean thumbnailEnabled) {
+  public CellImageViewHolder(Context context, ViewGroup parent, Authoritation authoritation) {
     super(context, parent, R.layout.cell_image_content_item);
 
     this.context = context;
     this.authoritation = authoritation;
-    this.thumbnailEnabled = thumbnailEnabled;
 
     new WeakReference<>(itemView);
 
@@ -56,8 +53,6 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
           .getViewTreeObserver()
           .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override public boolean onPreDraw() {
-              //byte[] imageByteArray = Base64.decode(sectionView.getImageThumb(), Base64.DEFAULT);
-
               ImageView imageView = imageViewWeakReference.get();
               View mainLayout = mainLayoutWeakReference.get();
 

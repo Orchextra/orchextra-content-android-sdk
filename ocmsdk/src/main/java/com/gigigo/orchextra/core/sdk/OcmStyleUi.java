@@ -15,7 +15,5 @@ public interface OcmStyleUi {
 
   boolean isTitleToolbarEnabled();
 
-  boolean isThumbnailEnabled();
-
   boolean isStatusBarEnabled();
 }

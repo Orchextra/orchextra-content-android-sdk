@@ -19,7 +19,6 @@ public abstract class UiListedBaseContentData extends LinearLayout {
   protected View loadingView;
   protected ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
   protected Authoritation authoritation;
-  protected boolean thumbnailEnabled;
 
   //4 carrusel
   public boolean bIsSliderActive = false;
@@ -64,10 +63,9 @@ public abstract class UiListedBaseContentData extends LinearLayout {
   }
 
   public void setParams(ClipToPadding clipToPadding,
-      Authoritation authoritation, boolean thumbnailEnabled) {
+      Authoritation authoritation) {
     this.clipToPadding = clipToPadding;
     this.authoritation = authoritation;
-    this.thumbnailEnabled = thumbnailEnabled;
 
     init();
   }

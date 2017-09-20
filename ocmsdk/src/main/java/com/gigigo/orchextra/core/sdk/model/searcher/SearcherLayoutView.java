@@ -44,7 +44,6 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   private MultipleGridRecyclerView recyclerView;
   private View emptyLayout;
   private View progressLayout;
-  private boolean thumbnailEnabled;
 
   public static SearcherLayoutView newInstance() {
     return new SearcherLayoutView();
@@ -71,7 +70,6 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
     Injector injector = OCManager.getInjector();
     if (injector != null) {
       injector.injectSearcherLayoutView(this);
-      thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
     }
   }
 
@@ -120,7 +118,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   }
 
   private void setAdapterDataViewHolders() {
-    ElementsViewHolderFactory factory = new ElementsViewHolderFactory(context, authoritation, thumbnailEnabled);
+    ElementsViewHolderFactory factory = new ElementsViewHolderFactory(context, authoritation);
 
     recyclerView.setAdapterViewHolderFactory(factory);
 

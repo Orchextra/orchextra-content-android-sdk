@@ -34,13 +34,13 @@ import static org.mockito.BDDMockito.given;
   }
 
   @Test public void testBuildUseCaseObservableReturnCorrectResult() {
-    useCase.execute(testObserver, Params.EMPTY, 1);
+    useCase.execute(testObserver, Params.EMPTY, PriorityScheduler.Priority.LOW);
 
     assertThat(testObserver.valuesCount).isZero();
   }
 
   @Test public void testSubscriptionWhenExecutingUseCase() {
-    useCase.execute(testObserver, Params.EMPTY, 1);
+    useCase.execute(testObserver, Params.EMPTY, PriorityScheduler.Priority.LOW);
     useCase.dispose();
 
     assertThat(testObserver.isDisposed()).isTrue();
@@ -48,7 +48,7 @@ import static org.mockito.BDDMockito.given;
 
   @Test public void testShouldFailWhenExecuteWithNullObserver() {
     expectedException.expect(NullPointerException.class);
-    useCase.execute(null, Params.EMPTY, 1);
+    useCase.execute(null, Params.EMPTY, PriorityScheduler.Priority.LOW);
   }
 
   private static class UseCaseTestClass extends UseCase<Object, Params> {
@@ -61,7 +61,7 @@ import static org.mockito.BDDMockito.given;
       return Observable.empty();
     }
 
-    @Override public void execute(DisposableObserver<Object> observer, Params params, int priority) {
+    @Override public void execute(DisposableObserver<Object> observer, Params params, PriorityScheduler.Priority priority) {
       super.execute(observer, params, priority);
     }
   }

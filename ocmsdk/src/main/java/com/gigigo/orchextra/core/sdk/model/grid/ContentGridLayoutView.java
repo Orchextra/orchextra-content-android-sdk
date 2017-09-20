@@ -76,7 +76,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       }
     }
   };
-  private boolean thumbnailEnabled;
+
   private View.OnClickListener onClickDiscoverMoreButtonListener = v -> {
     if (onLoadMoreContentListener != null) {
       onLoadMoreContentListener.onLoadMoreContent();
@@ -117,7 +117,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     Injector injector = OCManager.getInjector();
     if (injector != null) {
       injector.injectContentGridLayoutView(this);
-      thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
     }
   }
 
@@ -174,7 +173,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       uiListedBaseContentData = new SpannedGridRecyclerView(context);
 
       uiListedBaseContentData.setListedContentListener(listedContentListener);
-      uiListedBaseContentData.setParams(clipToPadding, authoritation, thumbnailEnabled);
+      uiListedBaseContentData.setParams(clipToPadding, authoritation);
       uiListedBaseContentData.setData(cellDataList);
 
       listedDataContainer.removeAllViews();
@@ -190,7 +189,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
 
     uiListedBaseContentData.setListedContentListener(listedContentListener);
-    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, authoritation, thumbnailEnabled);
+    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, authoritation);
     uiListedBaseContentData.setData(cellDataList);
 
     listedDataContainer.removeAllViews();

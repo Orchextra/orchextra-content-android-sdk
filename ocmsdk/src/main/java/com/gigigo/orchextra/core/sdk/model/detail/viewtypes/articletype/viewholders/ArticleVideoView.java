@@ -1,55 +1,49 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.ocmsdk.R;
-import orchextra.javax.inject.Inject;
 
-public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
+public class ArticleVideoView extends BaseViewHolder<ArticleVideoElement> {
 
+  private final Context context;
   private ImageView imgPlay;
   private ImageView imgThumb;
   private final ConnectionUtils connectionUtils;
 
-  public ArticleVideoView(Context context, ArticleVideoElement articleElement) {
-    super(context, articleElement);
-    connectionUtils = new ConnectionUtilsImp(getContext());
-  }
+  public ArticleVideoView(Context context, ViewGroup parent) {
+    super(context, parent, R.layout.view_article_video_item);
 
-  @Override protected int getViewLayout() {
-    return R.layout.view_article_video_item;
-  }
+    connectionUtils = new ConnectionUtilsImp(context);
 
-  @Override protected void bindViews() {
-
+    this.context = context;
     imgPlay = (ImageView) itemView.findViewById(R.id.imgPlay);
     imgThumb = (ImageView) itemView.findViewById(R.id.imgThumb);
   }
 
-  @Override protected void bindTo(final ArticleVideoElement articleElement) {
+  @Override public void bindTo(ArticleVideoElement articleElement, int position) {
 
-    View.OnClickListener onYoutubeThumbnailClickListener = new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (connectionUtils.hasConnection()) {
-          YoutubeContentDataActivity.open(getContext().getApplicationContext(), articleElement.getSource());
-        } else {
-          //TODO:
-          Snackbar.make(imgThumb, R.string.oc_error_content_not_available_without_internet, Toast.LENGTH_SHORT).show();
-        }
+    View.OnClickListener onYoutubeThumbnailClickListener = v -> {
+      if (connectionUtils.hasConnection()) {
+        YoutubeContentDataActivity.open(context.getApplicationContext(), articleElement.getSource());
+      } else {
+        Snackbar.make(imgThumb, R.string.oc_error_content_not_available_without_internet, Toast.LENGTH_SHORT).show();
       }
     };
+
     imgPlay.setOnClickListener(onYoutubeThumbnailClickListener);
     imgThumb.setOnClickListener(onYoutubeThumbnailClickListener);
 
@@ -57,7 +51,7 @@ public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
 
     String strImgForBlur = "http://img.youtube.com/vi/" + youtubeId + "/hqdefault.jpg";
 
-    Glide.with(getContext().getApplicationContext()).load(strImgForBlur).listener(new RequestListener<String, GlideDrawable>() {
+    Glide.with(context.getApplicationContext()).load(strImgForBlur).listener(new RequestListener<String, GlideDrawable>() {
       @Override public boolean onException(Exception e, String model, Target<GlideDrawable> target,
           boolean isFirstResource) {
         return false;
@@ -65,7 +59,7 @@ public class ArticleVideoView extends ArticleBaseView<ArticleVideoElement> {
 
       @Override public boolean onResourceReady(GlideDrawable resource, String model,
           Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-        imgPlay.setVisibility(VISIBLE);
+        imgPlay.setVisibility(View.VISIBLE);
         return false;
       }
     }).into(imgThumb);

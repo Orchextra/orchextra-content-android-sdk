@@ -7,7 +7,6 @@ public final class OcmStyleUiBuilder {
   private String mediumFontPath;
   private String lightFontPath;
   private boolean titleToolbarEnabled = false;
-  private boolean thumbnailEnabled = true;
   private boolean statusBarEnabled = true;
 
   /**
@@ -45,11 +44,6 @@ public final class OcmStyleUiBuilder {
     return this;
   }
 
-  public OcmStyleUiBuilder setThumbnailEnabled(boolean thumbnailEnabled) {
-    this.thumbnailEnabled = thumbnailEnabled;
-    return this;
-  }
-
   public OcmStyleUiBuilder setEnabledStatusBar(boolean statusBarEnabled) {
     this.statusBarEnabled = statusBarEnabled;
     return this;
@@ -74,10 +68,6 @@ public final class OcmStyleUiBuilder {
 
   public boolean isTitleToolbarEnabled() {
     return titleToolbarEnabled;
-  }
-
-  public boolean isThumbnailEnabled() {
-    return thumbnailEnabled;
   }
 
   public boolean isStatusBarEnabled() {
