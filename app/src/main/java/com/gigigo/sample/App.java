@@ -21,12 +21,12 @@ public class App extends MultiDexApplication {
   //public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
 
   //[UAT][CSE] - WOAH SITC STAGING
-  public static String API_KEY = "adfc8ba4340828a054bf061f692707a197af96cb";
-  public static String API_SECRET = "677cf75a17aeec144ee402c281ad3a732d736a8a";
+  //public static String API_KEY = "adfc8ba4340828a054bf061f692707a197af96cb";
+  //public static String API_SECRET = "677cf75a17aeec144ee402c281ad3a732d736a8a";
 
   //WOAH MARKETS RELEASE
-  //public static String API_KEY = "ef08c4dccb7649b9956296a863db002a68240be2";    //Woah project
-  //public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
+  public static String API_KEY = "ef08c4dccb7649b9956296a863db002a68240be2";    //Woah project
+  public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
 
   //WOAH QA RELEASE
   //public static String API_KEY = "ad46332237cbb9fd38ad38470a9bee6d4892d770";    //Woah project
@@ -70,23 +70,22 @@ public class App extends MultiDexApplication {
 
     MultiDex.install(this);
 
-    OcmBuilder ocmBuilder = new OcmBuilder(this)
-        .setNotificationActivityClass(MainActivity.class)
+    OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setShowReadedArticlesInGrayScale(false)
-       // .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
+        // .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
         .setOrchextraCredentials(API_KEY, API_SECRET)
         .setContentLanguage("EN")
         .setOnEventCallback(onEventCallback);
 
     Ocm.initialize(ocmBuilder);
 
-    OcmStyleUiBuilder ocmStyleUiBuilder = new OcmStyleUiBuilder().setTitleToolbarEnabled(true)
-        .setThumbnailEnabled(false)
+    OcmStyleUiBuilder ocmStyleUiBuilder = new OcmStyleUiBuilder()
+        .setTitleToolbarEnabled(true)
         .setEnabledStatusBar(true);
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
-    Ocm.setBusinessUnit("ro");
+    Ocm.setBusinessUnit("rs");
   }
 
   private void enableStrictMode() {

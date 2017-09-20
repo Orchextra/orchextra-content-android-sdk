@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.sdk.ui.views;
 
 import android.content.Context;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebView;
@@ -20,8 +21,25 @@ public class TouchyWebView extends WebView {
   }
 
   @Override
-  public boolean onTouchEvent(MotionEvent event){
-    requestDisallowInterceptTouchEvent(true);
+  public boolean onTouchEvent(MotionEvent event) {
+    if (MotionEventCompat.findPointerIndex(event, 0) == -1) {
+      return super.onTouchEvent(event);
+    }
+
+    if (event.getPointerCount() >= 2) {
+      requestDisallowInterceptTouchEvent(true);
+    } else {
+      requestDisallowInterceptTouchEvent(false);
+    }
+
     return super.onTouchEvent(event);
+  }
+
+  @Override
+  protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
+    super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+    requestDisallowInterceptTouchEvent(true);
+
+
   }
 }

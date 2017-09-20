@@ -42,15 +42,15 @@ public class WebViewContentData extends UiBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
   private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
-  View mView;
+  private static final String URL_START_QUERY_DELIMITER = "?";
+  private static final String URL_CONCAT_QUERY_DELIMITER = "&";
+  private static final String URL_QUERY_VALUE_DELIMITER = "=";
+
+  private View mView;
   private TouchyWebView webView;
   private ProgressBar progress;
   private JsHandler jsInterface;
   private boolean localStorageUpdated;
-
-  private static final String URL_START_QUERY_DELIMITER = "?";
-  private static final String URL_CONCAT_QUERY_DELIMITER = "&";
-  private static final String URL_QUERY_VALUE_DELIMITER = "=";
 
   public static WebViewContentData newInstance(ElementCacheRender render) {
     WebViewContentData webViewElements = new WebViewContentData();
@@ -188,8 +188,8 @@ public class WebViewContentData extends UiBaseContentData {
           //String result = jsInterface.getJSValue(this, String.format(script, new Object[]{key, value}));
           jsInterface.javaFnCall(String.format(script, new Object[] { key, value }));
 
-          System.out.println("Main webview setCidLocalStorage call js key:"+key+"value:"+value);
-
+          System.out.println(
+              "Main webview setCidLocalStorage call js key:" + key + "value:" + value);
         }
       }
 
@@ -235,15 +235,17 @@ public class WebViewContentData extends UiBaseContentData {
     showProgressView(true);
 
     String url = getArguments().getString(EXTRA_URL);
-    if (!url.isEmpty()) {
+    if (url != null && !url.isEmpty()) {
       FederatedAuthorization federatedAuthorization =
           (FederatedAuthorization) getArguments().getSerializable(EXTRA_FEDERATED_AUTH);
 
-      if (federatedAuthorization!=null && federatedAuthorization.isActive() && Ocm.getQueryStringGenerator() != null) {
+      if (federatedAuthorization != null
+          && federatedAuthorization.isActive()
+          && Ocm.getQueryStringGenerator() != null) {
         Ocm.getQueryStringGenerator().createQueryString(federatedAuthorization, queryString -> {
           if (queryString != null && !queryString.isEmpty()) {
             String urlWithQueryParams = addQueryParamsToUrl(queryString, url);
-          //no es necesario  OCManager.saveFedexAuth(url);
+            //no es necesario  OCManager.saveFedexAuth(url);
             Log.d(WebViewContentData.class.getSimpleName(),
                 "federatedAuth url: " + urlWithQueryParams);
             if (urlWithQueryParams != null) {
