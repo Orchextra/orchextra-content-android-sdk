@@ -2,7 +2,10 @@ package com.gigigo.orchextra.ocm;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+import android.webkit.WebStorage;
 import android.widget.ImageView;
 import com.gigigo.imagerecognitioninterface.ImageRecognition;
 import com.gigigo.orchextra.CrmUser;
@@ -58,7 +61,7 @@ public final class OCManager {
   private Map<String, String> localStorage;
   private OcmCredentialCallback ocmCredentialCallback;
   private OnCustomSchemeReceiver onCustomSchemeReceiver;
-
+  private boolean isShowReadedArticlesInGrayScale = false;
   //cambio para el inicio selectivo, MEJORAR,
   //necesitamos un contexto para q la funcion setNewOrchextracredentials pueda comprobar las preferences
   //lo suyo es no guardarlo en las preferences, de momneto así y una mejora sencilla seria añadir el contexto a
@@ -119,8 +122,10 @@ public final class OCManager {
   public static void clearData(boolean images, boolean data,
       final OCManagerCallbacks.Clear clearCallback) {
     if (instance != null) {
+
       instance.ocmController.clearCache(images, data, new OcmController.ClearCacheCallback() {
         @Override public void onClearCacheSuccess() {
+          // clearCookiesFedexAuth();
           clearCallback.onDataClearedSuccessfull();
         }
 
@@ -213,10 +218,10 @@ public final class OCManager {
 
     instance.ocmCredentialCallback = ocmCredentialCallback;
 
-    Orchextra.start();
+    Orchextra.start(); //this is new for repsol, esto hace q el primer changecredentials pase por el 401 y llege correctamente el token
 
     //Some case the start() and changeCredentials() method has concurrency problems
-    Orchextra.changeCredentials(apiKey, apiSecret);
+    Orchextra.updateSDKCredentials(apiKey, apiSecret, true);
   }
 
   static void bindUser(CrmUser crmUser) {
@@ -228,7 +233,11 @@ public final class OCManager {
 
   public static Map<String, String> getLocalStorage() {
     if (instance == null) {
+      System.out.println("main getLocalStorageinstance ==null");
       return null;
+    } else
+    {
+      System.out.println("main getLocalStorageinstance!==null");
     }
     return instance.localStorage;
   }
@@ -237,6 +246,9 @@ public final class OCManager {
   public static void setLocalStorage(Map<String, String> localStorage) {
     if (instance != null) {
       instance.localStorage = localStorage;
+      System.out.println("main setLocalStorage we have localstorage");
+    } else {
+      System.out.println("main setLocalStorage we have NOT localstorage");
     }
   }
 
@@ -332,57 +344,50 @@ public final class OCManager {
     app.registerActivityLifecycleCallbacks(ocmSdkLifecycle);
   }
 
+  static OrchextraCompletionCallback mOrchextraCompletionCallback =
+      new OrchextraCompletionCallback() {
+        @Override public void onSuccess() {
+          Log.d("WOAH", "Orchextra initialized successfully");
+        }
+
+        @Override public void onError(String error) {
+          Log.d("WOAH", "onError: " + error);
+          //new Handler(Looper.getMainLooper()).post(new Runnable() {
+          //  @Override public void run() {
+          //    Toast.makeText(mApplication, "onError:  app" + error, Toast.LENGTH_LONG).show();
+          //  }
+          //});
+          if (error.equals("401") && instance.ocmCredentialCallback != null) {
+            instance.ocmCredentialCallback.onCredentailError(error);
+          }
+        }
+
+        @Override public void onInit(String s) {
+          Log.d("WOAH", "onInit: " + s);
+          //asvox aki es cuando se va a background , en estepunto ox ya ha recuperado la config anterior(buena)
+          //y cuando llega a onSuccess se rompio del todo
+
+        }
+
+        @Override public void onConfigurationReceive(String accessToken) {
+          Log.d("WOAH", "onConfigurationReceive: " + accessToken);
+          //new Handler(Looper.getMainLooper()).post(new Runnable() {
+          //  @Override public void run() {
+          //    Toast.makeText(mApplication, "onConfigurationReceive:  app" + accessToken, Toast.LENGTH_LONG).show();
+          //  }
+          //});
+          instance.oxSession.setToken(accessToken);
+
+          if (instance.ocmCredentialCallback
+              != null) { //asv esto indica q se hace el changecredentials
+            instance.ocmCredentialCallback.onCredentialReceiver(accessToken);
+          }
+        }
+      };
+
   private void initOrchextra(Application app, String oxKey, String oxSecret,
       Class notificationActivityClass, String senderId) {
-
-    OrchextraBuilder builder = new OrchextraBuilder(app);
-    builder.setApiKeyAndSecret(oxKey, oxSecret)
-        .setLogLevel(OrchextraLogLevel.NETWORK)
-        //.setGcmSenderId("117687721829")       //TODO Test sender Id nuborisar
-        // .setImageRecognitionModule(new ImageRecognitionVuforiaImpl())
-        .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
-        .setOrchextraCompletionCallback(new OrchextraCompletionCallback() {
-          @Override public void onSuccess() {
-            Log.d("WOAH", "Orchextra initialized successfully");
-          }
-
-          @Override public void onError(String error) {
-            Log.d("WOAH", "onError: " + error);
-
-            if (error.equals("401") && instance.ocmCredentialCallback != null) {
-              ocmCredentialCallback.onCredentailError(error);
-            }
-          }
-
-          @Override public void onInit(String s) {
-            Log.d("WOAH", "onInit: " + s);
-            //asvox aki es cuando se va a background , en estepunto ox ya ha recuperado la config anterior(buena)
-            //y cuando llega a onSuccess se rompio del todo
-
-          }
-
-          @Override public void onConfigurationReceive(String accessToken) {
-            Log.d("WOAH", "onConfigurationReceive: " + accessToken);
-
-            instance.oxSession.setToken(accessToken);
-
-            if (instance.ocmCredentialCallback
-                != null) { //asv esto indica q se hace el changecredentials
-              ocmCredentialCallback.onCredentialReceiver(accessToken);
-            }
-          }
-        });
-
-    if (notificationActivityClass != null) {
-      builder.setNotificationActivityClass(notificationActivityClass.toString());
-    }
-    if (senderId != null && senderId != "") {
-      builder.setGcmSenderId(senderId);
-    }
-
-    Orchextra.initialize(builder);
-
-    Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
+    initOrchextra(app, oxKey, oxSecret, notificationActivityClass, senderId, null);
   }
 
   private void initOrchextra(Application app, String oxKey, String oxSecret,
@@ -392,33 +397,7 @@ public final class OCManager {
     builder.setApiKeyAndSecret(oxKey, oxSecret)
         .setLogLevel(OrchextraLogLevel.NETWORK)
         .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
-        .setOrchextraCompletionCallback(new OrchextraCompletionCallback() {
-          @Override public void onSuccess() {
-            Log.d("WOAH", "Orchextra initialized successfully");
-          }
-
-          @Override public void onError(String error) {
-            Log.d("WOAH", "onError: " + error);
-
-            if (error.equals("401") && instance.ocmCredentialCallback != null) {
-              ocmCredentialCallback.onCredentailError(error);
-            }
-          }
-
-          @Override public void onInit(String s) {
-            Log.d("WOAH", "onInit: " + s);
-          }
-
-          @Override public void onConfigurationReceive(String accessToken) {
-            Log.d("WOAH", "onConfigurationReceive: " + accessToken);
-
-            instance.oxSession.setToken(accessToken);
-
-            if (instance.ocmCredentialCallback != null) {
-              ocmCredentialCallback.onCredentialReceiver(accessToken);
-            }
-          }
-        });
+        .setOrchextraCompletionCallback(mOrchextraCompletionCallback);
 
     if (notificationActivityClass != null) {
       builder.setNotificationActivityClass(notificationActivityClass.toString());
@@ -433,4 +412,90 @@ public final class OCManager {
 
     Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
   }
+
+  //region cookies FedexAuth
+  public static void clearCookiesFedexAuth() {
+
+    //if (instance != null) {
+    WebStorage.getInstance().deleteAllData();
+      /*
+      //recuperar url del preferences
+      //dominio url ".facebook.com"
+      String urlFedexAuth = "";
+      //eliminar las cookies de esa url
+      SharedPreferences prefs = instance.ocmContextProvider.getApplicationContext()
+          .getSharedPreferences(Ocm.OCM_PREFERENCES, Context.MODE_PRIVATE);
+
+      urlFedexAuth = prefs.getString(Ocm.OCM_FEDEX_AUTH_URL, "");
+      if (!urlFedexAuth.equals("")) {
+        android.webkit.CookieManager.getInstance().setCookie(urlFedexAuth, "locale=");
+        android.webkit.CookieManager.getInstance().setCookie(urlFedexAuth, "datr=");
+        android.webkit.CookieManager.getInstance().setCookie(urlFedexAuth, "s=");
+        android.webkit.CookieManager.getInstance().setCookie(urlFedexAuth, "csm=");
+        android.webkit.CookieManager.getInstance().setCookie(urlFedexAuth, "fr=");
+        android.webkit.CookieManager.getInstance().setCookie(urlFedexAuth, "lu=");
+        android.webkit.CookieManager.getInstance().setCookie(urlFedexAuth, "c_user=");
+        android.webkit.CookieManager.getInstance().setCookie(urlFedexAuth, "xs=");
+
+      }*/
+    //}
+  }
+
+  /* public static void saveFedexAuth(String url) {
+     if (instance != null) {
+       SharedPreferences prefs = instance.ocmContextProvider.getApplicationContext()
+           .getSharedPreferences(Ocm.OCM_PREFERENCES, Context.MODE_PRIVATE);
+       SharedPreferences.Editor edit = prefs.edit();
+       edit.putString(Ocm.OCM_FEDEX_AUTH_URL, url);
+       edit.apply();
+     }
+   }
+ */
+  public static void addArticleToReadedArticles(String articleSlug) {
+    if (instance != null && instance.isShowReadedArticlesInGrayScale) {
+      SharedPreferences prefs = instance.ocmContextProvider.getApplicationContext()
+          .getSharedPreferences(Ocm.OCM_PREFERENCES, Context.MODE_PRIVATE);
+      String ArrayReadedArticlesSlug = prefs.getString(Ocm.OCM_READED_ARTICLES, "");
+
+      SharedPreferences.Editor edit = prefs.edit();
+      edit.putString(Ocm.OCM_READED_ARTICLES, ArrayReadedArticlesSlug + "|" + articleSlug + "|");
+      edit.apply();
+    }
+  }
+
+  public static boolean isThisArticleReaded(String articleSlug) {
+    if (instance != null && instance.isShowReadedArticlesInGrayScale) {
+      SharedPreferences prefs = instance.ocmContextProvider.getApplicationContext()
+          .getSharedPreferences(Ocm.OCM_PREFERENCES, Context.MODE_PRIVATE);
+      String ArrayReadedArticlesSlug = prefs.getString(Ocm.OCM_READED_ARTICLES, "");
+      if (ArrayReadedArticlesSlug.contains("|" + articleSlug + "|")) {
+        return true;
+      }
+
+      return false;
+    } else {
+      return false;
+    }
+  }
+
+  /***
+   * you must to reload grid in onResume if this feature are enabled
+   * @param showReadedArticlesInGrayScale
+   */
+  public static void setShowReadedArticlesInGrayScale(boolean showReadedArticlesInGrayScale) {
+
+    if (instance != null) {
+      instance.isShowReadedArticlesInGrayScale = showReadedArticlesInGrayScale;
+    }
+  }
+
+  public static boolean getShowReadedArticlesInGrayScale() {
+
+    if (instance != null) {
+      return instance.isShowReadedArticlesInGrayScale;
+    } else {
+      return false;
+    }
+  }
+  //endregion
 }

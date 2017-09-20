@@ -49,7 +49,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     this.detailElementsViewPresenterProvider = detailElementsViewPresenterProvider;
   }
 
-  @Override public void getMenu(boolean forceReload, final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
+  @Override public void getMenu(boolean forceReload,
+      final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
     ocmController.getMenu(forceReload, new OcmController.GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(MenuContentData menus) {
         getMenusViewGeneratorCallback.onGetMenusLoaded(transformMenu(menus));
@@ -76,7 +77,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         uiMenu.setElementUrl(element.getElementUrl());
 
         if (menuContentData.getElementsCache() != null) {
-          ElementCache elementCache = menuContentData.getElementsCache().get(element.getElementUrl());
+          ElementCache elementCache =
+              menuContentData.getElementsCache().get(element.getElementUrl());
           if (elementCache != null) {
             uiMenu.setUpdateAt(elementCache.getUpdateAt());
           }
@@ -89,15 +91,39 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return menuList;
   }
 
-  @Override public void generateSectionView(String viewId, String filter, final int imagesToDownload,
+  @Override
+  public void generateSectionView(String viewId, String filter, final int imagesToDownload,
       GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
 
     ocmController.getDetails(false, viewId, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache.getType() == ElementCacheType.WEBVIEW
             && elementCache.getRender() != null) {
-          getSectionViewGeneratorCallback.onSectionViewLoaded(
-              generateWebContentData(elementCache.getRender().getUrl()));
+
+          if (elementCache.getRender().getFederatedAuth() != null
+              && elementCache.getRender().getFederatedAuth().getKeys() != null
+              && elementCache.getRender().getFederatedAuth().getKeys().getSiteName() != null
+              && elementCache.getRender().getFederatedAuth().isActive()) {
+            System.out.println("Main ElementCacheType.WEBVIEW" + elementCache.getRender()
+                .getFederatedAuth()
+                .getKeys()
+                .getSiteName());
+
+            System.out.println("Main generateWebContentDataWithFederated" + elementCache.getRender()
+                .getFederatedAuth()
+                .getKeys()
+                .toString());
+            getSectionViewGeneratorCallback.onSectionViewLoaded(
+                generateWebContentDataWithFederated(elementCache.getRender()));
+          } else {
+            System.out.println("Main generateWebContentData" + elementCache.getRender()
+                .getFederatedAuth()
+                .getKeys()
+                .toString());
+
+            getSectionViewGeneratorCallback.onSectionViewLoaded(
+                generateWebContentData(elementCache.getRender().getUrl()));
+          }
         } else {
           getSectionViewGeneratorCallback.onSectionViewLoaded(
               generateGridContentData(viewId, imagesToDownload, filter));
@@ -118,7 +144,13 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return ContentWebViewGridLayoutView.newInstance(url);
   }
 
-  @NonNull private UiGridBaseContentData generateGridContentData(String viewId, int imagesToDownload, String filter) {
+  private UiGridBaseContentData generateWebContentDataWithFederated(ElementCacheRender render) {
+    return ContentWebViewGridLayoutView.newInstance(render);
+  }
+
+  @NonNull
+  private UiGridBaseContentData generateGridContentData(String viewId, int imagesToDownload,
+      String filter) {
     ContentGridLayoutView contentGridLayoutView = ContentGridLayoutView.newInstance();
     contentGridLayoutView.setViewId(viewId, imagesToDownload);
     contentGridLayoutView.setEmotion(filter);

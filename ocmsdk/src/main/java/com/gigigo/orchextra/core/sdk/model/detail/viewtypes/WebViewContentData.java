@@ -174,15 +174,22 @@ public class WebViewContentData extends UiBaseContentData {
   }
 
   private void setCidLocalStorage() {
+
+    System.out.println("Main webview setCidLocalStorage");
     if (!localStorageUpdated && webView != null) {
       Map<String, String> cidLocalStorage = OCManager.getLocalStorage();
       if (cidLocalStorage != null) {
+        System.out.println("Main  webview setCidLocalStorage cidLocalStorages");
+
         for (Map.Entry<String, String> element : cidLocalStorage.entrySet()) {
           final String key = element.getKey();
           final String value = element.getValue();
           String script = "window.localStorage.setItem(\'%1s\',\'%2s\')";
           //String result = jsInterface.getJSValue(this, String.format(script, new Object[]{key, value}));
           jsInterface.javaFnCall(String.format(script, new Object[] { key, value }));
+
+          System.out.println("Main webview setCidLocalStorage call js key:"+key+"value:"+value);
+
         }
       }
 
@@ -214,7 +221,8 @@ public class WebViewContentData extends UiBaseContentData {
       Iterator<Pair<String, String>> iterator = queryParams.iterator();
       while (iterator.hasNext()) {
         Pair<String, String> pair = iterator.next();
-        url = url + pair.first + URL_QUERY_VALUE_DELIMITER + pair.second + URL_CONCAT_QUERY_DELIMITER;
+        url =
+            url + pair.first + URL_QUERY_VALUE_DELIMITER + pair.second + URL_CONCAT_QUERY_DELIMITER;
       }
 
       return url.substring(0, url.length() - 2);
@@ -231,12 +239,13 @@ public class WebViewContentData extends UiBaseContentData {
       FederatedAuthorization federatedAuthorization =
           (FederatedAuthorization) getArguments().getSerializable(EXTRA_FEDERATED_AUTH);
 
-      if (federatedAuthorization.isActive() && Ocm.getQueryStringGenerator() != null) {
+      if (federatedAuthorization!=null && federatedAuthorization.isActive() && Ocm.getQueryStringGenerator() != null) {
         Ocm.getQueryStringGenerator().createQueryString(federatedAuthorization, queryString -> {
           if (queryString != null && !queryString.isEmpty()) {
-            String urlWithQueryParams =
-                addQueryParamsToUrl(queryString, url);
-            Log.d(WebViewContentData.class.getSimpleName(), "federatedAuth url: " + urlWithQueryParams);
+            String urlWithQueryParams = addQueryParamsToUrl(queryString, url);
+          //no es necesario  OCManager.saveFedexAuth(url);
+            Log.d(WebViewContentData.class.getSimpleName(),
+                "federatedAuth url: " + urlWithQueryParams);
             if (urlWithQueryParams != null) {
               webView.loadUrl(urlWithQueryParams);
             }

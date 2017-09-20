@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.domain.entities.elementcache;
 
-public class CidKey {
+import java.io.Serializable;
+
+public class CidKey implements Serializable {
 
   private String siteName;
 
