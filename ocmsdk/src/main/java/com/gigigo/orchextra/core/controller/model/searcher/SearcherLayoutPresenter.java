@@ -42,11 +42,13 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
   public void doSearch(String textToSearch) {
     this.textToSearch = textToSearch;
 
-    if (TextUtils.isEmpty(textToSearch)) {
-      getView().showEmptyView(false);
-      getView().setData(new ArrayList<>());
-    } else {
-      sendSearch(textToSearch);
+    if (getView() != null) {
+      if (TextUtils.isEmpty(textToSearch)) {
+        getView().showEmptyView(false);
+        getView().setData(new ArrayList<>());
+      } else {
+        sendSearch(textToSearch);
+      }
     }
   }
 
