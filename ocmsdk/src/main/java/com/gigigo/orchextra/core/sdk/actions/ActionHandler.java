@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.sdk.actions;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
@@ -42,9 +43,12 @@ public class ActionHandler {
   }
 
   public void launchExternalBrowser(String url) {
-    Intent i = new Intent(Intent.ACTION_VIEW);
-    i.setData(Uri.parse(url));
-    ocmContextProvider.getCurrentActivity().startActivity(i);
+    Activity currentActivity = ocmContextProvider.getCurrentActivity();
+    if (currentActivity != null) {
+      Intent intent = new Intent(Intent.ACTION_VIEW);
+      intent.setData(Uri.parse(url));
+      currentActivity.startActivity(intent);
+    }
   }
 
   public void launchCustomTabs(String url) {
@@ -53,7 +57,8 @@ public class ActionHandler {
     } else {
       View rootView = ((ViewGroup) ocmContextProvider.getCurrentActivity()
           .findViewById(android.R.id.content)).getChildAt(0);
-      Snackbar.make(rootView, R.string.oc_error_content_not_available_without_internet, Toast.LENGTH_SHORT).show();
+      Snackbar.make(rootView, R.string.oc_error_content_not_available_without_internet,
+          Toast.LENGTH_SHORT).show();
     }
   }
 }
