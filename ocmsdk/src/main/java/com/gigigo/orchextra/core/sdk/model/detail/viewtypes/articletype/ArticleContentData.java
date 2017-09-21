@@ -112,8 +112,8 @@ public class ArticleContentData extends UiBaseContentData {
 
     adapter.setMillisIntervalToAvoidDoubleClick(1500);
 
-    adapter.setItemClickListener(
-        (position, view) -> Toast.makeText(getContext(), "Pulsado: "+ position, Toast.LENGTH_SHORT).show());
+    //adapter.setItemClickListener(
+    //    (position, view) -> Toast.makeText(getContext(), "Pulsado: "+ position, Toast.LENGTH_SHORT).show());
 
     articleItemViewContainer.setAdapter(adapter);
     articleItemViewContainer.setLayoutManager(new LinearLayoutManager(getContext()));
