@@ -116,11 +116,6 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
             getSectionViewGeneratorCallback.onSectionViewLoaded(
                 generateWebContentDataWithFederated(elementCache.getRender()));
           } else {
-            System.out.println("Main generateWebContentData" + elementCache.getRender()
-                .getFederatedAuth()
-                .getKeys()
-                .toString());
-
             getSectionViewGeneratorCallback.onSectionViewLoaded(
                 generateWebContentData(elementCache.getRender().getUrl()));
           }
