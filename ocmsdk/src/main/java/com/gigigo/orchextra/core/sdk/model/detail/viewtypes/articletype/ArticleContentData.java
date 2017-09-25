@@ -32,7 +32,7 @@ public class ArticleContentData extends UiBaseContentData {
 
   private List<ArticleElement> articleElementList;
   private RecyclerView articleItemViewContainer;
-  private BaseRecyclerAdapter adapter;
+  private BaseRecyclerAdapter<ArticleElement> adapter;
 
   public static ArticleContentData newInstance() {
     return new ArticleContentData();
@@ -120,7 +120,7 @@ public class ArticleContentData extends UiBaseContentData {
     articleItemViewContainer.setNestedScrollingEnabled(false);
     articleItemViewContainer.setHasFixedSize(false);
 
-    if (adapter != null) {
+    if (adapter != null && articleElementList != null) {
       adapter.addAll(articleElementList);
     }
   }
