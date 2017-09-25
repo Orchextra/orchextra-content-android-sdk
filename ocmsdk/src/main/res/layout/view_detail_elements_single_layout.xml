@@ -6,7 +6,7 @@
     android:background="@color/oc_bg_article_content_color"
     >
 
-  <ScrollView
+  <android.support.v4.widget.NestedScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:fillViewport="true"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         />
 
-  </ScrollView>
+  </android.support.v4.widget.NestedScrollView>
   <com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView
       android:id="@+id/detailToolbarView"
       android:layout_width="match_parent"
