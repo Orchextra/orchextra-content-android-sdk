@@ -68,8 +68,10 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
   }
 
   private void showEmptyView() {
-    getView().showProgressView(false);
-    getView().showEmptyView(true);
+    if (getView() != null) {
+      getView().showProgressView(false);
+      getView().showEmptyView(true);
+    }
   }
 
   private void processResponse(ContentData response) {
