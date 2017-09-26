@@ -12,6 +12,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePrevie
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
+import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
@@ -207,7 +208,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         }
       case EXTERNAL_BROWSER:
         if (render != null) {
-          return generateBrowserDetailView(render.getUrl());
+          return generateBrowserDetailView(render.getUrl(),render.getFederatedAuth());
         }
       case VIDEO:
         if (render != null) {
@@ -269,8 +270,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return ScanContentData.newInstance();
   }
 
-  private UiBaseContentData generateBrowserDetailView(String url) {
-    return BrowserContentData.newInstance(url);
+  private UiBaseContentData generateBrowserDetailView(String url,FederatedAuthorization federatedAuthorization) {
+    return BrowserContentData.newInstance(url,federatedAuthorization);
   }
 
   private UiBaseContentData generateYoutubeDetailView(String url) {
