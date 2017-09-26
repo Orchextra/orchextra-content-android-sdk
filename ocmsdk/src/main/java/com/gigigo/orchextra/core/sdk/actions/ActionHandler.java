@@ -79,6 +79,10 @@ public class ActionHandler {
       }
       currentActivity.startActivity(intent);
     }
+    else
+    {
+      //todo falta que si no hay currentactivity lo lanze en webview
+    }
   }
 
   //region external browser FA
