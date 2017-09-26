@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.webkit.WebStorage;
 import android.widget.ImageView;
@@ -40,6 +41,7 @@ import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import jp.wasabeef.glide.transformations.gpu.SepiaFilterTransformation;
 import orchextra.javax.inject.Inject;
 
 public final class OCManager {
@@ -235,8 +237,7 @@ public final class OCManager {
     if (instance == null) {
       System.out.println("main getLocalStorageinstance ==null");
       return null;
-    } else
-    {
+    } else {
       System.out.println("main getLocalStorageinstance!==null");
     }
     return instance.localStorage;
@@ -497,5 +498,32 @@ public final class OCManager {
       return false;
     }
   }
+
   //endregion
+  //todo readed articles
+  //todo falta el set
+  public static com.bumptech.glide.load.Transformation<Bitmap> getBitmapTransformReadedArticles() {
+    //region normal Filters
+    // return new GrayscaleTransformation(mApplication);
+    //return new BlurTransformation(mApplication);
+    //return new ColorFilterTransformation(mApplication, 25);
+    //no sense, cropping...
+    // return new CropCircleTransformation(mApplication);
+    // return new CropSquareTransformation(mApplication);
+    //return new MaskTransformation(mApplication);
+    //return new RoundedCornersTransformation(mApplication);
+    //endregion
+    //region gpu Filters
+    //return new BrightnessFilterTransformation(mApplication);
+    //return new ContrastFilterTransformation(mApplication);
+    //return new InvertFilterTransformation(mApplication);
+    //return new KuwaharaFilterTransformation(mApplication);
+    //return new PixelationFilterTransformation(mApplication);
+    return new SepiaFilterTransformation(mApplication);
+    //return new SketchFilterTransformation(mApplication);
+    //return new SwirlFilterTransformation(mApplication);
+    //return new ToonFilterTransformation(mApplication);
+    //return new VignetteFilterTransformation(mApplication);
+    //endregion
+  }
 }

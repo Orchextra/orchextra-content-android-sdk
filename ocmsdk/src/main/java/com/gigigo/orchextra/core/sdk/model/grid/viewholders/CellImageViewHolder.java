@@ -69,10 +69,12 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                       .diskCacheStrategy(DiskCacheStrategy.ALL)
                       .dontAnimate();
                 } else {
+                  //todo articulos leidos el bitmapTransformation Transformation<Bitmap>
+                  //se le debe informar desde la integradora
                   requestBuilder = OcmImageLoader.load(context, generatedImageUrl)
                       .priority(Priority.NORMAL)
                       .diskCacheStrategy(DiskCacheStrategy.ALL)
-                      .bitmapTransform(new GrayscaleTransformation(context))
+                      .bitmapTransform(OCManager.getBitmapTransformReadedArticles())
                       .dontAnimate();
                 }
                 //if (thumbnailEnabled) {
