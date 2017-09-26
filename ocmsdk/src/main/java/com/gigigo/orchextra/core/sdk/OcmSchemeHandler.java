@@ -5,6 +5,7 @@ import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
+import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
@@ -90,7 +91,7 @@ public class OcmSchemeHandler {
           break;
         case EXTERNAL_BROWSER:
           if (render != null) {
-            processExternalBrowser(render.getUrl());
+            processExternalBrowser(render.getUrl(),render.getFederatedAuth());
           }
           break;
         case DEEP_LINK:
@@ -120,8 +121,8 @@ public class OcmSchemeHandler {
     actionHandler.lauchOxScan();
   }
 
-  private void processExternalBrowser(String url) {
-    actionHandler.launchExternalBrowser(url);
+  private void processExternalBrowser(String url, FederatedAuthorization federatedAuth) {
+    actionHandler.launchExternalBrowser(url,federatedAuth);
   }
 
   private void processDeepLink(String uri) {

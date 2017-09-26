@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
@@ -99,7 +100,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       OCManager.notifyEvent(OcmEvent.OPEN_BARCODE);
       return true;
     } else if (detailContentDataClass.equals(BrowserContentData.class)) {
-      launchExternalBrowser(((BrowserContentData) uiBaseContentData).getUrl());
+      launchExternalBrowser(((BrowserContentData) uiBaseContentData).getUrl(),((BrowserContentData) uiBaseContentData).getFederatedAuthorization());
       OCManager.notifyEvent(OcmEvent.VISIT_URL);
       return true;
     } else if (detailContentDataClass.equals(YoutubeContentData.class)) {
@@ -130,8 +131,8 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     actionHandler.launchExternalYoutube(url);
   }
 
-  private void launchExternalBrowser(String url) {
-    actionHandler.launchExternalBrowser(url);
+  private void launchExternalBrowser(String url, FederatedAuthorization fedexA) {
+    actionHandler.launchExternalBrowser(url,fedexA);
   }
 
   private void lauchOxScan() {
