@@ -148,6 +148,12 @@ public class DeviceUtils {
                     activity.startActivity(customTabsIntent.intent);
                   }
                 }
+              } else {
+                customTabsIntent.intent.setData(Uri.parse(url));
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                  activity.startActivity(customTabsIntent.intent);
+                }
               }
             });
           } else {

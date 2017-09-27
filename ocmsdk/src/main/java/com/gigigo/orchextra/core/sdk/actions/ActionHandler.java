@@ -71,6 +71,9 @@ public class ActionHandler {
                 intent.setData(Uri.parse(url));
                 currentActivity.startActivity(intent);
               }
+            }  else {
+              intent.setData(Uri.parse(url));
+              currentActivity.startActivity(intent);
             }
           });
         } else {
