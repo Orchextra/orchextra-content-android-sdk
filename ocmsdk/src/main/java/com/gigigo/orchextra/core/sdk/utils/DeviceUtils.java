@@ -137,22 +137,38 @@ public class DeviceUtils {
                     "Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
                 if (urlWithQueryParams != null) {
                   customTabsIntent.intent.setData(Uri.parse(urlWithQueryParams));
+
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    activity.startActivity(customTabsIntent.intent);
+                  }
                 } else {
                   customTabsIntent.intent.setData(Uri.parse(url));
+
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    activity.startActivity(customTabsIntent.intent);
+                  }
                 }
               }
             });
           } else {
             customTabsIntent.intent.setData(Uri.parse(url));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+              activity.startActivity(customTabsIntent.intent);
+            }
           }
         } else {
           customTabsIntent.intent.setData(Uri.parse(url));
+
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            activity.startActivity(customTabsIntent.intent);
+          }
         }
 
-        //customTabsIntent.intent.setData(Uri.parse(url));
+        /*customTabsIntent.intent.setData(Uri.parse(url));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
           activity.startActivity(customTabsIntent.intent);
-        }
+        }*/
       } catch (Exception e) {
         OcmWebViewActivity.open(activity, url);
       }

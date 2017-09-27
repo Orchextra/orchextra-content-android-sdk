@@ -66,18 +66,22 @@ public class ActionHandler {
                   "Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
               if (urlWithQueryParams != null) {
                 intent.setData(Uri.parse(urlWithQueryParams));
+                currentActivity.startActivity(intent);
               } else {
                 intent.setData(Uri.parse(url));
+                currentActivity.startActivity(intent);
               }
             }
           });
         } else {
           intent.setData(Uri.parse(url));
+          currentActivity.startActivity(intent);
         }
       } else {
         intent.setData(Uri.parse(url));
+        currentActivity.startActivity(intent);
       }
-      currentActivity.startActivity(intent);
+      //currentActivity.startActivity(intent);
     }
     else
     {
