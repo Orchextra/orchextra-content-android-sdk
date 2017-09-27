@@ -100,7 +100,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       OCManager.notifyEvent(OcmEvent.OPEN_BARCODE);
       return true;
     } else if (detailContentDataClass.equals(BrowserContentData.class)) {
-      launchExternalBrowser(((BrowserContentData) uiBaseContentData).getUrl(),((BrowserContentData) uiBaseContentData).getFederatedAuthorization());
+      launchExternalBrowser(((BrowserContentData) uiBaseContentData).getUrl(), ((BrowserContentData) uiBaseContentData).getFederatedAuthorization());
       OCManager.notifyEvent(OcmEvent.VISIT_URL);
       return true;
     } else if (detailContentDataClass.equals(YoutubeContentData.class)) {
@@ -112,15 +112,15 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       OCManager.notifyEvent(OcmEvent.VISIT_URL);
       return true;
     } else if (detailContentDataClass.equals(CustomTabsContentData.class)) {
-      launchCustomTabs(((CustomTabsContentData) uiBaseContentData).getUrl());
+      launchCustomTabs(((CustomTabsContentData) uiBaseContentData).getUrl(), ((BrowserContentData) uiBaseContentData).getFederatedAuthorization());
       OCManager.notifyEvent(OcmEvent.VISIT_URL);
       return true;
     }
     return false;
   }
 
-  private void launchCustomTabs(String url) {
-    actionHandler.launchCustomTabs(url);
+  private void launchCustomTabs(String url, FederatedAuthorization federatedAuthorization) {
+    actionHandler.launchCustomTabs(url, federatedAuthorization);
   }
 
   private void processDeepLink(String uri) {

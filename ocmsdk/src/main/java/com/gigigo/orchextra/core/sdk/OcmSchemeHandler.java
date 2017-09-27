@@ -86,12 +86,12 @@ public class OcmSchemeHandler {
           break;
         case BROWSER:
           if (render != null) {
-            processCustomTabs(render.getUrl());
+            processCustomTabs(render.getUrl(), render.getFederatedAuth());
           }
           break;
         case EXTERNAL_BROWSER:
           if (render != null) {
-            processExternalBrowser(render.getUrl(),render.getFederatedAuth());
+            processExternalBrowser(render.getUrl(), render.getFederatedAuth());
           }
           break;
         case DEEP_LINK:
@@ -109,8 +109,8 @@ public class OcmSchemeHandler {
     }
   }
 
-  private void processCustomTabs(String url) {
-    DeviceUtils.openChromeTabs(contextProvider.getCurrentActivity(), url);
+  private void processCustomTabs(String url, FederatedAuthorization federatedAuthorization) {
+    DeviceUtils.openChromeTabs(contextProvider.getCurrentActivity(), url, federatedAuthorization);
   }
 
   private void processImageRecognitionAction() {

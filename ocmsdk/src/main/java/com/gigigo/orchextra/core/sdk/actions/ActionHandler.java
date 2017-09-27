@@ -118,9 +118,9 @@ public class ActionHandler {
   }
   //endregion
 
-  public void launchCustomTabs(String url) {
+  public void launchCustomTabs(String url, FederatedAuthorization federatedAuthorization) {
     if (connectionUtils.hasConnection()) {
-      DeviceUtils.openChromeTabs(ocmContextProvider.getCurrentActivity(), url);
+      DeviceUtils.openChromeTabs(ocmContextProvider.getCurrentActivity(), url, federatedAuthorization);
     } else {
       View rootView = ((ViewGroup) ocmContextProvider.getCurrentActivity()
           .findViewById(android.R.id.content)).getChildAt(0);
