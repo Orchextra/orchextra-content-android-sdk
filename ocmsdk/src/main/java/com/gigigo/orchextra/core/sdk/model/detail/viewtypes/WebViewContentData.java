@@ -161,7 +161,7 @@ public class WebViewContentData extends UiBaseContentData {
         super.onPageFinished(view, url);
         showProgressView(false);
 
-        setCidLocalStorage();
+        //setCidLocalStorage();
       }
     });
 
