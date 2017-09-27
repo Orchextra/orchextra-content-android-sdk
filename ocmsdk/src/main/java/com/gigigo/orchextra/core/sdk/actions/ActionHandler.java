@@ -65,7 +65,7 @@ public class ActionHandler {
               System.out.println(
                   "Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
               if (urlWithQueryParams != null) {
-                intent.setData(Uri.parse(url));
+                intent.setData(Uri.parse(urlWithQueryParams));
               } else {
                 intent.setData(Uri.parse(url));
               }
