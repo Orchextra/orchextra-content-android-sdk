@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
@@ -18,6 +20,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
@@ -25,12 +28,16 @@ import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView;
-import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.federatedAuth.FAUtils;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.lang.ref.WeakReference;
 import java.util.Map;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -38,12 +45,14 @@ public class WebViewContentData extends UiBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
   private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
+  private static final int WAITED_FINISH_LOAD_WEB = 15 * 1000;
 
   private View mView;
   private TouchyWebView webView;
   private ProgressBar progress;
   private JsHandler jsInterface;
-  private boolean localStorageUpdated;
+  //private boolean localStorageUpdated;
+  private long timeToLoad;
 
   public static WebViewContentData newInstance(ElementCacheRender render) {
     WebViewContentData webViewElements = new WebViewContentData();
@@ -121,6 +130,36 @@ public class WebViewContentData extends UiBaseContentData {
     loadUrl();
   }
 
+  @TargetApi(Build.VERSION_CODES.JELLY_BEAN) private void setHeightWebview() {
+    if (webView != null) {
+      webView.getViewTreeObserver()
+          .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+
+              int heightWebview = webView.getContentHeight();
+
+              int heightDevice = DeviceUtils.calculateHeightDevice(getContext());
+
+              FrameLayout.LayoutParams lp;
+              if (heightWebview < heightDevice) {
+                lp =
+                    new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightDevice);
+              } else {
+                lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    heightWebview);
+              }
+
+              webView.setLayoutParams(lp);
+
+              if ( timeToLoad + WAITED_FINISH_LOAD_WEB > System.currentTimeMillis()
+                  && AndroidSdkVersion.hasJellyBean16()) {
+                webView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+              }
+            }
+          });
+    }
+  }
+
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN) private void initWebView() {
     jsInterface = new JsHandler(webView);
     webView.setClickable(true);
@@ -149,12 +188,23 @@ public class WebViewContentData extends UiBaseContentData {
         callback.invoke(origin, true, false);
       }
     });
+
     webView.setWebViewClient(new WebViewClient() {
+      @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
+        super.onPageStarted(view, url, favicon);
+
+        timeToLoad = System.currentTimeMillis();
+      }
+
       @Override public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
+
+        System.out.println("URL: " + url);
+
         showProgressView(false);
 
         //setCidLocalStorage();
+        setHeightWebview();
       }
     });
 
@@ -166,30 +216,30 @@ public class WebViewContentData extends UiBaseContentData {
     });
   }
 
-  private void setCidLocalStorage() {
-
-    System.out.println("Main webview setCidLocalStorage");
-    if (!localStorageUpdated && webView != null) {
-      Map<String, String> cidLocalStorage = OCManager.getLocalStorage();
-      if (cidLocalStorage != null) {
-        System.out.println("Main  webview setCidLocalStorage cidLocalStorages");
-
-        for (Map.Entry<String, String> element : cidLocalStorage.entrySet()) {
-          final String key = element.getKey();
-          final String value = element.getValue();
-          String script = "window.localStorage.setItem(\'%1s\',\'%2s\')";
-          //String result = jsInterface.getJSValue(this, String.format(script, new Object[]{key, value}));
-          jsInterface.javaFnCall(String.format(script, new Object[] { key, value }));
-
-          System.out.println(
-              "Main webview setCidLocalStorage call js key:" + key + "value:" + value);
-        }
-      }
-
-      localStorageUpdated = true;
-      webView.reload();
-    }
-  }
+  //private void setCidLocalStorage() {
+  //
+  //  System.out.println("Main webview setCidLocalStorage");
+  //  if (!localStorageUpdated && webView != null) {
+  //    Map<String, String> cidLocalStorage = OCManager.getLocalStorage();
+  //    if (cidLocalStorage != null) {
+  //      System.out.println("Main  webview setCidLocalStorage cidLocalStorages");
+  //
+  //      for (Map.Entry<String, String> element : cidLocalStorage.entrySet()) {
+  //        final String key = element.getKey();
+  //        final String value = element.getValue();
+  //        String script = "window.localStorage.setItem(\'%1s\',\'%2s\')";
+  //        //String result = jsInterface.getJSValue(this, String.format(script, new Object[]{key, value}));
+  //        jsInterface.javaFnCall(String.format(script, new Object[] { key, value }));
+  //
+  //        System.out.println(
+  //            "Main webview setCidLocalStorage call js key:" + key + "value:" + value);
+  //      }
+  //    }
+  //
+  //    localStorageUpdated = true;
+  //    webView.reload();
+  //  }
+  //}
 
   private void showProgressView(boolean visible) {
     if (progress != null) {
@@ -272,8 +322,7 @@ public class WebViewContentData extends UiBaseContentData {
 
       try {
         this.latch.countDown();
-      } catch (Exception var3) {
-        ;
+      } catch (Exception ignored) {
       }
     }
   }
