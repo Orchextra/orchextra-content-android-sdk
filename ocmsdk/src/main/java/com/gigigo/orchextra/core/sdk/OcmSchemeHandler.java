@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.sdk;
 
+import android.text.TextUtils;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
@@ -99,6 +100,11 @@ public class OcmSchemeHandler {
             processDeepLink(render.getUri());
           }
           break;
+        case VIDEO:
+          if (render != null) {
+            processVideo(render.getFormat(), render.getSource());
+          }
+          break;
         default:
           ImageView imageView = null;
           if (imageViewToExpandInDetail != null) {
@@ -107,6 +113,14 @@ public class OcmSchemeHandler {
           openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen, imageView);
           break;
     }
+  }
+
+  private void processVideo(String format, String source) {
+    if (TextUtils.isEmpty(source)) {
+      return;
+    }
+
+    actionHandler.launchYoutubePlayer(source);
   }
 
   private void processCustomTabs(String url, FederatedAuthorization federatedAuthorization) {
