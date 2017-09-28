@@ -2,6 +2,7 @@ package com.gigigo.orchextra.ocm;
 
 import android.app.Application;
 import com.gigigo.imagerecognitioninterface.ImageRecognition;
+import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 
@@ -18,8 +19,8 @@ public final class OcmBuilder {
 
   private String oxSenderId;
   private ImageRecognition vuforiaImpl;
-  private boolean showReadedArticlesInGrayScale = false;
-
+  private boolean showReadArticles = false;
+  private ImageTransformReadArticle transformReadArticle=ImageTransformReadArticle.B_AND_W;
   /**
    * setter for do vuforia optional in ocm, setted from intetragion app
    */
@@ -32,14 +33,23 @@ public final class OcmBuilder {
     return vuforiaImpl;
   }
 
-  public OcmBuilder setShowReadedArticlesInGrayScale(boolean isShowReadedArticlesInGrayScale) {
-    this.showReadedArticlesInGrayScale = isShowReadedArticlesInGrayScale;
+  public ImageTransformReadArticle getTransformReadArticle() {
+    return transformReadArticle;
+  }
+
+  public OcmBuilder setTransformReadArticle(ImageTransformReadArticle transformReadArticle) {
+    this.transformReadArticle = transformReadArticle;
+    return this;
+  }
+
+  public OcmBuilder setShowReadArticles(boolean isShowReadArticles) {
+    this.showReadArticles = isShowReadArticles;
 
     return this;
   }
 
-  public boolean getShowReadedArticlesInGrayScale() {
-    return showReadedArticlesInGrayScale;
+  public boolean getShowReadArticles() {
+    return showReadArticles;
   }
 
   /**

@@ -3,6 +3,7 @@ package com.gigigo.sample;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -71,7 +72,8 @@ public class App extends MultiDexApplication {
     MultiDex.install(this);
 
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
-        .setShowReadedArticlesInGrayScale(true)
+        .setShowReadArticles(true)
+        .setTransformReadArticle(ImageTransformReadArticle.OVERLAY)
         // .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
         .setOrchextraCredentials(API_KEY, API_SECRET)
         .setContentLanguage("EN")

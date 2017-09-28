@@ -35,8 +35,4 @@ dependencies {
   compile 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
   compile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
 
-  //compile 'jp.wasabeef:glide-transformations:3.0.1'
-  // If you want to use the GPU Filters
-  //todo readed articles MUST
-  compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
 }

@@ -142,6 +142,8 @@ dependencies {
 
   compile project.libraries.kache
 
+  compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+
   //TEST
   testCompile project.testLibraries.junit
   testCompile project.testLibraries.assertj

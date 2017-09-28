@@ -3,8 +3,10 @@ package com.gigigo.orchextra.ocm;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.Orchextra;
+import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
@@ -14,6 +16,12 @@ import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import java.util.List;
 import java.util.Map;
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
+import jp.wasabeef.glide.transformations.gpu.InvertFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.SepiaFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.SketchFilterTransformation;
+
+import static com.gigigo.orchextra.ocm.OCManager.mApplication;
 
 public final class Ocm {
 
@@ -37,8 +45,11 @@ public final class Ocm {
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
 
-    OCManager.setShowReadedArticlesInGrayScale(ocmBuilder.getShowReadedArticlesInGrayScale());
-
+    OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
+    if (ocmBuilder.getShowReadArticles()) {
+      OCManager.setBitmapTransformReadArticles(
+          convertImageTransformEnumToBitmap(ocmBuilder.getTransformReadArticle()));
+    }
 
     SharedPreferences prefs =
         ocmBuilder.getApp().getSharedPreferences(OCM_PREFERENCES, Context.MODE_PRIVATE);
@@ -62,8 +73,11 @@ public final class Ocm {
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
 
-    OCManager.setShowReadedArticlesInGrayScale(ocmBuilder.getShowReadedArticlesInGrayScale());
-
+    OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
+    if (ocmBuilder.getShowReadArticles()) {
+      OCManager.setBitmapTransformReadArticles(
+          convertImageTransformEnumToBitmap(ocmBuilder.getTransformReadArticle()));
+    }
     if (ocmBuilder.getVuforiaImpl() != null) {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
           ocmBuilder.getOxSenderId(), ocmBuilder.getVuforiaImpl());
@@ -92,14 +106,41 @@ public final class Ocm {
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
 
-    OCManager.setShowReadedArticlesInGrayScale(ocmBuilder.getShowReadedArticlesInGrayScale());
-
+    OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
+    if (ocmBuilder.getShowReadArticles()) {
+      OCManager.setBitmapTransformReadArticles(
+          convertImageTransformEnumToBitmap(ocmBuilder.getTransformReadArticle()));
+    }
     if (ocmBuilder.getVuforiaImpl() != null) {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
           ocmBuilder.getOxSenderId(), ocmBuilder.getVuforiaImpl());
     } else {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
           ocmBuilder.getOxSenderId());
+    }
+  }
+
+  private static com.bumptech.glide.load.Transformation<Bitmap> convertImageTransformEnumToBitmap(
+      ImageTransformReadArticle imgEnum) {
+
+    switch (imgEnum) {
+      case B_AND_W:
+        return new GrayscaleTransformation(mApplication);
+
+      case SEPIA:
+        return new SepiaFilterTransformation(mApplication);
+
+      case NEGATIVE:
+        return new InvertFilterTransformation(mApplication);
+
+      case EDGE:
+        return new SketchFilterTransformation(mApplication);
+
+      case OVERLAY:
+        return null;
+
+      default:
+        return null;
     }
   }
 

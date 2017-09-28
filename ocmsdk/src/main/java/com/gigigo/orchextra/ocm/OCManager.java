@@ -41,7 +41,7 @@ import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import jp.wasabeef.glide.transformations.gpu.SepiaFilterTransformation;
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 import orchextra.javax.inject.Inject;
 
 public final class OCManager {
@@ -481,16 +481,16 @@ public final class OCManager {
 
   /***
    * you must to reload grid in onResume if this feature are enabled
-   * @param showReadedArticlesInGrayScale
+   * @param showReadArticles
    */
-  public static void setShowReadedArticlesInGrayScale(boolean showReadedArticlesInGrayScale) {
+  public static void setShowReadArticles(boolean showReadArticles) {
 
     if (instance != null) {
-      instance.isShowReadedArticlesInGrayScale = showReadedArticlesInGrayScale;
+      instance.isShowReadedArticlesInGrayScale = showReadArticles;
     }
   }
 
-  public static boolean getShowReadedArticlesInGrayScale() {
+  public static boolean getShowReadArticles() {
 
     if (instance != null) {
       return instance.isShowReadedArticlesInGrayScale;
@@ -501,29 +501,62 @@ public final class OCManager {
 
   //endregion
   //todo readed articles
-  //todo falta el set
-  public static com.bumptech.glide.load.Transformation<Bitmap> getBitmapTransformReadedArticles() {
+
+  public static void setBitmapTransformReadArticles(
+      com.bumptech.glide.load.Transformation<Bitmap> transformBitmap) {
+    if (getInstance() != null) getInstance().readArticlesBitmapTransform = transformBitmap;
+  }
+
+  //public static int transform = -1;
+  com.bumptech.glide.load.Transformation<Bitmap> readArticlesBitmapTransform ;
+
+  public static com.bumptech.glide.load.Transformation<Bitmap> getBitmapTransformReadArticles() {
+    if (getInstance() != null) {
+      return getInstance().readArticlesBitmapTransform;
+    } else {
+      return new GrayscaleTransformation(mApplication);
+    }
     //region normal Filters
-    // return new GrayscaleTransformation(mApplication);
-    //return new BlurTransformation(mApplication);
-    //return new ColorFilterTransformation(mApplication, 25);
-    //no sense, cropping...
-    // return new CropCircleTransformation(mApplication);
-    // return new CropSquareTransformation(mApplication);
-    //return new MaskTransformation(mApplication);
-    //return new RoundedCornersTransformation(mApplication);
-    //endregion
-    //region gpu Filters
-    //return new BrightnessFilterTransformation(mApplication);
-    //return new ContrastFilterTransformation(mApplication);
-    //return new InvertFilterTransformation(mApplication);
-    //return new KuwaharaFilterTransformation(mApplication);
-    //return new PixelationFilterTransformation(mApplication);
-    return new SepiaFilterTransformation(mApplication);
-    //return new SketchFilterTransformation(mApplication);
-    //return new SwirlFilterTransformation(mApplication);
-    //return new ToonFilterTransformation(mApplication);
-    //return new VignetteFilterTransformation(mApplication);
-    //endregion
+/*
+    switch (transform) {
+      case 0:
+        return new GrayscaleTransformation(mApplication);
+      case 1:
+        return new BlurTransformation(mApplication);
+      case 2:
+        return new ColorFilterTransformation(mApplication, Color.RED);
+      case 3:
+        return new CropCircleTransformation(mApplication);
+      case 4:
+        return new CropSquareTransformation(mApplication);
+      case 5:
+        return new RoundedCornersTransformation(mApplication, 25,
+            25);//return new MaskTransformation(mApplication, 50); //fails
+      case 6:
+        return new RoundedCornersTransformation(mApplication, 25, 25);
+      case 7:
+        return new BrightnessFilterTransformation(mApplication);
+      case 8:
+        return new ContrastFilterTransformation(mApplication);
+      case 9:
+        return new InvertFilterTransformation(mApplication);
+      case 10:
+        return new KuwaharaFilterTransformation(mApplication);
+      case 11:
+        return new PixelationFilterTransformation(mApplication);
+      case 12:
+        return new SepiaFilterTransformation(mApplication);
+      case 13:
+        return new SketchFilterTransformation(mApplication);
+      case 14:
+        return new SwirlFilterTransformation(mApplication);
+      case 15:
+        return new ToonFilterTransformation(mApplication);
+      default:
+        transform = -1;
+        return new VignetteFilterTransformation(mApplication);
+    }
+     */
+
   }
 }
