@@ -274,8 +274,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return BrowserContentData.newInstance(url,federatedAuthorization);
   }
 
-  private UiBaseContentData generateYoutubeDetailView(String url) {
-    return YoutubeContentData.newInstance(url);
+  private UiBaseContentData generateYoutubeDetailView(String videoId) {
+    return YoutubeContentData.newInstance(videoId);
   }
 
   private UiBaseContentData generateDeepLinkView(String uri) {

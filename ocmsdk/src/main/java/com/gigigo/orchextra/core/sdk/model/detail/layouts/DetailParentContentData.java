@@ -104,7 +104,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       OCManager.notifyEvent(OcmEvent.VISIT_URL);
       return true;
     } else if (detailContentDataClass.equals(YoutubeContentData.class)) {
-      launchExternalYoutube(((YoutubeContentData) uiBaseContentData).getUrl());
+      launchYoutubePlayer(((YoutubeContentData) uiBaseContentData).getVideoId());
       OCManager.notifyEvent(OcmEvent.PLAY_YOUTUBE);
       return true;
     } else if (detailContentDataClass.equals(DeepLinkContentData.class)) {
@@ -127,8 +127,8 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     actionHandler.processDeepLink(uri);
   }
 
-  private void launchExternalYoutube(String url) {
-    actionHandler.launchExternalYoutube(url);
+  private void launchYoutubePlayer(String videoId) {
+    actionHandler.launchYoutubePlayer(videoId);
   }
 
   private void launchExternalBrowser(String url, FederatedAuthorization fedexA) {

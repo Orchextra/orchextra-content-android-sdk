@@ -33,8 +33,8 @@ public class ActionHandler {
     OCManager.returnOcCustomSchemeCallback(uri);
   }
 
-  public void launchExternalYoutube(String url) {
-    YoutubeContentDataActivity.open(ocmContextProvider.getCurrentActivity(), url);
+  public void launchYoutubePlayer(String videoId) {
+    YoutubeContentDataActivity.open(ocmContextProvider.getCurrentActivity(), videoId);
   }
 
   public void launchOxVuforia() {
