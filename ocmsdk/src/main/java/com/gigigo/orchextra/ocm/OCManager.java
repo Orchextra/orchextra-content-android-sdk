@@ -63,7 +63,7 @@ public final class OCManager {
   private Map<String, String> localStorage;
   private OcmCredentialCallback ocmCredentialCallback;
   private OnCustomSchemeReceiver onCustomSchemeReceiver;
-  private boolean isShowReadedArticlesInGrayScale = false;
+  private boolean isShowReadedArticles = false;
   //cambio para el inicio selectivo, MEJORAR,
   //necesitamos un contexto para q la funcion setNewOrchextracredentials pueda comprobar las preferences
   //lo suyo es no guardarlo en las preferences, de momneto así y una mejora sencilla seria añadir el contexto a
@@ -453,7 +453,7 @@ public final class OCManager {
    }
  */
   public static void addArticleToReadedArticles(String articleSlug) {
-    if (instance != null && instance.isShowReadedArticlesInGrayScale) {
+    if (instance != null && instance.isShowReadedArticles) {
       SharedPreferences prefs = instance.ocmContextProvider.getApplicationContext()
           .getSharedPreferences(Ocm.OCM_PREFERENCES, Context.MODE_PRIVATE);
       String ArrayReadedArticlesSlug = prefs.getString(Ocm.OCM_READED_ARTICLES, "");
@@ -465,7 +465,7 @@ public final class OCManager {
   }
 
   public static boolean isThisArticleReaded(String articleSlug) {
-    if (instance != null && instance.isShowReadedArticlesInGrayScale) {
+    if (instance != null && instance.isShowReadedArticles) {
       SharedPreferences prefs = instance.ocmContextProvider.getApplicationContext()
           .getSharedPreferences(Ocm.OCM_PREFERENCES, Context.MODE_PRIVATE);
       String ArrayReadedArticlesSlug = prefs.getString(Ocm.OCM_READED_ARTICLES, "");
@@ -486,14 +486,14 @@ public final class OCManager {
   public static void setShowReadArticles(boolean showReadArticles) {
 
     if (instance != null) {
-      instance.isShowReadedArticlesInGrayScale = showReadArticles;
+      instance.isShowReadedArticles = showReadArticles;
     }
   }
 
   public static boolean getShowReadArticles() {
 
     if (instance != null) {
-      return instance.isShowReadedArticlesInGrayScale;
+      return instance.isShowReadedArticles;
     } else {
       return false;
     }
@@ -516,47 +516,7 @@ public final class OCManager {
     } else {
       return new GrayscaleTransformation(mApplication);
     }
-    //region normal Filters
-/*
-    switch (transform) {
-      case 0:
-        return new GrayscaleTransformation(mApplication);
-      case 1:
-        return new BlurTransformation(mApplication);
-      case 2:
-        return new ColorFilterTransformation(mApplication, Color.RED);
-      case 3:
-        return new CropCircleTransformation(mApplication);
-      case 4:
-        return new CropSquareTransformation(mApplication);
-      case 5:
-        return new RoundedCornersTransformation(mApplication, 25,
-            25);//return new MaskTransformation(mApplication, 50); //fails
-      case 6:
-        return new RoundedCornersTransformation(mApplication, 25, 25);
-      case 7:
-        return new BrightnessFilterTransformation(mApplication);
-      case 8:
-        return new ContrastFilterTransformation(mApplication);
-      case 9:
-        return new InvertFilterTransformation(mApplication);
-      case 10:
-        return new KuwaharaFilterTransformation(mApplication);
-      case 11:
-        return new PixelationFilterTransformation(mApplication);
-      case 12:
-        return new SepiaFilterTransformation(mApplication);
-      case 13:
-        return new SketchFilterTransformation(mApplication);
-      case 14:
-        return new SwirlFilterTransformation(mApplication);
-      case 15:
-        return new ToonFilterTransformation(mApplication);
-      default:
-        transform = -1;
-        return new VignetteFilterTransformation(mApplication);
-    }
-     */
+
 
   }
 }
