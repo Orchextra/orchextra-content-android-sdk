@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +17,9 @@ import android.view.ViewTreeObserver;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
+import android.webkit.MimeTypeMap;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -33,11 +36,9 @@ import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.federatedAuth.FAUtils;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.lang.ref.WeakReference;
-import java.util.Map;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
+import java.net.URLConnection;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -51,7 +52,6 @@ public class WebViewContentData extends UiBaseContentData {
   private TouchyWebView webView;
   private ProgressBar progress;
   private JsHandler jsInterface;
-  //private boolean localStorageUpdated;
   private long timeToLoad;
 
   public static WebViewContentData newInstance(ElementCacheRender render) {
@@ -73,6 +73,42 @@ public class WebViewContentData extends UiBaseContentData {
     webViewElements.setArguments(bundle);
 
     return webViewElements;
+  }
+
+  public String getMimeType(String url) {
+    String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+    if (extension != null) {
+      return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+    }
+
+    // this is to handle call from main thread
+    StrictMode.ThreadPolicy prviousThreadPolicy = StrictMode.getThreadPolicy();
+
+    // temporary allow network access main thread
+    // in order to get mime type from content-type
+
+    StrictMode.ThreadPolicy permitAllPolicy =
+        new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    StrictMode.setThreadPolicy(permitAllPolicy);
+
+    try {
+      URLConnection connection = new URL(url).openConnection();
+      connection.setConnectTimeout(150);
+      connection.setReadTimeout(150);
+      return connection.getContentType();
+    } catch (Exception ignored) {
+    } finally {
+      // restore main thread's default network access policy
+      StrictMode.setThreadPolicy(prviousThreadPolicy);
+    }
+
+    // Our B plan: guessing from from url
+    try {
+      return URLConnection.guessContentTypeFromName(url);
+    } catch (Exception ignored) {
+    }
+
+    return null;
   }
 
   @Nullable @Override
@@ -151,7 +187,7 @@ public class WebViewContentData extends UiBaseContentData {
 
               webView.setLayoutParams(lp);
 
-              if ( timeToLoad + WAITED_FINISH_LOAD_WEB > System.currentTimeMillis()
+              if (timeToLoad + WAITED_FINISH_LOAD_WEB > System.currentTimeMillis()
                   && AndroidSdkVersion.hasJellyBean16()) {
                 webView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
               }
@@ -199,12 +235,25 @@ public class WebViewContentData extends UiBaseContentData {
       @Override public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
 
-        System.out.println("URL: " + url);
-
         showProgressView(false);
 
         //setCidLocalStorage();
         setHeightWebview();
+      }
+
+      @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        String mimeType = getMimeType(url);
+        return launchPdfReader(Uri.parse(url), mimeType) || super.shouldOverrideUrlLoading(view,
+            url);
+      }
+
+      @TargetApi(Build.VERSION_CODES.LOLLIPOP) @Override
+      public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+        Uri url = request.getUrl();
+
+        String mimeType = getMimeType(url.toString());
+
+        return launchPdfReader(url, mimeType) || super.shouldOverrideUrlLoading(view, request);
       }
     });
 
@@ -214,6 +263,16 @@ public class WebViewContentData extends UiBaseContentData {
         getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
       }
     });
+  }
+
+  private boolean launchPdfReader(Uri url, String mimeType) {
+    if (mimeType != null && mimeType.equals("application/pdf")) {
+      Intent browserIntent = new Intent(Intent.ACTION_VIEW, url);
+      startActivity(browserIntent);
+
+      return true;
+    }
+    return false;
   }
 
   //private void setCidLocalStorage() {
@@ -258,9 +317,10 @@ public class WebViewContentData extends UiBaseContentData {
       if (federatedAuthorization != null
           && federatedAuthorization.isActive()
           && Ocm.getQueryStringGenerator() != null) {
+        String finalUrl = url;
         Ocm.getQueryStringGenerator().createQueryString(federatedAuthorization, queryString -> {
           if (queryString != null && !queryString.isEmpty()) {
-            String urlWithQueryParams = FAUtils.addQueryParamsToUrl(queryString, url);
+            String urlWithQueryParams = FAUtils.addQueryParamsToUrl(queryString, finalUrl);
             //no es necesario  OCManager.saveFedexAuth(url);
             Log.d(WebViewContentData.class.getSimpleName(),
                 "federatedAuth url: " + urlWithQueryParams);
@@ -268,7 +328,7 @@ public class WebViewContentData extends UiBaseContentData {
               webView.loadUrl(urlWithQueryParams);
             }
           } else {
-            webView.loadUrl(url);
+            webView.loadUrl(finalUrl);
           }
         });
       } else {
