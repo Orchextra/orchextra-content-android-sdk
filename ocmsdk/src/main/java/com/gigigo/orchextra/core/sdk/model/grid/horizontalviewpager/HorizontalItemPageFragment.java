@@ -56,11 +56,9 @@ public class HorizontalItemPageFragment extends Fragment {
   }
 
   private void setListeners() {
-    horizontalItemImageView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (onClickHorizontalItem != null) {
-          onClickHorizontalItem.onClickItem(horizontalItemContainer);
-        }
+    horizontalItemImageView.setOnClickListener(v -> {
+      if (onClickHorizontalItem != null) {
+        onClickHorizontalItem.onClickItem(horizontalItemContainer);
       }
     });
   }

@@ -137,11 +137,11 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   }
 
   private UiGridBaseContentData generateWebContentData(String url) {
-    return ContentWebViewGridLayoutView.newInstance(url);
+    return WebViewContentData.newInstance(url);
   }
 
   private UiGridBaseContentData generateWebContentDataWithFederated(ElementCacheRender render) {
-    return ContentWebViewGridLayoutView.newInstance(render);
+    return WebViewContentData.newInstance(render);
   }
 
   @NonNull

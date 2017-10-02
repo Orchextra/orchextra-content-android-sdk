@@ -38,6 +38,8 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+//TODO Delete this class if not is used anymore
+@Deprecated
 public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
