@@ -1,12 +1,15 @@
 package com.gigigo.orchextra.core.sdk.ui.views.toolbars;
 
 import android.content.Context;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
@@ -24,6 +27,7 @@ public class DetailToolbarView extends FrameLayout {
   private View shareToolbarButton;
   private View backToolbarBgButton;
   private View shareToolbarBgButton;
+  private ImageView toolbarIcon;
 
   private boolean isBlocked;
   private String title;
@@ -32,6 +36,7 @@ public class DetailToolbarView extends FrameLayout {
   private boolean isFirstScrollFull;
 
   private OcmStyleUi ocmStyleUi;
+  private int icon;
 
   public DetailToolbarView(@NonNull Context context) {
     super(context);
@@ -59,6 +64,7 @@ public class DetailToolbarView extends FrameLayout {
     initDi();
     initViews();
     setToolbarTitle();
+    setToolbarIcon();
   }
 
   private void initDi() {
@@ -84,6 +90,7 @@ public class DetailToolbarView extends FrameLayout {
     shareToolbarButton = view.findViewById(R.id.share_toolbar_button);
     backToolbarBgButton = view.findViewById(R.id.back_toolbar_bg_button);
     shareToolbarBgButton = view.findViewById(R.id.share_bg_toolbar_button);
+    toolbarIcon = (ImageView) view.findViewById(R.id.toolbarIcon);
 
     isFirstScrollPreview = true;
     isFirstScrollFull = true;
@@ -134,5 +141,16 @@ public class DetailToolbarView extends FrameLayout {
   public void setToolbarTitle(String title) {
     this.title = title;
     setToolbarTitle();
+  }
+
+  public void setToolbarIcon(@DrawableRes int icon) {
+    this.icon = icon;
+    setToolbarIcon();
+  }
+
+  private void setToolbarIcon() {
+    if (icon != 0) {
+      toolbarIcon.setImageResource(icon);
+    }
   }
 }

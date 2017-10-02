@@ -70,6 +70,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
     DetailViewInfo detailViewInfo = new DetailViewInfo();
     detailViewInfo.setShareable(cachedElement.getShare() != null);
     detailViewInfo.setNameArticle(cachedElement.getName());
+    detailViewInfo.setType(cachedElement.getType());
 
     if (getView() != null) {
       if (cachedElement.getType() == ElementCacheType.CARDS) {

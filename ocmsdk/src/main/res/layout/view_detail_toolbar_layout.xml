@@ -1,89 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  >
-
-  <FrameLayout
-    android:id="@+id/detailToolbar"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/ocm_height_detail_toolbar"
-    android:background="@drawable/oc_bg_detail_toolbar_color"
-    android:visibility="gone"
-    />
-
-  <FrameLayout
-    android:id="@+id/back_toolbar_button"
-    android:layout_width="wrap_content"
-    android:layout_height="@dimen/ocm_height_detail_toolbar"
-    android:layout_alignParentLeft="true"
-    android:paddingLeft="@dimen/oc_spacing_16"
-    android:paddingStart="@dimen/oc_spacing_16"
+    android:layout_height="match_parent"
     >
 
-    <ImageView
-      android:id="@+id/back_toolbar_bg_button"
-      android:layout_width="@dimen/oc_detail_button_size"
-      android:layout_height="@dimen/oc_detail_button_size"
-      android:layout_gravity="center"
-      android:adjustViewBounds="true"
-      android:src="@drawable/oc_bg_button"
+  <FrameLayout
+      android:id="@+id/detailToolbar"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/ocm_height_detail_toolbar"
+      android:background="@drawable/oc_bg_detail_toolbar_color"
+      android:visibility="gone"
       />
 
-    <ImageView
+  <FrameLayout
+      android:id="@+id/back_toolbar_button"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:adjustViewBounds="true"
-      android:src="@drawable/oc_ic_back"
-      />
+      android:layout_height="@dimen/ocm_height_detail_toolbar"
+      android:layout_alignParentLeft="true"
+      android:paddingLeft="@dimen/oc_spacing_16"
+      android:paddingStart="@dimen/oc_spacing_16"
+      >
+
+    <ImageView
+        android:id="@+id/back_toolbar_bg_button"
+        android:layout_width="@dimen/oc_detail_button_size"
+        android:layout_height="@dimen/oc_detail_button_size"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:src="@drawable/oc_bg_button"
+        />
+
+    <ImageView
+        android:id="@+id/toolbarIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:src="@drawable/oc_ic_back"
+        />
 
   </FrameLayout>
 
   <TextView
-    android:id="@+id/detailTitleText"
+      android:id="@+id/detailTitleText"
 
-    android:layout_width="wrap_content"
-    android:layout_height="@dimen/ocm_height_detail_toolbar"
-    android:layout_toRightOf="@+id/back_toolbar_button"
-    android:layout_toLeftOf="@+id/share_toolbar_button"
-    android:ellipsize="end"
-    android:gravity="center_vertical"
-    android:maxLines="2"
-    android:textColor="@color/oc_color_text_toolbar"
-    android:textSize="@dimen/oc_size_text_toolbar"
-    android:layout_marginLeft="@dimen/oc_spacing_8"
-    android:layout_marginRight="@dimen/oc_spacing_8"
-    android:visibility="gone"
-    />
+      android:layout_width="wrap_content"
+      android:layout_height="@dimen/ocm_height_detail_toolbar"
+      android:layout_marginLeft="@dimen/oc_spacing_8"
+      android:layout_marginRight="@dimen/oc_spacing_8"
+      android:layout_toLeftOf="@+id/share_toolbar_button"
+      android:layout_toRightOf="@+id/back_toolbar_button"
+      android:ellipsize="end"
+      android:gravity="center_vertical"
+      android:maxLines="2"
+      android:textColor="@color/oc_color_text_toolbar"
+      android:textSize="@dimen/oc_size_text_toolbar"
+      android:visibility="gone"
+      />
 
   <FrameLayout
-    android:id="@+id/share_toolbar_button"
-    android:layout_width="wrap_content"
-    android:layout_height="@dimen/ocm_height_detail_toolbar"
-    android:layout_alignParentRight="true"
-    android:layout_gravity="right"
-    android:paddingEnd="@dimen/oc_spacing_16"
-    android:paddingRight="@dimen/oc_spacing_16"
-    >
-
-    <ImageView
-      android:id="@+id/share_bg_toolbar_button"
-      android:layout_width="@dimen/oc_detail_button_size"
-      android:layout_height="@dimen/oc_detail_button_size"
-      android:layout_gravity="center"
-      android:adjustViewBounds="true"
-      android:src="@drawable/oc_bg_button"
-      />
-
-    <ImageView
+      android:id="@+id/share_toolbar_button"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:adjustViewBounds="true"
-      android:src="@drawable/oc_ic_share"
-      />
+      android:layout_height="@dimen/ocm_height_detail_toolbar"
+      android:layout_alignParentRight="true"
+      android:layout_gravity="right"
+      android:paddingEnd="@dimen/oc_spacing_16"
+      android:paddingRight="@dimen/oc_spacing_16"
+      >
+
+    <ImageView
+        android:id="@+id/share_bg_toolbar_button"
+        android:layout_width="@dimen/oc_detail_button_size"
+        android:layout_height="@dimen/oc_detail_button_size"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:src="@drawable/oc_bg_button"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:src="@drawable/oc_ic_share"
+        />
 
   </FrameLayout>
 

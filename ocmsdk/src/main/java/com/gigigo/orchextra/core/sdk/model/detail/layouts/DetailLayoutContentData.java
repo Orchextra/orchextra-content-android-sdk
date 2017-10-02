@@ -157,6 +157,7 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
         detailSimpleLayoutContentData.setViews(uiBaseContentData);
         detailSimpleLayoutContentData.setOnFinishListener(onFinishListener);
         detailSimpleLayoutContentData.setArticleName(detailViewInfo.getNameArticle());
+        detailSimpleLayoutContentData.setTypeContent(detailViewInfo.getType());
         if (detailViewInfo.isShareable()) {
           detailSimpleLayoutContentData.setOnShareListener(onShareListener);
         }
