@@ -70,8 +70,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                       .dontAnimate();
 
                 } else {
-                  //todo articulos leidos el bitmapTransformation Transformation<Bitmap>
-                  //se le debe informar desde la integradora
+
                   requestBuilder = OcmImageLoader.load(context, generatedImageUrl)
                       .priority(Priority.NORMAL)
                       .diskCacheStrategy(DiskCacheStrategy.ALL)

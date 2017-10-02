@@ -242,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void onGoDetailView(List<UiMenu> uiMenu) {
+    tabLayout.removeAllTabs();
     if (uiMenu.size() > 0) {
       for (int i = 0; i < uiMenu.size(); i++) {
         UiMenu menu = uiMenu.get(i);

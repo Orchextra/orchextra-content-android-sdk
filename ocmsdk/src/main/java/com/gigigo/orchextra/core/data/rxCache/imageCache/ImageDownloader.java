@@ -97,11 +97,11 @@ public class ImageDownloader implements LowPriorityRunnable {
 
       copy(tempCacheFile, cacheFile);
       callback.onSuccess(imageData);
-    } catch (Exception e) {
+    } catch ( Throwable   e) {
       GGGLogImpl.log("ERROR <- " + imageData.getPath(), LogLevel.ERROR);
       e.printStackTrace();
       if (cacheFile.exists()) cacheFile.delete();
-      callback.onError(imageData, e);
+      callback.onError(imageData, new Exception(e.getMessage(),e));
     } finally {
       if (tempCacheFile.exists()) tempCacheFile.delete();
       if (input != null) {

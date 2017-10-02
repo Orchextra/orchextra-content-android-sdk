@@ -23,6 +23,16 @@ public final class OcmBuilder {
   private ImageRecognition vuforiaImpl;
   private boolean showReadArticles = false;
   private ImageTransformReadArticle transformReadArticleMode = ImageTransformReadArticle.OVERLAY;
+  private int maxReadArticles=100;
+
+  public int getMaxReadArticles() {
+    return maxReadArticles;
+  }
+
+  public OcmBuilder setMaxReadArticles(int maxReadArticles) {
+    this.maxReadArticles = maxReadArticles;
+    return this;
+  }
 
   public Transformation<Bitmap> getCustomBitmapTransformReadArticle() {
     return customBitmapTransformReadArticle;

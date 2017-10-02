@@ -3,6 +3,7 @@ package com.gigigo.sample;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -10,7 +11,7 @@ import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.squareup.leakcanary.LeakCanary;
-import jp.wasabeef.glide.transformations.gpu.ToonFilterTransformation;
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
 public class App extends MultiDexApplication {
 
@@ -120,8 +121,9 @@ public class App extends MultiDexApplication {
 
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setShowReadArticles(true)
-        // .setTransformReadArticleMode(ImageTransformReadArticle.BITMAP_TRANSFORM)
-        .setCustomBitmapTransformReadArticle(new ToonFilterTransformation(this))
+        .setTransformReadArticleMode(ImageTransformReadArticle.BITMAP_TRANSFORM)
+        .setCustomBitmapTransformReadArticle(new GrayscaleTransformation(this))
+        .setMaxReadArticles(100)
 
         .setOrchextraCredentials(API_KEY, API_SECRET)
         .setContentLanguage("EN")

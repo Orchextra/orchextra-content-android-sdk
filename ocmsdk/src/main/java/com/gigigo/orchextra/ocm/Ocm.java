@@ -23,9 +23,6 @@ public final class Ocm {
 
   public static final String OCM_PREFERENCES = "OCMpreferencez";
   public static final String OCM_CHANGE_CREDENTIALS_DONE = "ChangeCredentialsDONE";
-  // public static final String OCM_FEDEX_AUTH_URL="urlfedexauthforcookies";
-  public static final String OCM_READED_ARTICLES = "arrayreadedarticles4putitgrayscale";
-  public static final String OCM_SHOW_READED_ARTICLES_ENABLED = "OCM_SHOW_READED_ARTICLES_ENABLED";
 
   public static void initialize(Application app) {
 
@@ -82,6 +79,9 @@ public final class Ocm {
         OCManager.setBitmapTransformReadArticles(ocmBuilder.getCustomBitmapTransformReadArticle());
       }
     }
+    if (ocmBuilder.getShowReadArticles())
+      OCManager.setMaxReadArticles(ocmBuilder.getMaxReadArticles());
+
     if (ocmBuilder.getVuforiaImpl() != null) {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
           ocmBuilder.getOxSenderId(), ocmBuilder.getVuforiaImpl());
@@ -120,6 +120,9 @@ public final class Ocm {
         OCManager.setBitmapTransformReadArticles(ocmBuilder.getCustomBitmapTransformReadArticle());
       }
     }
+
+    if (ocmBuilder.getShowReadArticles())
+      OCManager.setMaxReadArticles(ocmBuilder.getMaxReadArticles());
 
     if (ocmBuilder.getVuforiaImpl() != null) {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
