@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 
@@ -107,6 +108,14 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
         unbindDrawables(((ViewGroup) view).getChildAt(i));
       }
       ((ViewGroup) view).removeAllViews();
+    }
+  }
+
+  public void setTypeContent(ElementCacheType type) {
+    switch (type) {
+      case WEBVIEW:
+        changeIconToolbar();
+        break;
     }
   }
 }

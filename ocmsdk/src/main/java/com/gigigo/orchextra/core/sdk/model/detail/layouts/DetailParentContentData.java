@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.sdk.model.detail.layouts;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   @Inject ActionHandler actionHandler;
   View mView;
   private String nameArticle;
+  private boolean changeToolbarIconToClose = false;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -39,7 +41,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
 
     initDi();
     initDetailViews(mView);
-    setData();
+    customizeToolbar();
 
     return mView;
   }
@@ -57,8 +59,18 @@ public abstract class DetailParentContentData extends UiBaseContentData {
     initViews(view);
   }
 
-  private void setData() {
-    detailToolbarView.setToolbarTitle(nameArticle);
+  private void customizeToolbar() {
+    if (detailToolbarView == null) {
+      return;
+    }
+
+    if (!TextUtils.isEmpty(nameArticle)) {
+      detailToolbarView.setToolbarTitle(nameArticle);
+    }
+
+    if (changeToolbarIconToClose) {
+      detailToolbarView.setToolbarIcon(R.drawable.ox_close);
+    }
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -100,7 +112,8 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       OCManager.notifyEvent(OcmEvent.OPEN_BARCODE);
       return true;
     } else if (detailContentDataClass.equals(BrowserContentData.class)) {
-      launchExternalBrowser(((BrowserContentData) uiBaseContentData).getUrl(), ((BrowserContentData) uiBaseContentData).getFederatedAuthorization());
+      launchExternalBrowser(((BrowserContentData) uiBaseContentData).getUrl(),
+          ((BrowserContentData) uiBaseContentData).getFederatedAuthorization());
       OCManager.notifyEvent(OcmEvent.VISIT_URL);
       return true;
     } else if (detailContentDataClass.equals(YoutubeContentData.class)) {
@@ -112,7 +125,8 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       OCManager.notifyEvent(OcmEvent.VISIT_URL);
       return true;
     } else if (detailContentDataClass.equals(CustomTabsContentData.class)) {
-      launchCustomTabs(((CustomTabsContentData) uiBaseContentData).getUrl(), ((BrowserContentData) uiBaseContentData).getFederatedAuthorization());
+      launchCustomTabs(((CustomTabsContentData) uiBaseContentData).getUrl(),
+          ((BrowserContentData) uiBaseContentData).getFederatedAuthorization());
       OCManager.notifyEvent(OcmEvent.VISIT_URL);
       return true;
     }
@@ -132,7 +146,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
   }
 
   private void launchExternalBrowser(String url, FederatedAuthorization fedexA) {
-    actionHandler.launchExternalBrowser(url,fedexA);
+    actionHandler.launchExternalBrowser(url, fedexA);
   }
 
   private void lauchOxScan() {
@@ -155,6 +169,10 @@ public abstract class DetailParentContentData extends UiBaseContentData {
 
   public void setArticleName(String nameArticle) {
     this.nameArticle = nameArticle;
+  }
+
+  protected void changeIconToolbar() {
+    this.changeToolbarIconToClose = true;
   }
 
   @Override public void onDestroy() {
