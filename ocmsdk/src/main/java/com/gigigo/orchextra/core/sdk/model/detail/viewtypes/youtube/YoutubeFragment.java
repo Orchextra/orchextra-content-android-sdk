@@ -24,8 +24,6 @@ import com.google.android.youtube.player.YouTubePlayer;
 import java.lang.ref.WeakReference;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
- 
-
 public class YoutubeFragment extends UiBaseContentData {
 
   private static final String EXTRA_PLAYED_VIDEO = "EXTRA_PLAYED_VIDEO";

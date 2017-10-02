@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.ocm;
 
 import android.app.Application;
+import android.graphics.Bitmap;
+import com.bumptech.glide.load.Transformation;
 import com.gigigo.imagerecognitioninterface.ImageRecognition;
 import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
@@ -20,7 +22,20 @@ public final class OcmBuilder {
   private String oxSenderId;
   private ImageRecognition vuforiaImpl;
   private boolean showReadArticles = false;
-  private ImageTransformReadArticle transformReadArticle=ImageTransformReadArticle.B_AND_W;
+  private ImageTransformReadArticle transformReadArticleMode = ImageTransformReadArticle.OVERLAY;
+
+  public Transformation<Bitmap> getCustomBitmapTransformReadArticle() {
+    return customBitmapTransformReadArticle;
+  }
+
+  public OcmBuilder setCustomBitmapTransformReadArticle(
+      Transformation<Bitmap> customBitmapTransformReadArticle) {
+    this.customBitmapTransformReadArticle = customBitmapTransformReadArticle;
+    return this;
+  }
+
+  private com.bumptech.glide.load.Transformation<Bitmap> customBitmapTransformReadArticle =null;
+
   /**
    * setter for do vuforia optional in ocm, setted from intetragion app
    */
@@ -33,12 +48,13 @@ public final class OcmBuilder {
     return vuforiaImpl;
   }
 
-  public ImageTransformReadArticle getTransformReadArticle() {
-    return transformReadArticle;
+  public ImageTransformReadArticle getTransformReadArticleMode() {
+    return transformReadArticleMode;
   }
 
-  public OcmBuilder setTransformReadArticle(ImageTransformReadArticle transformReadArticle) {
-    this.transformReadArticle = transformReadArticle;
+  public OcmBuilder setTransformReadArticleMode(
+      ImageTransformReadArticle transformReadArticleMode) {
+    this.transformReadArticleMode = transformReadArticleMode;
     return this;
   }
 
