@@ -24,25 +24,24 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
+import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.federatedAuth.FAUtils;
+import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class WebViewContentData extends UiBaseContentData {
+public class WebViewContentData extends UiGridBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
   private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
@@ -50,8 +49,7 @@ public class WebViewContentData extends UiBaseContentData {
 
   private View mView;
   private TouchyWebView webView;
-  private ProgressBar progress;
-  private JsHandler jsInterface;
+  private View progress;
   private long timeToLoad;
 
   public static WebViewContentData newInstance(ElementCacheRender render) {
@@ -117,7 +115,7 @@ public class WebViewContentData extends UiBaseContentData {
     mView = inflater.inflate(R.layout.view_webview_detail_item, container, false);
 
     webView = (TouchyWebView) mView.findViewById(R.id.ocm_webView);
-    progress = (ProgressBar) mView.findViewById(R.id.webview_progress);
+    progress = mView.findViewById(R.id.webview_progress);
 
     return mView;
   }
@@ -197,7 +195,7 @@ public class WebViewContentData extends UiBaseContentData {
   }
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN) private void initWebView() {
-    jsInterface = new JsHandler(webView);
+    JsHandler jsInterface = new JsHandler(webView);
     webView.setClickable(true);
 
     webView.getSettings().setJavaScriptEnabled(true);
@@ -317,10 +315,9 @@ public class WebViewContentData extends UiBaseContentData {
       if (federatedAuthorization != null
           && federatedAuthorization.isActive()
           && Ocm.getQueryStringGenerator() != null) {
-        String finalUrl = url;
         Ocm.getQueryStringGenerator().createQueryString(federatedAuthorization, queryString -> {
           if (queryString != null && !queryString.isEmpty()) {
-            String urlWithQueryParams = FAUtils.addQueryParamsToUrl(queryString, finalUrl);
+            String urlWithQueryParams = FAUtils.addQueryParamsToUrl(queryString, url);
             //no es necesario  OCManager.saveFedexAuth(url);
             Log.d(WebViewContentData.class.getSimpleName(),
                 "federatedAuth url: " + urlWithQueryParams);
@@ -328,12 +325,49 @@ public class WebViewContentData extends UiBaseContentData {
               webView.loadUrl(urlWithQueryParams);
             }
           } else {
-            webView.loadUrl(finalUrl);
+            webView.loadUrl(url);
           }
         });
       } else {
         webView.loadUrl(url);
       }
+    }
+  }
+
+  @Override public void setFilter(String filter) {
+
+  }
+
+  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
+    if (webView != null) {
+      webView.setClipToPadding(false);
+      webView.setPadding(0, 0, 0, clipToPadding.getPadding());
+    }
+  }
+
+  @Override public void scrollToTop() {
+    if (webView != null) {
+      webView.scrollTo(0, 0);
+    }
+  }
+
+  @Override public void setEmptyView(View emptyView) {
+
+  }
+
+  @Override public void setErrorView(View errorLayoutView) {
+
+  }
+
+  @Override public void setProgressView(View progressView) {
+    if (progressView != null) {
+      progress = progressView;
+    }
+  }
+
+  @Override public void reloadSection() {
+    if (webView != null) {
+      webView.reload();
     }
   }
 
