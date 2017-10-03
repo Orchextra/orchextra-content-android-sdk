@@ -12,6 +12,7 @@ import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.vimeo.VimeoContentDataActivity;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -35,6 +36,10 @@ public class ActionHandler {
 
   public void launchYoutubePlayer(String videoId) {
     YoutubeContentDataActivity.open(ocmContextProvider.getCurrentActivity(), videoId);
+  }
+
+  public void launchVimeoPlayer(String videoId) {
+    VimeoContentDataActivity.open(ocmContextProvider.getCurrentActivity(), videoId);
   }
 
   public void launchOxVuforia() {

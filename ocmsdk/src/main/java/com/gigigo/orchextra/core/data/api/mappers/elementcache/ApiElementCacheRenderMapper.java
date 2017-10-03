@@ -1,11 +1,12 @@
 package com.gigigo.orchextra.core.data.api.mappers.elementcache;
 
+import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCacheRender;
 import com.gigigo.orchextra.core.data.api.mappers.article.ApiArticleElementMapper;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
-import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
+import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,9 @@ public class ApiElementCacheRenderMapper
     model.setTitle(data.getTitle());
 
     model.setSource(data.getSource());
-    model.setFormat(data.getFormat());
+    if (data.getFormat() != null) {
+      model.setFormat(VideoFormat.convertStringToType(data.getFormat()));
+    }
 
     model.setSchemeUri(data.getSchemeUri());
 
@@ -56,7 +59,8 @@ public class ApiElementCacheRenderMapper
       //articleElementList.add(articleButtonElement);
     }
 
-    model.setFederatedAuth(federatedAuthorizationDataMapper.externalClassToModel(data.getFederatedAuth()));
+    model.setFederatedAuth(
+        federatedAuthorizationDataMapper.externalClassToModel(data.getFederatedAuth()));
 
     model.setElements(articleElementList);
 

@@ -7,6 +7,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
+import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
@@ -115,12 +116,14 @@ public class OcmSchemeHandler {
     }
   }
 
-  private void processVideo(String format, String source) {
-    if (TextUtils.isEmpty(source)) {
+  private void processVideo(VideoFormat format, String source) {
+    if (TextUtils.isEmpty(source) || format == VideoFormat.NONE) {
       return;
+    } else if (format == VideoFormat.YOUTUBE) {
+      actionHandler.launchYoutubePlayer(source);
+    } else if (format == VideoFormat.VIMEO) {
+      actionHandler.launchVimeoPlayer(source);
     }
-
-    actionHandler.launchYoutubePlayer(source);
   }
 
   private void processCustomTabs(String url, FederatedAuthorization federatedAuthorization) {

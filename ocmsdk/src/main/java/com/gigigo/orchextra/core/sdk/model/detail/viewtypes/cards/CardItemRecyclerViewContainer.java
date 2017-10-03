@@ -12,7 +12,7 @@ import com.gigigo.orchextra.core.domain.entities.article.ArticleImageAndTextElem
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleTextAndImageElement;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElement;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
@@ -66,9 +66,9 @@ public class CardItemRecyclerViewContainer extends LinearLayout {
             cardRichTextViewHolder.initialize();
 
             return cardRichTextViewHolder;
-          } else if (articleElement.getClass() == ArticleVideoElement.class) {
+          } else if (articleElement.getClass() == ArticleYoutubeVideoElement.class) {
             CardVideoView cardVideoViewHolder = new CardVideoView(context);
-            cardVideoViewHolder.setArticleElement((ArticleVideoElement) articleElement);
+            cardVideoViewHolder.setArticleElement((ArticleYoutubeVideoElement) articleElement);
             cardVideoViewHolder.initialize();
 
             return cardVideoViewHolder;

@@ -12,7 +12,7 @@ public class ElementCacheRender {
   private String title;
   private List<ArticleElement> elements;
 
-  private String format;
+  private VideoFormat format;
   private String source;
 
   private String schemeUri;
@@ -51,11 +51,11 @@ public class ElementCacheRender {
     this.elements = elements;
   }
 
-  public String getFormat() {
+  public VideoFormat getFormat() {
     return format;
   }
 
-  public void setFormat(String format) {
+  public void setFormat(VideoFormat format) {
     this.format = format;
   }
 

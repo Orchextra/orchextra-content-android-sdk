@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.gigigo.ggglogger.GGGLogImpl;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElement;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -22,7 +22,7 @@ public class CardVideoView extends CardDataView {
   private final Context context;
 
   private YouTubeThumbnailView youtubeThumbnail;
-  private ArticleVideoElement articleElement;
+  private ArticleYoutubeVideoElement articleElement;
 
   private YouTubeThumbnailLoader.OnThumbnailLoadedListener onThumbnailLoadedListener =
       new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
@@ -99,7 +99,7 @@ public class CardVideoView extends CardDataView {
     youtubeThumbnail.setOnClickListener(onYoutubeThumbnailClickListener);
   }
 
-  public void setArticleElement(ArticleVideoElement articleElement) {
+  public void setArticleElement(ArticleYoutubeVideoElement articleElement) {
     this.articleElement = articleElement;
   }
 
