@@ -6,7 +6,7 @@ import com.mskn73.kache.annotations.KacheLife;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
-@KacheLife(expiresTime = 1000 * 60 * 60)  // 1h
+@KacheLife(expiresTime = 1000 * 60 * 60 * 24)  // 1 day
 public class ApiSectionContentData implements Kacheable {
 
   private ApiContentItem content;
