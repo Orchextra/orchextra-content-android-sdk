@@ -121,8 +121,7 @@ public class App extends MultiDexApplication {
 
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setShowReadArticles(true)
-        .setTransformReadArticleMode(ImageTransformReadArticle.BITMAP_TRANSFORM)
-        .setCustomBitmapTransformReadArticle(new GrayscaleTransformation(this))
+        .setTransformReadArticleMode(ImageTransformReadArticle.OVERLAY)
         .setMaxReadArticles(100)
 
         .setOrchextraCredentials(API_KEY, API_SECRET)

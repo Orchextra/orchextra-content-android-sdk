@@ -76,6 +76,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                       .diskCacheStrategy(DiskCacheStrategy.ALL)
                       .dontAnimate();
                   if(OCManager.getBitmapTransformReadArticles()!=null) {
+
                     requestBuilder.bitmapTransform(OCManager.getBitmapTransformReadArticles());
                   } else {
                     //todo overlay, image.setForeground only api23, or ovelary with other image
