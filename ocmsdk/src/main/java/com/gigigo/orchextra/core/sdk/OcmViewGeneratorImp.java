@@ -27,6 +27,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.WebViewContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.ArticleContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.vimeo.VimeoContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.webview.ContentWebViewGridLayoutView;
@@ -212,7 +213,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         }
       case VIDEO:
         if (render != null) {
-          return generateYoutubeDetailView(render.getSource());
+          return generateVideoDetailView(render);
         }
       case DEEP_LINK:
         if (render != null) {
@@ -274,8 +275,23 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return BrowserContentData.newInstance(url,federatedAuthorization);
   }
 
+  private UiBaseContentData generateVideoDetailView(ElementCacheRender render) {
+    switch (render.getFormat()) {
+      case YOUTUBE:
+        return generateYoutubeDetailView(render.getSource());
+      case VIMEO:
+        return  generateVimeoDetailView(render.getSource());
+      default:
+        return null;
+    }
+  }
+
   private UiBaseContentData generateYoutubeDetailView(String videoId) {
     return YoutubeContentData.newInstance(videoId);
+  }
+
+  private UiBaseContentData generateVimeoDetailView(String videoId) {
+    return VimeoContentData.newInstance(videoId);
   }
 
   private UiBaseContentData generateDeepLinkView(String uri) {

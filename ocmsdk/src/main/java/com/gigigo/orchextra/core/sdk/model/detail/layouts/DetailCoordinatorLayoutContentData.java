@@ -146,15 +146,15 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
   private void executeExternalAction() {
     checkIfOxActionAndExecute(detailContentData);
 
-    new Handler().postDelayed(new Runnable() {
-      @Override public void run() {
-        appbarLayout.setExpanded(true, false);
-      }
-    }, 1000);
+    //new Handler().postDelayed(new Runnable() {
+    //  @Override public void run() {
+    //    appbarLayout.setExpanded(true, false);
+    //  }
+    //}, 1000);
 
-    if (detailContentData instanceof DeepLinkContentData) {
+    //if (detailContentData instanceof DeepLinkContentData) {
       closeView();
-    }
+    //}
   }
 
   @Override public void onResume() {
