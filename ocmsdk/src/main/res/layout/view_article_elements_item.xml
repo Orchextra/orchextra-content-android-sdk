@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
 
   <android.support.v7.widget.RecyclerView
@@ -12,25 +13,24 @@
       android:layout_height="match_parent"
       android:background="@color/oc_bg_article_content_color"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      />
+
+  <FrameLayout
+      android:id="@+id/fl_loading_fa"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="#99000000"
+      android:visibility="invisible"
       >
 
-    <FrameLayout
-        android:id="@+id/fl_loading_fa"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#99000000"
-        android:visibility="invisible"
-        >
-
-      <include
-          layout="@layout/progress_red"
-          android:id="@+id/progressFA"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:visibility="gone"
-          />
-    </FrameLayout>
-  </android.support.v7.widget.RecyclerView>
+    <include
+        layout="@layout/progress_red"
+        android:id="@+id/progressFA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
+  </FrameLayout>
 
 </LinearLayout>
