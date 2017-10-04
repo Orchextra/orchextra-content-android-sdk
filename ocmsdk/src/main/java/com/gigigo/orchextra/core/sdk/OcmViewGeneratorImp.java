@@ -204,11 +204,11 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         }
       case BROWSER:
         if (render != null) {
-          return generateCustomTabsDetailView(render.getUrl());
+          return generateCustomTabsDetailView(render.getUrl(), render.getFederatedAuth());
         }
       case EXTERNAL_BROWSER:
         if (render != null) {
-          return generateBrowserDetailView(render.getUrl(),render.getFederatedAuth());
+          return generateBrowserDetailView(render.getUrl(), render.getFederatedAuth());
         }
       case VIDEO:
         if (render != null) {
@@ -258,8 +258,9 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return WebViewContentData.newInstance(render);
   }
 
-  private UiBaseContentData generateCustomTabsDetailView(String url) {
-    return CustomTabsContentData.newInstance(url);
+  private UiBaseContentData generateCustomTabsDetailView(String url,
+      FederatedAuthorization federatedAuthorization) {
+    return CustomTabsContentData.newInstance(url, federatedAuthorization);
   }
 
   private UiBaseContentData generateVuforiaDetailView() {
@@ -270,7 +271,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return ScanContentData.newInstance();
   }
 
-  private UiBaseContentData generateBrowserDetailView(String url,FederatedAuthorization federatedAuthorization) {
+  private UiBaseContentData generateBrowserDetailView(String url, FederatedAuthorization federatedAuthorization) {
     return BrowserContentData.newInstance(url,federatedAuthorization);
   }
 
