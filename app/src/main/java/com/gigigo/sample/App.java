@@ -3,6 +3,7 @@ package com.gigigo.sample;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -10,6 +11,7 @@ import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.squareup.leakcanary.LeakCanary;
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
 public class App extends MultiDexApplication {
 
@@ -69,19 +71,67 @@ public class App extends MultiDexApplication {
     //// Normal app init code...
 
     MultiDex.install(this);
+    //region normal Filters., perfect 4 documentation
+/*
+    switch (transform) {
+      case 0:
+        return new GrayscaleTransformation(mApplication);
+      case 1:
+        return new BlurTransformation(mApplication);
+      case 2:
+        return new ColorFilterTransformation(mApplication, Color.RED);
+      case 3:
+        return new CropCircleTransformation(mApplication);
+      case 4:
+        return new CropSquareTransformation(mApplication);
+      case 5:
+        return new RoundedCornersTransformation(mApplication, 25,
+            25);//return new MaskTransformation(mApplication, 50); //fails
+      case 6:
+        return new RoundedCornersTransformation(mApplication, 25, 25);
+      case 7:
+        return new BrightnessFilterTransformation(mApplication);
+      case 8:
+        return new ContrastFilterTransformation(mApplication);
+      case 9:
+        return new InvertFilterTransformation(mApplication);
+      case 10:
+        return new KuwaharaFilterTransformation(mApplication);
+      case 11:
+        return new PixelationFilterTransformation(mApplication);
+      case 12:
+        return new SepiaFilterTransformation(mApplication);
+      case 13:
+        return new SketchFilterTransformation(mApplication);
+      case 14:
+        return new SwirlFilterTransformation(mApplication);
+      case 15:
+        return new ToonFilterTransformation(mApplication);
+      default:
+        transform = -1;
+        return new VignetteFilterTransformation(mApplication);
+    }
+     */
+    //endregion
+
+    //asv READ ARTICLES DOCU
+    // x defecto el transform es overlay si no se setea el mode
+    //x defecto es grayscale si se pone mode bitmap xo no se alimenta un bitmaptransform
+    //x defecto se guardarán hasta 100? articulos, y pueden ser un maximo de 200
 
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
-        .setShowReadedArticlesInGrayScale(true)
-        // .setOrchextraCredentials("FAKE_KEY", "FAKE_SECRET")
+        .setShowReadArticles(true)
+        .setTransformReadArticleMode(ImageTransformReadArticle.OVERLAY)
+        .setMaxReadArticles(100)
+
         .setOrchextraCredentials(API_KEY, API_SECRET)
         .setContentLanguage("EN")
         .setOnEventCallback(onEventCallback);
 
     Ocm.initialize(ocmBuilder);
 
-    OcmStyleUiBuilder ocmStyleUiBuilder = new OcmStyleUiBuilder()
-        .setTitleToolbarEnabled(true)
-        .setEnabledStatusBar(true);
+    OcmStyleUiBuilder ocmStyleUiBuilder =
+        new OcmStyleUiBuilder().setTitleToolbarEnabled(true).setEnabledStatusBar(true);
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 

@@ -53,10 +53,12 @@ public class MainActivity extends AppCompatActivity {
   @Override protected void onResume() {
     super.onResume();
     //ReadedArticles
-    if (OCManager.getShowReadedArticlesInGrayScale() && adapter != null) {
+    if (OCManager.getShowReadArticles() && adapter != null) {
       adapter.reloadSections();
-      Toast.makeText(this, "Refresh grid from integratied app if readed articles are enabled"
-          + OCManager.getShowReadedArticlesInGrayScale(), Toast.LENGTH_LONG).show();
+
+      //Toast.makeText(this, "Refresh grid from integratied app if readed articles are enabled transform number"
+      //    + OCManager.transform, Toast.LENGTH_LONG).show();
+      //OCManager.transform+=1;
     }
 
   }
@@ -79,6 +81,12 @@ public class MainActivity extends AppCompatActivity {
     fabChange.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         startCredentials();
+        if (OCManager.getShowReadArticles() && adapter != null) {
+          //OCManager.transform+=1;
+          adapter.reloadSections();
+          //Toast.makeText(MainActivity.this, "Refresh grid from integratied app if readed articles are enabled transform number"
+          //    + OCManager.transform, Toast.LENGTH_LONG).show();
+        }
       }
     });
 
@@ -234,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void onGoDetailView(List<UiMenu> uiMenu) {
+    tabLayout.removeAllTabs();
     if (uiMenu.size() > 0) {
       for (int i = 0; i < uiMenu.size(); i++) {
         UiMenu menu = uiMenu.get(i);

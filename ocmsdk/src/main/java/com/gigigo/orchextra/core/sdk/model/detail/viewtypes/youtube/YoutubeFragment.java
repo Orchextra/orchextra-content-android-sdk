@@ -19,10 +19,10 @@ import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.glide.transformations.BlurTransformation;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import java.lang.ref.WeakReference;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class YoutubeFragment extends UiBaseContentData {
 

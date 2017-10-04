@@ -90,7 +90,7 @@ public class PreviewContentData extends UiBaseContentData {
     previewTitle = (TextView) view.findViewById(R.id.preview_title);
     goToArticleButton = view.findViewById(R.id.go_to_article_button);
     MoreContentArrowView imgAnim = (MoreContentArrowView) view.findViewById(R.id.imgMoreContain);
-    imgAnim.Anim(32, -1);
+    imgAnim.anim(32, -1);
   }
 
   public void bindTo() {
@@ -146,9 +146,12 @@ public class PreviewContentData extends UiBaseContentData {
 
       String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, width, height);
 
+      Glide.with(this).load(generatedImageUrl).into(previewImage);
+
       OcmImageLoader.load(this, generatedImageUrl)
           .priority(Priority.NORMAL)
           .diskCacheStrategy(DiskCacheStrategy.ALL)
+          .override(width, height)
           .into(previewImage);
 
       animateAlphaBecauseOfCollapseEnterTransitionImage();

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.Orchextra;
+import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
@@ -14,6 +15,7 @@ import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import java.util.List;
 import java.util.Map;
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
 public final class Ocm {
 
@@ -21,9 +23,6 @@ public final class Ocm {
 
   public static final String OCM_PREFERENCES = "OCMpreferencez";
   public static final String OCM_CHANGE_CREDENTIALS_DONE = "ChangeCredentialsDONE";
-  // public static final String OCM_FEDEX_AUTH_URL="urlfedexauthforcookies";
-  public static final String OCM_READED_ARTICLES = "arrayreadedarticles4putitgrayscale";
-  public static final String OCM_SHOW_READED_ARTICLES_ENABLED = "OCM_SHOW_READED_ARTICLES_ENABLED";
 
   public static void initialize(Application app) {
 
@@ -37,8 +36,16 @@ public final class Ocm {
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
 
-    OCManager.setShowReadedArticlesInGrayScale(ocmBuilder.getShowReadedArticlesInGrayScale());
-
+    OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
+    if (ocmBuilder.getShowReadArticles() && ocmBuilder.getTransformReadArticleMode()
+        .equals(ImageTransformReadArticle.BITMAP_TRANSFORM)) {
+      if (ocmBuilder.getCustomBitmapTransformReadArticle() == null) {
+        OCManager.setBitmapTransformReadArticles(
+            new GrayscaleTransformation(app.getApplicationContext()));
+      } else {
+        OCManager.setBitmapTransformReadArticles(ocmBuilder.getCustomBitmapTransformReadArticle());
+      }
+    }
 
     SharedPreferences prefs =
         ocmBuilder.getApp().getSharedPreferences(OCM_PREFERENCES, Context.MODE_PRIVATE);
@@ -62,7 +69,18 @@ public final class Ocm {
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
 
-    OCManager.setShowReadedArticlesInGrayScale(ocmBuilder.getShowReadedArticlesInGrayScale());
+    OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
+    if (ocmBuilder.getShowReadArticles() && ocmBuilder.getTransformReadArticleMode()
+        .equals(ImageTransformReadArticle.BITMAP_TRANSFORM)) {
+      if (ocmBuilder.getCustomBitmapTransformReadArticle() == null) {
+        OCManager.setBitmapTransformReadArticles(
+            new GrayscaleTransformation(ocmBuilder.getApp().getApplicationContext()));
+      } else {
+        OCManager.setBitmapTransformReadArticles(ocmBuilder.getCustomBitmapTransformReadArticle());
+      }
+    }
+    if (ocmBuilder.getShowReadArticles())
+      OCManager.setMaxReadArticles(ocmBuilder.getMaxReadArticles());
 
     if (ocmBuilder.getVuforiaImpl() != null) {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
@@ -92,7 +110,19 @@ public final class Ocm {
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
 
-    OCManager.setShowReadedArticlesInGrayScale(ocmBuilder.getShowReadedArticlesInGrayScale());
+    OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
+    if (ocmBuilder.getShowReadArticles() && ocmBuilder.getTransformReadArticleMode()
+        .equals(ImageTransformReadArticle.BITMAP_TRANSFORM)) {
+      if (ocmBuilder.getCustomBitmapTransformReadArticle() == null) {
+        OCManager.setBitmapTransformReadArticles(
+            new GrayscaleTransformation(ocmBuilder.getApp().getApplicationContext()));
+      } else {
+        OCManager.setBitmapTransformReadArticles(ocmBuilder.getCustomBitmapTransformReadArticle());
+      }
+    }
+
+    if (ocmBuilder.getShowReadArticles())
+      OCManager.setMaxReadArticles(ocmBuilder.getMaxReadArticles());
 
     if (ocmBuilder.getVuforiaImpl() != null) {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
@@ -102,6 +132,8 @@ public final class Ocm {
           ocmBuilder.getOxSenderId());
     }
   }
+
+
 
   /**
    * Stylize the library Ui

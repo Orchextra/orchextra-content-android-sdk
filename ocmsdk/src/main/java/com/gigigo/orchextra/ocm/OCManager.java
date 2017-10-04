@@ -3,7 +3,6 @@ package com.gigigo.orchextra.ocm;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.webkit.WebStorage;
@@ -38,10 +37,16 @@ import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import jp.wasabeef.glide.transformations.gpu.SepiaFilterTransformation;
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 import orchextra.javax.inject.Inject;
 
 public final class OCManager {
@@ -63,7 +68,8 @@ public final class OCManager {
   private Map<String, String> localStorage;
   private OcmCredentialCallback ocmCredentialCallback;
   private OnCustomSchemeReceiver onCustomSchemeReceiver;
-  private boolean isShowReadedArticlesInGrayScale = false;
+  private boolean isShowReadedArticles = false;
+  private int maxReadArticles = 100;
   //cambio para el inicio selectivo, MEJORAR,
   //necesitamos un contexto para q la funcion setNewOrchextracredentials pueda comprobar las preferences
   //lo suyo es no guardarlo en las preferences, de momneto así y una mejora sencilla seria añadir el contexto a
@@ -452,48 +458,118 @@ public final class OCManager {
      }
    }
  */
-  public static void addArticleToReadedArticles(String articleSlug) {
-    if (instance != null && instance.isShowReadedArticlesInGrayScale) {
-      SharedPreferences prefs = instance.ocmContextProvider.getApplicationContext()
-          .getSharedPreferences(Ocm.OCM_PREFERENCES, Context.MODE_PRIVATE);
-      String ArrayReadedArticlesSlug = prefs.getString(Ocm.OCM_READED_ARTICLES, "");
 
-      SharedPreferences.Editor edit = prefs.edit();
-      edit.putString(Ocm.OCM_READED_ARTICLES, ArrayReadedArticlesSlug + "|" + articleSlug + "|");
-      edit.apply();
+  public static void addArticleToReadedArticles(String articleSlug) {
+    if (instance != null && instance.isShowReadedArticles) {
+      ArrayList<String> lstReadArticles = instance.readReadArticles();
+      if (lstReadArticles.size() == instance.maxReadArticles) {
+        lstReadArticles.remove(instance.maxReadArticles - 1);
+      }
+      lstReadArticles.add(0, articleSlug);
+      instance.writeReadArticles(lstReadArticles);
     }
   }
 
   public static boolean isThisArticleReaded(String articleSlug) {
-    if (instance != null && instance.isShowReadedArticlesInGrayScale) {
-      SharedPreferences prefs = instance.ocmContextProvider.getApplicationContext()
-          .getSharedPreferences(Ocm.OCM_PREFERENCES, Context.MODE_PRIVATE);
-      String ArrayReadedArticlesSlug = prefs.getString(Ocm.OCM_READED_ARTICLES, "");
-      if (ArrayReadedArticlesSlug.contains("|" + articleSlug + "|")) {
+    if (instance != null && instance.isShowReadedArticles) {
+      ArrayList<String> ArrayReadedArticlesSlug = instance.readReadArticles();
+      if (ArrayReadedArticlesSlug.indexOf(articleSlug)>-1) {
         return true;
       }
-
       return false;
     } else {
       return false;
     }
   }
 
-  /***
-   * you must to reload grid in onResume if this feature are enabled
-   * @param showReadedArticlesInGrayScale
-   */
-  public static void setShowReadedArticlesInGrayScale(boolean showReadedArticlesInGrayScale) {
+  //region serialize list of read articles slugs
+  private final String READ_ARTICLES_FILE = "read_articles_file.ocm";
 
-    if (instance != null) {
-      instance.isShowReadedArticlesInGrayScale = showReadedArticlesInGrayScale;
+  public ArrayList<String> readReadArticles() {
+
+    ArrayList<String> lst =
+        readSerializable(this.mApplication.getApplicationContext(), READ_ARTICLES_FILE);
+    if (lst != null) {
+      return lst;
+    } else {
+      return new ArrayList<>();
     }
   }
 
-  public static boolean getShowReadedArticlesInGrayScale() {
+  public void writeReadArticles(ArrayList<String> readArticles) {
+    saveSerializable(this.mApplication.getApplicationContext(), readArticles, READ_ARTICLES_FILE);
+  }
+
+  public static <T extends Serializable> void saveSerializable(Context context, T objectToSave,
+      String fileName) {
+    try {
+      FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+      ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+
+      objectOutputStream.writeObject(objectToSave);
+
+      objectOutputStream.close();
+      fileOutputStream.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static <T extends Serializable> T readSerializable(Context context, String fileName) {
+    T objectToReturn = null;
+
+    try {
+      FileInputStream fileInputStream = context.openFileInput(fileName);
+      ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+      objectToReturn = (T) objectInputStream.readObject();
+
+      objectInputStream.close();
+      fileInputStream.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return objectToReturn;
+  }
+
+  public static void removeSerializable(Context context, String filename) {
+    context.deleteFile(filename);
+  }
+
+  public static boolean isFileExists(String fileName) {
+
+    File file = new File(fileName);
+    if (file.exists()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //endregion
+
+  /***
+   * you must to reload grid in onResume if this feature are enabled
+   * @param showReadArticles
+   */
+  public static void setShowReadArticles(boolean showReadArticles) {
 
     if (instance != null) {
-      return instance.isShowReadedArticlesInGrayScale;
+      instance.isShowReadedArticles = showReadArticles;
+    }
+  }
+
+  public static void setMaxReadArticles(int maxReadArticles) {
+
+    if (instance != null) {
+      instance.maxReadArticles = maxReadArticles;
+    }
+  }
+
+  public static boolean getShowReadArticles() {
+
+    if (instance != null) {
+      return instance.isShowReadedArticles;
     } else {
       return false;
     }
@@ -501,29 +577,20 @@ public final class OCManager {
 
   //endregion
   //todo readed articles
-  //todo falta el set
-  public static com.bumptech.glide.load.Transformation<Bitmap> getBitmapTransformReadedArticles() {
-    //region normal Filters
-    // return new GrayscaleTransformation(mApplication);
-    //return new BlurTransformation(mApplication);
-    //return new ColorFilterTransformation(mApplication, 25);
-    //no sense, cropping...
-    // return new CropCircleTransformation(mApplication);
-    // return new CropSquareTransformation(mApplication);
-    //return new MaskTransformation(mApplication);
-    //return new RoundedCornersTransformation(mApplication);
-    //endregion
-    //region gpu Filters
-    //return new BrightnessFilterTransformation(mApplication);
-    //return new ContrastFilterTransformation(mApplication);
-    //return new InvertFilterTransformation(mApplication);
-    //return new KuwaharaFilterTransformation(mApplication);
-    //return new PixelationFilterTransformation(mApplication);
-    return new SepiaFilterTransformation(mApplication);
-    //return new SketchFilterTransformation(mApplication);
-    //return new SwirlFilterTransformation(mApplication);
-    //return new ToonFilterTransformation(mApplication);
-    //return new VignetteFilterTransformation(mApplication);
-    //endregion
+
+  public static void setBitmapTransformReadArticles(
+      com.bumptech.glide.load.Transformation<Bitmap> transformBitmap) {
+    if (getInstance() != null) getInstance().readArticlesBitmapTransform = transformBitmap;
+  }
+
+  //public static int transform = -1;
+  com.bumptech.glide.load.Transformation<Bitmap> readArticlesBitmapTransform;
+
+  public static com.bumptech.glide.load.Transformation<Bitmap> getBitmapTransformReadArticles() {
+    if (getInstance() != null) {
+      return getInstance().readArticlesBitmapTransform;
+    } else {
+      return new GrayscaleTransformation(mApplication);
+    }
   }
 }

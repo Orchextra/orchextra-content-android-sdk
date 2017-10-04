@@ -21,7 +21,15 @@
       android:scaleType="centerCrop"
       android:adjustViewBounds="true"
       />
-
+  <ImageView
+    android:id="@+id/cell_image_view_overlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="centerCrop"
+    android:adjustViewBounds="true"
+    android:src="@drawable/oc_read_articles_overlay"
+    android:visibility="gone"
+    />
   <FrameLayout
       android:id="@+id/padlock_layout"
       android:layout_width="match_parent"

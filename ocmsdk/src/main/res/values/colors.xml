@@ -2,6 +2,7 @@
 <resources>
   <color name="black">#000</color>
   <color name="white">#000</color>
+  <color name="transparent">#0000</color>
 
   <!-- More content -->
   <color name="oc_background_more_content_layout">#807f7f</color>

@@ -137,11 +137,11 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   }
 
   private UiGridBaseContentData generateWebContentData(String url) {
-    return ContentWebViewGridLayoutView.newInstance(url);
+    return WebViewContentData.newInstance(url);
   }
 
   private UiGridBaseContentData generateWebContentDataWithFederated(ElementCacheRender render) {
-    return ContentWebViewGridLayoutView.newInstance(render);
+    return WebViewContentData.newInstance(render);
   }
 
   @NonNull
@@ -274,8 +274,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return BrowserContentData.newInstance(url,federatedAuthorization);
   }
 
-  private UiBaseContentData generateYoutubeDetailView(String url) {
-    return YoutubeContentData.newInstance(url);
+  private UiBaseContentData generateYoutubeDetailView(String videoId) {
+    return YoutubeContentData.newInstance(videoId);
   }
 
   private UiBaseContentData generateDeepLinkView(String uri) {
