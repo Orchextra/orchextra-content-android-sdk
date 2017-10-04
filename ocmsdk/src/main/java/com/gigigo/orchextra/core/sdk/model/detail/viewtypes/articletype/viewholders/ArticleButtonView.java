@@ -24,6 +24,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   private final Context context;
   private TextView articleTextButton;
   private ImageView articleImageButton;
+  private FrameLayout flFA;
 
   public ArticleButtonView(Context context, ViewGroup parent) {
     super(context, parent, R.layout.view_article_button_item);
@@ -32,6 +33,9 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
     articleTextButton = (TextView) itemView.findViewById(R.id.articleTextButton);
     articleImageButton = (ImageView) itemView.findViewById(R.id.articleImageButton);
+
+    flFA = (FrameLayout) parent.findViewById(R.id.fl_loading_fa);
+    flFA.setVisibility(View.VISIBLE);
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
