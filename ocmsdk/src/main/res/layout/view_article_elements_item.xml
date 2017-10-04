@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/articleItemListLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/oc_bg_article_content_color"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
 
-  <FrameLayout
-      android:id="@+id/fl_loading_fa"
+  <android.support.v7.widget.RecyclerView
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      android:id="@+id/articleItemListLayout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="#99000000"
-      android:visibility="invisible"
+      android:background="@color/oc_bg_article_content_color"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
       >
 
-    <include
-        layout="@layout/progress_red"
-        android:id="@+id/progressFA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        />
-  </FrameLayout>
-</android.support.v7.widget.RecyclerView>
+    <FrameLayout
+        android:id="@+id/fl_loading_fa"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="invisible"
+        >
+
+      <include
+          layout="@layout/progress_red"
+          android:id="@+id/progressFA"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:visibility="gone"
+          />
+    </FrameLayout>
+  </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

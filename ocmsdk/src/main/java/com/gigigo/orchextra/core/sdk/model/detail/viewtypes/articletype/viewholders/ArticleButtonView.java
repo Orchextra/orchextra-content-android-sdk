@@ -34,7 +34,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     articleTextButton = (TextView) itemView.findViewById(R.id.articleTextButton);
     articleImageButton = (ImageView) itemView.findViewById(R.id.articleImageButton);
 
-    flFA = (FrameLayout) itemView.findViewById(R.id.fl_loading_fa);
+    flFA = (FrameLayout) parent.findViewById(R.id.fl_loading_fa);
     flFA.setVisibility(View.VISIBLE);
   }
 
