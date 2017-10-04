@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype;
 
 import android.content.Context;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolderFactory;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
@@ -19,8 +20,11 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhold
 
 public class ArticleContentDataFactory extends BaseViewHolderFactory {
 
-  public ArticleContentDataFactory(Context context) {
+  private final FrameLayout flFA;
+
+  public ArticleContentDataFactory(Context context, FrameLayout flFA) {
     super(context);
+    this.flFA = flFA;
   }
 
   @Override public BaseViewHolder create(Class valueClass, ViewGroup parent) {
@@ -33,7 +37,7 @@ public class ArticleContentDataFactory extends BaseViewHolderFactory {
     } else if (valueClass == ArticleHeaderElement.class) {
       return new ArticleHeaderView(context, parent);
     } else if (valueClass == ArticleButtonElement.class) {
-      return new ArticleButtonView(context, parent);
+      return new ArticleButtonView(context, parent, flFA);
     } else if (valueClass == ArticleBlankElement.class) {
       return new ArticleBlankView(context, parent);
     } else {

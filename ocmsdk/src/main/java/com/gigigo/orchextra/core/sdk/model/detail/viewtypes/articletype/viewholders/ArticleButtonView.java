@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.bumptech.glide.Priority;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
@@ -22,20 +23,20 @@ import com.gigigo.orchextra.ocmsdk.R;
 public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
   private final Context context;
+  private final FrameLayout flFA;
+  private final ProgressBar faLoading;
   private TextView articleTextButton;
   private ImageView articleImageButton;
-  private FrameLayout flFA;
 
-  public ArticleButtonView(Context context, ViewGroup parent) {
+  public ArticleButtonView(Context context, ViewGroup parent, FrameLayout flFA) {
     super(context, parent, R.layout.view_article_button_item);
 
     this.context = context;
+    this.flFA = flFA;
+    faLoading = (ProgressBar) flFA.findViewById(R.id.progressFA);
 
     articleTextButton = (TextView) itemView.findViewById(R.id.articleTextButton);
     articleImageButton = (ImageView) itemView.findViewById(R.id.articleImageButton);
-
-    flFA = (FrameLayout) parent.findViewById(R.id.fl_loading_fa);
-    flFA.setVisibility(View.VISIBLE);
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -53,10 +54,10 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     ViewGroup.LayoutParams lp = getLayoutParams(articleElement);
     articleTextButton.setLayoutParams(lp);
 
-    articleTextButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        processClickListener(articleElement.getElementUrl());
-      }
+    articleTextButton.setOnClickListener(v -> {
+      flFA.setVisibility(View.VISIBLE);
+      faLoading.setVisibility(View.VISIBLE);
+      processClickListener(articleElement.getElementUrl());
     });
   }
 
@@ -73,10 +74,11 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
         paddingRes = R.dimen.ocm_margin_article_small_button;
         break;
     }
-    int paddingHeight = (int) context.getResources().getDimension(R.dimen.ocm_height_article_button);
+    int paddingHeight =
+        (int) context.getResources().getDimension(R.dimen.ocm_height_article_button);
     int padding = (int) context.getResources().getDimension(paddingRes);
-    FrameLayout.LayoutParams
-        lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, paddingHeight);
+    FrameLayout.LayoutParams lp =
+        new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, paddingHeight);
     lp.setMargins(padding, 0, padding, 0);
     return lp;
   }
@@ -94,7 +96,11 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
         .override(realWidthDevice, calculatedHeight)
         .into(articleImageButton);
 
-    articleImageButton.setOnClickListener(v -> processClickListener(articleElement.getElementUrl()));
+    articleImageButton.setOnClickListener(v -> {
+      flFA.setVisibility(View.VISIBLE);
+      faLoading.setVisibility(View.VISIBLE);
+      processClickListener(articleElement.getElementUrl());
+    });
   }
 
   private void processClickListener(String elementUrl) {
