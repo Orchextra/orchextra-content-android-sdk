@@ -131,7 +131,7 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       return true;
     } else if (detailContentDataClass.equals(CustomTabsContentData.class)) {
       launchCustomTabs(((CustomTabsContentData) uiBaseContentData).getUrl(),
-          ((BrowserContentData) uiBaseContentData).getFederatedAuthorization());
+          ((CustomTabsContentData) uiBaseContentData).getFederatedAuthorization());
       OCManager.notifyEvent(OcmEvent.VISIT_URL);
       return true;
     }

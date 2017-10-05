@@ -91,9 +91,7 @@ public class DeviceUtils {
         //asv this is the same that launchUrl
 
         if (federatedAuthorization != null) {
-          if (federatedAuthorization != null
-              && federatedAuthorization.isActive()
-              && Ocm.getQueryStringGenerator() != null) {
+          if (federatedAuthorization.isActive() && Ocm.getQueryStringGenerator() != null) {
 
             Ocm.getQueryStringGenerator().createQueryString(federatedAuthorization, queryString -> {
               if (queryString != null && !queryString.isEmpty()) {

@@ -13,6 +13,7 @@ public class BrowserContentData extends UiBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
   private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
+
   private String url;
   private FederatedAuthorization fedexAuth;
 
