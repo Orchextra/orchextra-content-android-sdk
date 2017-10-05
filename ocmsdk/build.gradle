@@ -144,6 +144,9 @@ dependencies {
 
   compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
 
+  compile project.libraries.vimeoNetworking
+  compile project.libraries.exoplayer
+
   //TEST
   testCompile project.testLibraries.junit
   testCompile project.testLibraries.assertj
