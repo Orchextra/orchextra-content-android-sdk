@@ -7,6 +7,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
+import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
@@ -71,56 +72,72 @@ public class OcmSchemeHandler {
   private void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
       int widthScreen, int heightScreen, WeakReference<ImageView> imageViewToExpandInDetail) {
 
-      ElementCacheType type = cachedElement.getType();
-      ElementCacheRender render = cachedElement.getRender();
+    boolean hasPreview = cachedElement.getPreview() != null;
 
-      switch (type) {
-        case VUFORIA:
-          if (render != null) {
-            processImageRecognitionAction();
-          }
-          break;
-        case SCAN:
-          if (render != null) {
-            processScanAction();
-          }
-          break;
-        case BROWSER:
-          if (render != null) {
-            processCustomTabs(render.getUrl(), render.getFederatedAuth());
-          }
-          break;
-        case EXTERNAL_BROWSER:
-          if (render != null) {
-            processExternalBrowser(render.getUrl(), render.getFederatedAuth());
-          }
-          break;
-        case DEEP_LINK:
-          if (render != null) {
-            processDeepLink(render.getUri());
-          }
-          break;
-        case VIDEO:
-          if (render != null) {
-            processVideo(render.getFormat(), render.getSource());
-          }
-          break;
-        default:
-          ImageView imageView = null;
-          if (imageViewToExpandInDetail != null) {
-            imageView = imageViewToExpandInDetail.get();
-          }
-          openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen, imageView);
-          break;
-    }
-  }
-
-  private void processVideo(String format, String source) {
-    if (TextUtils.isEmpty(source)) {
+    if (hasPreview) {
+      processDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen,
+          imageViewToExpandInDetail);
       return;
     }
 
-    actionHandler.launchYoutubePlayer(source);
+    ElementCacheType type = cachedElement.getType();
+    ElementCacheRender render = cachedElement.getRender();
+
+    switch (type) {
+      case VUFORIA:
+        if (render != null) {
+          processImageRecognitionAction();
+        }
+        break;
+      case SCAN:
+        if (render != null) {
+          processScanAction();
+        }
+        break;
+      case BROWSER:
+        if (render != null) {
+          processCustomTabs(render.getUrl(), render.getFederatedAuth());
+        }
+        break;
+      case EXTERNAL_BROWSER:
+        if (render != null) {
+          processExternalBrowser(render.getUrl(), render.getFederatedAuth());
+        }
+        break;
+      case DEEP_LINK:
+        if (render != null) {
+          processDeepLink(render.getUri());
+        }
+        break;
+      case VIDEO:
+        if (render != null) {
+          processVideo(render.getFormat(), render.getSource());
+        }
+        break;
+      default:
+        processDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen,
+            imageViewToExpandInDetail);
+        break;
+    }
+  }
+
+  private void processDetailActivity(String elementUrl, String urlImageToExpand, int widthScreen,
+      int heightScreen, WeakReference<ImageView> imageViewToExpandInDetail) {
+    ImageView imageView = null;
+    if (imageViewToExpandInDetail != null) {
+      imageView = imageViewToExpandInDetail.get();
+    }
+    openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen, imageView);
+  }
+
+  private void processVideo(VideoFormat format, String source) {
+    if (TextUtils.isEmpty(source) || format == VideoFormat.NONE) {
+      return;
+    } else if (format == VideoFormat.YOUTUBE) {
+      actionHandler.launchYoutubePlayer(source);
+    } else if (format == VideoFormat.VIMEO) {
+      actionHandler.launchVimeoPlayer(source);
+    }
   }
 
   private void processCustomTabs(String url, FederatedAuthorization federatedAuthorization) {
@@ -136,7 +153,7 @@ public class OcmSchemeHandler {
   }
 
   private void processExternalBrowser(String url, FederatedAuthorization federatedAuth) {
-    actionHandler.launchExternalBrowser(url,federatedAuth);
+    actionHandler.launchExternalBrowser(url, federatedAuth);
   }
 
   private void processDeepLink(String uri) {

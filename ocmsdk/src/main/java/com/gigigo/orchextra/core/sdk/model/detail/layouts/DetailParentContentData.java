@@ -16,6 +16,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.CustomTabsContentDat
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.vimeo.VimeoContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -120,6 +121,10 @@ public abstract class DetailParentContentData extends UiBaseContentData {
       launchYoutubePlayer(((YoutubeContentData) uiBaseContentData).getVideoId());
       OCManager.notifyEvent(OcmEvent.PLAY_YOUTUBE);
       return true;
+    } else if (detailContentDataClass.equals(VimeoContentData.class)) {
+      launchVimeoPlayer(((VimeoContentData) uiBaseContentData).getVideoId());
+      OCManager.notifyEvent(OcmEvent.PLAY_VIMEO);
+      return true;
     } else if (detailContentDataClass.equals(DeepLinkContentData.class)) {
       processDeepLink(((DeepLinkContentData) uiBaseContentData).getUri());
       OCManager.notifyEvent(OcmEvent.VISIT_URL);
@@ -143,6 +148,10 @@ public abstract class DetailParentContentData extends UiBaseContentData {
 
   private void launchYoutubePlayer(String videoId) {
     actionHandler.launchYoutubePlayer(videoId);
+  }
+
+  private void launchVimeoPlayer(String videoId) {
+    actionHandler.launchVimeoPlayer(videoId);
   }
 
   private void launchExternalBrowser(String url, FederatedAuthorization fedexA) {

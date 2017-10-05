@@ -16,14 +16,16 @@ import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElement;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleBlankView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleButtonView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleHeaderView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleImageView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleRichTextView;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleVideoView;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleVimeoVideoView;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleYoutubeVideoView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.dto.ArticleBlankElement;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
@@ -56,12 +58,6 @@ public class ArticleContentData extends UiBaseContentData {
 
     flFA.setVisibility(View.INVISIBLE);
     faLoading.setVisibility(View.GONE);
-  }
-
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-
-    init();
   }
 
   @Override public void onDestroy() {
@@ -98,11 +94,6 @@ public class ArticleContentData extends UiBaseContentData {
     }
   }
 
-  private void init() {
-    //articleItemViewContainer.setThumbnailEnabled(thumbnailEnabled);
-    //articleItemViewContainer.addArticleElementList(articleElementList);
-  }
-
   private void initViews(View view) {
     articleItemViewContainer =
         (RecyclerView) view.findViewById(R.id.articleItemListLayout);
@@ -115,7 +106,8 @@ public class ArticleContentData extends UiBaseContentData {
     ArticleContentDataFactory factory = new ArticleContentDataFactory(getContext(), flFA);
     adapter = new BaseRecyclerAdapter(factory);
 
-    adapter.bind(ArticleVideoElement.class, ArticleVideoView.class);
+    adapter.bind(ArticleYoutubeVideoElement.class, ArticleYoutubeVideoView.class);
+    adapter.bind(ArticleVimeoVideoElement.class, ArticleVimeoVideoView.class);
     adapter.bind(ArticleRichTextElement.class, ArticleRichTextView.class);
     adapter.bind(ArticleImageElement.class, ArticleImageView.class);
     adapter.bind(ArticleHeaderElement.class, ArticleHeaderView.class);
@@ -124,15 +116,12 @@ public class ArticleContentData extends UiBaseContentData {
 
     adapter.setMillisIntervalToAvoidDoubleClick(1500);
 
-    //adapter.setItemClickListener(
-    //    (position, view) -> Toast.makeText(getContext(), "Pulsado: "+ position, Toast.LENGTH_SHORT).show());
-
     articleItemViewContainer.setAdapter(adapter);
     articleItemViewContainer.setLayoutManager(new LinearLayoutManager(getContext()));
     articleItemViewContainer.setNestedScrollingEnabled(false);
     articleItemViewContainer.setHasFixedSize(false);
 
-    if (adapter != null && articleElementList != null) {
+    if (articleElementList != null) {
       adapter.addAll(articleElementList);
     }
   }

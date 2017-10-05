@@ -14,6 +14,7 @@ public enum OcmEvent {
   OPEN_IR("OPEN_IR"),
   VISIT_URL("VISIT_URL"),
   PLAY_YOUTUBE("PLAY_YOUTUBE"),
+  PLAY_VIMEO("PLAY_VIMEO"),
   CONTENT_END("CONTENT_END");
 
   public String event;
