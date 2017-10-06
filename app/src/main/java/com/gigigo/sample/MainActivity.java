@@ -95,10 +95,6 @@ public class MainActivity extends AppCompatActivity {
         //Toast.makeText(MainActivity.this, "Delete all data webStorage", Toast.LENGTH_LONG).show();
         //clearDataAndGoToChangeCountryView();
 
-
-        Toast.makeText(MainActivity.this, "Ocm.TestVimeoVideoFeature", Toast.LENGTH_LONG).show();
-
-
         final String CLIENT_ID = "084c3b59bac4ed2e8a08698d3d28071f8bd4f3bf";
         final String CLIENTE_SECRET =
             "gLURPc2Cpcc5nj8ck3DYBt/avOhaYy0mcFTxCsmsyfVa9kJrXOFx6Cxau/CUOX4vZrYS2Y5/9rUJDtSMNgc4rjTNT55dTFlk9q51hlNOAnjg9hjV1UIYZo9cGYS54UON";
@@ -148,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
     Ocm.setOnCustomSchemeReceiver(new OnCustomSchemeReceiver() {
       @Override public void onReceive(String customScheme) {
-        Toast.makeText(MainActivity.this, customScheme, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(MainActivity.this, customScheme, Toast.LENGTH_SHORT).show();
         Orchextra.startScannerActivity();
       }
     });

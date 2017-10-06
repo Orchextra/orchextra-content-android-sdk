@@ -56,7 +56,7 @@ public class VimeoManager {
           mApiClient = VimeoClient.getInstance();
         }
       }
-      //.setCacheDirectory(this.getCacheDir());
+
 
     }
   }
@@ -111,12 +111,12 @@ public class VimeoManager {
                 callback.onSuccess(info);
               } else {
                 callback.onError(new Exception(
-                    "No data retrive form Vimeo video, maybe this is not a video from provided accesstoken account"
+                    "No data retrive from Vimeo video, maybe this is not a video from provided accesstoken account"
                         + videoId));
               }
             } else {
               callback.onError(new Exception(
-                  "No data retrive form Vimeo video, maybe this is not a video from provided accesstoken account"
+                  "No data retrive from Vimeo video, maybe this is not a video from provided accesstoken account"
                       + videoId));
             }
           }

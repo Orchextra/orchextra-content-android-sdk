@@ -5,17 +5,19 @@ import android.support.annotation.Nullable;
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElement;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonSize;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonType;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageAndTextElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleTextAndImageElement;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElement;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElementRender;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleTypeSection;
+import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 
 public class ApiArticleElementMapper implements
     ExternalClassToModelMapper<ApiArticleElement, ArticleElement> {
@@ -55,10 +57,27 @@ public class ApiArticleElementMapper implements
     return null;
   }
 
-  @NonNull private ArticleElement getArticleVideoElement(ApiArticleElementRender render) {
-    ArticleVideoElement element = new ArticleVideoElement();
-    element.setImageUrl(render.getImageUrl());
-    element.setFormat(render.getFormat());
+  private ArticleElement getArticleVideoElement(ApiArticleElementRender render) {
+    VideoFormat videoFormat = VideoFormat.convertStringToType(render.getFormat());
+
+    switch (videoFormat) {
+      case YOUTUBE:
+        return getArticleYoutubeVideoElement(render);
+      case VIMEO:
+        return getArticleVimeoVideoElement(render);
+      default:
+        return null;
+    }
+  }
+
+  private ArticleVimeoVideoElement getArticleVimeoVideoElement(ApiArticleElementRender render) {
+    ArticleVimeoVideoElement element = new ArticleVimeoVideoElement();
+    element.setSource(render.getSource());
+    return element;
+  }
+
+  private ArticleYoutubeVideoElement getArticleYoutubeVideoElement(ApiArticleElementRender render) {
+    ArticleYoutubeVideoElement element = new ArticleYoutubeVideoElement();
     element.setSource(render.getSource());
     return element;
   }

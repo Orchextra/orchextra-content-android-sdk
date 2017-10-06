@@ -12,19 +12,19 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElement;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.ocmsdk.R;
 
-public class ArticleVideoView extends BaseViewHolder<ArticleVideoElement> {
+public class ArticleYoutubeVideoView extends BaseViewHolder<ArticleYoutubeVideoElement> {
 
   private final Context context;
   private ImageView imgPlay;
   private ImageView imgThumb;
   private final ConnectionUtils connectionUtils;
 
-  public ArticleVideoView(Context context, ViewGroup parent) {
+  public ArticleYoutubeVideoView(Context context, ViewGroup parent) {
     super(context, parent, R.layout.view_article_video_item);
 
     connectionUtils = new ConnectionUtilsImp(context);
@@ -34,7 +34,7 @@ public class ArticleVideoView extends BaseViewHolder<ArticleVideoElement> {
     imgThumb = (ImageView) itemView.findViewById(R.id.imgThumb);
   }
 
-  @Override public void bindTo(ArticleVideoElement articleElement, int position) {
+  @Override public void bindTo(ArticleYoutubeVideoElement articleElement, int position) {
 
     View.OnClickListener onYoutubeThumbnailClickListener = v -> {
       if (connectionUtils.hasConnection()) {

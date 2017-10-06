@@ -27,6 +27,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.WebViewContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.ArticleContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.vimeo.VimeoContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.webview.ContentWebViewGridLayoutView;
@@ -204,15 +205,15 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         }
       case BROWSER:
         if (render != null) {
-          return generateCustomTabsDetailView(render.getUrl());
+          return generateCustomTabsDetailView(render.getUrl(), render.getFederatedAuth());
         }
       case EXTERNAL_BROWSER:
         if (render != null) {
-          return generateBrowserDetailView(render.getUrl(),render.getFederatedAuth());
+          return generateBrowserDetailView(render.getUrl(), render.getFederatedAuth());
         }
       case VIDEO:
         if (render != null) {
-          return generateYoutubeDetailView(render.getSource());
+          return generateVideoDetailView(render);
         }
       case DEEP_LINK:
         if (render != null) {
@@ -258,8 +259,9 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return WebViewContentData.newInstance(render);
   }
 
-  private UiBaseContentData generateCustomTabsDetailView(String url) {
-    return CustomTabsContentData.newInstance(url);
+  private UiBaseContentData generateCustomTabsDetailView(String url,
+      FederatedAuthorization federatedAuthorization) {
+    return CustomTabsContentData.newInstance(url, federatedAuthorization);
   }
 
   private UiBaseContentData generateVuforiaDetailView() {
@@ -270,12 +272,27 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return ScanContentData.newInstance();
   }
 
-  private UiBaseContentData generateBrowserDetailView(String url,FederatedAuthorization federatedAuthorization) {
+  private UiBaseContentData generateBrowserDetailView(String url, FederatedAuthorization federatedAuthorization) {
     return BrowserContentData.newInstance(url,federatedAuthorization);
+  }
+
+  private UiBaseContentData generateVideoDetailView(ElementCacheRender render) {
+    switch (render.getFormat()) {
+      case YOUTUBE:
+        return generateYoutubeDetailView(render.getSource());
+      case VIMEO:
+        return  generateVimeoDetailView(render.getSource());
+      default:
+        return null;
+    }
   }
 
   private UiBaseContentData generateYoutubeDetailView(String videoId) {
     return YoutubeContentData.newInstance(videoId);
+  }
+
+  private UiBaseContentData generateVimeoDetailView(String videoId) {
+    return VimeoContentData.newInstance(videoId);
   }
 
   private UiBaseContentData generateDeepLinkView(String uri) {

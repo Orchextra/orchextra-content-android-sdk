@@ -67,7 +67,7 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
   private String thumbBackground;
   private boolean isVertical; //todo
   FrameLayout main_media_frame;
-  ImageView mImageView;
+  ImageView mImageView,mExo_fullscreen_icon;
   boolean isVideoLoaded = false;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
     setContentView(R.layout.exo_player_activity);
     mImageView = (ImageView) findViewById(R.id.imgBackBlur);
     main_media_frame = (FrameLayout) findViewById(R.id.main_media_frame);
-
+    mExo_fullscreen_icon=(ImageView) findViewById(R.id.exo_fullscreen_icon);
     if (savedInstanceState != null) {
       mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
       mResumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION);
@@ -88,8 +88,14 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
       vimeoLink = vimeoInfo.getVideoPath();
       thumbBackground = vimeoInfo.getThumbPath();
       isVertical = vimeoInfo.isVertical;
-      if(isVertical)
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+      if(isVertical) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        mExo_fullscreen_icon.setVisibility(View.GONE);
+      }
+      else
+      {
+        mExo_fullscreen_icon.setVisibility(View.VISIBLE);
+      }
       setBlurBackGround();
       initializeExoPlayer();
     } else {

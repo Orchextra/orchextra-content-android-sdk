@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -145,16 +144,7 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
 
   private void executeExternalAction() {
     checkIfOxActionAndExecute(detailContentData);
-
-    new Handler().postDelayed(new Runnable() {
-      @Override public void run() {
-        appbarLayout.setExpanded(true, false);
-      }
-    }, 1000);
-
-    if (detailContentData instanceof DeepLinkContentData) {
-      closeView();
-    }
+    closeView();
   }
 
   @Override public void onResume() {
@@ -179,7 +169,7 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
     coordinatorLayout.removeAllViews();
     appbarLayout.removeAllViews();
     collapsingToolbar.removeAllViews();
-    
+
     if (previewContentData != null) {
       previewContentData.onDestroy();
     }
@@ -199,7 +189,6 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
     super.onDestroy();
   }
 
-  private int count;
   private void unbindDrawables(View view) {
 
     List<View> viewList = new ArrayList<>();
@@ -224,16 +213,5 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
         ((ViewGroup) child).removeAllViews();
       }
     }
-
-    //if (view.getBackground() != null) {
-    //  view.getBackground().setCallback(null);
-    //}
-    //if (view instanceof ViewGroup) {
-    //  for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-    //    unbindDrawables(((ViewGroup) view).getChildAt(i));
-    //  }
-    //  ((ViewGroup) view).removeAllViews();
-    //}
-    //Log.i("TAG", "Count Coordinator: " + count++);
   }
 }
