@@ -17,6 +17,8 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
+import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -24,7 +26,7 @@ import com.google.android.youtube.player.YouTubePlayer;
 import java.lang.ref.WeakReference;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
-public class YoutubeFragment extends UiBaseContentData {
+public class YoutubeFragment extends UiGridBaseContentData {
 
   private static final String EXTRA_PLAYED_VIDEO = "EXTRA_PLAYED_VIDEO";
   private static final String EXTRA_IS_PLAYING = "EXTRA_IS_PLAYING";
@@ -184,5 +186,33 @@ public class YoutubeFragment extends UiBaseContentData {
     }
 
     super.onSaveInstanceState(outState);
+  }
+
+  @Override public void setFilter(String filter) {
+
+  }
+
+  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
+
+  }
+
+  @Override public void scrollToTop() {
+
+  }
+
+  @Override public void setEmptyView(View emptyView) {
+
+  }
+
+  @Override public void setErrorView(View errorLayoutView) {
+
+  }
+
+  @Override public void setProgressView(View progressView) {
+
+  }
+
+  @Override public void reloadSection() {
+
   }
 }
