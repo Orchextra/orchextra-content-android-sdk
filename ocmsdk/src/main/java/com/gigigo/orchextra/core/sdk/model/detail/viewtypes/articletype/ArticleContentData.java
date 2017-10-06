@@ -11,7 +11,6 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.gigigo.baserecycleradapter.adapter.BaseRecyclerAdapter;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
@@ -39,6 +38,7 @@ public class ArticleContentData extends UiGridBaseContentData {
   private FrameLayout flFA;
   private View faLoading;
   private BaseRecyclerAdapter<ArticleElement> adapter;
+  private ClipToPadding clipToPadding;
 
   public static ArticleContentData newInstance() {
     return new ArticleContentData();
@@ -51,6 +51,7 @@ public class ArticleContentData extends UiGridBaseContentData {
 
     initViews(view);
     initRecyclerView();
+    setClipToPaddingBottomSize(clipToPadding);
 
     return view;
   }
@@ -97,8 +98,7 @@ public class ArticleContentData extends UiGridBaseContentData {
   }
 
   private void initViews(View view) {
-    articleItemViewContainer =
-        (RecyclerView) view.findViewById(R.id.articleItemListLayout);
+    articleItemViewContainer = (RecyclerView) view.findViewById(R.id.articleItemListLayout);
 
     flFA = (FrameLayout) view.findViewById(R.id.flFA);
     faLoading = (ProgressBar) flFA.findViewById(R.id.progressFA);
@@ -137,9 +137,12 @@ public class ArticleContentData extends UiGridBaseContentData {
   }
 
   @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
-    if (articleItemViewContainer != null) {
+    this.clipToPadding = clipToPadding;
+    if (articleItemViewContainer != null
+        && clipToPadding != null
+        && clipToPadding != ClipToPadding.PADDING_NONE) {
       articleItemViewContainer.setClipToPadding(false);
-      articleItemViewContainer.setPadding(0, 0, 0, clipToPadding.getPadding());
+      articleItemViewContainer.setPadding(0, 0, 0, 250 / clipToPadding.getPadding());
     }
   }
 
