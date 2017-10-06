@@ -27,15 +27,17 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhold
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleVimeoVideoView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleYoutubeVideoView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.dto.ArticleBlankElement;
+import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
+import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
 
-public class ArticleContentData extends UiBaseContentData {
+public class ArticleContentData extends UiGridBaseContentData {
 
   private List<ArticleElement> articleElementList;
   private RecyclerView articleItemViewContainer;
   private FrameLayout flFA;
-  private ProgressBar faLoading;
+  private View faLoading;
   private BaseRecyclerAdapter<ArticleElement> adapter;
 
   public static ArticleContentData newInstance() {
@@ -128,5 +130,42 @@ public class ArticleContentData extends UiBaseContentData {
 
   public void addItems(List<ArticleElement> articleElementList) {
     this.articleElementList = articleElementList;
+  }
+
+  @Override public void setFilter(String filter) {
+
+  }
+
+  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
+    if (articleItemViewContainer != null) {
+      articleItemViewContainer.setClipToPadding(false);
+      articleItemViewContainer.setPadding(0, 0, 0, clipToPadding.getPadding());
+    }
+  }
+
+  @Override public void scrollToTop() {
+    if (articleItemViewContainer != null) {
+      articleItemViewContainer.scrollTo(0, 0);
+    }
+  }
+
+  @Override public void setEmptyView(View emptyView) {
+
+  }
+
+  @Override public void setErrorView(View errorLayoutView) {
+
+  }
+
+  @Override public void setProgressView(View progressView) {
+    if (progressView != null) {
+      faLoading = progressView;
+    }
+  }
+
+  @Override public void reloadSection() {
+    if (adapter != null) {
+      adapter.notifyDataSetChanged();
+    }
   }
 }
