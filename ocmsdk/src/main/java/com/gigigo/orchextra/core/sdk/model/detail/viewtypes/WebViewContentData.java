@@ -341,11 +341,11 @@ public class WebViewContentData extends UiGridBaseContentData {
   }
 
   @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
-    //this.clipToPadding = clipToPadding;
-    //if (webView != null && clipToPadding != null && clipToPadding != ClipToPadding.PADDING_NONE) {
-    //  webView.setClipToPadding(false);
-    //  webView.setPadding(0, 0, 0, 250 / clipToPadding.getPadding());
-    //}
+    this.clipToPadding = clipToPadding;
+    if (webView != null && clipToPadding != null && clipToPadding != ClipToPadding.PADDING_NONE) {
+      webView.setClipToPadding(false);
+      webView.setPadding(0, 0, 0, 250 / clipToPadding.getPadding());
+    }
   }
 
   @Override public void scrollToTop() {
