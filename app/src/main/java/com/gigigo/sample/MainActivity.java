@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
       new TabLayout.OnTabSelectedListener() {
         @Override public void onTabSelected(TabLayout.Tab tab) {
           viewpager.setCurrentItem(tab.getPosition());
-          ScreenSlidePageFragment frag=  ((ScreenSlidePageFragment)adapter.getItem(viewpager.getCurrentItem()));
+          ScreenSlidePageFragment frag =
+              ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem()));
           frag.reloadSection();
         }
 
@@ -39,8 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override public void onTabReselected(TabLayout.Tab tab) {
           viewpager.setCurrentItem(tab.getPosition());
-          ((ScreenSlidePageFragment)adapter.getItem(viewpager.getCurrentItem())).reloadSection();
-
+          ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem())).reloadSection();
         }
       };
 
@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
       //    + OCManager.transform, Toast.LENGTH_LONG).show();
       //OCManager.transform+=1;
     }
-
   }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +91,24 @@ public class MainActivity extends AppCompatActivity {
 
     fabClean.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        Toast.makeText(MainActivity.this, "Delete all data webStorage", Toast.LENGTH_LONG).show();
-         clearDataAndGoToChangeCountryView();
+        //oldcode
+        //Toast.makeText(MainActivity.this, "Delete all data webStorage", Toast.LENGTH_LONG).show();
+        //clearDataAndGoToChangeCountryView();
+
+
+        Toast.makeText(MainActivity.this, "Ocm.TestVimeoVideoFeature", Toast.LENGTH_LONG).show();
+
+
+        final String CLIENT_ID = "084c3b59bac4ed2e8a08698d3d28071f8bd4f3bf";
+        final String CLIENTE_SECRET =
+            "gLURPc2Cpcc5nj8ck3DYBt/avOhaYy0mcFTxCsmsyfVa9kJrXOFx6Cxau/CUOX4vZrYS2Y5/9rUJDtSMNgc4rjTNT55dTFlk9q51hlNOAnjg9hjV1UIYZo9cGYS54UON";
+        final String SCOPE = "private public video_files";
+
+        final String VERTICAL_VIDEO="237059608";
+        final String VIDEO_ID ="234291582";// "236232109";
+        final String ACCESS_TOKEN = "50163590b4402cceefb2c78a7aba7093";
+
+        Ocm.TestVimeoVideoFeature(MainActivity.this, ACCESS_TOKEN, VIDEO_ID);
       }
     });
 
@@ -125,8 +140,9 @@ public class MainActivity extends AppCompatActivity {
       }
 
       @Override public void onCredentailError(String code) {
-        Snackbar.make(tabLayout, "No Internet Connection: " + code +"\n check Credentials-Enviroment", Snackbar.LENGTH_INDEFINITE)
-            .show();
+        Snackbar.make(tabLayout,
+            "No Internet Connection: " + code + "\n check Credentials-Enviroment",
+            Snackbar.LENGTH_INDEFINITE).show();
       }
     });
 

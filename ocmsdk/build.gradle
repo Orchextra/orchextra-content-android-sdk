@@ -144,6 +144,8 @@ dependencies {
 
   compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
 
+  compile project(':vimeosdk')
+
   //TEST
   testCompile project.testLibraries.junit
   testCompile project.testLibraries.assertj

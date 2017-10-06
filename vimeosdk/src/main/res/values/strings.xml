@@ -1,0 +1,9 @@
+<resources>
+  <string name="app_name">vimeoSdk</string>
+  <!--creo q los deeplink no se utilizan-->
+  <string name="deeplink_redirect_scheme">testlib</string>
+  <string name="deeplink_redirect_host">vimeonetworktestlib.com</string>
+
+  <!--El token debe ir en el string de ocm, woah...-->
+  <string name="nekot_ssecca">50163590b4402cceefb2c78a7aba7093</string>
+</resources>
