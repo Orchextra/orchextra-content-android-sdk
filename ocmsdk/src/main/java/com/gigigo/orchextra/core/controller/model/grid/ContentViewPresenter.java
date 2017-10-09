@@ -82,14 +82,14 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
     ocmController.getSection(false, section, imagesToDownload,
         new OcmController.GetSectionControllerCallback() {
-          @Override public void onGetSectionLoaded(ContentData contentData) {
-            ContentItem contentItem = contentData.getContent();
+          @Override public void onGetSectionLoaded(ContentData cachedContentData) {
+            ContentItem contentItem = cachedContentData.getContent();
             renderContentItem(contentItem);
 
             ocmController.getSection(true, section, imagesToDownload,
                 new OcmController.GetSectionControllerCallback() {
-                  @Override public void onGetSectionLoaded(ContentData contentData1) {
-                    checkNewContent(contentData, contentData1);
+                  @Override public void onGetSectionLoaded(ContentData newContentData) {
+                    checkNewContent(cachedContentData, newContentData);
                   }
 
                   @Override public void onGetSectionFails(Exception e) {
