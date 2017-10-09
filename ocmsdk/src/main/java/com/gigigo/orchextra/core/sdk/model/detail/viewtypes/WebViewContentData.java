@@ -124,7 +124,6 @@ public class WebViewContentData extends UiGridBaseContentData {
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    setClipToPaddingBottomSize(clipToPadding);
     init();
   }
 
@@ -191,6 +190,8 @@ public class WebViewContentData extends UiGridBaseContentData {
                   && AndroidSdkVersion.hasJellyBean16()) {
                 webView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
               }
+
+              setClipToPaddingBottomSize(clipToPadding);
             }
           });
     }
@@ -341,10 +342,11 @@ public class WebViewContentData extends UiGridBaseContentData {
   }
 
   @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
-    this.clipToPadding = clipToPadding;
+      this.clipToPadding = clipToPadding;
     if (webView != null && clipToPadding != null && clipToPadding != ClipToPadding.PADDING_NONE) {
       webView.setClipToPadding(false);
-      webView.setPadding(0, 0, 0, 250 / clipToPadding.getPadding());
+      //webView.setPadding(0, 0, 0, 400);
+      webView.loadUrl("javascript:(function(){ document.body.style.paddingBottom = '200px'})();");
     }
   }
 
