@@ -345,8 +345,8 @@ public class WebViewContentData extends UiGridBaseContentData {
       this.clipToPadding = clipToPadding;
     if (webView != null && clipToPadding != null && clipToPadding != ClipToPadding.PADDING_NONE) {
       webView.setClipToPadding(false);
-      //webView.setPadding(0, 0, 0, 400);
-      webView.loadUrl("javascript:(function(){ document.body.style.paddingBottom = '200px'})();");
+      webView.setPadding(0, 0, 0, 400);
+      //webView.loadUrl("javascript:(function(){ document.body.style.paddingBottom = '200px'})();");
     }
   }
 
