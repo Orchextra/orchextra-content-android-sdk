@@ -10,6 +10,8 @@
       android:id="@+id/imgThumb"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+    android:maxHeight="192dp"
+    android:scaleType="center"
       android:adjustViewBounds="true"
       />
   <ImageView

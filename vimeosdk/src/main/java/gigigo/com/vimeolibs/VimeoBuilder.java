@@ -5,12 +5,6 @@ package gigigo.com.vimeolibs;
  */
 
 public class VimeoBuilder {
-  //String videoId = "";
-  //boolean isMobileConection = false;
-  //boolean isWifiConnection = false;
-  //boolean isFastConnection = false;
-  //VimeoCallback callback;
-
   String noket = "";
   String client_id = "";
   String client_secret = "";
