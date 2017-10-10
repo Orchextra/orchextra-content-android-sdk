@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.controller.model.grid;
 
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -86,16 +87,29 @@ public class ContentViewPresenter extends Presenter<ContentView> {
             ContentItem contentItem = cachedContentData.getContent();
             renderContentItem(contentItem);
 
-            ocmController.getSection(true, section, imagesToDownload,
-                new OcmController.GetSectionControllerCallback() {
-                  @Override public void onGetSectionLoaded(ContentData newContentData) {
-                    checkNewContent(cachedContentData, newContentData);
-                  }
+            waitSomeSecondUntilCheckNewContent(cachedContentData);
 
-                  @Override public void onGetSectionFails(Exception e) {
-                    renderError();
-                  }
-                });
+          }
+
+          @Override public void onGetSectionFails(Exception e) {
+            renderError();
+          }
+        });
+  }
+
+  private void waitSomeSecondUntilCheckNewContent(ContentData cachedContentData) {
+    new Handler().postDelayed(new Runnable() {
+      @Override public void run() {
+        checkNewContent(cachedContentData);
+      }
+    }, 5000);
+  }
+
+  private void checkNewContent(ContentData cachedContentData) {
+    ocmController.getSection(true, section, imagesToDownload,
+        new OcmController.GetSectionControllerCallback() {
+          @Override public void onGetSectionLoaded(ContentData newContentData) {
+            checkNewContent(cachedContentData, newContentData);
           }
 
           @Override public void onGetSectionFails(Exception e) {
