@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contentLayoutContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
   <com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView
       android:id="@+id/ocm_webView"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"/>
+      android:layout_height="wrap_content"
+      >
+  </com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView>
 
-  <include layout="@layout/progress_red"
+  <include
+      layout="@layout/progress_red"
+      android:id="@+id/webview_progress"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:id="@+id/webview_progress"/>
+      />
 
 </FrameLayout>
