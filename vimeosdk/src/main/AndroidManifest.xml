@@ -1,0 +1,16 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  package="gigigo.com.vimeolibs">
+
+  <application
+    android:allowBackup="false"
+    android:supportsRtl="true"
+    tools:replace="android:allowBackup">
+    <activity
+      android:name=".VimeoExoPlayerActivity"
+      android:configChanges="orientation|screenSize"
+       >
+    </activity>
+  </application>
+
+</manifest>
