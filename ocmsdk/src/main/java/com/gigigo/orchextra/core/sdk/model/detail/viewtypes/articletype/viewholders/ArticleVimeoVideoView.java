@@ -14,6 +14,7 @@ import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElement;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
+import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import com.gigigo.orchextra.ocmsdk.R;
 import gigigo.com.vimeolibs.VimeoBuilder;
 import gigigo.com.vimeolibs.VimeoCallback;
@@ -30,7 +31,7 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
   private VimeoInfo mVimeoInfo;
 
   public ArticleVimeoVideoView(Context context, ViewGroup parent) {
-    super(context, parent, R.layout.view_article_video_item);
+    super(context, parent, R.layout.view_article_video_item_vimeo);
 
     connectionUtils = new ConnectionUtilsImp(context);
 
@@ -43,8 +44,7 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
     //todo truchingvimeo
     View.OnClickListener onVimeoThumbnailClickListener = v -> {
       if (connectionUtils.hasConnection()) {
-        //todo whats is this--> VimeoContentDataActivity.open(context.getApplicationContext(), articleElement.getSource());
-        if (mVimeoInfo != null) VimeoExoPlayerActivity.open(context, mVimeoInfo);
+               if (mVimeoInfo != null) VimeoExoPlayerActivity.open(context, mVimeoInfo);
       } else {
         Snackbar.make(imgThumb, R.string.oc_error_content_not_available_without_internet,
             Toast.LENGTH_SHORT).show();
@@ -52,7 +52,7 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
     };
     //todo truchingvimeo
     //poner en dagger el resto ok
-    VimeoBuilder builder = new VimeoBuilder("50163590b4402cceefb2c78a7aba7093");
+    VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
     VimeoManager vmManager = new VimeoManager(builder);
     ConnectionUtilsImp conn = new ConnectionUtilsImp(context);
 

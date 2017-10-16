@@ -16,6 +16,7 @@ def OCM_SDK_VERSION = "OCM_SDK_VERSION";
 
 def YOUTUBE_DEVELOPER_KEY = "YOUTUBE_DEVELOPER_KEY"
 
+def VIMEO_ACCESS_TOKEN = "VIMEO_ACCESS_TOKEN"
 android {
   compileSdkVersion project.androidCompileSdkVersion
   buildToolsVersion project.androidBuildToolsVersion
@@ -57,7 +58,8 @@ android {
       setVariantBuildConfigField(variant, project.retrofitLog, RETROFIT_LOG, BOOLEAN)
       setVariantBuildConfigField(variant, project.youtubeDeveloperKey,
           YOUTUBE_DEVELOPER_KEY, STRING)
-
+      setVariantBuildConfigField(variant, project.vimeoAccessToken,
+          VIMEO_ACCESS_TOKEN, STRING)
       println("--**********************************************************--")
     }
   }

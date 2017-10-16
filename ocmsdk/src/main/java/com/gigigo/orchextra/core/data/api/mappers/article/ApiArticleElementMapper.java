@@ -17,7 +17,7 @@ import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonSize;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonType;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleTypeSection;
-import java.util.Random;
+import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 
 public class ApiArticleElementMapper
     implements ExternalClassToModelMapper<ApiArticleElement, ArticleElement> {
@@ -59,22 +59,21 @@ public class ApiArticleElementMapper
 
   private ArticleElement getArticleVideoElement(ApiArticleElementRender render) {
     //todo truchingvimeo
-    return getArticleVimeoVideoElementFAKE(render);
-/*
+    //return getArticleVimeoVideoElementFAKE(render);
+
     VideoFormat videoFormat = VideoFormat.convertStringToType(render.getFormat());
 
     switch (videoFormat) {
       case YOUTUBE:
-
-
         return getArticleYoutubeVideoElement(render);
       case VIMEO:
         return getArticleVimeoVideoElement(render);
       default:
         return null;
-    }*/
+    }
   }
-  //todo truchingvimeo
+
+  /* truchingvimeo
   @Deprecated
   private ArticleVimeoVideoElement getArticleVimeoVideoElementFAKE(ApiArticleElementRender render) {
     ArticleVimeoVideoElement element = new ArticleVimeoVideoElement();
@@ -89,7 +88,7 @@ public class ApiArticleElementMapper
 
     return element;
   }
-
+*/
   private ArticleVimeoVideoElement getArticleVimeoVideoElement(ApiArticleElementRender render) {
     ArticleVimeoVideoElement element = new ArticleVimeoVideoElement();
     element.setSource(render.getSource());
