@@ -11,7 +11,6 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.gigigo.baserecycleradapter.adapter.BaseRecyclerAdapter;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
@@ -27,16 +26,19 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhold
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleVimeoVideoView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleYoutubeVideoView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.dto.ArticleBlankElement;
+import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
+import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
 
-public class ArticleContentData extends UiBaseContentData {
+public class ArticleContentData extends UiGridBaseContentData {
 
   private List<ArticleElement> articleElementList;
   private RecyclerView articleItemViewContainer;
   private FrameLayout flFA;
-  private ProgressBar faLoading;
+  private View faLoading;
   private BaseRecyclerAdapter<ArticleElement> adapter;
+  private ClipToPadding clipToPadding;
 
   public static ArticleContentData newInstance() {
     return new ArticleContentData();
@@ -49,6 +51,7 @@ public class ArticleContentData extends UiBaseContentData {
 
     initViews(view);
     initRecyclerView();
+    setClipToPaddingBottomSize(clipToPadding);
 
     return view;
   }
@@ -95,8 +98,7 @@ public class ArticleContentData extends UiBaseContentData {
   }
 
   private void initViews(View view) {
-    articleItemViewContainer =
-        (RecyclerView) view.findViewById(R.id.articleItemListLayout);
+    articleItemViewContainer = (RecyclerView) view.findViewById(R.id.articleItemListLayout);
 
     flFA = (FrameLayout) view.findViewById(R.id.flFA);
     faLoading = (ProgressBar) flFA.findViewById(R.id.progressFA);
@@ -128,5 +130,45 @@ public class ArticleContentData extends UiBaseContentData {
 
   public void addItems(List<ArticleElement> articleElementList) {
     this.articleElementList = articleElementList;
+  }
+
+  @Override public void setFilter(String filter) {
+
+  }
+
+  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
+    this.clipToPadding = clipToPadding;
+    if (articleItemViewContainer != null
+        && clipToPadding != null
+        && clipToPadding != ClipToPadding.PADDING_NONE) {
+      articleItemViewContainer.setClipToPadding(false);
+      articleItemViewContainer.setPadding(0, 0, 0, 250 / clipToPadding.getPadding());
+    }
+  }
+
+  @Override public void scrollToTop() {
+    if (articleItemViewContainer != null) {
+      articleItemViewContainer.scrollTo(0, 0);
+    }
+  }
+
+  @Override public void setEmptyView(View emptyView) {
+
+  }
+
+  @Override public void setErrorView(View errorLayoutView) {
+
+  }
+
+  @Override public void setProgressView(View progressView) {
+    if (progressView != null) {
+      faLoading = progressView;
+    }
+  }
+
+  @Override public void reloadSection() {
+    if (adapter != null) {
+      adapter.notifyDataSetChanged();
+    }
   }
 }

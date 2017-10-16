@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.controller.model.grid;
 
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -82,20 +83,33 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
     ocmController.getSection(false, section, imagesToDownload,
         new OcmController.GetSectionControllerCallback() {
-          @Override public void onGetSectionLoaded(ContentData contentData) {
-            ContentItem contentItem = contentData.getContent();
+          @Override public void onGetSectionLoaded(ContentData cachedContentData) {
+            ContentItem contentItem = cachedContentData.getContent();
             renderContentItem(contentItem);
 
-            ocmController.getSection(true, section, imagesToDownload,
-                new OcmController.GetSectionControllerCallback() {
-                  @Override public void onGetSectionLoaded(ContentData contentData1) {
-                    checkNewContent(contentData, contentData1);
-                  }
+            waitSomeSecondUntilCheckNewContent(cachedContentData);
 
-                  @Override public void onGetSectionFails(Exception e) {
-                    renderError();
-                  }
-                });
+          }
+
+          @Override public void onGetSectionFails(Exception e) {
+            renderError();
+          }
+        });
+  }
+
+  private void waitSomeSecondUntilCheckNewContent(ContentData cachedContentData) {
+    new Handler().postDelayed(new Runnable() {
+      @Override public void run() {
+        checkNewContent(cachedContentData);
+      }
+    }, 5000);
+  }
+
+  private void checkNewContent(ContentData cachedContentData) {
+    ocmController.getSection(true, section, imagesToDownload,
+        new OcmController.GetSectionControllerCallback() {
+          @Override public void onGetSectionLoaded(ContentData newContentData) {
+            checkNewContent(cachedContentData, newContentData);
           }
 
           @Override public void onGetSectionFails(Exception e) {
@@ -287,9 +301,11 @@ public class ContentViewPresenter extends Presenter<ContentView> {
           new OcmController.GetDetailControllerCallback() {
             @Override public void onGetDetailLoaded(ElementCache elementCache) {
               String imageUrlToExpandInPreview = null;
-              if (elementCache != null && elementCache.getPreview() != null) {
-                imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
-              }
+              //if (elementCache != null && elementCache.getPreview() != null) {
+              //  imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
+              //}
+
+              imageUrlToExpandInPreview = element.getSectionView().getImageUrl();
 
               if (getView() != null) {
                 OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);

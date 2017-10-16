@@ -28,7 +28,7 @@ public class OcmControllerImp implements OcmController {
       PriorityScheduler.Priority.MEDIUM;
 
   private static final PriorityScheduler.Priority PRIORITY_DETAIL =
-      PriorityScheduler.Priority.HIGHEST;
+      PriorityScheduler.Priority.HIGH;
 
   private static final PriorityScheduler.Priority PRIORITY_SEARCH =
       PriorityScheduler.Priority.MEDIUM;
@@ -66,7 +66,7 @@ public class OcmControllerImp implements OcmController {
   //region new
   @Override public void getMenu(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
     getMenus.execute(new MenuObserver(getMenusCallback),
-        GetMenus.Params.forForceReload(forceReload), PRIORITY_MENUS);
+        GetMenus.Params.forForceReload(forceReload), forceReload ? PRIORITY_MENUS : PriorityScheduler.Priority.HIGHEST);
   }
 
   @Override
@@ -82,7 +82,7 @@ public class OcmControllerImp implements OcmController {
           if (url != null) {
             getSection.execute(new SectionObserver(getSectionControllerCallback),
                 GetSection.Params.forSection(forceReload, url, imagesToDownload),
-                PRIORITY_SECTIONS);
+                forceReload ? PRIORITY_SECTIONS : PriorityScheduler.Priority.HIGHEST);
           } else {
             getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(
                 "elementCache.getRender().getContentUrl() IS NULL"));
@@ -101,7 +101,7 @@ public class OcmControllerImp implements OcmController {
       GetDetailControllerCallback getDetailControllerCallback) {
     String slug = getSlug(elementUrl);
     getDetail.execute(new DetailObserver(getDetailControllerCallback),
-        GetDetail.Params.forDetail(forceReload, slug), PRIORITY_DETAIL);
+        GetDetail.Params.forDetail(forceReload, slug), forceReload ? PRIORITY_DETAIL : PriorityScheduler.Priority.HIGHEST);
   }
 
   @Override
