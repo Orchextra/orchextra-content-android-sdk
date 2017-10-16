@@ -162,8 +162,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     if (!TextUtils.isEmpty(url)) {
       String generateImageUrl = ImageGenerator.generateImageUrl(url, width, height);
 
-      //supportPostponeEnterTransition();
-      //new Handler().postDelayed(this::supportStartPostponedEnterTransition, 1000);
+      supportPostponeEnterTransition();
 
       OcmImageLoader.load(this, generateImageUrl)
           .override(width, height)
@@ -174,26 +173,17 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
             @Override
             public boolean onException(Exception e, Object model, Target<GlideDrawable> target,
                 boolean isFirstResource) {
-              //supportStartPostponedEnterTransition();
+              supportStartPostponedEnterTransition();
               return false;
             }
 
             @Override public boolean onResourceReady(GlideDrawable resource, Object model,
                 Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-              //supportStartPostponedEnterTransition();
+              supportStartPostponedEnterTransition();
               return false;
             }
           })
           .into(animationImageView);
-    }
-  }
-
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-    if (requestCode == YoutubeWebviewActivity.RESULT_CODE_YOUTUBE_PLAYER && uiContentView != null) {
-      //  uiContentView.setTopScroll();
-    } else {
-      super.onActivityResult(requestCode, resultCode, data);
     }
   }
 

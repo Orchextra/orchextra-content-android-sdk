@@ -301,14 +301,15 @@ public class ContentViewPresenter extends Presenter<ContentView> {
           new OcmController.GetDetailControllerCallback() {
             @Override public void onGetDetailLoaded(ElementCache elementCache) {
               String imageUrlToExpandInPreview = null;
-              if (elementCache != null && elementCache.getPreview() != null) {
-                imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
-              }
+              //if (elementCache != null && elementCache.getPreview() != null) {
+              //  imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
+              //}
+
+              imageUrlToExpandInPreview = element.getSectionView().getImageUrl();
 
               if (getView() != null) {
                 OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
                 OCManager.addArticleToReadedArticles(element.getSlug());
-                System.out.println("CELL_CLICKED: "+ element.getSlug());
                 getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
                     viewWeakReference.get());
               }
