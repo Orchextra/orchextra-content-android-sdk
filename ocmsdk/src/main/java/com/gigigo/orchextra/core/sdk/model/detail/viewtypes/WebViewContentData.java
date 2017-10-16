@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.MimeTypeMap;
@@ -23,15 +22,14 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.federatedAuth.FAUtils;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -46,14 +44,13 @@ public class WebViewContentData extends UiGridBaseContentData {
 
   private static final String EXTRA_URL = "EXTRA_URL";
   private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
-  private static final int WAITED_FINISH_LOAD_WEB = 15 * 1000;
+  public static final float PADDING_CONTAINER = 600f;
 
   private View mView;
   private TouchyWebView webView;
   private View progress;
-  private long timeToLoad;
-  private ClipToPadding clipToPadding;
-  private FrameLayout contentLayoutContainer;
+  private LinearLayout transparentClipToPaddingBar;
+  private ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
 
   public static WebViewContentData newInstance(ElementCacheRender render) {
     WebViewContentData webViewElements = new WebViewContentData();
@@ -106,10 +103,9 @@ public class WebViewContentData extends UiGridBaseContentData {
     // Our B plan: guessing from from url
     try {
       return URLConnection.guessContentTypeFromName(url);
-    } catch (Exception ignored) {
+    } catch (Exception e) {
+      return null;
     }
-
-    return null;
   }
 
   @Nullable @Override
@@ -119,7 +115,8 @@ public class WebViewContentData extends UiGridBaseContentData {
 
     webView = (TouchyWebView) mView.findViewById(R.id.ocm_webView);
     progress = mView.findViewById(R.id.webview_progress);
-    contentLayoutContainer = (FrameLayout) mView.findViewById(R.id.contentLayoutContainer);
+    transparentClipToPaddingBar =
+        (LinearLayout) mView.findViewById(R.id.transparentClipToPaddingBar);
 
     return mView;
   }
@@ -131,7 +128,6 @@ public class WebViewContentData extends UiGridBaseContentData {
   }
 
   @Override public void onDestroy() {
-
     if (mView != null) {
       unbindDrawables(mView);
       System.gc();
@@ -168,38 +164,6 @@ public class WebViewContentData extends UiGridBaseContentData {
     loadUrl();
   }
 
-  //@TargetApi(Build.VERSION_CODES.JELLY_BEAN) private void setHeightWebview() {
-  //  if (webView != null) {
-  //    webView.getViewTreeObserver()
-  //        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-  //          @Override public void onGlobalLayout() {
-  //
-  //            //int heightWebview = webView.getContentHeight();
-  //            //
-  //            //int heightDevice = DeviceUtils.calculateHeightDevice(getContext());
-  //            //
-  //            //LinearLayout.LayoutParams lp;
-  //            //if (heightWebview < heightDevice) {
-  //            //  lp =
-  //            //      new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightDevice);
-  //            //} else {
-  //            //  lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-  //            //      heightWebview);
-  //            //}
-  //            //
-  //            //webView.setLayoutParams(lp);
-  //
-  //            //if (timeToLoad + WAITED_FINISH_LOAD_WEB > System.currentTimeMillis()
-  //            //    && AndroidSdkVersion.hasJellyBean16()) {
-  //            //  webView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-  //            //}
-  //
-  //            setClipToPaddingBottomSize(clipToPadding);
-  //          }
-  //        });
-  //  }
-  //}
-
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN) private void initWebView() {
     JsHandler jsInterface = new JsHandler(webView);
     webView.setClickable(true);
@@ -230,16 +194,12 @@ public class WebViewContentData extends UiGridBaseContentData {
     });
 
     webView.setWebViewClient(new WebViewClient() {
-      @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        super.onPageStarted(view, url, favicon);
-
-        timeToLoad = System.currentTimeMillis();
-      }
-
       @Override public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
 
         showProgressView(false);
+
+        //setClipToPaddingBottomSize(clipToPadding);
       }
 
       @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -258,12 +218,9 @@ public class WebViewContentData extends UiGridBaseContentData {
       }
     });
 
-    webView.setDownloadListener(new DownloadListener() {
-      @Override public void onDownloadStart(String url, String userAgent, String contentDisposition,
-          String mimetype, long contentLength) {
-        getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-      }
-    });
+    webView.setDownloadListener(
+        (url, userAgent, contentDisposition, mimetype, contentLength) -> getContext().startActivity(
+            new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
   }
 
   private boolean launchPdfReader(Uri url, String mimeType) {
@@ -341,20 +298,31 @@ public class WebViewContentData extends UiGridBaseContentData {
 
   }
 
+  @Override public void onResume() {
+    super.onResume();
+    //setClipToPaddingBottomSize(clipToPadding);
+  }
+
   @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
-    this.clipToPadding = clipToPadding;
-
-    if (webView != null && clipToPadding != null && clipToPadding != ClipToPadding.PADDING_NONE) {
-      webView.setClipToPadding(false);
-      webView.setPadding(0, 0, 0, 3000);
-
-      FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-          ViewGroup.LayoutParams.MATCH_PARENT);
-      lp.bottomMargin = 3000;
-      webView.setLayoutParams(lp);
-
-      webView.loadUrl("javascript:(function(){ document.body.style.paddingBottom = '3000px'})();");
-    }
+    //this.clipToPadding = clipToPadding;
+    //
+    //if (transparentClipToPaddingBar != null && clipToPadding != ClipToPadding.PADDING_NONE) {
+    //  transparentClipToPaddingBar.getViewTreeObserver()
+    //      .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+    //        @Override public boolean onPreDraw() {
+    //          int padding = (int) (PADDING_CONTAINER / clipToPadding.getPadding());
+    //
+    //          RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+    //              ViewGroup.LayoutParams.MATCH_PARENT, padding);
+    //
+    //          transparentClipToPaddingBar.setLayoutParams(lp);
+    //
+    //          transparentClipToPaddingBar.getViewTreeObserver().removeOnPreDrawListener(this);
+    //
+    //          return true;
+    //        }
+    //      });
+    //}
   }
 
   @Override public void scrollToTop() {
