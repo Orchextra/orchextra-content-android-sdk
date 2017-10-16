@@ -19,4 +19,5 @@ project.ext {
   youtubeDeveloperKey = [debug  : googleKeyDebug,
                          release: googleKey
   ]
+  vimeoAccessToken='50163590b4402cceefb2c78a7aba7093'
 }

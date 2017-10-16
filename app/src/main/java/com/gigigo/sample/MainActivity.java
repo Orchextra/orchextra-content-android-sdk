@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         final String VIDEO_ID ="234291582";// "236232109";
         final String ACCESS_TOKEN = "50163590b4402cceefb2c78a7aba7093";
 
-        Ocm.TestVimeoVideoFeature(MainActivity.this, ACCESS_TOKEN, VIDEO_ID);
+        Ocm.TestVimeoVideoFeature(MainActivity.this, ACCESS_TOKEN, VERTICAL_VIDEO);
       }
     });
 

@@ -309,6 +309,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
               if (getView() != null) {
                 OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
                 OCManager.addArticleToReadedArticles(element.getSlug());
+                System.out.println("CELL_CLICKED: " + element.getSlug());
                 getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
                     viewWeakReference.get());
               }

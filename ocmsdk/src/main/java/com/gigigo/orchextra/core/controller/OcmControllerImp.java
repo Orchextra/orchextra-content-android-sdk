@@ -114,6 +114,7 @@ public class OcmControllerImp implements OcmController {
       final ClearCacheCallback clearCacheCallback) {
     clearCache.execute(new ClearCacheObserver(clearCacheCallback),
         ClearCache.Params.create(images, data), PRIORITY_CLEAR);
+
   }
 
   //end region

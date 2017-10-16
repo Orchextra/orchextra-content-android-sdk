@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -65,17 +66,22 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
   private long mResumePosition;
   private String vimeoLink;
   private String thumbBackground;
-  private boolean isVertical; //todo
+  private boolean isVertical;
   FrameLayout main_media_frame;
-  ImageView mImageView,mExo_fullscreen_icon;
+  ImageView mImageView, mExo_fullscreen_icon;
   boolean isVideoLoaded = false;
+  //ProgressDialog progDailog;
+  ProgressBar mPbLoading;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.exo_player_activity);
     mImageView = (ImageView) findViewById(R.id.imgBackBlur);
     main_media_frame = (FrameLayout) findViewById(R.id.main_media_frame);
-    mExo_fullscreen_icon=(ImageView) findViewById(R.id.exo_fullscreen_icon);
+    mExo_fullscreen_icon = (ImageView) findViewById(R.id.exo_fullscreen_icon);
+
+    mPbLoading = (ProgressBar) findViewById(R.id.pbLoading);
+
     if (savedInstanceState != null) {
       mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
       mResumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION);
@@ -88,23 +94,21 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
       vimeoLink = vimeoInfo.getVideoPath();
       thumbBackground = vimeoInfo.getThumbPath();
       isVertical = vimeoInfo.isVertical;
-      if(isVertical) {
+      if (isVertical) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mExo_fullscreen_icon.setVisibility(View.GONE);
-      }
-      else
-      {
+      } else {
         mExo_fullscreen_icon.setVisibility(View.VISIBLE);
       }
       setBlurBackGround();
       initializeExoPlayer();
+      mPbLoading.setVisibility(View.GONE);
     } else {
       //todo loading, make UX, this make a leak
-      progDailog = ProgressDialog.show(this, "Please wait ...", "Video Loading ...", true);
+      // progDailog = ProgressDialog.show(this, "", "", true);
+      mPbLoading.setVisibility(View.VISIBLE);
     }
   }
-
-  ProgressDialog progDailog;
 
   public static void open(Context mContext, VimeoInfo info) {
     Intent i = new Intent(mContext, VimeoExoPlayerActivity.class);
@@ -145,39 +149,6 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
         .into(mImageCallback);
   }
 
-  public static File getCacheFile(Context mContext, String filename) {
-    File cacheFile = new File(getCacheDir(mContext), filename);
-    return cacheFile;
-  }
-
-  public static File getCacheDir(Context mContext) {
-    // Create a path pointing to the system-recommended cache dir for the app, with sub-dir named
-    // thumbnails
-    File cacheDir = new File(mContext.getCacheDir(), "images");
-    return cacheDir;
-  }
-
-  public static String md5(String s) {
-    if (s.contains("?")) {
-      int index = s.indexOf("?");
-      s = s.substring(0, index);
-    }
-    try {
-      // Create MD5 Hash
-      MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-      digest.update(s.getBytes());
-      byte messageDigest[] = digest.digest();
-
-      // Create Hex String
-      StringBuffer hexString = new StringBuffer();
-      for (int i = 0; i < messageDigest.length; i++)
-        hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
-      return hexString.toString();
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    }
-    return s;
-  }
   //endregion
 
   @Override public void onConfigurationChanged(android.content.res.Configuration newConfig) {
@@ -186,7 +157,6 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
     } else {
       newConfig.orientation = android.content.res.Configuration.ORIENTATION_PORTRAIT;
       super.onConfigurationChanged(null);
-
     }
     if (newConfig.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
       if (!isVertical) openFullscreenDialog();
@@ -197,7 +167,9 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    if (progDailog != null) progDailog.dismiss();
+    //if (progDailog != null) progDailog.dismiss();
+    if (mPbLoading != null) mPbLoading = null;
+    //destruir el reproductor
   }
 
   private void initializeExoPlayer() {
@@ -222,9 +194,9 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
 
       mVideoSource =
           new ExtractorMediaSource(daUri, dataSourceFactory, extractorsFactory, null, null);
-    }
 
-    prepareExoPlayer();
+      prepareExoPlayer();
+    }
 
     if (mExoPlayerFullscreen) {
       openFullscreenDialog();
@@ -295,6 +267,11 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
         new AdaptiveTrackSelection.Factory(bandwidthMeter);
     TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
     LoadControl loadControl = new DefaultLoadControl();
+
+    if (simpleExoPlayerView.getPlayer() != null) {
+      simpleExoPlayerView.getPlayer().stop();
+      simpleExoPlayerView.getPlayer().release();
+    }
     SimpleExoPlayer player =
         ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(this), trackSelector,
             loadControl);
@@ -308,6 +285,8 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
 
     simpleExoPlayerView.getPlayer().prepare(mVideoSource);
     simpleExoPlayerView.getPlayer().setPlayWhenReady(true);
+    simpleExoPlayerView.setVisibility(View.VISIBLE);
+
   }
 
   @Override protected void onResume() {
@@ -315,6 +294,7 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
 
     if (!TextUtils.isEmpty(vimeoLink)) {
       initializeExoPlayer();
+      prepareExoPlayer();
     } else {
       //todo something ??
     }
@@ -327,7 +307,10 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
       mResumePosition = Math.max(0, simpleExoPlayerView.getPlayer().getContentPosition());
 
       if (simpleExoPlayerView != null && simpleExoPlayerView.getPlayer() != null) {
+
+        simpleExoPlayerView.getPlayer().stop();
         simpleExoPlayerView.getPlayer().release();
+        simpleExoPlayerView.getPlayer().clearVideoSurface();
       }
 
       if (mFullScreenDialog != null) mFullScreenDialog.dismiss();
