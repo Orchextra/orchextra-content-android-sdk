@@ -1,12 +1,10 @@
 project.ext {
 
   androidCompileSdkVersion = 24
-  androidMinSdkVersion = 14
+  androidMinSdkVersion = 18
   androidBuildToolsVersion = '25.0.3'
   androidTargetSdkVersion = 23
   supportVersion = '24.2.1'
-  //supportVersion = '24.2.1'
-
 
   libraries = [androidSupportDesign       : "com.android.support:design:${supportVersion}",
                androidCustomtabs          : "com.android.support:customtabs:${supportVersion}",

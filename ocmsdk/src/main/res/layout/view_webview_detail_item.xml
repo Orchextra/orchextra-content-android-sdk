@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/contentLayoutContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-  <com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView
-      android:id="@+id/ocm_webView"
+  <ScrollView
+      android:id="@+id/webviewClipToPaddingContainer"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentTop="true"
-      />
-
-  <LinearLayout
-      android:id="@+id/transparentClipToPaddingBar"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@+id/ocm_webView"
-      android:background="@color/transparent"
-      android:orientation="horizontal"
-      android:layout_alignParentBottom="true"
-      />
+      android:layout_height="match_parent"
+      android:clipToPadding="false"
+      android:background="@color/oc_bg_article_content_color"
+      >
+    <com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView
+        android:id="@+id/ocm_webView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+  </ScrollView>
 
   <include
       layout="@layout/progress_red"

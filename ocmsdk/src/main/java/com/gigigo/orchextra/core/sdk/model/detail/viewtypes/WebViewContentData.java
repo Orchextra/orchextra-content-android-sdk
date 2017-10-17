@@ -3,7 +3,6 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.MimeTypeMap;
@@ -22,7 +20,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
@@ -42,15 +39,14 @@ import java.util.concurrent.TimeUnit;
 
 public class WebViewContentData extends UiGridBaseContentData {
 
+  public static final float PADDING_CONTAINER = 400f;
   private static final String EXTRA_URL = "EXTRA_URL";
   private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
-  public static final float PADDING_CONTAINER = 600f;
-
   private View mView;
   private TouchyWebView webView;
   private View progress;
-  private LinearLayout transparentClipToPaddingBar;
   private ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
+  private View webviewClipToPaddingContainer;
 
   public static WebViewContentData newInstance(ElementCacheRender render) {
     WebViewContentData webViewElements = new WebViewContentData();
@@ -115,8 +111,7 @@ public class WebViewContentData extends UiGridBaseContentData {
 
     webView = (TouchyWebView) mView.findViewById(R.id.ocm_webView);
     progress = mView.findViewById(R.id.webview_progress);
-    transparentClipToPaddingBar =
-        (LinearLayout) mView.findViewById(R.id.transparentClipToPaddingBar);
+    webviewClipToPaddingContainer = mView.findViewById(R.id.webviewClipToPaddingContainer);
 
     return mView;
   }
@@ -198,8 +193,6 @@ public class WebViewContentData extends UiGridBaseContentData {
         super.onPageFinished(view, url);
 
         showProgressView(false);
-
-        //setClipToPaddingBottomSize(clipToPadding);
       }
 
       @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -300,29 +293,16 @@ public class WebViewContentData extends UiGridBaseContentData {
 
   @Override public void onResume() {
     super.onResume();
-    //setClipToPaddingBottomSize(clipToPadding);
+    setClipToPaddingBottomSize(clipToPadding);
   }
 
   @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
-    //this.clipToPadding = clipToPadding;
-    //
-    //if (transparentClipToPaddingBar != null && clipToPadding != ClipToPadding.PADDING_NONE) {
-    //  transparentClipToPaddingBar.getViewTreeObserver()
-    //      .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-    //        @Override public boolean onPreDraw() {
-    //          int padding = (int) (PADDING_CONTAINER / clipToPadding.getPadding());
-    //
-    //          RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-    //              ViewGroup.LayoutParams.MATCH_PARENT, padding);
-    //
-    //          transparentClipToPaddingBar.setLayoutParams(lp);
-    //
-    //          transparentClipToPaddingBar.getViewTreeObserver().removeOnPreDrawListener(this);
-    //
-    //          return true;
-    //        }
-    //      });
-    //}
+    this.clipToPadding = clipToPadding;
+
+    if (webviewClipToPaddingContainer != null && clipToPadding != ClipToPadding.PADDING_NONE) {
+      int padding = (int) (PADDING_CONTAINER / clipToPadding.getPadding());
+      webviewClipToPaddingContainer.setPadding(0, 0, 0, padding);
+    }
   }
 
   @Override public void scrollToTop() {
