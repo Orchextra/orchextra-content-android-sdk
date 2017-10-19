@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.MimeTypeMap;
@@ -20,7 +21,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
@@ -214,6 +214,17 @@ public class WebViewContentData extends UiGridBaseContentData {
     webView.setDownloadListener(
         (url, userAgent, contentDisposition, mimetype, contentLength) -> getContext().startActivity(
             new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
+
+
+    //for avoid overlay keyboard over inputbox html webview
+    webView.getSettings().setLoadWithOverviewMode(true);
+    webView.getSettings().setUseWideViewPort(true);
+
+  this.getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+    this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+
   }
 
   private boolean launchPdfReader(Uri url, String mimeType) {

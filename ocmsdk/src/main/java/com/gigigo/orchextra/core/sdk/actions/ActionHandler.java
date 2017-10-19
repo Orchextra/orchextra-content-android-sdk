@@ -58,7 +58,7 @@ public class ActionHandler {
     if (videoId != null && !videoId.equals("")) {
       //show loading
       VimeoExoPlayerActivity.open(ocmContextProvider.getCurrentActivity(), null);
-      //todo this go to dagger
+
       VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
       VimeoManager vmManager = new VimeoManager(builder);
       //more 4 dagger
