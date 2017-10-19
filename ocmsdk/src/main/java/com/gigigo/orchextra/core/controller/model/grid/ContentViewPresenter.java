@@ -359,4 +359,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   public void setImagesToDownload(int imagesToDownload) {
     this.imagesToDownload = imagesToDownload;
   }
+
+  public void destroy() {
+    ocmController.disposeUseCases();
+  }
 }

@@ -117,6 +117,14 @@ public class OcmControllerImp implements OcmController {
 
   }
 
+  @Override public void disposeUseCases() {
+    getMenus.dispose();
+    getSection.dispose();
+    getDetail.dispose();
+    searchElements.dispose();
+    clearCache.dispose();
+  }
+
   //end region
   //region observers
 

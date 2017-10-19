@@ -29,6 +29,10 @@ android {
 
 }
 
+configurations {
+  compile.exclude group: "org.jetbrains", module: "annotations"
+}
+
 dependencies {
   compile project(path: ':ocmsdk')
   compile 'com.android.support:multidex:1.0.1'
