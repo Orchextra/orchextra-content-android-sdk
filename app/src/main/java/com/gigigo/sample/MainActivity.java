@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
   }
 
-  static String country = "it";
+  static String country = "gb";
 
   private void startCredentials() {
     Ocm.setBusinessUnit(country);

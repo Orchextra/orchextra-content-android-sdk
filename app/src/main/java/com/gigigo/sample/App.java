@@ -46,6 +46,9 @@ public class App extends MultiDexApplication {
   //public static String API_KEY = "338d65a6572be208f25a9a5815861543adaa4abb";
   //public static String API_SECRET = "b29dac01598f9d8e2102aef73ac816c0786843ef";
 
+
+
+
   private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {
 
@@ -134,7 +137,7 @@ public class App extends MultiDexApplication {
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
-    Ocm.setBusinessUnit("rs");
+    Ocm.setBusinessUnit("gb");
   }
 
   private void enableStrictMode() {
