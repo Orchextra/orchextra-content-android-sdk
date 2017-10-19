@@ -332,12 +332,12 @@ public class WebViewContentData extends UiGridBaseContentData {
   }
 
   private class JsHandler {
-    WeakReference<WebView> webView;
+    WebView webView;
     private CountDownLatch latch = null;
     private String returnValue;
 
     public JsHandler(WebView _webView) {
-      webView = new WeakReference<>(_webView);
+      this.webView = _webView;
     }
 
     /**
@@ -348,7 +348,7 @@ public class WebViewContentData extends UiGridBaseContentData {
       String code = "javascript:window.JsHandler.setValue((function(){try{return "
           + jsString
           + "+\"\";}catch(js_eval_err){return \'\';}})());";
-      if (webView.get() != null) webView.get().loadUrl(code);
+      if (webView != null) webView.loadUrl(code);
 
       try {
         this.latch.await(1L, TimeUnit.SECONDS);
@@ -364,11 +364,7 @@ public class WebViewContentData extends UiGridBaseContentData {
       final String webUrl = "javascript:" + jsString;
       // Add this to avoid android.view.windowmanager$badtokenexception unable to add window
 
-      new Runnable() {
-        @Override public void run() {
-          if (webView.get() != null) webView.get().loadUrl(webUrl);
-        }
-      }.run();
+      if (webView != null) webView.loadUrl(webUrl);
     }
 
     @JavascriptInterface public void setValue(String value) {
