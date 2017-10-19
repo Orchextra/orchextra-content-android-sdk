@@ -1,13 +1,12 @@
 package com.gigigo.orchextra.core.domain.rxInteractor;
 
+import android.util.Log;
 import com.fernandocejas.arrow.checks.Preconditions;
 import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
-import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Abstract class for a Use Case (Interactor in terms of Clean Architecture).
@@ -18,6 +17,8 @@ import io.reactivex.schedulers.Schedulers;
  * that will execute its job in a background thread and will post the result in the UI thread.
  */
 public abstract class UseCase<T, Params> {
+
+  private static final String DISPOSE_TAG = "DISPOSE";
 
   private final PriorityScheduler threadExecutor;
   private final PostExecutionThread postExecutionThread;
@@ -44,6 +45,8 @@ public abstract class UseCase<T, Params> {
   public void execute(DisposableObserver<T> observer, Params params, PriorityScheduler.Priority priority) {
     Preconditions.checkNotNull(observer);
 
+    Log.d("EXECUTE", observer.getClass().getSimpleName());
+
     final Observable<T> observable = this.buildUseCaseObservable(params)
         .subscribeOn(threadExecutor.priority(priority.getPriority()))
         .observeOn(postExecutionThread.getScheduler());
@@ -55,7 +58,8 @@ public abstract class UseCase<T, Params> {
    */
   public void dispose() {
     if (!disposables.isDisposed()) {
-      disposables.dispose();
+      Log.d(DISPOSE_TAG, UseCase.class.getSimpleName());
+      disposables.clear();
     }
   }
 

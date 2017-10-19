@@ -172,4 +172,8 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
   public void updateUi() {
     doSearch();
   }
+
+  public void destroy() {
+    ocmController.disposeUseCases();
+  }
 }

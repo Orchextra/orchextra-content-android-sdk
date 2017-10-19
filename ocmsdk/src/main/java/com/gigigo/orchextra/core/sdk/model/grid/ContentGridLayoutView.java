@@ -319,6 +319,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
   @Override public void onDestroy() {
     if (presenter != null) {
+      presenter.destroy();
       presenter.detachView();
     }
 

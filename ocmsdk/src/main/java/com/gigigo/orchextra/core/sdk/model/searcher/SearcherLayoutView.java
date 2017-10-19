@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -19,7 +17,6 @@ import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutInterface;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutPresenter;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
-import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
@@ -37,7 +34,6 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
 
   @Inject SearcherLayoutPresenter presenter;
   @Inject Authoritation authoritation;
-  @Inject OcmController ocmController;
 
   private Context context;
 
@@ -163,7 +159,10 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   }
 
   @Override public void onDestroy() {
-    presenter.detachView();
+    if (presenter != null) {
+      presenter.destroy();
+      presenter.detachView();
+    }
 
     super.onDestroy();
   }
