@@ -21,7 +21,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
@@ -32,11 +31,11 @@ import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.federatedAuth.FAUtils;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
-import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import retrofit2.http.HEAD;
 
 public class WebViewContentData extends UiGridBaseContentData {
 
@@ -272,7 +271,7 @@ public class WebViewContentData extends UiGridBaseContentData {
   private void loadUrl() {
 
     String url = getArguments().getString(EXTRA_URL);
-    if (url != null && !url.isEmpty()) {
+    if (url != null && !url.isEmpty() && webView != null) {
       FederatedAuthorization federatedAuthorization =
           (FederatedAuthorization) getArguments().getSerializable(EXTRA_FEDERATED_AUTH);
 
@@ -280,18 +279,21 @@ public class WebViewContentData extends UiGridBaseContentData {
           && federatedAuthorization.isActive()
           && Ocm.getQueryStringGenerator() != null) {
         Ocm.getQueryStringGenerator().createQueryString(federatedAuthorization, queryString -> {
-          if (queryString != null && !queryString.isEmpty()) {
-            String urlWithQueryParams = FAUtils.addQueryParamsToUrl(queryString, url);
-            //no es necesario  OCManager.saveFedexAuth(url);
-            Log.d(WebViewContentData.class.getSimpleName(),
-                "federatedAuth url: " + urlWithQueryParams);
-            if (urlWithQueryParams != null) {
+
+          if (webView != null) {
+            if (queryString != null && !queryString.isEmpty()) {
+              String urlWithQueryParams = FAUtils.addQueryParamsToUrl(queryString, url);
+              //no es necesario  OCManager.saveFedexAuth(url);
+              Log.d(WebViewContentData.class.getSimpleName(), "federatedAuth url: " + urlWithQueryParams);
+              if (urlWithQueryParams != null) {
+                showProgressView(true);
+                webView.loadUrl(urlWithQueryParams);
+              }
+            } else {
               showProgressView(true);
-              webView.loadUrl(urlWithQueryParams);
+              webView.loadUrl(url);
             }
-          } else {
-            showProgressView(true);
-            webView.loadUrl(url);
+
           }
         });
       } else {
@@ -347,12 +349,12 @@ public class WebViewContentData extends UiGridBaseContentData {
   }
 
   private class JsHandler {
-    WeakReference<WebView> webView;
+    WebView webView;
     private CountDownLatch latch = null;
     private String returnValue;
 
     public JsHandler(WebView _webView) {
-      webView = new WeakReference<>(_webView);
+      this.webView = _webView;
     }
 
     /**
@@ -363,7 +365,7 @@ public class WebViewContentData extends UiGridBaseContentData {
       String code = "javascript:window.JsHandler.setValue((function(){try{return "
           + jsString
           + "+\"\";}catch(js_eval_err){return \'\';}})());";
-      if (webView.get() != null) webView.get().loadUrl(code);
+      if (webView != null) webView.loadUrl(code);
 
       try {
         this.latch.await(1L, TimeUnit.SECONDS);
@@ -379,11 +381,7 @@ public class WebViewContentData extends UiGridBaseContentData {
       final String webUrl = "javascript:" + jsString;
       // Add this to avoid android.view.windowmanager$badtokenexception unable to add window
 
-      new Runnable() {
-        @Override public void run() {
-          if (webView.get() != null) webView.get().loadUrl(webUrl);
-        }
-      }.run();
+      if (webView != null) webView.loadUrl(webUrl);
     }
 
     @JavascriptInterface public void setValue(String value) {

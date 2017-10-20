@@ -159,4 +159,9 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
     }
     return share;
   }
+
+  public void destroy() {
+    ocmController.disposeUseCases();
+  }
+
 }

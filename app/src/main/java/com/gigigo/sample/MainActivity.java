@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
     View fabChange = findViewById(R.id.fabChange);
     View fabClean = findViewById(R.id.fabClean);
 
-    fabChange.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
+    //fabChange.setOnClickListener(new View.OnClickListener() {
+    //  @Override public void onClick(View v) {
         startCredentials();
         if (OCManager.getShowReadArticles() && adapter != null) {
           //OCManager.transform+=1;
@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
           //Toast.makeText(MainActivity.this, "Refresh grid from integratied app if readed articles are enabled transform number"
           //    + OCManager.transform, Toast.LENGTH_LONG).show();
         }
-      }
-    });
+      //}
+    //});
 
     fabClean.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {

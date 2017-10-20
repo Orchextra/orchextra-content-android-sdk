@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.core.domain;
 
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
-import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 
@@ -17,6 +16,8 @@ public interface OcmController {
   void search(String textToSearch, SearchControllerCallback searchControllerCallback);
 
   void clearCache(boolean images, boolean data, final ClearCacheCallback clearCacheCallback);
+
+  void disposeUseCases();
 
   // Callbacks
   interface GetMenusControllerCallback {

@@ -26,7 +26,7 @@ import orchextra.javax.inject.Singleton;
 
 @Module(includes = { DomainModule.class, InteractorModule.class }) public class ControllerModule {
 
-  @Singleton @Provides OcmController provideOcmController(GetMenus getMenus, GetSection getSection,
+  @Provides OcmController provideOcmController(GetMenus getMenus, GetSection getSection,
       GetDetail getDetail, SearchElements searchElements, ClearCache clearCache,
       ConnectionUtils connectionUtils) {
 

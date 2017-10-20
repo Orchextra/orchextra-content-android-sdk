@@ -281,7 +281,7 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
     //showProgressView(true);
     System.out.println("Main ContentWebViewGridLayout loadUrl  ");
     String url = getArguments().getString(EXTRA_URL);
-    if (!url.isEmpty()) {
+    if (!url.isEmpty() && webView != null) {
       FederatedAuthorization federatedAuthorization =
           (FederatedAuthorization) getArguments().getSerializable(EXTRA_FEDERATED_AUTH);
 
@@ -291,17 +291,18 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
         System.out.println("Main ContentWebViewGridLayout federatedAuthorization ok  ");
 
         Ocm.getQueryStringGenerator().createQueryString(federatedAuthorization, queryString -> {
-          if (queryString != null && !queryString.isEmpty()) {
-            String urlWithQueryParams = addQueryParamsToUrl(queryString, url);
-            //no es necesario  OCManager.saveFedexAuth(url);
+          if (webView != null) {
+            if (queryString != null && !queryString.isEmpty()) {
+              String urlWithQueryParams = addQueryParamsToUrl(queryString, url);
+              //no es necesario  OCManager.saveFedexAuth(url);
 
-            System.out.println(
-                "Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
-            if (urlWithQueryParams != null) {
-              webView.loadUrl(urlWithQueryParams);
+              System.out.println("Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
+              if (urlWithQueryParams != null) {
+                webView.loadUrl(urlWithQueryParams);
+              }
+            } else {
+              webView.loadUrl(url);
             }
-          } else {
-            webView.loadUrl(url);
           }
         });
       } else {
