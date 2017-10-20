@@ -45,12 +45,28 @@ public class TouchyWebView extends WebView implements NestedScrollingChild {
     }
   }
 
-  @Override
-  public boolean onTouchEvent(MotionEvent ev) {
+  @Override public boolean onTouchEvent(MotionEvent ev) {
+System.out.println("SCROLL onTouchEvent");
+
+/*
     if (MotionEventCompat.findPointerIndex(ev, 0) == -1) {
       return super.onTouchEvent(ev);
     }
 
+    if (ev.getPointerCount() >= 2) {
+      requestDisallowInterceptTouchEvent(true);
+    } else {
+      requestDisallowInterceptTouchEvent(false);
+    }
+
+    return super.onTouchEvent(ev);
+*/
+
+    if (MotionEventCompat.findPointerIndex(ev, 0) == -1) {
+      return super.onTouchEvent(ev);
+    }
+
+    //asv wtf?? solo se mueve con 2 dedos??
     if (ev.getPointerCount() >= 2) {
       requestDisallowInterceptTouchEvent(true);
     } else {
@@ -105,55 +121,50 @@ public class TouchyWebView extends WebView implements NestedScrollingChild {
   @Override
   protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
     super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
-    requestDisallowInterceptTouchEvent(true);
-
-
+   // requestDisallowInterceptTouchEvent(true);
+    System.out.println("SCROLL onOverScrolled");
   }
 
   // Nested Scroll implements
-  @Override
-  public void setNestedScrollingEnabled(boolean enabled) {
+  @Override public void setNestedScrollingEnabled(boolean enabled) {
     mChildHelper.setNestedScrollingEnabled(enabled);
   }
 
-  @Override
-  public boolean isNestedScrollingEnabled() {
+  @Override public boolean isNestedScrollingEnabled() {
     return mChildHelper.isNestedScrollingEnabled();
   }
 
-  @Override
-  public boolean startNestedScroll(int axes) {
+  @Override public boolean startNestedScroll(int axes) {
     return mChildHelper.startNestedScroll(axes);
   }
 
-  @Override
-  public void stopNestedScroll() {
+  @Override public void stopNestedScroll() {
     mChildHelper.stopNestedScroll();
   }
 
-  @Override
-  public boolean hasNestedScrollingParent() {
+  @Override public boolean hasNestedScrollingParent() {
     return mChildHelper.hasNestedScrollingParent();
   }
 
-  @Override
-  public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed,
-      int[] offsetInWindow) {
-    return mChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
+  @Override public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed,
+      int dyUnconsumed, int[] offsetInWindow) {
+    System.out.println("SCROLL dispatchNestedScroll");
+
+    return mChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
+        offsetInWindow);
   }
 
   @Override
   public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
+    System.out.println("SCROLL dispatchNestedPreScroll");
     return mChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
   }
 
-  @Override
-  public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
+  @Override public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
     return mChildHelper.dispatchNestedFling(velocityX, velocityY, consumed);
   }
 
-  @Override
-  public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
+  @Override public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
     return mChildHelper.dispatchNestedPreFling(velocityX, velocityY);
   }
 }

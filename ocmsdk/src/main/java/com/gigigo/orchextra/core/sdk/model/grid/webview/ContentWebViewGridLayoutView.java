@@ -21,6 +21,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
@@ -90,6 +91,7 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
 
     webView = (TouchyWebView) mView.findViewById(R.id.ocm_webView);
     progress = mView.findViewById(R.id.webview_progress);
+
     init();
     return mView;
   }
@@ -276,7 +278,7 @@ public class ContentWebViewGridLayoutView extends UiGridBaseContentData {
   }
 
   private void loadUrl() {
-    showProgressView(true);
+    //showProgressView(true);
     System.out.println("Main ContentWebViewGridLayout loadUrl  ");
     String url = getArguments().getString(EXTRA_URL);
     if (!url.isEmpty()) {
