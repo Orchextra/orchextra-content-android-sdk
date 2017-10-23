@@ -83,6 +83,7 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
     multipleGridRecyclerView.setErrorViewLayout(errorView);
     multipleGridRecyclerView.setLoadingViewLayout(loadingView);
 
+    multipleGridRecyclerView.overrideScollingVelocityY(0.4f);
   }
 
   private void setAdapterDataViewHolders() {
