@@ -59,7 +59,7 @@ public class ApiArticleElementMapper
 
   private ArticleElement getArticleVideoElement(ApiArticleElementRender render) {
     //todo truchingvimeo
-    //return getArticleVimeoVideoElementFAKE(render);
+    // return getArticleVimeoVideoElementFAKE(render);
 
     VideoFormat videoFormat = VideoFormat.convertStringToType(render.getFormat());
 
@@ -74,13 +74,13 @@ public class ApiArticleElementMapper
   }
 
   /* truchingvimeo
-  @Deprecated
-  private ArticleVimeoVideoElement getArticleVimeoVideoElementFAKE(ApiArticleElementRender render) {
+  @Deprecated private ArticleVimeoVideoElement getArticleVimeoVideoElementFAKE(
+      ApiArticleElementRender render) {
     ArticleVimeoVideoElement element = new ArticleVimeoVideoElement();
     //todo truchingvimeo
     Random r = new Random();
     boolean random = r.nextBoolean();
-    if (random ) {
+    if (random) {
       element.setSource("236232109");
     } else {
       element.setSource("237059608");//vertical

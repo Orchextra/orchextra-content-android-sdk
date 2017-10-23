@@ -14,6 +14,7 @@ import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElement;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
+import com.gigigo.orchextra.ocm.views.MoreContentArrowView;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import com.gigigo.orchextra.ocmsdk.R;
 import gigigo.com.vimeolibs.VimeoBuilder;
@@ -62,7 +63,13 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
             mVimeoInfo = vimeoInfo;
             String strImgForBlur = mVimeoInfo.getThumbPath();
 
+            if(mVimeoInfo.isVertical()){
+              imgThumb.setMaxHeight((int) MoreContentArrowView.convertDpToPixel(192,context.getApplicationContext()));
+              imgThumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
+
             Glide.with(context.getApplicationContext())
+
                 .load(strImgForBlur)
                 .listener(new RequestListener<String, GlideDrawable>() {
                   @Override public boolean onException(Exception e, String model,
