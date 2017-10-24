@@ -250,8 +250,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
         CellGridContentData cell = new CellGridContentData();
         cell.setData(element);
-        cell.setColumn(pattern.get(indexPattern).getRow() * auxPadding);
-        cell.setRow(pattern.get(indexPattern).getColumn() * auxPadding);
+        cell.setColumn(pattern.get(indexPattern).getColumn() * auxPadding);
+        cell.setRow(pattern.get(indexPattern).getRow() * auxPadding);
 
         indexPattern = ++indexPattern % pattern.size();
 
@@ -261,8 +261,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
     while (cellGridContentDataList.size() % 3 != 0) {
       CellBlankElement cellBlankElement = new CellBlankElement();
-      cellBlankElement.setColumn(pattern.get(indexPattern).getRow() * auxPadding);
-      cellBlankElement.setRow(pattern.get(indexPattern).getColumn() * auxPadding);
+      cellBlankElement.setColumn(1 * auxPadding);
+      cellBlankElement.setRow(1 * auxPadding);
       cellGridContentDataList.add(cellBlankElement);
 
       indexPattern = ++indexPattern % pattern.size();
