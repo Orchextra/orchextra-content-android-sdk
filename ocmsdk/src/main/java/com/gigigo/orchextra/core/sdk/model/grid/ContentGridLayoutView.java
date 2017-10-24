@@ -56,6 +56,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       };
   private UiListedBaseContentData uiListedBaseContentData;
   private ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
+  private int addictionalPadding = 0;
   private Context context;
   private View retryButton;
   private View moreButton;
@@ -173,7 +174,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       uiListedBaseContentData = new SpannedGridRecyclerView(context);
 
       uiListedBaseContentData.setListedContentListener(listedContentListener);
-      uiListedBaseContentData.setParams(clipToPadding, authoritation);
+      uiListedBaseContentData.setParams(clipToPadding, addictionalPadding, authoritation);
       uiListedBaseContentData.setData(cellDataList);
 
       listedDataContainer.removeAllViews();
@@ -189,7 +190,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
 
     uiListedBaseContentData.setListedContentListener(listedContentListener);
-    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, authoritation);
+    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding, authoritation);
     uiListedBaseContentData.setData(cellDataList);
 
     listedDataContainer.removeAllViews();
@@ -268,8 +269,10 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
   }
 
-  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
+  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding,
+      int addictionalPadding) {
     this.clipToPadding = clipToPadding;
+    this.addictionalPadding = addictionalPadding;
   }
 
   @Override public void scrollToTop() {
