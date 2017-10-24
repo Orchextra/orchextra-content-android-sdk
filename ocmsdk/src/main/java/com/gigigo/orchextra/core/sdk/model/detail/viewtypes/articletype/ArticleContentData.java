@@ -38,7 +38,7 @@ public class ArticleContentData extends UiGridBaseContentData {
   private FrameLayout flFA;
   private View faLoading;
   private BaseRecyclerAdapter<ArticleElement> adapter;
-  private ClipToPadding clipToPadding;
+  private int addictionalPadding;
 
   public static ArticleContentData newInstance() {
     return new ArticleContentData();
@@ -51,7 +51,7 @@ public class ArticleContentData extends UiGridBaseContentData {
 
     initViews(view);
     initRecyclerView();
-    setClipToPaddingBottomSize(clipToPadding);
+    setClipToPaddingBottomSize(ClipToPadding.PADDING_NONE, addictionalPadding);
 
     return view;
   }
@@ -136,13 +136,12 @@ public class ArticleContentData extends UiGridBaseContentData {
 
   }
 
-  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
-    this.clipToPadding = clipToPadding;
-    if (articleItemViewContainer != null
-        && clipToPadding != null
-        && clipToPadding != ClipToPadding.PADDING_NONE) {
+  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding,
+      int addictionalPadding) {
+    this.addictionalPadding = addictionalPadding;
+    if (articleItemViewContainer != null) {
       articleItemViewContainer.setClipToPadding(false);
-      articleItemViewContainer.setPadding(0, 0, 0, 250 / clipToPadding.getPadding());
+      articleItemViewContainer.setPadding(0, 0, 0, addictionalPadding);
     }
   }
 

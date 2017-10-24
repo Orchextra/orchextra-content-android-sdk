@@ -79,7 +79,7 @@ public class ScreenSlidePageFragment extends Fragment {
     if (contentView != null) {
       this.contentView = contentView;
 
-      contentView.setClipToPaddingBottomSize(ClipToPadding.PADDING_BIG);
+      contentView.setClipToPaddingBottomSize(ClipToPadding.PADDING_5, 20);
       contentView.setEmptyView(emptyViewLayout);
       contentView.setErrorView(errorViewLayout);
 

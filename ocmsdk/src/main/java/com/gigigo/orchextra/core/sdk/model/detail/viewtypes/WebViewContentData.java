@@ -35,7 +35,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import retrofit2.http.HEAD;
 
 public class WebViewContentData extends UiGridBaseContentData {
 
@@ -45,7 +44,7 @@ public class WebViewContentData extends UiGridBaseContentData {
   private View mView;
   private TouchyWebView webView;
   private View progress;
-  private ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
+  private int addictionalPadding;
   private View webviewClipToPaddingContainer;
 
   public static WebViewContentData newInstance(ElementCacheRender render) {
@@ -309,15 +308,15 @@ public class WebViewContentData extends UiGridBaseContentData {
 
   @Override public void onResume() {
     super.onResume();
-    setClipToPaddingBottomSize(clipToPadding);
+    setClipToPaddingBottomSize(ClipToPadding.PADDING_NONE, addictionalPadding);
   }
 
-  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
-    this.clipToPadding = clipToPadding;
+  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding,
+      int addictionalPadding) {
+    this.addictionalPadding = addictionalPadding;
 
-    if (webviewClipToPaddingContainer != null && clipToPadding != ClipToPadding.PADDING_NONE) {
-      int padding = (int) (PADDING_CONTAINER / clipToPadding.getPadding());
-      webviewClipToPaddingContainer.setPadding(0, 0, 0, padding);
+    if (webviewClipToPaddingContainer != null) {
+      webviewClipToPaddingContainer.setPadding(0, 0, 0, addictionalPadding);
     }
   }
 

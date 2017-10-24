@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
@@ -192,7 +191,8 @@ public class YoutubeFragment extends UiGridBaseContentData {
 
   }
 
-  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
+  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding,
+      int addictionalPadding) {
 
   }
 
