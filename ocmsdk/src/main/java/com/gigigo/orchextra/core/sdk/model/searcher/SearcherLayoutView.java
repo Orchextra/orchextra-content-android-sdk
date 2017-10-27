@@ -122,6 +122,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
     recyclerView.setAdapterDataViewHolder(CellBlankElement.class, CellBlankViewHolder.class);
 
     recyclerView.setUndecoratedViewHolder(CellBlankViewHolder.class);
+    recyclerView.overrideScollingVelocityY(0.4f);
   }
 
   @Override public void showProgressView(boolean isVisible) {
@@ -190,4 +191,3 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
     OCManager.notifyRequiredLoginToContinue();
   }
 }
-

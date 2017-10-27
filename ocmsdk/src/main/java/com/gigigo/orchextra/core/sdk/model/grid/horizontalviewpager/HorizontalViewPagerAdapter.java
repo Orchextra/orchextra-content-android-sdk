@@ -12,7 +12,7 @@ import java.util.List;
 public class HorizontalViewPagerAdapter extends FragmentStatePagerAdapter {
 
   private final UiListedBaseContentData.ListedContentListener listedContentListener;
-  int mLoops = 1;
+  private int mLoops = 1;
   private List<Cell> cellDataList;
 
   public HorizontalViewPagerAdapter(FragmentManager fm,
@@ -22,7 +22,6 @@ public class HorizontalViewPagerAdapter extends FragmentStatePagerAdapter {
   }
 
   @Override public Fragment getItem(int position) {
-
     int realSize = 1;
     if (getCount() > 0) realSize = getCount() / mLoops;
 
