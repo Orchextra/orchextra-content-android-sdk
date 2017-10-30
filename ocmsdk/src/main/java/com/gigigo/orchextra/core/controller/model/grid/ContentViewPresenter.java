@@ -303,7 +303,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
               String imageUrlToExpandInPreview = null;
               if (elementCache != null && elementCache.getPreview() != null) {
                 imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
-                //imageUrlToExpandInPreview = element.getSectionView().getImageUrl();
               }
 
               if (getView() != null) {

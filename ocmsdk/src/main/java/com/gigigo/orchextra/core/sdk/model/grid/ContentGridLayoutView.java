@@ -214,36 +214,10 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       final ImageView imageViewToExpandInDetail =
           (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
 
-      if (urlImageToExpand != null && imageViewToExpandInDetail != null) {
-        String imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
-            DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
-            DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
-
-        OcmImageLoader.load(this, imageUrl).load(imageUrl).into(new SimpleTarget<GlideDrawable>() {
-          @Override public void onResourceReady(GlideDrawable resource,
-              GlideAnimation<? super GlideDrawable> glideAnimation) {
-            imageViewToExpandInDetail.setImageDrawable(resource);
-          }
-
-          @Override public void onLoadFailed(Exception e, Drawable errorDrawable) {
-            super.onLoadFailed(e, errorDrawable);
-            clearImageToExpandWhenAnimationEnds(imageViewToExpandInDetail);
-          }
-        });
-      }
-
       OCManager.generateDetailView(elementUrl, urlImageToExpand,
           DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
           DeviceUtils.calculateHeightDeviceInImmersiveMode(context), imageViewToExpandInDetail);
     }
-  }
-
-  private void clearImageToExpandWhenAnimationEnds(final ImageView imageViewToExpandInDetail) {
-    new Handler().postDelayed(new Runnable() {
-      @Override public void run() {
-        imageViewToExpandInDetail.setImageDrawable(null);
-      }
-    }, 750);
   }
 
   @Override public void showAuthDialog() {

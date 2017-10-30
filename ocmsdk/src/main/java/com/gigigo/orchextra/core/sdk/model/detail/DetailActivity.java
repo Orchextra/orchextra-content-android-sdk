@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -164,7 +165,6 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
       OcmImageLoader.load(this, generateImageUrl)
           .override(width, height)
-          .centerCrop()
           .dontAnimate()
           .priority(Priority.HIGH)
           .listener(new RequestListener<Object, GlideDrawable>() {
@@ -186,11 +186,6 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   }
 
   @Override protected void onDestroy() {
-
-
-    System.out.println("----onDestroy------------------------------------------article activity");
-
-
     unbindDrawables(parentContainer);
     System.gc();
     Glide.get((Context) presenter.getView()).clearMemory();
@@ -205,14 +200,12 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
       presenter.detachView();
     }
 
-
     this.finish();
 
     super.onDestroy();
   }
 
   private void unbindDrawables(View view) {
-
     List<View> viewList = new ArrayList<>();
 
     viewList.add(view);
@@ -235,15 +228,5 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
         ((ViewGroup) child).removeAllViews();
       }
     }
-
-    //if (view.getBackground() != null) {
-    //  view.getBackground().setCallback(null);
-    //}
-    //if (view instanceof ViewGroup) {
-    //  for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-    //    unbindDrawables(((ViewGroup) view).getChildAt(i));
-    //  }
-    //  ((ViewGroup) view).removeAllViews();
-    //}
   }
 }
