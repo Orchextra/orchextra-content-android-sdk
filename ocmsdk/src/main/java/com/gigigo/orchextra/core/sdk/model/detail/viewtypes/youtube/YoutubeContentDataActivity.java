@@ -13,10 +13,12 @@ public class YoutubeContentDataActivity extends BaseActivity {
   private static final String TAG_RETAINED_FRAGMENT = "TAG_RETAINED_FRAGMENT";
 
   public static void open(Context context, String videoId) {
-    Intent intent = new Intent(context, YoutubeContentDataActivity.class);
-    intent.putExtra(EXTRA_YOUTUBE_VIDEO_ID, videoId);
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    context.startActivity(intent);
+    if (context != null) {
+      Intent intent = new Intent(context, YoutubeContentDataActivity.class);
+      intent.putExtra(EXTRA_YOUTUBE_VIDEO_ID, videoId);
+      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      context.startActivity(intent);
+    }
   }
 
   @Override public void onCreate(Bundle savedInstanceState) {

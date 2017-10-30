@@ -38,7 +38,7 @@ public class HorizontalViewPagerAdapter extends FragmentStatePagerAdapter {
             }
           }
         });
-    
+
     if (cellDataList.get(finalPosition) instanceof CellCarouselContentData) {
       CellCarouselContentData cell = (CellCarouselContentData) cellDataList.get(finalPosition);
       horizontalItemPageFragment.setCell(cell);

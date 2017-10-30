@@ -41,8 +41,7 @@ public class ActionHandler {
   }
 
   public void launchYoutubePlayer(String videoId) {
-
-    YoutubeContentDataActivity.open(ocmContextProvider.getCurrentActivity(), videoId);
+    YoutubeContentDataActivity.open(ocmContextProvider.getApplicationContext(), videoId);
   }
 
   public void launchVimeoPlayer(String videoId) {

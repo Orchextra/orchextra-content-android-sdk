@@ -90,7 +90,7 @@ public class CardVideoView extends CardDataView {
 
     View.OnClickListener onYoutubeThumbnailClickListener = new View.OnClickListener() {
       @Override public void onClick(View v) {
-        YoutubeContentDataActivity.open((Activity) context, articleElement.getSource());
+        YoutubeContentDataActivity.open(context.getApplicationContext(), articleElement.getSource());
         //YoutubeWebviewActivity.open(activity, articleElement.getSource());
       }
     };
