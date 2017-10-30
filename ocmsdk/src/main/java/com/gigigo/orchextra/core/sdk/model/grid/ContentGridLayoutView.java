@@ -168,7 +168,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   private void setDataGrid(List<Cell> cellDataList) {
-
     if (uiListedBaseContentData == null) {
 
       uiListedBaseContentData = new SpannedGridRecyclerView(context);

@@ -27,7 +27,7 @@ public class HorizontalViewPagerAdapter extends FragmentStatePagerAdapter {
 
     if (mLoops > 1) position = position % realSize;
     final int finalPosition = position;
-    CellCarouselContentData cell = (CellCarouselContentData) cellDataList.get(finalPosition);
+
     HorizontalItemPageFragment horizontalItemPageFragment =
         HorizontalItemPageFragment.newInstance();
     horizontalItemPageFragment.setOnClickHorizontalItem(
@@ -38,7 +38,11 @@ public class HorizontalViewPagerAdapter extends FragmentStatePagerAdapter {
             }
           }
         });
-    horizontalItemPageFragment.setCell(cell);
+    
+    if (cellDataList.get(finalPosition) instanceof CellCarouselContentData) {
+      CellCarouselContentData cell = (CellCarouselContentData) cellDataList.get(finalPosition);
+      horizontalItemPageFragment.setCell(cell);
+    }
 
     return horizontalItemPageFragment;
   }
