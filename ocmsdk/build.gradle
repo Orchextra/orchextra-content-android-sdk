@@ -6,6 +6,10 @@ apply from: 'common_methods.gradle'
 apply from: 'dependencies.gradle'
 apply plugin: 'me.tatarka.retrolambda'
 
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.Orchextra'
+
 apply from: 'variants.gradle'
 
 def CONCURRENT_INTERACTORS = "CONCURRENT_INTERACTORS"
