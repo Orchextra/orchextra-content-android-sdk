@@ -71,7 +71,7 @@ public class DeviceUtils {
           activity.startActivity(customTabsIntent.intent);
         }
       } catch (Exception e) {
-        OcmWebViewActivity.open(activity, url);
+        OcmWebViewActivity.open(activity, url,"");
       }
     }
   }
@@ -139,7 +139,7 @@ public class DeviceUtils {
           activity.startActivity(customTabsIntent.intent);
         }*/
       } catch (Exception e) {
-        OcmWebViewActivity.open(activity, url);
+        OcmWebViewActivity.open(activity, url,"");
       }
     }
   }

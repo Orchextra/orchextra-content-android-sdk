@@ -88,7 +88,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
             renderContentItem(contentItem);
 
             waitSomeSecondUntilCheckNewContent(cachedContentData);
-
           }
 
           @Override public void onGetSectionFails(Exception e) {
@@ -309,8 +308,20 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                 OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
                 OCManager.addArticleToReadedArticles(element.getSlug());
                 System.out.println("CELL_CLICKED: " + element.getSlug());
-                getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
-                    viewWeakReference.get());
+
+                //if (elementCache.getType() != ElementCacheType.WEBVIEW || imageUrlToExpandInPreview!="" ) {
+                  getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
+                      viewWeakReference.get());
+                  //getView().navigateToDetailView(elementCache, viewWeakReference.get());
+                //} else {
+                //  if (imageUrlToExpandInPreview != "") {
+                //    OcmWebViewActivity.open(viewWeakReference.get().getContext(),
+                //        elementCache.getRender().getUrl(),elementCache.getName());
+                //  } else {
+                //    OcmWebViewActivity.open(viewWeakReference.get().getContext(),
+                //        elementCache.getRender().getUrl(),elementCache.getName(),imageUrlToExpandInPreview);
+                //  }
+                //}
               }
             }
 

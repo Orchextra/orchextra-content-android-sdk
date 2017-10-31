@@ -26,7 +26,7 @@ import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
-import com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView;
+import com.gigigo.orchextra.core.sdk.ui.views.NestedWebView;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.federatedAuth.FAUtils;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -42,7 +42,7 @@ public class WebViewContentData extends UiGridBaseContentData {
   private static final String EXTRA_URL = "EXTRA_URL";
   private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
   private View mView;
-  private TouchyWebView webView;
+  private  NestedWebView webView;
   private View progress;
   private int addictionalPadding;
   private View webviewClipToPaddingContainer;
@@ -108,9 +108,11 @@ public class WebViewContentData extends UiGridBaseContentData {
       @Nullable Bundle savedInstanceState) {
     mView = inflater.inflate(R.layout.view_webview_detail_item, container, false);
 
-    webView = (TouchyWebView) mView.findViewById(R.id.ocm_webView);
+    webView = (NestedWebView) mView.findViewById(R.id.ocm_webView);
     progress = mView.findViewById(R.id.webview_progress);
+
     //webviewClipToPaddingContainer = mView.findViewById(R.id.webviewClipToPaddingContainer);
+
     showProgressView(false); //avoid double loading
 
     return mView;
@@ -155,8 +157,10 @@ public class WebViewContentData extends UiGridBaseContentData {
   }
 
   private void init() {
-    initWebView();
-    loadUrl();
+    if (webView != null) {
+      initWebView();
+      loadUrl();
+    }
   }
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN) private void initWebView() {
@@ -166,7 +170,7 @@ public class WebViewContentData extends UiGridBaseContentData {
     webView.getSettings().setJavaScriptEnabled(true);
     webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
     webView.getSettings().setDomStorageEnabled(true);
-    webView.getSettings().setSupportZoom(false);
+    webView.getSettings().setSupportZoom(true );
     webView.getSettings().setAppCacheEnabled(false);
     webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
     webView.getSettings().setDatabaseEnabled(true);
@@ -221,9 +225,15 @@ public class WebViewContentData extends UiGridBaseContentData {
     //for avoid overlay keyboard over inputbox html webview
     webView.getSettings().setLoadWithOverviewMode(true);
     webView.getSettings().setUseWideViewPort(true);
+    webView.getSettings().setBuiltInZoomControls(true);
+    webView.getSettings().setDisplayZoomControls(true);
+
+
 
     this.getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
     this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
   }
 
   private boolean launchPdfReader(Uri url, String mimeType) {
@@ -283,7 +293,8 @@ public class WebViewContentData extends UiGridBaseContentData {
             if (queryString != null && !queryString.isEmpty()) {
               String urlWithQueryParams = FAUtils.addQueryParamsToUrl(queryString, url);
               //no es necesario  OCManager.saveFedexAuth(url);
-              Log.d(WebViewContentData.class.getSimpleName(), "federatedAuth url: " + urlWithQueryParams);
+              Log.d(WebViewContentData.class.getSimpleName(),
+                  "federatedAuth url: " + urlWithQueryParams);
               if (urlWithQueryParams != null) {
                 showProgressView(true);
                 webView.loadUrl(urlWithQueryParams);
@@ -292,7 +303,6 @@ public class WebViewContentData extends UiGridBaseContentData {
               showProgressView(true);
               webView.loadUrl(url);
             }
-
           }
         });
       } else {
