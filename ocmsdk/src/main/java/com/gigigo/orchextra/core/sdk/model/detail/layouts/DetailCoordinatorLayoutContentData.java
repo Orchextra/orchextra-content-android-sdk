@@ -1,13 +1,16 @@
 package com.gigigo.orchextra.core.sdk.model.detail.layouts;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
@@ -30,8 +33,10 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
   private CoordinatorLayout coordinatorLayout;
   private UiBaseContentData previewContentData;
   private UiBaseContentData detailContentData;
+  private NestedScrollView nestedScrollView;
   private boolean isFirstTime = true;
   private boolean isAppBarExpanded = true;
+  private static boolean isKeyboardPreviuslyOpened = false;
 
   private PreviewFuntionalityListener previewFuntionalityListener =
       new PreviewFuntionalityListener() {
@@ -75,6 +80,36 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
     collapsingToolbar = (FrameLayout) view.findViewById(R.id.collapsingToolbar);
     appbarLayout = (AppBarLayout) view.findViewById(R.id.appbarLayout);
     coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
+    nestedScrollView = (NestedScrollView) view.findViewById(R.id.nestedScrollView);
+    //region hidesoftkeyboard, for when hide keyboard scroll to top
+    //todo only add this code when webview is the detail
+    coordinatorLayout.getViewTreeObserver()
+        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+          @Override public void onGlobalLayout() {
+            Rect r = new Rect();
+            //r will be populated with the coordinates of your view that area still visible.
+            coordinatorLayout.getWindowVisibleDisplayFrame(r);
+
+            int heightDiff = coordinatorLayout.getRootView().getHeight() - (r.bottom - r.top);
+            if (heightDiff > 200) { //   probably a keyboard...fucking android SO
+              System.out.println("TECLAO OPEN");
+              isKeyboardPreviuslyOpened = true;
+            } else {
+              System.out.println("TECLAO CLOSE");
+              if (isKeyboardPreviuslyOpened) {
+                isKeyboardPreviuslyOpened = false;
+                nestedScrollView.post(new Runnable() {
+                  @Override public void run() {
+                    nestedScrollView.startNestedScroll(View.SCROLL_AXIS_VERTICAL);
+                    nestedScrollView.stopNestedScroll();
+                    nestedScrollView.getChildAt(0).scrollTo(0,0);
+                  }
+                });
+              }
+            }
+          }
+        });
+    //endregion
   }
 
   @Override protected int getDetailLayout() {
