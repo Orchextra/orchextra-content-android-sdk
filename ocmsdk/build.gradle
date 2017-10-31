@@ -48,6 +48,7 @@ android {
       debuggable false
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+      signingConfig android.signingConfigs.debug
     }
   }
 
@@ -84,11 +85,11 @@ android {
     unitTests.returnDefaultValues = true
   }
 
-  flavorDimensions "oreo"
-
+  flavorDimensions "ocm"
+//
   productFlavors {
     ocm {
-      dimension "oreo"
+      dimension "ocm"
     }
   }
 
@@ -133,13 +134,16 @@ dependencies {
   annotationProcessor project.libraries.daggerCompiler
 
   //Image Loader Glide/Blur
-  implementation project.libraries.imageloaderGlideBlur
+  api project.libraries.imageloaderGlideBlur
 
   //Orchextra
   // implementation project.libraries.oxvuforiaimplementation
-  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true }
-  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true }
-  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true }
+  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true
+    exclude module: 'support-v4'  }
+  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true
+    exclude module: 'support-v4' }
+  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true
+    exclude module: 'support-v4' }
 
   //customs Views
   implementation project.libraries.doubleViewPager

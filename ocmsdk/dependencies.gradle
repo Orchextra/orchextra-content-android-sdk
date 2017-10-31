@@ -20,9 +20,9 @@ project.ext {
                orchextrasdkDebug          : 'com.github.orchextra.orchextra-android-sdk:orchextrasdk:512Test:play11Debug@aar',
                orchextrasdkRelease        : 'com.github.orchextra.orchextra-android-sdk:orchextrasdk:512Test:play11Release@aar',
 
-               playServicesBase           : "com.google.android.gms:play-services-base:10.0.1",
-               playServicesLocation       : "com.google.android.gms:play-services-location:10.0.1",
-               playServicesGcm            : "com.google.android.gms:play-services-gcm:10.0.1",
+               playServicesBase           : "com.google.android.gms:play-services-base:11.0.2",
+               playServicesLocation       : "com.google.android.gms:play-services-location:11.0.2",
+               playServicesGcm            : "com.google.android.gms:play-services-gcm:11.0.2",
 
                imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 
