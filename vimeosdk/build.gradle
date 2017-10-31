@@ -1,8 +1,12 @@
 apply plugin: 'com.android.library'
 
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.Orchextra'
+
 android {
   compileSdkVersion 26
-  buildToolsVersion "26.0.1"
+  buildToolsVersion '26.0.2'
 
   defaultConfig {
     minSdkVersion 18
@@ -13,6 +17,14 @@ android {
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
   buildTypes {
+    staging {
+
+    }
+
+    debug {
+
+    }
+
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -21,15 +33,15 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  compile 'com.android.support:appcompat-v7:24.2.1'
-  testCompile 'junit:junit:4.12'
+  implementation 'com.android.support:appcompat-v7:26.0.2'
+  testImplementation 'junit:junit:4.12'
 
-  compile 'com.vimeo.networking:vimeo-networking:1.1.1'
-  compile 'com.google.android.exoplayer:exoplayer:r2.5.3'
+  implementation 'com.vimeo.networking:vimeo-networking:1.1.1'
+  implementation 'com.google.android.exoplayer:exoplayer:r2.5.3'
 //todo this mustbe only interface and the impl(glide or whatever)on the VimeoBuilder
-  compile 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01'
+  implementation 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01'
 }

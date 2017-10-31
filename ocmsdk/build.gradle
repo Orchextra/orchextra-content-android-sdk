@@ -6,6 +6,10 @@ apply from: 'common_methods.gradle'
 apply from: 'dependencies.gradle'
 apply plugin: 'me.tatarka.retrolambda'
 
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.Orchextra'
+
 apply from: 'variants.gradle'
 
 def CONCURRENT_INTERACTORS = "CONCURRENT_INTERACTORS"
@@ -60,6 +64,7 @@ android {
           YOUTUBE_DEVELOPER_KEY, STRING)
       setVariantBuildConfigField(variant, project.vimeoAccessToken,
           VIMEO_ACCESS_TOKEN, STRING)
+      println("flavor: " + flavor)
       println("--**********************************************************--")
     }
   }
@@ -79,8 +84,12 @@ android {
     unitTests.returnDefaultValues = true
   }
 
+  flavorDimensions "oreo"
+
   productFlavors {
-    ocm {}
+    ocm {
+      dimension "oreo"
+    }
   }
 
   // true to publish all flavour artifacts
@@ -102,54 +111,54 @@ configurations {
 
 dependencies {
   //TEST
-  testCompile project.testLibraries.junit
-  testCompile project.testLibraries.mockito
+  testImplementation project.testLibraries.junit
+  testImplementation project.testLibraries.mockito
 
-  compile fileTree(dir: 'libs', include: ['*.jar']) //youtube
+  implementation fileTree(dir: 'libs', include: ['*.jar']) //youtube
 
   //google Support/CustomTabs/playServices
-  compile project.libraries.androidSupportDesign
-  compile project.libraries.androidCustomtabs
+  implementation project.libraries.androidSupportDesign
+  implementation project.libraries.androidCustomtabs
 
-  compile project.libraries.playServicesBase
-  compile project.libraries.playServicesLocation
-  compile project.libraries.playServicesGcm
+  implementation project.libraries.playServicesBase
+  implementation project.libraries.playServicesLocation
+  implementation project.libraries.playServicesGcm
 
   //gigigo Lib
-  compile project.libraries.ggglib
-  compile project.libraries.gggJavaLib
+  implementation project.libraries.ggglib
+  implementation project.libraries.gggJavaLib
 
   //Dagger
-  compile project.libraries.dagger
+  implementation project.libraries.dagger
   annotationProcessor project.libraries.daggerCompiler
 
   //Image Loader Glide/Blur
-  compile project.libraries.imageloaderGlideBlur
+  implementation project.libraries.imageloaderGlideBlur
 
   //Orchextra
-  // compile project.libraries.oxvuforiaimplementation
+  // implementation project.libraries.oxvuforiaimplementation
   ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true }
   ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true }
   ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true }
 
   //customs Views
-  compile project.libraries.doubleViewPager
-  compile project.libraries.autofitTextView
-  compile project.libraries.multipleGridRecyclerView
+  implementation project.libraries.doubleViewPager
+  implementation project.libraries.autofitTextView
+  implementation project.libraries.multipleGridRecyclerView
 
-  compile project.libraries.rxAndroid
-  compile project.libraries.rxJava
-  compile project.libraries.rxRetrofit
-  compile project.libraries.arrow
+  implementation project.libraries.rxAndroid
+  implementation project.libraries.rxJava
+  implementation project.libraries.rxRetrofit
+  implementation project.libraries.arrow
 
-  compile project.libraries.kache
+  implementation project.libraries.kache
 
-  compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+  implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
 
-  compile project(':vimeosdk')
+  api project(':vimeosdk')
 
   //TEST
-  testCompile project.testLibraries.junit
-  testCompile project.testLibraries.assertj
-  testCompile project.testLibraries.mockito
+  testImplementation project.testLibraries.junit
+  testImplementation project.testLibraries.assertj
+  testImplementation project.testLibraries.mockito
 }
