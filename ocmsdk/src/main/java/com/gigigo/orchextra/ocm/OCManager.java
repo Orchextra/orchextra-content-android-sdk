@@ -51,8 +51,8 @@ import orchextra.javax.inject.Inject;
 
 public final class OCManager {
 
-  static Application mApplication;
   private static OCManager instance;
+
   @Inject OcmSdkLifecycle ocmSdkLifecycle;
   @Inject OcmContextProvider ocmContextProvider;
   @Inject OcmViewGenerator ocmViewGenerator;
@@ -61,6 +61,7 @@ public final class OCManager {
   @Inject OcmSchemeHandler schemeHandler;
   @Inject OcmStyleUi ocmStyleUi;
   @Inject OcmController ocmController;
+
   private OnRequiredLoginCallback onRequiredLoginCallback;
   private OnEventCallback onEventCallback;
   private String language;
@@ -70,6 +71,7 @@ public final class OCManager {
   private OnCustomSchemeReceiver onCustomSchemeReceiver;
   private boolean isShowReadedArticles = false;
   private int maxReadArticles = 100;
+
   //cambio para el inicio selectivo, MEJORAR,
   //necesitamos un contexto para q la funcion setNewOrchextracredentials pueda comprobar las preferences
   //lo suyo es no guardarlo en las preferences, de momneto así y una mejora sencilla seria añadir el contexto a
@@ -83,7 +85,6 @@ public final class OCManager {
   static void initSdk(Application application) {
     getInstance();
     instance.initOcm(application);
-    mApplication = application;//
   }
 
   static void setDoRequiredLoginCallback(OnRequiredLoginCallback onRequiredLoginCallback) {
@@ -489,7 +490,7 @@ public final class OCManager {
   public ArrayList<String> readReadArticles() {
 
     ArrayList<String> lst =
-        readSerializable(this.mApplication.getApplicationContext(), READ_ARTICLES_FILE);
+        readSerializable(ocmContextProvider.getApplicationContext(), READ_ARTICLES_FILE);
     if (lst != null) {
       return lst;
     } else {
@@ -498,7 +499,7 @@ public final class OCManager {
   }
 
   public void writeReadArticles(ArrayList<String> readArticles) {
-    saveSerializable(this.mApplication.getApplicationContext(), readArticles, READ_ARTICLES_FILE);
+    saveSerializable(ocmContextProvider.getApplicationContext(), readArticles, READ_ARTICLES_FILE);
   }
 
   public static <T extends Serializable> void saveSerializable(Context context, T objectToSave,
@@ -568,7 +569,6 @@ public final class OCManager {
   }
 
   public static boolean getShowReadArticles() {
-
     if (instance != null) {
       return instance.isShowReadedArticles;
     } else {
@@ -591,7 +591,7 @@ public final class OCManager {
     if (getInstance() != null) {
       return getInstance().readArticlesBitmapTransform;
     } else {
-      return new GrayscaleTransformation(mApplication);
+      return null;
     }
   }
 }

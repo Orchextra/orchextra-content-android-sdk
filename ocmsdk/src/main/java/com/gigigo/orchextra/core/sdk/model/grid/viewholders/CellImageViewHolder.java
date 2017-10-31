@@ -1,12 +1,14 @@
 package com.gigigo.orchextra.core.sdk.model.grid.viewholders;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
@@ -75,9 +77,11 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                       .priority(Priority.NORMAL)
                       .diskCacheStrategy(DiskCacheStrategy.ALL)
                       .dontAnimate();
-                  if(OCManager.getBitmapTransformReadArticles()!=null) {
 
-                    requestBuilder.bitmapTransform(OCManager.getBitmapTransformReadArticles());
+                  Transformation<Bitmap> bitmapTransformReadArticles =
+                      OCManager.getBitmapTransformReadArticles();
+                  if(bitmapTransformReadArticles!=null) {
+                    requestBuilder.bitmapTransform(bitmapTransformReadArticles);
                   } else {
                     //todo overlay, image.setForeground only api23, or ovelary with other image
                     //now change de image for test
