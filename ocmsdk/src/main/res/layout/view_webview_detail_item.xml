@@ -28,7 +28,10 @@
     android:id="@+id/ocm_webView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="54dp" />
+     />
+  <!--android:layout_marginBottom="54dp"-->
+
+  
   <!--<com.gigigo.orchextra.core.sdk.ui.views.NestedWebView-->
   <!--android:id="@+id/ocm_webView"-->
   <!--android:layout_width="match_parent"-->
