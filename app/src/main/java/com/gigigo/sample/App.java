@@ -11,7 +11,6 @@ import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.squareup.leakcanary.LeakCanary;
-import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
 public class App extends MultiDexApplication {
 
