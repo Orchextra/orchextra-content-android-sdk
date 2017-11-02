@@ -295,8 +295,8 @@ public class WebViewContentData extends UiGridBaseContentData {
 
   private void loadUrl() {
 
-    String url =
-        "https://register.coca-cola.com/pl/multikino?utm_source=ocm"; // getArguments().getString(EXTRA_URL);
+    String url = getArguments().getString(EXTRA_URL);
+    // "https://register.coca-cola.com/pl/multikino?utm_source=ocm"; // getArguments().getString(EXTRA_URL);
     //  "https://register.coca-cola.com/pl/dagrasso?utm_source=ocm";// "https://www.cocacola.de/de/home/";//
 
     if (url != null && !url.isEmpty() && webView != null) {
