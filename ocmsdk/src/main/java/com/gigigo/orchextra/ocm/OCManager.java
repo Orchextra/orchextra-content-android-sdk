@@ -34,6 +34,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
+import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
@@ -103,7 +104,7 @@ public final class OCManager {
     if (instance != null) {
       instance.ocmViewGenerator.getMenu(forceReload,
           new OcmViewGenerator.GetMenusViewGeneratorCallback() {
-            @Override public void onGetMenusLoaded(List<UiMenu> menus) {
+            @Override public void onGetMenusLoaded(UiMenuData menus) {
               menusCallback.onMenusLoaded(menus);
             }
 
