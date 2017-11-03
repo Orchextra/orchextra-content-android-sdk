@@ -99,7 +99,7 @@ android {
   //defaultPublishConfig "ocmStaging"
   //  defaultPublishConfig "ocmDebug"
   // default build flavour
-  defaultPublishConfig "ocmRelease"
+  defaultPublishConfig "ocmDebug"
 
 }
 
