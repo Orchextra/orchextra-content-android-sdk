@@ -6,9 +6,9 @@ apply from: 'common_methods.gradle'
 apply from: 'dependencies.gradle'
 apply plugin: 'me.tatarka.retrolambda'
 
-apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'com.github.dcendents.android-maven'
 
-group='com.github.Orchextra'
+//group='com.github.Orchextra'
 
 apply from: 'variants.gradle'
 
@@ -93,8 +93,9 @@ android {
     }
   }
 
+  // publishNonDefault is deprecated and has no effect anymore. All variants are now published.
   // true to publish all flavour artifacts
-  publishNonDefault true
+  //publishNonDefault true
   //defaultPublishConfig "ocmStaging"
   //  defaultPublishConfig "ocmDebug"
   // default build flavour
