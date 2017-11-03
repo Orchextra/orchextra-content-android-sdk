@@ -97,7 +97,7 @@ android {
   publishNonDefault true
   //defaultPublishConfig "ocmStaging"
   //  defaultPublishConfig "ocmDebug"
-  defaultPublishConfig "ocmRelease"
+  //defaultPublishConfig "ocmRelease"
 }
 
 jacocoAndroidUnitTestReport {
