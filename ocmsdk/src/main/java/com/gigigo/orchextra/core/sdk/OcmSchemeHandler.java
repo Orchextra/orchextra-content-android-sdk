@@ -9,18 +9,21 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
+import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import java.lang.ref.WeakReference;
+import orchextra.javax.inject.Inject;
 
 public class OcmSchemeHandler {
 
   private final OcmContextProvider contextProvider;
   private final OcmController ocmController;
   private final ActionHandler actionHandler;
+  @Inject Authoritation authoritation;
 
   public OcmSchemeHandler(OcmContextProvider contextProvider, OcmController ocmController,
       ActionHandler actionHandler) {
@@ -81,7 +84,7 @@ public class OcmSchemeHandler {
 
   private boolean elementRequiredUserToBeLogged(ElementCache elementCache) {
     return elementCache.getSegmentation().getRequiredAuth().equals(
-        RequiredAuthoritation.LOGGED);
+        RequiredAuthoritation.LOGGED) && !authoritation.isAuthorizatedUser();
   }
 
   private void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
