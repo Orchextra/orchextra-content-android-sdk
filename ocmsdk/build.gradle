@@ -85,11 +85,11 @@ android {
     unitTests.returnDefaultValues = true
   }
 
-  flavorDimensions "ocm"
+  flavorDimensions "oreo"
 //
   productFlavors {
     ocm {
-      dimension "ocm"
+      dimension "oreo"
     }
   }
 
@@ -97,7 +97,9 @@ android {
   publishNonDefault true
   //defaultPublishConfig "ocmStaging"
   //  defaultPublishConfig "ocmDebug"
-  //defaultPublishConfig "ocmRelease"
+  // default build flavour
+  defaultPublishConfig "ocmRelease"
+
 }
 
 jacocoAndroidUnitTestReport {
