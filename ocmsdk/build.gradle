@@ -120,7 +120,7 @@ if( android.productFlavors.size() > 0 ) {
       def bundleTask = tasks["bundle${name.capitalize()}"]
       artifacts {
         archives(bundleTask.archivePath) {
-          classifier null
+          classifier variant.name
           builtBy bundleTask
         }
       }
