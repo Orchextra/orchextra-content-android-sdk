@@ -13,9 +13,11 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
+import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import java.lang.ref.WeakReference;
@@ -88,7 +90,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
             renderContentItem(contentItem);
 
             waitSomeSecondUntilCheckNewContent(cachedContentData);
-
           }
 
           @Override public void onGetSectionFails(Exception e) {
@@ -309,8 +310,22 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                 OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
                 OCManager.addArticleToReadedArticles(element.getSlug());
                 System.out.println("CELL_CLICKED: " + element.getSlug());
-                getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
-                    viewWeakReference.get());
+
+                if (elementCache.getType() != ElementCacheType.WEBVIEW )//|| imageUrlToExpandInPreview!="" )
+                {  getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
+                      viewWeakReference.get());
+                  //getView().navigateToDetailView(elementCache, viewWeakReference.get());
+                } else {
+                  OcmWebViewActivity.open(viewWeakReference.get().getContext(),
+                               elementCache.getRender().getUrl(),elementCache.getName());
+                //  if (imageUrlToExpandInPreview != "") {
+                //    OcmWebViewActivity.open(viewWeakReference.get().getContext(),
+                //        elementCache.getRender().getUrl(),elementCache.getName());
+                //  } else {
+                //    OcmWebViewActivity.open(viewWeakReference.get().getContext(),
+                //        elementCache.getRender().getUrl(),elementCache.getName(),imageUrlToExpandInPreview);
+                //  }
+                }
               }
             }
 

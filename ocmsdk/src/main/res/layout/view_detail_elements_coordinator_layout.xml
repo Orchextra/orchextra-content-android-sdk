@@ -45,8 +45,9 @@
     <FrameLayout
         android:id="@+id/viewDetailContentLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         />
+<!--android:layout_height="match_parent" needed by webview-->
 
   </android.support.v4.widget.NestedScrollView>
 

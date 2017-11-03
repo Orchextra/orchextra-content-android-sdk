@@ -1,10 +1,10 @@
 project.ext {
 
-  androidCompileSdkVersion = 24
+  androidCompileSdkVersion = 26
   androidMinSdkVersion = 18
-  androidBuildToolsVersion = '25.0.3'
-  androidTargetSdkVersion = 23
-  supportVersion = '24.2.1'
+  androidBuildToolsVersion = '26.0.2'
+  androidTargetSdkVersion = 26
+  supportVersion = '26.0.2'
 
   libraries = [androidSupportDesign       : "com.android.support:design:${supportVersion}",
                androidCustomtabs          : "com.android.support:customtabs:${supportVersion}",
@@ -16,13 +16,13 @@ project.ext {
                ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:2c184f2ed7',
                ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:2c184f2ed7',
 
-               orchextrasdkStaging        : 'com.github.orchextra.orchextra-android-sdk:orchextrasdk:512Test:play11Staging@aar',
-               orchextrasdkDebug          : 'com.github.orchextra.orchextra-android-sdk:orchextrasdk:512Test:play11Debug@aar',
-               orchextrasdkRelease        : 'com.github.orchextra.orchextra-android-sdk:orchextrasdk:512Test:play11Release@aar',
+               orchextrasdkStaging        : 'com.github.orchextra.orchextra-android-sdk:orchextrasdk:513Test:play11Staging@aar',
+               orchextrasdkDebug          : 'com.github.orchextra.orchextra-android-sdk:orchextrasdk:513Test:play11Debug@aar',
+               orchextrasdkRelease        : 'com.github.orchextra.orchextra-android-sdk:orchextrasdk:513Test:play11Release@aar',
 
-               playServicesBase           : "com.google.android.gms:play-services-base:10.0.1",
-               playServicesLocation       : "com.google.android.gms:play-services-location:10.0.1",
-               playServicesGcm            : "com.google.android.gms:play-services-gcm:10.0.1",
+               playServicesBase           : "com.google.android.gms:play-services-base:11.0.2",
+               playServicesLocation       : "com.google.android.gms:play-services-location:11.0.2",
+               playServicesGcm            : "com.google.android.gms:play-services-gcm:11.0.2",
 
                imageloaderGlideBlur       : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 

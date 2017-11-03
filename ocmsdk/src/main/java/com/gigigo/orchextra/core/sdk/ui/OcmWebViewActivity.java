@@ -13,18 +13,30 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.WebViewContentData;
 import com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView;
 import com.gigigo.orchextra.ocmsdk.R;
 
-public class OcmWebViewActivity extends BaseActivity {
+@Deprecated public class OcmWebViewActivity extends BaseActivity {
 
   private static final String EXTRA_URL = "EXTRA_URL";
+  private static final String EXTRA_HEADER_TEXT = "EXTRA_HEADER_TEXT";
 
-  public static void open(Context context, String url) {
+  String uriImgPreview = "";
+  String webviewTitle = "";
+
+  public static void open(Context context, String url, String toolbarText) {
     Intent intent = new Intent(context, OcmWebViewActivity.class);
     intent.putExtra(EXTRA_URL, url);
+    intent.putExtra(EXTRA_HEADER_TEXT, toolbarText);
     context.startActivity(intent);
   }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Intent i = getIntent();
+    if (i != null) {
+      if (i.getStringExtra(EXTRA_HEADER_TEXT) != null) {
+        webviewTitle = i.getStringExtra(EXTRA_HEADER_TEXT);
+      }
+    }
+
     setContentView(R.layout.activity_ocm_webview_layout);
 
     setStatusbar();
@@ -38,6 +50,8 @@ public class OcmWebViewActivity extends BaseActivity {
     ocmToolbar.switchBetweenButtonAndToolbar(true, false);
     ocmToolbar.blockSwipeEvents(true);
     ocmToolbar.setOnClickBackButtonListener(v -> finish());
+    ocmToolbar.setToolbarTitle(webviewTitle);
+    ocmToolbar.setToolbarIcon(R.drawable.ox_close);
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP) private void setStatusbar() {
@@ -52,11 +66,15 @@ public class OcmWebViewActivity extends BaseActivity {
 
   private void setWebViewFragment() {
     String url = getIntent().getStringExtra(EXTRA_URL);
-
     WebViewContentData webViewContentDataFragment = WebViewContentData.newInstance(url);
+    if (uriImgPreview.equals("")) {
+      getSupportFragmentManager().beginTransaction()
+          .replace(R.id.ocmWebViewContainer, webViewContentDataFragment)
+          .commit();
+    } else {
+      //todo preview y tal
+      //WebViewContentData webViewContentData =(WebViewContentData) findViewById(R.id.webviewData);
 
-    getSupportFragmentManager().beginTransaction()
-        .replace(R.id.ocmWebViewContainer, webViewContentDataFragment)
-        .commit();
+    }
   }
 }

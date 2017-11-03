@@ -1,9 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
+  signingConfigs {
+    config {}
+  }
   compileSdkVersion 26
-  buildToolsVersion "26.0.1"
-
+  buildToolsVersion '26.0.2'
   defaultConfig {
     applicationId "com.gigigo.sample"
     minSdkVersion 18
@@ -13,20 +15,21 @@ android {
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
     //asv mandatory for gpu filters of glide
-//    ndk {
-//            abiFilters "armeabi-v7a"
-//          }
+    //    ndk {
+    //            abiFilters "armeabi-v7a"
+    //          }
   }
   buildTypes {
     release {
+      debuggable true
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      signingConfig  android.signingConfigs.debug
     }
   }
   lintOptions {
     abortOnError false
   }
-
 }
 
 configurations {
@@ -36,7 +39,8 @@ configurations {
 dependencies {
   compile project(path: ':ocmsdk')
   compile 'com.android.support:multidex:1.0.1'
-  compile 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
+    compile 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
   compile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-
+  implementation 'com.android.support:support-v4:26.0.2'
+  implementation 'com.android.support:design:26.0.2'
 }

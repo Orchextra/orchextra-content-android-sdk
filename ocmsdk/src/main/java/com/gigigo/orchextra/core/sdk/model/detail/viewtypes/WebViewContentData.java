@@ -21,12 +21,13 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
-import com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.federatedAuth.FAUtils;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -42,7 +43,7 @@ public class WebViewContentData extends UiGridBaseContentData {
   private static final String EXTRA_URL = "EXTRA_URL";
   private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
   private View mView;
-  private TouchyWebView webView;
+  private WebView webView;
   private View progress;
   private int addictionalPadding;
   private View webviewClipToPaddingContainer;
@@ -108,9 +109,12 @@ public class WebViewContentData extends UiGridBaseContentData {
       @Nullable Bundle savedInstanceState) {
     mView = inflater.inflate(R.layout.view_webview_detail_item, container, false);
 
-    webView = (TouchyWebView) mView.findViewById(R.id.ocm_webView);
+    webView = (WebView) mView.findViewById(R.id.ocm_webView);
     progress = mView.findViewById(R.id.webview_progress);
+
     //webviewClipToPaddingContainer = mView.findViewById(R.id.webviewClipToPaddingContainer);
+    // webView.setmScrollView((ScrollView) webviewClipToPaddingContainer);
+
     showProgressView(false); //avoid double loading
 
     return mView;
@@ -155,8 +159,10 @@ public class WebViewContentData extends UiGridBaseContentData {
   }
 
   private void init() {
-    initWebView();
-    loadUrl();
+    if (webView != null) {
+      initWebView();
+      loadUrl();
+    }
   }
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN) private void initWebView() {
@@ -166,7 +172,7 @@ public class WebViewContentData extends UiGridBaseContentData {
     webView.getSettings().setJavaScriptEnabled(true);
     webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
     webView.getSettings().setDomStorageEnabled(true);
-    webView.getSettings().setSupportZoom(false);
+    webView.getSettings().setSupportZoom(true);
     webView.getSettings().setAppCacheEnabled(false);
     webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
     webView.getSettings().setDatabaseEnabled(true);
@@ -188,6 +194,10 @@ public class WebViewContentData extends UiGridBaseContentData {
       }
     });
 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      WebView.setWebContentsDebuggingEnabled(true);
+    }
+
     webView.setWebViewClient(new WebViewClient() {
       @Override public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
@@ -199,6 +209,7 @@ public class WebViewContentData extends UiGridBaseContentData {
       }
 
       @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
         String mimeType = getMimeType(url);
         return launchPdfReader(Uri.parse(url), mimeType) || super.shouldOverrideUrlLoading(view,
             url);
@@ -221,9 +232,24 @@ public class WebViewContentData extends UiGridBaseContentData {
     //for avoid overlay keyboard over inputbox html webview
     webView.getSettings().setLoadWithOverviewMode(true);
     webView.getSettings().setUseWideViewPort(true);
+    webView.getSettings().setBuiltInZoomControls(true);
+    webView.getSettings().setDisplayZoomControls(true);
 
     this.getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
     this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+  }
+
+  @JavascriptInterface public void resize(final float height) {
+    this.getActivity().runOnUiThread(new Runnable() {
+      @Override public void run() {
+        Toast.makeText(WebViewContentData.this.getActivity(), "" + height, Toast.LENGTH_SHORT)
+            .show();
+
+        webView.setLayoutParams(
+            new RelativeLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels,
+                (int) (height * getResources().getDisplayMetrics().density)));
+      }
+    });
   }
 
   private boolean launchPdfReader(Uri url, String mimeType) {
@@ -270,6 +296,9 @@ public class WebViewContentData extends UiGridBaseContentData {
   private void loadUrl() {
 
     String url = getArguments().getString(EXTRA_URL);
+    // "https://register.coca-cola.com/pl/multikino?utm_source=ocm"; // getArguments().getString(EXTRA_URL);
+    //  "https://register.coca-cola.com/pl/dagrasso?utm_source=ocm";// "https://www.cocacola.de/de/home/";//
+
     if (url != null && !url.isEmpty() && webView != null) {
       FederatedAuthorization federatedAuthorization =
           (FederatedAuthorization) getArguments().getSerializable(EXTRA_FEDERATED_AUTH);
@@ -283,7 +312,8 @@ public class WebViewContentData extends UiGridBaseContentData {
             if (queryString != null && !queryString.isEmpty()) {
               String urlWithQueryParams = FAUtils.addQueryParamsToUrl(queryString, url);
               //no es necesario  OCManager.saveFedexAuth(url);
-              Log.d(WebViewContentData.class.getSimpleName(), "federatedAuth url: " + urlWithQueryParams);
+              Log.d(WebViewContentData.class.getSimpleName(),
+                  "federatedAuth url: " + urlWithQueryParams);
               if (urlWithQueryParams != null) {
                 showProgressView(true);
                 webView.loadUrl(urlWithQueryParams);
@@ -292,7 +322,6 @@ public class WebViewContentData extends UiGridBaseContentData {
               showProgressView(true);
               webView.loadUrl(url);
             }
-
           }
         });
       } else {
@@ -311,8 +340,8 @@ public class WebViewContentData extends UiGridBaseContentData {
     setClipToPaddingBottomSize(ClipToPadding.PADDING_NONE, addictionalPadding);
   }
 
-  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding,
-      int addictionalPadding) {
+  @Override
+  public void setClipToPaddingBottomSize(ClipToPadding clipToPadding, int addictionalPadding) {
     this.addictionalPadding = addictionalPadding;
 
     if (webviewClipToPaddingContainer != null) {

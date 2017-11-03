@@ -405,7 +405,7 @@ public final class OCManager {
     OrchextraBuilder builder = new OrchextraBuilder(app);
     builder.setApiKeyAndSecret(oxKey, oxSecret)
         .setLogLevel(OrchextraLogLevel.NETWORK)
-        .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
+        .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.NORMAL)
         .setOrchextraCompletionCallback(mOrchextraCompletionCallback);
 
     if (notificationActivityClass != null) {
