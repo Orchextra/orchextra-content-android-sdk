@@ -105,9 +105,9 @@ jacocoAndroidUnitTestReport {
 }
 
 configurations {
-  ocmStagingCompile
-  ocmDebugCompile
-  ocmReleaseCompile
+  ocmStagingImplementation
+  ocmDebugImplementation
+  ocmReleaseImplementation
 }
 
 dependencies {
@@ -138,11 +138,11 @@ dependencies {
 
   //Orchextra
   // implementation project.libraries.oxvuforiaimplementation
-  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true
+  ocmStagingImplementation(project.libraries.orchextrasdkStaging) { transitive = true
     exclude module: 'support-v4'  }
-  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true
+  ocmDebugImplementation(project.libraries.orchextrasdkDebug) { transitive = true
     exclude module: 'support-v4' }
-  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true
+  ocmReleaseImplementation(project.libraries.orchextrasdkRelease) { transitive = true
     exclude module: 'support-v4' }
 
   //customs Views
