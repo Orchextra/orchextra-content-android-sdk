@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.domain.entities.elementcache;
 
+import com.gigigo.orchextra.core.domain.entities.elements.ElementSegmentation;
 import java.util.List;
 
 public class ElementCache {
@@ -10,6 +11,7 @@ public class ElementCache {
   private ElementCachePreview preview;
   private ElementCacheRender render;
   private ElementCacheShare share;
+  private ElementSegmentation segmentation;
   private String name;
   private long updateAt;
 
@@ -59,6 +61,14 @@ public class ElementCache {
 
   public void setShare(ElementCacheShare share) {
     this.share = share;
+  }
+
+  public ElementSegmentation getSegmentation() {
+    return segmentation;
+  }
+
+  public void setSegmentation(ElementSegmentation segmentation) {
+    this.segmentation = segmentation;
   }
 
   public String getName() {

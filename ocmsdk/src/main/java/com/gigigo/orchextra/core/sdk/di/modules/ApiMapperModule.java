@@ -74,8 +74,10 @@ public class ApiMapperModule {
 
   @Singleton @Provides ApiElementCacheMapper provideApiElementCacheMapper(
       ApiElementCacheRenderMapper apiElementCacheItemRenderMapper,
-      ApiElementCachePreviewMapper apiElementCachePreviewMapper, ApiElementCacheShareMapper apiElementCacheShareMapper) {
-    return new ApiElementCacheMapper(apiElementCacheItemRenderMapper, apiElementCachePreviewMapper, apiElementCacheShareMapper);
+      ApiElementCachePreviewMapper apiElementCachePreviewMapper, ApiElementCacheShareMapper apiElementCacheShareMapper,
+      ApiElementSegmentationMapper apiElementSegmentationMapper) {
+    return new ApiElementCacheMapper(apiElementCacheItemRenderMapper, apiElementCachePreviewMapper
+        , apiElementCacheShareMapper, apiElementSegmentationMapper);
   }
 
   @Singleton @Provides ApiElementDataMapper provideApiElementDataMapper(ApiElementCacheMapper apiElementCacheMapper) {

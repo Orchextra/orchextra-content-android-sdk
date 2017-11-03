@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.data.api.mappers.elementcache;
 
 
+import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSegmentationMapper;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
@@ -14,13 +15,16 @@ public class ApiElementCacheMapper
   private final ApiElementCacheRenderMapper apiElementCacheItemRenderMapper;
   private final ApiElementCachePreviewMapper apiElementCachePreviewMapper;
   private final ApiElementCacheShareMapper apiElementCacheShareMapper;
+  private final ApiElementSegmentationMapper apiElementSegmentationMapper;
 
   public ApiElementCacheMapper(ApiElementCacheRenderMapper apiElementCacheItemRenderMapper,
       ApiElementCachePreviewMapper apiElementCachePreviewMapper,
-      ApiElementCacheShareMapper apiElementCacheShareMapper) {
+      ApiElementCacheShareMapper apiElementCacheShareMapper,
+      ApiElementSegmentationMapper apiElementSegmentationMapper) {
     this.apiElementCacheItemRenderMapper = apiElementCacheItemRenderMapper;
     this.apiElementCachePreviewMapper = apiElementCachePreviewMapper;
     this.apiElementCacheShareMapper = apiElementCacheShareMapper;
+    this.apiElementSegmentationMapper = apiElementSegmentationMapper;
   }
 
   @Override public ElementCache externalClassToModel(ApiElementCache data) {
@@ -49,6 +53,10 @@ public class ApiElementCacheMapper
 
     if (data.getShare() != null) {
       model.setShare(apiElementCacheShareMapper.externalClassToModel(data.getShare()));
+    }
+
+    if (data.getSegmentation() != null) {
+      model.setSegmentation(apiElementSegmentationMapper.externalClassToModel(data.getSegmentation()));
     }
 
     return model;
