@@ -60,6 +60,10 @@ public class OcmSchemeHandler {
     ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
+          if (elementRequiredUserToBeLogged(elementCache)) {
+            OCManager.notifyRequiredLoginToContinue();
+            return;
+          }
           executeAction(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
               imageViewWeakReference);
         }
