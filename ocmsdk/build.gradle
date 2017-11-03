@@ -6,9 +6,9 @@ apply from: 'common_methods.gradle'
 apply from: 'dependencies.gradle'
 apply plugin: 'me.tatarka.retrolambda'
 
-//apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.github.dcendents.android-maven'
 
-//group='com.github.Orchextra'
+group='com.github.Orchextra'
 
 apply from: 'variants.gradle'
 
@@ -111,6 +111,21 @@ configurations {
   ocmStagingImplementation
   ocmDebugImplementation
   ocmReleaseImplementation
+}
+
+if( android.productFlavors.size() > 0 ) {
+  android.libraryVariants.all { variant ->
+    // Publish a main artifact, otherwise the maven pom is not generated
+    if( variant.name == android.defaultPublishConfig ) {
+      def bundleTask = tasks["bundle${name.capitalize()}"]
+      artifacts {
+        archives(bundleTask.archivePath) {
+          classifier null
+          builtBy bundleTask
+        }
+      }
+    }
+  }
 }
 
 dependencies {
