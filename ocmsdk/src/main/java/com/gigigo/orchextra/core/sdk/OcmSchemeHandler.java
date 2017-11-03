@@ -16,20 +16,20 @@ import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import java.lang.ref.WeakReference;
-import orchextra.javax.inject.Inject;
 
 public class OcmSchemeHandler {
 
   private final OcmContextProvider contextProvider;
   private final OcmController ocmController;
   private final ActionHandler actionHandler;
-  @Inject Authoritation authoritation;
+  private final Authoritation authoritation;
 
   public OcmSchemeHandler(OcmContextProvider contextProvider, OcmController ocmController,
-      ActionHandler actionHandler) {
+      ActionHandler actionHandler, Authoritation authoritation) {
     this.contextProvider = contextProvider;
     this.ocmController = ocmController;
     this.actionHandler = actionHandler;
+    this.authoritation = authoritation;
   }
 
   public void processElementUrl(final String elementUrl) {
