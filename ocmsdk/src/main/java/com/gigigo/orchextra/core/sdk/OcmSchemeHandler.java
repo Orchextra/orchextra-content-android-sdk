@@ -35,9 +35,9 @@ public class OcmSchemeHandler {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
             OCManager.notifyRequiredLoginToContinue();
-            return;
+          } else {
+            executeAction(elementCache, elementUrl, null, 0, 0, null);
           }
-          executeAction(elementCache, elementUrl, null, 0, 0, null);
         }
       }
 
@@ -62,10 +62,10 @@ public class OcmSchemeHandler {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
             OCManager.notifyRequiredLoginToContinue();
-            return;
+          } else {
+            executeAction(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
+                imageViewWeakReference);
           }
-          executeAction(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
-              imageViewWeakReference);
         }
       }
 
