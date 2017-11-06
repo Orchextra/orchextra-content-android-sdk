@@ -3,7 +3,6 @@ package com.gigigo.orchextra.core.sdk;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.domain.OcmController;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
@@ -24,6 +23,7 @@ public class OcmSchemeHandler {
   private final OcmController ocmController;
   private final ActionHandler actionHandler;
   private final Authoritation authoritation;
+  private String elementURL;
 
   public OcmSchemeHandler(OcmContextProvider contextProvider, OcmController ocmController,
       ActionHandler actionHandler, Authoritation authoritation) {
@@ -38,9 +38,15 @@ public class OcmSchemeHandler {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
+            elementURL = elementUrl;
             OCManager.notifyRequiredLoginToContinue();
           } else {
-            executeAction(elementCache, elementCache.getRender().getContentUrl(), null, 0, 0, null);
+            String elementUri = elementUrl;
+            if (elementURL != null) {
+              elementUri = elementURL;
+              elementURL = null;
+            }
+            executeAction(elementCache, elementUri, null, 0, 0, null);
           }
         }
       }
@@ -134,7 +140,7 @@ public class OcmSchemeHandler {
         }
         break;
       default:
-        processDetailActivity(((ArticleButtonElement)render.getElements().get(0)).getElementUrl(), urlImageToExpand, widthScreen, heightScreen,
+        processDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen,
             imageViewToExpandInDetail);
         break;
     }
