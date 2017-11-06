@@ -69,13 +69,13 @@ android {
       println("--**********************************************************--")
     }
 
-   /* def bundleTask = tasks["bundle${name.capitalize()}"]
-    artifacts {
-      archives(bundleTask.archivePath) {
-        classifier null
-        builtBy bundleTask
-      }
-    }*/
+    /* def bundleTask = tasks["bundle${name.capitalize()}"]
+     artifacts {
+       archives(bundleTask.archivePath) {
+         classifier null
+         builtBy bundleTask
+       }
+     }*/
   }
 
   lintOptions {
@@ -104,7 +104,7 @@ android {
 
 
   //true to publish all flavour artifacts
-  //publishNonDefault true
+  // publishNonDefault true
   //defaultPublishConfig "ocmStaging"
   //defaultPublishConfig "ocmDebug"
   //defaultPublishConfig {"ocmRelease","ocmDebug","ocmStaging"}
@@ -116,8 +116,6 @@ android {
   //  defaultPublishConfig "ocmDebug"
   // default build flavour
   //defaultPublishConfig "ocmDebug"
-
-
 }
 
 jacocoAndroidUnitTestReport {
@@ -125,9 +123,9 @@ jacocoAndroidUnitTestReport {
 }
 
 configurations {
+  ocmReleaseImplementation
   ocmStagingImplementation
   ocmDebugImplementation
-  ocmReleaseImplementation
 }
 /*
 if( android.productFlavors.size() > 0 ) {
@@ -145,11 +143,20 @@ if( android.productFlavors.size() > 0 ) {
   }
 }
 */
-//install.dependsOn {
-//  assembleOcmDebug
-//  assembleOcmRelease
-//  assembleOcmStaging
-//}
+
+task finalize {
+  doFirst {
+    tasks.assembleOcmDebug.execute()
+    tasks.assembleOcmRelease.execute()
+    tasks.assembleOcmStaging.execute()
+  }
+
+  println('finally!')
+}
+//finalize.dependsOn(assembleDebug)
+build.finalizedBy(finalize)
+
+
 
 dependencies {
   //TEST
@@ -179,26 +186,32 @@ dependencies {
 
   //Orchextra
   // implementation project.libraries.oxvuforiaimplementation
- /*
-  ocmStagingCompile(project.libraries.orchextrasdkStaging) {
+  /*
+   ocmStagingCompile(project.libraries.orchextrasdkStaging) {
+     transitive = true
+     exclude module: 'support-v4'
+   }
+   ocmDebugCompile(project.libraries.orchextrasdkDebug) {
+     transitive = true
+     exclude module: 'support-v4'
+   }
+   ocmReleaseCompile(project.libraries.orchextrasdkRelease) {
+     transitive = true
+     exclude module: 'support-v4'
+   }
+ */
+  ocmStagingImplementation(project.libraries.orchextrasdkStaging) {
     transitive = true
     exclude module: 'support-v4'
   }
-  ocmDebugCompile(project.libraries.orchextrasdkDebug) {
+  ocmDebugImplementation(project.libraries.orchextrasdkDebug) {
     transitive = true
     exclude module: 'support-v4'
   }
-  ocmReleaseCompile(project.libraries.orchextrasdkRelease) {
+  ocmReleaseImplementation(project.libraries.orchextrasdkRelease) {
     transitive = true
     exclude module: 'support-v4'
   }
-*/
-  ocmStagingImplementation(project.libraries.orchextrasdkStaging) { transitive = true
-    exclude module: 'support-v4'  }
-  ocmDebugImplementation(project.libraries.orchextrasdkDebug) { transitive = true
-    exclude module: 'support-v4' }
-  ocmReleaseImplementation(project.libraries.orchextrasdkRelease) { transitive = true
-    exclude module: 'support-v4' }
 
 
   //customs Views
