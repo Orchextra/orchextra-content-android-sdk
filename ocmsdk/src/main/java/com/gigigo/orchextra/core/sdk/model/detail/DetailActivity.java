@@ -22,12 +22,10 @@ import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.model.detail.DetailPresenter;
 import com.gigigo.orchextra.core.controller.model.detail.DetailView;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
-import com.gigigo.orchextra.core.domain.entities.cid.User;
 import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -44,7 +42,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   private static final String EXTRA_WIDTH_IMAGE_TO_EXPAND_URL = "EXTRA_WIDTH_IMAGE_TO_EXPAND_URL";
   private static final String EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL = "EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL";
   private static final int NATIVE_LOGIN = 0x32;
-  private static final String LOGGED_USER = "LOGGED_USER";
+  private static final String LOGGED_USER_UUID = "LOGGED_USER_UUID";
 
   @Inject DetailPresenter presenter;
   OnFinishViewListener onFinishViewListener = new OnFinishViewListener() {
@@ -96,11 +94,9 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
      if (requestCode == NATIVE_LOGIN) {
       if (resultCode == Activity.RESULT_OK) {
-        Ocm.setUserIsAuthorizated(true);
-
-        User user = (User) data.getExtras().getSerializable(LOGGED_USER);
-        if (user != null) {
-          presenter.setLoginUserFromNativeLogin(user.getUuid());
+        String uuid = data.getExtras().getString(LOGGED_USER_UUID);
+        if (uuid != null) {
+          presenter.setLoginUserFromNativeLogin(uuid);
         }
         /*Ocm.setLoggedAction(this.cachedElement, this.elementUrl, this.imageToExpandUrl,
             this.widthImageToExpandUrl, this.heightImageToExpandUrl, null);*/
