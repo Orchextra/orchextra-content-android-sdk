@@ -23,7 +23,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  * scheduler = new PriorityScheduler(); Observable.just(1, 2, 3) .subscribeOn(scheduler.priority(10))
  * .subscribe(); }
  */
-public final class PriorityScheduler {
+public class PriorityScheduler {
 
   public enum Priority {
     LOWEST(0),

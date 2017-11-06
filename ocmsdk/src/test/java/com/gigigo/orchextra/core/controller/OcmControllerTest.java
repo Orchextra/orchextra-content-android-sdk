@@ -51,7 +51,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
     ocmController.clearCache(true, true, null);
 
     verify(mockClearCache).execute(any(DisposableObserver.class), any(ClearCache.Params.class),
-        PriorityScheduler.Priority.LOW);
+        any(PriorityScheduler.Priority.class));
     verifyNoMoreInteractions(mockClearCache);
   }
 
@@ -59,7 +59,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
     ocmController.getDetails(true, FAKE_DETAIL, null);
 
     verify(mockGetDetail).execute(any(DisposableObserver.class), any(GetDetail.Params.class),
-        PriorityScheduler.Priority.LOW);
+        any(PriorityScheduler.Priority.class));
     verifyNoMoreInteractions(mockGetDetail);
   }
 
@@ -67,7 +67,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
     ocmController.getSection(true, FAKE_SECTION, FAKE_IMAGES, null);
 
     verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class),
-        PriorityScheduler.Priority.LOW);
+        any(PriorityScheduler.Priority.class));
     verifyNoMoreInteractions(mockGetMenus);
   }
 
@@ -75,7 +75,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
     ocmController.getMenu(true, null);
 
     verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class),
-        PriorityScheduler.Priority.LOW);
+        any(PriorityScheduler.Priority.class));
     verifyNoMoreInteractions(mockGetMenus);
   }
 
@@ -83,7 +83,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
     ocmController.search(FAKE_TEXT, null);
 
     verify(mockSearchElements).execute(any(DisposableObserver.class),
-        any(SearchElements.Params.class), PriorityScheduler.Priority.LOW);
+        any(SearchElements.Params.class), any(PriorityScheduler.Priority.class));
 
     verifyNoMoreInteractions(mockSearchElements);
   }
