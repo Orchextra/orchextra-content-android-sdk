@@ -26,6 +26,7 @@ import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -40,6 +41,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   private static final String EXTRA_IMAGE_TO_EXPAND_URL = "EXTRA_IMAGE_TO_EXPAND_URL";
   private static final String EXTRA_WIDTH_IMAGE_TO_EXPAND_URL = "EXTRA_WIDTH_IMAGE_TO_EXPAND_URL";
   private static final String EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL = "EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL";
+  private static final int LOGGED_ACTION = 0x62;
 
   @Inject DetailPresenter presenter;
   OnFinishViewListener onFinishViewListener = new OnFinishViewListener() {
@@ -83,6 +85,18 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     //CoordinatorDetail with click event recreate the view and preview is showed when return in video activity, so dont move
     presenter.attachView(this);
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+     if (requestCode == LOGGED_ACTION) {
+      if (resultCode == Activity.RESULT_OK) {
+        Ocm.setUserIsAuthorizated(true);
+        /*Ocm.setLoggedAction(this.cachedElement, this.elementUrl, this.urlImageToExpand,
+            this.widthScreen, this.heightScreen, this.imageViewToExpandInDetail);*/
+      }
+    }
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP) @Override
