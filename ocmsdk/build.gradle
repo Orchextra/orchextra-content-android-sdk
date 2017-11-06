@@ -85,19 +85,22 @@ android {
     unitTests.returnDefaultValues = true
   }
 
-  flavorDimensions "ocm"
+  flavorDimensions "oreo"
 //
   productFlavors {
     ocm {
-      dimension "ocm"
+      dimension "oreo"
     }
   }
 
+  // publishNonDefault is deprecated and has no effect anymore. All variants are now published.
   // true to publish all flavour artifacts
-  publishNonDefault true
+  //publishNonDefault true
   //defaultPublishConfig "ocmStaging"
   //  defaultPublishConfig "ocmDebug"
-  defaultPublishConfig "ocmRelease"
+  // default build flavour
+  defaultPublishConfig "ocmDebug"
+
 }
 
 jacocoAndroidUnitTestReport {
@@ -105,9 +108,24 @@ jacocoAndroidUnitTestReport {
 }
 
 configurations {
-  ocmStagingCompile
-  ocmDebugCompile
-  ocmReleaseCompile
+  ocmStagingImplementation
+  ocmDebugImplementation
+  ocmReleaseImplementation
+}
+
+if( android.productFlavors.size() > 0 ) {
+  android.libraryVariants.all { variant ->
+    // Publish a main artifact, otherwise the maven pom is not generated
+    if( variant.name == android.defaultPublishConfig ) {
+      def bundleTask = tasks["bundle${name.capitalize()}"]
+      artifacts {
+        archives(bundleTask.archivePath) {
+          classifier variant.name
+          builtBy bundleTask
+        }
+      }
+    }
+  }
 }
 
 dependencies {
@@ -138,11 +156,11 @@ dependencies {
 
   //Orchextra
   // implementation project.libraries.oxvuforiaimplementation
-  ocmStagingCompile(project.libraries.orchextrasdkStaging) { transitive = true
+  ocmStagingImplementation(project.libraries.orchextrasdkStaging) { transitive = true
     exclude module: 'support-v4'  }
-  ocmDebugCompile(project.libraries.orchextrasdkDebug) { transitive = true
+  ocmDebugImplementation(project.libraries.orchextrasdkDebug) { transitive = true
     exclude module: 'support-v4' }
-  ocmReleaseCompile(project.libraries.orchextrasdkRelease) { transitive = true
+  ocmReleaseImplementation(project.libraries.orchextrasdkRelease) { transitive = true
     exclude module: 'support-v4' }
 
   //customs Views
