@@ -39,5 +39,6 @@ public class DetailPresenter extends Presenter<DetailView> {
     Ocm.bindUser(crmUser);
     Ocm.setUserIsAuthorizated(true);
     Ocm.start();
+    getView().redirectToAction();
   }
 }

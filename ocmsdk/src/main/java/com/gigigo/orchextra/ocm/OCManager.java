@@ -16,7 +16,6 @@ import com.gigigo.orchextra.OrchextraCompletionCallback;
 import com.gigigo.orchextra.OrchextraLogLevel;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.OcmController;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
@@ -44,7 +43,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -170,11 +168,9 @@ public final class OCManager {
     }
   }
 
-  static void setLoggedAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
-      int widthScreen, int heightScreen, WeakReference<ImageView> imageViewToExpandInDetail) {
+  static void setLoggedAction(String elementUrl) {
     if (instance != null) {
-      instance.schemeHandler.executeAction(cachedElement, elementUrl, urlImageToExpand,
-      widthScreen, heightScreen, imageViewToExpandInDetail);
+      instance.schemeHandler.processElementUrl(elementUrl);
     }
   }
 

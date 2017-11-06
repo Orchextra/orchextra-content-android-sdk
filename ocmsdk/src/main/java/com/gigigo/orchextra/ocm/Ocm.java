@@ -3,12 +3,10 @@ package com.gigigo.orchextra.ocm;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.ImageView;
 import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
@@ -21,7 +19,6 @@ import gigigo.com.vimeolibs.VimeoCallback;
 import gigigo.com.vimeolibs.VimeoExoPlayerActivity;
 import gigigo.com.vimeolibs.VimeoInfo;
 import gigigo.com.vimeolibs.VimeoManager;
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
 import jp.wasabeef.glide.transformations.GrayscaleTransformation;
@@ -270,10 +267,8 @@ public final class Ocm {
   /**
    * Provide when the action requires the user to be logged.
    */
-  public static void setLoggedAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
-      int widthScreen, int heightScreen, WeakReference<ImageView> imageViewToExpandInDetail) {
-    OCManager.setLoggedAction(cachedElement, elementUrl, urlImageToExpand,
-        widthScreen, heightScreen, imageViewToExpandInDetail);
+  public static void setLoggedAction(String elementUrl) {
+    OCManager.setLoggedAction(elementUrl);
   }
 
   /**
