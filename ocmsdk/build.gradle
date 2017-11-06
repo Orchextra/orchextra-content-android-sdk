@@ -127,7 +127,7 @@ configurations {
   ocmStagingImplementation
   ocmDebugImplementation
 }
-/*
+
 if( android.productFlavors.size() > 0 ) {
   android.libraryVariants.all { variant ->
     // Publish a main artifact, otherwise the maven pom is not generated
@@ -142,7 +142,7 @@ if( android.productFlavors.size() > 0 ) {
     }
   }
 }
-*/
+
 
 task finalize {
   doFirst {
