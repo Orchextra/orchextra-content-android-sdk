@@ -43,7 +43,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   private static final String EXTRA_IMAGE_TO_EXPAND_URL = "EXTRA_IMAGE_TO_EXPAND_URL";
   private static final String EXTRA_WIDTH_IMAGE_TO_EXPAND_URL = "EXTRA_WIDTH_IMAGE_TO_EXPAND_URL";
   private static final String EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL = "EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL";
-  private static final int LOGGED_ACTION = 0x62;
+  private static final int NATIVE_LOGIN = 0x32;
   private static final String LOGGED_USER = "LOGGED_USER";
 
   @Inject DetailPresenter presenter;
@@ -94,7 +94,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
-     if (requestCode == LOGGED_ACTION) {
+     if (requestCode == NATIVE_LOGIN) {
       if (resultCode == Activity.RESULT_OK) {
         Ocm.setUserIsAuthorizated(true);
 
