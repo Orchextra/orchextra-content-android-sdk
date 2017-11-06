@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.controller.model.detail;
 import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.control.presenters.base.Presenter;
 import com.gigigo.orchextra.ocm.Ocm;
+import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 
@@ -38,7 +39,14 @@ public class DetailPresenter extends Presenter<DetailView> {
     CrmUser crmUser = new CrmUser(userId, null, null);
     Ocm.bindUser(crmUser);
     Ocm.setUserIsAuthorizated(true);
-    Ocm.start();
-    getView().redirectToAction();
+    Ocm.start(new OcmCredentialCallback() {
+      @Override public void onCredentialReceiver(String accessToken) {
+        getView().redirectToAction();
+      }
+
+      @Override public void onCredentailError(String code) {
+
+      }
+    });
   }
 }

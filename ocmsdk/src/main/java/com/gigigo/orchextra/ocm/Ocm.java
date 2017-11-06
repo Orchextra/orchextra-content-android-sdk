@@ -279,6 +279,12 @@ public final class Ocm {
     OCManager.setNewOrchextraCredentials(apiKey, apiSecret, onCredentialCallback);
   }
 
+  public static void start(
+      OcmCredentialCallback onCredentialCallback) {
+    OCManager.start(onCredentialCallback);
+  }
+
+
   /**
    * Set a business unit
    */

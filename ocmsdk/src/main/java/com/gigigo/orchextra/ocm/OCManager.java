@@ -239,6 +239,12 @@ public final class OCManager {
     Orchextra.updateSDKCredentials(apiKey, apiSecret, true);
   }
 
+  public static void start(OcmCredentialCallback onCredentialCallback) {
+    instance.ocmCredentialCallback = onCredentialCallback;
+
+    Orchextra.start();
+  }
+
   static void bindUser(CrmUser crmUser) {
     Orchextra.bindUser(crmUser);
     Orchextra.commitConfiguration();
