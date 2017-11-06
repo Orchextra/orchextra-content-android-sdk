@@ -37,7 +37,8 @@ public class OcmSchemeHandler {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
-            OCManager.notifyRequiredLoginToContinue();
+            OCManager.notifyLoggedActionRequiredToContinue(elementCache, elementUrl, null, 0,
+                0, null);
           } else {
             executeAction(elementCache, elementUrl, null, 0, 0, null);
           }
@@ -64,7 +65,8 @@ public class OcmSchemeHandler {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
-            OCManager.notifyRequiredLoginToContinue();
+            OCManager.notifyLoggedActionRequiredToContinue(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
+                imageViewWeakReference);
           } else {
             executeAction(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
                 imageViewWeakReference);
@@ -87,7 +89,7 @@ public class OcmSchemeHandler {
         RequiredAuthoritation.LOGGED) && !authoritation.isAuthorizatedUser();
   }
 
-  private void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
+  public void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
       int widthScreen, int heightScreen, WeakReference<ImageView> imageViewToExpandInDetail) {
 
     boolean hasPreview = cachedElement.getPreview() != null;
