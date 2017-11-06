@@ -153,8 +153,8 @@ task finalize {
 
   println('finally!')
 }
-//finalize.dependsOn(assembleDebug)
-install.finalizedBy(finalize)
+finalize.dependsOn(build)
+//install.finalizedBy(finalize)
 
 
 
