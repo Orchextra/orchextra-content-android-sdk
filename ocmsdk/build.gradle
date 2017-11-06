@@ -153,10 +153,9 @@ task finalize {
 
   println('finally!')
 }
-finalize.dependsOn(install)
-install.finalizedBy(finalize)
-
-
+finalize.dependsOn(ocmsdk:install)
+//install.finalizedBy(finalize)
+install.dependsOn(ocmsdk:build)
 
 dependencies {
   //TEST
