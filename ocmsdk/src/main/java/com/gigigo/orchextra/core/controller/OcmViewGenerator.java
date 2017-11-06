@@ -7,6 +7,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
+import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
@@ -37,7 +38,7 @@ public interface OcmViewGenerator {
 
   // Callbacks
   interface GetMenusViewGeneratorCallback {
-    void onGetMenusLoaded(List<UiMenu> menus);
+    void onGetMenusLoaded(UiMenuData menus);
 
     void onGetMenusFails(Throwable e);
   }

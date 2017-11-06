@@ -11,6 +11,7 @@ import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
+import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
@@ -179,7 +180,7 @@ public final class Ocm {
    */
   public static void getMenus(boolean forceReload, OcmCallbacks.Menus menusCallback) {
     OCManager.getMenus(forceReload, new OCManagerCallbacks.Menus() {
-      @Override public void onMenusLoaded(List<UiMenu> menus) {
+      @Override public void onMenusLoaded(UiMenuData menus) {
         menusCallback.onMenusLoaded(menus);
       }
 
