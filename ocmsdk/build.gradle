@@ -68,14 +68,14 @@ android {
       println("flavor: " + flavor)
       println("--**********************************************************--")
     }
-    
-    def bundleTask = tasks["bundle${name.capitalize()}"]
+
+   /* def bundleTask = tasks["bundle${name.capitalize()}"]
     artifacts {
       archives(bundleTask.archivePath) {
         classifier null
         builtBy bundleTask
       }
-    }
+    }*/
   }
 
   lintOptions {
