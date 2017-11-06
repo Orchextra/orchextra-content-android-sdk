@@ -16,6 +16,7 @@ import com.gigigo.orchextra.OrchextraCompletionCallback;
 import com.gigigo.orchextra.OrchextraLogLevel;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.OcmController;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
@@ -43,10 +44,10 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 import orchextra.javax.inject.Inject;
 
 public final class OCManager {
@@ -169,6 +170,14 @@ public final class OCManager {
     }
   }
 
+  static void setLoggedAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
+      int widthScreen, int heightScreen, WeakReference<ImageView> imageViewToExpandInDetail) {
+    if (instance != null) {
+      instance.schemeHandler.executeAction(cachedElement, elementUrl, urlImageToExpand,
+      widthScreen, heightScreen, imageViewToExpandInDetail);
+    }
+  }
+
   static void setStyleUi(OcmStyleUiBuilder ocmUiBuilder) {
     if (instance != null) {
       instance.ocmStyleUi.setStyleUi(ocmUiBuilder);
@@ -191,6 +200,15 @@ public final class OCManager {
   public static void notifyRequiredLoginToContinue() {
     if (instance != null && instance.onRequiredLoginCallback != null) {
       instance.onRequiredLoginCallback.doRequiredLogin();
+    }
+  }
+
+  public static void notifyLoggedActionRequiredToContinue(ElementCache elementCache, String elementUrl,
+      String urlImageToExpand, int widthScreen, int heightScreen,
+      WeakReference<ImageView> imageViewWeakReference) {
+    if (instance != null && instance.onRequiredLoginCallback != null) {
+      instance.onRequiredLoginCallback.doLoggedActionRequired(elementCache, elementUrl,
+          urlImageToExpand, widthScreen, heightScreen, imageViewWeakReference);
     }
   }
 
