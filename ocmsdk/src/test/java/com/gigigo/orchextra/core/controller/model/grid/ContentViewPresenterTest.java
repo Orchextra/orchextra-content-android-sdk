@@ -37,7 +37,6 @@ import static org.mockito.Mockito.verify;
   @Test public void testLoadSectionWithCacheAndAfterNetwork() {
     presenter.loadSectionWithFilter(FAKE_ID, FAKE_FILTER);
 
-    verify(mockContentView).showProgressView(true);
     verify(mockOcmController).getSection(anyBoolean(), anyString(), anyInt(),
         any(OcmController.GetSectionControllerCallback.class));
   }

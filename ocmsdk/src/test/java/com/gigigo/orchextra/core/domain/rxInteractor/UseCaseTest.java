@@ -15,6 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class) public class UseCaseTest {
 
@@ -30,7 +31,8 @@ import static org.mockito.BDDMockito.given;
   @Before public void setUp() {
     this.useCase = new UseCaseTestClass(mockThreadExecutor, mockPostExecutionThread);
     this.testObserver = new TestDisposableObserver<>();
-    given(mockPostExecutionThread.getScheduler()).willReturn(new TestScheduler());
+    when(mockThreadExecutor.priority(PriorityScheduler.Priority.LOW.getPriority())).thenReturn(new TestScheduler());
+    when(mockPostExecutionThread.getScheduler()).thenReturn(new TestScheduler());
   }
 
   @Test public void testBuildUseCaseObservableReturnCorrectResult() {
