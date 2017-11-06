@@ -34,19 +34,21 @@ public class OcmSchemeHandler {
   }
 
   public void processElementUrl(final String elementUrl) {
-    ocmController.getDetails(true, elementUrl, new OcmController.GetDetailControllerCallback() {
+    String elementUri = elementUrl;
+    if (elementURL != null) {
+      elementUri = elementURL;
+      elementURL = null;
+    }
+
+    String finalElementUri = elementUri;
+    ocmController.getDetails(true, elementUri, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
             elementURL = elementUrl;
             OCManager.notifyRequiredLoginToContinue();
           } else {
-            String elementUri = elementUrl;
-            if (elementURL != null) {
-              elementUri = elementURL;
-              elementURL = null;
-            }
-            executeAction(elementCache, elementUri, null, 0, 0, null);
+            executeAction(elementCache, finalElementUri, null, 0, 0, null);
           }
         }
       }
