@@ -34,6 +34,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeFragm
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
+import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
@@ -65,7 +66,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     });
   }
 
-  private List<UiMenu> transformMenu(MenuContentData menuContentData) {
+  private UiMenuData transformMenu(MenuContentData menuContentData) {
+
+    UiMenuData uiMenuData = new UiMenuData();
+
     List<UiMenu> menuList = new ArrayList<>();
 
     if (menuContentData != null
@@ -91,7 +95,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
       }
     }
 
-    return menuList;
+    uiMenuData.setUiMenuList(menuList);
+    uiMenuData.setFromCache(menuContentData.isFromCache());
+
+    return uiMenuData;
   }
 
   @Override

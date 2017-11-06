@@ -53,6 +53,8 @@ public class ApiMenuContentListResponseMapper
     }
     model.setElementsCache(elementCacheItemMap);
 
+    model.setFromCache(data.isFromCache());
+
     return model;
   }
 }

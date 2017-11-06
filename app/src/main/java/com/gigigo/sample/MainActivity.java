@@ -8,14 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 import com.gigigo.orchextra.Orchextra;
-import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocm.OCManagerCallbacks;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
+import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import java.io.File;
 import java.util.List;
 
@@ -25,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
   private ViewPager viewpager;
   private ScreenSlidePagerAdapter adapter;
   private View newContentMainContainer;
-
   private TabLayout.OnTabSelectedListener onTabSelectedListener =
       new TabLayout.OnTabSelectedListener() {
         @Override public void onTabSelected(TabLayout.Tab tab) {
@@ -43,23 +41,33 @@ public class MainActivity extends AppCompatActivity {
           ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem())).reloadSection();
         }
       };
-
   private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {
       Toast.makeText(getApplicationContext(), "Item needs permissions", Toast.LENGTH_SHORT).show();
     }
   };
 
+  public static boolean deleteDir(File dir) {
+    if (dir != null && dir.isDirectory()) {
+      String[] children = dir.list();
+      for (int i = 0; i < children.length; i++) {
+        boolean success = deleteDir(new File(dir, children[i]));
+        if (!success) {
+          return false;
+        }
+      }
+    }
+
+    return dir.delete();
+  }
+
   @Override protected void onResume() {
     super.onResume();
-    //ReadedArticles
-    if (OCManager.getShowReadArticles() && adapter != null) {
-      adapter.reloadSections();
 
-      //Toast.makeText(this, "Refresh grid from integratied app if readed articles are enabled transform number"
-      //    + OCManager.transform, Toast.LENGTH_LONG).show();
-      //OCManager.transform+=1;
-    }
+    //ReadedArticles
+    //if (OCManager.getShowReadArticles() && adapter != null) {
+    //  adapter.reloadSections();
+    //}
   }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -68,63 +76,37 @@ public class MainActivity extends AppCompatActivity {
     initViews();
 
     Ocm.setOnDoRequiredLoginCallback(onDoRequiredLoginCallback);
+
+    startCredentials();
   }
 
   private void initViews() {
     tabLayout = (TabLayout) findViewById(R.id.tabLayout);
     viewpager = (ViewPager) findViewById(R.id.viewpager);
-    View fabReload = findViewById(R.id.fabReload);
-    View fabChange = findViewById(R.id.fabChange);
-    View fabClean = findViewById(R.id.fabClean);
+    //View fabReload = findViewById(R.id.fabReload);
+    //View fabChange = findViewById(R.id.fabChange);
+    //View fabClean = findViewById(R.id.fabClean);
 
     //fabChange.setOnClickListener(new View.OnClickListener() {
     //  @Override public void onClick(View v) {
-        startCredentials();
-        if (OCManager.getShowReadArticles() && adapter != null) {
-          //OCManager.transform+=1;
-          adapter.reloadSections();
-          //Toast.makeText(MainActivity.this, "Refresh grid from integratied app if readed articles are enabled transform number"
-          //    + OCManager.transform, Toast.LENGTH_LONG).show();
-        }
-      //}
+    //    startCredentials();
+    //if (OCManager.getShowReadArticles() && adapter != null) {
+    //OCManager.transform+=1;
+    //adapter.reloadSections();
+    //Toast.makeText(MainActivity.this, "Refresh grid from integratied app if readed articles are enabled transform number"
+    //    + OCManager.transform, Toast.LENGTH_LONG).show();
+    //}
+    //}
     //});
 
-    fabClean.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        //oldcode
-        //Toast.makeText(MainActivity.this, "Delete all data webStorage", Toast.LENGTH_LONG).show();
-         clearDataAndGoToChangeCountryView();
-
-        //final String CLIENT_ID = "084c3b59bac4ed2e8a08698d3d28071f8bd4f3bf";
-        //final String CLIENTE_SECRET =
-        //    "gLURPc2Cpcc5nj8ck3DYBt/avOhaYy0mcFTxCsmsyfVa9kJrXOFx6Cxau/CUOX4vZrYS2Y5/9rUJDtSMNgc4rjTNT55dTFlk9q51hlNOAnjg9hjV1UIYZo9cGYS54UON";
-        //final String SCOPE = "private public video_files";
-        //
-        //final String VERTICAL_VIDEO="237059608";
-        //final String VIDEO_ID ="234291582";// "236232109";
-        //final String ACCESS_TOKEN = "50163590b4402cceefb2c78a7aba7093";
-        //
-        //Ocm.TestVimeoVideoFeature(MainActivity.this, ACCESS_TOKEN, VERTICAL_VIDEO);
-      }
-    });
-
     newContentMainContainer = findViewById(R.id.newContentMainContainer);
-
-    fabReload.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        adapter.reloadSections();
-      }
-    });
 
     adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
     viewpager.setAdapter(adapter);
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
   }
 
-  static String country = "gb";
-
   private void startCredentials() {
-    Ocm.setBusinessUnit(country);
     Ocm.startWithCredentials(App.API_KEY, App.API_SECRET, new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
         //TODO Fix in Orchextra
@@ -144,26 +126,11 @@ public class MainActivity extends AppCompatActivity {
 
     Ocm.setOnCustomSchemeReceiver(new OnCustomSchemeReceiver() {
       @Override public void onReceive(String customScheme) {
-       // Toast.makeText(MainActivity.this, customScheme, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(MainActivity.this, customScheme, Toast.LENGTH_SHORT).show();
         Orchextra.startScannerActivity();
       }
     });
     Ocm.start();//likewoah
-  }
-
-  //region clear all data
-  private void clearDataAndGoToChangeCountryView() {
-    clearApplicationData();
-    Orchextra.stop(); //asv V.I.Code
-    Ocm.clearData(true, true, new OCManagerCallbacks.Clear() {
-      @Override public void onDataClearedSuccessfull() {
-
-      }
-
-      @Override public void onDataClearFails(Exception e) {
-
-      }
-    });
   }
 
   public void clearApplicationData() {
@@ -178,32 +145,22 @@ public class MainActivity extends AppCompatActivity {
       }
     }
   }
-
-  public static boolean deleteDir(File dir) {
-    if (dir != null && dir.isDirectory()) {
-      String[] children = dir.list();
-      for (int i = 0; i < children.length; i++) {
-        boolean success = deleteDir(new File(dir, children[i]));
-        if (!success) {
-          return false;
-        }
-      }
-    }
-
-    return dir.delete();
-  }
   //endregion
 
   private void getContent() {
     Ocm.getMenus(false, new OcmCallbacks.Menus() {
-      @Override public void onMenusLoaded(List<UiMenu> uiMenu) {
-        if (uiMenu == null) {
+      @Override public void onMenusLoaded(UiMenuData uiMenuData) {
+        if (uiMenuData.getUiMenuList() == null) {
           Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
         } else {
+          List<UiMenu> uiMenu = uiMenuData.getUiMenuList();
           viewpager.setOffscreenPageLimit(uiMenu.size());
           onGoDetailView(uiMenu);
           adapter.setDataItems(uiMenu);
-          checkIfMenuHasChanged(uiMenu);
+
+          if (uiMenuData.isFromCache()) {
+            checkIfMenuHasChanged(uiMenu);
+          }
         }
       }
 
@@ -215,7 +172,8 @@ public class MainActivity extends AppCompatActivity {
 
   private void checkIfMenuHasChanged(final List<UiMenu> oldMenus) {
     Ocm.getMenus(true, new OcmCallbacks.Menus() {
-      @Override public void onMenusLoaded(List<UiMenu> newMenus) {
+      @Override public void onMenusLoaded(UiMenuData newMenudata) {
+        List<UiMenu> newMenus = newMenudata.getUiMenuList();
         if (oldMenus == null || newMenus == null) {
           return;
         }

@@ -42,6 +42,8 @@ import orchextra.javax.inject.Singleton;
           (ApiMenuContentData) kache.get(ApiMenuContentData.class, MENU_KEY);
 
       if (apiMenuContentData != null) {
+        apiMenuContentData.setFromCache(true);
+
         emitter.onNext(apiMenuContentData);
         emitter.onComplete();
       } else {
@@ -71,6 +73,8 @@ import orchextra.javax.inject.Singleton;
           (ApiSectionContentData) kache.get(ApiSectionContentData.class, elementUrl);
 
       if (apiSectionContentData != null) {
+        apiSectionContentData.setFromCache(true);
+
         emitter.onNext(apiSectionContentData);
         emitter.onComplete();
       } else {

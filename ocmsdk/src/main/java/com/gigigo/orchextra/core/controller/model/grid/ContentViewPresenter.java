@@ -23,6 +23,7 @@ import com.gigigo.orchextra.ocm.OcmEvent;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import org.w3c.dom.Text;
 
 public class ContentViewPresenter extends Presenter<ContentView> {
 
@@ -45,14 +46,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     getView().initUi();
   }
 
-  public void loadSection(String viewId, String filter) {
-    this.section = viewId;
-    this.filter = filter;
-
-    loadSection(true);
-  }
-
-  public void reloadSectionFromNetwork() {
+  public void loadFromNetwork() {
     loadSection(false);
   }
 
@@ -60,36 +54,33 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     loadSection(true);
   }
 
-  private void loadSection(final boolean useCache) {
-    getView().showProgressView(true);
-    if (ocmController != null) {
-      ocmController.getSection(!useCache, section, imagesToDownload,
-          new OcmController.GetSectionControllerCallback() {
-            @Override public void onGetSectionLoaded(ContentData contentData) {
-              ContentItem contentItem = contentData.getContent();
-              if (getView() != null) {
-                renderContentItem(contentItem);
-              }
-            }
-
-            @Override public void onGetSectionFails(Exception e) {
-              renderError();
-            }
-          });
-    }
+  public void loadFromCache(String section) {
+    loadSection(true, section, filter);
   }
 
-  public void loadSectionWithCacheAndAfterNetwork(String viewId, String filter) {
-    this.section = viewId;
+  private void loadSection(final boolean useCache) {
+    getView().showProgressView(true);
+
+    loadSection(useCache, section, filter);
+  }
+
+  public void loadSectionWithFilter(String section, String filter) {
+    loadSection(false, section, filter);
+  }
+
+  private void loadSection(boolean useCache, String section, String filter) {
+    this.section = section;
     this.filter = filter;
 
-    ocmController.getSection(false, section, imagesToDownload,
+    ocmController.getSection(!useCache, section, imagesToDownload,
         new OcmController.GetSectionControllerCallback() {
           @Override public void onGetSectionLoaded(ContentData cachedContentData) {
             ContentItem contentItem = cachedContentData.getContent();
             renderContentItem(contentItem);
 
-            waitSomeSecondUntilCheckNewContent(cachedContentData);
+            if (cachedContentData.isFromCache() && TextUtils.isEmpty(filter)) {
+              waitSomeSecondUntilCheckNewContent(cachedContentData);
+            }
           }
 
           @Override public void onGetSectionFails(Exception e) {

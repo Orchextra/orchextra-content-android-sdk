@@ -12,6 +12,7 @@ public class ApiSectionContentData implements Kacheable {
   private ApiContentItem content;
   private Map<String, ApiElementCache> elementsCache;
   private String key;
+  private boolean fromCache;
 
   public ApiContentItem getContent() {
     return content;
@@ -27,5 +28,13 @@ public class ApiSectionContentData implements Kacheable {
 
   @NotNull @Override public String getKey() {
     return key;
+  }
+
+  public boolean isFromCache() {
+    return fromCache;
+  }
+
+  public void setFromCache(boolean fromCache) {
+    this.fromCache = fromCache;
   }
 }

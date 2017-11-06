@@ -41,6 +41,8 @@ public class ApiContentDataResponseMapper
 
     model.setElementsCache(elementCacheMap);
 
+    model.setFromCache(data.isFromCache());
+
     return model;
   }
 }

@@ -1,9 +1,7 @@
 package com.gigigo.orchextra.core.sdk.model.grid;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -11,13 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.core.controller.model.grid.ContentView;
 import com.gigigo.orchextra.core.controller.model.grid.ContentViewPresenter;
-import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
@@ -25,7 +19,6 @@ import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalViewPager;
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
-import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
@@ -44,7 +37,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
           if (presenter != null) {
-            presenter.reloadSectionFromNetwork();
+            presenter.loadFromNetwork();
           }
         }
 
@@ -60,7 +53,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private Context context;
   private View retryButton;
   private View moreButton;
-  private String viewId;
+  private String section;
   private int imagesToDownload;
   private String emotion;
   private View emptyView;
@@ -86,7 +79,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View.OnClickListener onClickRetryButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       if (presenter != null) {
-        presenter.reloadSectionFromNetwork();
+        presenter.loadFromNetwork();
       }
     }
   };
@@ -139,17 +132,16 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     moreButton.setOnClickListener(onClickDiscoverMoreButtonListener);
   }
 
-  public void setViewId(String viewId, int imagesToDownload) {
-    this.viewId = viewId;
+  public void setViewId(String section, int imagesToDownload) {
+    this.section = section;
     this.imagesToDownload = imagesToDownload;
   }
 
   @Override public void initUi() {
-    if (viewId != null && presenter != null) {
+    if (section != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
       presenter.setImagesToDownload(imagesToDownload);
-      //presenter.loadSection(viewId, emotion);
-      presenter.loadSectionWithCacheAndAfterNetwork(viewId, emotion);
+      presenter.loadFromCache(section);
     }
   }
 
@@ -268,7 +260,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
   @Override public void reloadSection() {
     if (presenter != null) {
-      presenter.loadSectionWithCacheAndAfterNetwork(viewId, emotion);
+      presenter.loadSectionWithFilter(section, emotion);
     }
   }
 
