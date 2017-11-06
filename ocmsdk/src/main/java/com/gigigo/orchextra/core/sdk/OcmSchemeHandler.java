@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.sdk;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.domain.OcmController;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
@@ -39,7 +40,7 @@ public class OcmSchemeHandler {
           if (elementRequiredUserToBeLogged(elementCache)) {
             OCManager.notifyRequiredLoginToContinue();
           } else {
-            executeAction(elementCache, elementUrl, null, 0, 0, null);
+            executeAction(elementCache, elementCache.getRender().getContentUrl(), null, 0, 0, null);
           }
         }
       }
@@ -133,7 +134,7 @@ public class OcmSchemeHandler {
         }
         break;
       default:
-        processDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen,
+        processDetailActivity(((ArticleButtonElement)render.getElements().get(0)).getElementUrl(), urlImageToExpand, widthScreen, heightScreen,
             imageViewToExpandInDetail);
         break;
     }
