@@ -37,8 +37,7 @@ public class OcmSchemeHandler {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
-            OCManager.notifyLoggedActionRequiredToContinue(elementCache, elementUrl, null, 0,
-                0, null);
+            OCManager.notifyRequiredLoginToContinue();
           } else {
             executeAction(elementCache, elementUrl, null, 0, 0, null);
           }
@@ -65,8 +64,7 @@ public class OcmSchemeHandler {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
-            OCManager.notifyLoggedActionRequiredToContinue(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
-                imageViewWeakReference);
+            OCManager.notifyRequiredLoginToContinue();
           } else {
             executeAction(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
                 imageViewWeakReference);

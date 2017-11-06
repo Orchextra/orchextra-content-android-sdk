@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.controller.model.detail;
 
+import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.control.presenters.base.Presenter;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
@@ -30,5 +31,13 @@ public class DetailPresenter extends Presenter<DetailView> {
 
   public void setOnFinishViewListener(OnFinishViewListener onFinishViewListener) {
     this.onFinishViewListener = onFinishViewListener;
+  }
+
+  public void setLoginUserFromNativeLogin(String userId) {
+
+    CrmUser crmUser = new CrmUser(userId, null, null);
+    Ocm.bindUser(crmUser);
+    Ocm.setUserIsAuthorizated(true);
+    Ocm.start();
   }
 }

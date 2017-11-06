@@ -203,15 +203,6 @@ public final class OCManager {
     }
   }
 
-  public static void notifyLoggedActionRequiredToContinue(ElementCache elementCache, String elementUrl,
-      String urlImageToExpand, int widthScreen, int heightScreen,
-      WeakReference<ImageView> imageViewWeakReference) {
-    if (instance != null && instance.onRequiredLoginCallback != null) {
-      instance.onRequiredLoginCallback.doLoggedActionRequired(elementCache, elementUrl,
-          urlImageToExpand, widthScreen, heightScreen, imageViewWeakReference);
-    }
-  }
-
   public static void notifyEvent(OcmEvent event, Object data) {
     if (instance != null && instance.onEventCallback != null) {
       instance.onEventCallback.doEvent(event, data);

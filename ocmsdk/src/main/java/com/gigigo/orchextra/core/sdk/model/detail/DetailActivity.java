@@ -22,6 +22,7 @@ import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.controller.model.detail.DetailPresenter;
 import com.gigigo.orchextra.core.controller.model.detail.DetailView;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
+import com.gigigo.orchextra.core.domain.entities.cid.User;
 import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
@@ -37,11 +38,13 @@ import orchextra.javax.inject.Inject;
 public class DetailActivity extends BaseInjectionActivity<DetailActivityComponent>
     implements DetailView {
 
+  private static final String EXTRA_ELEMENT_CACHE = "EXTRA_ELEMENT_CACHE";
   private static final String EXTRA_ELEMENT_URL = "EXTRA_ELEMENT_URL";
   private static final String EXTRA_IMAGE_TO_EXPAND_URL = "EXTRA_IMAGE_TO_EXPAND_URL";
   private static final String EXTRA_WIDTH_IMAGE_TO_EXPAND_URL = "EXTRA_WIDTH_IMAGE_TO_EXPAND_URL";
   private static final String EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL = "EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL";
   private static final int LOGGED_ACTION = 0x62;
+  private static final String LOGGED_USER = "LOGGED_USER";
 
   @Inject DetailPresenter presenter;
   OnFinishViewListener onFinishViewListener = new OnFinishViewListener() {
@@ -60,6 +63,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     if (activity != null) {
       Intent intent = new Intent(activity, DetailActivity.class);
+
       intent.putExtra(DetailActivity.EXTRA_ELEMENT_URL, elementUrl);
       intent.putExtra(DetailActivity.EXTRA_IMAGE_TO_EXPAND_URL, urlImageToExpand);
       intent.putExtra(DetailActivity.EXTRA_WIDTH_IMAGE_TO_EXPAND_URL, width);
@@ -93,8 +97,13 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
      if (requestCode == LOGGED_ACTION) {
       if (resultCode == Activity.RESULT_OK) {
         Ocm.setUserIsAuthorizated(true);
-        /*Ocm.setLoggedAction(this.cachedElement, this.elementUrl, this.urlImageToExpand,
-            this.widthScreen, this.heightScreen, this.imageViewToExpandInDetail);*/
+
+        User user = (User) data.getExtras().getSerializable(LOGGED_USER);
+        if (user != null) {
+          presenter.setLoginUserFromNativeLogin(user.getUuid());
+        }
+        /*Ocm.setLoggedAction(this.cachedElement, this.elementUrl, this.imageToExpandUrl,
+            this.widthImageToExpandUrl, this.heightImageToExpandUrl, null);*/
       }
     }
   }
