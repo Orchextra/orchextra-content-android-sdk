@@ -9,6 +9,8 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.Orchextra'
+version ='ocmVersion'
+
 
 apply from: 'variants.gradle'
 
@@ -134,15 +136,19 @@ if( android.productFlavors.size() > 0 ) {
     //if( variant.name == android.defaultPublishConfig ) {
       def bundleTask = tasks["bundle${name.capitalize()}"]
       artifacts {
+        println('BUNDLE!'+bundleTask.archivePath)
+        println('classifier!'+variant.name)
+        println('builtBy!'+bundleTask.name)
         archives(bundleTask.archivePath) {
           classifier variant.name
           builtBy bundleTask
+
         }
       }
     }
   //}
 }
-
+//variant.name
 
 task finalize {
   doFirst {
