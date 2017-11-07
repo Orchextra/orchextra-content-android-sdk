@@ -205,15 +205,16 @@ dependencies {
      exclude module: 'support-v4'
    }
  */
-  ocmStagingImplementation(project.libraries.orchextrasdkStaging) {
+
+  stagingApi(project.libraries.orchextrasdkStaging) {
     transitive = true
     exclude module: 'support-v4'
   }
-  ocmDebugImplementation(project.libraries.orchextrasdkDebug) {
+  debugApi(project.libraries.orchextrasdkDebug) {
     transitive = true
     exclude module: 'support-v4'
   }
-  ocmReleaseImplementation(project.libraries.orchextrasdkRelease) {
+  releaseApi(project.libraries.orchextrasdkRelease) {
     transitive = true
     exclude module: 'support-v4'
   }
