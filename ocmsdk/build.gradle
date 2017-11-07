@@ -131,7 +131,7 @@ configurations {
 if( android.productFlavors.size() > 0 ) {
   android.libraryVariants.all { variant ->
     // Publish a main artifact, otherwise the maven pom is not generated
-    if( variant.name == android.defaultPublishConfig ) {
+    //if( variant.name == android.defaultPublishConfig ) {
       def bundleTask = tasks["bundle${name.capitalize()}"]
       artifacts {
         archives(bundleTask.archivePath) {
@@ -140,7 +140,7 @@ if( android.productFlavors.size() > 0 ) {
         }
       }
     }
-  }
+  //}
 }
 
 
