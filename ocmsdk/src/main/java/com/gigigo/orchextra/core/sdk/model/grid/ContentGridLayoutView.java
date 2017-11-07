@@ -1,9 +1,7 @@
 package com.gigigo.orchextra.core.sdk.model.grid;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -11,13 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.core.controller.model.grid.ContentView;
 import com.gigigo.orchextra.core.controller.model.grid.ContentViewPresenter;
-import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
@@ -25,7 +19,6 @@ import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalViewPager;
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
-import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
@@ -220,8 +213,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
   }
 
-  @Override public void showAuthDialog() {
-    OCManager.notifyRequiredLoginToContinue();
+  @Override public void showAuthDialog(String elementUrl) {
+    OCManager.notifyRequiredLoginToContinue(elementUrl);
   }
 
   @Override public void showProgressView(boolean isVisible) {

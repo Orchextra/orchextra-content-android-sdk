@@ -292,7 +292,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       }
 
       if (checkElementNeedAuthUser(element)) {
-        getView().showAuthDialog();
+        getView().showAuthDialog(element.getElementUrl());
         return;
       }
 

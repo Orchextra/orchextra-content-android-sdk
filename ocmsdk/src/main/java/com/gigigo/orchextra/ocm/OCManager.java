@@ -199,6 +199,12 @@ public final class OCManager {
     }
   }
 
+  public static void notifyRequiredLoginToContinue(String elementUrl) {
+    if (instance != null && instance.onRequiredLoginCallback != null) {
+      instance.onRequiredLoginCallback.doRequiredLogin(elementUrl);
+    }
+  }
+
   public static void notifyEvent(OcmEvent event, Object data) {
     if (instance != null && instance.onEventCallback != null) {
       instance.onEventCallback.doEvent(event, data);

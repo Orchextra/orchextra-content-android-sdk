@@ -17,7 +17,7 @@ public interface ContentView {
 
   void navigateToDetailView(String elementUrl, String imageToExpand, View view);
 
-  void showAuthDialog();
+  void showAuthDialog(String elementUrl);
 
   void showProgressView(boolean isVisible);
 
