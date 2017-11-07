@@ -10,6 +10,7 @@ import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 public class DetailPresenter extends Presenter<DetailView> {
 
   private OnFinishViewListener onFinishViewListener;
+  private String accessToken;
 
   public DetailPresenter() {
 
@@ -41,7 +42,10 @@ public class DetailPresenter extends Presenter<DetailView> {
     Ocm.setUserIsAuthorizated(true);
     Ocm.start(new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
-        getView().redirectToAction();
+        if (!accessToken.equals(DetailPresenter.this.accessToken)) {
+          DetailPresenter.this.accessToken = accessToken;
+          getView().redirectToAction();
+        }
       }
 
       @Override public void onCredentailError(String code) {

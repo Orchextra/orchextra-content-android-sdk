@@ -45,6 +45,7 @@ public class OcmSchemeHandler {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
+            // Save url of the element that require login
             elementURL = elementUrl;
             OCManager.notifyRequiredLoginToContinue();
           } else {
