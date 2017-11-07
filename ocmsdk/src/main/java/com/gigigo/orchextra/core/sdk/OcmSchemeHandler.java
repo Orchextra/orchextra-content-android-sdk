@@ -8,10 +8,13 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
+import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
+import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
+import com.gigigo.orchextra.ocm.OCManager;
 import java.lang.ref.WeakReference;
 
 public class OcmSchemeHandler {
@@ -19,19 +22,35 @@ public class OcmSchemeHandler {
   private final OcmContextProvider contextProvider;
   private final OcmController ocmController;
   private final ActionHandler actionHandler;
+  private final Authoritation authoritation;
+  private String elementURL;
 
   public OcmSchemeHandler(OcmContextProvider contextProvider, OcmController ocmController,
-      ActionHandler actionHandler) {
+      ActionHandler actionHandler, Authoritation authoritation) {
     this.contextProvider = contextProvider;
     this.ocmController = ocmController;
     this.actionHandler = actionHandler;
+    this.authoritation = authoritation;
   }
 
   public void processElementUrl(final String elementUrl) {
-    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
+    String elementUri = elementUrl;
+    if (elementURL != null) {
+      elementUri = elementURL;
+      elementURL = null;
+    }
+
+    String finalElementUri = elementUri;
+    ocmController.getDetails(true, elementUri, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
-          executeAction(elementCache, elementUrl, null, 0, 0, null);
+          if (elementRequiredUserToBeLogged(elementCache)) {
+            // Save url of the element that require login
+            elementURL = elementUrl;
+            OCManager.notifyRequiredLoginToContinue();
+          } else {
+            executeAction(elementCache, finalElementUri, null, 0, 0, null);
+          }
         }
       }
 
@@ -51,11 +70,15 @@ public class OcmSchemeHandler {
     WeakReference<ImageView> imageViewWeakReference =
         new WeakReference<>(imageViewToExpandInDetail);
 
-    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(true, elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
-          executeAction(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
-              imageViewWeakReference);
+          if (elementRequiredUserToBeLogged(elementCache)) {
+            OCManager.notifyRequiredLoginToContinue();
+          } else {
+            executeAction(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
+                imageViewWeakReference);
+          }
         }
       }
 
@@ -69,7 +92,12 @@ public class OcmSchemeHandler {
     });
   }
 
-  private void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
+  private boolean elementRequiredUserToBeLogged(ElementCache elementCache) {
+    return elementCache.getSegmentation().getRequiredAuth().equals(
+        RequiredAuthoritation.LOGGED) && !authoritation.isAuthorizatedUser();
+  }
+
+  public void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
       int widthScreen, int heightScreen, WeakReference<ImageView> imageViewToExpandInDetail) {
 
     boolean hasPreview = cachedElement.getPreview() != null;

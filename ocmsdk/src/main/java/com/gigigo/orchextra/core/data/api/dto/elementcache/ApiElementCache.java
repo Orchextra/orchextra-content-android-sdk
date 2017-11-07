@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.data.api.dto.elementcache;
 
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSegmentation;
 import java.util.List;
 
 public class ApiElementCache {
@@ -10,6 +11,7 @@ public class ApiElementCache {
   private ApiElementCachePreview preview;
   private ApiElementCacheRender render;
   private ApiElementCacheShare share;
+  private ApiElementSegmentation segmentation;
   private String name;
   private long updatedAt;
 
@@ -35,6 +37,10 @@ public class ApiElementCache {
 
   public ApiElementCacheShare getShare() {
     return share;
+  }
+
+  public ApiElementSegmentation getSegmentation() {
+    return segmentation;
   }
 
   public String getName() {

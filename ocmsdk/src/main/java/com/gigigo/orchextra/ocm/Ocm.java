@@ -266,12 +266,25 @@ public final class Ocm {
   }
 
   /**
+   * Provide when the action requires the user to be logged.
+   */
+  public static void setLoggedAction(String elementUrl) {
+    OCManager.setLoggedAction(elementUrl);
+  }
+
+  /**
    * Start or restart the sdk with a new credentials
    */
   public static void startWithCredentials(String apiKey, String apiSecret,
       OcmCredentialCallback onCredentialCallback) {
     OCManager.setNewOrchextraCredentials(apiKey, apiSecret, onCredentialCallback);
   }
+
+  public static void start(
+      OcmCredentialCallback onCredentialCallback) {
+    OCManager.start(onCredentialCallback);
+  }
+
 
   /**
    * Set a business unit

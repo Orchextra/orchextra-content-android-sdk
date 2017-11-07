@@ -15,7 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -27,6 +26,7 @@ import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -37,10 +37,15 @@ import orchextra.javax.inject.Inject;
 public class DetailActivity extends BaseInjectionActivity<DetailActivityComponent>
     implements DetailView {
 
+  private static final String EXTRA_ELEMENT_CACHE = "EXTRA_ELEMENT_CACHE";
   private static final String EXTRA_ELEMENT_URL = "EXTRA_ELEMENT_URL";
   private static final String EXTRA_IMAGE_TO_EXPAND_URL = "EXTRA_IMAGE_TO_EXPAND_URL";
   private static final String EXTRA_WIDTH_IMAGE_TO_EXPAND_URL = "EXTRA_WIDTH_IMAGE_TO_EXPAND_URL";
   private static final String EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL = "EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL";
+  private static final int NATIVE_LOGIN = 0x32;
+  private static final String LOGGED_USER_UUID = "LOGGED_USER_UUID";
+
+  private String elementUrl;
 
   @Inject DetailPresenter presenter;
   OnFinishViewListener onFinishViewListener = new OnFinishViewListener() {
@@ -59,6 +64,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     if (activity != null) {
       Intent intent = new Intent(activity, DetailActivity.class);
+
       intent.putExtra(DetailActivity.EXTRA_ELEMENT_URL, elementUrl);
       intent.putExtra(DetailActivity.EXTRA_IMAGE_TO_EXPAND_URL, urlImageToExpand);
       intent.putExtra(DetailActivity.EXTRA_WIDTH_IMAGE_TO_EXPAND_URL, width);
@@ -82,8 +88,25 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     animationImageView = (ImageView) findViewById(R.id.animationImageView);
 
+    this.elementUrl = getIntent().getExtras().getString(DetailActivity.EXTRA_ELEMENT_URL);
+
     //CoordinatorDetail with click event recreate the view and preview is showed when return in video activity, so dont move
     presenter.attachView(this);
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+     if (requestCode == NATIVE_LOGIN) {
+      if (resultCode == Activity.RESULT_OK) {
+        String uuid = data.getExtras().getString(LOGGED_USER_UUID);
+        if (uuid != null) {
+          presenter.setLoginUserFromNativeLogin(uuid);
+        }
+        /*Ocm.setLoggedAction(this.cachedElement, this.elementUrl, this.imageToExpandUrl,
+            this.widthImageToExpandUrl, this.heightImageToExpandUrl, null);*/
+      }
+    }
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP) @Override
@@ -183,6 +206,10 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
           })
           .into(animationImageView);
     }
+  }
+
+  @Override public void redirectToAction() {
+    Ocm.setLoggedAction(this.elementUrl);
   }
 
   @Override protected void onDestroy() {

@@ -47,7 +47,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 import orchextra.javax.inject.Inject;
 
 public final class OCManager {
@@ -170,6 +169,12 @@ public final class OCManager {
     }
   }
 
+  static void setLoggedAction(String elementUrl) {
+    if (instance != null) {
+      instance.schemeHandler.processElementUrl(elementUrl);
+    }
+  }
+
   static void setStyleUi(OcmStyleUiBuilder ocmUiBuilder) {
     if (instance != null) {
       instance.ocmStyleUi.setStyleUi(ocmUiBuilder);
@@ -192,6 +197,12 @@ public final class OCManager {
   public static void notifyRequiredLoginToContinue() {
     if (instance != null && instance.onRequiredLoginCallback != null) {
       instance.onRequiredLoginCallback.doRequiredLogin();
+    }
+  }
+
+  public static void notifyRequiredLoginToContinue(String elementUrl) {
+    if (instance != null && instance.onRequiredLoginCallback != null) {
+      instance.onRequiredLoginCallback.doRequiredLogin(elementUrl);
     }
   }
 
@@ -233,6 +244,12 @@ public final class OCManager {
 
     //Some case the start() and changeCredentials() method has concurrency problems
     Orchextra.updateSDKCredentials(apiKey, apiSecret, true);
+  }
+
+  public static void start(OcmCredentialCallback onCredentialCallback) {
+    instance.ocmCredentialCallback = onCredentialCallback;
+
+    Orchextra.start();
   }
 
   static void bindUser(CrmUser crmUser) {
