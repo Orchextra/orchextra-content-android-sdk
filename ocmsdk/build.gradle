@@ -190,6 +190,13 @@ dependencies {
   api project.libraries.imageloaderGlideBlur
 
   //Orchextra
+   implementation project.libraries.oxvuforiaimplementation
+  ocmStagingImplementation(project.libraries.orchextrasdkStaging) { transitive = true
+    exclude module: 'support-v4'  }
+  ocmDebugImplementation(project.libraries.orchextrasdkDebug) { transitive = true
+    exclude module: 'support-v4' }
+  ocmReleaseImplementation(project.libraries.orchextrasdkRelease) { transitive = true
+    exclude module: 'support-v4' }
   // implementation project.libraries.oxvuforiaimplementation
   /*
    ocmStagingCompile(project.libraries.orchextrasdkStaging) {

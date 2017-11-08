@@ -22,6 +22,10 @@ public class App extends MultiDexApplication {
   //public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
   //public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
 
+  //WOAH Debug
+  public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
+  public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
+
   //[UAT][CSE] - WOAH SITC STAGING
   //public static String API_KEY = "adfc8ba4340828a054bf061f692707a197af96cb";
   //public static String API_SECRET = "677cf75a17aeec144ee402c281ad3a732d736a8a";
@@ -128,6 +132,7 @@ public class App extends MultiDexApplication {
 
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setShowReadArticles(true)
+        //.setVuforiaImpl(new ImageRecognitionVuforiaImpl())
         .setTransformReadArticleMode(ImageTransformReadArticle.BITMAP_TRANSFORM)
         .setVuforiaImpl(new ImageRecognitionVuforiaImpl())
         .setMaxReadArticles(100)
@@ -142,7 +147,7 @@ public class App extends MultiDexApplication {
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
-    Ocm.setBusinessUnit("demo");
+    Ocm.setBusinessUnit("e2e");
   }
 
   private void enableStrictMode() {
