@@ -10,6 +10,7 @@ import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
 import com.squareup.leakcanary.LeakCanary;
 
 public class App extends MultiDexApplication {
@@ -48,8 +49,12 @@ public class App extends MultiDexApplication {
 
 
 
-  private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
+  private OnRequiredLoginCallback onDoRequiredLoginCallback =  new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {
+
+    }
+
+    @Override public void doRequiredLogin(String elementUrl) {
 
     }
   };
@@ -124,6 +129,7 @@ public class App extends MultiDexApplication {
     OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setShowReadArticles(true)
         .setTransformReadArticleMode(ImageTransformReadArticle.BITMAP_TRANSFORM)
+        .setVuforiaImpl(new ImageRecognitionVuforiaImpl())
         .setMaxReadArticles(100)
         .setOrchextraCredentials(API_KEY, API_SECRET)
         .setContentLanguage("EN")
@@ -136,7 +142,7 @@ public class App extends MultiDexApplication {
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
-    Ocm.setBusinessUnit("gb");
+    Ocm.setBusinessUnit("e2e");
   }
 
   private void enableStrictMode() {

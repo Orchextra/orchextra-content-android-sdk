@@ -41,9 +41,14 @@ public class MainActivity extends AppCompatActivity {
           ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem())).reloadSection();
         }
       };
+
   private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {
       Toast.makeText(getApplicationContext(), "Item needs permissions", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override public void doRequiredLogin(String elementUrl) {
+      Toast.makeText(getApplicationContext(), "Item needs permissions"+elementUrl, Toast.LENGTH_SHORT).show();
     }
   };
 
@@ -85,7 +90,14 @@ public class MainActivity extends AppCompatActivity {
     viewpager = (ViewPager) findViewById(R.id.viewpager);
     //View fabReload = findViewById(R.id.fabReload);
     //View fabChange = findViewById(R.id.fabChange);
-    //View fabClean = findViewById(R.id.fabClean);
+    View fabClean = findViewById(R.id.fabClean);
+
+    fabClean.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        //Orchextra.startScannerActivity();
+        Orchextra.startImageRecognition();
+      }
+    });
 
     //fabChange.setOnClickListener(new View.OnClickListener() {
     //  @Override public void onClick(View v) {

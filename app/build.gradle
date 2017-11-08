@@ -15,9 +15,9 @@ android {
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
     //asv mandatory for gpu filters of glide
-    //    ndk {
-    //            abiFilters "armeabi-v7a"
-    //          }
+    ndk {
+      abiFilters "armeabi-v7a"
+    }
   }
   buildTypes {
     release {
