@@ -8,7 +8,8 @@
     tools:replace="android:allowBackup">
     <activity
       android:name=".VimeoExoPlayerActivity"
-      android:configChanges="orientation|screenSize">
+      android:configChanges="orientation|screenSize"
+      >
     </activity>
   </application>
 

@@ -13,6 +13,7 @@ import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
+import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import java.lang.ref.WeakReference;
@@ -86,8 +87,8 @@ public class OcmSchemeHandler {
             processElementURL = elementUrl;
             OCManager.notifyRequiredLoginToContinue(processElementURL);
           } else {
-            executeAction(elementCache, finalElementUri, urlImageToExpand, widthScreen, heightScreen,
-                imageViewWeakReference);
+            executeAction(elementCache, finalElementUri, urlImageToExpand, widthScreen,
+                heightScreen, imageViewWeakReference);
           }
         }
       }
@@ -103,8 +104,8 @@ public class OcmSchemeHandler {
   }
 
   private boolean elementRequiredUserToBeLogged(ElementCache elementCache) {
-    return elementCache.getSegmentation().getRequiredAuth().equals(
-        RequiredAuthoritation.LOGGED) && !authoritation.isAuthorizatedUser();
+    return elementCache.getSegmentation().getRequiredAuth().equals(RequiredAuthoritation.LOGGED)
+        && !authoritation.isAuthorizatedUser();
   }
 
   public void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
@@ -132,6 +133,12 @@ public class OcmSchemeHandler {
           processScanAction();
         }
         break;
+      case WEBVIEW:
+        if (render != null) {
+          OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "web");
+        }
+        break;
+
       case BROWSER:
         if (render != null) {
           processCustomTabs(render.getUrl(), render.getFederatedAuth());

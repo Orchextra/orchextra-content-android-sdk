@@ -36,7 +36,7 @@ android {
   }
   //publishNonDefault true
   flavorDimensions "ocm"
-  //defaultPublishConfig "ocmRelease"
+  defaultPublishConfig "ocmRelease"
 
   productFlavors {
     ocm {

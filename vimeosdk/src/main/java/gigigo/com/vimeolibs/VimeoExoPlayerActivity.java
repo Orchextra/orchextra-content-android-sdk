@@ -1,7 +1,7 @@
 package gigigo.com.vimeolibs;
 
+import android.app.ActionBar;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -42,10 +42,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import java.io.File;
 import java.lang.ref.WeakReference;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class VimeoExoPlayerActivity extends AppCompatActivity {
@@ -76,6 +73,26 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.exo_player_activity);
+
+    //region fullscreen
+
+    //Window window = getWindow();
+    //WindowManager.LayoutParams winParams = window.getAttributes();
+    //winParams.flags &= ~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+    //window.setAttributes(winParams);
+    //window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+    View decorView = getWindow().getDecorView();
+    // Hide the status bar.
+    int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+    decorView.setSystemUiVisibility(uiOptions);
+    // Remember that you should never show the action bar if the
+    // status bar is hidden, so hide that too if necessary.
+    ActionBar actionBar = getActionBar();
+    if (actionBar != null) actionBar.hide();
+
+    //endregion
+
     mImageView = (ImageView) findViewById(R.id.imgBackBlur);
     main_media_frame = (FrameLayout) findViewById(R.id.main_media_frame);
     mExo_fullscreen_icon = (ImageView) findViewById(R.id.exo_fullscreen_icon);
@@ -286,7 +303,6 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
     simpleExoPlayerView.getPlayer().prepare(mVideoSource);
     simpleExoPlayerView.getPlayer().setPlayWhenReady(true);
     simpleExoPlayerView.setVisibility(View.VISIBLE);
-
   }
 
   @Override protected void onResume() {
