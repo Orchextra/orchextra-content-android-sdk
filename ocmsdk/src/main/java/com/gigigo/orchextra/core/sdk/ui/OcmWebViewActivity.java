@@ -80,14 +80,14 @@ import com.gigigo.orchextra.ocmsdk.R;
     FederatedAuthorization fa = (FederatedAuthorization) getIntent().getSerializableExtra(EXTRA_FA);
 
 
-    WebViewContentData webViewContentDataFragment;
-    if (url != null) {
-      webViewContentDataFragment = WebViewContentData.newInstance(url);
-    } else {
+    WebViewContentData webViewContentDataFragment = null;
+    if (url != null && fa != null) {
       webViewContentDataFragment = WebViewContentData.newInstance(url, fa);
+    } else if (url != null) {
+      webViewContentDataFragment = WebViewContentData.newInstance(url);
     }
 
-    if (uriImgPreview.equals("")) {
+    if (webViewContentDataFragment != null && uriImgPreview.equals("")) {
       getSupportFragmentManager().beginTransaction()
           .replace(R.id.ocmWebViewContainer, webViewContentDataFragment)
           .commit();
