@@ -42,7 +42,7 @@ public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
   }
 
   private int getNumberOfImagesToDownload(int position) {
-    int number = 12;
+    int number = 0;
     if (position == 0) {
       number = 12;
     } else if (position == 1 || position == 2) number = 6;
