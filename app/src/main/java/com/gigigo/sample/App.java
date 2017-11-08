@@ -35,8 +35,8 @@ public class App extends MultiDexApplication {
   //public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
 
   //WOAH QA RELEASE
-  public static String API_KEY = "ad46332237cbb9fd38ad38470a9bee6d4892d770";    //Woah project
-  public static String API_SECRET = "f5e2dd3ba0de46964775fc1b48c4895c73d263c5";
+  //public static String API_KEY = "ad46332237cbb9fd38ad38470a9bee6d4892d770";    //Woah project
+  //public static String API_SECRET = "f5e2dd3ba0de46964775fc1b48c4895c73d263c5";
 
   //REPSOL RELEASE
   //public static String API_KEY = "7bb9fa0f9b7a02846383fd6284d3c74b8155644c";

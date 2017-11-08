@@ -28,7 +28,7 @@ project.ext {
 
                multipleGridRecyclerView   : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.7',
 
-               oxvuforiaimplementation    : 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6',
+//               oxvuforiaimplementation    : 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6',
 
                doubleViewPager            : 'com.github.nuborisar:customViewPager:0.8RC',
                autofitTextView            : 'com.github.GigigoGreenLabs:AutoFitTextView:0.7RC',
