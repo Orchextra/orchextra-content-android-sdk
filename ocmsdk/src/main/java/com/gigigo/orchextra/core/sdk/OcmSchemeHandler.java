@@ -24,6 +24,7 @@ public class OcmSchemeHandler {
   private final ActionHandler actionHandler;
   private final Authoritation authoritation;
   private String elementURL;
+  private String processElementURL;
 
   public OcmSchemeHandler(OcmContextProvider contextProvider, OcmController ocmController,
       ActionHandler actionHandler, Authoritation authoritation) {
@@ -70,13 +71,22 @@ public class OcmSchemeHandler {
     WeakReference<ImageView> imageViewWeakReference =
         new WeakReference<>(imageViewToExpandInDetail);
 
-    ocmController.getDetails(true, elementUrl, new OcmController.GetDetailControllerCallback() {
+    String elementUri = elementUrl;
+    if (processElementURL != null) {
+      elementUri = processElementURL;
+      processElementURL = null;
+    }
+
+    String finalElementUri = elementUri;
+    ocmController.getDetails(true, elementUri, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
+            // Save url of the element that require login
+            processElementURL = elementUrl;
             OCManager.notifyRequiredLoginToContinue();
           } else {
-            executeAction(elementCache, elementUrl, urlImageToExpand, widthScreen, heightScreen,
+            executeAction(elementCache, finalElementUri, urlImageToExpand, widthScreen, heightScreen,
                 imageViewWeakReference);
           }
         }
