@@ -23,7 +23,6 @@ import com.gigigo.orchextra.ocm.OcmEvent;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import org.w3c.dom.Text;
 
 public class ContentViewPresenter extends Presenter<ContentView> {
 
@@ -308,7 +307,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                   //getView().navigateToDetailView(elementCache, viewWeakReference.get());
                 } else {
                   OcmWebViewActivity.open(viewWeakReference.get().getContext(),
-                               elementCache.getRender().getUrl(),elementCache.getName());
+                               elementCache.getRender(),elementCache.getName());
                 //  if (imageUrlToExpandInPreview != "") {
                 //    OcmWebViewActivity.open(viewWeakReference.get().getContext(),
                 //        elementCache.getRender().getUrl(),elementCache.getName());

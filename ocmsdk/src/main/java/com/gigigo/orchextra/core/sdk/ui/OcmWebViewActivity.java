@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
+import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.sdk.di.base.BaseActivity;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.WebViewContentData;
 import com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView;
@@ -16,10 +18,19 @@ import com.gigigo.orchextra.ocmsdk.R;
 @Deprecated public class OcmWebViewActivity extends BaseActivity {
 
   private static final String EXTRA_URL = "EXTRA_URL";
+  private static final String EXTRA_FA = "EXTRA_FA";
   private static final String EXTRA_HEADER_TEXT = "EXTRA_HEADER_TEXT";
 
   String uriImgPreview = "";
   String webviewTitle = "";
+
+  public static void open(Context context, ElementCacheRender render, String toolbarText) {
+    Intent intent = new Intent(context, OcmWebViewActivity.class);
+    intent.putExtra(EXTRA_URL, render.getUrl());
+    intent.putExtra(EXTRA_FA, render.getFederatedAuth());
+    intent.putExtra(EXTRA_HEADER_TEXT, toolbarText);
+    context.startActivity(intent);
+  }
 
   public static void open(Context context, String url, String toolbarText) {
     Intent intent = new Intent(context, OcmWebViewActivity.class);
@@ -66,7 +77,16 @@ import com.gigigo.orchextra.ocmsdk.R;
 
   private void setWebViewFragment() {
     String url = getIntent().getStringExtra(EXTRA_URL);
-    WebViewContentData webViewContentDataFragment = WebViewContentData.newInstance(url);
+    FederatedAuthorization fa = (FederatedAuthorization) getIntent().getSerializableExtra(EXTRA_FA);
+
+
+    WebViewContentData webViewContentDataFragment;
+    if (url != null) {
+      webViewContentDataFragment = WebViewContentData.newInstance(url);
+    } else {
+      webViewContentDataFragment = WebViewContentData.newInstance(url, fa);
+    }
+
     if (uriImgPreview.equals("")) {
       getSupportFragmentManager().beginTransaction()
           .replace(R.id.ocmWebViewContainer, webViewContentDataFragment)

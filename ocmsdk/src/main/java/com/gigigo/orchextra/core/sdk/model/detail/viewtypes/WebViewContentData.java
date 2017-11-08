@@ -59,6 +59,17 @@ public class WebViewContentData extends UiGridBaseContentData {
     return webViewElements;
   }
 
+  public static WebViewContentData newInstance(String url, FederatedAuthorization fa) {
+    WebViewContentData webViewElements = new WebViewContentData();
+
+    Bundle bundle = new Bundle();
+    bundle.putString(EXTRA_URL, url);
+    bundle.putSerializable(EXTRA_FEDERATED_AUTH, fa);
+    webViewElements.setArguments(bundle);
+
+    return webViewElements;
+  }
+
   public static WebViewContentData newInstance(String url) {
     WebViewContentData webViewElements = new WebViewContentData();
 
