@@ -152,8 +152,13 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
 
       @Override
       public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+
+        int width = 480;
+        if (width > bitmap.getWidth()) {
+          width = bitmap.getWidth();
+        }
         WeakReference<Bitmap> resizedbitmap =
-            new WeakReference<>(Bitmap.createBitmap(bitmap, 0, 45, 480, 270));
+            new WeakReference<>(Bitmap.createBitmap(bitmap, 0, 45, width, 270));
 
         BitmapDrawable ob = new BitmapDrawable(getResources(), resizedbitmap.get());
         main_media_frame.setBackground(ob);
