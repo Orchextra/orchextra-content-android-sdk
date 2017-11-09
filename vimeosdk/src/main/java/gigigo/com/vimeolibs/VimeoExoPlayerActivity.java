@@ -161,7 +161,7 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
         int y = 45;
         int height = 270;
         if (y + height > bitmap.getHeight()) {
-          height = bitmap.getHeight();
+          height = bitmap.getHeight() - y;
         }
 
         WeakReference<Bitmap> resizedbitmap =
