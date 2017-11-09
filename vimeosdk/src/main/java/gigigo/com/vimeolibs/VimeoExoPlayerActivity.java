@@ -157,8 +157,15 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
         if (width > bitmap.getWidth()) {
           width = bitmap.getWidth();
         }
+
+        int y = 45;
+        int height = 270;
+        if (y + height > bitmap.getHeight()) {
+          height = bitmap.getHeight();
+        }
+
         WeakReference<Bitmap> resizedbitmap =
-            new WeakReference<>(Bitmap.createBitmap(bitmap, 0, 45, width, 270));
+            new WeakReference<>(Bitmap.createBitmap(bitmap, 0, y, width, height));
 
         BitmapDrawable ob = new BitmapDrawable(getResources(), resizedbitmap.get());
         main_media_frame.setBackground(ob);
