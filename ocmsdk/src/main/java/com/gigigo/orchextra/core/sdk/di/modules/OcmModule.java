@@ -5,6 +5,7 @@ import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
+import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.OcmStyleUiImp;
@@ -31,8 +32,8 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Singleton @Provides OcmSdkLifecycle provideOcmSdkLifecycle(
-      OcmContextProvider ocmContextProvider) {
-    OcmSdkLifecycle ocmSdkLifecycle = new OcmSdkLifecycle();
+      OcmContextProvider ocmContextProvider, PriorityScheduler priorityScheduler) {
+    OcmSdkLifecycle ocmSdkLifecycle = new OcmSdkLifecycle(priorityScheduler);
 
     ocmContextProvider.setOcmActivityLifecycle(ocmSdkLifecycle);
 
