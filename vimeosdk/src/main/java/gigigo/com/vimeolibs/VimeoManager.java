@@ -94,11 +94,11 @@ public class VimeoManager {
 
               //asv new check INDEXs, because some videos dont have all resolutions
               if (videoResponse.body().getDownload() != null
-                  && videoResponse.body().files.size() >= videoIdx + 1) {
+                  && videoResponse.body().files.size() < videoIdx + 1) {
                 videoIdx = 0;
               }
               if (videoResponse.body().pictures != null
-                  && videoResponse.body().pictures.sizes.size() >= thumbIdx + 1) {
+                  && videoResponse.body().pictures.sizes.size() < thumbIdx + 1) {
                 thumbIdx = 0;
               }
 

@@ -70,6 +70,21 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
   //ProgressDialog progDailog;
   ProgressBar mPbLoading;
 
+  private void hideStatusBar() {
+    try {
+      View decorView = getWindow().getDecorView();
+      // Hide the status bar.
+      int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+      decorView.setSystemUiVisibility(uiOptions);
+      // Remember that you should never show the action bar if the
+      // status bar is hidden, so hide that too if necessary.
+      ActionBar actionBar = getActionBar();
+      if (actionBar != null) actionBar.hide();
+    } catch (Throwable throwable) {
+
+    }
+  }
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.exo_player_activity);
@@ -81,16 +96,7 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
     //winParams.flags &= ~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
     //window.setAttributes(winParams);
     //window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
-    View decorView = getWindow().getDecorView();
-    // Hide the status bar.
-    int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-    decorView.setSystemUiVisibility(uiOptions);
-    // Remember that you should never show the action bar if the
-    // status bar is hidden, so hide that too if necessary.
-    ActionBar actionBar = getActionBar();
-    if (actionBar != null) actionBar.hide();
-
+    hideStatusBar();
     //endregion
 
     mImageView = (ImageView) findViewById(R.id.imgBackBlur);
@@ -169,6 +175,13 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
 
         BitmapDrawable ob = new BitmapDrawable(getResources(), resizedbitmap.get());
         main_media_frame.setBackground(ob);
+/*
+        WeakReference<Bitmap> resizedbitmap =
+            new WeakReference<>(Bitmap.createBitmap(bitmap, 0, 45, 480, 270));
+        BitmapDrawable ob = new BitmapDrawable(getResources(), resizedbitmap.get());
+        main_media_frame.setBackground(ob);
+*/
+
       }
     };
     Glide.with(this)
@@ -182,8 +195,10 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
 
   @Override public void onConfigurationChanged(android.content.res.Configuration newConfig) {
     if (!isVertical) {
+      hideStatusBar();
       super.onConfigurationChanged(newConfig);
     } else {
+      hideStatusBar();
       newConfig.orientation = android.content.res.Configuration.ORIENTATION_PORTRAIT;
       super.onConfigurationChanged(null);
     }
@@ -321,6 +336,7 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
     super.onResume();
 
     if (!TextUtils.isEmpty(vimeoLink)) {
+      hideStatusBar();
       initializeExoPlayer();
       prepareExoPlayer();
     } else {

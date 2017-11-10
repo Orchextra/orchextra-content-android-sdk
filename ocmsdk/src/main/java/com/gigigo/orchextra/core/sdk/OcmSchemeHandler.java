@@ -135,7 +135,7 @@ public class OcmSchemeHandler {
         break;
       case WEBVIEW:
         if (render != null) {
-          OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "web");
+          OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "");
         }
         break;
 

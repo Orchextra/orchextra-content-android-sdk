@@ -71,6 +71,8 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
             Glide.with(context.getApplicationContext())
 
                 .load(strImgForBlur)
+                //.asBitmap()
+               // .transform(new BlurTransformation(context, 20))
                 .listener(new RequestListener<String, GlideDrawable>() {
                   @Override public boolean onException(Exception e, String model,
                       Target<GlideDrawable> target, boolean isFirstResource) {
@@ -84,6 +86,7 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
                     return false;
                   }
                 })
+
                 .into(imgThumb);
             imgPlay.setOnClickListener(onVimeoThumbnailClickListener);
             imgThumb.setOnClickListener(onVimeoThumbnailClickListener);
