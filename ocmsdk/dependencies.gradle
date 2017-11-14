@@ -16,9 +16,12 @@ project.ext {
                ggglogger                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:4.4',
                ggglib                     : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:4.4',
 
-               orchextrasdkStaging        : 'com.github.orchextra.orchextra-android-sdk:orchextrasdk:515Test:play11Staging@aar',
-               orchextrasdkDebug          : 'com.github.orchextra.orchextra-android-sdk:orchextrasdk:515Test:play11Debug@aar',
-               orchextrasdkRelease        : 'com.github.orchextra.orchextra-android-sdk:orchextrasdk:515Test:play11Release@aar',
+
+               orchextrasdkStaging        : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:521Test:play11Staging@aar',
+               orchextrasdkDebug          : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:521Test:play11Debug@aar',
+               orchextrasdkRelease        : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:521Test:play11Release@aar',
+
+
 
                playServicesBase           : "com.google.android.gms:play-services-base:11.0.2",
                playServicesLocation       : "com.google.android.gms:play-services-location:11.0.2",
