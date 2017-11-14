@@ -20,6 +20,11 @@ android {
     }
   }
   buildTypes {
+    staging {
+      debuggable true
+      minifyEnabled false
+      signingConfig  android.signingConfigs.debug
+    }
     release {
       debuggable true
       minifyEnabled false

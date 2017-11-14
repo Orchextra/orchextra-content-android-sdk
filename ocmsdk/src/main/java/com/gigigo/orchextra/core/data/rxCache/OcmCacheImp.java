@@ -1,22 +1,20 @@
 package com.gigigo.orchextra.core.data.rxCache;
 
 import android.content.Context;
+import android.text.TextUtils;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
-import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
+import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.CacheDir;
 import com.mskn73.kache.Kache;
 import io.reactivex.Observable;
 import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-import javax.inject.Named;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -30,6 +28,7 @@ import orchextra.javax.inject.Singleton;
   private final Context mContext;
 
   public static final String MENU_KEY = "MENU_KEY";
+  public static final String VERSION_KEY = "VERSION_KEY";
 
   @Inject public OcmCacheImp(Context context, @CacheDir String cacheDir) {
     this.kache = new Kache(context, cacheDir);
@@ -162,5 +161,12 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Context getContext() {
     return mContext;
+  }
+
+  @Override public void putVersion(ApiVersionKache apiVersionKache) {
+    if (apiVersionKache != null && !TextUtils.isEmpty(apiVersionKache.getVersion())) {
+      kache.evict(VERSION_KEY);
+      kache.put(apiVersionKache);
+    }
   }
 }

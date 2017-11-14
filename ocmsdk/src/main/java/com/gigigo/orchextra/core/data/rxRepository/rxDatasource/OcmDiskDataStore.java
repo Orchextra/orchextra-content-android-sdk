@@ -25,7 +25,7 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<ApiMenuContentData> getMenuEntity() {
     return ocmCache.getMenus();
-  }
+}
 
   @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl, int numberOfElementsToDownload) {
     return ocmCache.getSection(elementUrl);
@@ -37,6 +37,10 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<ApiElementData> getElementById(String slug) {
     return ocmCache.getDetail(slug);
+  }
+
+  @Override public boolean isFromCloud() {
+    return false;
   }
 
   public OcmCache getOcmCache() {

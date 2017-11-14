@@ -34,4 +34,6 @@ public interface OcmDataStore {
    * Get an {@link Observable} which will emit a {@link ApiElementData}.
    */
   Observable<ApiElementData> getElementById(String slug);
+
+  boolean isFromCloud();
 }

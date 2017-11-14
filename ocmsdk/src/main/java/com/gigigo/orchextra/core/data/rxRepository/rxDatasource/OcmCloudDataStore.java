@@ -3,11 +3,13 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
+import com.gigigo.orchextra.core.data.api.dto.base.BaseApiResponse;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
+import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageData;
@@ -38,8 +40,13 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<ApiMenuContentData> getMenuEntity() {
+    ocmApiService.getVersionDataRx()
+        .map(apiVersionResponse -> new ApiVersionKache(apiVersionResponse.getData()))
+        .filter(apiVersionKache -> apiVersionKache != null)
+        .doOnNext(ocmCache::putVersion);
+
     return ocmApiService.getMenuDataRx()
-        .map(dataResponse -> dataResponse.getResult())
+        .map(BaseApiResponse::getResult)
         .doOnNext(ocmCache::putMenus);
   }
 
@@ -113,5 +120,9 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.getElementByIdRx(section)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putDetail);
+  }
+
+  @Override public boolean isFromCloud() {
+    return true;
   }
 }

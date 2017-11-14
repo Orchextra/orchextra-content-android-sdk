@@ -1,7 +1,5 @@
 package com.gigigo.orchextra.core.data.rxRepository;
 
-import com.gigigo.ggglib.network.mappers.ApiGenericResponseMapper;
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentDataResponseMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
@@ -9,12 +7,14 @@ import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDiskDataStore;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
-import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
+import java.util.Map;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -40,7 +40,22 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<MenuContentData> getMenu(boolean forceReload) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForMenus(forceReload);
-    return ocmDataStore.getMenuEntity().map(apiMenuContentListResponseMapper::externalClassToModel);
+
+    Observable<MenuContentData> contentDataObservable =
+        ocmDataStore.getMenuEntity().map(apiMenuContentListResponseMapper::externalClassToModel);
+
+    if (!ocmDataStore.isFromCloud()) {
+      contentDataObservable = contentDataObservable.map(MenuContentData::getElementsCache)
+          .map(Map::entrySet)
+          .flatMapIterable(entries -> entries)
+          .map(Map.Entry::getValue)
+          .map(ElementCache::getUpdateAt)
+          .filter(this::checkDate)
+          .take(1)
+          .flatMap(aLong -> getMenu(true));
+    }
+
+    return contentDataObservable;
   }
 
   @Override
@@ -50,6 +65,12 @@ import orchextra.javax.inject.Singleton;
         ocmDataStoreFactory.getDataStoreForSections(forceReload, elementUrl);
     return ocmDataStore.getSectionEntity(elementUrl, numberOfElementsToDownload)
         .map(apiContentDataResponseMapper::externalClassToModel);
+  }
+
+  private boolean checkDate(Long updateAt) {
+    //TODO Change to expiredAt
+    long current = System.currentTimeMillis();
+    return updateAt < current;
   }
 
   @Override public Observable<ElementData> getDetail(boolean forceReload, String elementUrl) {
