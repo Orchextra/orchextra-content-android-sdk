@@ -45,14 +45,24 @@ import orchextra.javax.inject.Singleton;
         ocmDataStore.getMenuEntity().map(apiMenuContentListResponseMapper::externalClassToModel);
 
     if (!ocmDataStore.isFromCloud()) {
-      contentDataObservable = contentDataObservable.map(MenuContentData::getElementsCache)
-          .map(Map::entrySet)
-          .flatMapIterable(entries -> entries)
-          .map(Map.Entry::getValue)
-          .map(ElementCache::getUpdateAt)
-          .filter(this::checkDate)
-          .take(1)
-          .flatMap(aLong -> getMenu(true));
+      final boolean[] hasTobeUpdated = { false };
+
+      Observable<MenuContentData> forcedContentDataObservable =
+          contentDataObservable.map(MenuContentData::getElementsCache)
+              .map(Map::entrySet)
+              .flatMapIterable(entries -> entries)
+              .map(Map.Entry::getValue)
+              .map(ElementCache::getUpdateAt)
+              .filter(this::checkDate)
+              .take(1)
+              .flatMap(aLong -> {
+                hasTobeUpdated[0] = true;
+                return getMenu(true);
+              });
+
+      if (hasTobeUpdated[0]) {
+        contentDataObservable = forcedContentDataObservable;
+      }
     }
 
     return contentDataObservable;
@@ -70,7 +80,7 @@ import orchextra.javax.inject.Singleton;
   private boolean checkDate(Long updateAt) {
     //TODO Change to expiredAt
     long current = System.currentTimeMillis();
-    return updateAt < current;
+    return updateAt > current;
   }
 
   @Override public Observable<ElementData> getDetail(boolean forceReload, String elementUrl) {
