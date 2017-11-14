@@ -22,16 +22,16 @@ import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 
 public class OcmControllerImp implements OcmController {
-  private static final PriorityScheduler.Priority PRIORITY_MENUS = PriorityScheduler.Priority.LOW;
+  private static final PriorityScheduler.Priority PRIORITY_MENUS = PriorityScheduler.Priority.LOWEST;
 
   private static final PriorityScheduler.Priority PRIORITY_SECTIONS =
-      PriorityScheduler.Priority.MEDIUM;
+      PriorityScheduler.Priority.LOW;
 
   private static final PriorityScheduler.Priority PRIORITY_DETAIL =
-      PriorityScheduler.Priority.HIGH;
+      PriorityScheduler.Priority.MEDIUM;
 
   private static final PriorityScheduler.Priority PRIORITY_SEARCH =
-      PriorityScheduler.Priority.MEDIUM;
+      PriorityScheduler.Priority.LOW;
 
   private static final PriorityScheduler.Priority PRIORITY_CLEAR = PriorityScheduler.Priority.LOW;
 
@@ -66,7 +66,7 @@ public class OcmControllerImp implements OcmController {
   //region new
   @Override public void getMenu(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
     getMenus.execute(new MenuObserver(getMenusCallback),
-        GetMenus.Params.forForceReload(forceReload), forceReload ? PRIORITY_MENUS : PriorityScheduler.Priority.HIGHEST);
+        GetMenus.Params.forForceReload(forceReload), forceReload ? PRIORITY_MENUS : PriorityScheduler.Priority.HIGH);
   }
 
   @Override
@@ -82,7 +82,7 @@ public class OcmControllerImp implements OcmController {
           if (url != null) {
             getSection.execute(new SectionObserver(getSectionControllerCallback),
                 GetSection.Params.forSection(forceReload, url, imagesToDownload),
-                forceReload ? PRIORITY_SECTIONS : PriorityScheduler.Priority.HIGHEST);
+                forceReload ? PRIORITY_SECTIONS : PriorityScheduler.Priority.HIGH);
           } else {
             getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(
                 "elementCache.getRender().getContentUrl() IS NULL"));
