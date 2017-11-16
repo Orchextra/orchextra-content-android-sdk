@@ -43,7 +43,7 @@ configurations {
 
 dependencies {
   compile project(path: ':ocmsdk')
-  compile 'com.android.support:multidex:1.0.1'
+  compile 'com.android.support:multidex:1.0.2' //mustasv 4 woah
 //
 //    implementation ('com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'){
 //      exclude module: 'ggglib'
