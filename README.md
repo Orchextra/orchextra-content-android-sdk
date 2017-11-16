@@ -1,4 +1,4 @@
-Orchextra Content	
+Orchextra Content	[![Build Status](https://travis-ci.org/Orchextra/orchextra-content-android-sdk.svg?branch=develop)](https://travis-ci.org/Orchextra/orchextra-content-android-sdk)
 ===================
 A library that gives you access to Orchextra Content platform from your Android device.
 
