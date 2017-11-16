@@ -1,34 +1,100 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.applivery.gradle:applivery-deploy:1.0.0'
+  }
+}
+
 apply plugin: 'com.android.application'
+apply plugin: 'applivery-plugin'
 
 android {
   compileSdkVersion 26
 
-
+  signingConfigs {
+    config {}
+  }
 
   defaultConfig {
     applicationId "com.gigigo.showcase"
     minSdkVersion 18
     targetSdkVersion 26
-    versionCode 1
-    versionName "1.0"
+    versionCode computeVersionCode()
+    versionName "1.0-RC" + computeVersionCode()
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    multiDexEnabled true
   }
 
   buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    debug {
+      testCoverageEnabled = false
+      debuggable true
+      applicationIdSuffix ".debug"
     }
+
+    quality {
+      signingConfig signingConfigs.debug
+      debuggable true
+      applicationIdSuffix ".quality"
+    }
+
+    release {
+      signingConfig signingConfigs.debug
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt')
+    }
+  }
+
+  lintOptions {
+    abortOnError false
   }
 }
 
-dependencies {
-  implementation fileTree(dir: 'libs', include: ['*.jar'])
+configurations {
+  compile.exclude group: "org.jetbrains", module: "annotations"
+}
 
+dependencies {
   implementation 'com.android.support:appcompat-v7:26.1.0'
-  implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-  testImplementation 'junit:junit:4.12'
-  androidTestImplementation 'com.android.support.test:runner:1.0.1'
-  androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+  implementation 'com.android.support:design:26.1.0'
+  implementation 'com.android.support:support-v13:26.1.0'
+  implementation 'com.android.support:support-v4:26.1.0'
+  implementation 'com.android.support:design:26.1.0'
+
+  implementation project(path: ':ocmsdk')
+
+  implementation 'com.android.support:multidex:1.0.2'
+  implementation 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
+  implementation 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
+  implementation 'com.android.support:support-v4:26.1.0'
+
+  debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+  qualityImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+  releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+}
+
+applivery {
+  try {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('applivery.properties').newDataInputStream())
+
+    appId = "59c9197a48563b7721347736"
+    apiKey = properties.getProperty("API_KEY")
+  } catch (ex) {
+    throw new InvalidUserDataException("You should define API_KEY in applivery.properties.")
+  }
+}
+
+/**
+ * Gets the commit number from the current Git commit. E.g. 538*/
+def computeVersionCode() {
+  def stdout = new ByteArrayOutputStream()
+  exec {
+    commandLine 'git', 'rev-list', '--count', 'HEAD'
+    standardOutput = stdout
+  }
+  return stdout.toString().trim().toInteger()
 }

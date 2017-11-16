@@ -1,28 +1,21 @@
 apply plugin: 'com.android.library'
 apply from: 'jacoco.gradle'
 apply from: 'sonarqube.gradle'
-
 apply from: 'common_methods.gradle'
 apply from: 'dependencies.gradle'
 apply plugin: 'me.tatarka.retrolambda'
-
 apply plugin: 'com.github.dcendents.android-maven'
-
-group = 'com.github.Orchextra'
-version ='ocmVersion'
-
-
 apply from: 'variants.gradle'
 
+group = 'com.github.Orchextra'
+
 def CONCURRENT_INTERACTORS = "CONCURRENT_INTERACTORS"
-def RETROFIT_LOG = "RETROFIT_LOG"
-
-def API_URL = "API_URL";
-def OCM_SDK_VERSION = "OCM_SDK_VERSION";
-
+def API_URL = "API_URL"
+def NETWORK_LOG = "NETWORK_LOG"
+def OCM_SDK_VERSION = "OCM_SDK_VERSION"
 def YOUTUBE_DEVELOPER_KEY = "YOUTUBE_DEVELOPER_KEY"
-
 def VIMEO_ACCESS_TOKEN = "VIMEO_ACCESS_TOKEN"
+
 android {
   compileSdkVersion project.androidCompileSdkVersion
   buildToolsVersion project.androidBuildToolsVersion
@@ -36,48 +29,40 @@ android {
       abiFilters "armeabi-v7a"
     }
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    buildConfigField STRING, VIMEO_ACCESS_TOKEN, project.vimeoAccessToken
+    buildConfigField INT, CONCURRENT_INTERACTORS, project.concurrentInteractors
   }
+
   buildTypes {
-    staging {
-      debuggable true
-      //      testCoverageEnabled = true
-    }
     debug {
       debuggable true
-      //      testCoverageEnabled = true
+
+      buildConfigField STRING, API_URL, '"https://cm.s.orchextra.io/"'
+      buildConfigField STRING, OCM_SDK_VERSION, '"ANDROID_1.0.0"'
+      buildConfigField STRING, YOUTUBE_DEVELOPER_KEY, project.youtubeDevelopKey
+      buildConfigField BOOLEAN, NETWORK_LOG, "true"
     }
-    release {
+
+    quality {
       debuggable true
+
+      buildConfigField STRING, API_URL, '"https://cm.q.orchextra.io/"'
+      buildConfigField STRING, OCM_SDK_VERSION, '"ANDROID_1.0.0"'
+      buildConfigField STRING, YOUTUBE_DEVELOPER_KEY, project.youtubeDevelopKey
+      buildConfigField BOOLEAN, NETWORK_LOG, "true"
+    }
+
+    release {
+      debuggable false
       minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-      signingConfig android.signingConfigs.debug
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+      buildConfigField STRING, API_URL, '"https://cm.orchextra.io/"'
+      buildConfigField STRING, OCM_SDK_VERSION, '"ANDROID_1.0.0"'
+      buildConfigField STRING, YOUTUBE_DEVELOPER_KEY, project.youtubeReleaseKey
+      buildConfigField BOOLEAN, NETWORK_LOG, "false"
     }
-  }
-
-  project.android.libraryVariants.all { variant ->
-
-    variant.productFlavors.each { flavor ->
-
-      setVariantBuildConfigField(variant, project.apiOcm, API_URL, STRING)
-      setVariantBuildConfigField(variant, project.ocmSdkVersion, OCM_SDK_VERSION, STRING)
-      setVariantBuildConfigField(variant, project.concurrentInteractors,
-          CONCURRENT_INTERACTORS, INT)
-      setVariantBuildConfigField(variant, project.retrofitLog, RETROFIT_LOG, BOOLEAN)
-      setVariantBuildConfigField(variant, project.youtubeDeveloperKey,
-          YOUTUBE_DEVELOPER_KEY, STRING)
-      setVariantBuildConfigField(variant, project.vimeoAccessToken,
-          VIMEO_ACCESS_TOKEN, STRING)
-      println("flavor: " + flavor)
-      println("--**********************************************************--")
-    }
-
-    /* def bundleTask = tasks["bundle${name.capitalize()}"]
-     artifacts {
-       archives(bundleTask.archivePath) {
-         classifier null
-         builtBy bundleTask
-       }
-     }*/
   }
 
   lintOptions {
@@ -91,77 +76,16 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
+  publishNonDefault true
+
   testOptions {
     unitTests.returnDefaultValues = true
   }
-
-
-  flavorDimensions "ocm"
-
-  productFlavors {
-    ocm {
-      dimension "ocm"
-    }
-  }
-
-
-  //true to publish all flavour artifacts
-  // publishNonDefault true
-  //defaultPublishConfig "ocmStaging"
-  //defaultPublishConfig "ocmDebug"
-  //defaultPublishConfig {"ocmRelease","ocmDebug","ocmStaging"}
-
-  // publishNonDefault is deprecated and has no effect anymore. All variants are now published.
-  // true to publish all flavour artifacts
-  //publishNonDefault true
-  //defaultPublishConfig "ocmStaging"
-  //  defaultPublishConfig "ocmDebug"
-  // default build flavour
-  //defaultPublishConfig "ocmDebug"
 }
 
 jacocoAndroidUnitTestReport {
   excludes += ['**/BuildConfig*.*']
 }
-
-configurations {
-  ocmReleaseImplementation
-  ocmStagingImplementation
-  ocmDebugImplementation
-}
-
-if( android.productFlavors.size() > 0 ) {
-  android.libraryVariants.all { variant ->
-    // Publish a main artifact, otherwise the maven pom is not generated
-    //if( variant.name == android.defaultPublishConfig ) {
-      def bundleTask = tasks["bundle${name.capitalize()}"]
-      artifacts {
-        println('BUNDLE!'+bundleTask.archivePath)
-        println('classifier!'+variant.name)
-        println('builtBy!'+bundleTask.name)
-        archives(bundleTask.archivePath) {
-          classifier variant.name
-          builtBy bundleTask
-
-        }
-      }
-    }
-  //}
-}
-//variant.name
-
-task finalize {
-  doFirst {
-    tasks.assembleOcmDebug.execute()
-    tasks.assembleOcmRelease.execute()
-    tasks.assembleOcmStaging.execute()
-  }
-
-  println('finally!')
-}
-finalize.dependsOn(ocmsdk:install)
-//install.finalizedBy(finalize)
-install.dependsOn(ocmsdk:build)
 
 dependencies {
   //TEST
@@ -189,43 +113,23 @@ dependencies {
   //Image Loader Glide/Blur
   api project.libraries.imageloaderGlideBlur
 
-  //Orchextra
-//   implementation project.libraries.oxvuforiaimplementation
-//  ocmStagingImplementation(project.libraries.orchextrasdkStaging) { transitive = true
-//    exclude module: 'support-v4'  }
-//  ocmDebugImplementation(project.libraries.orchextrasdkDebug) { transitive = true
-//    exclude module: 'support-v4' }
-//  ocmReleaseImplementation(project.libraries.orchextrasdkRelease) { transitive = true
-//    exclude module: 'support-v4' }
-  // implementation project.libraries.oxvuforiaimplementation
-  /*
-   ocmStagingCompile(project.libraries.orchextrasdkStaging) {
-     transitive = true
-     exclude module: 'support-v4'
-   }
-   ocmDebugCompile(project.libraries.orchextrasdkDebug) {
-     transitive = true
-     exclude module: 'support-v4'
-   }
-   ocmReleaseCompile(project.libraries.orchextrasdkRelease) {
-     transitive = true
-     exclude module: 'support-v4'
-   }
- */
+  implementation "com.squareup.okhttp3:logging-interceptor:3.9.0"
+  implementation 'com.github.GigigoGreenLabs.imgRecogModule:imagerecognitioninterface:2.6'
 
-  stagingApi(project.libraries.orchextrasdkStaging) {
-    transitive = true
+  //Orchextra
+  // implementation project.libraries.oxvuforiaimplementation
+  debugApi(project.libraries.orchextrasdkStaging) {
+    transitive true
     exclude module: 'support-v4'
   }
-  debugApi(project.libraries.orchextrasdkDebug) {
-    transitive = true
+  qualityApi(project.libraries.orchextrasdkDebug) {
+    transitive true
     exclude module: 'support-v4'
   }
   releaseApi(project.libraries.orchextrasdkRelease) {
-    transitive = true
+    transitive true
     exclude module: 'support-v4'
   }
-
 
   //customs Views
   implementation project.libraries.doubleViewPager
@@ -239,7 +143,7 @@ dependencies {
 
   implementation project.libraries.kache
 
-  api 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+  implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
 
   api project(':vimeosdk')
 

@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="colorPrimary">#3F51B5</color>
-  <color name="colorPrimaryDark">#303F9F</color>
-  <color name="colorAccent">#FF4081</color>
+  <color name="primary">#777777</color>
+  <color name="accent">#15bcae</color>
+
+  <color name="primary_text">#212121</color>
+  <color name="secondary_text">#757575</color>
+  <color name="icons">#FFFFFF</color>
+  <color name="divider">#BDBDBD</color>
+
+  <color name="endColor">#7d7d7d</color>
+  <color name="startColor">#8c8c8c</color>
+
+  <!-- OCM -->
+  <color name="oc_background_detail_toolbar">@color/primary</color>
+  <color name="color_primary">@color/primary</color>
+  <color name="color_primary_dark">@color/primary</color>
+  <color name="color_accent">@color/icons</color>
 </resources>
