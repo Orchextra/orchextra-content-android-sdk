@@ -5,7 +5,7 @@ package com.gigigo.orchextra.ocm.dto;
  */
 
 public class UiVersionData {
-  long version;
+  private long version;
 
   public long getVersion() {
     return version;

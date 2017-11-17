@@ -6,6 +6,8 @@ import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataRespons
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
+import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
+import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
@@ -79,5 +81,17 @@ import static org.mockito.Mockito.verify;
     ocmCloudDataStore.getElementById(FAKE_ID);
 
     verify(mockRestApi).getElementByIdRx(FAKE_ID);
+  }
+
+  @Test public void testGetVersion(){
+    ApiVersionResponse fakeVersion = new ApiVersionResponse();
+
+    Observable<ApiVersionResponse> fakeObservable =  Observable.just(fakeVersion);
+    given(mockRestApi.getVersionDataRx()).willReturn(fakeObservable);
+
+    ocmCloudDataStore.getVersion();
+
+    verify(mockRestApi).getVersionDataRx();
+
   }
 }

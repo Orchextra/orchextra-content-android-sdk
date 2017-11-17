@@ -117,9 +117,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
   private UiVersionData transformVersionData(VersionData versionData){
     UiVersionData uiVersionData= new UiVersionData();
-    long version = Long.parseLong(versionData.getVersion());
-    uiVersionData.setVersion(version);
-
+    if(versionData.getVersion()!=null && !versionData.getVersion().isEmpty()) {
+      long version = Long.parseLong(versionData.getVersion());
+      uiVersionData.setVersion(version);
+    }
     return uiVersionData;
   }
 

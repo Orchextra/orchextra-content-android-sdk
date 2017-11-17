@@ -70,7 +70,7 @@ public class OcmControllerImp implements OcmController {
   }
 
   @Override public void getVersion(GetVersionControllerCallback getVersionCallback) {
-    getVersion.execute(new VersionObserver(getVersionCallback), null,
+    getVersion.execute(new VersionObserver(getVersionCallback), GetVersion.Params.forVersion(),
         PriorityScheduler.Priority.HIGH);
   }
 

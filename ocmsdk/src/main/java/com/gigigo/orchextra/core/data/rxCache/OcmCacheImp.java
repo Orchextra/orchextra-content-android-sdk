@@ -181,7 +181,7 @@ import orchextra.javax.inject.Singleton;
         emitter.onNext(apiVersionKache);
         emitter.onComplete();
       } else {
-        emitter.onNext(new ApiVersionKache("0"));
+        emitter.onNext(null);
       }
     });
   }

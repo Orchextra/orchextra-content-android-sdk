@@ -5,6 +5,7 @@ import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
+import com.gigigo.orchextra.core.domain.rxInteractor.GetVersion;
 import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
@@ -18,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -34,6 +36,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   @Mock private OcmController.ClearCacheCallback mockClearCacheCallback;
   @Mock private GetDetail mockGetDetail;
   @Mock private GetMenus mockGetMenus;
+  @Mock private GetVersion mockGetVersion;
   @Mock private GetSection mockGetSection;
   @Mock private SearchElements mockSearchElements;
   @Mock private ConnectionUtils mockConnectionUtils;
@@ -43,7 +46,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
   @Before public void setUp() {
     ocmController =
-        new OcmControllerImp(mockGetMenus, mockGetSection, mockGetDetail, mockSearchElements,
+        new OcmControllerImp(mockGetVersion,mockGetMenus, mockGetSection, mockGetDetail, mockSearchElements,
             mockClearCache, mockConnectionUtils);
   }
 
@@ -86,5 +89,15 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
         any(SearchElements.Params.class), any(PriorityScheduler.Priority.class));
 
     verifyNoMoreInteractions(mockSearchElements);
+  }
+
+  @Test public void testGetVersion(){
+
+    ocmController.getVersion(null);
+
+    verify(mockGetVersion).execute(any(DisposableObserver.class),any(GetVersion.Params.class),
+        any(PriorityScheduler.Priority.class));
+
+    verifyNoMoreInteractions(mockGetVersion);
   }
 }

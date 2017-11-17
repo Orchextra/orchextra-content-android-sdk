@@ -17,7 +17,9 @@ public class ApiVersionMapper
 
   @Override public VersionData externalClassToModel(ApiVersionKache data) {
     VersionData versionData = new VersionData();
-    versionData.setVersion(data.getVersion());
+    if(data!=null) {
+      versionData.setVersion(data.getVersion());
+    }
     return versionData;
   }
 }
