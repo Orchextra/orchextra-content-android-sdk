@@ -103,4 +103,13 @@ import orchextra.javax.inject.Singleton;
   public OcmDataStore getDiskDataStore() {
     return diskDataStore;
   }
+
+  public OcmDataStore getDataStoreForVersion() {
+    OcmDataStore ocmDataStore;
+
+    if (!connectionUtils.hasConnection())
+      return getDiskDataStore();
+
+    return getCloudDataStore();
+  }
 }

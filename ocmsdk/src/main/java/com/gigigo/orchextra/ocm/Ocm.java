@@ -12,6 +12,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
+import com.gigigo.orchextra.ocm.dto.UiVersionData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
@@ -173,6 +174,22 @@ public final class Ocm {
    */
   public static void setContentLanguage(String contentLanguage) {
     OCManager.setContentLanguage(contentLanguage);
+  }
+
+  /**
+   * Get the app menus
+   */
+  public static void getVersion(OcmCallbacks.Version menusCallback) {
+    OCManager.getVersion(new OCManagerCallbacks.Version() {
+
+      @Override public void onVersionLoaded(UiVersionData version) {
+        menusCallback.onVersionLoaded(version);
+      }
+
+      @Override public void onVersionFails(Throwable e) {
+        menusCallback.onVersionFails(e);
+      }
+    });
   }
 
   /**

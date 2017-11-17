@@ -17,6 +17,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
+import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailLayoutContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.CustomTabsContentData;
@@ -35,6 +36,7 @@ import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
+import com.gigigo.orchextra.ocm.dto.UiVersionData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
@@ -99,6 +101,26 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     uiMenuData.setFromCache(menuContentData.isFromCache());
 
     return uiMenuData;
+  }
+
+  @Override public void getVersion(GetVersionGeneratorCallback getVersionCallback) {
+    ocmController.getVersion(new OcmController.GetVersionControllerCallback() {
+      @Override public void onGetVersionLoaded(VersionData versionData) {
+        getVersionCallback.onGetVersionLoaded(transformVersionData(versionData));
+      }
+
+      @Override public void onGetVersionFails(Exception e) {
+        getVersionCallback.onGetVersionFails(e);
+      }
+    });
+  }
+
+  private UiVersionData transformVersionData(VersionData versionData){
+    UiVersionData uiVersionData= new UiVersionData();
+    long version = Long.parseLong(versionData.getVersion());
+    uiVersionData.setVersion(version);
+
+    return uiVersionData;
   }
 
   @Override

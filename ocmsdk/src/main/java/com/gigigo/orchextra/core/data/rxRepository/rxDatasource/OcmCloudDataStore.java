@@ -122,6 +122,13 @@ import orchextra.javax.inject.Singleton;
         .doOnNext(ocmCache::putDetail);
   }
 
+  @Override public Observable<ApiVersionKache> getVersion() {
+    return ocmApiService.getVersionDataRx()
+        .map(apiVersionResponse -> new ApiVersionKache(apiVersionResponse.getData()))
+        .filter(apiVersionKache -> apiVersionKache != null)
+        .doOnNext(ocmCache::putVersion);
+  }
+
   @Override public boolean isFromCloud() {
     return true;
   }

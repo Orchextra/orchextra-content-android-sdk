@@ -13,9 +13,19 @@ public class ApiSectionContentData implements Kacheable {
   private Map<String, ApiElementCache> elementsCache;
   private String key;
   private boolean fromCache;
+  private String version;
+  private String expireAt;
 
   public ApiContentItem getContent() {
     return content;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public String getExpireAt() {
+    return expireAt;
   }
 
   public Map<String, ApiElementCache> getElementsCache() {

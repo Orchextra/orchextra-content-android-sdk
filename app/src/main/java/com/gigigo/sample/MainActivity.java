@@ -1,6 +1,8 @@
 package com.gigigo.sample;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -15,11 +17,15 @@ import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
+import com.gigigo.orchextra.ocm.dto.UiVersionData;
 import java.io.File;
 import java.util.List;
+import jp.wasabeef.glide.transformations.internal.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static String PREFS_VERSION = "PREFS_VERSION";
+  private SharedPreferences sharedPreferences;
   private TabLayout tabLayout;
   private ViewPager viewpager;
   private ScreenSlidePagerAdapter adapter;
@@ -48,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override public void doRequiredLogin(String elementUrl) {
-      Toast.makeText(getApplicationContext(), "Item needs permissions"+elementUrl, Toast.LENGTH_SHORT).show();
+      Toast.makeText(getApplicationContext(), "Item needs permissions" + elementUrl,
+          Toast.LENGTH_SHORT).show();
     }
   };
 
@@ -80,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     initViews();
 
+    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     Ocm.setOnDoRequiredLoginCallback(onDoRequiredLoginCallback);
 
     startCredentials();
@@ -124,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO Fix in Orchextra
         runOnUiThread(new Runnable() {
           @Override public void run() {
-            getContent();
+            checkVersion();
           }
         });
       }
@@ -159,8 +167,35 @@ public class MainActivity extends AppCompatActivity {
   }
   //endregion
 
-  private void getContent() {
-    Ocm.getMenus(false, new OcmCallbacks.Menus() {
+  private void checkVersion() {
+    Ocm.getVersion(new OcmCallbacks.Version() {
+      @Override public void onVersionLoaded(UiVersionData version) {
+
+        boolean forceReload = false;
+        long localVersion = sharedPreferences.getLong(PREFS_VERSION, 0);
+        long cloudVersion = version.getVersion();
+
+        if (cloudVersion > localVersion) {
+          forceReload = true;
+          saveVersion(cloudVersion);
+        }
+
+        getContent(forceReload);
+      }
+
+      @Override public void onVersionFails(Throwable e) {
+        Toast.makeText(MainActivity.this, "Unable to get version", Toast.LENGTH_LONG).show();
+      }
+    });
+  }
+
+  private void saveVersion(long version) {
+    sharedPreferences.edit().putLong(PREFS_VERSION, version).apply();
+  }
+
+  private void getContent(boolean forceReload) {
+
+    Ocm.getMenus(forceReload, new OcmCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData uiMenuData) {
         if (uiMenuData.getUiMenuList() == null) {
           Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
@@ -170,9 +205,9 @@ public class MainActivity extends AppCompatActivity {
           onGoDetailView(uiMenu);
           adapter.setDataItems(uiMenu);
 
-          if (uiMenuData.isFromCache()) {
-            checkIfMenuHasChanged(uiMenu);
-          }
+          //if (uiMenuData.isFromCache()) {
+          //  checkIfMenuHasChanged(uiMenu);
+          //}
         }
       }
 

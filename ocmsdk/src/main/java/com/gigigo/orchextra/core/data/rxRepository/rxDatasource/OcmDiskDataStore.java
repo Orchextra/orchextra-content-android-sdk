@@ -6,6 +6,7 @@ import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataRespons
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
+import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import io.reactivex.Observable;
@@ -37,6 +38,10 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<ApiElementData> getElementById(String slug) {
     return ocmCache.getDetail(slug);
+  }
+
+  @Override public Observable<ApiVersionKache> getVersion() {
+    return ocmCache.getVersion();
   }
 
   @Override public boolean isFromCloud() {

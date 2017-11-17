@@ -169,4 +169,20 @@ import orchextra.javax.inject.Singleton;
       kache.put(apiVersionKache);
     }
   }
+
+  @Override public Observable<ApiVersionKache> getVersion() {
+
+    return Observable.create(emitter -> {
+      ApiVersionKache apiVersionKache =
+          (ApiVersionKache) kache.get(ApiVersionKache.class, VERSION_KEY);
+
+      if (apiVersionKache != null) {
+
+        emitter.onNext(apiVersionKache);
+        emitter.onComplete();
+      } else {
+        emitter.onNext(new ApiVersionKache("0"));
+      }
+    });
+  }
 }

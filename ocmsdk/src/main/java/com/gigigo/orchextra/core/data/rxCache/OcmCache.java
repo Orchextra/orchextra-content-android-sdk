@@ -38,4 +38,6 @@ public interface OcmCache {
   Context getContext();
 
   void putVersion(ApiVersionKache apiVersionKache);
+
+  Observable<ApiVersionKache> getVersion();
 }

@@ -33,8 +33,8 @@ import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
-import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
+import com.gigigo.orchextra.ocm.dto.UiVersionData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
@@ -109,6 +109,21 @@ public final class OCManager {
 
             @Override public void onGetMenusFails(Throwable e) {
               menusCallback.onMenusFails(e);
+            }
+          });
+    }
+  }
+
+  static void getVersion(final OCManagerCallbacks.Version versionCallback) {
+    if (instance != null) {
+      instance.ocmViewGenerator.getVersion(new OcmViewGenerator.GetVersionGeneratorCallback() {
+
+            @Override public void onGetVersionLoaded(UiVersionData versionData) {
+              versionCallback.onVersionLoaded(versionData);
+            }
+
+            @Override public void onGetVersionFails(Throwable e) {
+              versionCallback.onVersionFails(e);
             }
           });
     }

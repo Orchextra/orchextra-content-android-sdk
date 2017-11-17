@@ -8,6 +8,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
+import com.gigigo.orchextra.ocm.dto.UiVersionData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
@@ -15,6 +16,8 @@ import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import java.util.List;
 
 public interface OcmViewGenerator {
+
+  void getVersion(GetVersionGeneratorCallback getVersionCallback);
 
   void generateSectionView(String viewId, String filter, int imagesToDownload,
       GetSectionViewGeneratorCallback getSectionViewGeneratorCallback);
@@ -37,6 +40,10 @@ public interface OcmViewGenerator {
   void getMenu(boolean forceReload, GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
 
   // Callbacks
+  interface GetVersionGeneratorCallback{
+    void onGetVersionLoaded(UiVersionData versionData);
+    void onGetVersionFails(Throwable e);
+  }
   interface GetMenusViewGeneratorCallback {
     void onGetMenusLoaded(UiMenuData menus);
 
