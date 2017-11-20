@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
+import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
@@ -16,6 +17,7 @@ import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.receiver.WifiReceiver;
 import io.reactivex.Observable;
 import java.util.Iterator;
+import java.util.Map;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -49,9 +51,16 @@ import orchextra.javax.inject.Singleton;
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
         .doOnNext(ocmCache::putSection)
+        .doOnNext(apiSectionContentData -> saveElementsCache(apiSectionContentData.getElementsCache()))
         .doOnNext(apiSectionContentData -> {
           addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload);
         });
+  }
+
+  private void saveElementsCache(Map<String, ApiElementCache> elementsCache) {
+    for(ApiElementCache value: elementsCache.values()) {
+      ocmCache.putDetail(new ApiElementData(value));
+    }
   }
 
   private void addSectionsImagesToCache(ApiSectionContentData apiSectionContentData,
