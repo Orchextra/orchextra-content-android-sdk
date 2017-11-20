@@ -10,6 +10,7 @@ public class ApiElement {
     private String slug;
     private String elementUrl;
     private String name;
+    private List<List<String>> dates;
 
     public ApiElementSegmentation getSegmentation() {
         return segmentation;
@@ -33,5 +34,9 @@ public class ApiElement {
 
     public String getName() {
         return name;
+    }
+
+    public List<List<String>> getDates() {
+        return dates;
     }
 }

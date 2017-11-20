@@ -27,6 +27,7 @@ public class ApiElementMapper implements ExternalClassToModelMapper<ApiElement, 
     model.setSlug(data.getSlug());
     model.setElementUrl(data.getElementUrl());
     model.setName(data.getName());
+    model.setDates(data.getDates());
 
     if (data.getSegmentation() != null) {
       model.setSegmentation(apiMenuItemSegmentation.externalClassToModel(data.getSegmentation()));
