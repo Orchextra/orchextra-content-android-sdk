@@ -115,18 +115,18 @@ public final class OCManager {
   }
 
   static void getVersion(final OCManagerCallbacks.Version versionCallback) {
-    if (instance != null) {
-      instance.ocmViewGenerator.getVersion(new OcmViewGenerator.GetVersionGeneratorCallback() {
-
-            @Override public void onGetVersionLoaded(UiVersionData versionData) {
-              versionCallback.onVersionLoaded(versionData);
-            }
-
-            @Override public void onGetVersionFails(Throwable e) {
-              versionCallback.onVersionFails(e);
-            }
-          });
-    }
+    //if (instance != null) {
+    //  instance.ocmViewGenerator.getVersion(new OcmViewGenerator.GetVersionGeneratorCallback() {
+    //
+    //        @Override public void onGetVersionLoaded(UiVersionData versionData) {
+    //          versionCallback.onVersionLoaded(versionData);
+    //        }
+    //
+    //        @Override public void onGetVersionFails(Throwable e) {
+    //          versionCallback.onVersionFails(e);
+    //        }
+    //      });
+    //}
   }
 
   static void generateSectionView(String viewId, String filter, int imagesToDownload,

@@ -23,9 +23,11 @@ import com.gigigo.orchextra.core.domain.rxInteractor.GetVersion;
 import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
+import com.gigigo.orchextra.core.sdk.utils.OcmPreferences;
 
 public class OcmControllerImp implements OcmController {
-  private static final PriorityScheduler.Priority PRIORITY_MENUS = PriorityScheduler.Priority.LOWEST;
+  private static final PriorityScheduler.Priority PRIORITY_MENUS =
+      PriorityScheduler.Priority.LOWEST;
 
   private static final PriorityScheduler.Priority PRIORITY_SECTIONS =
       PriorityScheduler.Priority.LOW;
@@ -33,8 +35,7 @@ public class OcmControllerImp implements OcmController {
   private static final PriorityScheduler.Priority PRIORITY_DETAIL =
       PriorityScheduler.Priority.MEDIUM;
 
-  private static final PriorityScheduler.Priority PRIORITY_SEARCH =
-      PriorityScheduler.Priority.LOW;
+  private static final PriorityScheduler.Priority PRIORITY_SEARCH = PriorityScheduler.Priority.LOW;
 
   private static final PriorityScheduler.Priority PRIORITY_CLEAR = PriorityScheduler.Priority.LOW;
 
@@ -45,10 +46,11 @@ public class OcmControllerImp implements OcmController {
   private final SearchElements searchElements;
   private final ClearCache clearCache;
   private final ConnectionUtils connectionUtils;
+  private final OcmPreferences ocmPreferences;
 
   public OcmControllerImp(GetVersion getVersion, GetMenus getMenus, GetSection getSection,
-      GetDetail getDetail,
-      SearchElements searchElements, ClearCache clearCache, ConnectionUtils connectionUtils) {
+      GetDetail getDetail, SearchElements searchElements, ClearCache clearCache,
+      ConnectionUtils connectionUtils, OcmPreferences ocmPreferences) {
 
     this.getVersion = getVersion;
     this.getMenus = getMenus;
@@ -58,10 +60,10 @@ public class OcmControllerImp implements OcmController {
     this.clearCache = clearCache;
 
     this.connectionUtils = connectionUtils;
+    this.ocmPreferences = ocmPreferences;
   }
 
   private String getSlug(String elementUrl) {
-
     try {
       return elementUrl.substring(elementUrl.lastIndexOf("/") + 1, elementUrl.length());
     } catch (Exception ignored) {
@@ -70,14 +72,38 @@ public class OcmControllerImp implements OcmController {
   }
 
   @Override public void getVersion(GetVersionControllerCallback getVersionCallback) {
-    getVersion.execute(new VersionObserver(getVersionCallback), GetVersion.Params.forVersion(),
-        PriorityScheduler.Priority.HIGH);
+    //getVersion.execute(new VersionObserver(getVersionCallback), GetVersion.Params.forVersion(),
+    //    PriorityScheduler.Priority.HIGH);
   }
 
   //region new
   @Override public void getMenu(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
-    getMenus.execute(new MenuObserver(getMenusCallback),
-        GetMenus.Params.forForceReload(forceReload), forceReload ? PRIORITY_MENUS : PriorityScheduler.Priority.HIGH);
+    checkVersion(getMenusCallback);
+
+
+  }
+
+  private void checkVersion(GetMenusControllerCallback getMenusCallback) {
+    getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
+      @Override public void onGetVersionLoaded(VersionData versionData) {
+        boolean forceReload = false;
+
+        String version = ocmPreferences.getVersion();
+
+        if ( versionData != null && (version == null || !version.equals(versionData.getVersion()))) {
+          forceReload = true;
+          ocmPreferences.saveVersion(versionData.getVersion());
+        }
+
+        getMenus.execute(new MenuObserver(getMenusCallback),
+            GetMenus.Params.forForceReload(forceReload),
+            forceReload ? PRIORITY_MENUS : PriorityScheduler.Priority.HIGH);
+      }
+
+      @Override public void onGetVersionFails(Exception e) {
+
+      }
+    }), GetVersion.Params.forVersion(), PRIORITY_MENUS);
   }
 
   @Override
@@ -112,7 +138,8 @@ public class OcmControllerImp implements OcmController {
       GetDetailControllerCallback getDetailControllerCallback) {
     String slug = getSlug(elementUrl);
     getDetail.execute(new DetailObserver(getDetailControllerCallback),
-        GetDetail.Params.forDetail(forceReload, slug), forceReload ? PRIORITY_DETAIL : PriorityScheduler.Priority.HIGHEST);
+        GetDetail.Params.forDetail(forceReload, slug),
+        forceReload ? PRIORITY_DETAIL : PriorityScheduler.Priority.HIGHEST);
   }
 
   @Override
@@ -125,7 +152,6 @@ public class OcmControllerImp implements OcmController {
       final ClearCacheCallback clearCacheCallback) {
     clearCache.execute(new ClearCacheObserver(clearCacheCallback),
         ClearCache.Params.create(images, data), PRIORITY_CLEAR);
-
   }
 
   @Override public void disposeUseCases() {
@@ -160,10 +186,10 @@ public class OcmControllerImp implements OcmController {
     }
   }
 
-  private final class VersionObserver extends DefaultObserver<VersionData>{
+  private final class VersionObserver extends DefaultObserver<VersionData> {
     private final GetVersionControllerCallback getVersionControllerCallback;
 
-    public VersionObserver(GetVersionControllerCallback getVersionControllerCallback){
+    public VersionObserver(GetVersionControllerCallback getVersionControllerCallback) {
       this.getVersionControllerCallback = getVersionControllerCallback;
     }
 

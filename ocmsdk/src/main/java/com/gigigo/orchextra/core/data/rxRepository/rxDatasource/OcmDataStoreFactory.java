@@ -4,7 +4,6 @@ import android.util.Log;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import orchextra.javax.inject.Inject;
-import orchextra.javax.inject.Named;
 import orchextra.javax.inject.Singleton;
 
 /**
@@ -30,8 +29,7 @@ import orchextra.javax.inject.Singleton;
   public OcmDataStore getDataStoreForMenus(boolean force) {
     OcmDataStore ocmDataStore;
 
-    if (!connectionUtils.hasConnection())
-      return getDiskDataStore();
+    if (!connectionUtils.hasConnection()) return getDiskDataStore();
 
     if (force) {
       Log.i(TAG, "CLOUD - Menus");
@@ -53,8 +51,7 @@ import orchextra.javax.inject.Singleton;
   public OcmDataStore getDataStoreForSections(boolean force, String section) {
     OcmDataStore ocmDataStore;
 
-    if (!connectionUtils.hasConnection())
-      return getDiskDataStore();
+    if (!connectionUtils.hasConnection()) return getDiskDataStore();
 
     if (force) {
       Log.i(TAG, "CLOUD - Sections");
@@ -76,8 +73,7 @@ import orchextra.javax.inject.Singleton;
   public OcmDataStore getDataStoreForDetail(boolean force, String slug) {
     OcmDataStore ocmDataStore;
 
-    if (!connectionUtils.hasConnection())
-      return getDiskDataStore();
+    if (!connectionUtils.hasConnection()) return getDiskDataStore();
 
     if (force) {
       Log.i(TAG, "CLOUD - Detail");
@@ -105,11 +101,14 @@ import orchextra.javax.inject.Singleton;
   }
 
   public OcmDataStore getDataStoreForVersion() {
-    OcmDataStore ocmDataStore;
+    OcmCache ocmCache = diskDataStore.getOcmCache();
 
-    if (!connectionUtils.hasConnection())
+    if (ocmCache.isVersionCached() && !ocmCache.isVersionExpired()) {
+      Log.i(TAG, "DISK  - Version");
       return getDiskDataStore();
-
-    return getCloudDataStore();
+    } else {
+      Log.i(TAG, "CLOUD - Version");
+      return getCloudDataStore();
+    }
   }
 }

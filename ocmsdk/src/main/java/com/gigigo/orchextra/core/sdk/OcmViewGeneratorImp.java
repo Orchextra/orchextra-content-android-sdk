@@ -104,15 +104,15 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   }
 
   @Override public void getVersion(GetVersionGeneratorCallback getVersionCallback) {
-    ocmController.getVersion(new OcmController.GetVersionControllerCallback() {
-      @Override public void onGetVersionLoaded(VersionData versionData) {
-        getVersionCallback.onGetVersionLoaded(transformVersionData(versionData));
-      }
-
-      @Override public void onGetVersionFails(Exception e) {
-        getVersionCallback.onGetVersionFails(e);
-      }
-    });
+    //ocmController.getVersion(new OcmController.GetVersionControllerCallback() {
+    //  @Override public void onGetVersionLoaded(VersionData versionData) {
+    //    getVersionCallback.onGetVersionLoaded(transformVersionData(versionData));
+    //  }
+    //
+    //  @Override public void onGetVersionFails(Exception e) {
+    //    getVersionCallback.onGetVersionFails(e);
+    //  }
+    //});
   }
 
   private UiVersionData transformVersionData(VersionData versionData){

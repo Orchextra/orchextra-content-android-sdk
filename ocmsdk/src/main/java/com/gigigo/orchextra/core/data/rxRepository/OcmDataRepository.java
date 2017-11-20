@@ -52,15 +52,23 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<MenuContentData> getMenu(boolean forceReload) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForMenus(forceReload);
+    return ocmDataStore.getMenuEntity().map(apiMenuContentListResponseMapper::externalClassToModel);
+  }
 
-    Observable<MenuContentData> contentDataObservable =
-        ocmDataStore.getMenuEntity().map(apiMenuContentListResponseMapper::externalClassToModel);
+  @Override
+  public Observable<ContentData> getSectionElements(boolean forceReload, String elementUrl,
+      int numberOfElementsToDownload) {
+    OcmDataStore ocmDataStore =
+        ocmDataStoreFactory.getDataStoreForSections(forceReload, elementUrl);
+    Observable<ContentData> contentDataObservable =
+        ocmDataStore.getSectionEntity(elementUrl, numberOfElementsToDownload)
+            .map(apiContentDataResponseMapper::externalClassToModel);
 
     if (!ocmDataStore.isFromCloud()) {
       final boolean[] hasTobeUpdated = { false };
 
-      Observable<MenuContentData> forcedContentDataObservable =
-          contentDataObservable.map(MenuContentData::getElementsCache)
+      Observable<ContentData> forcedContentDataObservable =
+          contentDataObservable.map(ContentData::getElementsCache)
               .map(Map::entrySet)
               .flatMapIterable(entries -> entries)
               .map(Map.Entry::getValue)
@@ -69,7 +77,7 @@ import orchextra.javax.inject.Singleton;
               .take(1)
               .flatMap(aLong -> {
                 hasTobeUpdated[0] = true;
-                return getMenu(true);
+                return getSectionElements(true, elementUrl, numberOfElementsToDownload);
               });
 
       if (hasTobeUpdated[0]) {
@@ -78,15 +86,6 @@ import orchextra.javax.inject.Singleton;
     }
 
     return contentDataObservable;
-  }
-
-  @Override
-  public Observable<ContentData> getSectionElements(boolean forceReload, String elementUrl,
-      int numberOfElementsToDownload) {
-    OcmDataStore ocmDataStore =
-        ocmDataStoreFactory.getDataStoreForSections(forceReload, elementUrl);
-    return ocmDataStore.getSectionEntity(elementUrl, numberOfElementsToDownload)
-        .map(apiContentDataResponseMapper::externalClassToModel);
   }
 
   private boolean checkDate(Long updateAt) {

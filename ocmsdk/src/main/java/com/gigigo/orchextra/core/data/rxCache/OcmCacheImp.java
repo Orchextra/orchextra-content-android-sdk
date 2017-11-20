@@ -185,4 +185,12 @@ import orchextra.javax.inject.Singleton;
       }
     });
   }
+
+  @Override public boolean isVersionCached() {
+    return kache.isCached(VERSION_KEY);
+  }
+
+  @Override public boolean isVersionExpired() {
+    return kache.isExpired(VERSION_KEY, ApiVersionKache.class);
+  }
 }

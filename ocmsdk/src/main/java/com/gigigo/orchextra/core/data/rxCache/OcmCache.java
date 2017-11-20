@@ -40,4 +40,8 @@ public interface OcmCache {
   void putVersion(ApiVersionKache apiVersionKache);
 
   Observable<ApiVersionKache> getVersion();
+
+  boolean isVersionCached();
+
+  boolean isVersionExpired();
 }

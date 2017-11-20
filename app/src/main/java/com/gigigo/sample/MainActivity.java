@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO Fix in Orchextra
         runOnUiThread(new Runnable() {
           @Override public void run() {
-            checkVersion();
+            getContent(false);
           }
         });
       }
@@ -168,25 +168,25 @@ public class MainActivity extends AppCompatActivity {
   //endregion
 
   private void checkVersion() {
-    Ocm.getVersion(new OcmCallbacks.Version() {
-      @Override public void onVersionLoaded(UiVersionData version) {
-
-        boolean forceReload = false;
-        long localVersion = sharedPreferences.getLong(PREFS_VERSION, 0);
-        long cloudVersion = version.getVersion();
-
-        if (cloudVersion > localVersion) {
-          forceReload = true;
-          saveVersion(cloudVersion);
-        }
-
-        getContent(forceReload);
-      }
-
-      @Override public void onVersionFails(Throwable e) {
-        Toast.makeText(MainActivity.this, "Unable to get version", Toast.LENGTH_LONG).show();
-      }
-    });
+    //Ocm.getVersion(new OcmCallbacks.Version() {
+    //  @Override public void onVersionLoaded(UiVersionData version) {
+    //
+    //    boolean forceReload = false;
+    //    long localVersion = sharedPreferences.getLong(PREFS_VERSION, 0);
+    //    long cloudVersion = version.getVersion();
+    //
+    //    if (cloudVersion > localVersion) {
+    //      forceReload = true;
+    //      saveVersion(cloudVersion);
+    //    }
+    //
+    //    getContent(forceReload);
+    //  }
+    //
+    //  @Override public void onVersionFails(Throwable e) {
+    //    Toast.makeText(MainActivity.this, "Unable to get version", Toast.LENGTH_LONG).show();
+    //  }
+    //});
   }
 
   private void saveVersion(long version) {

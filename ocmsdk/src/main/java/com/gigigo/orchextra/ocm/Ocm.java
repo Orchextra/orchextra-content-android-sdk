@@ -180,16 +180,16 @@ public final class Ocm {
    * Get the app menus
    */
   public static void getVersion(OcmCallbacks.Version menusCallback) {
-    OCManager.getVersion(new OCManagerCallbacks.Version() {
-
-      @Override public void onVersionLoaded(UiVersionData version) {
-        menusCallback.onVersionLoaded(version);
-      }
-
-      @Override public void onVersionFails(Throwable e) {
-        menusCallback.onVersionFails(e);
-      }
-    });
+    //OCManager.getVersion(new OCManagerCallbacks.Version() {
+    //
+    //  @Override public void onVersionLoaded(UiVersionData version) {
+    //    menusCallback.onVersionLoaded(version);
+    //  }
+    //
+    //  @Override public void onVersionFails(Throwable e) {
+    //    menusCallback.onVersionFails(e);
+    //  }
+    //});
   }
 
   /**
