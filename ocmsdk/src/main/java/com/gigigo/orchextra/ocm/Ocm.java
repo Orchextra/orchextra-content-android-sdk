@@ -179,22 +179,6 @@ public final class Ocm {
   /**
    * Get the app menus
    */
-  public static void getVersion(OcmCallbacks.Version menusCallback) {
-    //OCManager.getVersion(new OCManagerCallbacks.Version() {
-    //
-    //  @Override public void onVersionLoaded(UiVersionData version) {
-    //    menusCallback.onVersionLoaded(version);
-    //  }
-    //
-    //  @Override public void onVersionFails(Throwable e) {
-    //    menusCallback.onVersionFails(e);
-    //  }
-    //});
-  }
-
-  /**
-   * Get the app menus
-   */
   public static void getMenus(boolean forceReload, OcmCallbacks.Menus menusCallback) {
     OCManager.getMenus(forceReload, new OCManagerCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData menus) {

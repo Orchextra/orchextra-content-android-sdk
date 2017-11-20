@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO Fix in Orchextra
         runOnUiThread(new Runnable() {
           @Override public void run() {
-            getContent(false);
+            getContent();
           }
         });
       }
@@ -167,35 +167,8 @@ public class MainActivity extends AppCompatActivity {
   }
   //endregion
 
-  private void checkVersion() {
-    //Ocm.getVersion(new OcmCallbacks.Version() {
-    //  @Override public void onVersionLoaded(UiVersionData version) {
-    //
-    //    boolean forceReload = false;
-    //    long localVersion = sharedPreferences.getLong(PREFS_VERSION, 0);
-    //    long cloudVersion = version.getVersion();
-    //
-    //    if (cloudVersion > localVersion) {
-    //      forceReload = true;
-    //      saveVersion(cloudVersion);
-    //    }
-    //
-    //    getContent(forceReload);
-    //  }
-    //
-    //  @Override public void onVersionFails(Throwable e) {
-    //    Toast.makeText(MainActivity.this, "Unable to get version", Toast.LENGTH_LONG).show();
-    //  }
-    //});
-  }
-
-  private void saveVersion(long version) {
-    sharedPreferences.edit().putLong(PREFS_VERSION, version).apply();
-  }
-
-  private void getContent(boolean forceReload) {
-
-    Ocm.getMenus(forceReload, new OcmCallbacks.Menus() {
+  private void getContent() {
+    Ocm.getMenus(false, new OcmCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData uiMenuData) {
         if (uiMenuData.getUiMenuList() == null) {
           Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();

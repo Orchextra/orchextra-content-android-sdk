@@ -17,8 +17,6 @@ import java.util.List;
 
 public interface OcmViewGenerator {
 
-  void getVersion(GetVersionGeneratorCallback getVersionCallback);
-
   void generateSectionView(String viewId, String filter, int imagesToDownload,
       GetSectionViewGeneratorCallback getSectionViewGeneratorCallback);
 
@@ -40,10 +38,6 @@ public interface OcmViewGenerator {
   void getMenu(boolean forceReload, GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
 
   // Callbacks
-  interface GetVersionGeneratorCallback{
-    void onGetVersionLoaded(UiVersionData versionData);
-    void onGetVersionFails(Throwable e);
-  }
   interface GetMenusViewGeneratorCallback {
     void onGetMenusLoaded(UiMenuData menus);
 

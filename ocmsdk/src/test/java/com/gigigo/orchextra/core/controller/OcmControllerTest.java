@@ -92,14 +92,4 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
     verifyNoMoreInteractions(mockSearchElements);
   }
-
-  @Test public void testGetVersion(){
-
-    ocmController.getVersion(null);
-
-    verify(mockGetVersion).execute(any(DisposableObserver.class),any(GetVersion.Params.class),
-        any(PriorityScheduler.Priority.class));
-
-    verifyNoMoreInteractions(mockGetVersion);
-  }
 }

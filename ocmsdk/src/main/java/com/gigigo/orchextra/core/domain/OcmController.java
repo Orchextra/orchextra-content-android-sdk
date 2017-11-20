@@ -9,7 +9,6 @@ import com.gigigo.orchextra.ocm.OCManagerCallbacks;
 
 public interface OcmController {
 
-  void getVersion(GetVersionControllerCallback getVersionCallback);
   void getMenu(boolean forceReload, final GetMenusControllerCallback getMenusCallback);
 
   void getSection(boolean forceReload, final String section, int imagesToDownload,
