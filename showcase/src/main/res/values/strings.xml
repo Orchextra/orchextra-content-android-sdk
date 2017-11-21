@@ -1,0 +1,22 @@
+<resources>
+  <string name="init_sdk" translatable="false">Init SDK</string>
+  <string name="refresh" translatable="false">Refresh</string>
+  <string name="init_clean" translatable="false">Clean</string>
+  <string name="loading" translatable="false">Loading</string>
+  <string name="empty_view_title" translatable="false">Sorry!</string>
+  <string name="empty_view_content" translatable="false">It does\'t have content jet</string>
+  <string name="error_view_title" translatable="false">Ups!</string>
+  <string name="error_view_content" translatable="false">We have a mistake</string>
+  <string name="network_error_view_title" translatable="false">Ups!</string>
+  <string name="network_error_view_content" translatable="false">Without internet connection</string>
+
+  <string name="ox_ir_scan_activity_name" translatable="false">Image recognition</string>
+  <string name="ox_webview_toolbar_title" translatable="false">Scanner</string>
+  <string name="title_activity_settings" translatable="false">SettingsActivity</string>
+
+  <string-array name="levels_array">
+    <item>Gold</item>
+    <item>Silver</item>
+    <item>Bronze</item>
+  </string-array>
+</resources>
