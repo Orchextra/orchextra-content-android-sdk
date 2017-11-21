@@ -76,10 +76,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
           @Override public void onGetSectionLoaded(ContentData cachedContentData) {
             ContentItem contentItem = cachedContentData.getContent();
             renderContentItem(contentItem);
-
-            //if (cachedContentData.isFromCache() && TextUtils.isEmpty(filter)) {
-            //  waitSomeSecondUntilCheckNewContent(cachedContentData);
-            //}
           }
 
           @Override public void onGetSectionFails(Exception e) {
@@ -87,78 +83,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
           }
         });
   }
-
-  //private void waitSomeSecondUntilCheckNewContent(ContentData cachedContentData) {
-  //  new Handler().postDelayed(new Runnable() {
-  //    @Override public void run() {
-  //      checkNewContent(cachedContentData);
-  //    }
-  //  }, 5000);
-  //}
-
-  //private void checkNewContent(ContentData cachedContentData) {
-  //  ocmController.getSection(true, section, imagesToDownload,
-  //      new OcmController.GetSectionControllerCallback() {
-  //        @Override public void onGetSectionLoaded(ContentData newContentData) {
-  //          checkNewContent(cachedContentData, newContentData);
-  //        }
-  //
-  //        @Override public void onGetSectionFails(Exception e) {
-  //          renderError();
-  //        }
-  //      });
-  //}
-
-  //private void checkNewContent(ContentData cachedContentData, ContentData newContentData) {
-  //  if (cachedContentData == null
-  //      || newContentData == null
-  //      || cachedContentData.getContent() == null
-  //      || newContentData.getContent() == null
-  //      || cachedContentData.getContent().getElements() == null
-  //      || newContentData.getContent().getElements() == null
-  //      || getView() == null) {
-  //    return;
-  //  }
-  //  UpdateAtType updateAtType = checkDifferents(cachedContentData, newContentData);
-  //  switch (updateAtType) {
-  //    case NEW_CONTENT:
-  //      getView().showNewExistingContent();
-  //      break;
-  //    case REFRESH:
-  //      loadFromCache();
-  //      break;
-  //  }
-  //}
-
-  //private UpdateAtType checkDifferents(ContentData cachedContentData, ContentData newContentData) {
-  //  List<Element> cachedElements = cachedContentData.getContent().getElements();
-  //  List<Element> newElements = newContentData.getContent().getElements();
-  //
-  //  if (cachedElements.size() > newElements.size()) {
-  //    return UpdateAtType.REFRESH;
-  //  } else if (cachedElements.size() < newElements.size()) {
-  //    return UpdateAtType.NEW_CONTENT;
-  //  } else {
-  //    for (int i = 0; i < cachedElements.size(); i++) {
-  //      if (!cachedElements.get(i).getSlug().equalsIgnoreCase(newElements.get(i).getSlug())) {
-  //        return UpdateAtType.REFRESH;
-  //      } else {
-  //        ElementCache cachedElementCache =
-  //            cachedContentData.getElementsCache().get(cachedElements.get(i).getElementUrl());
-  //
-  //        ElementCache newElementCache =
-  //            newContentData.getElementsCache().get(newElements.get(i).getElementUrl());
-  //
-  //        if (cachedElementCache != null
-  //            && newElementCache != null
-  //            && cachedElementCache.getUpdateAt() != newElementCache.getUpdateAt()) {
-  //          return UpdateAtType.REFRESH;
-  //        }
-  //      }
-  //    }
-  //  }
-  //  return UpdateAtType.NONE;
-  //}
 
   private void renderContentItem(ContentItem contentItem) {
     if (getView() != null) {
