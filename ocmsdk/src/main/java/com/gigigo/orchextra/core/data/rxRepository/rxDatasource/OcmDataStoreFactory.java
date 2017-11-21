@@ -4,7 +4,6 @@ import android.util.Log;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import orchextra.javax.inject.Inject;
-import orchextra.javax.inject.Named;
 import orchextra.javax.inject.Singleton;
 
 /**
@@ -73,7 +72,7 @@ import orchextra.javax.inject.Singleton;
     return ocmDataStore;
   }
 
-  public OcmDataStore getDataStoreForDetail(boolean force, String slug) {
+  public OcmDataStore getDataStoreForDetail(boolean force, String elementUrl) {
     OcmDataStore ocmDataStore;
 
     if (!connectionUtils.hasConnection())
@@ -84,7 +83,7 @@ import orchextra.javax.inject.Singleton;
       ocmDataStore = getCloudDataStore();
     } else {
       OcmCache cache = diskDataStore.getOcmCache();
-      if (cache.isDetailCached(slug) && !cache.isDetailExpired(slug)) {
+      if (cache.isDetailCached(elementUrl) && !cache.isDetailExpired(elementUrl)) {
         Log.i(TAG, "DISK  - Detail");
         ocmDataStore = getDiskDataStore();
       } else {

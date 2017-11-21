@@ -54,15 +54,6 @@ public class OcmControllerImp implements OcmController {
     this.connectionUtils = connectionUtils;
   }
 
-  private String getSlug(String elementUrl) {
-
-    try {
-      return elementUrl.substring(elementUrl.lastIndexOf("/") + 1, elementUrl.length());
-    } catch (Exception ignored) {
-      return null;
-    }
-  }
-
   //region new
   @Override public void getMenu(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
     getMenus.execute(new MenuObserver(getMenusCallback),
@@ -99,9 +90,8 @@ public class OcmControllerImp implements OcmController {
 
   @Override public void getDetails(boolean forceReload, String elementUrl,
       GetDetailControllerCallback getDetailControllerCallback) {
-    String slug = getSlug(elementUrl);
     getDetail.execute(new DetailObserver(getDetailControllerCallback),
-        GetDetail.Params.forDetail(forceReload, slug), forceReload ? PRIORITY_DETAIL : PriorityScheduler.Priority.HIGHEST);
+        GetDetail.Params.forDetail(forceReload, elementUrl), forceReload ? PRIORITY_DETAIL : PriorityScheduler.Priority.HIGHEST);
   }
 
   @Override

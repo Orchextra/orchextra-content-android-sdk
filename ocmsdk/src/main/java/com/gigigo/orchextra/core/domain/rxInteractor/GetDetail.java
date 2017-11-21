@@ -1,9 +1,7 @@
 package com.gigigo.orchextra.core.domain.rxInteractor;
 
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
-import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import io.reactivex.Observable;
 import orchextra.javax.inject.Inject;
@@ -36,8 +34,8 @@ public class GetDetail extends UseCase<ElementData, GetDetail.Params> {
       this.content = content;
     }
 
-    public static Params forDetail(boolean forceReload, String content) {
-      return new Params(forceReload, content);
+    public static Params forDetail(boolean forceReload, String elementUrl) {
+      return new Params(forceReload, elementUrl);
     }
   }
 }
