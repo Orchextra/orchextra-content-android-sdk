@@ -21,21 +21,21 @@ public class GetDetail extends UseCase<ElementData, GetDetail.Params> {
   }
 
   @Override Observable<ElementData> buildUseCaseObservable(Params params) {
-    return this.ocmRepository.getDetail(params.forceReload, params.content);
+    return this.ocmRepository.getDetail(params.forceReload, params.slug);
   }
 
   public static final class Params {
 
     private final boolean forceReload;
-    private final String content;
+    private final String slug;
 
-    private Params(boolean forceReload, String content) {
+    private Params(boolean forceReload, String slug) {
       this.forceReload = forceReload;
-      this.content = content;
+      this.slug = slug;
     }
 
-    public static Params forDetail(boolean forceReload, String elementUrl) {
-      return new Params(forceReload, elementUrl);
+    public static Params forDetail(boolean forceReload, String slug) {
+      return new Params(forceReload, slug);
     }
   }
 }

@@ -126,17 +126,8 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.searchRx(section).map(dataResponse -> dataResponse.getResult());
   }
 
-  private String getSlug(String elementUrl) {
-
-    try {
-      return elementUrl.substring(elementUrl.lastIndexOf("/") + 1, elementUrl.length());
-    } catch (Exception ignored) {
-      return null;
-    }
-  }
-
-  @Override public Observable<ApiElementData> getElementById(String elementUrl) {
-    return ocmApiService.getElementByIdRx(getSlug(elementUrl))
+  @Override public Observable<ApiElementData> getElementById(String slug) {
+    return ocmApiService.getElementByIdRx(slug)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putDetail);
   }

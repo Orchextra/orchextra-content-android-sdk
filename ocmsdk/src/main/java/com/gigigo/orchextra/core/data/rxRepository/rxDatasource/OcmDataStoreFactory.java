@@ -72,7 +72,7 @@ import orchextra.javax.inject.Singleton;
     return ocmDataStore;
   }
 
-  public OcmDataStore getDataStoreForDetail(boolean force, String elementUrl) {
+  public OcmDataStore getDataStoreForDetail(boolean force, String slug) {
     OcmDataStore ocmDataStore;
 
     if (!connectionUtils.hasConnection())
@@ -83,7 +83,7 @@ import orchextra.javax.inject.Singleton;
       ocmDataStore = getCloudDataStore();
     } else {
       OcmCache cache = diskDataStore.getOcmCache();
-      if (cache.isDetailCached(elementUrl) && !cache.isDetailExpired(elementUrl)) {
+      if (cache.isDetailCached(slug) && !cache.isDetailExpired(slug)) {
         Log.i(TAG, "DISK  - Detail");
         ocmDataStore = getDiskDataStore();
       } else {
