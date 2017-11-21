@@ -20,6 +20,6 @@ public class ApiElementData implements Kacheable {
   }
 
   @NotNull @Override public String getKey() {
-    return element.getElementUrl();
+    return element.getSlug();
   }
 }

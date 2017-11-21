@@ -2,7 +2,6 @@ package com.gigigo.orchextra.core.data.api.dto.content;
 
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.mskn73.kache.Kacheable;
-import com.mskn73.kache.annotations.KacheLife;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +12,8 @@ public class ApiSectionContentData implements Kacheable {
   private Map<String, ApiElementCache> elementsCache;
   private String key;
   private boolean fromCache;
+
+  private static String prefix = "section_";
 
   public ApiContentItem getContent() {
     return content;
@@ -27,7 +28,7 @@ public class ApiSectionContentData implements Kacheable {
   }
 
   @NotNull @Override public String getKey() {
-    return key;
+    return prefix + key;
   }
 
   public boolean isFromCache() {

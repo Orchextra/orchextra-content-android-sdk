@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
-import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
@@ -17,7 +17,6 @@ import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.receiver.WifiReceiver;
 import io.reactivex.Observable;
 import java.util.Iterator;
-import java.util.Map;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -43,7 +42,7 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.getMenuDataRx()
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putMenus)
-        .doOnNext(apiMenuContentData -> saveSectionsCache(apiMenuContentData.getElementsCache()));
+        .doOnNext(apiMenuContentData -> addSectionsToCache(apiMenuContentData));
   }
 
   @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl,
@@ -52,23 +51,23 @@ import orchextra.javax.inject.Singleton;
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
         .doOnNext(ocmCache::putSection)
-        .doOnNext(apiSectionContentData -> saveElementsCache(apiSectionContentData.getElementsCache()))
         .doOnNext(apiSectionContentData -> {
           addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload);
         });
   }
 
-  private void saveSectionsCache(Map<String, ApiElementCache> elementsCache) {
-    for(String key: elementsCache.keySet()) {
-      ApiSectionContentData contentData = new ApiSectionContentData();
-      contentData.setKey(key);
-      ocmCache.putSection(contentData);
-    }
-  }
-
-  private void saveElementsCache(Map<String, ApiElementCache> elementsCache) {
-    for(ApiElementCache value: elementsCache.values()) {
-      ocmCache.putDetail(new ApiElementData(value));
+  private void addSectionsToCache(ApiMenuContentData apiMenuContentData) {
+    Iterator<ApiMenuContent> menuContentIterator = apiMenuContentData.getMenuContentList().iterator();
+    while (menuContentIterator.hasNext()) {
+      Iterator<ApiElement> elementIterator = menuContentIterator.next().getElements().iterator();
+      while (elementIterator.hasNext()) {
+        ApiElement apiElement = elementIterator.next();
+        if (apiMenuContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
+          ApiSectionContentData contentData = new ApiSectionContentData();
+          contentData.setKey(apiElement.getElementUrl());
+          ocmCache.putSection(contentData);
+        }
+      }
     }
   }
 
