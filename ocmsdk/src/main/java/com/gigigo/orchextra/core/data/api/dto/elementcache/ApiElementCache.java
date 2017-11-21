@@ -5,6 +5,7 @@ import java.util.List;
 
 public class ApiElementCache {
 
+  private String elementUrl;
   private String slug;
   private String type;
   private List<String> tags;
@@ -14,6 +15,10 @@ public class ApiElementCache {
   private ApiElementSegmentation segmentation;
   private String name;
   private long updatedAt;
+
+  public String getElementUrl() {
+    return elementUrl;
+  }
 
   public String getSlug() {
     return slug;
