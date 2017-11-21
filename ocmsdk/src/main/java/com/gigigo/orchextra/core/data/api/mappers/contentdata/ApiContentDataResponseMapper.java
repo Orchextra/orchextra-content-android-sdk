@@ -41,6 +41,9 @@ public class ApiContentDataResponseMapper
 
     model.setElementsCache(elementCacheMap);
 
+    model.setVersion(data.getVersion());
+    model.setExpiredAt(data.getExpireAt());
+
     model.setFromCache(data.isFromCache());
 
     return model;

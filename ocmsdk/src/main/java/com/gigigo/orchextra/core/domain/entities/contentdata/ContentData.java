@@ -7,6 +7,8 @@ public class ContentData {
 
   private ContentItem content;
   private Map<String, ElementCache> elementsCache;
+  private String version;
+  private String expiredAt;
   private boolean fromCache;
 
   public ContentItem getContent() {
@@ -31,5 +33,21 @@ public class ContentData {
 
   public boolean isFromCache() {
     return fromCache;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  public String getExpiredAt() {
+    return expiredAt;
+  }
+
+  public void setExpiredAt(String expiredAt) {
+    this.expiredAt = expiredAt;
   }
 }

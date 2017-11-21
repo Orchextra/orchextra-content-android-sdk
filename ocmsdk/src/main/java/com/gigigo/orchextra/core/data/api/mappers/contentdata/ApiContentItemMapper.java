@@ -6,6 +6,7 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
+import com.gigigo.orchextra.core.sdk.utils.DateUtils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,7 +45,7 @@ public class ApiContentItemMapper
     if (data.getElements() != null) {
       for (ApiElement apiElement : data.getElements()) {
 
-        if (hasToBeAddedToListBecauseItemIsInDate(apiElement)) {
+        if (DateUtils.isBetweenTwoDates(apiElement.getDates())) {
           Element element = apiElementMapper.externalClassToModel(apiElement);
           if (element != null) {
             elementList.add(element);
@@ -55,41 +56,5 @@ public class ApiContentItemMapper
     model.setElements(elementList);
 
     return model;
-  }
-
-  private static final String DATE_FORMAT_TIME = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-
-  private boolean hasToBeAddedToListBecauseItemIsInDate(ApiElement apiElement) {
-    Calendar calendar = Calendar.getInstance();
-    Date calendarTime = calendar.getTime();
-
-    List<List<String>> dates = apiElement.getDates();
-    if (dates == null) {
-      return true;
-    }
-
-    for (List<String> date : dates) {
-      if (date.size() == 2) {
-
-        String startTimeString = date.get(0);
-        String endTimeString = date.get(1);
-
-        try {
-          SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_TIME, Locale.getDefault());
-
-          Date startTime = format.parse(startTimeString);
-          Date endTime = format.parse(endTimeString);
-
-          if (startTime.before(calendarTime) && endTime.after(calendarTime)) {
-            return true;
-          }
-
-        } catch (Exception ignored) {
-          ignored.printStackTrace();
-        }
-      }
-    }
-
-    return false;
   }
 }
