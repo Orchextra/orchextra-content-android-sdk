@@ -118,8 +118,17 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.searchRx(section).map(dataResponse -> dataResponse.getResult());
   }
 
-  @Override public Observable<ApiElementData> getElementById(String section) {
-    return ocmApiService.getElementByIdRx(section)
+  private String getSlug(String elementUrl) {
+
+    try {
+      return elementUrl.substring(elementUrl.lastIndexOf("/") + 1, elementUrl.length());
+    } catch (Exception ignored) {
+      return null;
+    }
+  }
+
+  @Override public Observable<ApiElementData> getElementById(String elementUrl) {
+    return ocmApiService.getElementByIdRx(getSlug(elementUrl))
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putDetail);
   }
