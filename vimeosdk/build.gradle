@@ -1,8 +1,7 @@
 apply plugin: 'com.android.library'
-
 apply plugin: 'com.github.dcendents.android-maven'
 
-group='com.github.Orchextra'
+group = 'com.github.Orchextra'
 
 android {
   compileSdkVersion 26
@@ -16,31 +15,21 @@ android {
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
-  lintOptions {
-    abortOnError false
-  }
 
   buildTypes {
-    staging {
-
-    }
 
     debug {
+      debuggable true
+    }
 
+    quality {
+      debuggable true
     }
 
     release {
+      debuggable false
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-    }
-  }
-  //publishNonDefault true
-  flavorDimensions "ocm"
-  defaultPublishConfig "ocmRelease"
-
-  productFlavors {
-    ocm {
-      dimension "ocm"
     }
   }
 }
@@ -50,11 +39,11 @@ dependencies {
   androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  implementation 'com.android.support:appcompat-v7:26.0.2'
+  implementation "com.android.support:appcompat-v7:26.1.0"
   testImplementation 'junit:junit:4.12'
 
-  api 'com.vimeo.networking:vimeo-networking:1.1.1'
-  api 'com.google.android.exoplayer:exoplayer:r2.5.3'
-//todo this mustbe only interface and the impl(glide or whatever)on the VimeoBuilder
-  api 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01'
+  implementation 'com.vimeo.networking:vimeo-networking:1.1.1'
+  implementation 'com.google.android.exoplayer:exoplayer:r2.5.3'
+  //todo this mustbe only interface and the impl(glide or whatever)on the VimeoBuilder
+  implementation 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01'
 }

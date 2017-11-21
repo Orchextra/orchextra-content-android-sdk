@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+      android:drawable="@drawable/edit_text_shape_focused"
+      android:state_enabled="true"
+      android:state_focused="true"/>
+
+  <item
+      android:drawable="@drawable/edit_text_shape_unfocused"
+      android:state_enabled="false"/>
+
+  <item
+      android:drawable="@drawable/edit_text_shape_unfocused"
+      android:state_focused="false"/>
+</selector>

@@ -1,0 +1,47 @@
+<resources>
+
+  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">@color/primary</item>
+    <item name="colorAccent">@color/accent</item>
+  </style>
+
+  <style name="AppTheme.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+  </style>
+
+  <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+  <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+  <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+    <item name="android:windowBackground">@drawable/background_splash</item>
+  </style>
+
+  <style name="CircularProgress" parent="Theme.AppCompat.Light">
+    <item name="colorAccent">@color/icons</item>
+  </style>
+
+  <style name="TabLayoutStyle" parent="Widget.Design.TabLayout">
+    <item name="tabIndicatorColor">@color/icons</item>
+  </style>
+
+  <style name="EditTextStyle" parent="android:Widget.EditText">
+    <item name="android:paddingLeft">14.5dp</item>
+    <item name="android:paddingTop">13dp</item>
+    <item name="android:paddingBottom">13dp</item>
+    <item name="android:textSize">16sp</item>
+    <item name="android:inputType">text</item>
+    <item name="android:textColorHint">@color/secondary_text</item>
+    <item name="android:textColor">@color/primary_text</item>
+    <item name="android:background">@drawable/edit_text_shape_selector</item>
+  </style>
+
+  <style name="ButtonLoginStyle" parent="Base.Widget.AppCompat.Button">
+    <item name="android:background">#ee524f</item>
+    <item name="android:textSize">16sp</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textColor">#ffffff</item>
+  </style>
+</resources>
