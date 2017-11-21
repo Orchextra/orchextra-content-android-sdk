@@ -59,9 +59,9 @@ import orchextra.javax.inject.Singleton;
   }
 
   private void saveSectionsCache(Map<String, ApiElementCache> elementsCache) {
-    for(ApiElementCache value: elementsCache.values()) {
+    for(String key: elementsCache.keySet()) {
       ApiSectionContentData contentData = new ApiSectionContentData();
-      contentData.setKey(value.getElementUrl());
+      contentData.setKey(key);
       ocmCache.putSection(contentData);
     }
   }
