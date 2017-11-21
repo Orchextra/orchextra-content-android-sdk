@@ -98,7 +98,6 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     }
 
     uiMenuData.setUiMenuList(menuList);
-    uiMenuData.setFromCache(menuContentData.isFromCache());
 
     return uiMenuData;
   }

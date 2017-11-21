@@ -27,18 +27,6 @@ import com.gigigo.orchextra.core.sdk.utils.DateUtils;
 import com.gigigo.orchextra.core.sdk.utils.OcmPreferences;
 
 public class OcmControllerImp implements OcmController {
-  private static final PriorityScheduler.Priority PRIORITY_MENUS =
-      PriorityScheduler.Priority.LOWEST;
-
-  private static final PriorityScheduler.Priority PRIORITY_SECTIONS =
-      PriorityScheduler.Priority.LOW;
-
-  private static final PriorityScheduler.Priority PRIORITY_DETAIL =
-      PriorityScheduler.Priority.MEDIUM;
-
-  private static final PriorityScheduler.Priority PRIORITY_SEARCH = PriorityScheduler.Priority.LOW;
-
-  private static final PriorityScheduler.Priority PRIORITY_CLEAR = PriorityScheduler.Priority.LOW;
 
   private final GetVersion getVersion;
   private final GetMenus getMenus;
@@ -73,7 +61,7 @@ public class OcmControllerImp implements OcmController {
   }
 
   //region new
-  @Override public void getMenu(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
+  @Override public void getMenu(boolean forceReload1, GetMenusControllerCallback getMenusCallback) {
     checkVersion(getMenusCallback);
   }
 
@@ -91,17 +79,17 @@ public class OcmControllerImp implements OcmController {
 
         getMenus.execute(new MenuObserver(getMenusCallback),
             GetMenus.Params.forForceReload(forceReload),
-            forceReload ? PRIORITY_MENUS : PriorityScheduler.Priority.HIGH);
+            PriorityScheduler.Priority.HIGH);
       }
 
       @Override public void onGetVersionFails(Exception e) {
 
       }
-    }), GetVersion.Params.forVersion(), PRIORITY_MENUS);
+    }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
   }
 
   @Override
-  public void getSection(final boolean forceReload, final String section, int imagesToDownload,
+  public void getSection(final boolean forceReload1, final String section, int imagesToDownload,
       GetSectionControllerCallback getSectionControllerCallback) {
 
     getMenus.execute(new MenuObserver(new GetMenusControllerCallback() {
@@ -113,9 +101,9 @@ public class OcmControllerImp implements OcmController {
               String url = elementCache.getRender().getContentUrl();
               if (url != null) {
                 getSection.execute(
-                    new SectionObserver(getSectionControllerCallback, section, imagesToDownload),
-                    GetSection.Params.forSection(forceReload, url, imagesToDownload),
-                    forceReload ? PRIORITY_SECTIONS : PriorityScheduler.Priority.HIGH);
+                    new SectionObserver(getSectionControllerCallback, url, imagesToDownload),
+                    GetSection.Params.forSection(false, url, imagesToDownload),
+                    PriorityScheduler.Priority.HIGH);
               } else {
                 getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(
                     "elementCache.getRender().getContentUrl() IS NULL"));
@@ -127,28 +115,27 @@ public class OcmControllerImp implements OcmController {
             getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(e));
             e.printStackTrace();
           }
-        }), GetMenus.Params.forForceReload(forceReload),
-        forceReload ? PRIORITY_MENUS : PriorityScheduler.Priority.HIGH);
+        }), GetMenus.Params.forForceReload(false),
+        PriorityScheduler.Priority.HIGH);
   }
 
-  @Override public void getDetails(boolean forceReload, String elementUrl,
+  @Override public void getDetails(boolean forceReload1, String elementUrl,
       GetDetailControllerCallback getDetailControllerCallback) {
     String slug = getSlug(elementUrl);
     getDetail.execute(new DetailObserver(getDetailControllerCallback),
-        GetDetail.Params.forDetail(forceReload, slug),
-        forceReload ? PRIORITY_DETAIL : PriorityScheduler.Priority.HIGHEST);
+        GetDetail.Params.forDetail(false, slug), PriorityScheduler.Priority.HIGH);
   }
 
   @Override
   public void search(String textToSearch, SearchControllerCallback searchControllerCallback) {
     searchElements.execute(new SearchObserver(searchControllerCallback),
-        SearchElements.Params.forTextToSearch(textToSearch), PRIORITY_SEARCH);
+        SearchElements.Params.forTextToSearch(textToSearch), PriorityScheduler.Priority.LOW);
   }
 
   @Override public void clearCache(boolean images, boolean data,
       final ClearCacheCallback clearCacheCallback) {
     clearCache.execute(new ClearCacheObserver(clearCacheCallback),
-        ClearCache.Params.create(images, data), PRIORITY_CLEAR);
+        ClearCache.Params.create(images, data), PriorityScheduler.Priority.LOW);
   }
 
   @Override public void disposeUseCases() {
@@ -207,13 +194,13 @@ public class OcmControllerImp implements OcmController {
   private final class SectionObserver extends DefaultObserver<ContentData> {
 
     private final GetSectionControllerCallback getSectionControllerCallback;
-    private final String section;
+    private final String url;
     private final int imagesToDownload;
 
     public SectionObserver(GetSectionControllerCallback getSectionControllerCallback,
-        String section, int imagesToDownload) {
+        String url, int imagesToDownload) {
       this.getSectionControllerCallback = getSectionControllerCallback;
-      this.section = section;
+      this.url = url;
       this.imagesToDownload = imagesToDownload;
     }
 
@@ -238,15 +225,15 @@ public class OcmControllerImp implements OcmController {
             requestFromCloud = true;
           }
 
-          if (contentData.getExpiredAt() != null && DateUtils.isDateAfter(
+          if (contentData.getExpiredAt() != null && DateUtils.isAfterCurrentDate(
               contentData.getExpiredAt())) {
             requestFromCloud = true;
           }
 
           if (requestFromCloud) {
             getSection.execute(
-                new SectionObserver(getSectionControllerCallback, section, imagesToDownload),
-                GetSection.Params.forSection(true, section, imagesToDownload), PRIORITY_SECTIONS);
+                new SectionObserver(getSectionControllerCallback, url, imagesToDownload),
+                GetSection.Params.forSection(true, url, imagesToDownload), PriorityScheduler.Priority.HIGH);
           }
 
           if (getSectionControllerCallback != null) {
@@ -257,7 +244,7 @@ public class OcmControllerImp implements OcmController {
         @Override public void onGetVersionFails(Exception e) {
 
         }
-      }), GetVersion.Params.forVersion(), PRIORITY_MENUS);
+      }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
     }
   }
 

@@ -45,7 +45,7 @@ public class DateUtils {
     return false;
   }
 
-  public static boolean isDateAfter(String expiredAt) {
+  public static boolean isAfterCurrentDate(String expiredAt) {
     Calendar calendar = Calendar.getInstance();
     Date calendarTime = calendar.getTime();
 
@@ -53,7 +53,7 @@ public class DateUtils {
 
     try {
       Date expiredAtDate = format.parse(expiredAt);
-      return expiredAtDate.after(calendarTime);
+      return calendarTime.after(expiredAtDate);
     } catch (ParseException ignored) {
       return false;
     }

@@ -10,8 +10,6 @@ public class MenuContentData {
   private List<MenuContent> menuContentList;
   private Map<String, ElementCache> elementsCache;
 
-  private boolean fromCache;
-
   public List<MenuContent> getMenuContentList() {
     return menuContentList;
   }
@@ -26,13 +24,5 @@ public class MenuContentData {
 
   public void setElementsCache(Map<String, ElementCache> elementsCache) {
     this.elementsCache = elementsCache;
-  }
-
-  public boolean isFromCache() {
-    return fromCache;
-  }
-
-  public void setFromCache(boolean fromCache) {
-    this.fromCache = fromCache;
   }
 }

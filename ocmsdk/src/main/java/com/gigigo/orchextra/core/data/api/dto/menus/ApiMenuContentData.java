@@ -14,8 +14,6 @@ import org.jetbrains.annotations.NotNull;
 //@KacheLife(expiresTime = 1000 * 60 * 60 * 24) // 1 day
 public class ApiMenuContentData implements Kacheable {
 
-  private boolean fromCache;
-
   @NotNull @Override public String getKey() {
     return OcmCacheImp.MENU_KEY;
   }
@@ -32,13 +30,5 @@ public class ApiMenuContentData implements Kacheable {
 
   public Map<String, ApiElementCache> getElementsCache() {
     return elementsCache;
-  }
-
-  public boolean isFromCache() {
-    return fromCache;
-  }
-
-  public void setFromCache(boolean fromCache) {
-    this.fromCache = fromCache;
   }
 }
