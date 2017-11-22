@@ -7,13 +7,13 @@ import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
-import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
@@ -30,7 +30,6 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentDat
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.vimeo.VimeoContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeFragment;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -88,6 +87,9 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
               menuContentData.getElementsCache().get(element.getElementUrl());
           if (elementCache != null) {
             uiMenu.setUpdateAt(elementCache.getUpdateAt());
+            if (elementCache.getRender() != null) {
+              uiMenu.setContentUrl(elementCache.getRender().getContentUrl());
+            }
           }
         }
 
@@ -105,7 +107,17 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   public void generateSectionView(String viewId, String filter, final int imagesToDownload,
       GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
 
-    ocmController.getDetails(false, viewId, new OcmController.GetDetailControllerCallback() {
+    ocmController.getSection(false, viewId, imagesToDownload, new OcmController.GetSectionControllerCallback() {
+      @Override public void onGetSectionLoaded(ContentData contentData) {
+
+      }
+
+      @Override public void onGetSectionFails(Exception e) {
+
+      }
+    });
+
+    /*ocmController.getDetails(false, viewId, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache.getType() == ElementCacheType.ARTICLE
             && elementCache.getRender() != null
@@ -151,7 +163,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
       @Override public void onGetDetailNoAvailable(Exception e) {
         getSectionViewGeneratorCallback.onSectionViewFails(e);
       }
-    });
+    });*/
   }
 
   private UiGridBaseContentData generateWebContentData(String url) {

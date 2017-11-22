@@ -5,6 +5,7 @@ public final class UiMenu {
   private String text;
   private String elementUrl;
   private long updateAt;
+  private String contentUrl;
 
   public String getSlug() {
     return slug;
@@ -36,5 +37,9 @@ public final class UiMenu {
 
   public void setUpdateAt(long updateAt) {
     this.updateAt = updateAt;
+  }
+
+  public void setContentUrl(String contentUrl) {
+    this.contentUrl = contentUrl;
   }
 }

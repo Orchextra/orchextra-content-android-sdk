@@ -49,8 +49,8 @@ import orchextra.javax.inject.Singleton;
       final int numberOfElementsToDownload) {
     return ocmApiService.getSectionDataRx(elementUrl)
         .map(dataResponse -> dataResponse.getResult())
-        .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
-        .doOnNext(ocmCache::putSection)
+        /*.doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
+        .doOnNext(ocmCache::putSection)*/
         .doOnNext(apiSectionContentData -> {
           addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload);
         });
