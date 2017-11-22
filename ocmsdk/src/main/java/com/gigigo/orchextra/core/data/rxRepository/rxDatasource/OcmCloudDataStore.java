@@ -45,12 +45,12 @@ import orchextra.javax.inject.Singleton;
         .doOnNext(apiMenuContentData -> addSectionsToCache(apiMenuContentData));
   }
 
-  @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl,
+  @Override public Observable<ApiSectionContentData> getSectionEntity(String contentUrl,
       final int numberOfElementsToDownload) {
-    return ocmApiService.getSectionDataRx(elementUrl)
+    return ocmApiService.getSectionDataRx(contentUrl)
         .map(dataResponse -> dataResponse.getResult())
-        /*.doOnNext(apiSectionContentData -> apiSectionContentData.setKey(elementUrl))
-        .doOnNext(ocmCache::putSection)*/
+        .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(contentUrl))
+        .doOnNext(ocmCache::putSection)
         .doOnNext(apiSectionContentData -> {
           addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload);
         });
