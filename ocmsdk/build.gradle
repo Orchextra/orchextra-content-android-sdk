@@ -76,16 +76,78 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-  publishNonDefault true
-
   testOptions {
     unitTests.returnDefaultValues = true
   }
+
+
+  flavorDimensions "ocm"
+
+  productFlavors {
+    ocm {
+      dimension "ocm"
+    }
+  }
+
+
+  //true to publish all flavour artifacts
+  // publishNonDefault true
+  //defaultPublishConfig "ocmStaging"
+  //defaultPublishConfig "ocmDebug"
+  //defaultPublishConfig {"ocmRelease","ocmDebug","ocmStaging"}
+
+  // publishNonDefault is deprecated and has no effect anymore. All variants are now published.
+  // true to publish all flavour artifacts
+  //publishNonDefault true
+  //defaultPublishConfig "ocmStaging"
+  //  defaultPublishConfig "ocmDebug"
+  // default build flavour
+  //defaultPublishConfig "ocmDebug"
 }
 
 jacocoAndroidUnitTestReport {
   excludes += ['**/BuildConfig*.*']
 }
+
+configurations {
+  ocmReleaseImplementation
+  ocmStagingImplementation
+  ocmDebugImplementation
+}
+
+if( android.productFlavors.size() > 0 ) {
+  android.libraryVariants.all { variant ->
+    // Publish a main artifact, otherwise the maven pom is not generated
+    //if( variant.name == android.defaultPublishConfig ) {
+    def bundleTask = tasks["bundle${name.capitalize()}"]
+    artifacts {
+      println('BUNDLE!'+bundleTask.archivePath)
+      println('classifier!'+variant.name)
+      println('builtBy!'+bundleTask.name)
+      archives(bundleTask.archivePath) {
+        classifier variant.name
+        builtBy bundleTask
+
+      }
+    }
+  }
+  //}
+}
+//variant.name
+
+task finalize {
+  doFirst {
+    tasks.assembleOcmDebug.execute()
+    tasks.assembleOcmRelease.execute()
+    tasks.assembleOcmStaging.execute()
+  }
+
+  println('finally!')
+}
+finalize.dependsOn(ocmsdk:install)
+//install.finalizedBy(finalize)
+install.dependsOn(ocmsdk:build)
+
 
 dependencies {
   //TEST
