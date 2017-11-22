@@ -61,7 +61,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   }
 
   @Test public void testGetDetail() {
-    ocmController.getDetails(true, FAKE_DETAIL, null);
+    ocmController.getDetails(FAKE_DETAIL, null);
 
     verify(mockGetDetail).execute(any(DisposableObserver.class), any(GetDetail.Params.class),
         any(PriorityScheduler.Priority.class));
@@ -69,7 +69,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   }
 
   @Test public void testGetSection() {
-    ocmController.getSection(true, FAKE_SECTION, FAKE_IMAGES, null);
+    ocmController.getSection(FAKE_SECTION, FAKE_IMAGES, null);
 
     verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class),
         any(PriorityScheduler.Priority.class));
@@ -77,7 +77,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   }
 
   @Test public void testGetMenus() {
-    ocmController.getMenu(true, null);
+    ocmController.getMenu( null);
 
     verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class),
         any(PriorityScheduler.Priority.class));

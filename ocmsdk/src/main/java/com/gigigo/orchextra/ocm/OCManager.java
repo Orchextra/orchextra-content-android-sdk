@@ -99,9 +99,9 @@ public final class OCManager {
     }
   }
 
-  static void getMenus(boolean forceReload, final OCManagerCallbacks.Menus menusCallback) {
+  static void getMenus(final OCManagerCallbacks.Menus menusCallback) {
     if (instance != null) {
-      instance.ocmViewGenerator.getMenu(forceReload,
+      instance.ocmViewGenerator.getMenu(
           new OcmViewGenerator.GetMenusViewGeneratorCallback() {
             @Override public void onGetMenusLoaded(UiMenuData menus) {
               menusCallback.onMenusLoaded(menus);

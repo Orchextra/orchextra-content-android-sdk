@@ -43,7 +43,7 @@ public class OcmSchemeHandler {
     }
 
     String finalElementUri = elementUri;
-    ocmController.getDetails(true, elementUri, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(elementUri, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
@@ -79,7 +79,7 @@ public class OcmSchemeHandler {
     }
 
     String finalElementUri = elementUri;
-    ocmController.getDetails(true, elementUri, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(elementUri, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {

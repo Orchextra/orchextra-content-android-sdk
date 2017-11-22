@@ -55,9 +55,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     this.detailElementsViewPresenterProvider = detailElementsViewPresenterProvider;
   }
 
-  @Override public void getMenu(boolean forceReload,
-      final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
-    ocmController.getMenu(forceReload, new OcmController.GetMenusControllerCallback() {
+  @Override public void getMenu(final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
+    ocmController.getMenu(new OcmController.GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(MenuContentData menus) {
         getMenusViewGeneratorCallback.onGetMenusLoaded(transformMenu(menus));
       }
@@ -115,7 +114,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   public void generateSectionView(String viewId, String filter, final int imagesToDownload,
       GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
 
-    ocmController.getDetails(false, viewId, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(viewId, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache.getType() == ElementCacheType.ARTICLE
             && elementCache.getRender() != null
@@ -252,7 +251,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
   @Override public void getImageUrl(String elementUrl,
       final GetDetailImageViewGeneratorCallback getDetailImageViewGeneratorCallback) {
-    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null && elementCache.getPreview() != null) {
           getDetailImageViewGeneratorCallback.onGetImageLoaded(

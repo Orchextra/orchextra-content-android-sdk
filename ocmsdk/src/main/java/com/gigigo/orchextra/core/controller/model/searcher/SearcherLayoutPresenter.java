@@ -134,7 +134,7 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
 
       Element element = (Element) cellGridContentDataList.get(position).getData();
 
-      ocmController.getDetails(false, element.getElementUrl(),
+      ocmController.getDetails(element.getElementUrl(),
           new OcmController.GetDetailControllerCallback() {
             @Override public void onGetDetailLoaded(ElementCache elementCache) {
               if (getView() != null) {

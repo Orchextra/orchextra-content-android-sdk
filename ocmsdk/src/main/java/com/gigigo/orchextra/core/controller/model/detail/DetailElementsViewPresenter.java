@@ -38,7 +38,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
     getView().showProgressView(true);
 
-    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (getView() != null) {
           if (elementCache != null) {
@@ -121,7 +121,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   }
 
   public void shareElement() {
-    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         showShare(elementCache);
       }

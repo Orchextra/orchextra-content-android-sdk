@@ -45,33 +45,25 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     getView().initUi();
   }
 
-  public void loadFromNetwork() {
-    loadSection(false);
-  }
-
-  public void loadFromCache() {
-    loadSection(true);
-  }
-
-  public void loadFromCache(String section) {
-    loadSection(true, section, filter);
-  }
-
-  private void loadSection(final boolean useCache) {
+  public void loadSection() {
     getView().showProgressView(true);
 
-    loadSection(useCache, section, filter);
+    loadSection(section, filter);
+  }
+
+  public void loadSection(String section) {
+    loadSection(section, filter);
   }
 
   public void loadSectionWithFilter(String section, String filter) {
-    loadSection(false, section, filter);
+    loadSection(section, filter);
   }
 
-  private void loadSection(boolean useCache, String section, String filter) {
+  private void loadSection(String section, String filter) {
     this.section = section;
     this.filter = filter;
 
-    ocmController.getSection(!useCache, section, imagesToDownload,
+    ocmController.getSection(section, imagesToDownload,
         new OcmController.GetSectionControllerCallback() {
           @Override public void onGetSectionLoaded(ContentData cachedContentData) {
             ContentItem contentItem = cachedContentData.getContent();
@@ -212,7 +204,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
       WeakReference<View> viewWeakReference = new WeakReference<>(view);
 
-      ocmController.getDetails(false, element.getElementUrl(),
+      ocmController.getDetails(element.getElementUrl(),
           new OcmController.GetDetailControllerCallback() {
             @Override public void onGetDetailLoaded(ElementCache elementCache) {
               String imageUrlToExpandInPreview = null;
@@ -268,7 +260,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   public void setFilter(String filter) {
     this.filter = filter;
     if (getView() != null) {
-      loadSection(false);
+      loadSection();
     }
   }
 

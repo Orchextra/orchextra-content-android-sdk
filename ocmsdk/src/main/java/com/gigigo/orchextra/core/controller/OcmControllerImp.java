@@ -60,36 +60,46 @@ public class OcmControllerImp implements OcmController {
     }
   }
 
-  //region new
-  @Override public void getMenu(boolean forceReload1, GetMenusControllerCallback getMenusCallback) {
-    checkVersion(getMenusCallback);
+  //region request menus
+  @Override public void getMenu(GetMenusControllerCallback getMenusCallback) {
+    checkVersionChangedAndRequestMenus(getMenusCallback);
   }
 
-  private void checkVersion(GetMenusControllerCallback getMenusCallback) {
+  private void checkVersionChangedAndRequestMenus(GetMenusControllerCallback getMenusCallback) {
     getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
       @Override public void onGetVersionLoaded(VersionData versionData) {
-        boolean forceReload = false;
-
-        String version = ocmPreferences.getVersion();
-
-        if (versionData != null && (version == null || !version.equals(versionData.getVersion()))) {
-          forceReload = true;
-          ocmPreferences.saveVersion(versionData.getVersion());
-        }
-
-        getMenus.execute(new MenuObserver(getMenusCallback),
-            GetMenus.Params.forForceReload(forceReload),
-            PriorityScheduler.Priority.HIGH);
+        boolean forceReload = hasToForceReloadBecauseVersionChanged(versionData);
+        retrieveMenus(forceReload, getMenusCallback);
       }
 
       @Override public void onGetVersionFails(Exception e) {
-
+        retrieveMenus(false, getMenusCallback);
       }
     }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
   }
 
+  private void retrieveMenus(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
+    getMenus.execute(new MenuObserver(getMenusCallback),
+        GetMenus.Params.forForceReload(forceReload),
+        PriorityScheduler.Priority.HIGH);
+  }
+
+  private boolean hasToForceReloadBecauseVersionChanged(VersionData versionData) {
+    boolean forceReload = false;
+
+    String version = ocmPreferences.getVersion();
+
+    if (versionData != null && (version == null || !version.equals(versionData.getVersion()))) {
+      forceReload = true;
+      ocmPreferences.saveVersion(versionData.getVersion());
+    }
+    return forceReload;
+  }
+
+  //region end
+
   @Override
-  public void getSection(final boolean forceReload1, final String section, int imagesToDownload,
+  public void getSection(final String section, int imagesToDownload,
       GetSectionControllerCallback getSectionControllerCallback) {
 
     getMenus.execute(new MenuObserver(new GetMenusControllerCallback() {
@@ -119,7 +129,7 @@ public class OcmControllerImp implements OcmController {
         PriorityScheduler.Priority.HIGH);
   }
 
-  @Override public void getDetails(boolean forceReload1, String elementUrl,
+  @Override public void getDetails(String elementUrl,
       GetDetailControllerCallback getDetailControllerCallback) {
     String slug = getSlug(elementUrl);
     getDetail.execute(new DetailObserver(getDetailControllerCallback),

@@ -49,7 +49,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
     presenter.loadSection(FAKE_ELEMENT_URL);
 
     verify(mockDetailView).showProgressView(true);
-    verify(mockOcmController).getDetails(anyBoolean(), anyString(),
+    verify(mockOcmController).getDetails(anyString(),
         any(OcmController.GetDetailControllerCallback.class));
   }
 }

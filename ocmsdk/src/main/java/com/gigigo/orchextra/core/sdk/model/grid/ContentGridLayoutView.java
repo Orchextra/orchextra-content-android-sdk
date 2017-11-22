@@ -37,7 +37,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
           if (presenter != null) {
-            presenter.loadFromNetwork();
+            presenter.loadSection();
           }
         }
 
@@ -66,7 +66,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     @Override public void onClick(View v) {
       newContentContainer.setVisibility(View.GONE);
       if (presenter != null) {
-        presenter.loadFromCache();
+        presenter.loadSection();
       }
     }
   };
@@ -79,7 +79,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View.OnClickListener onClickRetryButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       if (presenter != null) {
-        presenter.loadFromNetwork();
+        presenter.loadSection();
       }
     }
   };
@@ -141,7 +141,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (section != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
       presenter.setImagesToDownload(imagesToDownload);
-      presenter.loadFromCache(section);
+      presenter.loadSection(section);
     }
   }
 

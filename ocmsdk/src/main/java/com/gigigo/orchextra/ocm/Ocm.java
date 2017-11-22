@@ -179,8 +179,8 @@ public final class Ocm {
   /**
    * Get the app menus
    */
-  public static void getMenus(boolean forceReload, OcmCallbacks.Menus menusCallback) {
-    OCManager.getMenus(forceReload, new OCManagerCallbacks.Menus() {
+  public static void getMenus(OcmCallbacks.Menus menusCallback) {
+    OCManager.getMenus(new OCManagerCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData menus) {
         menusCallback.onMenusLoaded(menus);
       }

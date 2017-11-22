@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
   //endregion
 
   private void getContent() {
-    Ocm.getMenus(false, new OcmCallbacks.Menus() {
+    Ocm.getMenus(new OcmCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData uiMenuData) {
         if (uiMenuData.getUiMenuList() == null) {
           Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
@@ -178,39 +178,11 @@ public class MainActivity extends AppCompatActivity {
           viewpager.setOffscreenPageLimit(uiMenu.size());
           onGoDetailView(uiMenu);
           adapter.setDataItems(uiMenu);
-
-          //if (uiMenuData.isFromCache()) {
-          //  checkIfMenuHasChanged(uiMenu);
-          //}
         }
       }
 
       @Override public void onMenusFails(Throwable e) {
         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-      }
-    });
-  }
-
-  private void checkIfMenuHasChanged(final List<UiMenu> oldMenus) {
-    Ocm.getMenus(true, new OcmCallbacks.Menus() {
-      @Override public void onMenusLoaded(UiMenuData newMenudata) {
-        List<UiMenu> newMenus = newMenudata.getUiMenuList();
-        if (oldMenus == null || newMenus == null) {
-          return;
-        }
-        if (oldMenus.size() != newMenus.size()) {
-          showIconNewContent(newMenus);
-        } else {
-          for (int i = 0; i < newMenus.size(); i++) {
-            if (oldMenus.get(i).getUpdateAt() != newMenus.get(i).getUpdateAt()) {
-              showIconNewContent(newMenus);
-              return;
-            }
-          }
-        }
-      }
-
-      @Override public void onMenusFails(Throwable e) {
       }
     });
   }

@@ -9,12 +9,12 @@ import com.gigigo.orchextra.ocm.OCManagerCallbacks;
 
 public interface OcmController {
 
-  void getMenu(boolean forceReload, final GetMenusControllerCallback getMenusCallback);
+  void getMenu(final GetMenusControllerCallback getMenusCallback);
 
-  void getSection(boolean forceReload, final String section, int imagesToDownload,
+  void getSection(final String section, int imagesToDownload,
       final GetSectionControllerCallback getSectionControllerCallback);
 
-  void getDetails(boolean forceReload, final String elementUrl,
+  void getDetails(final String elementUrl,
       final GetDetailControllerCallback getDetailControllerCallback);
 
   void search(String textToSearch, SearchControllerCallback searchControllerCallback);
