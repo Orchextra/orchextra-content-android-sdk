@@ -60,7 +60,7 @@ public class OcmControllerImp implements OcmController {
     }
   }
 
-  //region request menus
+  //region menus
   @Override public void getMenu(GetMenusControllerCallback getMenusCallback) {
     checkVersionChangedAndRequestMenus(getMenusCallback);
   }
@@ -80,8 +80,7 @@ public class OcmControllerImp implements OcmController {
 
   private void retrieveMenus(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
     getMenus.execute(new MenuObserver(getMenusCallback),
-        GetMenus.Params.forForceReload(forceReload),
-        PriorityScheduler.Priority.HIGH);
+        GetMenus.Params.forForceReload(forceReload), PriorityScheduler.Priority.HIGH);
   }
 
   private boolean hasToForceReloadBecauseVersionChanged(VersionData versionData) {
@@ -96,37 +95,35 @@ public class OcmControllerImp implements OcmController {
     return forceReload;
   }
 
-  //region end
+  //end region
 
-  @Override
-  public void getSection(final String section, int imagesToDownload,
+  @Override public void getSection(final String section, int imagesToDownload,
       GetSectionControllerCallback getSectionControllerCallback) {
 
     getMenus.execute(new MenuObserver(new GetMenusControllerCallback() {
-          @Override public void onGetMenusLoaded(MenuContentData menus) {
-            ElementCache elementCache = menus.getElementsCache().get(section);
-            if (elementCache == null || elementCache.getRender() == null) {
-              getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException());
-            } else {
-              String url = elementCache.getRender().getContentUrl();
-              if (url != null) {
-                getSection.execute(
-                    new SectionObserver(getSectionControllerCallback, url, imagesToDownload),
-                    GetSection.Params.forSection(false, url, imagesToDownload),
-                    PriorityScheduler.Priority.HIGH);
-              } else {
-                getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(
-                    "elementCache.getRender().getContentUrl() IS NULL"));
-              }
-            }
+      @Override public void onGetMenusLoaded(MenuContentData menus) {
+        ElementCache elementCache = menus.getElementsCache().get(section);
+        if (elementCache == null || elementCache.getRender() == null) {
+          getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException());
+        } else {
+          String url = elementCache.getRender().getContentUrl();
+          if (url != null) {
+            getSection.execute(
+                new SectionObserver(getSectionControllerCallback, url, imagesToDownload),
+                GetSection.Params.forSection(false, url, imagesToDownload),
+                PriorityScheduler.Priority.HIGH);
+          } else {
+            getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(
+                "elementCache.getRender().getContentUrl() IS NULL"));
           }
+        }
+      }
 
-          @Override public void onGetMenusFails(Exception e) {
-            getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(e));
-            e.printStackTrace();
-          }
-        }), GetMenus.Params.forForceReload(false),
-        PriorityScheduler.Priority.HIGH);
+      @Override public void onGetMenusFails(Exception e) {
+        getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(e));
+        e.printStackTrace();
+      }
+    }), GetMenus.Params.forForceReload(false), PriorityScheduler.Priority.HIGH);
   }
 
   @Override public void getDetails(String elementUrl,
@@ -157,8 +154,8 @@ public class OcmControllerImp implements OcmController {
   }
 
   //end region
-  //region observers
 
+  //region observers
   private final class MenuObserver extends DefaultObserver<MenuContentData> {
     private final GetMenusControllerCallback getMenusCallback;
 
@@ -207,8 +204,8 @@ public class OcmControllerImp implements OcmController {
     private final String url;
     private final int imagesToDownload;
 
-    public SectionObserver(GetSectionControllerCallback getSectionControllerCallback,
-        String url, int imagesToDownload) {
+    public SectionObserver(GetSectionControllerCallback getSectionControllerCallback, String url,
+        int imagesToDownload) {
       this.getSectionControllerCallback = getSectionControllerCallback;
       this.url = url;
       this.imagesToDownload = imagesToDownload;
@@ -228,34 +225,40 @@ public class OcmControllerImp implements OcmController {
     @Override public void onNext(ContentData contentData) {
       getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
         @Override public void onGetVersionLoaded(VersionData versionData) {
+          checkVersionAndExpiredAtAndRetrieveSecion(versionData, contentData);
+        }
 
-          boolean requestFromCloud = false;
-
-          if (!versionData.getVersion().equals(contentData.getVersion())) {
-            requestFromCloud = true;
-          }
-
-          if (contentData.getExpiredAt() != null && DateUtils.isAfterCurrentDate(
-              contentData.getExpiredAt())) {
-            requestFromCloud = true;
-          }
-
-          if (requestFromCloud) {
-            getSection.execute(
-                new SectionObserver(getSectionControllerCallback, url, imagesToDownload),
-                GetSection.Params.forSection(true, url, imagesToDownload), PriorityScheduler.Priority.HIGH);
-          }
-
+        @Override public void onGetVersionFails(Exception e) {
           if (getSectionControllerCallback != null) {
             getSectionControllerCallback.onGetSectionLoaded(contentData);
           }
         }
-
-        @Override public void onGetVersionFails(Exception e) {
-
-        }
       }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
     }
+
+    private void checkVersionAndExpiredAtAndRetrieveSecion(VersionData versionData,
+        ContentData contentData) {
+      boolean requestFromCloud =
+          hasToForceReloadBecauseVersionChangedOrSectionHasExpired(versionData, contentData);
+
+      if (requestFromCloud) {
+        getSection.execute(
+            new SectionObserver(getSectionControllerCallback, url, imagesToDownload),
+            GetSection.Params.forSection(true, url, imagesToDownload),
+            PriorityScheduler.Priority.HIGH);
+      }
+
+      if (getSectionControllerCallback != null) {
+        getSectionControllerCallback.onGetSectionLoaded(contentData);
+      }
+    }
+  }
+
+  private boolean hasToForceReloadBecauseVersionChangedOrSectionHasExpired(VersionData versionData,
+      ContentData contentData) {
+    return !versionData.getVersion().equals(contentData.getVersion())
+        || contentData.getExpiredAt() != null && DateUtils.isAfterCurrentDate(
+        contentData.getExpiredAt());
   }
 
   private final class DetailObserver extends DefaultObserver<ElementData> {
