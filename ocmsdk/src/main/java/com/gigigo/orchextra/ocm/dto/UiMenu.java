@@ -42,4 +42,8 @@ public final class UiMenu {
   public void setContentUrl(String contentUrl) {
     this.contentUrl = contentUrl;
   }
+
+  public String getContentUrl() {
+    return contentUrl;
+  }
 }
