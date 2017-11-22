@@ -22,10 +22,11 @@ android {
   buildTypes {
     staging {
       debuggable true
+      signingConfig signingConfigs.debug
     }
     debug {
-      signingConfig signingConfigs.debug
       debuggable true
+      signingConfig signingConfigs.debug
     }
     release {
       debuggable true
