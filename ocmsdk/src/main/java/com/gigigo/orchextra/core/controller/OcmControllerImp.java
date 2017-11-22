@@ -8,7 +8,6 @@ import com.gigigo.orchextra.core.data.rxException.ClearCacheException;
 import com.gigigo.orchextra.core.data.rxException.NetworkConnectionException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
@@ -22,7 +21,8 @@ import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 
 public class OcmControllerImp implements OcmController {
-  private static final PriorityScheduler.Priority PRIORITY_MENUS = PriorityScheduler.Priority.LOWEST;
+  private static final PriorityScheduler.Priority PRIORITY_MENUS =
+      PriorityScheduler.Priority.LOWEST;
 
   private static final PriorityScheduler.Priority PRIORITY_SECTIONS =
       PriorityScheduler.Priority.LOW;
@@ -30,8 +30,7 @@ public class OcmControllerImp implements OcmController {
   private static final PriorityScheduler.Priority PRIORITY_DETAIL =
       PriorityScheduler.Priority.MEDIUM;
 
-  private static final PriorityScheduler.Priority PRIORITY_SEARCH =
-      PriorityScheduler.Priority.LOW;
+  private static final PriorityScheduler.Priority PRIORITY_SEARCH = PriorityScheduler.Priority.LOW;
 
   private static final PriorityScheduler.Priority PRIORITY_CLEAR = PriorityScheduler.Priority.LOW;
 
@@ -57,35 +56,21 @@ public class OcmControllerImp implements OcmController {
   //region new
   @Override public void getMenu(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
     getMenus.execute(new MenuObserver(getMenusCallback),
-        GetMenus.Params.forForceReload(forceReload), forceReload ? PRIORITY_MENUS : PriorityScheduler.Priority.HIGH);
+        GetMenus.Params.forForceReload(forceReload),
+        forceReload ? PRIORITY_MENUS : PriorityScheduler.Priority.HIGH);
   }
 
   @Override
   public void getSection(final boolean forceReload, final String section, int imagesToDownload,
       GetSectionControllerCallback getSectionControllerCallback) {
-    getMenu(false, new GetMenusControllerCallback() {
-      @Override public void onGetMenusLoaded(MenuContentData menus) {
-        ElementCache elementCache = menus.getElementsCache().get(section);
-        if (elementCache == null || elementCache.getRender() == null) {
-          getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException());
-        } else {
-          String url = elementCache.getRender().getContentUrl();
-          if (url != null) {
-            getSection.execute(new SectionObserver(getSectionControllerCallback),
-                GetSection.Params.forSection(forceReload, url, imagesToDownload),
-                forceReload ? PRIORITY_SECTIONS : PriorityScheduler.Priority.HIGH);
-          } else {
-            getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(
-                "elementCache.getRender().getContentUrl() IS NULL"));
-          }
-        }
-      }
-
-      @Override public void onGetMenusFails(Exception e) {
-        getSectionControllerCallback.onGetSectionFails(new ApiSectionNotFoundException(e));
-        e.printStackTrace();
-      }
-    });
+    if (section != null) {
+      getSection.execute(new SectionObserver(getSectionControllerCallback),
+          GetSection.Params.forSection(forceReload, section, imagesToDownload),
+          forceReload ? PRIORITY_SECTIONS : PriorityScheduler.Priority.HIGH);
+    } else {
+      getSectionControllerCallback.onGetSectionFails(
+          new ApiSectionNotFoundException("elementCache.getRender().getContentUrl() IS NULL"));
+    }
   }
 
   private String getSlug(String elementUrl) {
@@ -101,7 +86,8 @@ public class OcmControllerImp implements OcmController {
       GetDetailControllerCallback getDetailControllerCallback) {
     String slug = getSlug(elementUrl);
     getDetail.execute(new DetailObserver(getDetailControllerCallback),
-        GetDetail.Params.forDetail(forceReload, slug), forceReload ? PRIORITY_DETAIL : PriorityScheduler.Priority.HIGHEST);
+        GetDetail.Params.forDetail(forceReload, slug),
+        forceReload ? PRIORITY_DETAIL : PriorityScheduler.Priority.HIGHEST);
   }
 
   @Override
@@ -114,7 +100,6 @@ public class OcmControllerImp implements OcmController {
       final ClearCacheCallback clearCacheCallback) {
     clearCache.execute(new ClearCacheObserver(clearCacheCallback),
         ClearCache.Params.create(images, data), PRIORITY_CLEAR);
-
   }
 
   @Override public void disposeUseCases() {
