@@ -1,21 +1,28 @@
 apply plugin: 'com.android.library'
 apply from: 'jacoco.gradle'
 apply from: 'sonarqube.gradle'
+
 apply from: 'common_methods.gradle'
 apply from: 'dependencies.gradle'
 apply plugin: 'me.tatarka.retrolambda'
+
 apply plugin: 'com.github.dcendents.android-maven'
-apply from: 'variants.gradle'
 
 group = 'com.github.Orchextra'
+version ='ocmVersion'
+
+
+apply from: 'variants.gradle'
 
 def CONCURRENT_INTERACTORS = "CONCURRENT_INTERACTORS"
-def API_URL = "API_URL"
-def NETWORK_LOG = "NETWORK_LOG"
-def OCM_SDK_VERSION = "OCM_SDK_VERSION"
-def YOUTUBE_DEVELOPER_KEY = "YOUTUBE_DEVELOPER_KEY"
-def VIMEO_ACCESS_TOKEN = "VIMEO_ACCESS_TOKEN"
+def RETROFIT_LOG = "RETROFIT_LOG"
 
+def API_URL = "API_URL";
+def OCM_SDK_VERSION = "OCM_SDK_VERSION";
+
+def YOUTUBE_DEVELOPER_KEY = "YOUTUBE_DEVELOPER_KEY"
+
+def VIMEO_ACCESS_TOKEN = "VIMEO_ACCESS_TOKEN"
 android {
   compileSdkVersion project.androidCompileSdkVersion
   buildToolsVersion project.androidBuildToolsVersion
@@ -29,40 +36,48 @@ android {
       abiFilters "armeabi-v7a"
     }
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-    buildConfigField STRING, VIMEO_ACCESS_TOKEN, project.vimeoAccessToken
-    buildConfigField INT, CONCURRENT_INTERACTORS, project.concurrentInteractors
   }
-
   buildTypes {
+    staging {
+      debuggable true
+      //      testCoverageEnabled = true
+    }
     debug {
       debuggable true
-
-      buildConfigField STRING, API_URL, '"https://cm.s.orchextra.io/"'
-      buildConfigField STRING, OCM_SDK_VERSION, '"ANDROID_1.0.0"'
-      buildConfigField STRING, YOUTUBE_DEVELOPER_KEY, project.youtubeDevelopKey
-      buildConfigField BOOLEAN, NETWORK_LOG, "true"
+      //      testCoverageEnabled = true
     }
-
-    quality {
-      debuggable true
-
-      buildConfigField STRING, API_URL, '"https://cm.q.orchextra.io/"'
-      buildConfigField STRING, OCM_SDK_VERSION, '"ANDROID_1.0.0"'
-      buildConfigField STRING, YOUTUBE_DEVELOPER_KEY, project.youtubeDevelopKey
-      buildConfigField BOOLEAN, NETWORK_LOG, "true"
-    }
-
     release {
       debuggable true
       minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-      buildConfigField STRING, API_URL, '"https://cm.orchextra.io/"'
-      buildConfigField STRING, OCM_SDK_VERSION, '"ANDROID_1.0.0"'
-      buildConfigField STRING, YOUTUBE_DEVELOPER_KEY, project.youtubeReleaseKey
-      buildConfigField BOOLEAN, NETWORK_LOG, "false"
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+      signingConfig android.signingConfigs.debug
     }
+  }
+
+  project.android.libraryVariants.all { variant ->
+
+    variant.productFlavors.each { flavor ->
+
+      setVariantBuildConfigField(variant, project.apiOcm, API_URL, STRING)
+      setVariantBuildConfigField(variant, project.ocmSdkVersion, OCM_SDK_VERSION, STRING)
+      setVariantBuildConfigField(variant, project.concurrentInteractors,
+          CONCURRENT_INTERACTORS, INT)
+      setVariantBuildConfigField(variant, project.retrofitLog, RETROFIT_LOG, BOOLEAN)
+      setVariantBuildConfigField(variant, project.youtubeDeveloperKey,
+          YOUTUBE_DEVELOPER_KEY, STRING)
+      setVariantBuildConfigField(variant, project.vimeoAccessToken,
+          VIMEO_ACCESS_TOKEN, STRING)
+      println("flavor: " + flavor)
+      println("--**********************************************************--")
+    }
+
+    /* def bundleTask = tasks["bundle${name.capitalize()}"]
+     artifacts {
+       archives(bundleTask.archivePath) {
+         classifier null
+         builtBy bundleTask
+       }
+     }*/
   }
 
   lintOptions {
@@ -148,7 +163,6 @@ finalize.dependsOn(ocmsdk:install)
 //install.finalizedBy(finalize)
 install.dependsOn(ocmsdk:build)
 
-
 dependencies {
   //TEST
   testImplementation project.testLibraries.junit
@@ -175,23 +189,43 @@ dependencies {
   //Image Loader Glide/Blur
   api project.libraries.imageloaderGlideBlur
 
-  implementation "com.squareup.okhttp3:logging-interceptor:3.9.0"
-  implementation 'com.github.GigigoGreenLabs.imgRecogModule:imagerecognitioninterface:2.6'
-
   //Orchextra
+  //   implementation project.libraries.oxvuforiaimplementation
+  //  ocmStagingImplementation(project.libraries.orchextrasdkStaging) { transitive = true
+  //    exclude module: 'support-v4'  }
+  //  ocmDebugImplementation(project.libraries.orchextrasdkDebug) { transitive = true
+  //    exclude module: 'support-v4' }
+  //  ocmReleaseImplementation(project.libraries.orchextrasdkRelease) { transitive = true
+  //    exclude module: 'support-v4' }
   // implementation project.libraries.oxvuforiaimplementation
-  debugApi(project.libraries.orchextrasdkStaging) {
-    transitive true
+  /*
+   ocmStagingCompile(project.libraries.orchextrasdkStaging) {
+     transitive = true
+     exclude module: 'support-v4'
+   }
+   ocmDebugCompile(project.libraries.orchextrasdkDebug) {
+     transitive = true
+     exclude module: 'support-v4'
+   }
+   ocmReleaseCompile(project.libraries.orchextrasdkRelease) {
+     transitive = true
+     exclude module: 'support-v4'
+   }
+ */
+
+  stagingApi(project.libraries.orchextrasdkStaging) {
+    transitive = true
     exclude module: 'support-v4'
   }
-  qualityApi(project.libraries.orchextrasdkDebug) {
-    transitive true
+  debugApi(project.libraries.orchextrasdkDebug) {
+    transitive = true
     exclude module: 'support-v4'
   }
   releaseApi(project.libraries.orchextrasdkRelease) {
-    transitive true
+    transitive = true
     exclude module: 'support-v4'
   }
+
 
   //customs Views
   implementation project.libraries.doubleViewPager
@@ -205,7 +239,7 @@ dependencies {
 
   implementation project.libraries.kache
 
-  implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+  api 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
 
   api project(':vimeosdk')
 

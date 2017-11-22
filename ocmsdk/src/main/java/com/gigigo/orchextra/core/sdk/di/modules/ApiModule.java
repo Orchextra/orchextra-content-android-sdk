@@ -39,7 +39,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
   }
 
   @Provides @Singleton @RetrofitLog boolean provideRetrofitLog() {
-    return BuildConfig.NETWORK_LOG;
+    return BuildConfig.DEBUG;
   }
 
   @Provides @Singleton @HttpLoggingInterceptorOcm
