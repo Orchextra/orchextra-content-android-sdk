@@ -1,16 +1,14 @@
 package com.gigigo.orchextra.core.sdk.ui.views.edittexts;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v7ox.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.EditText;
-import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
+import com.gigigo.orchextra.core.sdk.ui.FontCache;
+import com.gigigo.orchextra.ocm.OCManager;
 
 public class OcmTitleEditText extends AppCompatEditText {
 
@@ -42,7 +40,7 @@ public class OcmTitleEditText extends AppCompatEditText {
     if (injector != null) {
       OcmStyleUi styleUi = injector.provideOcmStyleUi();
       if (styleUi != null && !TextUtils.isEmpty(styleUi.getTitleFontPath())) {
-        setTypeface(Typeface.createFromAsset(context.getAssets(), styleUi.getTitleFontPath()));
+        this.setTypeface(FontCache.getFont(context, styleUi.getTitleFontPath()));
       }
     }
 

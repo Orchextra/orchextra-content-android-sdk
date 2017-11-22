@@ -1,11 +1,11 @@
 package com.gigigo.orchextra.core.sdk.ui.views.textviews;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
+import com.gigigo.orchextra.core.sdk.ui.FontCache;
 import com.gigigo.orchextra.ocm.OCManager;
 import views.gigigo.com.textviewautofit.TextFitTextView;
 
@@ -39,7 +39,7 @@ public class OcmLightTextView extends TextFitTextView {
     if (injector != null) {
       OcmStyleUi styleUi = injector.provideOcmStyleUi();
       if (styleUi != null && !TextUtils.isEmpty(styleUi.getLightFontPath())) {
-        setTypeface(Typeface.createFromAsset(context.getAssets(), styleUi.getLightFontPath()));
+        this.setTypeface(FontCache.getFont(context, styleUi.getTitleFontPath()));
       }
     }
   }
