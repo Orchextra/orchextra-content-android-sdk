@@ -20,10 +20,10 @@ android {
     }
   }
   buildTypes {
-    debug {
+    staging {
       debuggable true
     }
-    quality {
+    debug {
       signingConfig signingConfigs.debug
       debuggable true
     }
@@ -47,8 +47,8 @@ dependencies {
   compile project(path: ':ocmsdk')
   compile 'com.android.support:multidex:1.0.1'
 
-  debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-  qualityImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+  stagingImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+  debugImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
   releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
   implementation 'com.android.support:support-v4:26.1.0'

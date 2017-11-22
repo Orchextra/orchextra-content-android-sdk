@@ -29,16 +29,16 @@ android {
   }
 
   buildTypes {
-    debug {
+    staging {
       testCoverageEnabled = false
       debuggable true
-      applicationIdSuffix ".debug"
+      applicationIdSuffix ".staging"
     }
 
-    quality {
+    debug {
       signingConfig signingConfigs.debug
       debuggable true
-      applicationIdSuffix ".quality"
+      applicationIdSuffix ".debug"
     }
 
     release {

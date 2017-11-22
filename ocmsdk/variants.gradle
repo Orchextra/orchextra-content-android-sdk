@@ -1,10 +1,23 @@
 project.ext {
   googleKeyDebug = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
+  //gigigo.desarrollo -> Google Console --> Orchextra2016 --> Woah Dev
   googleKey = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
 
-  concurrentInteractors = '3'
+  ocmSdkVersion = [debug: 'ANDROID_1.0.0']
 
-  youtubeDevelopKey = '"AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"'
-  youtubeReleaseKey = '"AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"'
-  vimeoAccessToken = '"50163590b4402cceefb2c78a7aba7093"'
+  apiOcm = [release: 'https://cm.orchextra.io/',
+            debug  : 'https://cm.q.orchextra.io/',
+            staging: 'https://cm.s.orchextra.io/'
+  ]
+
+  concurrentInteractors = 3
+
+  retrofitLog = [debug  : 'true',
+                 release: 'true'
+  ]
+
+  youtubeDeveloperKey = [debug  : googleKeyDebug,
+                         release: googleKey
+  ]
+  vimeoAccessToken='50163590b4402cceefb2c78a7aba7093'
 }

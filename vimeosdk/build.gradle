@@ -18,11 +18,11 @@ android {
 
   buildTypes {
 
-    debug {
+    staging {
       debuggable true
     }
 
-    quality {
+    debug {
       debuggable true
     }
 
