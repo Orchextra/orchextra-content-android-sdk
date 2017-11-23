@@ -73,18 +73,8 @@ public class OcmControllerImp implements OcmController {
     }
   }
 
-  private String getSlug(String elementUrl) {
-
-    try {
-      return elementUrl.substring(elementUrl.lastIndexOf("/") + 1, elementUrl.length());
-    } catch (Exception ignored) {
-      return null;
-    }
-  }
-
-  @Override public void getDetails(boolean forceReload, String elementUrl,
+  @Override public void getDetails(boolean forceReload, String slug,
       GetDetailControllerCallback getDetailControllerCallback) {
-    String slug = getSlug(elementUrl);
     getDetail.execute(new DetailObserver(getDetailControllerCallback),
         GetDetail.Params.forDetail(forceReload, slug),
         forceReload ? PRIORITY_DETAIL : PriorityScheduler.Priority.HIGHEST);
