@@ -13,8 +13,6 @@ public class ApiSectionContentData implements Kacheable {
   private String key;
   private boolean fromCache;
 
-  private static String prefix = "section_";
-
   public ApiContentItem getContent() {
     return content;
   }
@@ -28,7 +26,7 @@ public class ApiSectionContentData implements Kacheable {
   }
 
   @NotNull @Override public String getKey() {
-    return prefix + key;
+    return key;
   }
 
   public boolean isFromCache() {
