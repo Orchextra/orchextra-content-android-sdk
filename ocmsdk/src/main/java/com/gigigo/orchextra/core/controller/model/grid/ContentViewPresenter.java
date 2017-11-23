@@ -287,7 +287,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
       WeakReference<View> viewWeakReference = new WeakReference<>(view);
 
-      ocmController.getDetails(false, element.getSlug(),
+      ocmController.getDetails(false, element.getElementUrl(),
           new OcmController.GetDetailControllerCallback() {
             @Override public void onGetDetailLoaded(ElementCache elementCache) {
               String imageUrlToExpandInPreview = null;
