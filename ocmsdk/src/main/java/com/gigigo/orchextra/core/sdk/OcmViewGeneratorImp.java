@@ -14,6 +14,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
+import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
@@ -30,6 +31,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentDat
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.vimeo.VimeoContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeFragment;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -86,6 +88,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
           ElementCache elementCache =
               menuContentData.getElementsCache().get(element.getElementUrl());
           if (elementCache != null) {
+            uiMenu.setElementCache(elementCache);
             uiMenu.setUpdateAt(elementCache.getUpdateAt());
             if (elementCache.getRender() != null) {
               uiMenu.setContentUrl(elementCache.getRender().getContentUrl());
@@ -117,54 +120,42 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         getSectionViewGeneratorCallback.onSectionViewFails(e);
       }
     });
+  }
 
-    /*ocmController.getDetails(false, viewId, new OcmController.GetDetailControllerCallback() {
-      @Override public void onGetDetailLoaded(ElementCache elementCache) {
-        if (elementCache.getType() == ElementCacheType.ARTICLE
-            && elementCache.getRender() != null
-            && elementCache.getRender().getElements() != null) {
+  public void generateActionView(ElementCache elementCache, GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
+    if (elementCache.getType() == ElementCacheType.ARTICLE
+        && elementCache.getRender() != null
+        && elementCache.getRender().getElements() != null) {
 
-          getSectionViewGeneratorCallback.onSectionViewLoaded(
-              generateArticleDetailView(elementCache.getRender().getElements()));
+      getSectionViewGeneratorCallback.onSectionViewLoaded(
+          generateArticleDetailView(elementCache.getRender().getElements()));
 
-        } else if (elementCache.getType() == ElementCacheType.VIDEO
-            && elementCache.getRender() != null) {
+    } else if (elementCache.getType() == ElementCacheType.VIDEO
+        && elementCache.getRender() != null) {
 
-          if (elementCache.getRender().getFormat() == VideoFormat.YOUTUBE) {
-            getSectionViewGeneratorCallback.onSectionViewLoaded(YoutubeFragment.newInstance(elementCache.getRender().getSource()));
-          } else if (elementCache.getRender().getFormat() == VideoFormat.VIMEO) {
-            //TODO Return vimeo fragment
-            getSectionViewGeneratorCallback.onSectionViewLoaded(YoutubeFragment.newInstance(elementCache.getRender().getSource()));
-          }
-
-        } else if (elementCache.getType() == ElementCacheType.WEBVIEW
-            && elementCache.getRender() != null) {
-
-          if (elementCache.getRender().getFederatedAuth() != null
-              && elementCache.getRender().getFederatedAuth().getKeys() != null
-              && elementCache.getRender().getFederatedAuth().getKeys().getSiteName() != null
-              && elementCache.getRender().getFederatedAuth().isActive()) {
-
-            getSectionViewGeneratorCallback.onSectionViewLoaded(
-                generateWebContentDataWithFederated(elementCache.getRender()));
-          } else {
-            getSectionViewGeneratorCallback.onSectionViewLoaded(
-                generateWebContentData(elementCache.getRender().getUrl()));
-          }
-        } else {
-          getSectionViewGeneratorCallback.onSectionViewLoaded(
-              generateGridContentData(viewId, imagesToDownload, filter));
-        }
+      if (elementCache.getRender().getFormat() == VideoFormat.YOUTUBE) {
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            YoutubeFragment.newInstance(elementCache.getRender().getSource()));
+      } else if (elementCache.getRender().getFormat() == VideoFormat.VIMEO) {
+        //TODO Return vimeo fragment
+        getSectionViewGeneratorCallback.onSectionViewLoaded(YoutubeFragment.newInstance(elementCache.getRender().getSource()));
       }
 
-      @Override public void onGetDetailFails(Exception e) {
-        getSectionViewGeneratorCallback.onSectionViewFails(e);
-      }
+    } else if (elementCache.getType() == ElementCacheType.WEBVIEW
+        && elementCache.getRender() != null) {
 
-      @Override public void onGetDetailNoAvailable(Exception e) {
-        getSectionViewGeneratorCallback.onSectionViewFails(e);
+      if (elementCache.getRender().getFederatedAuth() != null
+          && elementCache.getRender().getFederatedAuth().getKeys() != null
+          && elementCache.getRender().getFederatedAuth().getKeys().getSiteName() != null
+          && elementCache.getRender().getFederatedAuth().isActive()) {
+
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            generateWebContentDataWithFederated(elementCache.getRender()));
+      } else {
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            generateWebContentData(elementCache.getRender().getUrl()));
       }
-    });*/
+    }
   }
 
   private UiGridBaseContentData generateWebContentData(String url) {
