@@ -61,11 +61,11 @@ public class OcmControllerImp implements OcmController {
   }
 
   @Override
-  public void getSection(final boolean forceReload, final String section, int imagesToDownload,
+  public void getSection(final boolean forceReload, final String contentUrl, int imagesToDownload,
       GetSectionControllerCallback getSectionControllerCallback) {
-    if (section != null) {
+    if (contentUrl != null) {
       getSection.execute(new SectionObserver(getSectionControllerCallback),
-          GetSection.Params.forSection(forceReload, section, imagesToDownload),
+          GetSection.Params.forSection(forceReload, contentUrl, imagesToDownload),
           forceReload ? PRIORITY_SECTIONS : PriorityScheduler.Priority.HIGH);
     } else {
       getSectionControllerCallback.onGetSectionFails(
