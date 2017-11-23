@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.controller.model.grid;
 
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -33,6 +32,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private int imagesToDownload = 21;
   private String filter;
   private List<Cell> listedCellContentDataList;
+  private ContentData cachedContentData;
+  private boolean hasToCheckNewContent = false;
   private int padding;
 
   public ContentViewPresenter(OcmController ocmController, Authoritation authoritation) {
@@ -65,15 +66,78 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
     ocmController.getSection(section, imagesToDownload,
         new OcmController.GetSectionControllerCallback() {
-          @Override public void onGetSectionLoaded(ContentData cachedContentData) {
-            ContentItem contentItem = cachedContentData.getContent();
-            renderContentItem(contentItem);
+
+          @Override public void onGetSectionLoaded(ContentData contentData) {
+            if (!hasToCheckNewContent) {
+              cachedContentData = contentData;
+              ContentItem contentItem = contentData.getContent();
+              renderContentItem(contentItem);
+              hasToCheckNewContent = true;
+            } else if (cachedContentData != null) {
+              checkNewContent(cachedContentData, contentData);
+            }
+
+            cachedContentData = contentData;
           }
 
           @Override public void onGetSectionFails(Exception e) {
             renderError();
           }
         });
+  }
+
+  private void checkNewContent(ContentData cachedContentData, ContentData newContentData) {
+    if (cachedContentData == null
+        || newContentData == null
+        || cachedContentData.getContent() == null
+        || newContentData.getContent() == null
+        || cachedContentData.getContent().getElements() == null
+        || newContentData.getContent().getElements() == null
+        || getView() == null) {
+      return;
+    }
+    UpdateAtType updateAtType = checkDifferents(cachedContentData, newContentData);
+    switch (updateAtType) {
+      case NEW_CONTENT:
+        getView().showNewExistingContent();
+        hasToCheckNewContent = false;
+        break;
+      case REFRESH:
+        loadSection();
+        hasToCheckNewContent = false;
+        break;
+    }
+    getView().showProgressView(false);
+  }
+
+  private UpdateAtType checkDifferents(ContentData cachedContentData, ContentData newContentData) {
+    List<Element> cachedElements = cachedContentData.getContent().getElements();
+    List<Element> newElements = newContentData.getContent().getElements();
+
+    if (cachedElements.size() > newElements.size()) {
+      return UpdateAtType.REFRESH;
+    } else if (cachedElements.size() < newElements.size()) {
+      return UpdateAtType.NEW_CONTENT;
+    } else {
+      for (int i = 0; i < cachedElements.size(); i++) {
+        if (!cachedElements.get(i).getSlug().equalsIgnoreCase(newElements.get(i).getSlug())) {
+          return UpdateAtType.REFRESH;
+        } else {
+          ElementCache cachedElementCache =
+              cachedContentData.getElementsCache().get(cachedElements.get(i).getElementUrl());
+
+          ElementCache newElementCache =
+              newContentData.getElementsCache().get(newElements.get(i).getElementUrl());
+
+          if (cachedElementCache != null
+              && newElementCache != null
+              && cachedElementCache.getUpdateAt() != newElementCache.getUpdateAt()) {
+            return UpdateAtType.REFRESH;
+          }
+        }
+      }
+    }
+    return UpdateAtType.NONE;
   }
 
   private void renderContentItem(ContentItem contentItem) {
@@ -217,20 +281,22 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                 OCManager.addArticleToReadedArticles(element.getSlug());
                 System.out.println("CELL_CLICKED: " + element.getSlug());
 
-                if (elementCache.getType() != ElementCacheType.WEBVIEW )//|| imageUrlToExpandInPreview!="" )
-                {  getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
+                if (elementCache.getType()
+                    != ElementCacheType.WEBVIEW)//|| imageUrlToExpandInPreview!="" )
+                {
+                  getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
                       viewWeakReference.get());
                   //getView().navigateToDetailView(elementCache, viewWeakReference.get());
                 } else {
                   OcmWebViewActivity.open(viewWeakReference.get().getContext(),
-                               elementCache.getRender(),elementCache.getName());
-                //  if (imageUrlToExpandInPreview != "") {
-                //    OcmWebViewActivity.open(viewWeakReference.get().getContext(),
-                //        elementCache.getRender().getUrl(),elementCache.getName());
-                //  } else {
-                //    OcmWebViewActivity.open(viewWeakReference.get().getContext(),
-                //        elementCache.getRender().getUrl(),elementCache.getName(),imageUrlToExpandInPreview);
-                //  }
+                      elementCache.getRender(), elementCache.getName());
+                  //  if (imageUrlToExpandInPreview != "") {
+                  //    OcmWebViewActivity.open(viewWeakReference.get().getContext(),
+                  //        elementCache.getRender().getUrl(),elementCache.getName());
+                  //  } else {
+                  //    OcmWebViewActivity.open(viewWeakReference.get().getContext(),
+                  //        elementCache.getRender().getUrl(),elementCache.getName(),imageUrlToExpandInPreview);
+                  //  }
                 }
               }
             }
