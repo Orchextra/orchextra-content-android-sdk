@@ -14,7 +14,6 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
-import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
@@ -31,7 +30,6 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentDat
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.vimeo.VimeoContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeFragment;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -40,9 +38,7 @@ import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import orchextra.javax.inject.Provider;
 
 public class OcmViewGeneratorImp implements OcmViewGenerator {
@@ -113,50 +109,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
     ocmController.getSection(false, viewId, imagesToDownload, new OcmController.GetSectionControllerCallback() {
       @Override public void onGetSectionLoaded(ContentData contentData) {
-        if (contentData.getElementsCache().size() > 0) {
-          Iterator<Map.Entry<String, ElementCache>>
-              iterator = contentData.getElementsCache().entrySet().iterator();
-          while (iterator.hasNext()) {
-            ElementCache elementCache = iterator.next().getValue();
-
-            if (elementCache.getType() == ElementCacheType.ARTICLE
-                && elementCache.getRender() != null
-                && elementCache.getRender().getElements() != null) {
-
-              getSectionViewGeneratorCallback.onSectionViewLoaded(
-                  generateArticleDetailView(elementCache.getRender().getElements()));
-
-            } else if (elementCache.getType() == ElementCacheType.VIDEO
-                && elementCache.getRender() != null) {
-
-              if (elementCache.getRender().getFormat() == VideoFormat.YOUTUBE) {
-                getSectionViewGeneratorCallback.onSectionViewLoaded(
-                    YoutubeFragment.newInstance(elementCache.getRender().getSource()));
-              } else if (elementCache.getRender().getFormat() == VideoFormat.VIMEO) {
-                //TODO Return vimeo fragment
-                getSectionViewGeneratorCallback.onSectionViewLoaded(YoutubeFragment.newInstance(elementCache.getRender().getSource()));
-              }
-
-            } else if (elementCache.getType() == ElementCacheType.WEBVIEW
-                && elementCache.getRender() != null) {
-
-              if (elementCache.getRender().getFederatedAuth() != null
-                  && elementCache.getRender().getFederatedAuth().getKeys() != null
-                  && elementCache.getRender().getFederatedAuth().getKeys().getSiteName() != null
-                  && elementCache.getRender().getFederatedAuth().isActive()) {
-
-                getSectionViewGeneratorCallback.onSectionViewLoaded(
-                    generateWebContentDataWithFederated(elementCache.getRender()));
-              } else {
-                getSectionViewGeneratorCallback.onSectionViewLoaded(
-                    generateWebContentData(elementCache.getRender().getUrl()));
-              }
-            } else {
-              getSectionViewGeneratorCallback.onSectionViewLoaded(
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
                   generateGridContentData(viewId, imagesToDownload, filter));
-            }
-          }
-        }
       }
 
       @Override public void onGetSectionFails(Exception e) {
