@@ -1,12 +1,12 @@
 package com.gigigo.orchextra.core.sdk.utils;
 
-import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class DateUtils {
 
@@ -27,15 +27,15 @@ public class DateUtils {
         String endTimeString = date.get(1);
 
         try {
-          SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_TIME, Locale.getDefault());
+          Date startTime = convertStringToDateWithDeviceTimeZone(startTimeString);
+          Date endTime = convertStringToDateWithDeviceTimeZone(endTimeString);
 
-          Date startTime = format.parse(startTimeString);
-          Date endTime = format.parse(endTimeString);
-
-          if (startTime.before(calendarTime) && endTime.after(calendarTime)) {
+          if (startTime != null
+              && endTime != null
+              && startTime.before(calendarTime)
+              && endTime.after(calendarTime)) {
             return true;
           }
-
         } catch (Exception ignored) {
           ignored.printStackTrace();
         }
@@ -49,13 +49,26 @@ public class DateUtils {
     Calendar calendar = Calendar.getInstance();
     Date calendarTime = calendar.getTime();
 
-    SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_TIME, Locale.getDefault());
+    Date expiredAtDate = convertStringToDateWithDeviceTimeZone(expiredAt);
 
+    return expiredAtDate != null && calendarTime.after(expiredAtDate);
+  }
+
+  private static Date convertStringToDateWithDeviceTimeZone(String timeStringToConvert) {
     try {
-      Date expiredAtDate = format.parse(expiredAt);
-      return calendarTime.after(expiredAtDate);
-    } catch (ParseException ignored) {
-      return false;
+      SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_TIME, Locale.getDefault());
+
+      format.setTimeZone(TimeZone.getTimeZone("UTC"));
+      Date startTime = format.parse(timeStringToConvert);
+
+      TimeZone tz = TimeZone.getDefault();
+      SimpleDateFormat destFormat = new SimpleDateFormat(DATE_FORMAT_TIME, Locale.getDefault());
+      destFormat.setTimeZone(tz);
+
+      String result = destFormat.format(startTime);
+      return destFormat.parse(result);
+    } catch (ParseException e) {
+      return null;
     }
   }
 }
