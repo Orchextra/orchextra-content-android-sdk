@@ -179,8 +179,8 @@ public final class Ocm {
   /**
    * Get the app menus
    */
-  public static void getMenus(OcmCallbacks.Menus menusCallback) {
-    OCManager.getMenus(new OCManagerCallbacks.Menus() {
+  public static void getMenus(boolean forceUpdate, OcmCallbacks.Menus menusCallback) {
+    OCManager.getMenus(forceUpdate, new OCManagerCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData menus) {
         menusCallback.onMenusLoaded(menus);
       }
@@ -211,14 +211,14 @@ public final class Ocm {
   /**
    * Return a fragment which you can add to your views.
    *
-   * @param viewId It is the content url returned in the menus call.
+   * @param uiMenu It is the content url returned in the menus call.
    * @param filter To filter the content by a word
    * @param imagesToDownload Number of images that we can to download for caching
    * @param sectionCallbacks callback
    */
-  public static void generateSectionView(String viewId, String filter, int imagesToDownload,
+  public static void generateSectionView(UiMenu uiMenu, String filter, int imagesToDownload,
       OcmCallbacks.Section sectionCallbacks) {
-    OCManager.generateSectionView(viewId, filter, imagesToDownload,
+    OCManager.generateSectionView(uiMenu, filter, imagesToDownload,
         new OCManagerCallbacks.Section() {
           @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
             sectionCallbacks.onSectionLoaded(uiGridBaseContentData);

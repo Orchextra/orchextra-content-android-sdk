@@ -49,18 +49,22 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   public void loadSection() {
     getView().showProgressView(true);
 
-    loadSection(section, filter);
+    loadSection(false, section, filter);
   }
 
   public void loadSection(String section) {
-    loadSection(section, filter);
+    loadSection(false, section, filter);
   }
 
-  public void loadSectionWithFilter(String section, String filter) {
-    loadSection(section, filter);
+  public void loadSection(boolean forceReload) {
+    loadSection(forceReload, section, filter);
   }
 
-  private void loadSection(String section, String filter) {
+  public void loadSection(String section, String filter) {
+    loadSection(false, section, filter);
+  }
+
+  private void loadSection(boolean forceReload, String section, String filter) {
     this.section = section;
     this.filter = filter;
 
@@ -68,7 +72,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         new OcmController.GetSectionControllerCallback() {
 
           @Override public void onGetSectionLoaded(ContentData contentData) {
-            if (!hasToCheckNewContent) {
+            if (!hasToCheckNewContent || forceReload) {
               cachedContentData = contentData;
               ContentItem contentItem = contentData.getContent();
               renderContentItem(contentItem);

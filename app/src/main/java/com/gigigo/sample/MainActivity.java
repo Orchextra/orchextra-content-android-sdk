@@ -1,8 +1,6 @@
 package com.gigigo.sample;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -17,15 +15,11 @@ import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
-import com.gigigo.orchextra.ocm.dto.UiVersionData;
 import java.io.File;
 import java.util.List;
-import jp.wasabeef.glide.transformations.internal.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
-  private static String PREFS_VERSION = "PREFS_VERSION";
-  private SharedPreferences sharedPreferences;
   private TabLayout tabLayout;
   private ViewPager viewpager;
   private ScreenSlidePagerAdapter adapter;
@@ -87,15 +81,14 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     initViews();
 
-    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     Ocm.setOnDoRequiredLoginCallback(onDoRequiredLoginCallback);
 
     startCredentials();
   }
 
   private void initViews() {
-    tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-    viewpager = (ViewPager) findViewById(R.id.viewpager);
+    tabLayout = findViewById(R.id.tabLayout);
+    viewpager = findViewById(R.id.viewpager);
     //View fabReload = findViewById(R.id.fabReload);
     //View fabChange = findViewById(R.id.fabChange);
     View fabClean = findViewById(R.id.fabClean);
@@ -104,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onClick(View view) {
         //Orchextra.startScannerActivity();
         Orchextra.startImageRecognition();
-        
       }
     });
 
@@ -153,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
     });
     Ocm.start();//likewoah
   }
+  //endregion
 
   public void clearApplicationData() {
     File cache = getCacheDir();
@@ -166,18 +159,34 @@ public class MainActivity extends AppCompatActivity {
       }
     }
   }
-  //endregion
 
   private void getContent() {
-    Ocm.getMenus(new OcmCallbacks.Menus() {
-      @Override public void onMenusLoaded(UiMenuData uiMenuData) {
-        if (uiMenuData.getUiMenuList() == null) {
+    Ocm.getMenus(false, new OcmCallbacks.Menus() {
+      @Override public void onMenusLoaded(UiMenuData oldUiMenuData) {
+        final List<UiMenu> oldUiMenuList = oldUiMenuData.getUiMenuList();
+
+        if (oldUiMenuList == null) {
           Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
-        } else {
-          List<UiMenu> uiMenu = uiMenuData.getUiMenuList();
-          viewpager.setOffscreenPageLimit(uiMenu.size());
-          onGoDetailView(uiMenu);
-          adapter.setDataItems(uiMenu);
+          return;
+        }
+
+        onGoDetailView(oldUiMenuList);
+
+        if (!oldUiMenuData.isFromCloud()) {
+          Ocm.getMenus(true, new OcmCallbacks.Menus() {
+            @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
+              List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
+              if (newUiMenuList == null) {
+                return;
+              }
+
+              checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
+            }
+
+            @Override public void onMenusFails(Throwable e) {
+
+            }
+          });
         }
       }
 
@@ -185,6 +194,23 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
       }
     });
+  }
+
+  private void checkIfMenuHasChanged(List<UiMenu> oldUiMenuList, List<UiMenu> newUiMenuList) {
+    if (oldUiMenuList == null || newUiMenuList == null) {
+      return;
+    }
+
+    if (oldUiMenuList.size() != newUiMenuList.size()) {
+      showIconNewContent(newUiMenuList);
+    } else {
+      for (int i = 0; i < newUiMenuList.size(); i++) {
+        if (oldUiMenuList.get(i).getUpdateAt() != newUiMenuList.get(i).getUpdateAt()) {
+          showIconNewContent(newUiMenuList);
+          return;
+        }
+      }
+    }
   }
 
   private void showIconNewContent(final List<UiMenu> newMenus) {
@@ -195,8 +221,6 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         adapter.setDataItems(newMenus);
-        viewpager.removeAllViews();
-        viewpager.setAdapter(adapter);
 
         tabLayout.removeAllTabs();
         onGoDetailView(newMenus);
@@ -211,6 +235,8 @@ public class MainActivity extends AppCompatActivity {
         UiMenu menu = uiMenu.get(i);
         TabLayout.Tab tab = tabLayout.newTab().setText(menu.getText());
         tabLayout.addTab(tab);
+
+        adapter.setDataItems(uiMenu);
       }
     }
 

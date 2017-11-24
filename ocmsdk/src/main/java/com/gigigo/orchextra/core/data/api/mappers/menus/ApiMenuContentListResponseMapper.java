@@ -52,6 +52,7 @@ public class ApiMenuContentListResponseMapper
       }
     }
     model.setElementsCache(elementCacheItemMap);
+    model.setFromCloud(data.isFromCloud());
 
     return model;
   }

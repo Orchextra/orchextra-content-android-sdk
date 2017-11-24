@@ -9,6 +9,7 @@ public class MenuContentData {
 
   private List<MenuContent> menuContentList;
   private Map<String, ElementCache> elementsCache;
+  private boolean fromCloud;
 
   public List<MenuContent> getMenuContentList() {
     return menuContentList;
@@ -24,5 +25,13 @@ public class MenuContentData {
 
   public void setElementsCache(Map<String, ElementCache> elementsCache) {
     this.elementsCache = elementsCache;
+  }
+
+  public void setFromCloud(boolean fromCloud) {
+    this.fromCloud = fromCloud;
+  }
+
+  public boolean isFromCloud() {
+    return fromCloud;
   }
 }

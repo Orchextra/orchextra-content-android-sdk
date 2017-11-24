@@ -33,6 +33,7 @@ import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.dto.UiVersionData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
@@ -99,9 +100,9 @@ public final class OCManager {
     }
   }
 
-  static void getMenus(final OCManagerCallbacks.Menus menusCallback) {
+  static void getMenus(boolean forceUpdate, final OCManagerCallbacks.Menus menusCallback) {
     if (instance != null) {
-      instance.ocmViewGenerator.getMenu(
+      instance.ocmViewGenerator.getMenu(forceUpdate,
           new OcmViewGenerator.GetMenusViewGeneratorCallback() {
             @Override public void onGetMenusLoaded(UiMenuData menus) {
               menusCallback.onMenusLoaded(menus);
@@ -114,9 +115,9 @@ public final class OCManager {
     }
   }
 
-  static void generateSectionView(String viewId, String filter, int imagesToDownload,
+  static void generateSectionView(UiMenu uiMenu, String filter, int imagesToDownload,
       final OCManagerCallbacks.Section sectionCallback) {
-    instance.ocmViewGenerator.generateSectionView(viewId, filter, imagesToDownload,
+    instance.ocmViewGenerator.generateSectionView(uiMenu, filter, imagesToDownload,
         new OcmViewGenerator.GetSectionViewGeneratorCallback() {
           @Override public void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData) {
             sectionCallback.onSectionLoaded(uiGridBaseContentData);

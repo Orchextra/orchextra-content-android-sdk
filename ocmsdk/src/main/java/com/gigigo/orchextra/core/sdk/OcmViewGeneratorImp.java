@@ -7,6 +7,7 @@ import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
@@ -55,8 +56,9 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     this.detailElementsViewPresenterProvider = detailElementsViewPresenterProvider;
   }
 
-  @Override public void getMenu(final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
-    ocmController.getMenu(new OcmController.GetMenusControllerCallback() {
+  @Override public void getMenu(boolean forceUpdate,
+      final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
+    ocmController.getMenu(forceUpdate, new OcmController.GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(MenuContentData menus) {
         getMenusViewGeneratorCallback.onGetMenusLoaded(transformMenu(menus));
       }
@@ -77,6 +79,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         && menuContentData.getMenuContentList() != null
         && menuContentData.getMenuContentList().size() > 0) {
 
+      uiMenuData.setFromCloud(menuContentData.isFromCloud());
+
       for (Element element : menuContentData.getMenuContentList().get(0).getElements()) {
         UiMenu uiMenu = new UiMenu();
 
@@ -88,7 +92,11 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
           ElementCache elementCache =
               menuContentData.getElementsCache().get(element.getElementUrl());
           if (elementCache != null) {
+            uiMenu.setElementCache(elementCache);
             uiMenu.setUpdateAt(elementCache.getUpdateAt());
+            if (elementCache.getRender() != null) {
+              uiMenu.setContentUrl(elementCache.getRender().getContentUrl());
+            }
           }
         }
 
@@ -101,66 +109,47 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return uiMenuData;
   }
 
-  private UiVersionData transformVersionData(VersionData versionData){
-    UiVersionData uiVersionData= new UiVersionData();
-    if(versionData.getVersion()!=null && !versionData.getVersion().isEmpty()) {
-      long version = Long.parseLong(versionData.getVersion());
-      uiVersionData.setVersion(version);
-    }
-    return uiVersionData;
-  }
-
   @Override
-  public void generateSectionView(String viewId, String filter, final int imagesToDownload,
+  public void generateSectionView(UiMenu uiMenu, String filter, final int imagesToDownload,
       GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
 
-    ocmController.getDetails(viewId, new OcmController.GetDetailControllerCallback() {
-      @Override public void onGetDetailLoaded(ElementCache elementCache) {
-        if (elementCache.getType() == ElementCacheType.ARTICLE
-            && elementCache.getRender() != null
-            && elementCache.getRender().getElements() != null) {
+    ElementCache elementCache = uiMenu.getElementCache();
 
-          getSectionViewGeneratorCallback.onSectionViewLoaded(
-              generateArticleDetailView(elementCache.getRender().getElements()));
+    if (elementCache.getType() == ElementCacheType.ARTICLE
+        && elementCache.getRender() != null
+        && elementCache.getRender().getElements() != null) {
 
-        } else if (elementCache.getType() == ElementCacheType.VIDEO
-            && elementCache.getRender() != null) {
+      getSectionViewGeneratorCallback.onSectionViewLoaded(
+          generateArticleDetailView(elementCache.getRender().getElements()));
+    } else if (elementCache.getType() == ElementCacheType.VIDEO
+        && elementCache.getRender() != null) {
 
-          if (elementCache.getRender().getFormat() == VideoFormat.YOUTUBE) {
-            getSectionViewGeneratorCallback.onSectionViewLoaded(YoutubeFragment.newInstance(elementCache.getRender().getSource()));
-          } else if (elementCache.getRender().getFormat() == VideoFormat.VIMEO) {
-            //TODO Return vimeo fragment
-            getSectionViewGeneratorCallback.onSectionViewLoaded(YoutubeFragment.newInstance(elementCache.getRender().getSource()));
-          }
-
-        } else if (elementCache.getType() == ElementCacheType.WEBVIEW
-            && elementCache.getRender() != null) {
-
-          if (elementCache.getRender().getFederatedAuth() != null
-              && elementCache.getRender().getFederatedAuth().getKeys() != null
-              && elementCache.getRender().getFederatedAuth().getKeys().getSiteName() != null
-              && elementCache.getRender().getFederatedAuth().isActive()) {
-
-            getSectionViewGeneratorCallback.onSectionViewLoaded(
-                generateWebContentDataWithFederated(elementCache.getRender()));
-          } else {
-            getSectionViewGeneratorCallback.onSectionViewLoaded(
-                generateWebContentData(elementCache.getRender().getUrl()));
-          }
-        } else {
-          getSectionViewGeneratorCallback.onSectionViewLoaded(
-              generateGridContentData(viewId, imagesToDownload, filter));
-        }
+      if (elementCache.getRender().getFormat() == VideoFormat.YOUTUBE) {
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            YoutubeFragment.newInstance(elementCache.getRender().getSource()));
+      } else if (elementCache.getRender().getFormat() == VideoFormat.VIMEO) {
+        //TODO Return vimeo fragment
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            YoutubeFragment.newInstance(elementCache.getRender().getSource()));
       }
+    } else if (elementCache.getType() == ElementCacheType.WEBVIEW
+        && elementCache.getRender() != null) {
 
-      @Override public void onGetDetailFails(Exception e) {
-        getSectionViewGeneratorCallback.onSectionViewFails(e);
-      }
+      if (elementCache.getRender().getFederatedAuth() != null
+          && elementCache.getRender().getFederatedAuth().getKeys() != null
+          && elementCache.getRender().getFederatedAuth().getKeys().getSiteName() != null
+          && elementCache.getRender().getFederatedAuth().isActive()) {
 
-      @Override public void onGetDetailNoAvailable(Exception e) {
-        getSectionViewGeneratorCallback.onSectionViewFails(e);
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            generateWebContentDataWithFederated(elementCache.getRender()));
+      } else {
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            generateWebContentData(elementCache.getRender().getUrl()));
       }
-    });
+    } else if (elementCache.getRender() != null) {
+      String contentUrl = elementCache.getRender().getContentUrl();
+      getSectionViewGeneratorCallback.onSectionViewLoaded(generateGridContentData(contentUrl, imagesToDownload, filter));
+    }
   }
 
   private UiGridBaseContentData generateWebContentData(String url) {

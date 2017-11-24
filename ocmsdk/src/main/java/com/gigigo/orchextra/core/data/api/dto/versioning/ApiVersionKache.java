@@ -5,7 +5,7 @@ import com.mskn73.kache.Kacheable;
 import com.mskn73.kache.annotations.KacheLife;
 import org.jetbrains.annotations.NotNull;
 
-@KacheLife(expiresTime = 1000 * 15) // 15 seconds
+@KacheLife(expiresTime = 1000 * 15) // seconds
 public class ApiVersionKache implements Kacheable {
 
   private String version;

@@ -1,15 +1,13 @@
 package com.gigigo.orchextra.core.domain;
 
-import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.entities.version.VersionData;
-import com.gigigo.orchextra.ocm.OCManagerCallbacks;
 
 public interface OcmController {
 
-  void getMenu(final GetMenusControllerCallback getMenusCallback);
+  void getMenu(boolean forceUpdate, final GetMenusControllerCallback getMenusCallback);
 
   void getSection(final String section, int imagesToDownload,
       final GetSectionControllerCallback getSectionControllerCallback);

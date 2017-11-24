@@ -42,13 +42,9 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<ApiMenuContentData> getMenuEntity() {
-    //ocmApiService.getVersionDataRx()
-    //    .map(apiVersionResponse -> new ApiVersionKache(apiVersionResponse.getData()))
-    //    .filter(apiVersionKache -> apiVersionKache != null)
-    //    .doOnNext(ocmCache::putVersion);
-
     return ocmApiService.getMenuDataRx()
         .map(BaseApiResponse::getResult)
+        .doOnNext(apiMenuContentData -> apiMenuContentData.setFromCloud(true))
         .doOnNext(ocmCache::putMenus);
   }
 

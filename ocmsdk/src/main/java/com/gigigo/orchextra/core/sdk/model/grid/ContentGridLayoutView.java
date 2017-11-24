@@ -37,7 +37,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
           if (presenter != null) {
-            presenter.loadSection();
+            presenter.loadSection(true);
           }
         }
 
@@ -260,7 +260,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
   @Override public void reloadSection() {
     if (presenter != null) {
-      presenter.loadSectionWithFilter(section, emotion);
+      presenter.loadSection(section, emotion);
     }
   }
 

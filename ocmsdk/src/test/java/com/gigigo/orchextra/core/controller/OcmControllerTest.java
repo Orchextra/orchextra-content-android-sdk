@@ -69,7 +69,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   }
 
   @Test public void testGetSection() {
-    ocmController.getSection(FAKE_SECTION, FAKE_IMAGES, null);
+    ocmController.getSection(forceReload, FAKE_SECTION, FAKE_IMAGES, null);
 
     verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class),
         any(PriorityScheduler.Priority.class));
@@ -77,7 +77,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   }
 
   @Test public void testGetMenus() {
-    ocmController.getMenu( null);
+    ocmController.getMenu(forceReload, null);
 
     verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class),
         any(PriorityScheduler.Priority.class));

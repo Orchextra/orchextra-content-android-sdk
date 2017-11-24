@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -35,9 +34,9 @@ import static org.mockito.Mockito.verify;
   }
 
   @Test public void testLoadSectionWithCacheAndAfterNetwork() {
-    presenter.loadSectionWithFilter(FAKE_ID, FAKE_FILTER);
+    presenter.loadSection(FAKE_ID, FAKE_FILTER);
 
-    verify(mockOcmController).getSection(anyString(), anyInt(),
+    verify(mockOcmController).getSection(forceReload, anyString(), anyInt(),
         any(OcmController.GetSectionControllerCallback.class));
   }
 }
