@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.domain.entities.elementcache;
 
-public enum ElementCacheType {
+import java.io.Serializable;
+
+public enum ElementCacheType implements Serializable {
   ARTICLE("article"),
   CARDS("cards"),
   VUFORIA("vuforia"),

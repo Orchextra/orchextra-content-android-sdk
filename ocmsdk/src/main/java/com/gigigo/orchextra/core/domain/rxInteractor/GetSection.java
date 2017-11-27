@@ -21,23 +21,23 @@ public class GetSection extends UseCase<ContentData, GetSection.Params> {
   }
 
   @Override Observable<ContentData> buildUseCaseObservable(Params params) {
-    return this.ocmRepository.getSectionElements(params.forceReload, params.section, params.imagesToDownload);
+    return this.ocmRepository.getSectionElements(params.forceReload, params.contentUrl, params.imagesToDownload);
   }
 
   public static final class Params {
 
     private final boolean forceReload;
-    private final String section;
+    private final String contentUrl;
     private final int imagesToDownload;
 
-    private Params(boolean forceReload, String section, int imagesToDownload) {
+    private Params(boolean forceReload, String contentUrl, int imagesToDownload) {
       this.forceReload = forceReload;
-      this.section = section;
+      this.contentUrl = contentUrl;
       this.imagesToDownload = imagesToDownload;
     }
 
-    public static Params forSection(boolean forceReload, String section, int imagestodownload) {
-      return new Params(forceReload, section, imagestodownload);
+    public static Params forSection(boolean forceReload, String contentUrl, int imagestodownload) {
+      return new Params(forceReload, contentUrl, imagestodownload);
     }
   }
 }

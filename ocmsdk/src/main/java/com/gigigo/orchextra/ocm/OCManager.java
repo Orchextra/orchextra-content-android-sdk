@@ -16,6 +16,7 @@ import com.gigigo.orchextra.OrchextraCompletionCallback;
 import com.gigigo.orchextra.OrchextraLogLevel;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.OcmController;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
@@ -33,7 +34,6 @@ import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
-import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -117,6 +117,22 @@ public final class OCManager {
   static void generateSectionView(String viewId, String filter, int imagesToDownload,
       final OCManagerCallbacks.Section sectionCallback) {
     instance.ocmViewGenerator.generateSectionView(viewId, filter, imagesToDownload,
+        new OcmViewGenerator.GetSectionViewGeneratorCallback() {
+          @Override public void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData) {
+            sectionCallback.onSectionLoaded(uiGridBaseContentData);
+          }
+
+          @Override public void onSectionViewFails(Exception e) {
+            sectionCallback.onSectionFails(e);
+          }
+        });
+  }
+
+
+
+  static void generateActionView(ElementCache elementCache,
+      final OCManagerCallbacks.Section sectionCallback) {
+    instance.ocmViewGenerator.generateActionView(elementCache,
         new OcmViewGenerator.GetSectionViewGeneratorCallback() {
           @Override public void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData) {
             sectionCallback.onSectionLoaded(uiGridBaseContentData);

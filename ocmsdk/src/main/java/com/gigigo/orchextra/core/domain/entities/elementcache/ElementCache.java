@@ -1,9 +1,10 @@
 package com.gigigo.orchextra.core.domain.entities.elementcache;
 
 import com.gigigo.orchextra.core.domain.entities.elements.ElementSegmentation;
+import java.io.Serializable;
 import java.util.List;
 
-public class ElementCache {
+public class ElementCache implements Serializable {
 
   private String slug;
   private ElementCacheType type;

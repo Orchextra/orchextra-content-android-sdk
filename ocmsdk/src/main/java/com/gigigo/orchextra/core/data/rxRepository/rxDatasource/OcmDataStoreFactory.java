@@ -4,7 +4,6 @@ import android.util.Log;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import orchextra.javax.inject.Inject;
-import orchextra.javax.inject.Named;
 import orchextra.javax.inject.Singleton;
 
 /**
