@@ -37,8 +37,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
           if (presenter != null) {
-            presenter.loadSection(true);
+            presenter.reloadAllSections();
           }
+          uiListedBaseContentData.showProgressView(false);
         }
 
         @Override public void onItemClicked(int position, View view) {
@@ -67,6 +68,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       newContentContainer.setVisibility(View.GONE);
       if (presenter != null) {
         presenter.loadSection();
+
       }
     }
   };

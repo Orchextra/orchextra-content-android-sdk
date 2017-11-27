@@ -77,7 +77,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   }
 
   @Test public void testGetMenus() {
-    ocmController.getMenu(forceReload, null);
+    ocmController.refreshAllContent(forceReload, null);
 
     verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class),
         any(PriorityScheduler.Priority.class));

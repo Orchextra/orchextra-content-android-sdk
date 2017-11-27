@@ -9,6 +9,7 @@ import com.gigigo.orchextra.core.data.rxException.ClearCacheException;
 import com.gigigo.orchextra.core.data.rxException.NetworkConnectionException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
@@ -24,9 +25,11 @@ import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.utils.DateUtils;
 import com.gigigo.orchextra.core.sdk.utils.OcmPreferences;
+import java.util.Map;
 
 public class OcmControllerImp implements OcmController {
 
+  private static GetMenusControllerCallback getMenusCallback;
   private final GetVersion getVersion;
   private final GetMenus getMenus;
   private final GetSection getSection;
@@ -35,8 +38,6 @@ public class OcmControllerImp implements OcmController {
   private final ClearCache clearCache;
   private final ConnectionUtils connectionUtils;
   private final OcmPreferences ocmPreferences;
-
-  private GetMenusControllerCallback getMenusCallback;
 
   public OcmControllerImp(GetVersion getVersion, GetMenus getMenus, GetSection getSection,
       GetDetail getDetail, SearchElements searchElements, ClearCache clearCache,
@@ -63,6 +64,35 @@ public class OcmControllerImp implements OcmController {
 
   //region menus
 
+  @Override public void refreshAllContent() {
+    if (getMenusCallback != null) {
+      checkVersionChangedAndRequestMenus(new GetMenusControllerCallback() {
+        @Override public void onGetMenusLoaded(MenuContentData menus) {
+          Map<String, ElementCache> elementsCache = menus.getElementsCache();
+          for (ElementCache elementCache : elementsCache.values()) {
+            if (elementCache != null
+                && elementCache.getRender() != null
+                && elementCache.getRender().getContentUrl() != null) {
+              getSection(elementCache.getRender().getContentUrl(), 0, new GetSectionControllerCallback() {
+                @Override public void onGetSectionLoaded(ContentData contentData) {
+                  getMenusCallback.onGetMenusLoaded(menus);
+                }
+
+                @Override public void onGetSectionFails(Exception e) {
+
+                }
+              });
+            }
+          }
+        }
+
+        @Override public void onGetMenusFails(Exception e) {
+
+        }
+      });
+    }
+  }
+
   /**
    * 1 - If Pull to refresh
    * 1.1 - Check version
@@ -78,8 +108,9 @@ public class OcmControllerImp implements OcmController {
    * 4.2 - Return data
    * 4.3 - App is which control menu changes
    */
-  @Override public void getMenu(boolean forceUpdate, GetMenusControllerCallback getMenusCallback) {
-    this.getMenusCallback = getMenusCallback;
+  @Override public void refreshAllContent(boolean forceUpdate,
+      GetMenusControllerCallback getMenusCallback) {
+    OcmControllerImp.getMenusCallback = getMenusCallback;
     if (forceUpdate) {
       checkVersionChangedAndRequestMenus(getMenusCallback);
     } else {

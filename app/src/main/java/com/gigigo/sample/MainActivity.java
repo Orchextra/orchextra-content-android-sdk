@@ -160,10 +160,12 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  private List<UiMenu> oldUiMenuList;
+
   private void getContent() {
     Ocm.getMenus(false, new OcmCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData oldUiMenuData) {
-        final List<UiMenu> oldUiMenuList = oldUiMenuData.getUiMenuList();
+        oldUiMenuList = oldUiMenuData.getUiMenuList();
 
         if (oldUiMenuList == null) {
           Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
@@ -181,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
               }
 
               checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
+              oldUiMenuList = newUiMenuList;
             }
 
             @Override public void onMenusFails(Throwable e) {

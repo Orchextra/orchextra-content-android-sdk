@@ -7,7 +7,9 @@ import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 
 public interface OcmController {
 
-  void getMenu(boolean forceUpdate, final GetMenusControllerCallback getMenusCallback);
+  void refreshAllContent();
+
+  void refreshAllContent(boolean forceUpdate, final GetMenusControllerCallback getMenusCallback);
 
   void getSection(final String section, int imagesToDownload,
       final GetSectionControllerCallback getSectionControllerCallback);

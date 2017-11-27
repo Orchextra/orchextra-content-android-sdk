@@ -356,4 +356,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   public void destroy() {
     ocmController.disposeUseCases();
   }
+
+  public void reloadAllSections() {
+    ocmController.refreshAllContent();
+  }
 }
