@@ -36,6 +36,8 @@ public class OcmControllerImp implements OcmController {
   private final ConnectionUtils connectionUtils;
   private final OcmPreferences ocmPreferences;
 
+  private GetMenusControllerCallback getMenusCallback;
+
   public OcmControllerImp(GetVersion getVersion, GetMenus getMenus, GetSection getSection,
       GetDetail getDetail, SearchElements searchElements, ClearCache clearCache,
       ConnectionUtils connectionUtils, OcmPreferences ocmPreferences) {
@@ -77,6 +79,7 @@ public class OcmControllerImp implements OcmController {
    * 4.3 - App is which control menu changes
    */
   @Override public void getMenu(boolean forceUpdate, GetMenusControllerCallback getMenusCallback) {
+    this.getMenusCallback = getMenusCallback;
     if (forceUpdate) {
       checkVersionChangedAndRequestMenus(getMenusCallback);
     } else {

@@ -219,9 +219,6 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onClick(View v) {
         newContentMainContainer.setVisibility(View.GONE);
 
-        adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        adapter.setDataItems(newMenus);
-
         tabLayout.removeAllTabs();
         onGoDetailView(newMenus);
       }

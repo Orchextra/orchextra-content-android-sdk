@@ -100,6 +100,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         || getView() == null) {
       return;
     }
+
     UpdateAtType updateAtType = checkDifferents(cachedContentData, newContentData);
     switch (updateAtType) {
       case NEW_CONTENT:
@@ -107,10 +108,12 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         hasToCheckNewContent = false;
         break;
       case REFRESH:
-        loadSection();
+        //loadSection();
+        getView().showNewExistingContent();
         hasToCheckNewContent = false;
         break;
     }
+
     getView().showProgressView(false);
   }
 

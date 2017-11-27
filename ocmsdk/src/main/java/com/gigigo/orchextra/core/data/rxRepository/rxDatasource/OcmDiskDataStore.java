@@ -25,7 +25,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<ApiMenuContentData> getMenuEntity() {
-    return ocmCache.getMenus();
+    return ocmCache.getMenus().doOnNext(apiMenuContentData -> apiMenuContentData.setFromCloud(false));
 }
 
   @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl, int numberOfElementsToDownload) {
