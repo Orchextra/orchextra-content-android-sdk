@@ -333,6 +333,7 @@ public class OcmControllerImp implements OcmController {
       getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
         @Override public void onGetVersionLoaded(VersionData versionData) {
           checkVersionAndExpiredAtAndRetrieveSection(versionData, contentData);
+          ocmPreferences.saveVersion(versionData.getVersion());
         }
 
         @Override public void onGetVersionFails(Exception e) {

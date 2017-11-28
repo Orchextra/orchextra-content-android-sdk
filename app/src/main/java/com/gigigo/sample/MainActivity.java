@@ -239,10 +239,10 @@ public class MainActivity extends AppCompatActivity {
         UiMenu menu = uiMenu.get(i);
         TabLayout.Tab tab = tabLayout.newTab().setText(menu.getText());
         tabLayout.addTab(tab);
-
-        adapter.setDataItems(uiMenu);
       }
     }
+
+    adapter.setDataItems(uiMenu);
 
     tabLayout.addOnTabSelectedListener(onTabSelectedListener);
   }
