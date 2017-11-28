@@ -133,20 +133,6 @@ public final class OCManager {
         });
   }
 
-  static void generateActionView(ElementCache elementCache,
-      final OCManagerCallbacks.Section sectionCallback) {
-    instance.ocmViewGenerator.generateActionView(elementCache,
-        new OcmViewGenerator.GetSectionViewGeneratorCallback() {
-          @Override public void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData) {
-            sectionCallback.onSectionLoaded(uiGridBaseContentData);
-          }
-
-          @Override public void onSectionViewFails(Exception e) {
-            sectionCallback.onSectionFails(e);
-          }
-        });
-  }
-
   public static void clearData(boolean images, boolean data,
       final OCManagerCallbacks.Clear clearCallback) {
     if (instance != null) {

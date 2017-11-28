@@ -2,7 +2,6 @@ package com.gigigo.sample;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import java.util.ArrayList;
@@ -22,8 +21,7 @@ public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
   @Override public Fragment getItem(int position) {
     UiMenu menu = menuContent.get(position);
-    ScreenSlidePageFragment screenSlidePageFragment =
-        ScreenSlidePageFragment.newInstance();
+    ScreenSlidePageFragment screenSlidePageFragment = ScreenSlidePageFragment.newInstance();
     screenSlidePageFragment.setItemMenu(menu);
     screenSlidePageFragment.setNumberOfImagesToDownload(getNumberOfImagesToDownload(position));
 
@@ -37,8 +35,7 @@ public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
   }
 
   public void setDataItems(List<UiMenu> menuContent) {
-    if (fm != null && !fm.isDestroyed() &&
-        menuContent != null && menuContent.size() > 0) {
+    if (fm != null && !fm.isDestroyed() && menuContent != null && menuContent.size() > 0) {
       fragments = new ArrayList<>(menuContent.size());
       this.menuContent = menuContent;
       notifyDataSetChanged();

@@ -231,18 +231,6 @@ public final class Ocm {
         });
   }
 
-  public static void generateActionView(ElementCache elementCache, OcmCallbacks.Section sectionCallbacks) {
-    OCManager.generateActionView(elementCache, new OCManagerCallbacks.Section() {
-      @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
-        sectionCallbacks.onSectionLoaded(uiGridBaseContentData);
-      }
-
-      @Override public void onSectionFails(Exception e) {
-        sectionCallbacks.onSectionFails(e);
-      }
-    });
-  }
-
   /**
    * Return a detail view which you have to add in your view. You have to specify the element url
    * to get the content.
