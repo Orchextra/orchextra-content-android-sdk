@@ -39,7 +39,7 @@ public class OcmNormalTextView extends TextFitTextView {
     if (injector != null) {
       OcmStyleUi styleUi = injector.provideOcmStyleUi();
       if (styleUi != null && !TextUtils.isEmpty(styleUi.getNormalFonPath())) {
-        this.setTypeface(FontCache.getFont(context, styleUi.getTitleFontPath()));
+        this.setTypeface(FontCache.getFont(context, styleUi.getNormalFonPath()));
       }
     }
   }

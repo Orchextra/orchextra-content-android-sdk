@@ -174,9 +174,9 @@ dependencies {
   implementation project.libraries.androidSupportDesign
   implementation project.libraries.androidCustomtabs
 
-  implementation project.libraries.playServicesBase
-  implementation project.libraries.playServicesLocation
-  implementation project.libraries.playServicesGcm
+  api project.libraries.playServicesBase
+  api project.libraries.playServicesLocation
+  api project.libraries.playServicesGcm
 
   //gigigo Lib
   implementation project.libraries.ggglib
@@ -232,14 +232,14 @@ dependencies {
   implementation project.libraries.autofitTextView
   implementation project.libraries.multipleGridRecyclerView
 
-  implementation project.libraries.rxAndroid
-  implementation project.libraries.rxJava
-  implementation project.libraries.rxRetrofit
-  implementation project.libraries.arrow
+  api project.libraries.rxAndroid
+  api project.libraries.rxJava
+  api project.libraries.rxRetrofit
+  api project.libraries.arrow
 
   implementation project.libraries.kache
 
-  api 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+  api project.libraries.gpuImage//4 readarticles
 
   api project(':vimeosdk')
 

@@ -39,7 +39,7 @@ public class OcmMediumTextView extends TextFitTextView {
     if (injector != null) {
       OcmStyleUi styleUi = injector.provideOcmStyleUi();
       if (styleUi != null && !TextUtils.isEmpty(styleUi.getMediumFontPath())) {
-        this.setTypeface(FontCache.getFont(context, styleUi.getTitleFontPath()));
+        this.setTypeface(FontCache.getFont(context, styleUi.getMediumFontPath()));
       }
     }
   }
