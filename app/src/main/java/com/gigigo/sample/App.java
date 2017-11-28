@@ -23,8 +23,8 @@ public class App extends MultiDexApplication {
   //public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
 
   //WOAH Debug
-  //public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
-  //public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
+  public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
+  public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
 
   //[UAT][CSE] - WOAH SITC STAGING
   //public static String API_KEY = "adfc8ba4340828a054bf061f692707a197af96cb";
@@ -148,8 +148,11 @@ public class App extends MultiDexApplication {
     Ocm.initialize(ocmBuilder);
 
     OcmStyleUiBuilder ocmStyleUiBuilder =
-        new OcmStyleUiBuilder().setTitleToolbarEnabled(true).setEnabledStatusBar(true);
-
+        new OcmStyleUiBuilder().setTitleFont("fonts/Gotham-Ultra.ttf")
+            .setNormalFont("fonts/Gotham-Book.ttf")
+            .setMediumFont("fonts/Gotham-Medium.ttf")
+            .setTitleToolbarEnabled(false)
+            .setEnabledStatusBar(false);
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
     Ocm.setBusinessUnit("es");

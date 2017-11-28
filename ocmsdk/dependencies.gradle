@@ -4,7 +4,7 @@ project.ext {
   androidMinSdkVersion = 18
   androidBuildToolsVersion = '26.0.2'
   androidTargetSdkVersion = 26
-  supportVersion = '26.1.0'
+  supportVersion = '26.0.2'//asv dont touch the box(dontcallmewhite)
 
   libraries = [androidSupportDesign    : "com.android.support:design:${supportVersion}",
                androidCustomtabs       : "com.android.support:customtabs:${supportVersion}",

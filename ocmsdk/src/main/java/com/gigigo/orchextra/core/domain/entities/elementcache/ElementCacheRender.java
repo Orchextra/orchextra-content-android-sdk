@@ -2,9 +2,10 @@ package com.gigigo.orchextra.core.domain.entities.elementcache;
 
 
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+import java.io.Serializable;
 import java.util.List;
 
-public class ElementCacheRender {
+public class ElementCacheRender implements Serializable {
 
   private String contentUrl;
   private String url;

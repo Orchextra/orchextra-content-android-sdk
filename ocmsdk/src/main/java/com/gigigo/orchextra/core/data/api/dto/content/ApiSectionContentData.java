@@ -2,7 +2,6 @@ package com.gigigo.orchextra.core.data.api.dto.content;
 
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.mskn73.kache.Kacheable;
-import com.mskn73.kache.annotations.KacheLife;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 

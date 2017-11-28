@@ -7,6 +7,7 @@ import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
@@ -106,6 +107,42 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     } else if (elementCache.getRender() != null) {
       String contentUrl = elementCache.getRender().getContentUrl();
       getSectionViewGeneratorCallback.onSectionViewLoaded(generateGridContentData(contentUrl, imagesToDownload, filter));
+    }
+  }
+
+  public void generateActionView(ElementCache elementCache, GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
+    if (elementCache.getType() == ElementCacheType.ARTICLE
+        && elementCache.getRender() != null
+        && elementCache.getRender().getElements() != null) {
+
+      getSectionViewGeneratorCallback.onSectionViewLoaded(
+          generateArticleDetailView(elementCache.getRender().getElements()));
+
+    } else if (elementCache.getType() == ElementCacheType.VIDEO
+        && elementCache.getRender() != null) {
+
+      if (elementCache.getRender().getFormat() == VideoFormat.YOUTUBE) {
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            YoutubeFragment.newInstance(elementCache.getRender().getSource()));
+      } else if (elementCache.getRender().getFormat() == VideoFormat.VIMEO) {
+        //TODO Return vimeo fragment
+        getSectionViewGeneratorCallback.onSectionViewLoaded(YoutubeFragment.newInstance(elementCache.getRender().getSource()));
+      }
+
+    } else if (elementCache.getType() == ElementCacheType.WEBVIEW
+        && elementCache.getRender() != null) {
+
+      if (elementCache.getRender().getFederatedAuth() != null
+          && elementCache.getRender().getFederatedAuth().getKeys() != null
+          && elementCache.getRender().getFederatedAuth().getKeys().getSiteName() != null
+          && elementCache.getRender().getFederatedAuth().isActive()) {
+
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            generateWebContentDataWithFederated(elementCache.getRender()));
+      } else {
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            generateWebContentData(elementCache.getRender().getUrl()));
+      }
     }
   }
 

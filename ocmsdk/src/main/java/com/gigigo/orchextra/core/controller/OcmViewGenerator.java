@@ -17,6 +17,8 @@ public interface OcmViewGenerator {
   void generateSectionView(UiMenu uiMenu, String filter, int imagesToDownload,
       GetSectionViewGeneratorCallback getSectionViewGeneratorCallback);
 
+  void generateActionView(ElementCache elementCache, GetSectionViewGeneratorCallback getSectionViewGeneratorCallback);
+
   UiDetailBaseContentData generateDetailView(String elementUrl);
 
   UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share);

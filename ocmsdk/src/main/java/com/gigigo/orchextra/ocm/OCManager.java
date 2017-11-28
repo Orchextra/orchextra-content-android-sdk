@@ -17,6 +17,7 @@ import com.gigigo.orchextra.OrchextraLogLevel;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
@@ -121,6 +122,20 @@ public final class OCManager {
   static void generateSectionView(UiMenu uiMenu, String filter, int imagesToDownload,
       final OCManagerCallbacks.Section sectionCallback) {
     instance.ocmViewGenerator.generateSectionView(uiMenu, filter, imagesToDownload,
+        new OcmViewGenerator.GetSectionViewGeneratorCallback() {
+          @Override public void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData) {
+            sectionCallback.onSectionLoaded(uiGridBaseContentData);
+          }
+
+          @Override public void onSectionViewFails(Exception e) {
+            sectionCallback.onSectionFails(e);
+          }
+        });
+  }
+
+  static void generateActionView(ElementCache elementCache,
+      final OCManagerCallbacks.Section sectionCallback) {
+    instance.ocmViewGenerator.generateActionView(elementCache,
         new OcmViewGenerator.GetSectionViewGeneratorCallback() {
           @Override public void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData) {
             sectionCallback.onSectionLoaded(uiGridBaseContentData);

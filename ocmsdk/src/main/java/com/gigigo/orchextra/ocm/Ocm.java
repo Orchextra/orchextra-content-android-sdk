@@ -7,6 +7,7 @@ import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
@@ -22,7 +23,6 @@ import gigigo.com.vimeolibs.VimeoCallback;
 import gigigo.com.vimeolibs.VimeoExoPlayerActivity;
 import gigigo.com.vimeolibs.VimeoInfo;
 import gigigo.com.vimeolibs.VimeoManager;
-import java.util.List;
 import java.util.Map;
 import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
@@ -229,6 +229,18 @@ public final class Ocm {
             sectionCallbacks.onSectionFails(e);
           }
         });
+  }
+
+  public static void generateActionView(ElementCache elementCache, OcmCallbacks.Section sectionCallbacks) {
+    OCManager.generateActionView(elementCache, new OCManagerCallbacks.Section() {
+      @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+        sectionCallbacks.onSectionLoaded(uiGridBaseContentData);
+      }
+
+      @Override public void onSectionFails(Exception e) {
+        sectionCallbacks.onSectionFails(e);
+      }
+    });
   }
 
   /**

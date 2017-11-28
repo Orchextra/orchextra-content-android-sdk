@@ -7,8 +7,8 @@ public final class UiMenu {
   private String text;
   private String elementUrl;
   private long updateAt;
-  private ElementCache elementCache;
   private String contentUrl;
+  private ElementCache elementCache;
 
   public String getSlug() {
     return slug;

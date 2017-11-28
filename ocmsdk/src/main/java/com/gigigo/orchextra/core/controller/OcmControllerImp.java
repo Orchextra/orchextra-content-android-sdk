@@ -58,16 +58,6 @@ public class OcmControllerImp implements OcmController {
     this.ocmPreferences = ocmPreferences;
   }
 
-  private String getSlug(String elementUrl) {
-    try {
-      return elementUrl.substring(elementUrl.lastIndexOf("/") + 1, elementUrl.length());
-    } catch (Exception ignored) {
-      return null;
-    }
-  }
-
-  //region menus
-
   /**
    * 1 - If Pull to refresh
    * 1.1 - Check version
@@ -123,12 +113,25 @@ public class OcmControllerImp implements OcmController {
 
   //end region
 
-  @Override public void getSection(final String section, int imagesToDownload,
+  @Override
+  public void getSection(final String contentUrl, int imagesToDownload,
       GetSectionControllerCallback getSectionControllerCallback) {
+    if (contentUrl != null) {
+      getSection.execute(new SectionObserver(getSectionControllerCallback, contentUrl, imagesToDownload),
+          GetSection.Params.forSection(false, contentUrl, imagesToDownload),
+          PriorityScheduler.Priority.HIGH);
+    } else {
+      getSectionControllerCallback.onGetSectionFails(
+          new ApiSectionNotFoundException("elementCache.getRender().getContentUrl() IS NULL"));
+    }
+  }
 
-    getSection.execute(new SectionObserver(getSectionControllerCallback, section, imagesToDownload),
-        GetSection.Params.forSection(false, section, imagesToDownload),
-        PriorityScheduler.Priority.HIGH);
+  private String getSlug(String elementUrl) {
+    try {
+      return elementUrl.substring(elementUrl.lastIndexOf("/") + 1, elementUrl.length());
+    } catch (Exception ignored) {
+      return null;
+    }
   }
 
   @Override public void getDetails(String elementUrl,
