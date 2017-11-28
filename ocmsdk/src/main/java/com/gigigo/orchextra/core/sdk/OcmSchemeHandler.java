@@ -8,6 +8,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
+import com.gigigo.orchextra.core.domain.entities.elements.ElementSegmentation;
 import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
@@ -103,9 +104,15 @@ public class OcmSchemeHandler {
     });
   }
 
-  private boolean elementRequiredUserToBeLogged(ElementCache elementCache) {
-    return elementCache.getSegmentation().getRequiredAuth().equals(RequiredAuthoritation.LOGGED)
-        && !authoritation.isAuthorizatedUser();
+  private boolean elementRequiredUserToBeLogged(ElementCache elementCache){
+    ElementSegmentation segmentation = elementCache.getSegmentation();
+
+    boolean loggedRequired = false;
+    if(segmentation!=null) {
+      loggedRequired = RequiredAuthoritation.LOGGED.equals(segmentation.getRequiredAuth());
+    }
+
+    return loggedRequired && !authoritation.isAuthorizatedUser();
   }
 
   public void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
