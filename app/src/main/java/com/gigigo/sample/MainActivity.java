@@ -11,6 +11,7 @@ import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
+import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -69,6 +70,12 @@ public class MainActivity extends AppCompatActivity {
 
   @Override protected void onResume() {
     super.onResume();
+
+    Ocm.setOnChangedMenuCallback(new OnChangedMenuCallback() {
+      @Override public void onChangedMenu(UiMenuData uiMenuData) {
+        showIconNewContent(uiMenuData.getUiMenuList());
+      }
+    });
 
     //ReadedArticles
     //if (OCManager.getShowReadArticles() && adapter != null) {
@@ -160,12 +167,10 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  private List<UiMenu> oldUiMenuList;
-
   private void getContent() {
     Ocm.getMenus(false, new OcmCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData oldUiMenuData) {
-        oldUiMenuList = oldUiMenuData.getUiMenuList();
+        final List<UiMenu> oldUiMenuList = oldUiMenuData.getUiMenuList();
 
         if (oldUiMenuList == null) {
           Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
@@ -183,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
               }
 
               checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
-              oldUiMenuList = newUiMenuList;
             }
 
             @Override public void onMenusFails(Throwable e) {

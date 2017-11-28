@@ -357,7 +357,17 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     ocmController.disposeUseCases();
   }
 
+  /**
+   * When callback is not set, only do a section refresh.
+   *
+   * If callback is set, return the menu with a possible change.
+   * App must to refresh menus and sections.
+   */
   public void reloadAllSections() {
-    ocmController.refreshAllContent();
+    if (OCManager.hasOnChangedMenuCallback()) {
+      ocmController.refreshAllContent();
+    } else {
+      loadSection(true);
+    }
   }
 }

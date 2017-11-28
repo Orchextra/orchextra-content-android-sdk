@@ -8,6 +8,7 @@ import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
+import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -331,5 +332,9 @@ public final class Ocm {
 
   public static QueryStringGenerator getQueryStringGenerator() {
     return Ocm.queryStringGenerator;
+  }
+
+  public static void setOnChangedMenuCallback(OnChangedMenuCallback onChangedMenuCallback) {
+    OCManager.setOnChangedMenuCallback(onChangedMenuCallback);
   }
 }

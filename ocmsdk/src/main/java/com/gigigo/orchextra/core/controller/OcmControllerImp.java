@@ -11,6 +11,7 @@ import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
+import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.entities.version.VersionData;
@@ -25,11 +26,14 @@ import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.utils.DateUtils;
 import com.gigigo.orchextra.core.sdk.utils.OcmPreferences;
-import java.util.Map;
+import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
+import com.gigigo.orchextra.ocm.dto.UiMenuData;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OcmControllerImp implements OcmController {
 
-  private static GetMenusControllerCallback getMenusCallback;
   private final GetVersion getVersion;
   private final GetMenus getMenus;
   private final GetSection getSection;
@@ -64,35 +68,6 @@ public class OcmControllerImp implements OcmController {
 
   //region menus
 
-  @Override public void refreshAllContent() {
-    if (getMenusCallback != null) {
-      checkVersionChangedAndRequestMenus(new GetMenusControllerCallback() {
-        @Override public void onGetMenusLoaded(MenuContentData menus) {
-          Map<String, ElementCache> elementsCache = menus.getElementsCache();
-          for (ElementCache elementCache : elementsCache.values()) {
-            if (elementCache != null
-                && elementCache.getRender() != null
-                && elementCache.getRender().getContentUrl() != null) {
-              getSection(elementCache.getRender().getContentUrl(), 0, new GetSectionControllerCallback() {
-                @Override public void onGetSectionLoaded(ContentData contentData) {
-                  getMenusCallback.onGetMenusLoaded(menus);
-                }
-
-                @Override public void onGetSectionFails(Exception e) {
-
-                }
-              });
-            }
-          }
-        }
-
-        @Override public void onGetMenusFails(Exception e) {
-
-        }
-      });
-    }
-  }
-
   /**
    * 1 - If Pull to refresh
    * 1.1 - Check version
@@ -108,9 +83,7 @@ public class OcmControllerImp implements OcmController {
    * 4.2 - Return data
    * 4.3 - App is which control menu changes
    */
-  @Override public void refreshAllContent(boolean forceUpdate,
-      GetMenusControllerCallback getMenusCallback) {
-    OcmControllerImp.getMenusCallback = getMenusCallback;
+  @Override public void getMenu(boolean forceUpdate, GetMenusControllerCallback getMenusCallback) {
     if (forceUpdate) {
       checkVersionChangedAndRequestMenus(getMenusCallback);
     } else {
@@ -177,6 +150,42 @@ public class OcmControllerImp implements OcmController {
         ClearCache.Params.create(images, data), PriorityScheduler.Priority.LOW);
   }
 
+  @Override public void refreshAllContent() {
+    getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
+      @Override public void onGetVersionLoaded(VersionData versionData) {
+        checkIfNeedsRefreshMenuAndSectionsAndNotifyChanges(versionData);
+      }
+
+      @Override public void onGetVersionFails(Exception e) {
+      }
+    }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
+  }
+
+  private void checkIfNeedsRefreshMenuAndSectionsAndNotifyChanges(VersionData versionData) {
+    boolean forceReload = hasToForceReloadBecauseVersionChanged(versionData);
+    if (forceReload) {
+      retrieveMenus(true, new GetMenusControllerCallback() {
+        @Override public void onGetMenusLoaded(UiMenuData menus) {
+          for (UiMenu uiMenu : menus.getUiMenuList()) {
+            ElementCache elementCache = uiMenu.getElementCache();
+
+            if (elementCache != null
+                && elementCache.getRender() != null
+                && elementCache.getRender().getContentUrl() != null) {
+
+              getSection(elementCache.getRender().getContentUrl(), 0, null);
+            }
+          }
+
+          OCManager.notifyOnMenuChanged(menus);
+        }
+
+        @Override public void onGetMenusFails(Exception e) {
+        }
+      });
+    }
+  }
+
   @Override public void disposeUseCases() {
     getMenus.dispose();
     getSection.dispose();
@@ -192,6 +201,46 @@ public class OcmControllerImp implements OcmController {
     return !versionData.getVersion().equals(contentData.getVersion())
         || contentData.getExpiredAt() != null && DateUtils.isAfterCurrentDate(
         contentData.getExpiredAt());
+  }
+
+  private UiMenuData transformMenu(MenuContentData menuContentData) {
+
+    UiMenuData uiMenuData = new UiMenuData();
+
+    List<UiMenu> menuList = new ArrayList<>();
+
+    if (menuContentData != null
+        && menuContentData.getMenuContentList() != null
+        && menuContentData.getMenuContentList().size() > 0) {
+
+      uiMenuData.setFromCloud(menuContentData.isFromCloud());
+
+      for (Element element : menuContentData.getMenuContentList().get(0).getElements()) {
+        UiMenu uiMenu = new UiMenu();
+
+        uiMenu.setSlug(element.getSlug());
+        uiMenu.setText(element.getSectionView().getText());
+        uiMenu.setElementUrl(element.getElementUrl());
+
+        if (menuContentData.getElementsCache() != null) {
+          ElementCache elementCache =
+              menuContentData.getElementsCache().get(element.getElementUrl());
+          if (elementCache != null) {
+            uiMenu.setElementCache(elementCache);
+            uiMenu.setUpdateAt(elementCache.getUpdateAt());
+            if (elementCache.getRender() != null) {
+              uiMenu.setContentUrl(elementCache.getRender().getContentUrl());
+            }
+          }
+        }
+
+        menuList.add(uiMenu);
+      }
+    }
+
+    uiMenuData.setUiMenuList(menuList);
+
+    return uiMenuData;
   }
 
   //region observers
@@ -213,18 +262,22 @@ public class OcmControllerImp implements OcmController {
 
     @Override public void onNext(MenuContentData menuContentData) {
       if (menuContentData.isFromCloud()) {
-        getMenusCallback.onGetMenusLoaded(menuContentData);
+        retrieveMenu(menuContentData);
       } else {
         getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
           @Override public void onGetVersionLoaded(VersionData versionData) {
-            getMenusCallback.onGetMenusLoaded(menuContentData);
+            retrieveMenu(menuContentData);
           }
 
           @Override public void onGetVersionFails(Exception e) {
-            getMenusCallback.onGetMenusLoaded(menuContentData);
+            retrieveMenu(menuContentData);
           }
         }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
       }
+    }
+
+    private void retrieveMenu(MenuContentData menuContentData) {
+      getMenusCallback.onGetMenusLoaded(transformMenu(menuContentData));
     }
   }
 
@@ -276,7 +329,7 @@ public class OcmControllerImp implements OcmController {
     @Override public void onNext(ContentData contentData) {
       getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
         @Override public void onGetVersionLoaded(VersionData versionData) {
-          checkVersionAndExpiredAtAndRetrieveSecion(versionData, contentData);
+          checkVersionAndExpiredAtAndRetrieveSection(versionData, contentData);
         }
 
         @Override public void onGetVersionFails(Exception e) {
@@ -287,7 +340,7 @@ public class OcmControllerImp implements OcmController {
       }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
     }
 
-    private void checkVersionAndExpiredAtAndRetrieveSecion(VersionData versionData,
+    private void checkVersionAndExpiredAtAndRetrieveSection(VersionData versionData,
         ContentData contentData) {
       boolean requestFromCloud =
           hasToForceReloadBecauseVersionChangedOrSectionHasExpired(versionData, contentData);
@@ -357,6 +410,7 @@ public class OcmControllerImp implements OcmController {
       if (searchControllerCallback != null) searchControllerCallback.onSearchLoaded(contentData);
     }
   }
+  //end region
 
   private final class ClearCacheObserver extends DefaultObserver<Void> {
     private final ClearCacheCallback clearCacheCallback;
@@ -376,5 +430,4 @@ public class OcmControllerImp implements OcmController {
       e.printStackTrace();
     }
   }
-  //end region
 }

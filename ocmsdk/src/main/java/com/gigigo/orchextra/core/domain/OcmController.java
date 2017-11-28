@@ -4,12 +4,11 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.entities.version.VersionData;
+import com.gigigo.orchextra.ocm.dto.UiMenuData;
 
 public interface OcmController {
 
-  void refreshAllContent();
-
-  void refreshAllContent(boolean forceUpdate, final GetMenusControllerCallback getMenusCallback);
+  void getMenu(boolean forceUpdate, final GetMenusControllerCallback getMenusCallback);
 
   void getSection(final String section, int imagesToDownload,
       final GetSectionControllerCallback getSectionControllerCallback);
@@ -23,6 +22,8 @@ public interface OcmController {
 
   void disposeUseCases();
 
+  void refreshAllContent();
+
   // Callbacks
 
   interface GetVersionControllerCallback{
@@ -30,7 +31,7 @@ public interface OcmController {
     void onGetVersionFails(Exception e);
   }
   interface GetMenusControllerCallback {
-    void onGetMenusLoaded(MenuContentData menus);
+    void onGetMenusLoaded(UiMenuData menus);
 
     void onGetMenusFails(Exception e);
   }

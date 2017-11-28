@@ -55,55 +55,15 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
   @Override public void getMenu(boolean forceUpdate,
       final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
-    ocmController.refreshAllContent(forceUpdate, new OcmController.GetMenusControllerCallback() {
-      @Override public void onGetMenusLoaded(MenuContentData menus) {
-        getMenusViewGeneratorCallback.onGetMenusLoaded(transformMenu(menus));
+    ocmController.getMenu(forceUpdate, new OcmController.GetMenusControllerCallback() {
+      @Override public void onGetMenusLoaded(UiMenuData menus) {
+        getMenusViewGeneratorCallback.onGetMenusLoaded(menus);
       }
 
       @Override public void onGetMenusFails(Exception e) {
         getMenusViewGeneratorCallback.onGetMenusFails(new ApiMenuNotFoundException(e));
       }
     });
-  }
-
-  private UiMenuData transformMenu(MenuContentData menuContentData) {
-
-    UiMenuData uiMenuData = new UiMenuData();
-
-    List<UiMenu> menuList = new ArrayList<>();
-
-    if (menuContentData != null
-        && menuContentData.getMenuContentList() != null
-        && menuContentData.getMenuContentList().size() > 0) {
-
-      uiMenuData.setFromCloud(menuContentData.isFromCloud());
-
-      for (Element element : menuContentData.getMenuContentList().get(0).getElements()) {
-        UiMenu uiMenu = new UiMenu();
-
-        uiMenu.setSlug(element.getSlug());
-        uiMenu.setText(element.getSectionView().getText());
-        uiMenu.setElementUrl(element.getElementUrl());
-
-        if (menuContentData.getElementsCache() != null) {
-          ElementCache elementCache =
-              menuContentData.getElementsCache().get(element.getElementUrl());
-          if (elementCache != null) {
-            uiMenu.setElementCache(elementCache);
-            uiMenu.setUpdateAt(elementCache.getUpdateAt());
-            if (elementCache.getRender() != null) {
-              uiMenu.setContentUrl(elementCache.getRender().getContentUrl());
-            }
-          }
-        }
-
-        menuList.add(uiMenu);
-      }
-    }
-
-    uiMenuData.setUiMenuList(menuList);
-
-    return uiMenuData;
   }
 
   @Override

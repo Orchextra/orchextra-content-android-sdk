@@ -16,6 +16,7 @@ import com.gigigo.orchextra.OrchextraCompletionCallback;
 import com.gigigo.orchextra.OrchextraLogLevel;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.OcmController;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
@@ -30,6 +31,7 @@ import com.gigigo.orchextra.core.sdk.di.modules.OcmModule;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.device.bluetooth.beacons.BeaconBackgroundModeScan;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
+import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
@@ -70,6 +72,7 @@ public final class OCManager {
   private Map<String, String> localStorage;
   private OcmCredentialCallback ocmCredentialCallback;
   private OnCustomSchemeReceiver onCustomSchemeReceiver;
+  private OnChangedMenuCallback onChangedMenuCallback;
   private boolean isShowReadedArticles = false;
   private int maxReadArticles = 100;
 
@@ -604,13 +607,32 @@ public final class OCManager {
   }
 
   //public static int transform = -1;
-  com.bumptech.glide.load.Transformation<Bitmap> readArticlesBitmapTransform;
+  private com.bumptech.glide.load.Transformation<Bitmap> readArticlesBitmapTransform;
 
   public static com.bumptech.glide.load.Transformation<Bitmap> getBitmapTransformReadArticles() {
     if (getInstance() != null) {
       return getInstance().readArticlesBitmapTransform;
     } else {
       return null;
+    }
+  }
+
+  public static void setOnChangedMenuCallback(OnChangedMenuCallback onChangedMenuCallback) {
+    OCManager instance = getInstance();
+    if (instance != null) {
+      instance.onChangedMenuCallback = onChangedMenuCallback;
+    }
+  }
+
+  public static boolean hasOnChangedMenuCallback() {
+    OCManager instance = getInstance();
+    return instance != null && instance.onChangedMenuCallback != null;
+  }
+
+  public static void notifyOnMenuChanged(UiMenuData menus) {
+    OCManager instance = getInstance();
+    if (instance != null && instance.onChangedMenuCallback != null) {
+      instance.onChangedMenuCallback.onChangedMenu(menus);
     }
   }
 }
