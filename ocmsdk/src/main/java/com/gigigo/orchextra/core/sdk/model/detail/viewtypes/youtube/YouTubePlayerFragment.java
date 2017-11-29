@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube;
 
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -44,6 +46,24 @@ public class YouTubePlayerFragment extends YouTubePlayerSupportFragment {
       mPlayer.release();
     }
     super.onDestroyView();
+  }
+
+  @Override public void onSaveInstanceState(Bundle bundle) {
+    super.onSaveInstanceState(bundle);
+
+    /**
+     * https://stackoverflow.com/questions/44379747/youtube-android-player-api-throws-badparcelableexception-classnotfoundexception
+     * Disable view state saving to prevent saving states from youtube apk which cannot be restored.
+     * This solution does not remove YouTube player state from bundle so youtube player will be
+     * restored successfully.
+     */
+    View view = getView();
+    if (view instanceof ViewGroup) {
+      ViewGroup viewGroup = ((ViewGroup) view);
+      for (int i = 0; i < viewGroup.getChildCount(); i++) {
+        viewGroup.getChildAt(i).setSaveFromParentEnabled(false);
+      }
+    }
   }
 
   public YouTubePlayer getPlayer() {
