@@ -17,6 +17,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.OcmEvent;
 import java.lang.ref.WeakReference;
 
 public class OcmSchemeHandler {
@@ -131,32 +132,38 @@ public class OcmSchemeHandler {
 
     switch (type) {
       case VUFORIA:
+        OCManager.notifyEvent(OcmEvent.OPEN_IR);
         if (render != null) {
           processImageRecognitionAction();
         }
         break;
       case SCAN:
+        OCManager.notifyEvent(OcmEvent.OPEN_BARCODE);
         if (render != null) {
           processScanAction();
         }
         break;
       case WEBVIEW:
+        OCManager.notifyEvent(OcmEvent.VISIT_URL);
         if (render != null) {
           OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "");
         }
         break;
 
       case BROWSER:
+        OCManager.notifyEvent(OcmEvent.VISIT_URL);
         if (render != null) {
           processCustomTabs(render.getUrl(), render.getFederatedAuth());
         }
         break;
       case EXTERNAL_BROWSER:
+        OCManager.notifyEvent(OcmEvent.VISIT_URL);
         if (render != null) {
           processExternalBrowser(render.getUrl(), render.getFederatedAuth());
         }
         break;
       case DEEP_LINK:
+        OCManager.notifyEvent(OcmEvent.VISIT_URL);
         if (render != null) {
           processDeepLink(render.getUri());
         }
@@ -186,8 +193,10 @@ public class OcmSchemeHandler {
     if (TextUtils.isEmpty(source) || format == VideoFormat.NONE) {
       return;
     } else if (format == VideoFormat.YOUTUBE) {
+      OCManager.notifyEvent(OcmEvent.PLAY_YOUTUBE);
       actionHandler.launchYoutubePlayer(source);
     } else if (format == VideoFormat.VIMEO) {
+      OCManager.notifyEvent(OcmEvent.PLAY_VIMEO);
       actionHandler.launchVimeoPlayer(source);
     }
   }
