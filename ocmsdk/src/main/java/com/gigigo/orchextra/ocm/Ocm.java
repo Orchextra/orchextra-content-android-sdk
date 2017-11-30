@@ -11,6 +11,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
+import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
@@ -336,5 +337,10 @@ public final class Ocm {
 
   public static void setOnChangedMenuCallback(OnChangedMenuCallback onChangedMenuCallback) {
     OCManager.setOnChangedMenuCallback(onChangedMenuCallback);
+  }
+
+  public static void setOnLoadDataContentSectionFinished(UiMenu uiMenu,
+      OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback) {
+    OCManager.setOnLoadDataContentSectionFinished(uiMenu, onLoadContentSectionFinishedCallback);
   }
 }

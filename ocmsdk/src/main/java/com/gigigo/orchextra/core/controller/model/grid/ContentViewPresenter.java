@@ -19,6 +19,7 @@ import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private final Authoritation authoritation;
   private final OcmController ocmController;
 
-  private String section;
+  private UiMenu uiMenu;
   private int imagesToDownload = 21;
   private String filter;
   private List<Cell> listedCellContentDataList;
@@ -49,26 +50,28 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   public void loadSection() {
     getView().showProgressView(true);
 
-    loadSection(false, section, filter);
+    loadSection(false, uiMenu, filter);
   }
 
-  public void loadSection(String section) {
-    loadSection(false, section, filter);
+  public void loadSection(UiMenu uiMenu) {
+    loadSection(false, uiMenu, filter);
   }
 
   public void loadSection(boolean forceReload) {
-    loadSection(forceReload, section, filter);
+    loadSection(forceReload, uiMenu, filter);
   }
 
-  public void loadSection(String section, String filter) {
-    loadSection(false, section, filter);
+  public void loadSection(UiMenu uiMenu, String filter) {
+    loadSection(false, uiMenu, filter);
   }
 
-  private void loadSection(boolean forceReload, String section, String filter) {
-    this.section = section;
+  private void loadSection(boolean forceReload, UiMenu uiMenu, String filter) {
+    this.uiMenu = uiMenu;
     this.filter = filter;
 
-    ocmController.getSection(section, imagesToDownload,
+    String contentUrl = uiMenu.getElementCache().getRender().getContentUrl();
+
+    ocmController.getSection(contentUrl, imagesToDownload,
         new OcmController.GetSectionControllerCallback() {
 
           @Override public void onGetSectionLoaded(ContentData contentData) {
@@ -82,6 +85,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
             }
 
             cachedContentData = contentData;
+
+            OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
           }
 
           @Override public void onGetSectionFails(Exception e) {

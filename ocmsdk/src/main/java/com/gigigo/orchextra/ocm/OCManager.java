@@ -35,6 +35,7 @@ import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
+import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
@@ -74,6 +75,8 @@ public final class OCManager {
   private OcmCredentialCallback ocmCredentialCallback;
   private OnCustomSchemeReceiver onCustomSchemeReceiver;
   private OnChangedMenuCallback onChangedMenuCallback;
+  private OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback;
+  private UiMenu uiMenuToNotifyWhenSectionIsLoaded;
   private boolean isShowReadedArticles = false;
   private int maxReadArticles = 100;
 
@@ -634,6 +637,27 @@ public final class OCManager {
     OCManager instance = getInstance();
     if (instance != null && instance.onChangedMenuCallback != null) {
       instance.onChangedMenuCallback.onChangedMenu(menus);
+    }
+  }
+
+  public static void setOnLoadDataContentSectionFinished(UiMenu uiMenu,
+      OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback) {
+
+    OCManager instance = getInstance();
+    if (instance != null && onLoadContentSectionFinishedCallback != null) {
+      instance.onLoadContentSectionFinishedCallback = onLoadContentSectionFinishedCallback;
+      instance.uiMenuToNotifyWhenSectionIsLoaded = uiMenu;
+    }
+  }
+
+  public static void notifyOnLoadDataContentSectionFinished(UiMenu menuToNotify) {
+    OCManager instance = getInstance();
+    if (instance != null
+        && instance.onChangedMenuCallback != null
+        && instance.uiMenuToNotifyWhenSectionIsLoaded != null)  {
+      if (instance.uiMenuToNotifyWhenSectionIsLoaded.equals(menuToNotify)) {
+        instance.onLoadContentSectionFinishedCallback.onLoadContentSectionFinished();
+      }
     }
   }
 }

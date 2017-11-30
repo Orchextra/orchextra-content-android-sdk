@@ -106,7 +106,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
       }
     } else if (elementCache.getRender() != null) {
       String contentUrl = elementCache.getRender().getContentUrl();
-      getSectionViewGeneratorCallback.onSectionViewLoaded(generateGridContentData(contentUrl, imagesToDownload, filter));
+      getSectionViewGeneratorCallback.onSectionViewLoaded(generateGridContentData(uiMenu, imagesToDownload, filter));
     }
   }
 
@@ -119,10 +119,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   }
 
   @NonNull
-  private UiGridBaseContentData generateGridContentData(String viewId, int imagesToDownload,
+  private UiGridBaseContentData generateGridContentData(UiMenu uiMenu, int imagesToDownload,
       String filter) {
     ContentGridLayoutView contentGridLayoutView = ContentGridLayoutView.newInstance();
-    contentGridLayoutView.setViewId(viewId, imagesToDownload);
+    contentGridLayoutView.setViewId(uiMenu, imagesToDownload);
     contentGridLayoutView.setEmotion(filter);
     return contentGridLayoutView;
   }

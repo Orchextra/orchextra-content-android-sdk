@@ -20,6 +20,7 @@ import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalVi
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -54,7 +55,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private Context context;
   private View retryButton;
   private View moreButton;
-  private String section;
+  private UiMenu uiMenu;
   private int imagesToDownload;
   private String emotion;
   private View emptyView;
@@ -134,16 +135,16 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     moreButton.setOnClickListener(onClickDiscoverMoreButtonListener);
   }
 
-  public void setViewId(String section, int imagesToDownload) {
-    this.section = section;
+  public void setViewId(UiMenu uiMenu, int imagesToDownload) {
+    this.uiMenu = uiMenu;
     this.imagesToDownload = imagesToDownload;
   }
 
   @Override public void initUi() {
-    if (section != null && presenter != null) {
+    if (uiMenu != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
       presenter.setImagesToDownload(imagesToDownload);
-      presenter.loadSection(section);
+      presenter.loadSection(uiMenu);
     }
   }
 
@@ -262,7 +263,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
   @Override public void reloadSection() {
     if (presenter != null) {
-      presenter.loadSection(section, emotion);
+      presenter.loadSection(uiMenu, emotion);
     }
   }
 
