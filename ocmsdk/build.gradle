@@ -107,7 +107,7 @@ android {
 
   //true to publish all flavour artifacts
   // publishNonDefault true
-  //defaultPublishConfig "ocmStaging"
+  defaultPublishConfig "ocmRelease"
   //defaultPublishConfig "ocmDebug"
   //defaultPublishConfig {"ocmRelease","ocmDebug","ocmStaging"}
 
@@ -124,11 +124,11 @@ jacocoAndroidUnitTestReport {
   excludes += ['**/BuildConfig*.*']
 }
 
-configurations {
-  ocmReleaseImplementation
-  ocmStagingImplementation
-  ocmDebugImplementation
-}
+//configurations {
+//  ocmReleaseImplementation
+//  ocmStagingImplementation
+//  ocmDebugImplementation
+//}
 
 if( android.productFlavors.size() > 0 ) {
   android.libraryVariants.all { variant ->
@@ -171,16 +171,16 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar']) //youtube
 
   //google Support/CustomTabs/playServices
-  implementation project.libraries.androidSupportDesign
-  implementation project.libraries.androidCustomtabs
+  api project.libraries.androidSupportDesign
+  api project.libraries.androidCustomtabs
 
-  implementation project.libraries.playServicesBase
-  implementation project.libraries.playServicesLocation
-  implementation project.libraries.playServicesGcm
+  api project.libraries.playServicesBase
+  api project.libraries.playServicesLocation
+  api project.libraries.playServicesGcm
 
   //gigigo Lib
-  implementation project.libraries.ggglib
-  implementation project.libraries.gggJavaLib
+  api project.libraries.ggglib
+  api project.libraries.gggJavaLib
 
   //Dagger
   implementation project.libraries.dagger
@@ -212,7 +212,7 @@ dependencies {
      exclude module: 'support-v4'
    }
  */
-
+/*asv old compiles ox gradle 2.3.3
   stagingApi(project.libraries.orchextrasdkStaging) {
     transitive = true
     exclude module: 'support-v4'
@@ -221,25 +221,29 @@ dependencies {
     transitive = true
     exclude module: 'support-v4'
   }
-  releaseApi(project.libraries.orchextrasdkRelease) {
+  api(project.libraries.orchextrasdkRelease) {
     transitive = true
     exclude module: 'support-v4'
-  }
-
+    exclude group:'com.google.dagger', module:'dagger'
+    exclude group:'javax.inject'
+  }*/
+//asv new ox with gradle 3.0.0
+  api(project.libraries.orchextrasdkReleaseGradle3)
+  //api('com.github.Orchextra.orchextra-android-sdk:orchextrasdk-control:525Test')
 
   //customs Views
-  implementation project.libraries.doubleViewPager
-  implementation project.libraries.autofitTextView
-  implementation project.libraries.multipleGridRecyclerView
+  api project.libraries.doubleViewPager
+  api project.libraries.autofitTextView
+  api project.libraries.multipleGridRecyclerView
 
-  implementation project.libraries.rxAndroid
-  implementation project.libraries.rxJava
-  implementation project.libraries.rxRetrofit
-  implementation project.libraries.arrow
+  api project.libraries.rxAndroid
+  api project.libraries.rxJava
+  api project.libraries.rxRetrofit
+  api project.libraries.arrow
 
-  implementation project.libraries.kache
+  api project.libraries.kache
 
-  api 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+  api project.libraries.gpuImage
 
   api project(':vimeosdk')
 
