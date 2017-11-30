@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.Ocm;
@@ -23,11 +26,11 @@ public class ScreenSlidePageFragment extends Fragment {
   private View errorViewLayout;
   private UiGridBaseContentData contentView;
 
-  public static ScreenSlidePageFragment newInstance(String section, int imagesToDownload) {
+  public static ScreenSlidePageFragment newInstance(ElementCache elementCache, int imagesToDownload) {
     ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
 
     Bundle args = new Bundle();
-    args.putString(EXTRA_SCREEN_SLIDE_SECTION, section);
+    args.putSerializable(EXTRA_SCREEN_SLIDE_SECTION, elementCache);
     args.putInt(EXTRA_IMAGES_TO_DOWNLOAD, imagesToDownload);
     fragment.setArguments(args);
 
@@ -51,19 +54,45 @@ public class ScreenSlidePageFragment extends Fragment {
 
   private void loadArguments() {
     if (arguments != null) {
-      String section = arguments.getString(EXTRA_SCREEN_SLIDE_SECTION);
+      ElementCache section = (ElementCache) arguments.getSerializable(EXTRA_SCREEN_SLIDE_SECTION);
       int imagesToDownload = arguments.getInt(EXTRA_IMAGES_TO_DOWNLOAD);
 
-      Ocm.generateSectionView(section, null, imagesToDownload, new OcmCallbacks.Section() {
-        @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+      if (section.getType().equals(ElementCacheType.GO_CONTENT)) {
+        generateSectionView(section, imagesToDownload);
+      } else {
+        generateActionView(section);
+      }
+    }
+  }
+
+  public void generateActionView(ElementCache section) {
+    Ocm.generateActionView(section, new OcmCallbacks.Section() {
+      @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+        if (getView() != null) {
           setView(uiGridBaseContentData);
         }
+      }
 
-        @Override public void onSectionFails(Exception e) {
-          e.printStackTrace();
-        }
-      });
-    }
+      @Override public void onSectionFails(Exception e) {
+        Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_LONG).show();
+      }
+    });
+  }
+
+  public void generateSectionView(ElementCache section, int imagesToDownload) {
+      if (section.getRender() != null) {
+        Ocm.generateSectionView(section.getRender().getContentUrl(), null, imagesToDownload, new OcmCallbacks.Section() {
+          @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+            setView(uiGridBaseContentData);
+          }
+
+          @Override public void onSectionFails(Exception e) {
+            Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_LONG).show();
+          }
+        });
+      } else {
+        Toast.makeText(getActivity(),"Section is null",Toast.LENGTH_LONG).show();
+      }
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

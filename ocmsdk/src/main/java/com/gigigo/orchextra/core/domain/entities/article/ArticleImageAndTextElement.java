@@ -1,9 +1,10 @@
 package com.gigigo.orchextra.core.domain.entities.article;
 
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+import java.io.Serializable;
 import java.util.List;
 
-public class ArticleImageAndTextElement extends ArticleElement {
+public class ArticleImageAndTextElement extends ArticleElement implements Serializable {
 
   private String text;
   private String imageUrl;

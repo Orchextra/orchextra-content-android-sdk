@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.domain.entities.article.base;
 
-public enum ArticleButtonSize {
+import java.io.Serializable;
+
+public enum ArticleButtonSize implements Serializable {
   BIG("big"),
   MEDIUM("medium"),
   SMALL("small");

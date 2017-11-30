@@ -1,8 +1,9 @@
 package com.gigigo.orchextra.core.domain.entities.article;
 
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+import java.io.Serializable;
 
-public class ArticleYoutubeVideoElement extends ArticleElement {
+public class ArticleYoutubeVideoElement extends ArticleElement implements Serializable {
 
   private String source;
 
