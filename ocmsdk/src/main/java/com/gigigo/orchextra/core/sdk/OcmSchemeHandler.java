@@ -132,45 +132,45 @@ public class OcmSchemeHandler {
 
     switch (type) {
       case VUFORIA:
-        OCManager.notifyEvent(OcmEvent.OPEN_IR);
+        OCManager.notifyEvent(OcmEvent.OPEN_IR, cachedElement);
         if (render != null) {
           processImageRecognitionAction();
         }
         break;
       case SCAN:
-        OCManager.notifyEvent(OcmEvent.OPEN_BARCODE);
+        OCManager.notifyEvent(OcmEvent.OPEN_BARCODE, cachedElement);
         if (render != null) {
           processScanAction();
         }
         break;
       case WEBVIEW:
-        OCManager.notifyEvent(OcmEvent.VISIT_URL);
+        OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
           OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "");
         }
         break;
 
       case BROWSER:
-        OCManager.notifyEvent(OcmEvent.VISIT_URL);
+        OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
           processCustomTabs(render.getUrl(), render.getFederatedAuth());
         }
         break;
       case EXTERNAL_BROWSER:
-        OCManager.notifyEvent(OcmEvent.VISIT_URL);
+        OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
           processExternalBrowser(render.getUrl(), render.getFederatedAuth());
         }
         break;
       case DEEP_LINK:
-        OCManager.notifyEvent(OcmEvent.VISIT_URL);
+        OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
           processDeepLink(render.getUri());
         }
         break;
       case VIDEO:
         if (render != null) {
-          processVideo(render.getFormat(), render.getSource());
+          processVideo(render.getFormat(), render.getSource(), cachedElement);
         }
         break;
       default:
@@ -189,14 +189,14 @@ public class OcmSchemeHandler {
     openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen, imageView);
   }
 
-  private void processVideo(VideoFormat format, String source) {
+  private void processVideo(VideoFormat format, String source, ElementCache cachedElement) {
     if (TextUtils.isEmpty(source) || format == VideoFormat.NONE) {
       return;
     } else if (format == VideoFormat.YOUTUBE) {
-      OCManager.notifyEvent(OcmEvent.PLAY_YOUTUBE);
+      OCManager.notifyEvent(OcmEvent.PLAY_YOUTUBE, cachedElement);
       actionHandler.launchYoutubePlayer(source);
     } else if (format == VideoFormat.VIMEO) {
-      OCManager.notifyEvent(OcmEvent.PLAY_VIMEO);
+      OCManager.notifyEvent(OcmEvent.PLAY_VIMEO, cachedElement);
       actionHandler.launchVimeoPlayer(source);
     }
   }
