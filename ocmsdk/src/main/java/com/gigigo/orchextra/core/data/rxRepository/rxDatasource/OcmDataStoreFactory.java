@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
 import android.util.Log;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
+import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
@@ -17,13 +18,15 @@ import orchextra.javax.inject.Singleton;
   private final OcmCloudDataStore cloudDataStore;
   private final OcmDiskDataStore diskDataStore;
   private final ConnectionUtils connectionUtils;
+  private final OxSession session;
 
   @Inject
   public OcmDataStoreFactory(OcmCloudDataStore cloudDataStore, OcmDiskDataStore diskDataStore,
-      ConnectionUtils connectionUtils) {
+      ConnectionUtils connectionUtils, OxSession session) {
     this.cloudDataStore = cloudDataStore;
     this.diskDataStore = diskDataStore;
     this.connectionUtils = connectionUtils;
+    this.session = session;
   }
 
   public OcmDataStore getDataStoreForMenus(boolean force) {
@@ -101,6 +104,10 @@ import orchextra.javax.inject.Singleton;
   }
 
   public OcmDataStore getDataStoreForVersion() {
+    if (session.getAccessToken() != null) {
+      return getDiskDataStore();
+    }
+
     OcmCache ocmCache = diskDataStore.getOcmCache();
 
     if (ocmCache.isVersionCached() && !ocmCache.isVersionExpired()) {
