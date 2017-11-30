@@ -104,7 +104,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   public OcmDataStore getDataStoreForVersion() {
-    if (session.getAccessToken() != null) {
+    if (session.getToken() == null) {
       return getDiskDataStore();
     }
 
