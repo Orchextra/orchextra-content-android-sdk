@@ -112,6 +112,10 @@ public final class OCManager {
       instance.ocmViewGenerator.getMenu(forceUpdate,
           new OcmViewGenerator.GetMenusViewGeneratorCallback() {
             @Override public void onGetMenusLoaded(UiMenuData menus) {
+              if (menus != null && menus.getUiMenuList() != null && menus.getUiMenuList().size() > 0) {
+                instance.uiMenuToNotifyWhenSectionIsLoaded = menus.getUiMenuList().get(0);
+              }
+
               menusCallback.onMenusLoaded(menus);
             }
 
@@ -379,7 +383,7 @@ public final class OCManager {
     app.registerActivityLifecycleCallbacks(ocmSdkLifecycle);
   }
 
-  static OrchextraCompletionCallback mOrchextraCompletionCallback =
+  private static OrchextraCompletionCallback mOrchextraCompletionCallback =
       new OrchextraCompletionCallback() {
         @Override public void onSuccess() {
           Log.d("WOAH", "Orchextra initialized successfully");
@@ -640,20 +644,17 @@ public final class OCManager {
     }
   }
 
-  public static void setOnLoadDataContentSectionFinished(UiMenu uiMenu,
-      OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback) {
-
+  public static void setOnLoadDataContentSectionFinished(OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback) {
     OCManager instance = getInstance();
     if (instance != null && onLoadContentSectionFinishedCallback != null) {
       instance.onLoadContentSectionFinishedCallback = onLoadContentSectionFinishedCallback;
-      instance.uiMenuToNotifyWhenSectionIsLoaded = uiMenu;
     }
   }
 
   public static void notifyOnLoadDataContentSectionFinished(UiMenu menuToNotify) {
     OCManager instance = getInstance();
     if (instance != null
-        && instance.onChangedMenuCallback != null
+        && instance.onLoadContentSectionFinishedCallback != null
         && instance.uiMenuToNotifyWhenSectionIsLoaded != null)  {
       if (instance.uiMenuToNotifyWhenSectionIsLoaded.equals(menuToNotify)) {
         instance.onLoadContentSectionFinishedCallback.onLoadContentSectionFinished();

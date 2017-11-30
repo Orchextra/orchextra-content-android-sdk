@@ -13,6 +13,7 @@ import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
+import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
           Toast.LENGTH_SHORT).show();
     }
   };
+
 
   public static boolean deleteDir(File dir) {
     if (dir != null && dir.isDirectory()) {
@@ -166,11 +168,37 @@ public class MainActivity extends AppCompatActivity {
       }
     }
   }
+  private List<UiMenu> oldUiMenuList;
 
   private void getContent() {
+    Ocm.setOnLoadDataContentSectionFinished(
+        new OnLoadContentSectionFinishedCallback() {
+          @Override public void onLoadContentSectionFinished() {
+            Toast.makeText(MainActivity.this, "LLega", Toast.LENGTH_LONG).show();
+
+            //if (!oldUiMenuData.isFromCloud()) {
+              Ocm.getMenus(true, new OcmCallbacks.Menus() {
+                @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
+                  List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
+                  if (newUiMenuList == null) {
+                    return;
+                  }
+
+                  checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
+                  oldUiMenuList = newUiMenuList;
+                }
+
+                @Override public void onMenusFails(Throwable e) {
+
+                }
+              });
+            //}
+          }
+        });
+
     Ocm.getMenus(false, new OcmCallbacks.Menus() {
-      @Override public void onMenusLoaded(UiMenuData oldUiMenuData) {
-        final List<UiMenu> oldUiMenuList = oldUiMenuData.getUiMenuList();
+      @Override public void onMenusLoaded(final UiMenuData oldUiMenuData) {
+        oldUiMenuList = oldUiMenuData.getUiMenuList();
 
         if (oldUiMenuList == null) {
           Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
@@ -178,23 +206,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         onGoDetailView(oldUiMenuList);
-
-        if (!oldUiMenuData.isFromCloud()) {
-          Ocm.getMenus(true, new OcmCallbacks.Menus() {
-            @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
-              List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
-              if (newUiMenuList == null) {
-                return;
-              }
-
-              checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
-            }
-
-            @Override public void onMenusFails(Throwable e) {
-
-            }
-          });
-        }
       }
 
       @Override public void onMenusFails(Throwable e) {

@@ -34,6 +34,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeConte
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeFragment;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
+import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
@@ -79,6 +80,9 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
       getSectionViewGeneratorCallback.onSectionViewLoaded(
           generateArticleDetailView(elementCache.getRender().getElements()));
+
+      OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
+
     } else if (elementCache.getType() == ElementCacheType.VIDEO
         && elementCache.getRender() != null) {
 
@@ -90,6 +94,9 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         getSectionViewGeneratorCallback.onSectionViewLoaded(
             YoutubeFragment.newInstance(elementCache.getRender().getSource()));
       }
+
+      OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
+
     } else if (elementCache.getType() == ElementCacheType.WEBVIEW
         && elementCache.getRender() != null) {
 
@@ -104,8 +111,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         getSectionViewGeneratorCallback.onSectionViewLoaded(
             generateWebContentData(elementCache.getRender().getUrl()));
       }
+
+      OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
+
     } else if (elementCache.getRender() != null) {
-      String contentUrl = elementCache.getRender().getContentUrl();
       getSectionViewGeneratorCallback.onSectionViewLoaded(generateGridContentData(uiMenu, imagesToDownload, filter));
     }
   }

@@ -339,8 +339,8 @@ public final class Ocm {
     OCManager.setOnChangedMenuCallback(onChangedMenuCallback);
   }
 
-  public static void setOnLoadDataContentSectionFinished(UiMenu uiMenu,
+  public static void setOnLoadDataContentSectionFinished(
       OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback) {
-    OCManager.setOnLoadDataContentSectionFinished(uiMenu, onLoadContentSectionFinishedCallback);
+    OCManager.setOnLoadDataContentSectionFinished(onLoadContentSectionFinishedCallback);
   }
 }
