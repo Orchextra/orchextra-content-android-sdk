@@ -3,11 +3,8 @@ package com.gigigo.orchextra.ocm;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.gigigo.orchextra.CrmUser;
-import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
@@ -15,10 +12,10 @@ import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
-import com.gigigo.orchextra.ocm.dto.UiVersionData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
+import com.gigigo.orchextra.wrapper.CrmUser;
 import gigigo.com.vimeolibs.VimeoBuilder;
 import gigigo.com.vimeolibs.VimeoCallback;
 import gigigo.com.vimeolibs.VimeoExoPlayerActivity;
@@ -83,7 +80,7 @@ public final class Ocm {
     if (!IsCredentialsChanged) {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
           ocmBuilder.getOxSenderId());
-      Orchextra.start();
+      start();
     }
   }
 

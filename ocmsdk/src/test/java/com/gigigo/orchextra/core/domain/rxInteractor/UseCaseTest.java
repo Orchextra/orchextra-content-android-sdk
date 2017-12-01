@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.core.domain.rxInteractor;
 
 import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
-import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
 import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.TestScheduler;
@@ -14,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class) public class UseCaseTest {

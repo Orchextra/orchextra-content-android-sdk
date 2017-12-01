@@ -1,14 +1,10 @@
 package com.gigigo.orchextra.core.data.api.services;
 
-import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
-import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionResponse;
 import io.reactivex.Observable;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;

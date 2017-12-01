@@ -1,9 +1,6 @@
 package com.gigigo.orchextra.core.domain.rxRepository;
 
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
-import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.entities.version.VersionData;

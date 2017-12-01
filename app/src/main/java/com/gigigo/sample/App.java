@@ -10,8 +10,9 @@ import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
-//import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
 import com.squareup.leakcanary.LeakCanary;
+
+//import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
 
 public class App extends MultiDexApplication {
 

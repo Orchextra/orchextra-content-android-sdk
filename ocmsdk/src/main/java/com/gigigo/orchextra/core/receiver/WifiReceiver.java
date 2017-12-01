@@ -4,24 +4,12 @@ package com.gigigo.orchextra.core.receiver;
  * Created by francisco.hernandez on 12/6/17.
  */
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
-import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
-import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
-import com.gigigo.orchextra.core.sdk.di.injector.Injector;
-import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocmsdk.R;
-import orchextra.javax.inject.Inject;
 
 /**
  * Receives wifi changes and creates a notification when wifi connects to a network,

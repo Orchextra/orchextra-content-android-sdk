@@ -231,6 +231,7 @@ dependencies {
   implementation project.libraries.doubleViewPager
   implementation project.libraries.autofitTextView
   implementation project.libraries.multipleGridRecyclerView
+  implementation project.libraries.loggingInterceptor
 
   implementation project.libraries.rxAndroid
   implementation project.libraries.rxJava
