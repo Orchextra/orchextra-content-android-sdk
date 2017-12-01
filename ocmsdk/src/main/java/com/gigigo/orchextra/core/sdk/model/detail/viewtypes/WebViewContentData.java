@@ -246,6 +246,9 @@ public class WebViewContentData extends UiGridBaseContentData {
     webView.getSettings().setBuiltInZoomControls(true);
     webView.getSettings().setDisplayZoomControls(true);
 
+    //asv this is for play sound in some promos(guille)
+    webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
+
     this.getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
     this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
   }
