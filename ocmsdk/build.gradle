@@ -212,7 +212,7 @@ dependencies {
      exclude module: 'support-v4'
    }
  */
-/*asv old compiles ox gradle 2.3.3
+/*asv old compiles ox gradle 2.3.3*/
   stagingApi(project.libraries.orchextrasdkStaging) {
     transitive = true
     exclude module: 'support-v4'
@@ -226,9 +226,9 @@ dependencies {
     exclude module: 'support-v4'
     exclude group:'com.google.dagger', module:'dagger'
     exclude group:'javax.inject'
-  }*/
+  }
 //asv new ox with gradle 3.0.0
-  api(project.libraries.orchextrasdkReleaseGradle3)
+
   //api('com.github.Orchextra.orchextra-android-sdk:orchextrasdk-control:525Test')
 
   //customs Views
