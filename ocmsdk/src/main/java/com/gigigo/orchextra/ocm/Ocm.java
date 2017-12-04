@@ -7,7 +7,7 @@ import com.gigigo.orchextra.CrmUser;
 import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuRequest;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
@@ -15,7 +15,6 @@ import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
-import com.gigigo.orchextra.ocm.dto.UiVersionData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
@@ -181,8 +180,8 @@ public final class Ocm {
   /**
    * Get the app menus
    */
-  public static void getMenus(boolean forceUpdate, OcmCallbacks.Menus menusCallback) {
-    OCManager.getMenus(forceUpdate, new OCManagerCallbacks.Menus() {
+  public static void getMenus(MenuRequest menuRequest, OcmCallbacks.Menus menusCallback) {
+    OCManager.getMenus(menuRequest, new OCManagerCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData menus) {
         menusCallback.onMenusLoaded(menus);
       }

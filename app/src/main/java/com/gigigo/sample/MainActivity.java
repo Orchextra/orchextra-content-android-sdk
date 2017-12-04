@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 import com.gigigo.orchextra.Orchextra;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuRequest;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
@@ -177,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "LLega", Toast.LENGTH_LONG).show();
 
             //if (!oldUiMenuData.isFromCloud()) {
-              Ocm.getMenus(true, new OcmCallbacks.Menus() {
+              Ocm.getMenus(MenuRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
                 @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
                   List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
                   if (newUiMenuList == null) {
@@ -196,8 +197,30 @@ public class MainActivity extends AppCompatActivity {
           }
         });
 
-    Ocm.getMenus(false, new OcmCallbacks.Menus() {
+    Ocm.getMenus(MenuRequest.ONLY_CACHE, new OcmCallbacks.Menus() {
       @Override public void onMenusLoaded(final UiMenuData oldUiMenuData) {
+        if (oldUiMenuData == null) {
+          Ocm.getMenus(MenuRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
+            @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
+              if (oldUiMenuList == null) {
+                onGoDetailView(newUiMenuData.getUiMenuList());
+                return;
+              }
+
+              List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
+              if (newUiMenuList == null) {
+                return;
+              }
+
+              checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
+              oldUiMenuList = newUiMenuList;
+            }
+
+            @Override public void onMenusFails(Throwable e) {
+
+            }
+          });
+        }  else {
         oldUiMenuList = oldUiMenuData.getUiMenuList();
 
         if (oldUiMenuList == null) {
@@ -206,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         onGoDetailView(oldUiMenuList);
+        }
       }
 
       @Override public void onMenusFails(Throwable e) {

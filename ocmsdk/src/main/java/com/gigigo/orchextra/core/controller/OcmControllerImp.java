@@ -14,6 +14,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuRequest;
 import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
@@ -73,12 +74,38 @@ public class OcmControllerImp implements OcmController {
    * 4.2 - Return data
    * 4.3 - App is which control menu changes
    */
-  @Override public void getMenu(boolean forceUpdate, GetMenusControllerCallback getMenusCallback) {
-    if (forceUpdate) {
-      checkVersionChangedAndRequestMenus(getMenusCallback);
-    } else {
-      retrieveMenus(false, getMenusCallback);
+  @Override public void getMenu(MenuRequest menuRequest, GetMenusControllerCallback getMenusCallback) {
+    switch (menuRequest) {
+      case ONLY_CACHE:
+        retrieveMenusOnlyFromCache(getMenusCallback);
+        break;
+      case FORCE_CLOUD:
+        checkVersionChangedAndRequestMenus(getMenusCallback);
+        break;
+      case FIRST_CACHE:
+        retrieveMenus(false, getMenusCallback);
+        break;
     }
+  }
+
+  private void retrieveMenusOnlyFromCache(GetMenusControllerCallback getMenusCallback) {
+    retrieveMenus(new MenuObserver(new GetMenusControllerCallback() {
+      @Override public void onGetMenusLoaded(UiMenuData menus) {
+        if (!menus.isFromCloud()) {
+          getMenusCallback.onGetMenusLoaded(menus);
+        } else {
+          getMenusCallback.onGetMenusLoaded(null);
+        }
+      }
+
+      @Override public void onGetMenusFails(Exception e) {
+        getMenusCallback.onGetMenusLoaded(null);
+      }
+    }), GetMenus.Params.forForceReload(false));
+  }
+
+  private void retrieveMenus(MenuObserver observer, GetMenus.Params params) {
+    getMenus.execute(observer, params, PriorityScheduler.Priority.HIGH);
   }
 
   private void checkVersionChangedAndRequestMenus(GetMenusControllerCallback getMenusCallback) {
@@ -95,8 +122,8 @@ public class OcmControllerImp implements OcmController {
   }
 
   private void retrieveMenus(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
-    getMenus.execute(new MenuObserver(getMenusCallback),
-        GetMenus.Params.forForceReload(forceReload), PriorityScheduler.Priority.HIGH);
+    retrieveMenus(new MenuObserver(getMenusCallback),
+        GetMenus.Params.forForceReload(forceReload));
   }
 
   private boolean hasToForceReloadBecauseVersionChanged(VersionData versionData) {

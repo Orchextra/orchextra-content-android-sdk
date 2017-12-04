@@ -86,7 +86,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
             cachedContentData = contentData;
 
-            OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
+              OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
           }
 
           @Override public void onGetSectionFails(Exception e) {
