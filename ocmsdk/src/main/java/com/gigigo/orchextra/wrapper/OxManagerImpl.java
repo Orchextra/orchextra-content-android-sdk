@@ -11,6 +11,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import orchextra.javax.inject.Inject;
 
 /**
  * Created by alex on 01/12/2017.
@@ -25,19 +26,21 @@ public class OxManagerImpl implements OxManager {
   //necesitamos un contexto para q la funcion setNewOrchextracredentials pueda comprobar las preferences
   //lo suyo es no guardarlo en las preferences, de momneto así y una mejora sencilla seria añadir el contexto a
   //la funcion de setNewOrchextracredentials, para no mantener el application cuando no es necesario
-  private CustomSchemeReceiver onOxCustomSchemeReceiver = new CustomSchemeReceiver() {
-    @Override public void onReceive(String customScheme) {
-      if (onCustomSchemeReceiver != null) {
-        onCustomSchemeReceiver.onReceive(customScheme);
-      }
-    }
-  };
+  private CustomSchemeReceiver onOxCustomSchemeReceiver =
+      customScheme -> callOnCustomSchemeReceiver(customScheme);
 
-  public OxManagerImpl(){
+  @Inject
+  public OxManagerImpl() {
     genders = new HashMap<>();
-    genders.put(CrmUser.Gender.GenderFemale,com.gigigo.orchextra.CrmUser.Gender.GenderFemale);
-    genders.put(CrmUser.Gender.GenderMale,com.gigigo.orchextra.CrmUser.Gender.GenderMale);
-    genders.put(CrmUser.Gender.GenderND,com.gigigo.orchextra.CrmUser.Gender.GenderND);
+    genders.put(CrmUser.Gender.GenderFemale, com.gigigo.orchextra.CrmUser.Gender.GenderFemale);
+    genders.put(CrmUser.Gender.GenderMale, com.gigigo.orchextra.CrmUser.Gender.GenderMale);
+    genders.put(CrmUser.Gender.GenderND, com.gigigo.orchextra.CrmUser.Gender.GenderND);
+  }
+
+  @Override public void callOnCustomSchemeReceiver(String customScheme) {
+    if (onCustomSchemeReceiver != null) {
+      onCustomSchemeReceiver.onReceive(customScheme);
+    }
   }
 
   @Override public void startImageRecognition() {
@@ -48,52 +51,47 @@ public class OxManagerImpl implements OxManager {
     Orchextra.startScannerActivity();
   }
 
-  @Override public void init(Application app,
-      String oxKey,
-      String oxSecret,
-      Class notificationActivityClass,
-      String senderId,
-      ImageRecognition vuforia,
-      OrchextraCompletionCallback orchextraCompletionCallback) {
+  @Override public void init(Application app, Config config) {
 
     OrchextraBuilder builder = new OrchextraBuilder(app);
-    builder.setApiKeyAndSecret(oxKey, oxSecret)
+    builder.setApiKeyAndSecret(config.getApiKey(), config.getApiSecret())
         .setLogLevel(OrchextraLogLevel.NETWORK)
         .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.NORMAL)
         .setOrchextraCompletionCallback(new com.gigigo.orchextra.OrchextraCompletionCallback() {
           @Override public void onSuccess() {
-            orchextraCompletionCallback.onSuccess();
+            config.getOrchextraCompletionCallback().onSuccess();
           }
 
-          @Override public void onError(String s) {
-            orchextraCompletionCallback.onError(s);
+          @Override public void onError(String message) {
+            config.getOrchextraCompletionCallback().onError(message);
           }
 
           @Override public void onInit(String s) {
-            orchextraCompletionCallback.onInit(s);
+            config.getOrchextraCompletionCallback().onInit(s);
           }
 
           @Override public void onConfigurationReceive(String s) {
-            orchextraCompletionCallback.onConfigurationReceive(s);
+            config.getOrchextraCompletionCallback().onConfigurationReceive(s);
           }
         });
 
-    if (notificationActivityClass != null) {
-      builder.setNotificationActivityClass(notificationActivityClass.toString());
+    if (config.getNotificationActivityClass() != null) {
+      builder.setNotificationActivityClass(config.getNotificationActivityClass().toString());
     }
-    if (senderId != null && senderId != "") {
-      builder.setGcmSenderId(senderId);
+    if (config.getSenderId() != null && !config.getSenderId().equals("")) {
+      builder.setGcmSenderId(config.getSenderId());
     }
-    if (vuforia != null) {
+    if (config.getVuforia() != null) {
       builder.setImageRecognitionModule(
           new com.gigigo.imagerecognitioninterface.ImageRecognition() {
             @Override public <T> void setContextProvider(T contextProvider) {
-              vuforia.setContextProvider(contextProvider);
+              config.getVuforia().setContextProvider(contextProvider);
             }
 
             @Override
-            public void startImageRecognition(ImageRecognitionCredentials imageRecognitionCredentials) {
-              vuforia.startImageRecognition(
+            public void startImageRecognition(
+                ImageRecognitionCredentials imageRecognitionCredentials) {
+              config.getVuforia().startImageRecognition(
                   new com.gigigo.orchextra.wrapper.ImageRecognitionCredentials() {
                     @Override public String getClientAccessKey() {
                       return imageRecognitionCredentials.getClientAccessKey();
@@ -110,10 +108,10 @@ public class OxManagerImpl implements OxManager {
             }
           });
     }
+
     Orchextra.initialize(builder);
 
     Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
-
   }
 
   @Override public void getToken() {
@@ -122,7 +120,7 @@ public class OxManagerImpl implements OxManager {
 
   @Override public void bindUser(CrmUser crmUser) {
     com.gigigo.orchextra.CrmUser crmUserOx = new com.gigigo.orchextra.CrmUser(crmUser.getCrmId(),
-        crmUser.getBirthdate(),genders.get(crmUser.getGender()));
+        crmUser.getBirthdate(), genders.get(crmUser.getGender()));
 
     Orchextra.bindUser(crmUserOx);
     Orchextra.commitConfiguration();
@@ -142,7 +140,7 @@ public class OxManagerImpl implements OxManager {
 
   }
 
-  @Override public void setCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {
+  @Override public void setOnCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {
     this.onCustomSchemeReceiver = onCustomSchemeReceiver;
   }
 
@@ -154,8 +152,8 @@ public class OxManagerImpl implements OxManager {
     Orchextra.stop();
   }
 
-  @Override public void updateSDKCredentials(String apiKey, String apiSecret, boolean forceCallback) {
+  @Override
+  public void updateSDKCredentials(String apiKey, String apiSecret, boolean forceCallback) {
     Orchextra.updateSDKCredentials(apiKey, apiSecret, forceCallback);
   }
-
 }

@@ -14,6 +14,8 @@ import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProviderImpl;
 import com.gigigo.orchextra.core.sdk.application.OcmSdkLifecycle;
+import com.gigigo.orchextra.wrapper.OxManager;
+import com.gigigo.orchextra.wrapper.OxManagerImpl;
 import orchextra.dagger.Module;
 import orchextra.dagger.Provides;
 import orchextra.javax.inject.Provider;
@@ -60,5 +62,9 @@ import orchextra.javax.inject.Singleton;
 
   @Singleton @Provides OcmStyleUi provideOcmStyleUi() {
     return new OcmStyleUiImp();
+  }
+
+  @Singleton @Provides OxManager provideOxManager(){
+    return new OxManagerImpl();
   }
 }

@@ -34,9 +34,8 @@ import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.wrapper.CrmUser;
 import com.gigigo.orchextra.wrapper.ImageRecognition;
-import com.gigigo.orchextra.wrapper.OxManager;
 import com.gigigo.orchextra.wrapper.OrchextraCompletionCallback;
-import com.gigigo.orchextra.wrapper.OxManagerImpl;
+import com.gigigo.orchextra.wrapper.OxManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -51,6 +50,7 @@ public final class OCManager {
 
   private static OCManager instance;
 
+  @Inject OxManager oxManager;
   @Inject OcmSdkLifecycle ocmSdkLifecycle;
   @Inject OcmContextProvider ocmContextProvider;
   @Inject OcmViewGenerator ocmViewGenerator;
@@ -60,24 +60,18 @@ public final class OCManager {
   @Inject OcmStyleUi ocmStyleUi;
   @Inject OcmController ocmController;
 
-  OxManager oxManager;
-
   private OnRequiredLoginCallback onRequiredLoginCallback;
   private OnEventCallback onEventCallback;
   private String language;
   private InjectorImpl injector;
   private Map<String, String> localStorage;
   private OcmCredentialCallback ocmCredentialCallback;
-  private OnCustomSchemeReceiver onCustomSchemeReceiver;
   private OnChangedMenuCallback onChangedMenuCallback;
   private OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback;
   private UiMenu uiMenuToNotifyWhenSectionIsLoaded;
   private boolean isShowReadedArticles = false;
   private int maxReadArticles = 100;
 
-  public OCManager(){
-    oxManager = new OxManagerImpl();
-  }
 
   static void initSdk(Application application) {
     getInstance();
@@ -290,7 +284,7 @@ public final class OCManager {
   }
 
   public static void setOnCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {
-    OCManager.instance.onCustomSchemeReceiver = onCustomSchemeReceiver;
+    OCManager.instance.oxManager.setOnCustomSchemeReceiver(onCustomSchemeReceiver);
   }
 
   public static void start() {
@@ -304,9 +298,8 @@ public final class OCManager {
   }
 
   public static void returnOcCustomSchemeCallback(String customScheme) {
-    if (instance.onCustomSchemeReceiver != null) {
-      instance.onCustomSchemeReceiver.onReceive(customScheme);
-    }
+
+    instance.oxManager.callOnCustomSchemeReceiver(customScheme);
   }
 
   public static OcmContextProvider getOcmContextProvider() {
@@ -417,8 +410,16 @@ public final class OCManager {
   private void initOrchextra(Application app, String oxKey, String oxSecret,
       Class notificationActivityClass, String senderId, ImageRecognition vuforia) {
 
-    instance.oxManager.init(app,oxKey,oxSecret,notificationActivityClass,senderId,vuforia,
-        mOrchextraCompletionCallback);
+    OxManager.Config config = new OxManager.Config.Builder()
+        .setApiKey(oxKey)
+        .setApiSecret(oxSecret)
+        .setNotificationActivityClass(notificationActivityClass)
+        .setSenderId(senderId)
+        .setVuforia(vuforia)
+        .setOrchextraCompletionCallback(mOrchextraCompletionCallback)
+        .build();
+
+    instance.oxManager.init(app,config);
   }
 
   //region cookies FedexAuth
