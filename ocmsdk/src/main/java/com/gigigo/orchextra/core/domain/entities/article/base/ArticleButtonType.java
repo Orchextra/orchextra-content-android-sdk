@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.domain.entities.article.base;
 
-public enum ArticleButtonType {
+import java.io.Serializable;
+
+public enum ArticleButtonType implements Serializable {
   IMAGE("image"),
   DEFAULT("default");
 

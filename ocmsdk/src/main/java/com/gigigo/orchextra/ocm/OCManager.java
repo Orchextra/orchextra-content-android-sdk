@@ -9,6 +9,7 @@ import android.webkit.WebStorage;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.OcmController;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuRequest;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
@@ -90,9 +91,9 @@ public final class OCManager {
     }
   }
 
-  static void getMenus(boolean forceUpdate, final OCManagerCallbacks.Menus menusCallback) {
+  static void getMenus(MenuRequest menuRequest, final OCManagerCallbacks.Menus menusCallback) {
     if (instance != null) {
-      instance.ocmViewGenerator.getMenu(forceUpdate,
+      instance.ocmViewGenerator.getMenu(menuRequest,
           new OcmViewGenerator.GetMenusViewGeneratorCallback() {
             @Override public void onGetMenusLoaded(UiMenuData menus) {
               if (menus != null && menus.getUiMenuList() != null && menus.getUiMenuList().size() > 0) {

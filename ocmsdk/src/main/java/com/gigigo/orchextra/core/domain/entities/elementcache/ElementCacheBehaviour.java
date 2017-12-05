@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.domain.entities.elementcache;
 
-public enum ElementCacheBehaviour {
+import java.io.Serializable;
+
+public enum ElementCacheBehaviour implements Serializable {
   CLICK("click"),
   SWIPE("swipe"),
   NONE("");

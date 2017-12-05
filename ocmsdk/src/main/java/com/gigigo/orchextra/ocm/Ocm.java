@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuRequest;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
@@ -178,8 +179,8 @@ public final class Ocm {
   /**
    * Get the app menus
    */
-  public static void getMenus(boolean forceUpdate, OcmCallbacks.Menus menusCallback) {
-    OCManager.getMenus(forceUpdate, new OCManagerCallbacks.Menus() {
+  public static void getMenus(MenuRequest menuRequest, OcmCallbacks.Menus menusCallback) {
+    OCManager.getMenus(menuRequest, new OCManagerCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData menus) {
         menusCallback.onMenusLoaded(menus);
       }

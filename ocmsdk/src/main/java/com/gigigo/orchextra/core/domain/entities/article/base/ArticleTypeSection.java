@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.domain.entities.article.base;
 
-public enum ArticleTypeSection {
+import java.io.Serializable;
+
+public enum ArticleTypeSection implements Serializable {
   HEADER("header"),
   IMAGE("image"),
   VIDEO("video"),
