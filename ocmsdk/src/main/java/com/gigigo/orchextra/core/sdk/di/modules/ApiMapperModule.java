@@ -10,15 +10,15 @@ import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentItemPatt
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCachePreviewMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheRenderMapper;
+import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheShareMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.CidKeyDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.FederatedAuthorizationDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
-import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheShareMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSectionViewMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSegmentationMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
+import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentMapper;
 import orchextra.dagger.Module;
 import orchextra.dagger.Provides;
 import orchextra.javax.inject.Named;

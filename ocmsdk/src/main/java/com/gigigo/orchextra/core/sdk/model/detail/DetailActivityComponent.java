@@ -1,7 +1,7 @@
 package com.gigigo.orchextra.core.sdk.model.detail;
 
-import com.gigigo.orchextra.core.sdk.di.providers.OcmModuleProvider;
 import com.gigigo.orchextra.core.sdk.di.components.OcmComponent;
+import com.gigigo.orchextra.core.sdk.di.providers.OcmModuleProvider;
 import com.gigigo.orchextra.core.sdk.di.scopes.PerActivity;
 import orchextra.dagger.Component;
 

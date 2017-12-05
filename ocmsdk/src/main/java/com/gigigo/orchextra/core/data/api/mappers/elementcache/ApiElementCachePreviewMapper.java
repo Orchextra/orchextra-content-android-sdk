@@ -1,9 +1,9 @@
 package com.gigigo.orchextra.core.data.api.mappers.elementcache;
 
+import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
-import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 
 public class ApiElementCachePreviewMapper
   implements ExternalClassToModelMapper<ApiElementCachePreview, ElementCachePreview> {

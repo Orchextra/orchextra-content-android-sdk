@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.core.domain.rxInteractor;
 
 import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
-import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import org.junit.Before;
 import org.junit.Rule;

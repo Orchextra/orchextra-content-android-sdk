@@ -3,7 +3,6 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
-import com.gigigo.orchextra.core.data.api.dto.base.BaseApiResponse;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;

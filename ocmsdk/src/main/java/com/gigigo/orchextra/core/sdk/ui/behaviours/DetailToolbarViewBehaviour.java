@@ -5,7 +5,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
 import com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView;
 
 public class DetailToolbarViewBehaviour extends CoordinatorLayout.Behavior<DetailToolbarView>{
