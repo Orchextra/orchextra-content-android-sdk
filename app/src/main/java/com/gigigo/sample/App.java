@@ -19,8 +19,8 @@ public class App extends MultiDexApplication {
   //public static String API_SECRET = "f79713d7e9b0fcd69fedfb94f471106cb85d8ca4";
 
   //WOAH RELEASE
-  //public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
-  //public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
+  public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
+  public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
 
   //WOAH Debug
   //public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
@@ -31,8 +31,8 @@ public class App extends MultiDexApplication {
   //public static String API_SECRET = "677cf75a17aeec144ee402c281ad3a732d736a8a";
 
   //ANDROID SDK - STAGING
-  public static String API_KEY = "34a4654b9804eab82aae05b2a5f949eb2a9f412c";
-  public static String API_SECRET = "2d5bce79e3e6e9cabf6d7b040d84519197dc22f3";
+  //public static String API_KEY = "34a4654b9804eab82aae05b2a5f949eb2a9f412c";
+  //public static String API_SECRET = "2d5bce79e3e6e9cabf6d7b040d84519197dc22f3";
 
   //WOAH MARKETS RELEASE
   //public static String API_KEY = "ef08c4dccb7649b9956296a863db002a68240be2";    //Woah project
@@ -53,7 +53,7 @@ public class App extends MultiDexApplication {
   //[UAT][INTERNAL] DEMO APP
   //public static String API_KEY = "338d65a6572be208f25a9a5815861543adaa4abb";
   //public static String API_SECRET = "b29dac01598f9d8e2102aef73ac816c0786843ef";
-  
+
   private OnRequiredLoginCallback onDoRequiredLoginCallback =  new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {
 

@@ -221,11 +221,9 @@ dependencies {
     transitive = true
     exclude module: 'support-v4'
   }
-  api(project.libraries.orchextrasdkRelease) {
+  releaseApi(project.libraries.orchextrasdkRelease) {
     transitive = true
     exclude module: 'support-v4'
-    exclude group:'com.google.dagger', module:'dagger'
-    exclude group:'javax.inject'
   }
 //asv new ox with gradle 3.0.0
 
