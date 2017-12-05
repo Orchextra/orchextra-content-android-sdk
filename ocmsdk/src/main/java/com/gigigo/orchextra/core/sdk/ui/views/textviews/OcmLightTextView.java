@@ -39,7 +39,7 @@ public class OcmLightTextView extends TextFitTextView {
     if (injector != null) {
       OcmStyleUi styleUi = injector.provideOcmStyleUi();
       if (styleUi != null && !TextUtils.isEmpty(styleUi.getLightFontPath())) {
-        this.setTypeface(FontCache.getFont(context, styleUi.getTitleFontPath()));
+        this.setTypeface(FontCache.getFont(context, styleUi.getLightFontPath()));
       }
     }
   }

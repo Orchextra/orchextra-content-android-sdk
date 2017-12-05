@@ -100,13 +100,19 @@ public class MainActivity extends AppCompatActivity {
     tabLayout = findViewById(R.id.tabLayout);
     viewpager = findViewById(R.id.viewpager);
     //View fabReload = findViewById(R.id.fabReload);
-    //View fabChange = findViewById(R.id.fabChange);
+    View fabSearch = findViewById(R.id.fabSearch);
     View fabClean = findViewById(R.id.fabClean);
 
     fabClean.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         //Orchextra.startScannerActivity();
         Orchextra.startImageRecognition();
+      }
+    });
+
+    fabSearch.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        SearcherActivity.open(MainActivity.this);
       }
     });
 

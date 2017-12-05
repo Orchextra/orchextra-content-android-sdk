@@ -1,5 +1,7 @@
 package com.gigigo.orchextra.core.domain.entities.article.base;
 
-public abstract class ArticleElement {
+import java.io.Serializable;
+
+public abstract class ArticleElement implements Serializable {
 
 }

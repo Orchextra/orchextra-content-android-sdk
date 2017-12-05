@@ -36,8 +36,8 @@ public class App extends MultiDexApplication {
 
 
   //WOAH MARKETS RELEASE
-  //public static String API_KEY = "ef08c4dccb7649b9956296a863db002a68240be2";    //Woah project
-  //public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
+  public static String API_KEY = "ef08c4dccb7649b9956296a863db002a68240be2";    //Woah project
+  public static String API_SECRET = "6bc18c500546f253699f61c11a62827679178400";
 
   //WOAH QA RELEASE
   //public static String API_KEY = "ad46332237cbb9fd38ad38470a9bee6d4892d770";    //Woah project
@@ -155,7 +155,7 @@ public class App extends MultiDexApplication {
             .setEnabledStatusBar(false);
     Ocm.setStyleUi(ocmStyleUiBuilder);
 
-    Ocm.setBusinessUnit("es");
+    Ocm.setBusinessUnit("it");
   }
 
   private void enableStrictMode() {

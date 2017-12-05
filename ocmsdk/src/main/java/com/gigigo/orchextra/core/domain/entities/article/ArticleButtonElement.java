@@ -3,8 +3,9 @@ package com.gigigo.orchextra.core.domain.entities.article;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonSize;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonType;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+import java.io.Serializable;
 
-public class ArticleButtonElement extends ArticleElement {
+public class ArticleButtonElement extends ArticleElement implements Serializable {
 
   private ArticleButtonType type;
   private ArticleButtonSize size;

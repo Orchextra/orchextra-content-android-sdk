@@ -171,20 +171,14 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   @Override public void navigateToDetailView(String elementUrl, String urlImageToExpand,
       AppCompatActivity activity, View view) {
 
-    ImageView imageViewToExpand = (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
+    if (view != null) {
+      final ImageView imageViewToExpandInDetail =
+          (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
 
-    String imageUrl = null;
-    if (urlImageToExpand != null) {
-      imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
+      OCManager.generateDetailView(elementUrl, urlImageToExpand,
           DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
-          DeviceUtils.calculateHeightDeviceInImmersiveMode(context));
-
-      OcmImageLoader.load(this, imageUrl).into(imageViewToExpand);
+          DeviceUtils.calculateHeightDeviceInImmersiveMode(context), imageViewToExpandInDetail);
     }
-
-    DetailActivity.open(activity, elementUrl, imageUrl,
-        DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
-        DeviceUtils.calculateHeightDeviceInImmersiveMode(context), imageViewToExpand);
   }
 
   @Override public void showAuthDialog() {
