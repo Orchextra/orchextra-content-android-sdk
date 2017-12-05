@@ -1,18 +1,5 @@
 package com.gigigo.orchextra.core.domain.rxRepository;
 
-import com.gigigo.orchextra.core.data.rxRepository.OcmDataRepository;
-import io.reactivex.Observable;
-import java.util.ArrayList;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.verify;
-
 //@RunWith(MockitoJUnitRunner.class)
 public class OcmDataRepositoryTest {
   //

@@ -1,11 +1,8 @@
 package com.gigigo.orchextra.ocm;
 
-import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.dto.UiVersionData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
-
-import java.util.List;
 
 /**
  * Created by francisco.hernandez on 26/5/17.

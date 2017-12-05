@@ -2,9 +2,9 @@ package com.gigigo.orchextra.core.controller.model.detail;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import com.gigigo.orchextra.control.presenters.base.Presenter;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.controller.dto.DetailViewInfo;
+import com.gigigo.orchextra.core.controller.model.base.Presenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;

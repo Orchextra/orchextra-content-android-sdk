@@ -1,11 +1,10 @@
 package com.gigigo.orchextra.core.data.api.mappers.elementcache;
 
-
-import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSegmentationMapper;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
-import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
+import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
+import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSegmentationMapper;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import java.util.ArrayList;
 import java.util.List;
 

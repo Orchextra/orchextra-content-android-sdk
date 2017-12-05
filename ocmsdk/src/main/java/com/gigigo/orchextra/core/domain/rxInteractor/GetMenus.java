@@ -1,11 +1,9 @@
 package com.gigigo.orchextra.core.domain.rxInteractor;
 
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import io.reactivex.Observable;
-import java.util.Map;
 import orchextra.javax.inject.Inject;
 
 /**

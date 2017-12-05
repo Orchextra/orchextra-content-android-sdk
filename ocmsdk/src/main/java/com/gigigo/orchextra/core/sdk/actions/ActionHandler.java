@@ -7,12 +7,10 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
-
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -20,6 +18,8 @@ import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.federatedAuth.FAUtils;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import com.gigigo.orchextra.ocmsdk.R;
+import com.gigigo.orchextra.wrapper.OxManager;
+import com.gigigo.orchextra.wrapper.OxManagerImpl;
 import gigigo.com.vimeolibs.VimeoBuilder;
 import gigigo.com.vimeolibs.VimeoCallback;
 import gigigo.com.vimeolibs.VimeoExoPlayerActivity;
@@ -28,12 +28,14 @@ import gigigo.com.vimeolibs.VimeoManager;
 
 public class ActionHandler {
 
+  OxManager orchextra;
   private final OcmContextProvider ocmContextProvider;
   private final ConnectionUtils connectionUtils;
 
   public ActionHandler(OcmContextProvider ocmContextProvider) {
     this.ocmContextProvider = ocmContextProvider;
     this.connectionUtils = new ConnectionUtilsImp(ocmContextProvider.getApplicationContext());
+    this.orchextra = new OxManagerImpl();
   }
 
   public void processDeepLink(String uri) {
@@ -77,11 +79,11 @@ public class ActionHandler {
   }
 
   public void launchOxVuforia() {
-    Orchextra.startImageRecognition();
+    orchextra.startImageRecognition();
   }
 
   public void lauchOxScan() {
-    Orchextra.startScannerActivity();
+    orchextra.startScanner();
   }
 
   public void launchExternalBrowser(final String url, FederatedAuthorization federatedAuth) {

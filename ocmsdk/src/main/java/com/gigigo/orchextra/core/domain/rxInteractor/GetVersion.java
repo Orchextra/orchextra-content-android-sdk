@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.domain.rxInteractor;
 
-import android.support.v4.util.Preconditions;
 import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;

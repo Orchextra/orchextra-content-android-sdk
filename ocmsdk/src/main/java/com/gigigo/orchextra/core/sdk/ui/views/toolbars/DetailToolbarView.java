@@ -2,7 +2,6 @@ package com.gigigo.orchextra.core.sdk.ui.views.toolbars;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;

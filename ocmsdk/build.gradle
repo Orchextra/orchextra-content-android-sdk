@@ -230,6 +230,7 @@ dependencies {
   //api('com.github.Orchextra.orchextra-android-sdk:orchextrasdk-control:525Test')
 
   //customs Views
+
   api project.libraries.doubleViewPager
   api project.libraries.autofitTextView
   api project.libraries.multipleGridRecyclerView

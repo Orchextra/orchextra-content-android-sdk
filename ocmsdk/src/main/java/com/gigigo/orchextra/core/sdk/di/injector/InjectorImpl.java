@@ -23,19 +23,18 @@ import com.gigigo.orchextra.core.receiver.DaggerImagesServiceComponent;
 import com.gigigo.orchextra.core.receiver.ImagesServiceComponent;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.components.OcmComponent;
+import com.gigigo.orchextra.core.sdk.model.detail.DaggerDetailActivityComponent;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivityComponent;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DaggerDetailContentDataComponent;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailContentDataComponent;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailParentContentData;
-import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutViewComponent;
-import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
-import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutViewComponent;
-import com.gigigo.orchextra.core.sdk.model.detail.DaggerDetailActivityComponent;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
+import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutViewComponent;
 import com.gigigo.orchextra.core.sdk.model.grid.DaggerContentGridLayoutViewComponent;
 import com.gigigo.orchextra.core.sdk.model.searcher.DaggerSearcherLayoutViewComponent;
-import com.gigigo.orchextra.core.receiver.WifiReceiver;
+import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
+import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutViewComponent;
 
 public class InjectorImpl implements Injector {
 
