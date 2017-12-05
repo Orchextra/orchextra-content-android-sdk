@@ -1,0 +1,87 @@
+fastlane_version "2.13.0"
+
+default_platform :android
+
+platform :android do
+
+  desc "Sonar"
+  lane :sonarComplete do |options|
+    gradle(task:"sonarComplete")
+  end
+
+  desc "PR build"
+  lane :PR do |options|
+    gradle(task:"clean")
+    gradle(task:"assembleWoahDebug")
+  end
+
+  desc "Develop build"
+  lane :develop do |options|
+    gradle(task:"clean")
+    gradle(task:"assembleWoahDebug")
+  end
+
+  desc "QA build"
+  lane :qa do |options|
+    gradle(task:"clean")
+    gradle(task:"assembleWoahPrelaunchPrerelease")
+    applivery(
+      api_key: "af2af6cabd63c3776f2edcdf025b35ab2892cf92",
+      app_id: "5943c40ae8cccb591f9e206b",
+      name: "WOAH QA (Variant: woahPrelaunchPrerelease)",
+      notify: false,
+      autoremove: true,
+      notes: options[:notes],
+      tags: options[:tags],
+      build_path: Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    )
+  end
+
+  desc "Markets build"
+  lane :markets do |options|
+    gradle(task:"clean")
+    gradle(task:"assembleWoahMarketsPrerelease")
+    applivery(
+      api_key: "af2af6cabd63c3776f2edcdf025b35ab2892cf92",
+      app_id: "58a5c95bad732d382eff0172",
+      name: "WOAH Markets (Variant: woahMarketsPrerelease)",
+      notify: true,
+      autoremove: true,
+      notes: options[:notes],
+      tags: options[:tags],
+      build_path: Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    )
+  end
+
+  desc "Release build"
+  lane :release do |options|
+    gradle(task:"clean")
+    gradle(task:"assembleWoahPrelaunchPrerelease")
+    applivery(
+      api_key: "af2af6cabd63c3776f2edcdf025b35ab2892cf92",
+      app_id: "58bd8f584133e78f1e659ceb",
+      name: "WOAH PreLaunch (Variant: woahPrelaunchPrerelease)",
+      notify: true,
+      autoremove: true,
+      notes: options[:notes],
+      tags: options[:tags],
+      build_path: Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    )
+  end
+
+  desc "Master build"
+  lane :master do |options|
+    gradle(task:"clean")
+    gradle(task:"assembleWoahPrerelease")
+    applivery(
+      api_key: "af2af6cabd63c3776f2edcdf025b35ab2892cf92",
+      app_id: "58ae9db85ef2ecaa6b17faa0",
+      name: "WOAH Stores (Variant: woahPrerelease)",
+      notify: true,
+      autoremove: true,
+      notes: options[:notes],
+      tags: options[:tags],
+      build_path: Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    )
+  end
+end
