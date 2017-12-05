@@ -2,7 +2,7 @@ package com.gigigo.orchextra.core.domain.entities.elementcache;
 
 import java.io.Serializable;
 
-public enum VideoFormat implements Serializable {
+public enum VideoFormat implements Serializable{
   YOUTUBE("youtube"),
   VIMEO("vimeo"),
   NONE("");
