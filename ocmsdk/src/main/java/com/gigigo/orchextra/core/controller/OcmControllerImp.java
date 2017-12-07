@@ -122,7 +122,27 @@ public class OcmControllerImp implements OcmController {
   }
 
   private void retrieveMenus(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
-    retrieveMenus(new MenuObserver(getMenusCallback),
+    retrieveMenus(new MenuObserver(new GetMenusControllerCallback() {
+          @Override public void onGetMenusLoaded(UiMenuData menus) {
+            if (menus.isFromCloud()) {
+              getMenusCallback.onGetMenusLoaded(menus);
+            } else {
+              getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
+                @Override public void onGetVersionLoaded(VersionData versionData) {
+                  getMenusCallback.onGetMenusLoaded(menus);
+                }
+
+                @Override public void onGetVersionFails(Exception e) {
+                  getMenusCallback.onGetMenusLoaded(menus);
+                }
+              }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
+            }
+          }
+
+          @Override public void onGetMenusFails(Exception e) {
+
+          }
+        }),
         GetMenus.Params.forForceReload(forceReload));
   }
 
@@ -291,19 +311,7 @@ public class OcmControllerImp implements OcmController {
     }
 
     @Override public void onNext(MenuContentData menuContentData) {
-      if (menuContentData.isFromCloud()) {
-        retrieveMenu(menuContentData);
-      } else {
-        getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
-          @Override public void onGetVersionLoaded(VersionData versionData) {
-            retrieveMenu(menuContentData);
-          }
-
-          @Override public void onGetVersionFails(Exception e) {
-            retrieveMenu(menuContentData);
-          }
-        }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
-      }
+      retrieveMenu(menuContentData);
     }
 
     private void retrieveMenu(MenuContentData menuContentData) {
@@ -360,7 +368,7 @@ public class OcmControllerImp implements OcmController {
       getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
         @Override public void onGetVersionLoaded(VersionData versionData) {
           checkVersionAndExpiredAtAndRetrieveSection(versionData, contentData);
-          ocmPreferences.saveVersion(versionData.getVersion());
+          //ocmPreferences.saveVersion(versionData.getVersion());
         }
 
         @Override public void onGetVersionFails(Exception e) {
