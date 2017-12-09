@@ -20,8 +20,8 @@ public class App extends MultiDexApplication {
   //public static String API_SECRET = "f79713d7e9b0fcd69fedfb94f471106cb85d8ca4";
 
   //WOAH RELEASE
-  public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
-  public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
+  //public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
+  //public static String API_SECRET = "eab37080130215ced60eb9d5ff729049749ec205";
 
   //WOAH Debug
   //public static String API_KEY = "8286702045adf5a3ad816f70ecb80e4c91fbb8de";
@@ -138,7 +138,7 @@ public class App extends MultiDexApplication {
         .setTransformReadArticleMode(ImageTransformReadArticle.BITMAP_TRANSFORM)
        // .setVuforiaImpl(new ImageRecognitionVuforiaImpl())
         .setMaxReadArticles(100)
-        .setOrchextraCredentials(API_KEY, API_SECRET)
+        .setOrchextraCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET)
         .setContentLanguage("EN")
         .setOnEventCallback(onEventCallback);
 
