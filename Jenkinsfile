@@ -1,11 +1,11 @@
 #!groovy
 
-@Library('github.com/red-panda-ci/jenkins-pipeline-library@v2.2.2') _
+@Library('github.com/red-panda-ci/jenkins-pipeline-library@v2.3.0') _
 
 // Initialize global config
 cfg = jplConfig('ocmsdk', 'android', '', [hipchat: '', slack: '#integrations', email: 'qa+ocmsdk@gigigo.com,jose.benito@gigigo.com'])
 cfg.commitValidation.enabled = false
-cfg.androidPackages = 'build-tools-24.0.3,android-24,build-tools-25.0.0,android-25,build-tools-26.0.2,android-26'
+cfg.androidPackages = '"build-tools;24.0.3" "platforms;android-24" "build-tools;25.0.0" "platforms;android-25" "build-tools;26.0.2" "platforms;android-26"'
 cfg.archivePattern = "ocmsdk/build/outputs/aar/ocmsdk-ocm-release.aar"
 
 pipeline {
