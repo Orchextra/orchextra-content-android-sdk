@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: 'variants.gradle'
 
 android {
   signingConfigs {
@@ -23,18 +24,25 @@ android {
     staging {
       debuggable true
       signingConfig signingConfigs.debug
+      buildConfigField "String", "API_KEY", project.ext.api_key_staging
+      buildConfigField "String", "API_SECRET", project.ext.api_secret_staging
     }
     debug {
       debuggable true
+      buildConfigField "String", "API_KEY", project.ext.api_key_debug
+      buildConfigField "String", "API_SECRET", project.ext.api_secret_debug
       signingConfig signingConfigs.debug
     }
     release {
       debuggable true
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      buildConfigField "String", "API_KEY", project.ext.api_key_release
+      buildConfigField "String", "API_SECRET", project.ext.api_secret_release
       signingConfig android.signingConfigs.debug
     }
   }
+
   lintOptions {
     abortOnError false
   }

@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void startCredentials() {
-    Ocm.startWithCredentials(App.API_KEY, App.API_SECRET, new OcmCredentialCallback() {
+    Ocm.startWithCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET, new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
         //TODO Fix in Orchextra
         runOnUiThread(new Runnable() {
