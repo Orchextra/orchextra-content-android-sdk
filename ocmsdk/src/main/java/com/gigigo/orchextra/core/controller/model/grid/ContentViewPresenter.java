@@ -62,6 +62,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   }
 
   public void loadSection(UiMenu uiMenu, String filter) {
+    hasToCheckNewContent = true;
     loadSection(false, uiMenu, filter);
   }
 

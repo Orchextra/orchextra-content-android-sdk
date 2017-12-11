@@ -92,6 +92,19 @@ public class ImageDownloader implements LowPriorityRunnable {
       }
       // totalDownloadSize += total;
 
+      try {
+        input.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+      try {
+        output.flush();
+        output.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
       GGGLogImpl.log("GET (" + total / 1024 + "kb) <- " + imageData.getPath(),
           (total / 1024) > 150 ? LogLevel.WARN : LogLevel.INFO);
 
@@ -104,26 +117,7 @@ public class ImageDownloader implements LowPriorityRunnable {
       callback.onError(imageData, new Exception(e.getMessage(), e));
     } finally {
       if (tempCacheFile.exists()) tempCacheFile.delete();
-      if (input != null) {
-        try {
-          input.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
 
-      if (output != null) {
-        try {
-          output.flush();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-        try {
-          output.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
     }
 
     //GGGLogImpl.log(OcmImageCacheImp.totalDownloadSize / 1024 / 1024 + "MB", LogLevel.ASSERT, "TOTAL DOWNLOAD");

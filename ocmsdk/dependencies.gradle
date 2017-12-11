@@ -1,7 +1,7 @@
 project.ext {
 
   androidCompileSdkVersion = 26
-  androidMinSdkVersion = 18
+  androidMinSdkVersion = 17
   androidBuildToolsVersion = '26.0.2'
   androidTargetSdkVersion = 26
   supportVersion = '26.0.2' //asv dont touch the box(dontcallmewhite)
