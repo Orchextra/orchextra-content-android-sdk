@@ -62,10 +62,12 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   }
 
   public void loadSection(UiMenu uiMenu, String filter) {
-    hasToCheckNewContent = true;
     loadSection(false, uiMenu, filter);
   }
 
+  public void setHasToCheckNewContent(boolean hasToCheckNewContent){
+    this.hasToCheckNewContent = hasToCheckNewContent;
+  }
   private void loadSection(boolean forceReload, UiMenu uiMenu, String filter) {
     this.uiMenu = uiMenu;
     this.filter = filter;
@@ -87,7 +89,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
             cachedContentData = contentData;
 
-              OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
+            OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
           }
 
           @Override public void onGetSectionFails(Exception e) {
@@ -157,7 +159,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     if (getView() != null) {
       if (contentItem != null
           && contentItem.getLayout() != null
-          && contentItem.getElements() != null) {
+          && contentItem.getElements() != null){
+          //&& hasFilter(contentItem)) {
 
         listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
 
@@ -175,6 +178,16 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       getView().showProgressView(false);
     }
   }
+
+  //private boolean hasFilter(ContentItem contentItem){
+  //  if(filter!=null && !filter.isEmpty()){
+  //    if(contentItem.getTags()!=null){
+  //      return contentItem.getTags().contains(filter);
+  //    }
+  //    return false;
+  //  }
+  //  return true;
+  //}
 
   private void renderError() {
     if (getView() != null) {

@@ -106,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
     fabClean.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         //Orchextra.startScannerActivity();
-        Orchextra.startImageRecognition();
+        //Orchextra.startImageRecognition();
+        adapter.setEmotion("happy");
       }
     });
 

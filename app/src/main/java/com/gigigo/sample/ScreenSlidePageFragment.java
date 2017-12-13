@@ -19,13 +19,14 @@ public class ScreenSlidePageFragment extends Fragment {
   private UiGridBaseContentData contentView;
   private UiMenu itemMenu;
   private int numberOfImagesToDownload;
+  private String emotion;
 
   public static ScreenSlidePageFragment newInstance() {
     return new ScreenSlidePageFragment();
   }
 
   private void loadContent() {
-    Ocm.generateSectionView(itemMenu, null, numberOfImagesToDownload, new OcmCallbacks.Section() {
+    Ocm.generateSectionView(itemMenu, emotion, numberOfImagesToDownload, new OcmCallbacks.Section() {
       @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
         setView(uiGridBaseContentData);
       }
@@ -82,5 +83,9 @@ public class ScreenSlidePageFragment extends Fragment {
 
   public void setNumberOfImagesToDownload(int numberOfImagesToDownload) {
     this.numberOfImagesToDownload = numberOfImagesToDownload;
+  }
+
+  public void setEmotion(String emotion) {
+    this.emotion = emotion;
   }
 }
