@@ -12,6 +12,7 @@ public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
   private final FragmentManager fm;
   private List<UiMenu> menuContent;
   private List<ScreenSlidePageFragment> fragments = new ArrayList<>();
+  private String emotion;
 
   public ScreenSlidePagerAdapter(FragmentManager fm) {
     super(fm);
@@ -23,6 +24,7 @@ public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
     UiMenu menu = menuContent.get(position);
     ScreenSlidePageFragment screenSlidePageFragment = ScreenSlidePageFragment.newInstance();
     screenSlidePageFragment.setItemMenu(menu);
+    screenSlidePageFragment.setEmotion(emotion);
     screenSlidePageFragment.setNumberOfImagesToDownload(getNumberOfImagesToDownload(position));
 
     if (position < fragments.size()) {
@@ -34,6 +36,15 @@ public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
     return screenSlidePageFragment;
   }
 
+  public void setEmotion(String emotion){
+    try {
+      if (!emotion.equals(this.emotion)) {
+        this.emotion = emotion;
+        notifyDataSetChanged();
+      }
+    } catch (Exception ignored) {
+    }
+  }
   public void setDataItems(List<UiMenu> menuContent) {
     if (fm != null && !fm.isDestroyed() && menuContent != null && menuContent.size() > 0) {
       fragments = new ArrayList<>(menuContent.size());

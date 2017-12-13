@@ -69,7 +69,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       newContentContainer.setVisibility(View.GONE);
       if (presenter != null) {
         presenter.loadSection();
-
       }
     }
   };
@@ -144,7 +143,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (uiMenu != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
       presenter.setImagesToDownload(imagesToDownload);
-      presenter.loadSection(uiMenu);
+      presenter.loadSection(uiMenu,emotion);
     }
   }
 
@@ -263,6 +262,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
   @Override public void reloadSection() {
     if (presenter != null) {
+      presenter.setHasToCheckNewContent(true);
       presenter.loadSection(uiMenu, emotion);
     }
   }
