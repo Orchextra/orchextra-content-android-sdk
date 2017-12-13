@@ -364,10 +364,6 @@ public final class OCManager {
     }
   }
 
-  public static void showIconNewContent() {
-
-  }
-
   private void initOcm(Application app) {
     initDependencyInjection(app);
     initLifecyle(app);

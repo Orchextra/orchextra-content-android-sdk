@@ -15,6 +15,8 @@ import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageData;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.receiver.WifiReceiver;
+import com.gigigo.orchextra.core.sdk.di.injector.Injector;
+import com.gigigo.orchextra.ocm.OCManager;
 import io.reactivex.Observable;
 import java.util.Iterator;
 import orchextra.javax.inject.Inject;
@@ -30,12 +32,19 @@ import orchextra.javax.inject.Singleton;
   private final OcmApiService ocmApiService;
   private final OcmCache ocmCache;
   private final OcmImageCache ocmImageCache;
+  private Integer withThumbnails = null; //For default, thumbnails are enabled
 
   @Inject public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,
       @NonNull OcmImageCache ocmImageCache) {
     this.ocmApiService = ocmApiService;
     this.ocmCache = ocmCache;
     this.ocmImageCache = ocmImageCache;
+
+    Injector injector = OCManager.getInjector();
+    if (injector != null) {
+      boolean thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
+      this.withThumbnails = thumbnailEnabled ? 0 : null;
+    }
   }
 
   @Override public Observable<ApiMenuContentData> getMenuEntity() {
@@ -47,7 +56,7 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<ApiSectionContentData> getSectionEntity(String contentUrl,
       final int numberOfElementsToDownload) {
-    return ocmApiService.getSectionDataRx(contentUrl)
+    return ocmApiService.getSectionDataRx(contentUrl, withThumbnails)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(contentUrl))
         .doOnNext(ocmCache::putSection)
@@ -127,7 +136,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<ApiElementData> getElementById(String slug) {
-    return ocmApiService.getElementByIdRx(slug)
+    return ocmApiService.getElementByIdRx(slug, withThumbnails)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putDetail);
   }

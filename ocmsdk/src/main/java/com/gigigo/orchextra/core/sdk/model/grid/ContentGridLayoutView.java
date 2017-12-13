@@ -60,6 +60,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View errorView;
   private View progressView;
   private FrameLayout listedDataContainer;
+  private boolean thumbnailEnabled;
 
   private View newContentContainer;
   private final View.OnClickListener onNewContentClickListener = new View.OnClickListener() {
@@ -111,6 +112,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     Injector injector = OCManager.getInjector();
     if (injector != null) {
       injector.injectContentGridLayoutView(this);
+      thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
     }
   }
 
@@ -165,7 +167,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       uiListedBaseContentData = new SpannedGridRecyclerView(context);
 
       uiListedBaseContentData.setListedContentListener(listedContentListener);
-      uiListedBaseContentData.setParams(clipToPadding, addictionalPadding, authoritation);
+      uiListedBaseContentData.setParams(clipToPadding, addictionalPadding, authoritation, thumbnailEnabled);
       uiListedBaseContentData.setData(cellDataList);
 
       listedDataContainer.removeAllViews();
@@ -181,7 +183,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
 
     uiListedBaseContentData.setListedContentListener(listedContentListener);
-    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding, authoritation);
+    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding, authoritation, thumbnailEnabled);
     uiListedBaseContentData.setData(cellDataList);
 
     listedDataContainer.removeAllViews();

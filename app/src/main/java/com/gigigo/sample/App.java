@@ -147,6 +147,7 @@ public class App extends MultiDexApplication {
             .setNormalFont("fonts/Gotham-Book.ttf")
             .setMediumFont("fonts/Gotham-Medium.ttf")
             .setTitleToolbarEnabled(false)
+            //.disableThumbnailImages()
             .setEnabledStatusBar(false);
     Ocm.setStyleUi(ocmStyleUiBuilder);
 

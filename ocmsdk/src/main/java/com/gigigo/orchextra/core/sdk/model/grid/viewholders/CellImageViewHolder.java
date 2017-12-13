@@ -2,11 +2,13 @@ package com.gigigo.orchextra.core.sdk.model.grid.viewholders;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import com.bumptech.glide.DrawableRequestBuilder;
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -26,19 +28,23 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
   private final WeakReference<View> mainLayoutWeakReference;
   private final WeakReference<View> padlockViewWeakReference;
   private final Context context;
+  private final boolean thumbnailEnabled;
 
   private WeakReference<ImageView> imageViewWeakReference;
   private WeakReference<ImageView> imageViewOverlayWeakReference;
   private Authoritation authoritation;
 
-  public CellImageViewHolder(Context context, ViewGroup parent, Authoritation authoritation) {
+  public CellImageViewHolder(Context context, ViewGroup parent, Authoritation authoritation,
+      boolean thumbnailEnabled) {
     super(context, parent, R.layout.cell_image_content_item);
 
     this.context = context;
     this.authoritation = authoritation;
+    this.thumbnailEnabled = thumbnailEnabled;
 
     new WeakReference<>(itemView);
-    imageViewOverlayWeakReference=new WeakReference<>((ImageView) itemView.findViewById(R.id.cell_image_view_overlay));
+    imageViewOverlayWeakReference =
+        new WeakReference<>((ImageView) itemView.findViewById(R.id.cell_image_view_overlay));
     imageViewWeakReference =
         new WeakReference<>((ImageView) itemView.findViewById(R.id.cell_image_view));
     padlockViewWeakReference = new WeakReference<>(itemView.findViewById(R.id.padlock_layout));
@@ -70,7 +76,6 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                       .priority(Priority.NORMAL)
                       .diskCacheStrategy(DiskCacheStrategy.ALL)
                       .dontAnimate();
-
                 } else {
 
                   requestBuilder = OcmImageLoader.load(context, generatedImageUrl)
@@ -80,7 +85,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
 
                   Transformation<Bitmap> bitmapTransformReadArticles =
                       OCManager.getBitmapTransformReadArticles();
-                  if(bitmapTransformReadArticles!=null) {
+                  if (bitmapTransformReadArticles != null) {
                     requestBuilder.bitmapTransform(bitmapTransformReadArticles);
                   } else {
                     //todo overlay, image.setForeground only api23, or ovelary with other image
@@ -89,13 +94,13 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                     imageViewOverlay.setVisibility(View.VISIBLE);
                   }
                 }
+
+                if (thumbnailEnabled && sectionView.getImageThumb() != null) {
+                  byte[] imageByteArray = Base64.decode(sectionView.getImageThumb(), Base64.DEFAULT);
+                  requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageByteArray));
+                }
+
                 requestBuilder.into(imageView);
-                //if (thumbnailEnabled) {
-                //requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageByteArray));
-                //}
-
-
-               // requestBuilder.into(imageView);
               }
 
               mainLayout.getViewTreeObserver().removeOnPreDrawListener(this);

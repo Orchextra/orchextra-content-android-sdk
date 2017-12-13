@@ -131,10 +131,11 @@ public final class Ocm {
     String oxSecret = ocmBuilder.getOxSecret();
     Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
 
-    OCManager.initSdk(app);
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
+
+    OCManager.initSdk(app);
 
     OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
     if (ocmBuilder.getShowReadArticles() && ocmBuilder.getTransformReadArticleMode()
