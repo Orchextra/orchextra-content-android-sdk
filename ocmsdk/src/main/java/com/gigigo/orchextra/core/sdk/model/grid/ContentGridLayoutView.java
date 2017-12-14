@@ -265,7 +265,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   @Override public void reloadSection(boolean hasToShowNewContentButton) {
     if (presenter != null) {
       presenter.setHasToCheckNewContent(hasToShowNewContentButton);
-      presenter.loadSection(uiMenu, emotion);
+      presenter.loadSection(!hasToShowNewContentButton, uiMenu, emotion);
     }
   }
 

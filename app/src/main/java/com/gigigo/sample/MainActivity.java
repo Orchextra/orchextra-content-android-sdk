@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(MainActivity.this, "LLega", Toast.LENGTH_LONG).show();
 
         //if (!oldUiMenuData.isFromCloud()) {
-        Ocm.getMenus(MenuRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
+        Ocm.getMenus(MenuRequest.FIRST_CACHE, new OcmCallbacks.Menus() {
           @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
             List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
             if (newUiMenuList == null) {

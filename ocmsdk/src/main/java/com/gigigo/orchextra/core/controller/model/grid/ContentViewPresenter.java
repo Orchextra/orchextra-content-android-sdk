@@ -47,6 +47,10 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     getView().initUi();
   }
 
+  public void setHasToCheckNewContent(boolean hasToCheckNewContent){
+    this.hasToCheckNewContent = hasToCheckNewContent;
+  }
+
   public void loadSection() {
     getView().showProgressView(true);
 
@@ -65,10 +69,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     loadSection(false, uiMenu, filter);
   }
 
-  public void setHasToCheckNewContent(boolean hasToCheckNewContent){
-    this.hasToCheckNewContent = hasToCheckNewContent;
-  }
-  private void loadSection(boolean forceReload, UiMenu uiMenu, String filter) {
+  public void loadSection(boolean forceReload, UiMenu uiMenu, String filter) {
     this.uiMenu = uiMenu;
     this.filter = filter;
 
