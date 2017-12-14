@@ -18,21 +18,22 @@ import com.gigigo.orchextra.ocmsdk.R;
 public class ArticleHeaderView extends BaseViewHolder<ArticleHeaderElement> {
 
   private final Context context;
+  private final boolean thumbnailEnabled;
 
   private ImageView articleHeaderImage;
-
   private TextView articleHeaderText;
 
-  public ArticleHeaderView(Context context, ViewGroup parent) {
+  public ArticleHeaderView(Context context, ViewGroup parent, boolean thumbnailEnabled) {
     super(context, parent, R.layout.view_article_header_item);
 
     this.context = context;
+    this.thumbnailEnabled = thumbnailEnabled;
 
     articleHeaderImage = (ImageView) itemView.findViewById(R.id.article_header_image);
     articleHeaderText = (TextView) itemView.findViewById(R.id.article_header_text);
   }
 
-  private void setImage(final String imageUrl) {
+  private void setImage(final String imageUrl, String imageThumb) {
     float ratioImage = ImageGenerator.getRatioImage(imageUrl);
 
     int realWidthDevice = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context);
@@ -50,11 +51,16 @@ public class ArticleHeaderView extends BaseViewHolder<ArticleHeaderElement> {
     DrawableRequestBuilder<String> requestBuilder =
         OcmImageLoader.load(context, generatedImageUrl).priority(Priority.NORMAL).dontAnimate();
 
+    if (thumbnailEnabled && imageThumb != null) {
+      byte[] imageThumbBytes = Base64.decode(imageThumb, Base64.DEFAULT);
+      requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageThumbBytes));
+    }
+
     requestBuilder.into(articleHeaderImage);
   }
 
   @Override public void bindTo(ArticleHeaderElement articleElement, int i) {
-    setImage(articleElement.getImageUrl());
+    setImage(articleElement.getImageUrl(), articleElement.getImageThumb());
 
     if (articleElement.getHtml() != null) {
       articleHeaderText.setText(Html.fromHtml(articleElement.getHtml()));

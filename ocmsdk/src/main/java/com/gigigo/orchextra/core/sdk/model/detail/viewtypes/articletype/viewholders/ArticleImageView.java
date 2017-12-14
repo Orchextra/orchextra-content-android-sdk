@@ -17,11 +17,13 @@ public class ArticleImageView extends BaseViewHolder<ArticleImageElement> {
 
   private final Context context;
   private ImageView articleImagePlaceholder;
+  private boolean thumbnailEnabled;
 
-  public ArticleImageView(Context context, ViewGroup parent) {
+  public ArticleImageView(Context context, ViewGroup parent, boolean thumbnailEnabled) {
     super(context, parent, R.layout.view_article_image_item);
 
     this.context = context;
+    this.thumbnailEnabled = thumbnailEnabled;
 
     articleImagePlaceholder = (ImageView) itemView.findViewById(R.id.article_image_placeholder);
   }
@@ -42,6 +44,11 @@ public class ArticleImageView extends BaseViewHolder<ArticleImageElement> {
 
     DrawableRequestBuilder<String> requestBuilder =
         OcmImageLoader.load(context, generatedImageUrl).priority(Priority.NORMAL).dontAnimate();
+
+    if (thumbnailEnabled && imageThumb != null) {
+      byte[] imageThumbBytes = Base64.decode(imageThumb, Base64.DEFAULT);
+      requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageThumbBytes));
+    }
 
     requestBuilder.into(articleImagePlaceholder);
   }

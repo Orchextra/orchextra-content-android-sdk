@@ -25,6 +25,7 @@ public final class OcmBuilder {
   private ImageTransformReadArticle transformReadArticleMode = ImageTransformReadArticle.OVERLAY;
   private int maxReadArticles=100;
 
+
   public int getMaxReadArticles() {
     return maxReadArticles;
   }

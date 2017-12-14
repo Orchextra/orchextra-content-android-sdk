@@ -22,9 +22,9 @@ public interface OcmApiService {
   @GET(MENUS) Observable<ApiMenuContentDataResponse> getMenuDataRx();
 
   @GET(SECTION) Observable<ApiSectionContentDataResponse> getSectionDataRx(
-      @Path(value = "section", encoded = true) String section);
+      @Path(value = "section", encoded = true) String section, @Query("withThumbnails") Integer withThumbnails);
 
   @GET(SEARCH) Observable<ApiSectionContentDataResponse> searchRx(@Query("search") String textToSearch);
 
-  @GET(ELEMENT) Observable<ApiElementDataResponse> getElementByIdRx(@Path(value = "elementId", encoded = true) String elementId);
+  @GET(ELEMENT) Observable<ApiElementDataResponse> getElementByIdRx(@Path(value = "elementId", encoded = true) String elementId, @Query("withThumbnails") Integer withThumbnails);
 }
