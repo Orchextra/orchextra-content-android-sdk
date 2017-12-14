@@ -66,7 +66,7 @@ public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
   public void reloadSections() {
     for (ScreenSlidePageFragment fragment : fragments) {
-      fragment.reloadSection();
+      fragment.reloadSection(false);
     }
   }
 

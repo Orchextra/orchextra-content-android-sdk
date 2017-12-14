@@ -262,9 +262,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     this.progressView = progressView;
   }
 
-  @Override public void reloadSection() {
+  @Override public void reloadSection(boolean hasToShowNewContentButton) {
     if (presenter != null) {
-      presenter.setHasToCheckNewContent(true);
+      presenter.setHasToCheckNewContent(hasToShowNewContentButton);
       presenter.loadSection(uiMenu, emotion);
     }
   }

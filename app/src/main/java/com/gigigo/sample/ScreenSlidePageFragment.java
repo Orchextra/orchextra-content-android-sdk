@@ -71,9 +71,9 @@ public class ScreenSlidePageFragment extends Fragment {
     }
   }
 
-  public void reloadSection() {
+  public void reloadSection(boolean hasToShowNewContentButton) {
     if (contentView != null) {
-      contentView.reloadSection();
+      contentView.reloadSection(hasToShowNewContentButton);
     }
   }
 

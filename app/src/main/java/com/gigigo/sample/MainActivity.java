@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
           viewpager.setCurrentItem(tab.getPosition());
           ScreenSlidePageFragment frag =
               ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem()));
-          frag.reloadSection();
+          frag.reloadSection(false);
         }
 
         @Override public void onTabUnselected(TabLayout.Tab tab) {
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override public void onTabReselected(TabLayout.Tab tab) {
           viewpager.setCurrentItem(tab.getPosition());
-          ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem())).reloadSection();
+          ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem())).reloadSection(false);
         }
       };
 
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
           Toast.LENGTH_SHORT).show();
     }
   };
-
+  private List<UiMenu> oldUiMenuList;
 
   public static boolean deleteDir(File dir) {
     if (dir != null && dir.isDirectory()) {
@@ -76,7 +76,12 @@ public class MainActivity extends AppCompatActivity {
 
     Ocm.setOnChangedMenuCallback(new OnChangedMenuCallback() {
       @Override public void onChangedMenu(UiMenuData uiMenuData) {
-        showIconNewContent(uiMenuData.getUiMenuList());
+        boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, uiMenuData.getUiMenuList());
+        if (menuHasChanged) {
+          showIconNewContent(uiMenuData.getUiMenuList());
+        } else {
+          adapter.reloadSections();
+        }
       }
     });
 
@@ -135,24 +140,26 @@ public class MainActivity extends AppCompatActivity {
     viewpager.setAdapter(adapter);
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
   }
+  //endregion
 
   private void startCredentials() {
-    Ocm.startWithCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET, new OcmCredentialCallback() {
-      @Override public void onCredentialReceiver(String accessToken) {
-        //TODO Fix in Orchextra
-        runOnUiThread(new Runnable() {
-          @Override public void run() {
-            getContent();
+    Ocm.startWithCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET,
+        new OcmCredentialCallback() {
+          @Override public void onCredentialReceiver(String accessToken) {
+            //TODO Fix in Orchextra
+            runOnUiThread(new Runnable() {
+              @Override public void run() {
+                getContent();
+              }
+            });
+          }
+
+          @Override public void onCredentailError(String code) {
+            Snackbar.make(tabLayout,
+                "No Internet Connection: " + code + "\n check Credentials-Enviroment",
+                Snackbar.LENGTH_INDEFINITE).show();
           }
         });
-      }
-
-      @Override public void onCredentailError(String code) {
-        Snackbar.make(tabLayout,
-            "No Internet Connection: " + code + "\n check Credentials-Enviroment",
-            Snackbar.LENGTH_INDEFINITE).show();
-      }
-    });
 
     Ocm.setOnCustomSchemeReceiver(new OnCustomSchemeReceiver() {
       @Override public void onReceive(String customScheme) {
@@ -162,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
     });
     Ocm.start();//likewoah
   }
-  //endregion
 
   public void clearApplicationData() {
     File cache = getCacheDir();
@@ -176,33 +182,31 @@ public class MainActivity extends AppCompatActivity {
       }
     }
   }
-  private List<UiMenu> oldUiMenuList;
 
   private void getContent() {
-    Ocm.setOnLoadDataContentSectionFinished(
-        new OnLoadContentSectionFinishedCallback() {
-          @Override public void onLoadContentSectionFinished() {
-            Toast.makeText(MainActivity.this, "LLega", Toast.LENGTH_LONG).show();
+    Ocm.setOnLoadDataContentSectionFinished(new OnLoadContentSectionFinishedCallback() {
+      @Override public void onLoadContentSectionFinished() {
+        Toast.makeText(MainActivity.this, "LLega", Toast.LENGTH_LONG).show();
 
-            //if (!oldUiMenuData.isFromCloud()) {
-              Ocm.getMenus(MenuRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
-                @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
-                  List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
-                  if (newUiMenuList == null) {
-                    return;
-                  }
+        //if (!oldUiMenuData.isFromCloud()) {
+        Ocm.getMenus(MenuRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
+          @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
+            List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
+            if (newUiMenuList == null) {
+              return;
+            }
 
-                  checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
-                  oldUiMenuList = newUiMenuList;
-                }
+            checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
+            oldUiMenuList = newUiMenuList;
+          }
 
-                @Override public void onMenusFails(Throwable e) {
+          @Override public void onMenusFails(Throwable e) {
 
-                }
-              });
-            //}
           }
         });
+        //}
+      }
+    });
 
     Ocm.getMenus(MenuRequest.ONLY_CACHE, new OcmCallbacks.Menus() {
       @Override public void onMenusLoaded(final UiMenuData oldUiMenuData) {
@@ -227,15 +231,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
           });
-        }  else {
-        oldUiMenuList = oldUiMenuData.getUiMenuList();
+        } else {
+          oldUiMenuList = oldUiMenuData.getUiMenuList();
 
-        if (oldUiMenuList == null) {
-          Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
-          return;
-        }
+          if (oldUiMenuList == null) {
+            Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
+            return;
+          }
 
-        onGoDetailView(oldUiMenuList);
+          onGoDetailView(oldUiMenuList);
         }
       }
 
@@ -245,21 +249,21 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  private void checkIfMenuHasChanged(List<UiMenu> oldUiMenuList, List<UiMenu> newUiMenuList) {
+  private boolean checkIfMenuHasChanged(List<UiMenu> oldUiMenuList, List<UiMenu> newUiMenuList) {
     if (oldUiMenuList == null || newUiMenuList == null) {
-      return;
+      return false;
     }
 
     if (oldUiMenuList.size() != newUiMenuList.size()) {
-      showIconNewContent(newUiMenuList);
+      return true;
     } else {
       for (int i = 0; i < newUiMenuList.size(); i++) {
         if (oldUiMenuList.get(i).getUpdateAt() != newUiMenuList.get(i).getUpdateAt()) {
-          showIconNewContent(newUiMenuList);
-          return;
+          return true;
         }
       }
     }
+    return false;
   }
 
   private void showIconNewContent(final List<UiMenu> newMenus) {

@@ -178,7 +178,7 @@ public class ArticleContentData extends UiGridBaseContentData {
     }
   }
 
-  @Override public void reloadSection() {
+  @Override public void reloadSection(boolean hasToShowNewContentButton) {
     if (adapter != null) {
       adapter.notifyDataSetChanged();
     }
