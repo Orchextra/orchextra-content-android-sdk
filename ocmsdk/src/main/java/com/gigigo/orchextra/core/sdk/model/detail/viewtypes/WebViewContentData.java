@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes;
 
 import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.MimeTypeMap;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -37,8 +39,12 @@ import java.net.URLConnection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static android.app.Activity.RESULT_OK;
+
 public class WebViewContentData extends UiGridBaseContentData {
 
+  public static final int REQUEST_SELECT_FILE = 101;
+  public static final int FILECHOOSER_RESULTCODE = 102;
   public static final float PADDING_CONTAINER = 400f;
   private static final String EXTRA_URL = "EXTRA_URL";
   private static final String EXTRA_FEDERATED_AUTH = "EXTRA_FEDERATED_AUTH";
@@ -47,6 +53,8 @@ public class WebViewContentData extends UiGridBaseContentData {
   private View progress;
   private int addictionalPadding;
   private View webviewClipToPaddingContainer;
+  private ValueCallback<Uri[]> uploadMessageUri;
+  private ValueCallback uploadMessage;
 
   public static WebViewContentData newInstance(ElementCacheRender render) {
     WebViewContentData webViewElements = new WebViewContentData();
@@ -203,6 +211,57 @@ public class WebViewContentData extends UiGridBaseContentData {
           GeolocationPermissions.Callback callback) {
         callback.invoke(origin, true, false);
       }
+      // For Android 3.0+
+      public void openFileChooser(ValueCallback uploadMsg, String acceptType) {
+        uploadMessage = uploadMsg;
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("*/*");
+        startActivityForResult(Intent.createChooser(i, "File Browser"), FILECHOOSER_RESULTCODE);
+      }
+
+      //For Android 4.1+ only
+      protected void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture)
+      {
+        uploadMessage = uploadMsg;
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        startActivityForResult(Intent.createChooser(intent, "File Browser"), FILECHOOSER_RESULTCODE);
+      }
+
+      protected void openFileChooser(ValueCallback<Uri> uploadMsg)
+      {
+        uploadMessage = uploadMsg;
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("*/*");
+        startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE);
+      }
+
+      @Override
+      public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback,
+          FileChooserParams fileChooserParams) {
+
+        if (uploadMessageUri != null) {
+          uploadMessageUri.onReceiveValue(null);
+          uploadMessageUri = null;
+        }
+
+        uploadMessageUri = filePathCallback;
+        Intent intent = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          intent = fileChooserParams.createIntent();
+        }
+        try {
+          startActivityForResult(intent, REQUEST_SELECT_FILE);
+        } catch (ActivityNotFoundException e) {
+          uploadMessageUri = null;
+          Toast.makeText(webView.getContext(), "Cannot Open File Chooser", Toast.LENGTH_LONG).show();
+          return false;
+        }
+        return true;
+      }
     });
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -352,6 +411,26 @@ public class WebViewContentData extends UiGridBaseContentData {
   @Override public void onResume() {
     super.onResume();
     setClipToPaddingBottomSize(ClipToPadding.PADDING_NONE, addictionalPadding);
+  }
+
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode == REQUEST_SELECT_FILE) {
+      if (uploadMessageUri == null) return;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        uploadMessageUri.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
+      }
+      uploadMessageUri = null;
+    } else if (requestCode == FILECHOOSER_RESULTCODE) {
+      if (null == uploadMessage)
+        return;
+      // Use MainActivity.RESULT_OK if you're implementing WebView inside Fragment
+      // Use RESULT_OK only if you're implementing WebView inside an Activity
+      Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+      uploadMessage.onReceiveValue(result);
+      uploadMessage = null;
+    }
   }
 
   @Override
