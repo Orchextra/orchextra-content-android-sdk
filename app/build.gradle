@@ -19,6 +19,8 @@ android {
     ndk {
       abiFilters "armeabi-v7a"
     }
+
+    buildConfigField "String", "BUSSINES_UNIT", project.ext.bussines_unit
   }
   buildTypes {
     staging {
