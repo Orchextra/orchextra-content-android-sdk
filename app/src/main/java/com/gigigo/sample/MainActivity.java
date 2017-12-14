@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 import com.gigigo.orchextra.Orchextra;
-import com.gigigo.orchextra.core.domain.entities.menus.MenuRequest;
+import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
@@ -19,6 +19,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         if (menuHasChanged) {
           showIconNewContent(uiMenuData.getUiMenuList());
         } else {
-          adapter.reloadSections();
+          adapter.reloadSections(viewpager.getCurrentItem());
         }
       }
     });
@@ -183,21 +184,31 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  private List<UiMenu> copy(List<UiMenu> list) {
+    List<UiMenu> copyList = new ArrayList<>();
+    copyList.addAll(list);
+    return copyList;
+  }
+
   private void getContent() {
     Ocm.setOnLoadDataContentSectionFinished(new OnLoadContentSectionFinishedCallback() {
       @Override public void onLoadContentSectionFinished() {
         Toast.makeText(MainActivity.this, "LLega", Toast.LENGTH_LONG).show();
 
         //if (!oldUiMenuData.isFromCloud()) {
-        Ocm.getMenus(MenuRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
+        Ocm.getMenus(DataRequest.FIRST_CACHE, new OcmCallbacks.Menus() {
           @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
             List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
             if (newUiMenuList == null) {
               return;
             }
 
-            checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
-            oldUiMenuList = newUiMenuList;
+            boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
+            if (menuHasChanged) {
+              showIconNewContent(newUiMenuList);
+            }
+
+            oldUiMenuList = copy(newUiMenuList);
           }
 
           @Override public void onMenusFails(Throwable e) {
@@ -208,10 +219,10 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    Ocm.getMenus(MenuRequest.ONLY_CACHE, new OcmCallbacks.Menus() {
+    Ocm.getMenus(DataRequest.ONLY_CACHE, new OcmCallbacks.Menus() {
       @Override public void onMenusLoaded(final UiMenuData oldUiMenuData) {
         if (oldUiMenuData == null) {
-          Ocm.getMenus(MenuRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
+          Ocm.getMenus(DataRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
             @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
               if (oldUiMenuList == null) {
                 onGoDetailView(newUiMenuData.getUiMenuList());
@@ -223,8 +234,11 @@ public class MainActivity extends AppCompatActivity {
                 return;
               }
 
-              checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
-              oldUiMenuList = newUiMenuList;
+              boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
+              if (menuHasChanged) {
+                showIconNewContent(newUiMenuList);
+              }
+              oldUiMenuList = copy(newUiMenuList);
             }
 
             @Override public void onMenusFails(Throwable e) {
@@ -232,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
             }
           });
         } else {
-          oldUiMenuList = oldUiMenuData.getUiMenuList();
+          oldUiMenuList = copy(oldUiMenuData.getUiMenuList());
 
           if (oldUiMenuList == null) {
             Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
@@ -258,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
       return true;
     } else {
       for (int i = 0; i < newUiMenuList.size(); i++) {
-        if (oldUiMenuList.get(i).getUpdateAt() != newUiMenuList.get(i).getUpdateAt()) {
+        if (!oldUiMenuList.get(i).getSlug().equals(newUiMenuList.get(i).getSlug())) {
           return true;
         }
       }

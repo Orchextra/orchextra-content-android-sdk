@@ -13,6 +13,7 @@ public class ApiSectionContentData implements Kacheable {
   private String key;
   private String version;
   private String expireAt;
+  private boolean fromCloud;
 
   public ApiContentItem getContent() {
     return content;
@@ -36,5 +37,13 @@ public class ApiSectionContentData implements Kacheable {
 
   @NotNull @Override public String getKey() {
     return key;
+  }
+
+  public void setFromCloud(boolean fromCloud) {
+    this.fromCloud = fromCloud;
+  }
+
+  public boolean isFromCloud() {
+    return fromCloud;
   }
 }

@@ -9,6 +9,7 @@ public class ContentData {
   private Map<String, ElementCache> elementsCache;
   private String version;
   private String expiredAt;
+  private boolean fromCloud;
 
   public ContentItem getContent() {
     return content;
@@ -40,5 +41,13 @@ public class ContentData {
 
   public void setExpiredAt(String expiredAt) {
     this.expiredAt = expiredAt;
+  }
+
+  public boolean isFromCloud() {
+    return fromCloud;
+  }
+
+  public void setFromCloud(boolean fromCloud) {
+    this.fromCloud = fromCloud;
   }
 }
