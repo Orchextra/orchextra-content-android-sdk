@@ -317,10 +317,10 @@ public class OcmControllerImp implements OcmController {
         ClearCache.Params.create(images, data), PriorityScheduler.Priority.LOW);
   }
 
-  @Override public void refreshAllContent() {
+  @Override public void refreshMenuData() {
     getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
       @Override public void onGetVersionLoaded(VersionData versionData) {
-        checkIfNeedsRefreshMenuAndSectionsAndNotifyChanges(versionData);
+        checkIfNeedsRefreshMenu(versionData);
       }
 
       @Override public void onGetVersionFails(Exception e) {
@@ -328,22 +328,11 @@ public class OcmControllerImp implements OcmController {
     }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
   }
 
-  private void checkIfNeedsRefreshMenuAndSectionsAndNotifyChanges(VersionData versionData) {
+  private void checkIfNeedsRefreshMenu(VersionData versionData) {
     boolean forceReload = hasToForceReloadBecauseVersionChanged(versionData);
     if (forceReload) {
       retrieveMenus(true, new GetMenusControllerCallback() {
         @Override public void onGetMenusLoaded(UiMenuData menus) {
-          for (UiMenu uiMenu : menus.getUiMenuList()) {
-            ElementCache elementCache = uiMenu.getElementCache();
-
-            if (elementCache != null
-                && elementCache.getRender() != null
-                && elementCache.getRender().getContentUrl() != null) {
-
-              getSection(DataRequest.FIRST_CACHE, elementCache.getRender().getContentUrl(), 0, null);
-            }
-          }
-
           OCManager.notifyOnMenuChanged(menus);
         }
 

@@ -55,26 +55,34 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   public void loadSection() {
     getView().showProgressView(true);
 
-    loadSection(false, uiMenu, filter);
+    loadSection(false, uiMenu, filter, false);
   }
 
   public void loadSection(UiMenu uiMenu) {
-    loadSection(false, uiMenu, filter);
+    loadSection(false, uiMenu, filter, false);
   }
 
   public void loadSection(boolean forceReload) {
-    loadSection(forceReload, uiMenu, filter);
+    loadSection(forceReload, uiMenu, filter,false);
   }
 
   public void loadSection(UiMenu uiMenu, String filter) {
-    loadSection(false, uiMenu, filter);
+    loadSection(false, uiMenu, filter, false);
   }
 
-  public void loadSection(boolean forceReload, UiMenu uiMenu, String filter) {
+  public void loadSectionAndNotifyMenu() {
+    loadSection(true, uiMenu, filter, true);
+  }
+
+  public void loadSection(boolean forceReload, UiMenu uiMenu, String filter, boolean notifyMenu) {
     this.uiMenu = uiMenu;
     this.filter = filter;
 
     String contentUrl = uiMenu.getElementCache().getRender().getContentUrl();
+
+    if (OCManager.hasOnChangedMenuCallback() && notifyMenu) {
+      ocmController.refreshMenuData();
+    }
 
     /**
      * Init app
@@ -442,19 +450,5 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   public void destroy() {
     ocmController.disposeUseCases();
-  }
-
-  /**
-   * When callback is not set, only do a section refresh.
-   *
-   * If callback is set, return the menu with a possible change.
-   * App must to refresh menus and sections.
-   */
-  public void reloadAllSections() {
-    if (OCManager.hasOnChangedMenuCallback()) {
-      ocmController.refreshAllContent();
-    } else {
-      loadSection(true);
-    }
   }
 }

@@ -22,7 +22,7 @@ public interface OcmController {
 
   void disposeUseCases();
 
-  void refreshAllContent();
+  void refreshMenuData();
 
   // Callbacks
 
