@@ -63,7 +63,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   }
 
   public void loadSection(boolean forceReload) {
-    loadSection(forceReload, uiMenu, filter,false);
+    loadSection(forceReload, uiMenu, filter, false);
   }
 
   public void loadSection(UiMenu uiMenu, String filter) {
@@ -114,20 +114,22 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
                 return;
               } else {
+                if (!hasToCheckNewContent) {
+                  renderContentItem(cachedContentData.getContent());
+                }
+                ocmController.getSection(DataRequest.FIRST_CACHE, contentUrl, imagesToDownload,
+                    new OcmController.GetSectionControllerCallback() {
 
-                renderContentItem(cachedContentData.getContent());
-                ocmController.getSection(DataRequest.FIRST_CACHE, contentUrl, imagesToDownload, new OcmController.GetSectionControllerCallback() {
+                      @Override public void onGetSectionLoaded(ContentData newContentData) {
+                        if (newContentData.isFromCloud()) {
+                          checkNewContent(cachedContentData, newContentData);
+                        }
+                      }
 
-                  @Override public void onGetSectionLoaded(ContentData newContentData) {
-                    if (newContentData.isFromCloud()) {
-                      checkNewContent(cachedContentData, newContentData);
-                    }
-                  }
+                      @Override public void onGetSectionFails(Exception e) {
 
-                  @Override public void onGetSectionFails(Exception e) {
-
-                  }
-                });
+                      }
+                    });
 
                 //if (cachedContentData == null) {
                 //  cachedContentData = contentData;
