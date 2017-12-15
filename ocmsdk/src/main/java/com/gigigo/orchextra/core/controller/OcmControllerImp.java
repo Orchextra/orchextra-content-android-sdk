@@ -292,6 +292,21 @@ public class OcmControllerImp implements OcmController {
     }
   }
 
+  private void checkVersionAndExpiredAtAndRetrieveSection(VersionData versionData,
+      ContentData contentData, String contentUrl, int imagesToDownload, GetSectionControllerCallback getSectionControllerCallback) {
+    boolean requestFromCloud =
+        hasToForceReloadBecauseVersionChangedOrSectionHasExpired(versionData, contentData);
+
+    if (requestFromCloud) {
+      getSection.execute(new SectionObserver(getSectionControllerCallback), GetSection.Params.forSection(true, contentUrl, imagesToDownload),
+          PriorityScheduler.Priority.HIGH);
+    }
+
+    if (getSectionControllerCallback != null) {
+      getSectionControllerCallback.onGetSectionLoaded(contentData);
+    }
+  }
+
   private String getSlug(String elementUrl) {
     try {
       return elementUrl.substring(elementUrl.lastIndexOf("/") + 1, elementUrl.length());
@@ -483,6 +498,8 @@ public class OcmControllerImp implements OcmController {
         getSectionControllerCallback.onGetSectionLoaded(contentData);
       }
     }
+
+
   }
 
   private final class DetailObserver extends DefaultObserver<ElementData> {
