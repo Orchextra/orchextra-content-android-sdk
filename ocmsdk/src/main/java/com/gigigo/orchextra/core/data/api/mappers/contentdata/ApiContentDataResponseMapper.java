@@ -43,6 +43,7 @@ public class ApiContentDataResponseMapper
 
     model.setVersion(data.getVersion());
     model.setExpiredAt(data.getExpireAt());
+    model.setFromCloud(data.isFromCloud());
 
     return model;
   }

@@ -463,7 +463,7 @@ public class WebViewContentData extends UiGridBaseContentData {
     }
   }
 
-  @Override public void reloadSection() {
+  @Override public void reloadSection(boolean hasToShowNewContentButton) {
     if (webView != null) {
       webView.reload();
     }

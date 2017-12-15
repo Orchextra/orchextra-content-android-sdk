@@ -22,7 +22,7 @@ public abstract class UiGridBaseContentData extends UiBaseContentData {
 
   public abstract void setProgressView(View progressView);
 
-  public abstract void reloadSection();
+  public abstract void reloadSection(boolean hasToShowNewContentButton);
 
   public void setOnLoadMoreContentListener(OnLoadMoreContentListener onLoadMoreContentListener) {
     this.onLoadMoreContentListener = onLoadMoreContentListener;

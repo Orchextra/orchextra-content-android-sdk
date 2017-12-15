@@ -64,7 +64,8 @@ import orchextra.javax.inject.Singleton;
         .doOnNext(ocmCache::putSection)
         .doOnNext(apiSectionContentData -> {
           addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload);
-        });
+        })
+        .doOnNext(apiSectionContentData -> apiSectionContentData.setFromCloud(true));
   }
 
   private void addSectionsToCache(ApiMenuContentData apiMenuContentData) {
