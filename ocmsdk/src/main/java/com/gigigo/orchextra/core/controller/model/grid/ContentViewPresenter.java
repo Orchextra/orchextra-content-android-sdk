@@ -74,15 +74,11 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     loadSection(true, uiMenu, filter, true);
   }
 
-  public void loadSection(boolean forceReload, UiMenu uiMenu, String filter, boolean notifyMenu) {
+  public void loadSection(boolean forceReload, UiMenu uiMenu, String filter, boolean reloadFromPullToRefresh) {
     this.uiMenu = uiMenu;
     this.filter = filter;
 
     String contentUrl = uiMenu.getElementCache().getRender().getContentUrl();
-
-    if (OCManager.hasOnChangedMenuCallback() && notifyMenu) {
-      ocmController.refreshMenuData();
-    }
 
     /**
      * Init app
@@ -164,7 +160,14 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
             @Override public void onGetSectionLoaded(ContentData contentData) {
               if (contentData.isFromCloud()) {
-                renderContentItem(contentData.getContent());
+                if (reloadFromPullToRefresh) {
+                  if (OCManager.hasOnChangedMenuCallback()) {
+                    ocmController.refreshMenuData();
+                  }
+                  renderContentItem(contentData.getContent());
+                } else {
+                  getView().showNewExistingContent();
+                }
               }
             }
 
