@@ -74,7 +74,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     loadSection(true, uiMenu, filter, true);
   }
 
-  public void loadSection(boolean forceReload, UiMenu uiMenu, String filter, boolean reloadFromPullToRefresh) {
+  public void loadSection(boolean forceReload, UiMenu uiMenu, String filter,
+      boolean reloadFromPullToRefresh) {
     this.uiMenu = uiMenu;
     this.filter = filter;
 
@@ -107,7 +108,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                         renderError();
                       }
                     });
-
               } else {
 
                 renderContentItem(cachedContentData.getContent());
@@ -160,13 +160,24 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
             @Override public void onGetSectionLoaded(ContentData contentData) {
               if (contentData.isFromCloud()) {
+
+                /** This condition is realized because when the application is dead,
+                 *  Orchextra is dead too and when the data is sent without forcing
+                 *  it gives an exception because Orchextra is not initialized, so
+                 *  when tries to check menus there is an inconsistency.
+                 *
+                 *  Always show the button of new content,
+                 *  and only force data when the user does a pull to refresh
+                 */
                 if (reloadFromPullToRefresh) {
                   if (OCManager.hasOnChangedMenuCallback()) {
                     ocmController.refreshMenuData();
                   }
                   renderContentItem(contentData.getContent());
                 } else {
-                  getView().showNewExistingContent();
+                  if (getView() != null) {
+                    getView().showNewExistingContent();
+                  }
                 }
               }
             }
