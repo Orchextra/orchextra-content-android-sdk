@@ -112,11 +112,10 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                       }
                     });
 
-                return;
               } else {
-                if (!hasToCheckNewContent) {
-                  renderContentItem(cachedContentData.getContent());
-                }
+
+                renderContentItem(cachedContentData.getContent());
+
                 ocmController.getSection(DataRequest.FIRST_CACHE, contentUrl, imagesToDownload,
                     new OcmController.GetSectionControllerCallback() {
 
@@ -170,7 +169,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
             }
 
             @Override public void onGetSectionFails(Exception e) {
-              renderError();
+
             }
           });
     }
