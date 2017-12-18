@@ -50,7 +50,48 @@ import orchextra.javax.inject.Inject;
 public final class OCManager {
 
   private static OCManager instance;
+  private static OrchextraCompletionCallback mOrchextraCompletionCallback =
+      new OrchextraCompletionCallback() {
+        @Override public void onSuccess() {
+          Log.d("WOAH", "Orchextra initialized successfully");
+        }
 
+        @Override public void onError(String error) {
+          Log.d("WOAH", "onError: " + error);
+          //new Handler(Looper.getMainLooper()).post(new Runnable() {
+          //  @Override public void run() {
+          //    Toast.makeText(mApplication, "onError:  app" + error, Toast.LENGTH_LONG).show();
+          //  }
+          //});
+          if (error.equals("401") && instance.ocmCredentialCallback != null) {
+            instance.ocmCredentialCallback.onCredentailError(error);
+          }
+        }
+
+        @Override public void onInit(String s) {
+          Log.d("WOAH", "onInit: " + s);
+          //asvox aki es cuando se va a background , en estepunto ox ya ha recuperado la config anterior(buena)
+          //y cuando llega a onSuccess se rompio del todo
+
+        }
+
+        @Override public void onConfigurationReceive(String accessToken) {
+          Log.d("WOAH", "onConfigurationReceive: " + accessToken);
+          //new Handler(Looper.getMainLooper()).post(new Runnable() {
+          //  @Override public void run() {
+          //    Toast.makeText(mApplication, "onConfigurationReceive:  app" + accessToken, Toast.LENGTH_LONG).show();
+          //  }
+          //});
+          instance.oxSession.setToken(accessToken);
+
+          if (instance.ocmCredentialCallback
+              != null) { //asv esto indica q se hace el changecredentials
+            instance.ocmCredentialCallback.onCredentialReceiver(accessToken);
+          }
+        }
+      };
+  //region serialize list of read articles slugs
+  private final String READ_ARTICLES_FILE = "read_articles_file.ocm";
   @Inject OxManager oxManager;
   @Inject OcmSdkLifecycle ocmSdkLifecycle;
   @Inject OcmContextProvider ocmContextProvider;
@@ -60,7 +101,6 @@ public final class OCManager {
   @Inject OcmSchemeHandler schemeHandler;
   @Inject OcmStyleUi ocmStyleUi;
   @Inject OcmController ocmController;
-
   private OnRequiredLoginCallback onRequiredLoginCallback;
   private OnEventCallback onEventCallback;
   private String language;
@@ -72,23 +112,19 @@ public final class OCManager {
   private UiMenu uiMenuToNotifyWhenSectionIsLoaded;
   private boolean isShowReadedArticles = false;
   private int maxReadArticles = 100;
-
+  //public static int transform = -1;
+  private com.bumptech.glide.load.Transformation<Bitmap> readArticlesBitmapTransform;
 
   static void initSdk(Application application) {
-    getInstance();
-    instance.initOcm(application);
+    getInstance().initOcm(application);
   }
 
   static void setDoRequiredLoginCallback(OnRequiredLoginCallback onRequiredLoginCallback) {
-    if (instance != null) {
-      instance.onRequiredLoginCallback = onRequiredLoginCallback;
-    }
+    getInstance().onRequiredLoginCallback = onRequiredLoginCallback;
   }
 
   static void setEventCallback(OnEventCallback onEventCallback) {
-    if (instance != null) {
-      instance.onEventCallback = onEventCallback;
-    }
+    getInstance().onEventCallback = onEventCallback;
   }
 
   static void getMenus(DataRequest menuRequest, final OCManagerCallbacks.Menus menusCallback) {
@@ -96,7 +132,9 @@ public final class OCManager {
       instance.ocmViewGenerator.getMenu(menuRequest,
           new OcmViewGenerator.GetMenusViewGeneratorCallback() {
             @Override public void onGetMenusLoaded(UiMenuData menus) {
-              if (menus != null && menus.getUiMenuList() != null && menus.getUiMenuList().size() > 0) {
+              if (menus != null
+                  && menus.getUiMenuList() != null
+                  && menus.getUiMenuList().size() > 0) {
                 instance.uiMenuToNotifyWhenSectionIsLoaded = menus.getUiMenuList().get(0);
               }
 
@@ -132,7 +170,6 @@ public final class OCManager {
         @Override public void onClearCacheSuccess() {
           // clearCookiesFedexAuth();
           clearCallback.onDataClearedSuccessfull();
-
         }
 
         @Override public void onClearCacheFails(Exception e) {
@@ -226,6 +263,8 @@ public final class OCManager {
     instance.oxManager.bindDevice(businessUnit);
   }
 
+  //region Orchextra method
+
   static void setNewOrchextraCredentials(final String apiKey, final String apiSecret,
       final OcmCredentialCallback ocmCredentialCallback) {
 
@@ -237,7 +276,7 @@ public final class OCManager {
     instance.oxManager.start();
 
     //Some case the start() and changeCredentials() method has concurrency problems
-    instance.oxManager.updateSDKCredentials(apiKey,apiSecret,true);
+    instance.oxManager.updateSDKCredentials(apiKey, apiSecret, true);
   }
 
   public static void start(OcmCredentialCallback onCredentialCallback) {
@@ -248,8 +287,6 @@ public final class OCManager {
   static void bindUser(CrmUser crmUser) {
     instance.oxManager.bindUser(crmUser);
   }
-
-  //region Orchextra method
 
   public static Map<String, String> getLocalStorage() {
     if (instance == null) {
@@ -278,10 +315,10 @@ public final class OCManager {
     return instance.language;
   }
 
+  //endregion
+
   static void setContentLanguage(String language) {
-    if (instance != null) {
-      instance.language = language;
-    }
+    getInstance().language = language;
   }
 
   public static void setOnCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {
@@ -291,8 +328,6 @@ public final class OCManager {
   public static void start() {
     instance.oxManager.start();
   }
-
-  //endregion
 
   public static void stop() {
     instance.oxManager.stop();
@@ -321,6 +356,8 @@ public final class OCManager {
     }
   }
 
+  //endregion
+
   public static synchronized OCManager getInstance() {
     if (instance != null) {
       return instance;
@@ -337,86 +374,6 @@ public final class OCManager {
       OCManager.instance.initOrchextra(app, oxKey, oxSecret, notificationActivityClass, senderId,
           vuforia);
     }
-  }
-
-  private void initOcm(Application app) {
-    initDependencyInjection(app);
-    initLifecyle(app);
-  }
-
-  //endregion
-
-  private void initDependencyInjection(Application app) {
-    OcmComponent ocmComponent = DaggerOcmComponent.builder().ocmModule(new OcmModule(app)).build();
-
-    injector = new InjectorImpl(ocmComponent);
-
-    ocmComponent.injectOcm(OCManager.instance);
-  }
-
-  private void initLifecyle(Application app) {
-    app.registerActivityLifecycleCallbacks(ocmSdkLifecycle);
-  }
-
-  private static OrchextraCompletionCallback mOrchextraCompletionCallback =
-      new OrchextraCompletionCallback() {
-        @Override public void onSuccess() {
-          Log.d("WOAH", "Orchextra initialized successfully");
-        }
-
-        @Override public void onError(String error) {
-          Log.d("WOAH", "onError: " + error);
-          //new Handler(Looper.getMainLooper()).post(new Runnable() {
-          //  @Override public void run() {
-          //    Toast.makeText(mApplication, "onError:  app" + error, Toast.LENGTH_LONG).show();
-          //  }
-          //});
-          if (error.equals("401") && instance.ocmCredentialCallback != null) {
-            instance.ocmCredentialCallback.onCredentailError(error);
-          }
-        }
-
-        @Override public void onInit(String s) {
-          Log.d("WOAH", "onInit: " + s);
-          //asvox aki es cuando se va a background , en estepunto ox ya ha recuperado la config anterior(buena)
-          //y cuando llega a onSuccess se rompio del todo
-
-        }
-
-        @Override public void onConfigurationReceive(String accessToken) {
-          Log.d("WOAH", "onConfigurationReceive: " + accessToken);
-          //new Handler(Looper.getMainLooper()).post(new Runnable() {
-          //  @Override public void run() {
-          //    Toast.makeText(mApplication, "onConfigurationReceive:  app" + accessToken, Toast.LENGTH_LONG).show();
-          //  }
-          //});
-          instance.oxSession.setToken(accessToken);
-
-          if (instance.ocmCredentialCallback
-              != null) { //asv esto indica q se hace el changecredentials
-            instance.ocmCredentialCallback.onCredentialReceiver(accessToken);
-          }
-        }
-      };
-
-  private void initOrchextra(Application app, String oxKey, String oxSecret,
-      Class notificationActivityClass, String senderId) {
-    initOrchextra(app, oxKey, oxSecret, notificationActivityClass, senderId, null);
-  }
-
-  private void initOrchextra(Application app, String oxKey, String oxSecret,
-      Class notificationActivityClass, String senderId, ImageRecognition vuforia) {
-
-    OxManager.Config config = new OxManager.Config.Builder()
-        .setApiKey(oxKey)
-        .setApiSecret(oxSecret)
-        .setNotificationActivityClass(notificationActivityClass)
-        .setSenderId(senderId)
-        .setVuforia(vuforia)
-        .setOrchextraCompletionCallback(mOrchextraCompletionCallback)
-        .build();
-
-    instance.oxManager.init(app,config);
   }
 
   //region cookies FedexAuth
@@ -447,17 +404,6 @@ public final class OCManager {
     //}
   }
 
-  /* public static void saveFedexAuth(String url) {
-     if (instance != null) {
-       SharedPreferences prefs = instance.ocmContextProvider.getApplicationContext()
-           .getSharedPreferences(Ocm.OCM_PREFERENCES, Context.MODE_PRIVATE);
-       SharedPreferences.Editor edit = prefs.edit();
-       edit.putString(Ocm.OCM_FEDEX_AUTH_URL, url);
-       edit.apply();
-     }
-   }
- */
-
   public static void addArticleToReadedArticles(String articleSlug) {
     if (instance != null && instance.isShowReadedArticles) {
       ArrayList<String> lstReadArticles = instance.readReadArticles();
@@ -472,31 +418,13 @@ public final class OCManager {
   public static boolean isThisArticleReaded(String articleSlug) {
     if (instance != null && instance.isShowReadedArticles) {
       ArrayList<String> ArrayReadedArticlesSlug = instance.readReadArticles();
-      if (ArrayReadedArticlesSlug.indexOf(articleSlug)>-1) {
+      if (ArrayReadedArticlesSlug.indexOf(articleSlug) > -1) {
         return true;
       }
       return false;
     } else {
       return false;
     }
-  }
-
-  //region serialize list of read articles slugs
-  private final String READ_ARTICLES_FILE = "read_articles_file.ocm";
-
-  public ArrayList<String> readReadArticles() {
-
-    ArrayList<String> lst =
-        readSerializable(ocmContextProvider.getApplicationContext(), READ_ARTICLES_FILE);
-    if (lst != null) {
-      return lst;
-    } else {
-      return new ArrayList<>();
-    }
-  }
-
-  public void writeReadArticles(ArrayList<String> readArticles) {
-    saveSerializable(ocmContextProvider.getApplicationContext(), readArticles, READ_ARTICLES_FILE);
   }
 
   public static <T extends Serializable> void saveSerializable(Context context, T objectToSave,
@@ -513,6 +441,17 @@ public final class OCManager {
       e.printStackTrace();
     }
   }
+
+  /* public static void saveFedexAuth(String url) {
+     if (instance != null) {
+       SharedPreferences prefs = instance.ocmContextProvider.getApplicationContext()
+           .getSharedPreferences(Ocm.OCM_PREFERENCES, Context.MODE_PRIVATE);
+       SharedPreferences.Editor edit = prefs.edit();
+       edit.putString(Ocm.OCM_FEDEX_AUTH_URL, url);
+       edit.apply();
+     }
+   }
+ */
 
   public static <T extends Serializable> T readSerializable(Context context, String fileName) {
     T objectToReturn = null;
@@ -545,19 +484,6 @@ public final class OCManager {
     }
   }
 
-  //endregion
-
-  /***
-   * you must to reload grid in onResume if this feature are enabled
-   * @param showReadArticles
-   */
-  public static void setShowReadArticles(boolean showReadArticles) {
-
-    if (instance != null) {
-      instance.isShowReadedArticles = showReadArticles;
-    }
-  }
-
   public static void setMaxReadArticles(int maxReadArticles) {
 
     if (instance != null) {
@@ -573,16 +499,13 @@ public final class OCManager {
     }
   }
 
-  //endregion
-  //todo readed articles
-
-  public static void setBitmapTransformReadArticles(
-      com.bumptech.glide.load.Transformation<Bitmap> transformBitmap) {
-    if (getInstance() != null) getInstance().readArticlesBitmapTransform = transformBitmap;
+  /***
+   * you must to reload grid in onResume if this feature are enabled
+   * @param showReadArticles
+   */
+  public static void setShowReadArticles(boolean showReadArticles) {
+    getInstance().isShowReadedArticles = showReadArticles;
   }
-
-  //public static int transform = -1;
-  private com.bumptech.glide.load.Transformation<Bitmap> readArticlesBitmapTransform;
 
   public static com.bumptech.glide.load.Transformation<Bitmap> getBitmapTransformReadArticles() {
     if (getInstance() != null) {
@@ -592,12 +515,19 @@ public final class OCManager {
     }
   }
 
+  public static void setBitmapTransformReadArticles(
+      com.bumptech.glide.load.Transformation<Bitmap> transformBitmap) {
+    getInstance().readArticlesBitmapTransform = transformBitmap;
+  }
+
   public static void setOnChangedMenuCallback(OnChangedMenuCallback onChangedMenuCallback) {
     OCManager instance = getInstance();
     if (instance != null) {
       instance.onChangedMenuCallback = onChangedMenuCallback;
     }
   }
+
+  //endregion
 
   public static boolean hasOnChangedMenuCallback() {
     OCManager instance = getInstance();
@@ -611,21 +541,76 @@ public final class OCManager {
     }
   }
 
-  public static void setOnLoadDataContentSectionFinished(OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback) {
+  public static void setOnLoadDataContentSectionFinished(
+      OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback) {
     OCManager instance = getInstance();
     if (instance != null && onLoadContentSectionFinishedCallback != null) {
       instance.onLoadContentSectionFinishedCallback = onLoadContentSectionFinishedCallback;
     }
   }
 
+  //endregion
+  //todo readed articles
+
   public static void notifyOnLoadDataContentSectionFinished(UiMenu menuToNotify) {
     OCManager instance = getInstance();
     if (instance != null
         && instance.onLoadContentSectionFinishedCallback != null
-        && instance.uiMenuToNotifyWhenSectionIsLoaded != null)  {
+        && instance.uiMenuToNotifyWhenSectionIsLoaded != null) {
       if (instance.uiMenuToNotifyWhenSectionIsLoaded.equals(menuToNotify)) {
         instance.onLoadContentSectionFinishedCallback.onLoadContentSectionFinished();
       }
     }
+  }
+
+  private void initOcm(Application app) {
+    initDependencyInjection(app);
+    initLifecyle(app);
+  }
+
+  private void initDependencyInjection(Application app) {
+    OcmComponent ocmComponent = DaggerOcmComponent.builder().ocmModule(new OcmModule(app)).build();
+
+    injector = new InjectorImpl(ocmComponent);
+
+    ocmComponent.injectOcm(OCManager.instance);
+  }
+
+  private void initLifecyle(Application app) {
+    app.registerActivityLifecycleCallbacks(ocmSdkLifecycle);
+  }
+
+  private void initOrchextra(Application app, String oxKey, String oxSecret,
+      Class notificationActivityClass, String senderId) {
+    initOrchextra(app, oxKey, oxSecret, notificationActivityClass, senderId, null);
+  }
+
+  private void initOrchextra(Application app, String oxKey, String oxSecret,
+      Class notificationActivityClass, String senderId, ImageRecognition vuforia) {
+
+    OxManager.Config config = new OxManager.Config.Builder().setApiKey(oxKey)
+        .setApiSecret(oxSecret)
+        .setNotificationActivityClass(notificationActivityClass)
+        .setSenderId(senderId)
+        .setVuforia(vuforia)
+        .setOrchextraCompletionCallback(mOrchextraCompletionCallback)
+        .build();
+
+    instance.oxManager.init(app, config);
+  }
+
+  public ArrayList<String> readReadArticles() {
+
+    ArrayList<String> lst =
+        readSerializable(ocmContextProvider.getApplicationContext(), READ_ARTICLES_FILE);
+    if (lst != null) {
+      return lst;
+    } else {
+      return new ArrayList<>();
+    }
+  }
+
+  public void writeReadArticles(ArrayList<String> readArticles) {
+    saveSerializable(ocmContextProvider.getApplicationContext(), readArticles, READ_ARTICLES_FILE);
   }
 }
