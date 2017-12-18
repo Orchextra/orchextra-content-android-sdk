@@ -43,7 +43,9 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
         if (getView() != null) {
           if (elementCache != null) {
             renderView(elementCache);
-            OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, elementCache);
+            if (elementCache.getPreview() != null) {
+              OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, elementCache);
+            }
           } else {
             getView().finishView();
           }
@@ -163,5 +165,4 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   public void destroy() {
     ocmController.disposeUseCases();
   }
-
 }
