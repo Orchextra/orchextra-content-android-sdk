@@ -113,7 +113,7 @@ public class DetailToolbarView extends FrameLayout {
 
       detailTitleText.setVisibility(areVisibleToolbar ? View.VISIBLE : View.GONE);
 
-      if (isFirstScrollFull && areVisibleToolbar && !isBlocked) {
+      if (isFirstScrollFull && areVisibleToolbar) {
         OCManager.notifyEvent(OcmEvent.CONTENT_FULL);
       } else if (isFirstScrollPreview && !areVisibleToolbar) {
         OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW);
