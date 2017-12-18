@@ -58,11 +58,12 @@ public final class Ocm {
     String oxSecret = "FAKE_SECRET";
     Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
 
-    //Initialization has to be done before callback because gets them could be null.
-    OCManager.initSdk(ocmBuilder.getApp());
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
+
+    //Initialization has to be done before callback because gets them could be null.
+    OCManager.initSdk(ocmBuilder.getApp());
 
     OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
     if (ocmBuilder.getShowReadArticles() && ocmBuilder.getTransformReadArticleMode()
