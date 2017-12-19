@@ -20,6 +20,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.VuforiaContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.WebViewContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -53,7 +54,12 @@ public class DetailCoordinatorLayoutContentData extends DetailParentContentData 
               @Override public void run() {
                 if (!checkIfOxActionAndExecute(detailContentData)) {
                   coordinatorLayout.removeView(appbarLayout);
-                  detailToolbarView.switchBetweenButtonAndToolbar(true, true);
+                  if (!(detailContentData instanceof BrowserContentData)
+                      && !(detailContentData instanceof WebViewContentData)) {
+                    detailToolbarView.switchBetweenButtonAndToolbar(true, true, true);
+                  } else {
+                    detailToolbarView.switchBetweenButtonAndToolbar(false, true, true);
+                  }
                 } else {
                   closeView();
                 }

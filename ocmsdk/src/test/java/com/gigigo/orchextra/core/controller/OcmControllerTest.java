@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.controller;
 
 import com.gigigo.orchextra.core.domain.OcmController;
+import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
@@ -68,7 +69,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   }
 
   @Test public void testGetSection() {
-    ocmController.getSection(forceReload, FAKE_SECTION, FAKE_IMAGES, null);
+    ocmController.getSection(DataRequest.FORCE_CLOUD, FAKE_SECTION, FAKE_IMAGES, null);
 
     verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class),
         any(PriorityScheduler.Priority.class));
@@ -76,7 +77,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   }
 
   @Test public void testGetMenus() {
-    ocmController.getMenu(forceReload, null);
+    ocmController.getMenu(DataRequest.FORCE_CLOUD, null);
 
     verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class),
         any(PriorityScheduler.Priority.class));

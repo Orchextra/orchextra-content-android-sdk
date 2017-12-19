@@ -58,7 +58,7 @@ import com.gigigo.orchextra.ocmsdk.R;
   private void setToolbar() {
     DetailToolbarView ocmToolbar = (DetailToolbarView) findViewById(R.id.ocmToolbar);
     ocmToolbar.setShareButtonVisible(false);
-    ocmToolbar.switchBetweenButtonAndToolbar(true, false);
+    ocmToolbar.switchBetweenButtonAndToolbar(false, true, false);
     ocmToolbar.blockSwipeEvents(true);
     ocmToolbar.setOnClickBackButtonListener(v -> finish());
     ocmToolbar.setToolbarTitle(webviewTitle);

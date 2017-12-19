@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.WebViewContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 
 public class DetailSimpleLayoutContentData extends DetailParentContentData {
@@ -51,7 +53,11 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
         if (uiBaseContentData instanceof PreviewContentData) {
           setOnClickListenerButtons();
         } else {
-          detailToolbarView.switchBetweenButtonAndToolbar(true);
+          if (!(uiBaseContentData instanceof WebViewContentData) && !(uiBaseContentData instanceof BrowserContentData)) {
+            detailToolbarView.switchBetweenButtonAndToolbar(true,true);
+          } else {
+            detailToolbarView.switchBetweenButtonAndToolbar(false,true);
+          }
           setPaddingTop();
         }
       } else {

@@ -23,6 +23,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class) public class OcmCloudDataStoreTest {
 
   private static final String FAKE_SECTION = "FAKE_SECTION";
+  private static final int FAKE_THUMBNAILS = 32;
   private static final String FAKE_SEACH_TEXT = "FAKE_TEXT";
   private static final String FAKE_ID = "F4k3_ID";
 
@@ -51,11 +52,11 @@ import static org.mockito.Mockito.verify;
   @Test public void testGetSectionEntityFromApi() {
     ApiSectionContentDataResponse fakeApiSection = new ApiSectionContentDataResponse();
     Observable<ApiSectionContentDataResponse> fakeObservable = Observable.just(fakeApiSection);
-    given(mockRestApi.getSectionDataRx(FAKE_SECTION)).willReturn(fakeObservable);
+    given(mockRestApi.getSectionDataRx(FAKE_SECTION, FAKE_THUMBNAILS)).willReturn(fakeObservable);
 
     ocmCloudDataStore.getSectionEntity(FAKE_SECTION, anyInt());
 
-    verify(mockRestApi).getSectionDataRx(FAKE_SECTION);
+    verify(mockRestApi).getSectionDataRx(FAKE_SECTION, FAKE_THUMBNAILS);
   }
 
   @Test public void testSearchByTextEntityFromApi() {
@@ -71,11 +72,11 @@ import static org.mockito.Mockito.verify;
   @Test public void testGetElementByIdEntityFromApi() {
     ApiElementDataResponse fakeApiElement = new ApiElementDataResponse();
     Observable<ApiElementDataResponse> fakeObservable = Observable.just(fakeApiElement);
-    given(mockRestApi.getElementByIdRx(FAKE_ID)).willReturn(fakeObservable);
+    given(mockRestApi.getElementByIdRx(FAKE_ID, FAKE_THUMBNAILS)).willReturn(fakeObservable);
 
     ocmCloudDataStore.getElementById(FAKE_ID);
 
-    verify(mockRestApi).getElementByIdRx(FAKE_ID);
+    verify(mockRestApi).getElementByIdRx(FAKE_ID, FAKE_THUMBNAILS);
   }
 
   @Test public void testGetVersion(){

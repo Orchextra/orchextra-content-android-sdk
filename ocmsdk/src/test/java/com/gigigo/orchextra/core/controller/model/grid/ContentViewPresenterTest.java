@@ -1,7 +1,9 @@
 package com.gigigo.orchextra.core.controller.model.grid;
 
 import com.gigigo.orchextra.core.domain.OcmController;
+import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,7 +21,6 @@ import static org.mockito.Mockito.verify;
 
   private ContentViewPresenter presenter;
 
-  private final String FAKE_ID = "FAKE_ID";
   private final String FAKE_FILTER = "FAKE_FILTER";
 
   @Mock private OcmController mockOcmController;
@@ -34,9 +35,9 @@ import static org.mockito.Mockito.verify;
   }
 
   @Test public void testLoadSectionWithCacheAndAfterNetwork() {
-    presenter.loadSection(FAKE_ID, FAKE_FILTER);
+    presenter.loadSection(new UiMenu(), FAKE_FILTER);
 
-    verify(mockOcmController).getSection(forceReload, anyString(), anyInt(),
+    verify(mockOcmController).getSection(any(DataRequest.class), anyString(), anyInt(),
         any(OcmController.GetSectionControllerCallback.class));
   }
 }
