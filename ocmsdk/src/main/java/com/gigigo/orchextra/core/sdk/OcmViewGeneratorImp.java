@@ -72,6 +72,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
     ElementCache elementCache = uiMenu.getElementCache();
 
+    if (elementCache == null) {
+      getSectionViewGeneratorCallback.onSectionViewFails(new NullPointerException());
+    }
+
     if (elementCache.getType() == ElementCacheType.ARTICLE
         && elementCache.getRender() != null
         && elementCache.getRender().getElements() != null) {
