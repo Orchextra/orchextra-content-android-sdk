@@ -55,7 +55,7 @@ public class DetailToolbarViewBehaviour extends CoordinatorLayout.Behavior<Detai
   }
 
   private void switchDetailViewItems(DetailToolbarView child, boolean expanded) {
-    child.switchBetweenButtonAndToolbar(true, !expanded);
+    child.switchBetweenButtonAndToolbar(true, !expanded, null);
   }
 
   private enum State {
