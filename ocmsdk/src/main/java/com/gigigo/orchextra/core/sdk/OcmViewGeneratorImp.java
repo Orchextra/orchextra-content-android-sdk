@@ -69,12 +69,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   @Override
   public void generateSectionView(UiMenu uiMenu, String filter, final int imagesToDownload,
       GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
-
+    
     ElementCache elementCache = uiMenu.getElementCache();
-
-    if (elementCache == null) {
-      getSectionViewGeneratorCallback.onSectionViewFails(new NullPointerException());
-    }
 
     if (elementCache.getType() == ElementCacheType.ARTICLE
         && elementCache.getRender() != null
