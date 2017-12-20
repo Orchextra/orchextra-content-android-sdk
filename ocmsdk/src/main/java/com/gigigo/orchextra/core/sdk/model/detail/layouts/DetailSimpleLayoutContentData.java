@@ -55,7 +55,7 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
           setOnClickListenerButtons();
         } else {
           if (!(uiBaseContentData instanceof WebViewContentData) && !(uiBaseContentData instanceof BrowserContentData)) {
-            detailToolbarView.switchBetweenButtonAndToolbar(true,true, null);
+            detailToolbarView.switchBetweenButtonAndToolbar(true,true, this.elementCache);
           } else {
             detailToolbarView.switchBetweenButtonAndToolbar(false,true, null);
           }
