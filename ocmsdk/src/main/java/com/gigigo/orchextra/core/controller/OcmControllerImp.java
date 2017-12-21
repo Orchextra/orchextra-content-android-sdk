@@ -96,7 +96,17 @@ public class OcmControllerImp implements OcmController {
         if (!menus.isFromCloud()) {
           getMenusCallback.onGetMenusLoaded(menus);
         } else {
-          getMenusCallback.onGetMenusLoaded(null);
+          //It the first time that the app is executed
+          getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
+            @Override public void onGetVersionLoaded(VersionData versionData) {
+              ocmPreferences.saveVersion(versionData.getVersion());
+              getMenusCallback.onGetMenusLoaded(null);
+            }
+
+            @Override public void onGetVersionFails(Exception e) {
+              getMenusCallback.onGetMenusLoaded(null);
+            }
+          }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
         }
       }
 
