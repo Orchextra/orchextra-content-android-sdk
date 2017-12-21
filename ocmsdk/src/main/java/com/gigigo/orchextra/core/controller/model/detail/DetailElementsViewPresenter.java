@@ -3,7 +3,6 @@ package com.gigigo.orchextra.core.controller.model.detail;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
-import com.gigigo.orchextra.core.controller.dto.DetailViewInfo;
 import com.gigigo.orchextra.core.controller.model.base.Presenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
@@ -69,15 +68,10 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   }
 
   private void renderView(ElementCache cachedElement) {
-    DetailViewInfo detailViewInfo = new DetailViewInfo();
-    detailViewInfo.setShareable(cachedElement.getShare() != null);
-    detailViewInfo.setNameArticle(cachedElement.getName());
-    detailViewInfo.setType(cachedElement.getType());
-
     if (getView() != null) {
       if (cachedElement.getType() == ElementCacheType.CARDS) {
         UiBaseContentData contentData = generateCardView(cachedElement);
-        getView().renderDetailView(contentData, detailViewInfo);
+        getView().renderDetailView(contentData, cachedElement);
       } else {
         UiBaseContentData previewContentData =
             generatePreview(cachedElement.getPreview(), cachedElement.getShare());
@@ -87,14 +81,14 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
         if (previewContentData != null && detailContentData != null && getView() != null) {
           getView().renderDetailViewWithPreview(previewContentData, detailContentData,
-              detailViewInfo);
+              cachedElement);
 
           getView().showEmptyView(false);
         } else if (previewContentData != null) {
-          getView().renderPreview(previewContentData, detailViewInfo);
+          getView().renderPreview(previewContentData, cachedElement);
           getView().showEmptyView(false);
         } else if (detailContentData != null) {
-          getView().renderDetailView(detailContentData, detailViewInfo);
+          getView().renderDetailView(detailContentData, cachedElement);
           getView().showEmptyView(false);
         } else {
           getView().showEmptyView(true);

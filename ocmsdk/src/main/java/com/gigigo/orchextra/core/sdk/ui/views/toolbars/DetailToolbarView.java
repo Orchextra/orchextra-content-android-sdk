@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -36,6 +37,7 @@ public class DetailToolbarView extends FrameLayout {
 
   private OcmStyleUi ocmStyleUi;
   private int icon;
+  private ElementCache elementCache;
 
   public DetailToolbarView(@NonNull Context context) {
     super(context);
@@ -95,7 +97,8 @@ public class DetailToolbarView extends FrameLayout {
     isFirstScrollFull = true;
   }
 
-  public void switchBetweenButtonAndToolbar(boolean notifyEvent, boolean areVisibleToolbar) {
+  public void switchBetweenButtonAndToolbar(boolean notifyEvent, boolean areVisibleToolbar, ElementCache elementCache) {
+    this.elementCache = elementCache;
     switchBetweenButtonAndToolbar(notifyEvent, areVisibleToolbar, false);
   }
 
@@ -115,7 +118,11 @@ public class DetailToolbarView extends FrameLayout {
 
       if (notifyEvent) {
         if (isFirstScrollFull && areVisibleToolbar) {
-          OCManager.notifyEvent(OcmEvent.CONTENT_FULL);
+          if (this.elementCache != null) {
+            OCManager.notifyEvent(OcmEvent.CONTENT_FULL);
+          } else {
+            OCManager.notifyEvent(OcmEvent.CONTENT_FULL, this.elementCache);
+          }
         } else if (isFirstScrollPreview && !areVisibleToolbar) {
           OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW);
         }
