@@ -3,10 +3,10 @@ package com.gigigo.orchextra.ocm;
 import android.app.Application;
 import android.graphics.Bitmap;
 import com.bumptech.glide.load.Transformation;
-import com.gigigo.imagerecognitioninterface.ImageRecognition;
 import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.orchextra.wrapper.ImageRecognition;
 
 public final class OcmBuilder {
 
@@ -24,6 +24,7 @@ public final class OcmBuilder {
   private boolean showReadArticles = false;
   private ImageTransformReadArticle transformReadArticleMode = ImageTransformReadArticle.OVERLAY;
   private int maxReadArticles=100;
+
 
   public int getMaxReadArticles() {
     return maxReadArticles;

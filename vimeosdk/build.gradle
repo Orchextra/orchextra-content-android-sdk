@@ -8,7 +8,7 @@ android {
   buildToolsVersion '26.0.2'
 
   defaultConfig {
-    minSdkVersion 18
+    minSdkVersion 17
     targetSdkVersion 26
     versionCode 1
     versionName "1.0"
@@ -32,8 +32,22 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
-}
 
+
+
+  flavorDimensions "ocm"
+
+  productFlavors {
+    ocm {
+      dimension "ocm"
+    }
+  }
+
+
+  //true to publish all flavour artifacts
+  // publishNonDefault true
+  defaultPublishConfig "ocmRelease"
+}
 dependencies {
 
   androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {

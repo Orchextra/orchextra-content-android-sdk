@@ -32,8 +32,9 @@ android {
     targetSdkVersion project.androidTargetSdkVersion
     versionCode 1
     versionName "1.0"
+    //asv mandatory for realm(not exits realm.so version for mips64, armeabi
     ndk {
-      abiFilters "armeabi-v7a"
+      abiFilters "armeabi-v7a","x86_64","x86","mips","arm65-v8a"
     }
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
@@ -107,7 +108,7 @@ android {
 
   //true to publish all flavour artifacts
   // publishNonDefault true
-  //defaultPublishConfig "ocmStaging"
+  defaultPublishConfig "ocmRelease"
   //defaultPublishConfig "ocmDebug"
   //defaultPublishConfig {"ocmRelease","ocmDebug","ocmStaging"}
 
@@ -124,11 +125,11 @@ jacocoAndroidUnitTestReport {
   excludes += ['**/BuildConfig*.*']
 }
 
-configurations {
-  ocmReleaseImplementation
-  ocmStagingImplementation
-  ocmDebugImplementation
-}
+//configurations {
+//  ocmReleaseImplementation
+//  ocmStagingImplementation
+//  ocmDebugImplementation
+//}
 
 if( android.productFlavors.size() > 0 ) {
   android.libraryVariants.all { variant ->
@@ -163,6 +164,10 @@ finalize.dependsOn(ocmsdk:install)
 //install.finalizedBy(finalize)
 install.dependsOn(ocmsdk:build)
 
+configurations {
+  compile.exclude group: "org.jetbrains", module: "annotations"
+}
+
 dependencies {
   //TEST
   testImplementation project.testLibraries.junit
@@ -171,16 +176,16 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar']) //youtube
 
   //google Support/CustomTabs/playServices
-  implementation project.libraries.androidSupportDesign
-  implementation project.libraries.androidCustomtabs
+  api project.libraries.androidSupportDesign
+  api project.libraries.androidCustomtabs
 
   api project.libraries.playServicesBase
   api project.libraries.playServicesLocation
   api project.libraries.playServicesGcm
 
   //gigigo Lib
-  implementation project.libraries.ggglib
-  implementation project.libraries.gggJavaLib
+  api project.libraries.ggglib
+  api project.libraries.gggJavaLib
 
   //Dagger
   implementation project.libraries.dagger
@@ -212,7 +217,7 @@ dependencies {
      exclude module: 'support-v4'
    }
  */
-
+/*asv old compiles ox gradle 2.3.3*/
   stagingApi(project.libraries.orchextrasdkStaging) {
     transitive = true
     exclude module: 'support-v4'
@@ -225,21 +230,28 @@ dependencies {
     transitive = true
     exclude module: 'support-v4'
   }
+//asv new ox with gradle 3.0.0
 
+  //api('com.github.Orchextra.orchextra-android-sdk:orchextrasdk-control:525Test')
 
   //customs Views
-  implementation project.libraries.doubleViewPager
-  implementation project.libraries.autofitTextView
-  implementation project.libraries.multipleGridRecyclerView
+
+
+  api project.libraries.doubleViewPager
+  api project.libraries.autofitTextView
+  api project.libraries.multipleGridRecyclerView
+
 
   api project.libraries.rxAndroid
   api project.libraries.rxJava
   api project.libraries.rxRetrofit
   api project.libraries.arrow
 
-  implementation project.libraries.kache
+  api project.libraries.kache
+
 
   api project.libraries.gpuImage//4 readarticles
+
 
   api project(':vimeosdk')
 

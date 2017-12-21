@@ -1,12 +1,9 @@
 package com.gigigo.orchextra.core.data.api.dto.menus;
 
-
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.data.rxCache.OcmCacheImp;
 import com.google.gson.annotations.SerializedName;
-
 import com.mskn73.kache.Kacheable;
-import com.mskn73.kache.annotations.KacheLife;
 import java.util.List;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 //@KacheLife(expiresTime = 1000 * 60 * 60 * 24) // 1 day
 public class ApiMenuContentData implements Kacheable {
 
-  private boolean fromCache;
+  private boolean fromCloud = false;
 
   @NotNull @Override public String getKey() {
     return OcmCacheImp.MENU_KEY;
@@ -34,11 +31,11 @@ public class ApiMenuContentData implements Kacheable {
     return elementsCache;
   }
 
-  public boolean isFromCache() {
-    return fromCache;
+  public void setFromCloud(boolean fromCloud) {
+    this.fromCloud = fromCloud;
   }
 
-  public void setFromCache(boolean fromCache) {
-    this.fromCache = fromCache;
+  public boolean isFromCloud() {
+    return fromCloud;
   }
 }

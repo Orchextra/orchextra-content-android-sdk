@@ -2,7 +2,6 @@ package com.gigigo.orchextra.core.data.api.dto.content;
 
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.mskn73.kache.Kacheable;
-import com.mskn73.kache.annotations.KacheLife;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,10 +11,20 @@ public class ApiSectionContentData implements Kacheable {
   private ApiContentItem content;
   private Map<String, ApiElementCache> elementsCache;
   private String key;
-  private boolean fromCache;
+  private String version;
+  private String expireAt;
+  private boolean fromCloud;
 
   public ApiContentItem getContent() {
     return content;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public String getExpireAt() {
+    return expireAt;
   }
 
   public Map<String, ApiElementCache> getElementsCache() {
@@ -30,11 +39,11 @@ public class ApiSectionContentData implements Kacheable {
     return key;
   }
 
-  public boolean isFromCache() {
-    return fromCache;
+  public void setFromCloud(boolean fromCloud) {
+    this.fromCloud = fromCloud;
   }
 
-  public void setFromCache(boolean fromCache) {
-    this.fromCache = fromCache;
+  public boolean isFromCloud() {
+    return fromCloud;
   }
 }

@@ -18,8 +18,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * A class to be used with RxJava's {@link Scheduler} interface. Though this class is not a {@link
- * Scheduler} itself, calling {@link #priority(int)} will return one. E.x.: {@code
- * PriorityScheduler
+ * Scheduler} itself, calling {@link #priority(int)} will return one. E.x.: {@code PriorityScheduler
  * scheduler = new PriorityScheduler(); Observable.just(1, 2, 3) .subscribeOn(scheduler.priority(10))
  * .subscribe(); }
  */
@@ -46,7 +45,9 @@ public class PriorityScheduler {
    * highest priority action available.
    */
   public static PriorityScheduler create() {
-    return new PriorityScheduler(Runtime.getRuntime().availableProcessors() - 1);
+    int availableProcessors = Runtime.getRuntime().availableProcessors() - 1;
+    availableProcessors = Math.max(availableProcessors, 1);
+    return new PriorityScheduler(availableProcessors);
   }
 
   /**
@@ -227,7 +228,7 @@ public class PriorityScheduler {
 
     @Override public Worker createWorker() {
       synchronized (workerCount) {
-        final int[] numThread = { 0 };
+        final int[] numThread = {0};
 
         if (workerCount.get() < concurrency) {
           workerCount.incrementAndGet();

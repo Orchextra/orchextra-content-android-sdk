@@ -5,7 +5,7 @@ import java.util.List;
 public class UiMenuData {
 
   private List<UiMenu> uiMenuList;
-  private boolean fromCache;
+  private boolean fromCloud;
 
   public List<UiMenu> getUiMenuList() {
     return uiMenuList;
@@ -15,11 +15,11 @@ public class UiMenuData {
     this.uiMenuList = uiMenuList;
   }
 
-  public boolean isFromCache() {
-    return fromCache;
+  public void setFromCloud(boolean fromCloud) {
+    this.fromCloud = fromCloud;
   }
 
-  public void setFromCache(boolean fromCache) {
-    this.fromCache = fromCache;
+  public boolean isFromCloud() {
+    return fromCloud;
   }
 }

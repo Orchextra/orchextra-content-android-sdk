@@ -1,13 +1,10 @@
 package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
-import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
-import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
+import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
-import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import io.reactivex.Observable;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
@@ -24,11 +21,11 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<ApiMenuContentData> getMenuEntity() {
-    return ocmCache.getMenus();
-  }
+    return ocmCache.getMenus().doOnNext(apiMenuContentData -> apiMenuContentData.setFromCloud(false));
+}
 
   @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl, int numberOfElementsToDownload) {
-    return ocmCache.getSection(elementUrl);
+    return ocmCache.getSection(elementUrl).doOnNext(apiSectionContentData -> apiSectionContentData.setFromCloud(false));
   }
 
   @Override public Observable<ApiSectionContentData> searchByText(String section) {
@@ -37,6 +34,14 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<ApiElementData> getElementById(String slug) {
     return ocmCache.getDetail(slug);
+  }
+
+  @Override public Observable<ApiVersionKache> getVersion() {
+    return ocmCache.getVersion();
+  }
+
+  @Override public boolean isFromCloud() {
+    return false;
   }
 
   public OcmCache getOcmCache() {

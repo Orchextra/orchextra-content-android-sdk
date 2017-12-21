@@ -1,13 +1,16 @@
 package com.gigigo.orchextra.core.controller;
 
 import com.gigigo.orchextra.core.domain.OcmController;
+import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
+import com.gigigo.orchextra.core.domain.rxInteractor.GetVersion;
 import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
+import com.gigigo.orchextra.core.sdk.utils.OcmPreferences;
 import io.reactivex.observers.DisposableObserver;
 import org.junit.Before;
 import org.junit.Rule;
@@ -34,17 +37,19 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   @Mock private OcmController.ClearCacheCallback mockClearCacheCallback;
   @Mock private GetDetail mockGetDetail;
   @Mock private GetMenus mockGetMenus;
+  @Mock private GetVersion mockGetVersion;
   @Mock private GetSection mockGetSection;
   @Mock private SearchElements mockSearchElements;
   @Mock private ConnectionUtils mockConnectionUtils;
+  @Mock private OcmPreferences mockOcmPreferences;
 
 
   @Rule public ExpectedException expectedException = ExpectedException.none();
 
   @Before public void setUp() {
     ocmController =
-        new OcmControllerImp(mockGetMenus, mockGetSection, mockGetDetail, mockSearchElements,
-            mockClearCache, mockConnectionUtils);
+        new OcmControllerImp(mockGetVersion,mockGetMenus, mockGetSection, mockGetDetail, mockSearchElements,
+            mockClearCache, mockConnectionUtils, mockOcmPreferences);
   }
 
   @Test public void testClearCache() {
@@ -56,7 +61,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   }
 
   @Test public void testGetDetail() {
-    ocmController.getDetails(true, FAKE_DETAIL, null);
+    ocmController.getDetails(FAKE_DETAIL, null);
 
     verify(mockGetDetail).execute(any(DisposableObserver.class), any(GetDetail.Params.class),
         any(PriorityScheduler.Priority.class));
@@ -64,7 +69,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   }
 
   @Test public void testGetSection() {
-    ocmController.getSection(true, FAKE_SECTION, FAKE_IMAGES, null);
+    ocmController.getSection(DataRequest.FORCE_CLOUD, FAKE_SECTION, FAKE_IMAGES, null);
 
     verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class),
         any(PriorityScheduler.Priority.class));
@@ -72,7 +77,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   }
 
   @Test public void testGetMenus() {
-    ocmController.getMenu(true, null);
+    ocmController.getMenu(DataRequest.FORCE_CLOUD, null);
 
     verify(mockGetMenus).execute(any(DisposableObserver.class), any(GetMenus.Params.class),
         any(PriorityScheduler.Priority.class));

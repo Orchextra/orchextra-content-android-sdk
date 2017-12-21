@@ -13,7 +13,8 @@ import io.reactivex.observers.DisposableObserver;
  * This interface represents a execution unit for different use cases (this means any use case
  * in the application should implement this contract).
  *
- * By convention each UseCase implementation will return the result using a {@link DisposableObserver}
+ * By convention each UseCase implementation will return the result using a {@link
+ * DisposableObserver}
  * that will execute its job in a background thread and will post the result in the UI thread.
  */
 public abstract class UseCase<T, Params> {
@@ -42,12 +43,14 @@ public abstract class UseCase<T, Params> {
    * by {@link #buildUseCaseObservable(Params)} ()} method.
    * @param params Parameters (Optional) used to build/execute this use case.
    */
-  public void execute(DisposableObserver<T> observer, Params params, PriorityScheduler.Priority priority) {
+  public void execute(DisposableObserver<T> observer, Params params,
+      PriorityScheduler.Priority priority) {
     Preconditions.checkNotNull(observer);
 
     Log.d("EXECUTE", observer.getClass().getSimpleName());
 
     final Observable<T> observable = this.buildUseCaseObservable(params)
+        .distinct()
         .subscribeOn(threadExecutor.priority(priority.getPriority()))
         .observeOn(postExecutionThread.getScheduler());
     addDisposable(observable.subscribeWith(observer));

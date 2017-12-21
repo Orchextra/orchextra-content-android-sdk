@@ -5,9 +5,9 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 
 public class BrowserContentData extends UiBaseContentData {
 

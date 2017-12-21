@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.core.data.api.services;
 
+import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
-import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.Request;

@@ -212,7 +212,7 @@ public class YoutubeFragment extends UiGridBaseContentData {
 
   }
 
-  @Override public void reloadSection() {
+  @Override public void reloadSection(boolean hasToShowNewContentButton) {
 
   }
 }

@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.ocmsdk.R;

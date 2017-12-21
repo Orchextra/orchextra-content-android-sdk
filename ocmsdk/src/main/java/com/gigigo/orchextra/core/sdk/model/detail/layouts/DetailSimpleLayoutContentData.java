@@ -7,14 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.WebViewContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 
 public class DetailSimpleLayoutContentData extends DetailParentContentData {
 
   private UiBaseContentData uiBaseContentData;
   private View contentMainLayout;
+  private ElementCache elementCache;
 
   public static DetailSimpleLayoutContentData newInstance() {
     return new DetailSimpleLayoutContentData();
@@ -51,7 +54,11 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
         if (uiBaseContentData instanceof PreviewContentData) {
           setOnClickListenerButtons();
         } else {
-          detailToolbarView.switchBetweenButtonAndToolbar(true);
+          if (!(uiBaseContentData instanceof WebViewContentData) && !(uiBaseContentData instanceof BrowserContentData)) {
+            detailToolbarView.switchBetweenButtonAndToolbar(true,true, this.elementCache);
+          } else {
+            detailToolbarView.switchBetweenButtonAndToolbar(false,true, null);
+          }
           setPaddingTop();
         }
       } else {
@@ -111,11 +118,14 @@ public class DetailSimpleLayoutContentData extends DetailParentContentData {
     }
   }
 
-  public void setTypeContent(ElementCacheType type) {
-    switch (type) {
+  public void setElementCache(ElementCache elementCache) {
+    this.elementCache = elementCache;
+
+    switch (this.elementCache.getType()) {
       case WEBVIEW:
         changeIconToolbar();
         break;
     }
+
   }
 }

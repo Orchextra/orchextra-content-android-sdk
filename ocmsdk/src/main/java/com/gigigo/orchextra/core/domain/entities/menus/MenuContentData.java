@@ -9,8 +9,7 @@ public class MenuContentData {
 
   private List<MenuContent> menuContentList;
   private Map<String, ElementCache> elementsCache;
-
-  private boolean fromCache;
+  private boolean fromCloud;
 
   public List<MenuContent> getMenuContentList() {
     return menuContentList;
@@ -28,11 +27,11 @@ public class MenuContentData {
     this.elementsCache = elementsCache;
   }
 
-  public boolean isFromCache() {
-    return fromCache;
+  public void setFromCloud(boolean fromCloud) {
+    this.fromCloud = fromCloud;
   }
 
-  public void setFromCache(boolean fromCache) {
-    this.fromCache = fromCache;
+  public boolean isFromCloud() {
+    return fromCloud;
   }
 }

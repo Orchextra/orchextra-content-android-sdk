@@ -1,11 +1,11 @@
 package com.gigigo.orchextra.core.data.api.mappers.menus;
 
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
-import com.gigigo.orchextra.core.domain.entities.elements.Element;
-import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
-import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
-import com.gigigo.orchextra.core.domain.entities.menus.MenuContent;
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
+import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
+import com.gigigo.orchextra.core.domain.entities.elements.Element;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContent;
 import java.util.ArrayList;
 import java.util.List;
 

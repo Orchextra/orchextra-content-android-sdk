@@ -1,7 +1,6 @@
 package com.gigigo.sample;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -11,59 +10,31 @@ import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 
 public class ScreenSlidePageFragment extends Fragment {
-
-  private static final String EXTRA_SCREEN_SLIDE_SECTION = "EXTRA_SCREEN_SLIDE_SECTION";
-  private static final String EXTRA_IMAGES_TO_DOWNLOAD = "EXTRA_IMAGES_TO_DOWNLOAD";
-
-  private Bundle arguments;
   private View emptyViewLayout;
   private View errorViewLayout;
   private UiGridBaseContentData contentView;
+  private UiMenu itemMenu;
+  private int numberOfImagesToDownload;
+  private String emotion;
 
-  public static ScreenSlidePageFragment newInstance(String section, int imagesToDownload) {
-    ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
-
-    Bundle args = new Bundle();
-    args.putString(EXTRA_SCREEN_SLIDE_SECTION, section);
-    args.putInt(EXTRA_IMAGES_TO_DOWNLOAD, imagesToDownload);
-    fragment.setArguments(args);
-
-    return fragment;
+  public static ScreenSlidePageFragment newInstance() {
+    return new ScreenSlidePageFragment();
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    saveArguments();
-  }
+  private void loadContent() {
+    Ocm.generateSectionView(itemMenu, emotion, numberOfImagesToDownload, new OcmCallbacks.Section() {
+      @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+        setView(uiGridBaseContentData);
+      }
 
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    loadArguments();
-  }
-
-
-  private void saveArguments() {
-    arguments = getArguments();
-  }
-
-  private void loadArguments() {
-    if (arguments != null) {
-      String section = arguments.getString(EXTRA_SCREEN_SLIDE_SECTION);
-      int imagesToDownload = arguments.getInt(EXTRA_IMAGES_TO_DOWNLOAD);
-
-      Ocm.generateSectionView(section, null, imagesToDownload, new OcmCallbacks.Section() {
-        @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
-          setView(uiGridBaseContentData);
-        }
-
-        @Override public void onSectionFails(Exception e) {
-          e.printStackTrace();
-        }
-      });
-    }
+      @Override public void onSectionFails(Exception e) {
+        e.printStackTrace();
+      }
+    });
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +43,8 @@ public class ScreenSlidePageFragment extends Fragment {
 
     emptyViewLayout = view.findViewById(R.id.emptyViewLayout);
     errorViewLayout = view.findViewById(R.id.errorViewLayout);
+
+    loadContent();
 
     return view;
   }
@@ -98,14 +71,21 @@ public class ScreenSlidePageFragment extends Fragment {
     }
   }
 
-  public void reloadSection() {
+  public void reloadSection(boolean hasToShowNewContentButton) {
     if (contentView != null) {
-      contentView.reloadSection();
+      contentView.reloadSection(hasToShowNewContentButton);
     }
-    else
-    {
-      loadArguments();
-      //contentView.reloadSection();
-    }
+  }
+
+  public void setItemMenu(UiMenu itemMenu) {
+    this.itemMenu = itemMenu;
+  }
+
+  public void setNumberOfImagesToDownload(int numberOfImagesToDownload) {
+    this.numberOfImagesToDownload = numberOfImagesToDownload;
+  }
+
+  public void setEmotion(String emotion) {
+    this.emotion = emotion;
   }
 }

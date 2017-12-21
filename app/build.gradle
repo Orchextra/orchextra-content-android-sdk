@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: 'variants.gradle'
 
 android {
   signingConfigs {
@@ -9,45 +10,55 @@ android {
   defaultConfig {
     applicationId "com.gigigo.sample"
     minSdkVersion 18
-    targetSdkVersion 24
+    targetSdkVersion 24 //asv?¿ why,24?
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
-    //asv mandatory for gpu filters of glide
-    ndk {
-      abiFilters "armeabi-v7a"
-    }
+    buildConfigField "String", "BUSSINES_UNIT", project.ext.bussines_unit
   }
   buildTypes {
     staging {
       debuggable true
       signingConfig signingConfigs.debug
+      buildConfigField "String", "API_KEY", project.ext.api_key_staging
+      buildConfigField "String", "API_SECRET", project.ext.api_secret_staging
     }
     debug {
       debuggable true
+      buildConfigField "String", "API_KEY", project.ext.api_key_debug
+      buildConfigField "String", "API_SECRET", project.ext.api_secret_debug
       signingConfig signingConfigs.debug
     }
     release {
       debuggable true
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      buildConfigField "String", "API_KEY", project.ext.api_key_release
+      buildConfigField "String", "API_SECRET", project.ext.api_secret_release
       signingConfig android.signingConfigs.debug
     }
   }
+
   lintOptions {
     abortOnError false
   }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8 //this is 4 rx, no problem with ox 1_7
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
-configurations {
-  compile.exclude group: "org.jetbrains", module: "annotations"
-}
+
 
 dependencies {
-  compile project(path: ':ocmsdk')
-  compile 'com.android.support:multidex:1.0.2'
 
+  api project(path: ':ocmsdk')
+  api 'com.android.support:multidex:1.0.2'
+
+
+  /*New dependencies*/
   stagingImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
   debugImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
   releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'

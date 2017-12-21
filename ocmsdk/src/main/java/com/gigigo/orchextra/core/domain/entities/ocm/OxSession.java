@@ -11,7 +11,6 @@ public class OxSession {
   }
 
   public String getKey() {
-
     return key;
   }
 
@@ -21,6 +20,10 @@ public class OxSession {
 
   public void setToken(String token) {
     this.token = token;
+  }
+
+  public String getToken() {
+    return token;
   }
 
   public String getAccessToken() {

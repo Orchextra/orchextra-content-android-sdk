@@ -6,3 +6,9 @@
 /build
 /captures
 .externalNativeBuild
+fastlane/README.md
+fatlane/report.xml
+
+!.gitignore
+!.gitkeep
+*~

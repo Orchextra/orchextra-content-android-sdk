@@ -1,11 +1,11 @@
 package com.gigigo.orchextra.core.data.api.mappers.contentdata;
 
+import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
+import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
+import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheMapper;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
-import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
-import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
-import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +41,9 @@ public class ApiContentDataResponseMapper
 
     model.setElementsCache(elementCacheMap);
 
-    model.setFromCache(data.isFromCache());
+    model.setVersion(data.getVersion());
+    model.setExpiredAt(data.getExpireAt());
+    model.setFromCloud(data.isFromCloud());
 
     return model;
   }

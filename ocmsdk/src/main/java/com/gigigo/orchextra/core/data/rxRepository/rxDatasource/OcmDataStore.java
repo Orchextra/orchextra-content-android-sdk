@@ -1,13 +1,9 @@
 package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
-import com.gigigo.ggglib.network.responses.ApiGenericResponse;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
-import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
-import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
-import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
+import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
 import io.reactivex.Observable;
 
 /**
@@ -34,4 +30,8 @@ public interface OcmDataStore {
    * Get an {@link Observable} which will emit a {@link ApiElementData}.
    */
   Observable<ApiElementData> getElementById(String slug);
+
+  Observable<ApiVersionKache> getVersion();
+
+  boolean isFromCloud();
 }

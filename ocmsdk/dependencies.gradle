@@ -16,13 +16,14 @@ project.ext {
                ggglogger               : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:4.4',
                ggglib                  : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:4.4',
 
-               orchextrasdkStaging     : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:521Test:play11Staging@aar',
-               orchextrasdkDebug       : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:521Test:play11Debug@aar',
-               orchextrasdkRelease     : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:521Test:play11Release@aar',
+               orchextrasdkStaging     : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:532Test:play11Staging@aar',
+               orchextrasdkDebug       : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:532Test:play11Debug@aar',
+               orchextrasdkRelease     : 'com.github.Orchextra.orchextra-android-sdk:orchextrasdk:532Test:play11Release@aar',
 
-               playServicesBase        : "com.google.android.gms:play-services-base:11.0.4",
-               playServicesLocation    : "com.google.android.gms:play-services-location:11.0.4",
-               playServicesGcm         : "com.google.android.gms:play-services-gcm:11.0.4",
+               gpuImage                : 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1',
+               playServicesBase        : "com.google.android.gms:play-services-base:11.4.2",
+               playServicesLocation    : "com.google.android.gms:play-services-location:11.4.2",
+               playServicesGcm         : "com.google.android.gms:play-services-gcm:11.4.2",
 
                imageloaderGlideBlur    : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 
@@ -42,7 +43,11 @@ project.ext {
 
                vimeoNetworking         : 'com.vimeo.networking:vimeo-networking:1.1.1',
                exoplayer               : 'com.google.android.exoplayer:exoplayer:r2.5.3',
-               gpuImage                : 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1']
+
+               gpuImage                : 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1',
+
+               loggingInterceptor      : 'com.squareup.okhttp3:logging-interceptor:3.8.0']
+
 
   testLibraries = [mockito          : 'org.mockito:mockito-core:2.0.31-beta',
                    junit            : 'junit:junit:4.12',

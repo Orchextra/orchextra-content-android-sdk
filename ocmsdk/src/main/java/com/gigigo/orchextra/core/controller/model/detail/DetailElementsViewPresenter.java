@@ -2,9 +2,8 @@ package com.gigigo.orchextra.core.controller.model.detail;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import com.gigigo.orchextra.control.presenters.base.Presenter;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
-import com.gigigo.orchextra.core.controller.dto.DetailViewInfo;
+import com.gigigo.orchextra.core.controller.model.base.Presenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
@@ -38,12 +37,14 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
     getView().showProgressView(true);
 
-    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (getView() != null) {
           if (elementCache != null) {
             renderView(elementCache);
-            OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, elementCache);
+            if (elementCache.getPreview() != null) {
+              OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, elementCache);
+            }
           } else {
             getView().finishView();
           }
@@ -67,15 +68,10 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   }
 
   private void renderView(ElementCache cachedElement) {
-    DetailViewInfo detailViewInfo = new DetailViewInfo();
-    detailViewInfo.setShareable(cachedElement.getShare() != null);
-    detailViewInfo.setNameArticle(cachedElement.getName());
-    detailViewInfo.setType(cachedElement.getType());
-
     if (getView() != null) {
       if (cachedElement.getType() == ElementCacheType.CARDS) {
         UiBaseContentData contentData = generateCardView(cachedElement);
-        getView().renderDetailView(contentData, detailViewInfo);
+        getView().renderDetailView(contentData, cachedElement);
       } else {
         UiBaseContentData previewContentData =
             generatePreview(cachedElement.getPreview(), cachedElement.getShare());
@@ -85,14 +81,14 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
         if (previewContentData != null && detailContentData != null && getView() != null) {
           getView().renderDetailViewWithPreview(previewContentData, detailContentData,
-              detailViewInfo);
+              cachedElement);
 
           getView().showEmptyView(false);
         } else if (previewContentData != null) {
-          getView().renderPreview(previewContentData, detailViewInfo);
+          getView().renderPreview(previewContentData, cachedElement);
           getView().showEmptyView(false);
         } else if (detailContentData != null) {
-          getView().renderDetailView(detailContentData, detailViewInfo);
+          getView().renderDetailView(detailContentData, cachedElement);
           getView().showEmptyView(false);
         } else {
           getView().showEmptyView(true);
@@ -121,7 +117,7 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   }
 
   public void shareElement() {
-    ocmController.getDetails(false, elementUrl, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         showShare(elementCache);
       }
@@ -163,5 +159,4 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   public void destroy() {
     ocmController.disposeUseCases();
   }
-
 }

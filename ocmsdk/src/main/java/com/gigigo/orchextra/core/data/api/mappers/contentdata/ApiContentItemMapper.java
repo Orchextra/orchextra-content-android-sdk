@@ -6,6 +6,7 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
+import com.gigigo.orchextra.core.sdk.utils.DateUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,6 @@ public class ApiContentItemMapper
 
   @Override public ContentItem externalClassToModel(ApiContentItem data) {
     ContentItem model = new ContentItem();
-
     model.setSlug(data.getSlug());
     model.setType(data.getType());
 
@@ -40,9 +40,12 @@ public class ApiContentItemMapper
     List<Element> elementList = new ArrayList<>();
     if (data.getElements() != null) {
       for (ApiElement apiElement : data.getElements()) {
-        Element element = apiElementMapper.externalClassToModel(apiElement);
-        if (element != null) {
-          elementList.add(element);
+
+        if (DateUtils.isBetweenTwoDates(apiElement.getDates())) {
+          Element element = apiElementMapper.externalClassToModel(apiElement);
+          if (element != null) {
+            elementList.add(element);
+          }
         }
       }
     }

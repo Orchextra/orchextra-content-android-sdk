@@ -20,6 +20,7 @@ import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalVi
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -37,8 +38,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
           if (presenter != null) {
-            presenter.loadFromNetwork();
+            presenter.loadSectionAndNotifyMenu();
           }
+          uiListedBaseContentData.showProgressView(false);
         }
 
         @Override public void onItemClicked(int position, View view) {
@@ -53,20 +55,21 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private Context context;
   private View retryButton;
   private View moreButton;
-  private String section;
+  private UiMenu uiMenu;
   private int imagesToDownload;
   private String emotion;
   private View emptyView;
   private View errorView;
   private View progressView;
   private FrameLayout listedDataContainer;
+  private boolean thumbnailEnabled;
 
   private View newContentContainer;
   private final View.OnClickListener onNewContentClickListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       newContentContainer.setVisibility(View.GONE);
       if (presenter != null) {
-        presenter.loadFromCache();
+        presenter.loadSection();
       }
     }
   };
@@ -79,7 +82,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View.OnClickListener onClickRetryButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       if (presenter != null) {
-        presenter.loadFromNetwork();
+        presenter.loadSection();
       }
     }
   };
@@ -111,6 +114,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     Injector injector = OCManager.getInjector();
     if (injector != null) {
       injector.injectContentGridLayoutView(this);
+      thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
     }
   }
 
@@ -132,16 +136,16 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     moreButton.setOnClickListener(onClickDiscoverMoreButtonListener);
   }
 
-  public void setViewId(String section, int imagesToDownload) {
-    this.section = section;
+  public void setViewId(UiMenu uiMenu, int imagesToDownload) {
+    this.uiMenu = uiMenu;
     this.imagesToDownload = imagesToDownload;
   }
 
   @Override public void initUi() {
-    if (section != null && presenter != null) {
+    if (uiMenu != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
       presenter.setImagesToDownload(imagesToDownload);
-      presenter.loadFromCache(section);
+      presenter.loadSection(uiMenu,emotion);
     }
   }
 
@@ -165,7 +169,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       uiListedBaseContentData = new SpannedGridRecyclerView(context);
 
       uiListedBaseContentData.setListedContentListener(listedContentListener);
-      uiListedBaseContentData.setParams(clipToPadding, addictionalPadding, authoritation);
+      uiListedBaseContentData.setParams(clipToPadding, addictionalPadding, authoritation, thumbnailEnabled);
       uiListedBaseContentData.setData(cellDataList);
 
       listedDataContainer.removeAllViews();
@@ -181,7 +185,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
 
     uiListedBaseContentData.setListedContentListener(listedContentListener);
-    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding, authoritation);
+    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding, authoritation, thumbnailEnabled);
     uiListedBaseContentData.setData(cellDataList);
 
     listedDataContainer.removeAllViews();
@@ -258,9 +262,10 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     this.progressView = progressView;
   }
 
-  @Override public void reloadSection() {
+  @Override public void reloadSection(boolean hasToShowNewContentButton) {
     if (presenter != null) {
-      presenter.loadSectionWithFilter(section, emotion);
+      presenter.setHasToCheckNewContent(hasToShowNewContentButton);
+      presenter.loadSection(!hasToShowNewContentButton, uiMenu, emotion, false);
     }
   }
 

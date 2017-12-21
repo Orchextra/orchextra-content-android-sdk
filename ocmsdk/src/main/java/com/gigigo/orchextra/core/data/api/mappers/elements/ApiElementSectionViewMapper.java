@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.core.data.api.mappers.elements;
 
+import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementSectionView;
-import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 
 public class ApiElementSectionViewMapper
         implements ExternalClassToModelMapper<ApiElementSectionView, ElementSectionView> {

@@ -8,6 +8,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
+import com.gigigo.orchextra.core.domain.entities.elements.ElementSegmentation;
 import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
@@ -16,6 +17,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.OcmEvent;
 import java.lang.ref.WeakReference;
 
 public class OcmSchemeHandler {
@@ -43,7 +45,7 @@ public class OcmSchemeHandler {
     }
 
     String finalElementUri = elementUri;
-    ocmController.getDetails(true, elementUri, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(elementUri, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
@@ -79,7 +81,7 @@ public class OcmSchemeHandler {
     }
 
     String finalElementUri = elementUri;
-    ocmController.getDetails(true, elementUri, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(elementUri, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementRequiredUserToBeLogged(elementCache)) {
@@ -103,9 +105,15 @@ public class OcmSchemeHandler {
     });
   }
 
-  private boolean elementRequiredUserToBeLogged(ElementCache elementCache) {
-    return elementCache.getSegmentation().getRequiredAuth().equals(RequiredAuthoritation.LOGGED)
-        && !authoritation.isAuthorizatedUser();
+  private boolean elementRequiredUserToBeLogged(ElementCache elementCache){
+    ElementSegmentation segmentation = elementCache.getSegmentation();
+
+    boolean loggedRequired = false;
+    if(segmentation!=null) {
+      loggedRequired = RequiredAuthoritation.LOGGED.equals(segmentation.getRequiredAuth());
+    }
+
+    return loggedRequired && !authoritation.isAuthorizatedUser();
   }
 
   public void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
@@ -124,39 +132,45 @@ public class OcmSchemeHandler {
 
     switch (type) {
       case VUFORIA:
+        OCManager.notifyEvent(OcmEvent.OPEN_IR, cachedElement);
         if (render != null) {
           processImageRecognitionAction();
         }
         break;
       case SCAN:
+        OCManager.notifyEvent(OcmEvent.OPEN_BARCODE, cachedElement);
         if (render != null) {
           processScanAction();
         }
         break;
       case WEBVIEW:
+        OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
           OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "");
         }
         break;
 
       case BROWSER:
+        OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
           processCustomTabs(render.getUrl(), render.getFederatedAuth());
         }
         break;
       case EXTERNAL_BROWSER:
+        OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
           processExternalBrowser(render.getUrl(), render.getFederatedAuth());
         }
         break;
       case DEEP_LINK:
+        OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
           processDeepLink(render.getUri());
         }
         break;
       case VIDEO:
         if (render != null) {
-          processVideo(render.getFormat(), render.getSource());
+          processVideo(render.getFormat(), render.getSource(), cachedElement);
         }
         break;
       default:
@@ -175,12 +189,14 @@ public class OcmSchemeHandler {
     openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen, imageView);
   }
 
-  private void processVideo(VideoFormat format, String source) {
+  private void processVideo(VideoFormat format, String source, ElementCache cachedElement) {
     if (TextUtils.isEmpty(source) || format == VideoFormat.NONE) {
       return;
     } else if (format == VideoFormat.YOUTUBE) {
+      OCManager.notifyEvent(OcmEvent.PLAY_YOUTUBE, cachedElement);
       actionHandler.launchYoutubePlayer(source);
     } else if (format == VideoFormat.VIMEO) {
+      OCManager.notifyEvent(OcmEvent.PLAY_VIMEO, cachedElement);
       actionHandler.launchVimeoPlayer(source);
     }
   }

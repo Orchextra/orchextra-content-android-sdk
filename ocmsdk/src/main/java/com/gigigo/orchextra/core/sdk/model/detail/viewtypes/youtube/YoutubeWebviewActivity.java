@@ -5,9 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.Html;
-import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -16,7 +13,6 @@ import android.webkit.WebViewClient;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.sdk.di.base.BaseActivity;
 import com.gigigo.orchextra.ocmsdk.R;
-import java.io.PrintWriter;
 
 //https://developers.google.com/youtube/player_parameters?hl=es-419
 public class YoutubeWebviewActivity extends BaseActivity {

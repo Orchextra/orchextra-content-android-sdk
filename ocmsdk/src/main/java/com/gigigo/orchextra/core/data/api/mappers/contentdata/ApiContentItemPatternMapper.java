@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.core.data.api.mappers.contentdata;
 
+import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
-import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 
 public class ApiContentItemPatternMapper
     implements ExternalClassToModelMapper<ApiContentItemPattern, ContentItemPattern> {

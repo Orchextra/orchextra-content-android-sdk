@@ -4,6 +4,9 @@
   <color name="white">#000</color>
   <color name="transparent">#0000</color>
 
+  <!-- Orchextra -->
+  <color name="color_primary_dark">#807f7f</color>
+
   <!-- More content -->
   <color name="oc_background_more_content_layout">#807f7f</color>
   <color name="oc_more_content_text_color">#FFF</color>
@@ -52,5 +55,6 @@
   <color name="oc_indicator_color">#ffffff</color>
 
   <color name="oc_status_bar_color">#333</color>
+  <color name="oc_read_background">#333</color>
 
 </resources>

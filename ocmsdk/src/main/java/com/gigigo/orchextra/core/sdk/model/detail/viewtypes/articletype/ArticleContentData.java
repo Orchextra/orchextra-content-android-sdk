@@ -18,6 +18,7 @@ import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElement;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleBlankView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleButtonView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleHeaderView;
@@ -27,6 +28,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhold
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleYoutubeVideoView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.dto.ArticleBlankElement;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
+import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
@@ -39,9 +41,19 @@ public class ArticleContentData extends UiGridBaseContentData {
   private View faLoading;
   private BaseRecyclerAdapter<ArticleElement> adapter;
   private int addictionalPadding;
+  private boolean thumbnailEnabled;
 
   public static ArticleContentData newInstance() {
     return new ArticleContentData();
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    Injector injector = OCManager.getInjector();
+    if (injector != null) {
+      thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
+    }
   }
 
   @Nullable @Override
@@ -105,7 +117,8 @@ public class ArticleContentData extends UiGridBaseContentData {
   }
 
   private void initRecyclerView() {
-    ArticleContentDataFactory factory = new ArticleContentDataFactory(getContext(), flFA);
+    ArticleContentDataFactory factory = new ArticleContentDataFactory(getContext(), flFA,
+        thumbnailEnabled);
     adapter = new BaseRecyclerAdapter(factory);
 
     adapter.bind(ArticleYoutubeVideoElement.class, ArticleYoutubeVideoView.class);
@@ -165,7 +178,7 @@ public class ArticleContentData extends UiGridBaseContentData {
     }
   }
 
-  @Override public void reloadSection() {
+  @Override public void reloadSection(boolean hasToShowNewContentButton) {
     if (adapter != null) {
       adapter.notifyDataSetChanged();
     }

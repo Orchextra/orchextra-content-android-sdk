@@ -34,10 +34,10 @@ allprojects {
     maven { url "https://jitpack.io" }
     maven { url "https://maven.google.com" }
   }
-  /*tasks.withType(JavaCompile) {
+   tasks.withType(JavaCompile) {
     sourceCompatibility = "1.7"
     targetCompatibility = "1.7"
-  }*/
+  }
 }
 
 sonarqube {

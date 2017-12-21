@@ -1,13 +1,13 @@
 package com.gigigo.orchextra.core.data.api.mappers.menus;
 
+import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
+import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheMapper;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContent;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,8 +52,7 @@ public class ApiMenuContentListResponseMapper
       }
     }
     model.setElementsCache(elementCacheItemMap);
-
-    model.setFromCache(data.isFromCache());
+    model.setFromCloud(data.isFromCloud());
 
     return model;
   }

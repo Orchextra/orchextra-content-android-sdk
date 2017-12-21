@@ -6,17 +6,16 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePrevie
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
+import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 
-import java.util.List;
-
 public interface OcmViewGenerator {
 
-  void generateSectionView(String viewId, String filter, int imagesToDownload,
+  void generateSectionView(UiMenu uiMenu, String filter, int imagesToDownload,
       GetSectionViewGeneratorCallback getSectionViewGeneratorCallback);
 
   UiDetailBaseContentData generateDetailView(String elementUrl);
@@ -34,7 +33,7 @@ public interface OcmViewGenerator {
 
   UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
 
-  void getMenu(boolean forceReload, GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
+  void getMenu(DataRequest menuRequest, GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
 
   // Callbacks
   interface GetMenusViewGeneratorCallback {

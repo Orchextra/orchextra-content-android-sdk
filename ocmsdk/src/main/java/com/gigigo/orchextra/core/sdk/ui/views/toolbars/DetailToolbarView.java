@@ -2,7 +2,6 @@ package com.gigigo.orchextra.core.sdk.ui.views.toolbars;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -11,6 +10,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -37,6 +37,7 @@ public class DetailToolbarView extends FrameLayout {
 
   private OcmStyleUi ocmStyleUi;
   private int icon;
+  private ElementCache elementCache;
 
   public DetailToolbarView(@NonNull Context context) {
     super(context);
@@ -96,11 +97,12 @@ public class DetailToolbarView extends FrameLayout {
     isFirstScrollFull = true;
   }
 
-  public void switchBetweenButtonAndToolbar(boolean areVisibleToolbar) {
-    switchBetweenButtonAndToolbar(areVisibleToolbar, false);
+  public void switchBetweenButtonAndToolbar(boolean notifyEvent, boolean areVisibleToolbar, ElementCache elementCache) {
+    this.elementCache = elementCache;
+    switchBetweenButtonAndToolbar(notifyEvent, areVisibleToolbar, false);
   }
 
-  public void switchBetweenButtonAndToolbar(boolean areVisibleToolbar, boolean forceChange) {
+  public void switchBetweenButtonAndToolbar(boolean notifyEvent, boolean areVisibleToolbar, boolean forceChange) {
     boolean hasToChangeViews = (detailToolbar.getVisibility() == GONE && areVisibleToolbar)
         || (detailToolbar.getVisibility() == VISIBLE && !areVisibleToolbar);
 
@@ -114,10 +116,16 @@ public class DetailToolbarView extends FrameLayout {
 
       detailTitleText.setVisibility(areVisibleToolbar ? View.VISIBLE : View.GONE);
 
-      if (isFirstScrollFull && areVisibleToolbar) {
-        OCManager.notifyEvent(OcmEvent.CONTENT_FULL);
-      } else if (isFirstScrollPreview && !areVisibleToolbar) {
-        OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW);
+      if (notifyEvent) {
+        if (isFirstScrollFull && areVisibleToolbar) {
+          if (this.elementCache != null) {
+            OCManager.notifyEvent(OcmEvent.CONTENT_FULL);
+          } else {
+            OCManager.notifyEvent(OcmEvent.CONTENT_FULL, this.elementCache);
+          }
+        } else if (isFirstScrollPreview && !areVisibleToolbar) {
+          OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW);
+        }
       }
     }
   }

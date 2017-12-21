@@ -10,6 +10,7 @@ public class Element {
     private String elementUrl;
     private List<String> tags;
     private String name;
+    private List<List<String>> dates;
 
     public ElementSegmentation getSegmentation() {
         return segmentation;
@@ -57,5 +58,13 @@ public class Element {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<List<String>> getDates() {
+        return dates;
+    }
+
+    public void setDates(List<List<String>> dates) {
+        this.dates = dates;
     }
 }

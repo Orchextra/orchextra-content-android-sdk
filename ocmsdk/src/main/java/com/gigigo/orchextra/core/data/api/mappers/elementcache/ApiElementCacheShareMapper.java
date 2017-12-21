@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.core.data.api.mappers.elementcache;
 
+import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
-import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 
 /**
  * Created by rui.alonso on 5/12/16.

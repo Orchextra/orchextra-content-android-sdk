@@ -5,8 +5,8 @@ import android.text.TextUtils;
 import android.view.View;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.multiplegridrecyclerview.entities.CellBlankElement;
-import com.gigigo.orchextra.control.presenters.base.Presenter;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
+import com.gigigo.orchextra.core.controller.model.base.Presenter;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
@@ -134,7 +134,7 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
 
       Element element = (Element) cellGridContentDataList.get(position).getData();
 
-      ocmController.getDetails(false, element.getElementUrl(),
+      ocmController.getDetails(element.getElementUrl(),
           new OcmController.GetDetailControllerCallback() {
             @Override public void onGetDetailLoaded(ElementCache elementCache) {
               if (getView() != null) {

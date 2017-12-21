@@ -10,10 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
-import com.gigigo.orchextra.core.controller.dto.DetailViewInfo;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsView;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
@@ -83,13 +83,13 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
   }
 
   @Override public void renderDetailViewWithPreview(UiBaseContentData previewContentData,
-      UiBaseContentData detailContentData, DetailViewInfo detailViewInfo) {
+      UiBaseContentData detailContentData, ElementCache elementCache) {
 
-    addLayoutToCoordinatorLayoutView(previewContentData, detailContentData, detailViewInfo);
+    addLayoutToCoordinatorLayoutView(previewContentData, detailContentData, elementCache);
   }
 
   private void addLayoutToCoordinatorLayoutView(UiBaseContentData previewContentData,
-      UiBaseContentData detailContentData, DetailViewInfo detailViewInfo) {
+      UiBaseContentData detailContentData, ElementCache elementCache) {
 
     try {
       if (isAdded()) {
@@ -98,8 +98,8 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
 
         detailCoordinatorLayoutContentData.setViews(previewContentData, detailContentData);
         detailCoordinatorLayoutContentData.setOnFinishListener(onFinishListener);
-        detailCoordinatorLayoutContentData.setArticleName(detailViewInfo.getNameArticle());
-        if (detailViewInfo.isShareable()) {
+        detailCoordinatorLayoutContentData.setArticleName(elementCache.getName());
+        if (elementCache.getShare() != null) {
           detailCoordinatorLayoutContentData.setOnShareListener(onShareListener);
         }
 
@@ -113,13 +113,13 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
   }
 
   @Override
-  public void renderDetailView(UiBaseContentData detailContentData, DetailViewInfo detailViewInfo) {
-    addLayoutToView(detailContentData, detailViewInfo);
+  public void renderDetailView(UiBaseContentData detailContentData, ElementCache elementCache) {
+    addLayoutToView(detailContentData, elementCache);
   }
 
   @Override
-  public void renderPreview(UiBaseContentData previewContentData, DetailViewInfo detailViewInfo) {
-    addLayoutToView(previewContentData, detailViewInfo);
+  public void renderPreview(UiBaseContentData previewContentData, ElementCache elementCache) {
+    addLayoutToView(previewContentData, elementCache);
   }
 
   @Override public void showProgressView(boolean visible) {
@@ -149,16 +149,16 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
     }
   }
 
-  private void addLayoutToView(UiBaseContentData uiBaseContentData, DetailViewInfo detailViewInfo) {
+  private void addLayoutToView(UiBaseContentData uiBaseContentData, ElementCache elementCache) {
     try {
       if (isAdded()) {
         DetailSimpleLayoutContentData detailSimpleLayoutContentData = DetailSimpleLayoutContentData.newInstance();
 
         detailSimpleLayoutContentData.setViews(uiBaseContentData);
         detailSimpleLayoutContentData.setOnFinishListener(onFinishListener);
-        detailSimpleLayoutContentData.setArticleName(detailViewInfo.getNameArticle());
-        detailSimpleLayoutContentData.setTypeContent(detailViewInfo.getType());
-        if (detailViewInfo.isShareable()) {
+        detailSimpleLayoutContentData.setElementCache(elementCache);
+        detailSimpleLayoutContentData.setArticleName(elementCache.getName());
+        if (elementCache.getShare() != null) {
           detailSimpleLayoutContentData.setOnShareListener(onShareListener);
         }
 

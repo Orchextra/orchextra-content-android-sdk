@@ -2,13 +2,10 @@ package com.gigigo.orchextra.core.data.rxCache;
 
 import android.content.Context;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
-import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
-import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
+import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
 import io.reactivex.Observable;
-import java.util.List;
 
 public interface OcmCache {
 
@@ -39,4 +36,12 @@ public interface OcmCache {
   void evictAll(boolean images, boolean data);
 
   Context getContext();
+
+  void putVersion(ApiVersionKache apiVersionKache);
+
+  Observable<ApiVersionKache> getVersion();
+
+  boolean isVersionCached();
+
+  boolean isVersionExpired();
 }

@@ -1,9 +1,7 @@
 package com.gigigo.orchextra.core.domain.rxInteractor;
 
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
-import com.gigigo.orchextra.core.domain.rxExecutor.ThreadExecutor;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import io.reactivex.Observable;
 import orchextra.javax.inject.Inject;
@@ -23,21 +21,21 @@ public class GetDetail extends UseCase<ElementData, GetDetail.Params> {
   }
 
   @Override Observable<ElementData> buildUseCaseObservable(Params params) {
-    return this.ocmRepository.getDetail(params.forceReload, params.content);
+    return this.ocmRepository.getDetail(params.forceReload, params.slug);
   }
 
   public static final class Params {
 
     private final boolean forceReload;
-    private final String content;
+    private final String slug;
 
-    private Params(boolean forceReload, String content) {
+    private Params(boolean forceReload, String slug) {
       this.forceReload = forceReload;
-      this.content = content;
+      this.slug = slug;
     }
 
-    public static Params forDetail(boolean forceReload, String content) {
-      return new Params(forceReload, content);
+    public static Params forDetail(boolean forceReload, String slug) {
+      return new Params(forceReload, slug);
     }
   }
 }
