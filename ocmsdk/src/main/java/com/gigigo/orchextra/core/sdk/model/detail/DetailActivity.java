@@ -99,12 +99,12 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
      if (requestCode == NATIVE_LOGIN) {
       if (resultCode == Activity.RESULT_OK) {
-        String uuid = data.getExtras().getString(LOGGED_USER_UUID);
-        if (uuid != null) {
-          presenter.setLoginUserFromNativeLogin(uuid);
+        if (data != null && data.getExtras() != null) {
+          String uuid = data.getExtras().getString(LOGGED_USER_UUID);
+          if (uuid != null) {
+            presenter.setLoginUserFromNativeLogin(uuid);
+          }
         }
-        /*Ocm.setLoggedAction(this.cachedElement, this.elementUrl, this.imageToExpandUrl,
-            this.widthImageToExpandUrl, this.heightImageToExpandUrl, null);*/
       }
     }
   }
