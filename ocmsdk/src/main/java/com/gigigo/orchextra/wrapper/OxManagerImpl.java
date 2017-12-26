@@ -52,7 +52,7 @@ public class OxManagerImpl implements OxManager {
   }
 
   @Override public void init(Application app, Config config) {
-
+    System.out.println("appOn6.6.3");
     OrchextraBuilder builder = new OrchextraBuilder(app);
     builder.setApiKeyAndSecret(config.getApiKey(), config.getApiSecret())
         .setLogLevel(OrchextraLogLevel.NETWORK)
@@ -74,13 +74,15 @@ public class OxManagerImpl implements OxManager {
             config.getOrchextraCompletionCallback().onConfigurationReceive(s);
           }
         });
-
+    System.out.println("appOn6.6.4");
     if (config.getNotificationActivityClass() != null) {
       builder.setNotificationActivityClass(config.getNotificationActivityClass().toString());
     }
+    System.out.println("appOn6.6.5");
     if (config.getSenderId() != null && !config.getSenderId().equals("")) {
       builder.setGcmSenderId(config.getSenderId());
     }
+    System.out.println("appOn6.6.6");
     if (config.getVuforia() != null) {
       builder.setImageRecognitionModule(
           new com.gigigo.imagerecognitioninterface.ImageRecognition() {
@@ -108,10 +110,11 @@ public class OxManagerImpl implements OxManager {
             }
           });
     }
-
+    System.out.println("appOn6.6.7");
     Orchextra.initialize(builder);
-
+    System.out.println("appOn6.6.8");
     Orchextra.setCustomSchemeReceiver(onOxCustomSchemeReceiver);
+    System.out.println("appOn6.6.9");
   }
 
   @Override public void getToken() {

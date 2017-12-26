@@ -1,6 +1,6 @@
 project.ext {
 
-  bussines_unit = '"es"'
+  bussines_unit = '"it"'
 
   /** RELEASE */
   //WOAH RELEASE

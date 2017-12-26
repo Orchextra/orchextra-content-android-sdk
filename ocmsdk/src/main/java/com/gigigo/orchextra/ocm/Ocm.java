@@ -128,19 +128,19 @@ public final class Ocm {
    * class
    */
   public static void initialize(OcmBuilder ocmBuilder) {
-
+    System.out.println("appOn6.1");
     Application app = ocmBuilder.getApp();
-
+    System.out.println("appOn6.1");
     String oxKey = ocmBuilder.getOxKey();
     String oxSecret = ocmBuilder.getOxSecret();
     Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
-
+    System.out.println("appOn6.2");
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
-
+    System.out.println("appOn6.3");
     OCManager.initSdk(app);
-
+    System.out.println("appOn6.4");
     OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
     if (ocmBuilder.getShowReadArticles() && ocmBuilder.getTransformReadArticleMode()
         .equals(ImageTransformReadArticle.BITMAP_TRANSFORM)) {
@@ -151,11 +151,11 @@ public final class Ocm {
         OCManager.setBitmapTransformReadArticles(ocmBuilder.getCustomBitmapTransformReadArticle());
       }
     }
-
+    System.out.println("appOn6.5");
     if (ocmBuilder.getShowReadArticles()) {
       OCManager.setMaxReadArticles(ocmBuilder.getMaxReadArticles());
     }
-
+    System.out.println("appOn6.6");
     if (ocmBuilder.getVuforiaImpl() != null) {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
           ocmBuilder.getOxSenderId(), ocmBuilder.getVuforiaImpl());
@@ -163,6 +163,7 @@ public final class Ocm {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
           ocmBuilder.getOxSenderId());
     }
+    System.out.println("appOn6.7");
   }
 
   /**

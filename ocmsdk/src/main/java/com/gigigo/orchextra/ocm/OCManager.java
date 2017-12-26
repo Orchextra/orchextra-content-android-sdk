@@ -587,7 +587,7 @@ public final class OCManager {
 
   private void initOrchextra(Application app, String oxKey, String oxSecret,
       Class notificationActivityClass, String senderId, ImageRecognition vuforia) {
-
+    System.out.println("appOn6.6.1");
     OxManager.Config config = new OxManager.Config.Builder().setApiKey(oxKey)
         .setApiSecret(oxSecret)
         .setNotificationActivityClass(notificationActivityClass)
@@ -595,7 +595,7 @@ public final class OCManager {
         .setVuforia(vuforia)
         .setOrchextraCompletionCallback(mOrchextraCompletionCallback)
         .build();
-
+    System.out.println("appOn6.6.2");
     instance.oxManager.init(app, config);
   }
 
