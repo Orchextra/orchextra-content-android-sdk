@@ -53,30 +53,34 @@ public final class OCManager {
   private static OrchextraCompletionCallback mOrchextraCompletionCallback =
       new OrchextraCompletionCallback() {
         @Override public void onSuccess() {
-          Log.d("WOAH", "Orchextra initialized successfully");
+          Log.d("OCM", "Orchextra initialized successfully");
         }
 
         @Override public void onError(String error) {
-          Log.d("WOAH", "onError: " + error);
+          Log.d("OCM", "onError: " + error);
           //new Handler(Looper.getMainLooper()).post(new Runnable() {
           //  @Override public void run() {
           //    Toast.makeText(mApplication, "onError:  app" + error, Toast.LENGTH_LONG).show();
           //  }
           //});
-          if (error.equals("401") && instance.ocmCredentialCallback != null) {
+
+          //asv in ox 1.0 && ox 2.0 invalid credentials/or invalid enviroment(credentials from pro in stagign endpoint
+          //was 401, in this case the ox onError must be throw to ocm credentials callback
+          //in ox 3.0 the back error code will be 2000, for the same problem
+          if ((error.equals("401") || error.equals("2000")) && instance.ocmCredentialCallback != null) {
             instance.ocmCredentialCallback.onCredentailError(error);
           }
         }
 
         @Override public void onInit(String s) {
-          Log.d("WOAH", "onInit: " + s);
+          Log.d("OCM", "onInit: " + s);
           //asvox aki es cuando se va a background , en estepunto ox ya ha recuperado la config anterior(buena)
           //y cuando llega a onSuccess se rompio del todo
 
         }
 
         @Override public void onConfigurationReceive(String accessToken) {
-          Log.d("WOAH", "onConfigurationReceive: " + accessToken);
+          Log.d("OCM", "onConfigurationReceive: " + accessToken);
           //new Handler(Looper.getMainLooper()).post(new Runnable() {
           //  @Override public void run() {
           //    Toast.makeText(mApplication, "onConfigurationReceive:  app" + accessToken, Toast.LENGTH_LONG).show();
