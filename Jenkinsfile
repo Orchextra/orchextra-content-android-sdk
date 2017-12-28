@@ -1,6 +1,6 @@
 #!groovy
 
-@Library('github.com/red-panda-ci/jenkins-pipeline-library@v2.3.0') _
+@Library('github.com/red-panda-ci/jenkins-pipeline-library@v2.4.0') _
 
 // Initialize global config
 cfg = jplConfig('ocmsdk', 'android', '', [hipchat: '', slack: '#integrations', email: 'qa+ocmsdk@gigigo.com,jose.benito@gigigo.com'])
@@ -35,6 +35,13 @@ pipeline {
             when { branch 'release/v*' }
             steps {
                 jplCloseRelease(cfg)
+            }
+        }
+        stage ('PR Clean') {
+            agent { label 'docker' }
+            when { branch 'PR-*' }
+            steps {
+                deleteDir()
             }
         }
     }
