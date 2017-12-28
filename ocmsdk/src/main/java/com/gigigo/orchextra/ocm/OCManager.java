@@ -63,6 +63,45 @@ public final class OCManager {
           //    Toast.makeText(mApplication, "onError:  app" + error, Toast.LENGTH_LONG).show();
           //  }
           //});
+//performance for use ox3 we need to change the old code error of ox2.0 401 becomes 2000 now x example
+          /*
+          NoDatabase:{
+       code:1100,
+       message:'No database connection'
+   },
+   InvalidCredentials:{
+       code:2001,
+       statusCode: 403,
+       message:'Invalid credentials supplied'
+   },
+   Unauthorized:{
+       code:2002,
+       statusCode: 401,
+       message:'Unauthorized'
+   },
+   ProjectNotFound:{
+       code:2000,
+       statusCode: 404,
+       message:'Project not found'
+   },
+   InvalidJSON:{
+       code:2003,
+       statusCode: 400,
+       message:'Invalid JSON body',
+       conversion: err =>
+           err.name == 'SyntaxError'
+           && (err.message.indexOf('Unexpected token')===0
+           || err.message.indexOf('Unexpected string in JSON')===0)
+   },
+   ValidationError:{
+       code:3000,
+       statusCode: 400,
+       message: 'Validation Error',
+Add Comment C
+           */
+
+
+
 
           //asv in ox 1.0 && ox 2.0 invalid credentials/or invalid enviroment(credentials from pro in stagign endpoint
           //was 401, in this case the ox onError must be throw to ocm credentials callback

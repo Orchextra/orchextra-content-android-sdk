@@ -373,7 +373,7 @@ public class OcmControllerImp implements OcmController {
 
     UiMenuData uiMenuData = new UiMenuData();
 
-    List<UiMenu> menuList = new ArrayList<>();
+    List<UiMenu> menuList = new  ArrayList<>();
 
     if (menuContentData != null
         && menuContentData.getMenuContentList() != null
@@ -408,6 +408,10 @@ public class OcmControllerImp implements OcmController {
 
     return uiMenuData;
   }
+
+  //performance https://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html
+  //leak with this kind inner class
+
 
   //region observers
   private final class MenuObserver extends DefaultObserver<MenuContentData> {

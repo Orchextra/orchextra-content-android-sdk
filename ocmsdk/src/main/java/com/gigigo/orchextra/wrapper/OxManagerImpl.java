@@ -56,7 +56,7 @@ public class OxManagerImpl implements OxManager {
     OrchextraBuilder builder = new OrchextraBuilder(app);
     builder.setApiKeyAndSecret(config.getApiKey(), config.getApiSecret())
         .setLogLevel(OrchextraLogLevel.NETWORK)
-        .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.NORMAL)
+        .setBackgroundBeaconScanMode(BeaconBackgroundModeScan.HARDCORE)
         .setOrchextraCompletionCallback(new com.gigigo.orchextra.OrchextraCompletionCallback() {
           @Override public void onSuccess() {
             config.getOrchextraCompletionCallback().onSuccess();
