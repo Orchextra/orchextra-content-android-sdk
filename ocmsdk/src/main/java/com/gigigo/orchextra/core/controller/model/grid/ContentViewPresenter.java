@@ -125,26 +125,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
                       }
                     });
-
-                //if (cachedContentData == null) {
-                //  cachedContentData = contentData;
-                //
-                //  ContentItem contentItem = contentData.getContent();
-                //  renderContentItem(contentItem);
-                //
-                //  if (contentData.isFromCloud()) {
-                //    checkNewContent(cachedContentData, contentData);
-                //  }
-                //} else if (!hasToCheckNewContent || forceReload) {
-                //  cachedContentData = contentData;
-                //  ContentItem contentItem = contentData.getContent();
-                //  renderContentItem(contentItem);
-                //  hasToCheckNewContent = true;
-                //} else {
-                //  checkNewContent(cachedContentData, contentData);
-                //}
-                //
-                //cachedContentData = contentData;
               }
 
               OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
@@ -152,6 +132,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
             @Override public void onGetSectionFails(Exception e) {
               renderError();
+              OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
             }
           });
     } else {
