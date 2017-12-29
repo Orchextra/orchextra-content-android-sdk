@@ -6,6 +6,7 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
+import com.gigigo.orchextra.ocm.dto.UiMenuData;
 
 public class ContentArticleHomeLayoutViewPresenter extends Presenter<ArticleView> {
 
@@ -39,13 +40,25 @@ public class ContentArticleHomeLayoutViewPresenter extends Presenter<ArticleView
   }
 
   public void reloadSection(boolean hasToShowNewContentButton) {
+    ocmController.getMenu(DataRequest.ONLY_CACHE, new OcmController.GetMenusControllerCallback() {
+      @Override public void onGetMenusLoaded(UiMenuData menus) {
 
-    String contentUrl = uiMenu.getElementCache().getRender().getContentUrl();
+        if (menus == null) {
+          return;
+        }
 
-    ocmController.getSection(DataRequest.FIRST_CACHE, contentUrl, 0, new OcmController.GetSectionControllerCallback() {
+        boolean isFound = false;
+        for (UiMenu menu : menus.getUiMenuList()) {
+          if (menu.getSlug().equals(uiMenu.getSlug())) {
+            uiMenu = menu;
+            isFound = true;
+            break;
+          }
+        }
 
-      @Override public void onGetSectionLoaded(ContentData cachedContentData) {
-        elementCache = cachedContentData.getElementsCache().get(contentUrl);
+        if (!isFound) {
+          return;
+        }
 
         getView().showEmptyView(false);
 
@@ -56,7 +69,7 @@ public class ContentArticleHomeLayoutViewPresenter extends Presenter<ArticleView
         }
       }
 
-      @Override public void onGetSectionFails(Exception e) {
+      @Override public void onGetMenusFails(Exception e) {
         getView().showEmptyView(true);
       }
     });
