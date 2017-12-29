@@ -11,7 +11,6 @@ import com.gigigo.orchextra.ocm.dto.UiMenuData;
 public class ContentArticleHomeLayoutViewPresenter extends Presenter<ArticleView> {
 
   private final OcmController ocmController;
-  private ElementCache elementCache;
   private UiMenu uiMenu;
 
   public ContentArticleHomeLayoutViewPresenter(OcmController ocmController) {
@@ -23,11 +22,11 @@ public class ContentArticleHomeLayoutViewPresenter extends Presenter<ArticleView
   }
 
   public void loadSectionFirstTime() {
-    this.elementCache = uiMenu.getElementCache();
     loadSection();
   }
 
   public void loadSection() {
+    ElementCache elementCache = uiMenu.getElementCache();
     if (elementCache != null
         && elementCache.getRender() != null
         && elementCache.getRender().getElements() != null) {
