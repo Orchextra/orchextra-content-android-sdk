@@ -3,7 +3,7 @@ package com.gigigo.sample;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
+import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;

@@ -1,6 +1,6 @@
 package com.gigigo.orchextra.core.sdk.model.grid;
 
-import com.gigigo.orchextra.core.controller.model.grid.ContentViewPresenter;
+import com.gigigo.orchextra.core.controller.model.home.grid.ContentViewPresenter;
 import com.gigigo.orchextra.core.sdk.di.components.OcmComponent;
 import com.gigigo.orchextra.core.sdk.di.providers.OcmModuleProvider;
 import com.gigigo.orchextra.core.sdk.di.scopes.PerSection;

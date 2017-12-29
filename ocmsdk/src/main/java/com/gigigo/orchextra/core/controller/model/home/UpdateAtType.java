@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.controller.model.grid;
+package com.gigigo.orchextra.core.controller.model.home;
 
 public enum UpdateAtType {
   REFRESH,

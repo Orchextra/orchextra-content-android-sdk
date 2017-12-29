@@ -1,5 +1,7 @@
-package com.gigigo.orchextra.core.controller.model.grid;
+package com.gigigo.orchextra.core.controller.model.home;
 
+import com.gigigo.orchextra.core.controller.model.home.grid.ContentView;
+import com.gigigo.orchextra.core.controller.model.home.grid.ContentViewPresenter;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;

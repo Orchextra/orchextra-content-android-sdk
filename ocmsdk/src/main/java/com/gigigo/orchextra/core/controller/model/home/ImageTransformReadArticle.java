@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.controller.model.grid;
+package com.gigigo.orchextra.core.controller.model.home;
 
 /***
  * modify drawable/oc_read_articles_overlay for change the overlay

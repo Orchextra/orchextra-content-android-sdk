@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.controller.model.grid;
+package com.gigigo.orchextra.core.controller.model.home.grid;
 
 import android.text.TextUtils;
 import android.view.View;
@@ -7,6 +7,7 @@ import com.gigigo.multiplegridrecyclerview.entities.CellBlankElement;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.controller.model.base.Presenter;
+import com.gigigo.orchextra.core.controller.model.home.UpdateAtType;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;

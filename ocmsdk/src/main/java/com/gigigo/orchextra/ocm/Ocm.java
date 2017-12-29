@@ -3,7 +3,7 @@ package com.gigigo.orchextra.ocm;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
+import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;

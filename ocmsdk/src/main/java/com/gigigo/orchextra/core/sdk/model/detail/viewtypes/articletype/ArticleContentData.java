@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.gigigo.baserecycleradapter.adapter.BaseRecyclerAdapter;
+import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
@@ -29,11 +30,10 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhold
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.dto.ArticleBlankElement;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
 
-public class ArticleContentData extends UiGridBaseContentData {
+public class ArticleContentData extends UiBaseContentData {
 
   private List<ArticleElement> articleElementList;
   private RecyclerView articleItemViewContainer;
@@ -117,8 +117,8 @@ public class ArticleContentData extends UiGridBaseContentData {
   }
 
   private void initRecyclerView() {
-    ArticleContentDataFactory factory = new ArticleContentDataFactory(getContext(), flFA,
-        thumbnailEnabled);
+    ArticleContentDataFactory factory =
+        new ArticleContentDataFactory(getContext(), flFA, thumbnailEnabled);
     adapter = new BaseRecyclerAdapter(factory);
 
     adapter.bind(ArticleYoutubeVideoElement.class, ArticleYoutubeVideoView.class);
@@ -145,42 +145,17 @@ public class ArticleContentData extends UiGridBaseContentData {
     this.articleElementList = articleElementList;
   }
 
-  @Override public void setFilter(String filter) {
-
-  }
-
-  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding,
-      int addictionalPadding) {
-    this.addictionalPadding = addictionalPadding;
-    if (articleItemViewContainer != null) {
-      articleItemViewContainer.setClipToPadding(false);
-      articleItemViewContainer.setPadding(0, 0, 0, addictionalPadding);
-    }
-  }
-
-  @Override public void scrollToTop() {
+  public void scrollToTop() {
     if (articleItemViewContainer != null) {
       articleItemViewContainer.scrollTo(0, 0);
     }
   }
 
-  @Override public void setEmptyView(View emptyView) {
-
-  }
-
-  @Override public void setErrorView(View errorLayoutView) {
-
-  }
-
-  @Override public void setProgressView(View progressView) {
-    if (progressView != null) {
-      faLoading = progressView;
-    }
-  }
-
-  @Override public void reloadSection(boolean hasToShowNewContentButton) {
-    if (adapter != null) {
-      adapter.notifyDataSetChanged();
+  public void setClipToPaddingBottomSize(ClipToPadding clipToPadding, int addictionalPadding) {
+    this.addictionalPadding = addictionalPadding;
+    if (articleItemViewContainer != null) {
+      articleItemViewContainer.setClipToPadding(false);
+      articleItemViewContainer.setPadding(0, 0, 0, addictionalPadding);
     }
   }
 }

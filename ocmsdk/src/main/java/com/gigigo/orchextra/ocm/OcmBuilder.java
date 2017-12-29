@@ -3,7 +3,7 @@ package com.gigigo.orchextra.ocm;
 import android.app.Application;
 import android.graphics.Bitmap;
 import com.bumptech.glide.load.Transformation;
-import com.gigigo.orchextra.core.controller.model.grid.ImageTransformReadArticle;
+import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.wrapper.ImageRecognition;

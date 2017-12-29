@@ -32,6 +32,9 @@ import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailParentContentDat
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutViewComponent;
 import com.gigigo.orchextra.core.sdk.model.grid.DaggerContentGridLayoutViewComponent;
+import com.gigigo.orchextra.core.sdk.model.grid.articles.ContentArticleHomeLayoutView;
+import com.gigigo.orchextra.core.sdk.model.grid.articles.ContentArticleHomeLayoutViewComponent;
+import com.gigigo.orchextra.core.sdk.model.grid.articles.DaggerContentArticleHomeLayoutViewComponent;
 import com.gigigo.orchextra.core.sdk.model.searcher.DaggerSearcherLayoutViewComponent;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutViewComponent;
@@ -83,5 +86,14 @@ public class InjectorImpl implements Injector {
     ImagesServiceComponent
         imagesServiceComponent = DaggerImagesServiceComponent.builder().ocmComponent(ocmComponent).build();
     imagesServiceComponent.injectImagesService(imagesService);
+  }
+
+  @Override public void injectContentArticleHomeLayoutView(
+      ContentArticleHomeLayoutView contentArticleHomeLayoutView) {
+
+    ContentArticleHomeLayoutViewComponent component =
+        DaggerContentArticleHomeLayoutViewComponent.builder().ocmComponent(ocmComponent).build();
+
+    component.injectContentArticleHomeLayoutView(contentArticleHomeLayoutView);
   }
 }

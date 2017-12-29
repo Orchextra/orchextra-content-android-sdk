@@ -31,6 +31,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.vimeo.VimeoContentDa
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeFragment;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
+import com.gigigo.orchextra.core.sdk.model.grid.articles.ContentArticleHomeLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -72,12 +73,10 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     
     ElementCache elementCache = uiMenu.getElementCache();
 
-    if (elementCache.getType() == ElementCacheType.ARTICLE
-        && elementCache.getRender() != null
-        && elementCache.getRender().getElements() != null) {
+    if (elementCache.getType() == ElementCacheType.ARTICLE) {
 
       getSectionViewGeneratorCallback.onSectionViewLoaded(
-          generateArticleDetailView(elementCache.getRender().getElements()));
+          generateHomeArticleView(uiMenu));
 
       OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
 
@@ -132,6 +131,12 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     contentGridLayoutView.setViewId(uiMenu, imagesToDownload);
     contentGridLayoutView.setEmotion(filter);
     return contentGridLayoutView;
+  }
+
+  private UiGridBaseContentData generateHomeArticleView(UiMenu uiMenu) {
+    ContentArticleHomeLayoutView contentData = ContentArticleHomeLayoutView.newInstance();
+    contentData.setViewId(uiMenu);
+    return contentData;
   }
 
   @Override public UiSearchBaseContentData generateSearchView() {
@@ -223,7 +228,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     });
   }
 
-  private UiGridBaseContentData generateArticleDetailView(List<ArticleElement> elements) {
+  private UiBaseContentData generateArticleDetailView(List<ArticleElement> elements) {
     ArticleContentData articleContentData = ArticleContentData.newInstance();
     articleContentData.addItems(elements);
     return articleContentData;
