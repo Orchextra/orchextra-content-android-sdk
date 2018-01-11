@@ -13,8 +13,10 @@ import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheRe
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheShareMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.CidKeyDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.FederatedAuthorizationDataMapper;
+import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementCustomPropertyMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
+import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementPropertyOptionMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSectionViewMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSegmentationMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
@@ -24,8 +26,7 @@ import orchextra.dagger.Provides;
 import orchextra.javax.inject.Named;
 import orchextra.javax.inject.Singleton;
 
-@Module
-public class ApiMapperModule {
+@Module public class ApiMapperModule {
 
   @Singleton @Provides ApiElementSectionViewMapper provideApiElementSectionViewMapper() {
     return new ApiElementSectionViewMapper();
@@ -35,10 +36,21 @@ public class ApiMapperModule {
     return new ApiElementSegmentationMapper();
   }
 
+  @Singleton @Provides ApiElementPropertyOptionMapper provideApiElementPropertyOptionMapper() {
+    return new ApiElementPropertyOptionMapper();
+  }
+
+  @Singleton @Provides ApiElementCustomPropertyMapper provideApiElementCustomPropertiesMapper(
+      ApiElementPropertyOptionMapper apiElementPropertyOptionMapper) {
+    return new ApiElementCustomPropertyMapper(apiElementPropertyOptionMapper);
+  }
+
   @Singleton @Provides ApiElementMapper provideApiElementMapper(
       ApiElementSegmentationMapper apiMenuItemSegmentationMapper,
+      ApiElementCustomPropertyMapper apiElementCustomPropertyMapper,
       ApiElementSectionViewMapper apiMenuItemViewMapper) {
-    return new ApiElementMapper(apiMenuItemSegmentationMapper, apiMenuItemViewMapper);
+    return new ApiElementMapper(apiMenuItemSegmentationMapper, apiElementCustomPropertyMapper,
+        apiMenuItemViewMapper);
   }
 
   @Singleton @Provides ApiMenuContentMapper provideApiMenuContentMapper(
@@ -54,14 +66,16 @@ public class ApiMapperModule {
     return new CidKeyDataMapper();
   }
 
-  @Singleton @Provides FederatedAuthorizationDataMapper provideFederatedAuthorizationDataMapper(CidKeyDataMapper cidKeyDataMapper) {
+  @Singleton @Provides FederatedAuthorizationDataMapper provideFederatedAuthorizationDataMapper(
+      CidKeyDataMapper cidKeyDataMapper) {
     return new FederatedAuthorizationDataMapper(cidKeyDataMapper);
   }
 
   @Singleton @Provides ApiElementCacheRenderMapper provideApiElementCacheRenderMapper(
-      ApiArticleElementMapper apiArticleElementMapper, FederatedAuthorizationDataMapper
-      federatedAuthorizationDataMapper) {
-    return new ApiElementCacheRenderMapper(apiArticleElementMapper, federatedAuthorizationDataMapper);
+      ApiArticleElementMapper apiArticleElementMapper,
+      FederatedAuthorizationDataMapper federatedAuthorizationDataMapper) {
+    return new ApiElementCacheRenderMapper(apiArticleElementMapper,
+        federatedAuthorizationDataMapper);
   }
 
   @Singleton @Provides ApiElementCachePreviewMapper provideApiElementCachePreviewMapper() {
@@ -74,24 +88,27 @@ public class ApiMapperModule {
 
   @Singleton @Provides ApiElementCacheMapper provideApiElementCacheMapper(
       ApiElementCacheRenderMapper apiElementCacheItemRenderMapper,
-      ApiElementCachePreviewMapper apiElementCachePreviewMapper, ApiElementCacheShareMapper apiElementCacheShareMapper,
+      ApiElementCachePreviewMapper apiElementCachePreviewMapper,
+      ApiElementCacheShareMapper apiElementCacheShareMapper,
       ApiElementSegmentationMapper apiElementSegmentationMapper) {
-    return new ApiElementCacheMapper(apiElementCacheItemRenderMapper, apiElementCachePreviewMapper
-        , apiElementCacheShareMapper, apiElementSegmentationMapper);
+    return new ApiElementCacheMapper(apiElementCacheItemRenderMapper, apiElementCachePreviewMapper,
+        apiElementCacheShareMapper, apiElementSegmentationMapper);
   }
 
-  @Singleton @Provides ApiElementDataMapper provideApiElementDataMapper(ApiElementCacheMapper apiElementCacheMapper) {
+  @Singleton @Provides ApiElementDataMapper provideApiElementDataMapper(
+      ApiElementCacheMapper apiElementCacheMapper) {
     return new ApiElementDataMapper(apiElementCacheMapper);
   }
 
-  @Singleton @Provides @Named("MapperApiMenuResponse") ApiGenericResponseMapper provideApiMenuMapper(ApiMenuContentMapper apiMenuContentMapper,
+  @Singleton @Provides @Named("MapperApiMenuResponse")
+  ApiGenericResponseMapper provideApiMenuMapper(ApiMenuContentMapper apiMenuContentMapper,
       ApiElementCacheMapper apiElementCacheItemMapper) {
     return new OcmGenericResponseMapper(
         new ApiMenuContentListResponseMapper(apiMenuContentMapper, apiElementCacheItemMapper));
   }
 
-  @Singleton @Provides ApiContentDataResponseMapper provideApiContentDataResponseMapper(ApiContentItemMapper apiContentItemMapper,
-      ApiElementCacheMapper apiElementCacheMapper) {
+  @Singleton @Provides ApiContentDataResponseMapper provideApiContentDataResponseMapper(
+      ApiContentItemMapper apiContentItemMapper, ApiElementCacheMapper apiElementCacheMapper) {
     return new ApiContentDataResponseMapper(apiContentItemMapper, apiElementCacheMapper);
   }
 
@@ -117,8 +134,8 @@ public class ApiMapperModule {
   }
 
   @Singleton @Provides @Named("MapperApiElementCacheResponse")
-  ApiGenericResponseMapper provideApiElementCacheResponseMapper(ApiElementDataMapper apiElementDataMapper) {
+  ApiGenericResponseMapper provideApiElementCacheResponseMapper(
+      ApiElementDataMapper apiElementDataMapper) {
     return new OcmGenericResponseMapper(apiElementDataMapper);
   }
-
 }

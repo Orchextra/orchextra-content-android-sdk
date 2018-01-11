@@ -5,6 +5,7 @@ import java.util.List;
 public class Element {
 
     private ElementSegmentation segmentation;
+    private List<ElementCustomProperty> customProperties;
     private ElementSectionView sectionView;
     private String slug;
     private String elementUrl;
@@ -18,6 +19,14 @@ public class Element {
 
     public void setSegmentation(ElementSegmentation segmentation) {
         this.segmentation = segmentation;
+    }
+
+    public List<ElementCustomProperty> getCustomProperties() {
+        return customProperties;
+    }
+
+    public void setCustomProperties(List<ElementCustomProperty> customProperties) {
+        this.customProperties = customProperties;
     }
 
     public ElementSectionView getSectionView() {

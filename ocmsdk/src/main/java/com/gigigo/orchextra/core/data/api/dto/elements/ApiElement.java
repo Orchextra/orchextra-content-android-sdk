@@ -4,39 +4,44 @@ import java.util.List;
 
 public class ApiElement {
 
-    private List<String> tags;
-    private ApiElementSegmentation segmentation;
-    private ApiElementSectionView sectionView;
-    private String slug;
-    private String elementUrl;
-    private String name;
-    private List<List<String>> dates;
+  private List<String> tags;
+  private ApiElementSegmentation segmentation;
+  private List<ApiElementCustomProperty> customProperties;
+  private ApiElementSectionView sectionView;
+  private String slug;
+  private String elementUrl;
+  private String name;
+  private List<List<String>> dates;
 
-    public ApiElementSegmentation getSegmentation() {
-        return segmentation;
-    }
+  public ApiElementSegmentation getSegmentation() {
+    return segmentation;
+  }
 
-    public ApiElementSectionView getSectionView() {
-        return sectionView;
-    }
+  public List<ApiElementCustomProperty> getCustomProperties() {
+    return customProperties;
+  }
 
-    public String getSlug() {
-        return slug;
-    }
+  public ApiElementSectionView getSectionView() {
+    return sectionView;
+  }
 
-    public String getElementUrl() {
-        return elementUrl;
-    }
+  public String getSlug() {
+    return slug;
+  }
 
-    public List<String> getTags() {
-        return tags;
-    }
+  public String getElementUrl() {
+    return elementUrl;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public List<String> getTags() {
+    return tags;
+  }
 
-    public List<List<String>> getDates() {
-        return dates;
-    }
+  public String getName() {
+    return name;
+  }
+
+  public List<List<String>> getDates() {
+    return dates;
+  }
 }
