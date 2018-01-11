@@ -30,8 +30,14 @@ android {
       buildConfigField "String", "API_SECRET", project.ext.api_secret_debug
       signingConfig signingConfigs.debug
     }
-    release {
+    prerelease {
       debuggable true
+      buildConfigField "String", "API_KEY", project.ext.api_key_release
+      buildConfigField "String", "API_SECRET", project.ext.api_secret_release
+      signingConfig signingConfigs.debug
+      matchingFallbacks = ['release']
+    }
+    release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
       buildConfigField "String", "API_KEY", project.ext.api_key_release
@@ -61,6 +67,7 @@ dependencies {
   /*New dependencies*/
   stagingImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
   debugImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+  prereleaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
   releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
   implementation 'com.android.support:support-v4:26.0.2'
