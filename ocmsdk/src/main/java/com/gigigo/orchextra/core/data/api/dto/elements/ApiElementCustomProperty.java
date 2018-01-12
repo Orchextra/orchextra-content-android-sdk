@@ -1,36 +1,11 @@
 package com.gigigo.orchextra.core.data.api.dto.elements;
 
-import java.util.List;
+import java.util.Map;
 
 public class ApiElementCustomProperty {
-  private String name;
-  private String label;
-  private String description;
-  private String type;
-  private String def;
-  private List<ApiElementPropertyOption> options;
+  private Map<String, String> customProperties;
 
-  public String getName() {
-    return name;
-  }
-
-  public String getLabel() {
-    return label;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public String getDef() {
-    return def;
-  }
-
-  public List<ApiElementPropertyOption> getOptions() {
-    return options;
+  public Map<String, String> getCustomProperties() {
+    return customProperties;
   }
 }

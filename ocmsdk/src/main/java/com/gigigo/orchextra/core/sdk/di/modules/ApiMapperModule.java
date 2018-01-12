@@ -16,7 +16,6 @@ import com.gigigo.orchextra.core.data.api.mappers.elementcache.FederatedAuthoriz
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementCustomPropertyMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementPropertyOptionMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSectionViewMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSegmentationMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
@@ -36,13 +35,8 @@ import orchextra.javax.inject.Singleton;
     return new ApiElementSegmentationMapper();
   }
 
-  @Singleton @Provides ApiElementPropertyOptionMapper provideApiElementPropertyOptionMapper() {
-    return new ApiElementPropertyOptionMapper();
-  }
-
-  @Singleton @Provides ApiElementCustomPropertyMapper provideApiElementCustomPropertiesMapper(
-      ApiElementPropertyOptionMapper apiElementPropertyOptionMapper) {
-    return new ApiElementCustomPropertyMapper(apiElementPropertyOptionMapper);
+  @Singleton @Provides ApiElementCustomPropertyMapper provideApiElementCustomPropertiesMapper() {
+    return new ApiElementCustomPropertyMapper();
   }
 
   @Singleton @Provides ApiElementMapper provideApiElementMapper(
