@@ -9,6 +9,7 @@ import android.webkit.WebStorage;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.OcmController;
+import com.gigigo.orchextra.core.domain.entities.elements.ElementCustomProperties;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
@@ -45,6 +46,9 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
+import kotlin.Function;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import orchextra.javax.inject.Inject;
 
 public final class OCManager {
@@ -152,6 +156,7 @@ Add Comment C
   private OcmCredentialCallback ocmCredentialCallback;
   private OnChangedMenuCallback onChangedMenuCallback;
   private OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback;
+  private OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate;
   private UiMenu uiMenuToNotifyWhenSectionIsLoaded;
   private boolean isShowReadedArticles = false;
   private int maxReadArticles = 100;
@@ -164,6 +169,15 @@ Add Comment C
 
   static void setDoRequiredLoginCallback(OnRequiredLoginCallback onRequiredLoginCallback) {
     getInstance().onRequiredLoginCallback = onRequiredLoginCallback;
+  }
+
+  public static void setCustomBehaviourDelegate(
+      OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
+    getInstance().ocmCustomBehaviourDelegate = ocmCustomBehaviourDelegate;
+  }
+
+  public  static OcmCustomBehaviourDelegate getOcmCustomBehaviourDelegate() {
+    return getInstance().ocmCustomBehaviourDelegate;
   }
 
   static void setEventCallback(OnEventCallback onEventCallback) {
@@ -279,6 +293,12 @@ Add Comment C
   public static void notifyRequiredLoginToContinue(String elementUrl) {
     if (instance != null && instance.onRequiredLoginCallback != null) {
       instance.onRequiredLoginCallback.doRequiredLogin(elementUrl);
+    }
+  }
+
+  public static void notifyCustomBehaviourContinue(Map<String, String> customProperties, Function1<Boolean, Unit> completion) {
+    if (instance != null && instance.ocmCustomBehaviourDelegate != null) {
+      instance.ocmCustomBehaviourDelegate.contentNeedsValidation(customProperties, completion);
     }
   }
 

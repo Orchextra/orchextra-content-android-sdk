@@ -33,7 +33,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   public int mTime = 0;
   @Inject ContentViewPresenter presenter;
   @Inject Authoritation authoritation;
-
+  private UiListedBaseContentData uiListedBaseContentData;
   UiListedBaseContentData.ListedContentListener listedContentListener =
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
@@ -49,7 +49,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
           }
         }
       };
-  private UiListedBaseContentData uiListedBaseContentData;
   private ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
   private int addictionalPadding = 0;
   private Context context;
@@ -145,7 +144,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (uiMenu != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
       presenter.setImagesToDownload(imagesToDownload);
-      presenter.loadSection(uiMenu,emotion);
+      presenter.loadSection(uiMenu, emotion);
     }
   }
 
@@ -169,7 +168,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       uiListedBaseContentData = new SpannedGridRecyclerView(context);
 
       uiListedBaseContentData.setListedContentListener(listedContentListener);
-      uiListedBaseContentData.setParams(clipToPadding, addictionalPadding, authoritation, thumbnailEnabled);
+      uiListedBaseContentData.setParams(clipToPadding, addictionalPadding, authoritation,
+          thumbnailEnabled);
       uiListedBaseContentData.setData(cellDataList);
 
       listedDataContainer.removeAllViews();
@@ -185,7 +185,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
 
     uiListedBaseContentData.setListedContentListener(listedContentListener);
-    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding, authoritation, thumbnailEnabled);
+    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding, authoritation,
+        thumbnailEnabled);
     uiListedBaseContentData.setData(cellDataList);
 
     listedDataContainer.removeAllViews();
@@ -238,8 +239,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
   }
 
-  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding,
-      int addictionalPadding) {
+  @Override
+  public void setClipToPaddingBottomSize(ClipToPadding clipToPadding, int addictionalPadding) {
     this.clipToPadding = clipToPadding;
     this.addictionalPadding = addictionalPadding;
   }

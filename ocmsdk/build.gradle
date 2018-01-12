@@ -8,6 +8,9 @@ apply plugin: 'me.tatarka.retrolambda'
 
 apply plugin: 'com.github.dcendents.android-maven'
 
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
 group = 'com.github.Orchextra'
 version ='ocmVersion'
 

@@ -6,7 +6,7 @@ public class ApiElement {
 
   private List<String> tags;
   private ApiElementSegmentation segmentation;
-  private List<ApiElementCustomProperty> customProperties;
+  private ApiElementCustomProperty customProperties;
   private ApiElementSectionView sectionView;
   private String slug;
   private String elementUrl;
@@ -17,7 +17,7 @@ public class ApiElement {
     return segmentation;
   }
 
-  public List<ApiElementCustomProperty> getCustomProperties() {
+  public ApiElementCustomProperty getCustomProperties() {
     return customProperties;
   }
 

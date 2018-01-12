@@ -11,6 +11,7 @@ import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
+import com.gigigo.orchextra.ocm.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
@@ -20,7 +21,13 @@ import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override public void onTabReselected(TabLayout.Tab tab) {
           viewpager.setCurrentItem(tab.getPosition());
-          ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem())).reloadSection(false);
+          ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem())).reloadSection(
+              false);
         }
       };
 
@@ -56,6 +64,33 @@ public class MainActivity extends AppCompatActivity {
           Toast.LENGTH_SHORT).show();
     }
   };
+
+  private OcmCustomBehaviourDelegate customPropertiesDelegate = new OcmCustomBehaviourDelegate() {
+    @Override public void contentNeedsValidation(@NotNull Map<String, String> customProperties,
+        @NotNull Function1<? super Boolean, Unit> completion) {
+
+      Set<Map.Entry<String, String>> entrySet = customProperties.entrySet();
+      Iterator<Map.Entry<String, String>> iterator = entrySet.iterator();
+      while (iterator.hasNext()) {
+        Map.Entry<String, String> next = iterator.next();
+        String property = next.getKey();
+        String value = next.getValue();
+
+        //TODO: check custom properties
+        switch (property) {
+          case "requireAuth":
+
+            break;
+          case "loyalty":
+
+            break;
+        }
+      }
+
+      completion.invoke(true);
+    }
+  };
+
   private List<UiMenu> oldUiMenuList;
 
   public static boolean deleteDir(File dir) {
@@ -98,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
     initViews();
 
     Ocm.setOnDoRequiredLoginCallback(onDoRequiredLoginCallback);
+    Ocm.setCustomBehaviourDelegate(customPropertiesDelegate);
 
     startCredentials();
   }

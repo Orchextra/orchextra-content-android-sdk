@@ -329,6 +329,11 @@ public final class Ocm {
     OCManager.setDoRequiredLoginCallback(onDoRequiredLoginCallback);
   }
 
+  public static void setCustomBehaviourDelegate(
+      OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
+    OCManager.setCustomBehaviourDelegate(ocmCustomBehaviourDelegate);
+  }
+
   public static void setQueryStringGenerator(QueryStringGenerator queryStringGenerator) {
     Ocm.queryStringGenerator = queryStringGenerator;
   }

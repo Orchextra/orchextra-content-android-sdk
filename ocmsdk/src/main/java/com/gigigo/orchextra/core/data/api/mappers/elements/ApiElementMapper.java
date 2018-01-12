@@ -3,10 +3,13 @@ package com.gigigo.orchextra.core.data.api.mappers.elements;
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementCustomProperty;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
-import com.gigigo.orchextra.core.domain.entities.elements.ElementCustomProperty;
+import com.gigigo.orchextra.core.domain.entities.elements.ElementCustomProperties;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ApiElementMapper implements ExternalClassToModelMapper<ApiElement, Element> {
 
@@ -38,12 +41,10 @@ public class ApiElementMapper implements ExternalClassToModelMapper<ApiElement, 
       model.setSegmentation(apiMenuItemSegmentation.externalClassToModel(data.getSegmentation()));
     }
 
-    List<ElementCustomProperty> customProperties = new ArrayList<>();
+    ElementCustomProperties customProperties = new ElementCustomProperties();
     if(data.getCustomProperties() != null) {
-      for (ApiElementCustomProperty apiElementCustomProperty : data.getCustomProperties()) {
-        customProperties.add(apiElementCustomPropertyMapper.externalClassToModel(
-            apiElementCustomProperty));
-      }
+      customProperties.setProperties(data.getCustomProperties().getProperties());
+
       model.setCustomProperties(customProperties);
     }
 
