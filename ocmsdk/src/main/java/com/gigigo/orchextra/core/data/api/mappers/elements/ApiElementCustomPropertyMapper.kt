@@ -9,7 +9,7 @@ class ApiElementCustomPropertyMapper : ExternalClassToModelMapper<ApiElementCust
   override fun externalClassToModel(data: ApiElementCustomProperty): ElementCustomProperties {
     val model = ElementCustomProperties()
 
-    model.properties = data.properties
+    model.properties = data.properties ?: HashMap()
 
     return model
   }

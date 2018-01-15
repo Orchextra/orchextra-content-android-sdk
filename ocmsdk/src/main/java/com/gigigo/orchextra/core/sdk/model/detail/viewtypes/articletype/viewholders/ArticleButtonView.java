@@ -17,12 +17,16 @@ import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocmsdk.R;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
   private final Context context;
+  //TODO: what's FA?? more descriptive name
   private final FrameLayout flFA;
   private final ProgressBar faLoading;
   private TextView articleTextButton;
@@ -54,11 +58,14 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     ViewGroup.LayoutParams lp = getLayoutParams(articleElement);
     articleTextButton.setLayoutParams(lp);
 
+    //TODO: two click listener? they are the same, just add it to itemView
+    /*
     articleTextButton.setOnClickListener(v -> {
       flFA.setVisibility(View.VISIBLE);
       faLoading.setVisibility(View.VISIBLE);
       processClickListener(articleElement.getElementUrl());
     });
+    */
   }
 
   @NonNull private ViewGroup.LayoutParams getLayoutParams(ArticleButtonElement articleElement) {
@@ -96,18 +103,24 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
         .override(realWidthDevice, calculatedHeight)
         .into(articleImageButton);
 
+    //TODO: two click listener? they are the same, just add it to itemView
+    /*
     articleImageButton.setOnClickListener(v -> {
       flFA.setVisibility(View.VISIBLE);
       faLoading.setVisibility(View.VISIBLE);
       processClickListener(articleElement.getElementUrl());
     });
+    */
   }
 
+  /*
+  //TODO: view just manage view, not logic in click event, propagate it to ArticleContentData
   private void processClickListener(String elementUrl) {
     if (elementUrl != null) {
       Ocm.processDeepLinks(elementUrl);
     }
   }
+  */
 
   @Override public void bindTo(ArticleButtonElement articleButtonElement, int i) {
     switch (articleButtonElement.getType()) {
@@ -117,5 +130,11 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
       case DEFAULT:
         bindTextButton(articleButtonElement);
     }
+  }
+
+  @Override public void onClick(View v) {
+    flFA.setVisibility(View.VISIBLE);
+    faLoading.setVisibility(View.VISIBLE);
+    super.onClick(v);
   }
 }

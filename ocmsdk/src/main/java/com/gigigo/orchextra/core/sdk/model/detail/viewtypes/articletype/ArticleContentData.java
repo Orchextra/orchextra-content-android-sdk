@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.gigigo.baserecycleradapter.adapter.BaseRecyclerAdapter;
+import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
@@ -30,6 +31,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhold
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.dto.ArticleBlankElement;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
 
@@ -130,6 +132,20 @@ public class ArticleContentData extends UiBaseContentData {
     adapter.bind(ArticleBlankElement.class, ArticleBlankView.class);
 
     adapter.setMillisIntervalToAvoidDoubleClick(1500);
+
+    adapter.setItemClickListener(new BaseViewHolder.OnItemClickListener() {
+      @Override public void onItemClick(int i, View view) {
+        ArticleElement element = adapter.getItem(i);
+
+        if (element instanceof ArticleButtonElement) {
+          String elementUrl = ((ArticleButtonElement) element).getElementUrl();
+
+          if (elementUrl != null) {
+            Ocm.processDeepLinks(elementUrl);
+          }
+        }
+      }
+    });
 
     articleItemViewContainer.setAdapter(adapter);
     articleItemViewContainer.setLayoutManager(new LinearLayoutManager(getContext()));

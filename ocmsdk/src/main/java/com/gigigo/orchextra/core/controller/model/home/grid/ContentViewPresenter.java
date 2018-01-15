@@ -20,6 +20,7 @@ import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import java.lang.ref.WeakReference;
@@ -375,6 +376,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   }
 
   private void itemClickedContinue(Element element, View view) {
+    //TODO: why not use Ocm.processDeepLinks(elementUrl) instead??
+
     WeakReference<View> viewWeakReference = new WeakReference<>(view);
 
     ocmController.getDetails(element.getElementUrl(),
