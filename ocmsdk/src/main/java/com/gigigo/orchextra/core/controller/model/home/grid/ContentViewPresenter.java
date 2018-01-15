@@ -364,8 +364,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       }
 
       OCManager.notifyCustomBehaviourContinue(element.getCustomProperties().getProperties(), new Function1<Boolean, Unit>() {
-        @Override public Unit invoke(Boolean aBoolean) {
-          if(aBoolean) {
+        @Override public Unit invoke(Boolean canContinue) {
+          if(canContinue) {
             itemClickedContinue(element, view);
           }
           return null;

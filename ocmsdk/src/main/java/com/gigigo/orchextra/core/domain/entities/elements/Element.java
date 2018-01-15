@@ -5,7 +5,7 @@ import java.util.List;
 public class Element {
 
     private ElementSegmentation segmentation;
-    private ElementCustomProperties customProperties;
+    private ElementCustomProperties customProperties = new ElementCustomProperties();
     private ElementSectionView sectionView;
     private String slug;
     private String elementUrl;
