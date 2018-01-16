@@ -31,19 +31,19 @@ public class ApiSectionContentData implements Kacheable {
     return elementsCache;
   }
 
-  public void setKey(String key) {
-    this.key = key;
-  }
-
   @NotNull @Override public String getKey() {
     return key;
   }
 
-  public void setFromCloud(boolean fromCloud) {
-    this.fromCloud = fromCloud;
+  public void setKey(String key) {
+    this.key = key;
   }
 
   public boolean isFromCloud() {
     return fromCloud;
+  }
+
+  public void setFromCloud(boolean fromCloud) {
+    this.fromCloud = fromCloud;
   }
 }

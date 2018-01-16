@@ -38,7 +38,7 @@ public class ArticleYoutubeVideoView extends BaseViewHolder<ArticleYoutubeVideoE
 
     View.OnClickListener onYoutubeThumbnailClickListener = v -> {
       if (connectionUtils.hasConnection()) {
-        YoutubeContentDataActivity.open(context.getApplicationContext(), articleElement.getSource());
+        YoutubeContentDataActivity.open(context.getApplicationContext(), articleElement.getRender().getSource());
       } else {
         Snackbar.make(imgThumb, R.string.oc_error_content_not_available_without_internet, Toast.LENGTH_SHORT).show();
       }
@@ -47,7 +47,7 @@ public class ArticleYoutubeVideoView extends BaseViewHolder<ArticleYoutubeVideoE
     imgPlay.setOnClickListener(onYoutubeThumbnailClickListener);
     imgThumb.setOnClickListener(onYoutubeThumbnailClickListener);
 
-    String youtubeId = articleElement.getSource();
+    String youtubeId = articleElement.getRender().getSource();
 
     String strImgForBlur = "http://img.youtube.com/vi/" + youtubeId + "/hqdefault.jpg";
 

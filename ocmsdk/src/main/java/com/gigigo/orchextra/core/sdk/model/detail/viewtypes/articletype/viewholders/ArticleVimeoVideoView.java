@@ -57,7 +57,7 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
     VimeoManager vmManager = new VimeoManager(builder);
     ConnectionUtilsImp conn = new ConnectionUtilsImp(context);
 
-    vmManager.getVideoVimeoInfo(articleElement.getSource(), conn.isConnectedMobile(),
+    vmManager.getVideoVimeoInfo(articleElement.getRender().getSource(), conn.isConnectedMobile(),
         conn.isConnectedWifi(), conn.isConnectedMobile(), new VimeoCallback() {
           @Override public void onSuccess(VimeoInfo vimeoInfo) {
             mVimeoInfo = vimeoInfo;

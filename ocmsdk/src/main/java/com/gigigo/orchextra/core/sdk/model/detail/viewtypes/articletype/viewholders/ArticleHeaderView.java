@@ -62,10 +62,10 @@ public class ArticleHeaderView extends BaseViewHolder<ArticleHeaderElement> {
   }
 
   @Override public void bindTo(ArticleHeaderElement articleElement, int i) {
-    setImage(articleElement.getImageUrl(), articleElement.getImageThumb());
+    setImage(articleElement.getRender().getImageUrl(), articleElement.getRender().getImageThumb());
 
-    if (articleElement.getHtml() != null) {
-      articleHeaderText.setText(Html.fromHtml(articleElement.getHtml()));
+    if (articleElement.getRender().getHtml() != null) {
+      articleHeaderText.setText(Html.fromHtml(articleElement.getRender().getHtml()));
     }
   }
 }

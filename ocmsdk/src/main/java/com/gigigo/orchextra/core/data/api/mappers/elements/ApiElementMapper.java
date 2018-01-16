@@ -1,27 +1,19 @@
 package com.gigigo.orchextra.core.data.api.mappers.elements;
 
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
-import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementCustomProperty;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
-import com.gigigo.orchextra.core.domain.entities.elements.ElementCustomProperties;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class ApiElementMapper implements ExternalClassToModelMapper<ApiElement, Element> {
 
   private final ApiElementSegmentationMapper apiMenuItemSegmentation;
-  private final ApiElementCustomPropertyMapper apiElementCustomPropertyMapper;
   private final ApiElementSectionViewMapper apiMenuItemViewMapper;
 
   public ApiElementMapper(ApiElementSegmentationMapper apiMenuItemSegmentation,
-      ApiElementCustomPropertyMapper apiElementCustomPropertyMapper,
       ApiElementSectionViewMapper apiMenuItemViewMapper) {
     this.apiMenuItemSegmentation = apiMenuItemSegmentation;
-    this.apiElementCustomPropertyMapper = apiElementCustomPropertyMapper;
     this.apiMenuItemViewMapper = apiMenuItemViewMapper;
   }
 
@@ -41,11 +33,8 @@ public class ApiElementMapper implements ExternalClassToModelMapper<ApiElement, 
       model.setSegmentation(apiMenuItemSegmentation.externalClassToModel(data.getSegmentation()));
     }
 
-    ElementCustomProperties customProperties = new ElementCustomProperties();
-    if(data.getCustomProperties() != null) {
-      customProperties.setProperties(data.getCustomProperties().getProperties());
-
-      model.setCustomProperties(customProperties);
+    if (data.getCustomProperties() != null) {
+      model.setCustomProperties(data.getCustomProperties());
     }
 
     if (data.getSectionView() != null) {

@@ -68,11 +68,11 @@ public class CardImageAndTextDataView extends CardDataView {
 
   private void setConstraints() {
     if (dataElement != null
-        && dataElement.getRatios() != null
-        && dataElement.getRatios().size() >= 2) {
+        && dataElement.getRender().getRatios() != null
+        && dataElement.getRender().getRatios().size() >= 2) {
 
-      ratioFirstItem = dataElement.getRatios().get(0);
-      ratioSecondItem = dataElement.getRatios().get(1);
+      ratioFirstItem = dataElement.getRender().getRatios().get(0);
+      ratioSecondItem = dataElement.getRender().getRatios().get(1);
     }
 
     if (firstItem == ITEM.IMAGE) {

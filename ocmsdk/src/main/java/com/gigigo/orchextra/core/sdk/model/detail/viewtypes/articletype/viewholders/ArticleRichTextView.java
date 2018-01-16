@@ -71,8 +71,8 @@ public class ArticleRichTextView extends BaseViewHolder<ArticleRichTextElement> 
   }
 
   @Override public void bindTo(ArticleRichTextElement richTextElement, int position) {
-    if (!TextUtils.isEmpty(richTextElement.getHtml())) {
-      setTextViewHTML(articleRichText, richTextElement.getHtml());
+    if (!TextUtils.isEmpty(richTextElement.getRender().getHtml())) {
+      setTextViewHTML(articleRichText, richTextElement.getRender().getHtml());
     }
   }
 }

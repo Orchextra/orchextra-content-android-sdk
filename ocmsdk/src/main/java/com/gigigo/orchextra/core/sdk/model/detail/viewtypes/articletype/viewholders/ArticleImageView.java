@@ -56,6 +56,6 @@ public class ArticleImageView extends BaseViewHolder<ArticleImageElement> {
   }
 
   @Override public void bindTo(ArticleImageElement imageElement, int position) {
-    setImage(imageElement.getImageUrl(), imageElement.getImageThumb());
+    setImage(imageElement.getRender().getImageUrl(), imageElement.getRender().getImageThumb());
   }
 }

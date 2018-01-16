@@ -120,7 +120,7 @@ public class ArticleContentData extends UiBaseContentData {
 
   private void initRecyclerView() {
     ArticleContentDataFactory factory =
-        new ArticleContentDataFactory(getContext(), flFA, thumbnailEnabled);
+        new ArticleContentDataFactory(getContext(), thumbnailEnabled);
     adapter = new BaseRecyclerAdapter(factory);
 
     adapter.bind(ArticleYoutubeVideoElement.class, ArticleYoutubeVideoView.class);
@@ -135,10 +135,13 @@ public class ArticleContentData extends UiBaseContentData {
 
     adapter.setItemClickListener(new BaseViewHolder.OnItemClickListener() {
       @Override public void onItemClick(int i, View view) {
+        flFA.setVisibility(View.VISIBLE);
+        faLoading.setVisibility(View.VISIBLE);
+
         ArticleElement element = adapter.getItem(i);
 
         if (element instanceof ArticleButtonElement) {
-          String elementUrl = ((ArticleButtonElement) element).getElementUrl();
+          String elementUrl = ((ArticleButtonElement) element).getRender().getElementUrl();
 
           if (elementUrl != null) {
             Ocm.processDeepLinks(elementUrl);

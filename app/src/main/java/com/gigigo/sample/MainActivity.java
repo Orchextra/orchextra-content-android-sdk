@@ -66,15 +66,15 @@ public class MainActivity extends AppCompatActivity {
   };
 
   private OcmCustomBehaviourDelegate customPropertiesDelegate = new OcmCustomBehaviourDelegate() {
-    @Override public void contentNeedsValidation(@NotNull Map<String, String> customProperties,
+    @Override public void contentNeedsValidation(@NotNull Map<String, ?> customProperties,
         @NotNull Function1<? super Boolean, Unit> completion) {
 
-      Set<Map.Entry<String, String>> entrySet = customProperties.entrySet();
-      Iterator<Map.Entry<String, String>> iterator = entrySet.iterator();
+      Set<? extends Map.Entry<String, ?>> entrySet = customProperties.entrySet();
+      Iterator<? extends Map.Entry<String, ?>> iterator = entrySet.iterator();
       while (iterator.hasNext()) {
-        Map.Entry<String, String> next = iterator.next();
+        Map.Entry<String, ?> next = iterator.next();
         String property = next.getKey();
-        String value = next.getValue();
+        Object value = next.getValue();
 
         //TODO: check custom properties
         switch (property) {

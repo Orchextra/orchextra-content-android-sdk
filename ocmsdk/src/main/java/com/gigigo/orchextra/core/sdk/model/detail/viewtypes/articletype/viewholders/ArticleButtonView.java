@@ -15,29 +15,22 @@ import com.bumptech.glide.Priority;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocmsdk.R;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
   private final Context context;
-  //TODO: what's FA?? more descriptive name
-  private final FrameLayout flFA;
-  private final ProgressBar faLoading;
   private TextView articleTextButton;
   private ImageView articleImageButton;
 
-  public ArticleButtonView(Context context, ViewGroup parent, FrameLayout flFA) {
+  public ArticleButtonView(Context context, ViewGroup parent) {
     super(context, parent, R.layout.view_article_button_item);
 
     this.context = context;
-    this.flFA = flFA;
-    faLoading = (ProgressBar) flFA.findViewById(R.id.progressFA);
 
     articleTextButton = (TextView) itemView.findViewById(R.id.articleTextButton);
     articleImageButton = (ImageView) itemView.findViewById(R.id.articleImageButton);
@@ -47,30 +40,21 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   private void bindTextButton(final ArticleButtonElement articleElement) {
     articleTextButton.setVisibility(View.VISIBLE);
 
-    articleTextButton.setText(articleElement.getText());
+    articleTextButton.setText(articleElement.getRender().getText());
 
     try {
-      articleTextButton.setTextColor(Color.parseColor(articleElement.getTextColor()));
-      articleTextButton.setBackgroundColor(Color.parseColor(articleElement.getBgColor()));
+      articleTextButton.setTextColor(Color.parseColor(articleElement.getRender().getTextColor()));
+      articleTextButton.setBackgroundColor(Color.parseColor(articleElement.getRender().getBgColor()));
     } catch (Exception ignored) {
     }
 
     ViewGroup.LayoutParams lp = getLayoutParams(articleElement);
     articleTextButton.setLayoutParams(lp);
-
-    //TODO: two click listener? they are the same, just add it to itemView
-    /*
-    articleTextButton.setOnClickListener(v -> {
-      flFA.setVisibility(View.VISIBLE);
-      faLoading.setVisibility(View.VISIBLE);
-      processClickListener(articleElement.getElementUrl());
-    });
-    */
   }
 
   @NonNull private ViewGroup.LayoutParams getLayoutParams(ArticleButtonElement articleElement) {
     int paddingRes = 0;
-    switch (articleElement.getSize()) {
+    switch (articleElement.getRender().getSize()) {
       case BIG:
         paddingRes = R.dimen.ocm_margin_article_big_button;
         break;
@@ -93,37 +77,19 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   private void bindImageButton(final ArticleButtonElement articleElement) {
     articleImageButton.setVisibility(View.VISIBLE);
 
-    float ratioImage = ImageGenerator.getRatioImage(articleElement.getImageUrl());
+    float ratioImage = ImageGenerator.getRatioImage(articleElement.getRender().getImageUrl());
 
     int realWidthDevice = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context);
     int calculatedHeight = (int) (realWidthDevice / ratioImage);
 
-    OcmImageLoader.load(context, articleElement.getImageUrl())
+    OcmImageLoader.load(context, articleElement.getRender().getImageUrl())
         .priority(Priority.NORMAL)
         .override(realWidthDevice, calculatedHeight)
         .into(articleImageButton);
-
-    //TODO: two click listener? they are the same, just add it to itemView
-    /*
-    articleImageButton.setOnClickListener(v -> {
-      flFA.setVisibility(View.VISIBLE);
-      faLoading.setVisibility(View.VISIBLE);
-      processClickListener(articleElement.getElementUrl());
-    });
-    */
   }
-
-  /*
-  //TODO: view just manage view, not logic in click event, propagate it to ArticleContentData
-  private void processClickListener(String elementUrl) {
-    if (elementUrl != null) {
-      Ocm.processDeepLinks(elementUrl);
-    }
-  }
-  */
 
   @Override public void bindTo(ArticleButtonElement articleButtonElement, int i) {
-    switch (articleButtonElement.getType()) {
+    switch (articleButtonElement.getRender().getType()) {
       case IMAGE:
         bindImageButton(articleButtonElement);
         break;
@@ -133,8 +99,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   }
 
   @Override public void onClick(View v) {
-    flFA.setVisibility(View.VISIBLE);
-    faLoading.setVisibility(View.VISIBLE);
+
     super.onClick(v);
   }
 }

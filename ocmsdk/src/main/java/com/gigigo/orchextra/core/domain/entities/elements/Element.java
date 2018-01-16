@@ -1,11 +1,12 @@
 package com.gigigo.orchextra.core.domain.entities.elements;
 
 import java.util.List;
+import java.util.Map;
 
 public class Element {
 
     private ElementSegmentation segmentation;
-    private ElementCustomProperties customProperties = new ElementCustomProperties();
+    private Map<String, Object> customProperties;
     private ElementSectionView sectionView;
     private String slug;
     private String elementUrl;
@@ -21,11 +22,11 @@ public class Element {
         this.segmentation = segmentation;
     }
 
-    public ElementCustomProperties getCustomProperties() {
+    public Map<String, Object> getCustomProperties() {
         return customProperties;
     }
 
-    public void setCustomProperties(ElementCustomProperties customProperties) {
+    public void setCustomProperties(Map<String, Object> customProperties) {
         this.customProperties = customProperties;
     }
 

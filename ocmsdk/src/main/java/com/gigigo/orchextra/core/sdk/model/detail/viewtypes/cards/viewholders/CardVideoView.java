@@ -75,7 +75,7 @@ public class CardVideoView extends CardDataView {
         new YouTubeThumbnailView.OnInitializedListener() {
           @Override public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView,
               YouTubeThumbnailLoader youTubeThumbnailLoader) {
-            youTubeThumbnailLoader.setVideo(articleElement.getSource());
+            youTubeThumbnailLoader.setVideo(articleElement.getRender().getSource());
             youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
           }
 
@@ -89,7 +89,7 @@ public class CardVideoView extends CardDataView {
 
     View.OnClickListener onYoutubeThumbnailClickListener = new View.OnClickListener() {
       @Override public void onClick(View v) {
-        YoutubeContentDataActivity.open(context.getApplicationContext(), articleElement.getSource());
+        YoutubeContentDataActivity.open(context.getApplicationContext(), articleElement.getRender().getSource());
         //YoutubeWebviewActivity.open(activity, articleElement.getSource());
       }
     };

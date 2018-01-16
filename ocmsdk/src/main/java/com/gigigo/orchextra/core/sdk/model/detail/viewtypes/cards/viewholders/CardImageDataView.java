@@ -57,7 +57,7 @@ public class CardImageDataView extends CardDataView {
 
   private void bindTo() {
     if (imageElement != null) {
-      setImage(imageElement.getImageUrl(), imageElement.getImageThumb());
+      setImage(imageElement.getRender().getImageUrl(), imageElement.getRender().getImageThumb());
     }
   }
 

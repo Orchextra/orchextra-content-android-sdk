@@ -32,8 +32,8 @@ project.ext {
   /** STAGING */
 
   //[UAT][CSE] - WOAH SITC STAGING
-  api_key_staging = '"ef08c4dccb7649b9956296a863db002a68240be2"' //'"adfc8ba4340828a054bf061f692707a197af96cb"'
-  api_secret_staging = '"6bc18c500546f253699f61c11a62827679178400"' //'"677cf75a17aeec144ee402c281ad3a732d736a8a"'
+  api_key_staging = '"adfc8ba4340828a054bf061f692707a197af96cb"'
+  api_secret_staging = '"677cf75a17aeec144ee402c281ad3a732d736a8a"'
 
   //ANDROID SDK - STAGING
 //  api_key_staging = '"34a4654b9804eab82aae05b2a5f949eb2a9f412c"'

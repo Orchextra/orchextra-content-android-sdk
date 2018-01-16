@@ -22,12 +22,10 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhold
 
 public class ArticleContentDataFactory extends BaseViewHolderFactory {
 
-  private final FrameLayout flFA;
   private final boolean thumbnailEnabled;
 
-  public ArticleContentDataFactory(Context context, FrameLayout flFA, boolean thumbnailEnabled) {
+  public ArticleContentDataFactory(Context context, boolean thumbnailEnabled) {
     super(context);
-    this.flFA = flFA;
     this.thumbnailEnabled = thumbnailEnabled;
   }
 
@@ -43,7 +41,7 @@ public class ArticleContentDataFactory extends BaseViewHolderFactory {
     } else if (valueClass == ArticleHeaderElement.class) {
       return new ArticleHeaderView(context, parent, thumbnailEnabled);
     } else if (valueClass == ArticleButtonElement.class) {
-      return new ArticleButtonView(context, parent, flFA);
+      return new ArticleButtonView(context, parent);
     } else if (valueClass == ArticleBlankElement.class) {
       return new ArticleBlankView(context, parent);
     } else {

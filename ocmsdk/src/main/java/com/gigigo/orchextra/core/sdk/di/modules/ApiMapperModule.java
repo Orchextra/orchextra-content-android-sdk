@@ -13,7 +13,6 @@ import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheRe
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheShareMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.CidKeyDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.FederatedAuthorizationDataMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementCustomPropertyMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSectionViewMapper;
@@ -35,16 +34,10 @@ import orchextra.javax.inject.Singleton;
     return new ApiElementSegmentationMapper();
   }
 
-  @Singleton @Provides ApiElementCustomPropertyMapper provideApiElementCustomPropertiesMapper() {
-    return new ApiElementCustomPropertyMapper();
-  }
-
   @Singleton @Provides ApiElementMapper provideApiElementMapper(
       ApiElementSegmentationMapper apiMenuItemSegmentationMapper,
-      ApiElementCustomPropertyMapper apiElementCustomPropertyMapper,
       ApiElementSectionViewMapper apiMenuItemViewMapper) {
-    return new ApiElementMapper(apiMenuItemSegmentationMapper, apiElementCustomPropertyMapper,
-        apiMenuItemViewMapper);
+    return new ApiElementMapper(apiMenuItemSegmentationMapper, apiMenuItemViewMapper);
   }
 
   @Singleton @Provides ApiMenuContentMapper provideApiMenuContentMapper(

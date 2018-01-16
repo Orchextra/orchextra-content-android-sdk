@@ -9,7 +9,6 @@ import android.webkit.WebStorage;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.OcmController;
-import com.gigigo.orchextra.core.domain.entities.elements.ElementCustomProperties;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
@@ -46,10 +45,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
-import kotlin.Function;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import orchextra.javax.inject.Inject;
+import org.jetbrains.annotations.NotNull;
 
 public final class OCManager {
 
@@ -67,7 +66,7 @@ public final class OCManager {
           //    Toast.makeText(mApplication, "onError:  app" + error, Toast.LENGTH_LONG).show();
           //  }
           //});
-//performance for use ox3 we need to change the old code error of ox2.0 401 becomes 2000 now x example
+          //performance for use ox3 we need to change the old code error of ox2.0 401 becomes 2000 now x example
           /*
           NoDatabase:{
        code:1100,
@@ -104,13 +103,11 @@ public final class OCManager {
 Add Comment C
            */
 
-
-
-
           //asv in ox 1.0 && ox 2.0 invalid credentials/or invalid enviroment(credentials from pro in stagign endpoint
           //was 401, in this case the ox onError must be throw to ocm credentials callback
           //in ox 3.0 the back error code will be 2000, for the same problem
-          if ((error.equals("401") || error.equals("2000")) && instance.ocmCredentialCallback != null) {
+          if ((error.equals("401") || error.equals("2000"))
+              && instance.ocmCredentialCallback != null) {
             instance.ocmCredentialCallback.onCredentailError(error);
           }
         }
@@ -176,7 +173,7 @@ Add Comment C
     getInstance().ocmCustomBehaviourDelegate = ocmCustomBehaviourDelegate;
   }
 
-  public  static OcmCustomBehaviourDelegate getOcmCustomBehaviourDelegate() {
+  public static OcmCustomBehaviourDelegate getOcmCustomBehaviourDelegate() {
     return getInstance().ocmCustomBehaviourDelegate;
   }
 
@@ -296,7 +293,8 @@ Add Comment C
     }
   }
 
-  public static void notifyCustomBehaviourContinue(Map<String, String> customProperties, Function1<Boolean, Unit> completion) {
+  public static void notifyCustomBehaviourContinue(@NotNull Map<String, Object> customProperties,
+      Function1<Boolean, Unit> completion) {
     if (instance != null && instance.ocmCustomBehaviourDelegate != null) {
       instance.ocmCustomBehaviourDelegate.contentNeedsValidation(customProperties, completion);
     }

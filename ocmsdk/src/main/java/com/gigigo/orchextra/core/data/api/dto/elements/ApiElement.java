@@ -1,12 +1,13 @@
 package com.gigigo.orchextra.core.data.api.dto.elements;
 
 import java.util.List;
+import java.util.Map;
 
 public class ApiElement {
 
   private List<String> tags;
   private ApiElementSegmentation segmentation;
-  private ApiElementCustomProperty customProperties;
+  private Map<String, Object> customProperties;
   private ApiElementSectionView sectionView;
   private String slug;
   private String elementUrl;
@@ -17,7 +18,7 @@ public class ApiElement {
     return segmentation;
   }
 
-  public ApiElementCustomProperty getCustomProperties() {
+  public Map<String, Object> getCustomProperties() {
     return customProperties;
   }
 
