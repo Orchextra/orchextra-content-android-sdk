@@ -19,6 +19,9 @@ import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.Ocm;
+import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
+import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocmsdk.R;
 
 public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
@@ -89,6 +92,10 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   }
 
   @Override public void bindTo(ArticleButtonElement articleButtonElement, int i) {
+    ViewCustomizationType[] viewCustomizationTypes = OCManager.getOcmCustomBehaviourDelegate()
+        .customizationForContent(articleButtonElement.getCustomProperties(),
+            ViewType.BUTTON_ELEMENT);
+
     switch (articleButtonElement.getRender().getType()) {
       case IMAGE:
         bindImageButton(articleButtonElement);

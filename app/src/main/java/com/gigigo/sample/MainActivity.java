@@ -11,12 +11,14 @@ import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
-import com.gigigo.orchextra.ocm.OcmCustomBehaviourDelegate;
+import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
+import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import java.io.File;
@@ -88,6 +90,13 @@ public class MainActivity extends AppCompatActivity {
       }
 
       completion.invoke(true);
+    }
+
+    public ViewCustomizationType[] customizationForContent(@NotNull Map<String, ?> customProperties,
+        @NotNull ViewType viewType) {
+
+      //TODO: check properties to apply customization
+      return ViewCustomizationType[0];
     }
   };
 
