@@ -7,7 +7,7 @@ import com.gigigo.orchextra.core.domain.entities.article.*
 import com.gigigo.orchextra.core.domain.entities.article.base.*
 import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat
 
-class ApiArticleElementMapper() : ExternalClassToModelMapper<ApiArticleElement, ArticleElement<ArticleElementRender>> {
+class ApiArticleElementMapper : ExternalClassToModelMapper<ApiArticleElement, ArticleElement<ArticleElementRender>> {
 
   override fun externalClassToModel(
       data: ApiArticleElement): ArticleElement<ArticleElementRender>? {

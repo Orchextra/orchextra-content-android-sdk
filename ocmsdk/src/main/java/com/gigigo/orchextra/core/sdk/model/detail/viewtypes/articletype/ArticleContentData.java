@@ -20,6 +20,7 @@ import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElement;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElementRender;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleBlankView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleButtonView;
@@ -34,14 +35,16 @@ import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 public class ArticleContentData extends UiBaseContentData {
 
-  private List<ArticleElement> articleElementList;
+  private List<ArticleElement<ArticleElementRender>> articleElementList;
   private RecyclerView articleItemViewContainer;
   private FrameLayout flFA;
   private View faLoading;
-  private BaseRecyclerAdapter<ArticleElement> adapter;
+  private BaseRecyclerAdapter<ArticleElement<ArticleElementRender>> adapter;
   private int addictionalPadding;
   private boolean thumbnailEnabled;
 
@@ -135,16 +138,27 @@ public class ArticleContentData extends UiBaseContentData {
 
     adapter.setItemClickListener(new BaseViewHolder.OnItemClickListener() {
       @Override public void onItemClick(int i, View view) {
-        flFA.setVisibility(View.VISIBLE);
-        faLoading.setVisibility(View.VISIBLE);
-
         ArticleElement element = adapter.getItem(i);
 
         if (element instanceof ArticleButtonElement) {
+          flFA.setVisibility(View.VISIBLE);
+          faLoading.setVisibility(View.VISIBLE);
+
           String elementUrl = ((ArticleButtonElement) element).getRender().getElementUrl();
 
           if (elementUrl != null) {
-            Ocm.processDeepLinks(elementUrl);
+            if (element.getCustomProperties() != null && element.getCustomProperties() != null) {
+              OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(), new Function1<Boolean, Unit>() {
+                @Override public Unit invoke(Boolean canContinue) {
+                  if (canContinue) {
+                    Ocm.processDeepLinks(elementUrl);
+                  }
+                  return null;
+                }
+              });
+            } else {
+              Ocm.processDeepLinks(elementUrl);
+            }
           }
         }
       }
@@ -160,7 +174,7 @@ public class ArticleContentData extends UiBaseContentData {
     }
   }
 
-  public void addItems(List<ArticleElement> articleElementList) {
+  public void addItems(List<ArticleElement<ArticleElementRender>> articleElementList) {
     this.articleElementList = articleElementList;
   }
 

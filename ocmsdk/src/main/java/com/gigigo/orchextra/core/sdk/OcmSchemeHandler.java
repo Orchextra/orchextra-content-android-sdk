@@ -165,7 +165,7 @@ public class OcmSchemeHandler {
       case DEEP_LINK:
         OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
-          processDeepLink(render.getUri());
+          processDeepLink(render.getSchemeUri());
         }
         break;
       case VIDEO:

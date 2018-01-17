@@ -7,6 +7,7 @@ import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElementRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
@@ -176,34 +177,42 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         if (render != null) {
           return generateArticleDetailView(render.getElements());
         }
+        break;
       case VUFORIA:
         if (render != null) {
           return generateVuforiaDetailView();
         }
+        break;
       case SCAN:
         if (render != null) {
           return generateScanDetailView();
         }
+        break;
       case WEBVIEW:
         if (render != null) {
           return generateWebContentDataWithFederated(render);
         }
+        break;
       case BROWSER:
         if (render != null) {
           return generateCustomTabsDetailView(render.getUrl(), render.getFederatedAuth());
         }
+        break;
       case EXTERNAL_BROWSER:
         if (render != null) {
           return generateBrowserDetailView(render.getUrl(), render.getFederatedAuth());
         }
+        break;
       case VIDEO:
         if (render != null) {
           return generateVideoDetailView(render);
         }
+        break;
       case DEEP_LINK:
         if (render != null) {
-          return generateDeepLinkView(render.getUri());
+          return generateDeepLinkView(render.getSchemeUri());
         }
+        break;
     }
     return null;
   }
@@ -228,7 +237,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     });
   }
 
-  private UiBaseContentData generateArticleDetailView(List<ArticleElement> elements) {
+  private UiBaseContentData generateArticleDetailView(List<ArticleElement<ArticleElementRender>> elements) {
     ArticleContentData articleContentData = ArticleContentData.newInstance();
     articleContentData.addItems(elements);
     return articleContentData;
