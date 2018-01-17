@@ -5,21 +5,19 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.bumptech.glide.Priority;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
-import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -29,14 +27,15 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   private final Context context;
   private TextView articleTextButton;
   private ImageView articleImageButton;
+  private boolean isDisabled = false;
 
   public ArticleButtonView(Context context, ViewGroup parent) {
     super(context, parent, R.layout.view_article_button_item);
 
     this.context = context;
 
-    articleTextButton = (TextView) itemView.findViewById(R.id.articleTextButton);
-    articleImageButton = (ImageView) itemView.findViewById(R.id.articleImageButton);
+    articleTextButton = itemView.findViewById(R.id.articleTextButton);
+    articleImageButton = itemView.findViewById(R.id.articleImageButton);
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -47,7 +46,10 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
     try {
       articleTextButton.setTextColor(Color.parseColor(articleElement.getRender().getTextColor()));
-      articleTextButton.setBackgroundColor(Color.parseColor(articleElement.getRender().getBgColor()));
+      //articleTextButton.setBackgroundColor(
+      //    Color.parseColor(articleElement.getRender().getBgColor()));
+
+      setButtonDisable();
     } catch (Exception ignored) {
     }
 
@@ -106,7 +108,14 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   }
 
   @Override public void onClick(View v) {
+    if (!isDisabled) {
+      super.onClick(v);
+    }
+  }
 
-    super.onClick(v);
+  private void setButtonDisable() {
+    articleTextButton.setBackgroundColor(
+        ContextCompat.getColor(context, R.color.oc_background_detail_view_color));
+    isDisabled = true;
   }
 }
