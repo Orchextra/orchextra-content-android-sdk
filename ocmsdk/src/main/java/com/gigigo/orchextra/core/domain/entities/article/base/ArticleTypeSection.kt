@@ -2,7 +2,7 @@ package com.gigigo.orchextra.core.domain.entities.article.base
 
 import java.io.Serializable
 
-enum class ArticleTypeSection private constructor(val typeSection: String) : Serializable {
+enum class ArticleTypeSection constructor(val typeSection: String) : Serializable {
   HEADER("header"),
   IMAGE("image"),
   VIDEO("video"),

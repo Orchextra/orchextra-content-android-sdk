@@ -11,7 +11,7 @@ class ApiElementMapper(private val apiMenuItemSegmentation: ApiElementSegmentati
   override fun externalClassToModel(data: ApiElement): Element? {
     val model = Element()
 
-    if (data.slug == null || data.sectionView == null || data.elementUrl == null) {
+    if (data.sectionView == null || data.elementUrl == null) {
       return null
     }
 

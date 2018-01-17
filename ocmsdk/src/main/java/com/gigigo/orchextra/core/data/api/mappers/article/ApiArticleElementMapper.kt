@@ -143,8 +143,8 @@ class ApiArticleElementMapper : ExternalClassToModelMapper<ApiArticleElement, Ar
       render: ApiArticleElementRender): ArticleButtonElementRender {
     val elementRender = ArticleButtonElementRender()
     with(elementRender) {
-      type = ArticleButtonType.convertStringToEnum(render.type)
-      size = ArticleButtonSize.convertStringToEnum(render.size)
+      type = ArticleButtonType.convertFromString(render.type)
+      size = ArticleButtonSize.convertFromString(render.size)
       elementUrl = render.elementUrl
       text = render.text
       textColor = render.textColor
