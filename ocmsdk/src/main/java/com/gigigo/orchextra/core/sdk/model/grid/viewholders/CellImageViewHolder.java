@@ -16,44 +16,41 @@ import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementSectionView;
-import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
+import com.gigigo.orchextra.ocm.customProperties.ViewLayer;
+import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.lang.ref.WeakReference;
+import java.util.Map;
 
 public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
 
   private final WeakReference<View> mainLayoutWeakReference;
-  private final WeakReference<View> padlockViewWeakReference;
   private final Context context;
   private final boolean thumbnailEnabled;
 
   private WeakReference<ImageView> imageViewWeakReference;
   private WeakReference<ImageView> imageViewOverlayWeakReference;
-  private Authoritation authoritation;
 
-  public CellImageViewHolder(Context context, ViewGroup parent, Authoritation authoritation,
-      boolean thumbnailEnabled) {
+  public CellImageViewHolder(Context context, ViewGroup parent, boolean thumbnailEnabled) {
     super(context, parent, R.layout.cell_image_content_item);
 
     this.context = context;
-    this.authoritation = authoritation;
     this.thumbnailEnabled = thumbnailEnabled;
 
     new WeakReference<>(itemView);
     imageViewOverlayWeakReference =
-        new WeakReference<>((ImageView) itemView.findViewById(R.id.cell_image_view_overlay));
-    imageViewWeakReference =
-        new WeakReference<>((ImageView) itemView.findViewById(R.id.cell_image_view));
-    padlockViewWeakReference = new WeakReference<>(itemView.findViewById(R.id.padlock_layout));
+        new WeakReference<>(itemView.findViewById(R.id.cell_image_view_overlay));
+    imageViewWeakReference = new WeakReference<>(itemView.findViewById(R.id.cell_image_view));
     mainLayoutWeakReference =
         new WeakReference<>(itemView.findViewById(R.id.cell_image_content_layout));
   }
 
   @Override public void bindTo(CellGridContentData item, final int position) {
     final ElementSectionView sectionView = item.getData().getSectionView();
+    final Map<String, Object> customProperties = item.getData().getCustomProperties();
 
     if (sectionView != null) {
 
@@ -96,8 +93,10 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                 }
 
                 if (thumbnailEnabled && sectionView.getImageThumb() != null) {
-                  byte[] imageByteArray = Base64.decode(sectionView.getImageThumb(), Base64.DEFAULT);
-                  requestBuilder = requestBuilder.thumbnail(Glide.with(context).load(imageByteArray));
+                  byte[] imageByteArray =
+                      Base64.decode(sectionView.getImageThumb(), Base64.DEFAULT);
+                  requestBuilder =
+                      requestBuilder.thumbnail(Glide.with(context).load(imageByteArray));
                 }
 
                 requestBuilder.into(imageView);
@@ -110,13 +109,18 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
           });
     }
 
-    View padlockView = padlockViewWeakReference.get();
+    ViewGroup mainView = (ViewGroup) mainLayoutWeakReference.get();
 
-    if (padlockView != null) {
-      if (item.getData().getSegmentation().getRequiredAuth().equals(RequiredAuthoritation.LOGGED)) {
-        padlockView.setVisibility(authoritation.isAuthorizatedUser() ? View.GONE : View.VISIBLE);
-      } else {
-        padlockView.setVisibility(View.GONE);
+    ViewCustomizationType[] viewCustomizationTypes = OCManager.getOcmCustomBehaviourDelegate()
+        .customizationForContent(customProperties, ViewType.GRID_CONTENT);
+
+    for (ViewCustomizationType viewCustomizationType : viewCustomizationTypes) {
+      if (viewCustomizationType instanceof ViewLayer) {
+        View view = ((ViewLayer) viewCustomizationType).getView();
+
+        if (mainView != null) {
+          mainView.addView(view);
+        }
       }
     }
   }

@@ -16,8 +16,10 @@ import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.orchextra.ocm.customProperties.Disabled;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
+import com.gigigo.orchextra.ocm.customProperties.ViewLayer;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
@@ -97,8 +99,12 @@ public class MainActivity extends AppCompatActivity {
 
       //TODO: check properties to apply customization
 
-      ViewCustomizationType[] viewCustomizationType = new ViewCustomizationType[1];
-      viewCustomizationType[0] = ViewCustomizationType.DISABLED;
+      ViewCustomizationType[] viewCustomizationType = new ViewCustomizationType[2];
+      viewCustomizationType[0] = new Disabled();
+
+      View view = getLayoutInflater().inflate(R.layout.padlock_view, null);
+      viewCustomizationType[1] = new ViewLayer(view);
+
       return viewCustomizationType;
     }
   };

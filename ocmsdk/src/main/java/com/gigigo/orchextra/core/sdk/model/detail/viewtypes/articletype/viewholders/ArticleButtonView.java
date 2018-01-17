@@ -18,6 +18,7 @@ import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.customProperties.Disabled;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -100,7 +101,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
             ViewType.BUTTON_ELEMENT);
 
     for (ViewCustomizationType viewCustomizationType : viewCustomizationTypes) {
-      if (viewCustomizationType == ViewCustomizationType.DISABLED) {
+      if (viewCustomizationType instanceof Disabled) {
         setButtonDisable();
       }
     }

@@ -16,14 +16,11 @@ import com.gigigo.multiplegridrecyclerview.viewholder.CellBlankViewHolder;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutInterface;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutPresenter;
-import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
-import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.grid.factory.ElementsViewHolderFactory;
 import com.gigigo.orchextra.core.sdk.model.grid.viewholders.CellImageViewHolder;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
-import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -116,7 +113,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   }
 
   private void setAdapterDataViewHolders() {
-    ElementsViewHolderFactory factory = new ElementsViewHolderFactory(context, authoritation, thumbnailEnabled);
+    ElementsViewHolderFactory factory = new ElementsViewHolderFactory(context, thumbnailEnabled);
 
     recyclerView.setAdapterViewHolderFactory(factory);
 

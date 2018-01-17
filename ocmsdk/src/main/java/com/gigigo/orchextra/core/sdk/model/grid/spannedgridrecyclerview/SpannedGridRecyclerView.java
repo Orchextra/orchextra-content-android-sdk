@@ -89,7 +89,7 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
 
   private void setAdapterDataViewHolders() {
     ElementsViewHolderFactory factory =
-        new ElementsViewHolderFactory(getContext(), authoritation, thumbnailEnabled);
+        new ElementsViewHolderFactory(getContext(), thumbnailEnabled);
 
     multipleGridRecyclerView.setAdapterViewHolderFactory(factory);
 
