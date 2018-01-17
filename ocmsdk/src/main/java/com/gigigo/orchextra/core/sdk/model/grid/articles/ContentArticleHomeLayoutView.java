@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.gigigo.orchextra.core.controller.model.home.articles.ArticleView;
 import com.gigigo.orchextra.core.controller.model.home.articles.ContentArticleHomeLayoutViewPresenter;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElementRender;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.ArticleContentData;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
@@ -106,7 +107,7 @@ public class ContentArticleHomeLayoutView extends UiGridBaseContentData implemen
     }
   }
 
-  @Override public void showArticle(List<ArticleElement> elements) {
+  @Override public void showArticle(List<ArticleElement<ArticleElementRender>> elements) {
     articleContentData = ArticleContentData.newInstance();
 
     articleContentData.addItems(elements);
