@@ -96,15 +96,16 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   }
 
   @Override public void bindTo(ArticleButtonElement articleButtonElement, int i) {
-    ViewCustomizationType[] viewCustomizationTypes = OCManager.getOcmCustomBehaviourDelegate()
-        .customizationForContent(articleButtonElement.getCustomProperties(),
-            ViewType.BUTTON_ELEMENT);
 
-    for (ViewCustomizationType viewCustomizationType : viewCustomizationTypes) {
-      if (viewCustomizationType instanceof Disabled) {
-        setButtonDisable();
-      }
-    }
+    OCManager.getOcmCustomBehaviourDelegate()
+        .customizationForContent(articleButtonElement.getCustomProperties(),
+            ViewType.BUTTON_ELEMENT, customizations -> {
+              for (ViewCustomizationType viewCustomizationType : customizations) {
+                if (viewCustomizationType instanceof Disabled) {
+                  setButtonDisable();
+                }
+              }
+            });
 
     switch (articleButtonElement.getRender().getType()) {
       case IMAGE:

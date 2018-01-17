@@ -16,6 +16,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.orchextra.ocm.customProperties.CustomizationListener;
 import com.gigigo.orchextra.ocm.customProperties.Disabled;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
@@ -70,6 +71,18 @@ public class MainActivity extends AppCompatActivity {
   };
 
   private OcmCustomBehaviourDelegate customPropertiesDelegate = new OcmCustomBehaviourDelegate() {
+
+    @Override public void customizationForContent(@NotNull Map<String, ?> customProperties,
+        @NotNull ViewType viewType, @NotNull CustomizationListener customizationListener) {
+
+      List<ViewCustomizationType> viewCustomizationType = new ArrayList<>();
+      viewCustomizationType.add(new Disabled());
+      View view = getLayoutInflater().inflate(R.layout.padlock_view, null);
+      viewCustomizationType.add(new ViewLayer(view));
+
+      customizationListener.onGetCustomization(viewCustomizationType);
+    }
+
     @Override public void contentNeedsValidation(@NotNull Map<String, ?> customProperties,
         @NotNull Function1<? super Boolean, Unit> completion) {
 
@@ -92,20 +105,6 @@ public class MainActivity extends AppCompatActivity {
       }
 
       completion.invoke(true);
-    }
-
-    public ViewCustomizationType[] customizationForContent(@NotNull Map<String, ?> customProperties,
-        @NotNull ViewType viewType) {
-
-      //TODO: check properties to apply customization
-
-      ViewCustomizationType[] viewCustomizationType = new ViewCustomizationType[2];
-      viewCustomizationType[0] = new Disabled();
-
-      View view = getLayoutInflater().inflate(R.layout.padlock_view, null);
-      viewCustomizationType[1] = new ViewLayer(view);
-
-      return viewCustomizationType;
     }
   };
 

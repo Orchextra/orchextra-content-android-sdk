@@ -28,6 +28,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.orchextra.ocm.customProperties.CustomizationListener;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -303,9 +304,10 @@ Add Comment C
   }
 
   public static void notifyCustomizationForContent(@NotNull Map<String, Object> customProperties,
-      ViewType viewType) {
+      ViewType viewType, CustomizationListener customizationListener) {
     if (instance != null && instance.ocmCustomBehaviourDelegate != null) {
-      instance.ocmCustomBehaviourDelegate.customizationForContent(customProperties, viewType);
+      instance.ocmCustomBehaviourDelegate.customizationForContent(customProperties, viewType,
+          customizationListener);
     }
   }
 

@@ -111,17 +111,17 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
 
     ViewGroup mainView = (ViewGroup) mainLayoutWeakReference.get();
 
-    ViewCustomizationType[] viewCustomizationTypes = OCManager.getOcmCustomBehaviourDelegate()
-        .customizationForContent(customProperties, ViewType.GRID_CONTENT);
+    OCManager.getOcmCustomBehaviourDelegate()
+        .customizationForContent(customProperties, ViewType.GRID_CONTENT, customizations -> {
+          for (ViewCustomizationType viewCustomizationType : customizations) {
+            if (viewCustomizationType instanceof ViewLayer) {
+              View view = ((ViewLayer) viewCustomizationType).getView();
 
-    for (ViewCustomizationType viewCustomizationType : viewCustomizationTypes) {
-      if (viewCustomizationType instanceof ViewLayer) {
-        View view = ((ViewLayer) viewCustomizationType).getView();
-
-        if (mainView != null) {
-          mainView.addView(view);
-        }
-      }
-    }
+              if (mainView != null) {
+                mainView.addView(view);
+              }
+            }
+          }
+        });
   }
 }
