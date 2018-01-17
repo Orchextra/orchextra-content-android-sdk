@@ -46,10 +46,8 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
     try {
       articleTextButton.setTextColor(Color.parseColor(articleElement.getRender().getTextColor()));
-      //articleTextButton.setBackgroundColor(
-      //    Color.parseColor(articleElement.getRender().getBgColor()));
-
-      setButtonDisable();
+      articleTextButton.setBackgroundColor(
+          Color.parseColor(articleElement.getRender().getBgColor()));
     } catch (Exception ignored) {
     }
 
@@ -97,6 +95,12 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     ViewCustomizationType[] viewCustomizationTypes = OCManager.getOcmCustomBehaviourDelegate()
         .customizationForContent(articleButtonElement.getCustomProperties(),
             ViewType.BUTTON_ELEMENT);
+
+    for (ViewCustomizationType viewCustomizationType : viewCustomizationTypes) {
+      if (viewCustomizationType == ViewCustomizationType.DISABLED) {
+        setButtonDisable();
+      }
+    }
 
     switch (articleButtonElement.getRender().getType()) {
       case IMAGE:

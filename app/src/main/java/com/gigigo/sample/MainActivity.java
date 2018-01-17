@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         @NotNull ViewType viewType) {
 
       //TODO: check properties to apply customization
-      return ViewCustomizationType[0];
+      return new ViewCustomizationType[0];
     }
   };
 
