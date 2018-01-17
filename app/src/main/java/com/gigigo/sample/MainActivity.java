@@ -11,12 +11,12 @@ import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
-import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -96,7 +96,10 @@ public class MainActivity extends AppCompatActivity {
         @NotNull ViewType viewType) {
 
       //TODO: check properties to apply customization
-      return new ViewCustomizationType[0];
+
+      ViewCustomizationType[] viewCustomizationType = new ViewCustomizationType[1];
+      viewCustomizationType[0] = ViewCustomizationType.DISABLED;
+      return viewCustomizationType;
     }
   };
 
