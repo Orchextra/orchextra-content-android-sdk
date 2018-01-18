@@ -79,6 +79,8 @@ public class ArticleContentData extends UiBaseContentData {
 
     flFA.setVisibility(View.INVISIBLE);
     faLoading.setVisibility(View.GONE);
+
+    adapter.notifyDataSetChanged();
   }
 
   @Override public void onDestroy() {
@@ -156,7 +158,7 @@ public class ArticleContentData extends UiBaseContentData {
                         Ocm.processDeepLinks(elementUrl);
                       }
 
-                      flFA.setVisibility(View.GONE);
+                      flFA.setVisibility(View.INVISIBLE);
                       faLoading.setVisibility(View.GONE);
                       return null;
                     }
