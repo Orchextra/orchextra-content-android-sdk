@@ -36,8 +36,6 @@ import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 public class ArticleContentData extends UiBaseContentData {
 
@@ -150,19 +148,17 @@ public class ArticleContentData extends UiBaseContentData {
           String elementUrl = ((ArticleButtonElement) element).getRender().getElementUrl();
 
           if (elementUrl != null) {
-            if (element.getCustomProperties() != null && element.getCustomProperties() != null) {
+            if (element.getCustomProperties() != null) {
               OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(),
-                  ViewType.BUTTON_ELEMENT, new Function1<Boolean, Unit>() {
-                    @Override public Unit invoke(Boolean canContinue) {
-                      if (canContinue) {
-                        Ocm.processDeepLinks(elementUrl);
-                      }
-
-                      flFA.setVisibility(View.INVISIBLE);
-                      faLoading.setVisibility(View.GONE);
-                      return null;
+                  ViewType.BUTTON_ELEMENT, canContinue -> {
+                    if (canContinue) {
+                      Ocm.processDeepLinks(elementUrl);
                     }
-              });
+
+                    flFA.setVisibility(View.INVISIBLE);
+                    faLoading.setVisibility(View.GONE);
+                    return null;
+                  });
             } else {
               Ocm.processDeepLinks(elementUrl);
             }

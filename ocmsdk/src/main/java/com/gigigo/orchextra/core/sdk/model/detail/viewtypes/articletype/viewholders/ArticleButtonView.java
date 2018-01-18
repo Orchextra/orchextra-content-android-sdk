@@ -105,8 +105,9 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
   @Override public void bindTo(ArticleButtonElement articleButtonElement, int i) {
 
-    showLoading();
     if (articleButtonElement.getCustomProperties() != null) {
+      showLoading();
+
       OCManager.notifyCustomizationForContent(articleButtonElement.getCustomProperties(),
           ViewType.BUTTON_ELEMENT, customizations -> {
             for (ViewCustomizationType viewCustomizationType : customizations) {
