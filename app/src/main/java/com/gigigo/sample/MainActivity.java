@@ -110,6 +110,13 @@ public class MainActivity extends AppCompatActivity {
 
       completion.invoke(true);
     }
+
+    public ViewCustomizationType[] customizationForContent(@NotNull Map<String, ?> customProperties,
+        @NotNull ViewType viewType) {
+
+      //TODO: check properties to apply customization
+      return new ViewCustomizationType[0];
+    }
   };
 
   private List<UiMenu> oldUiMenuList;
