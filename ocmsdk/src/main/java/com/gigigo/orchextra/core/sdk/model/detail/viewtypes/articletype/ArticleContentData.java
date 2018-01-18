@@ -33,6 +33,7 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhold
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.Ocm;
+import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
 import kotlin.Unit;
@@ -148,13 +149,14 @@ public class ArticleContentData extends UiBaseContentData {
 
           if (elementUrl != null) {
             if (element.getCustomProperties() != null && element.getCustomProperties() != null) {
-              OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(), new Function1<Boolean, Unit>() {
-                @Override public Unit invoke(Boolean canContinue) {
-                  if (canContinue) {
-                    Ocm.processDeepLinks(elementUrl);
-                  }
-                  return null;
-                }
+              OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(),
+                  ViewType.BUTTON_ELEMENT, new Function1<Boolean, Unit>() {
+                    @Override public Unit invoke(Boolean canContinue) {
+                      if (canContinue) {
+                        Ocm.processDeepLinks(elementUrl);
+                      }
+                      return null;
+                    }
               });
             } else {
               Ocm.processDeepLinks(elementUrl);

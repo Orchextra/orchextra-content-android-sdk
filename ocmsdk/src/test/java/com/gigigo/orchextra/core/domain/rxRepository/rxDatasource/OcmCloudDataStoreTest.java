@@ -80,7 +80,7 @@ import static org.mockito.Mockito.verify;
   }
 
   @Test public void testGetVersion(){
-    ApiVersionResponse fakeVersion = new ApiVersionResponse();
+    ApiVersionResponse fakeVersion = new ApiVersionResponse(true, "");
 
     Observable<ApiVersionResponse> fakeObservable =  Observable.just(fakeVersion);
     given(mockRestApi.getVersionDataRx()).willReturn(fakeObservable);

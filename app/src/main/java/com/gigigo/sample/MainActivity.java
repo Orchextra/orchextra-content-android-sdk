@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override public void contentNeedsValidation(@NotNull Map<String, ?> customProperties,
-        @NotNull Function1<? super Boolean, Unit> completion) {
+        @NotNull ViewType viewType, @NotNull Function1<? super Boolean, Unit> completion) {
 
       Set<? extends Map.Entry<String, ?>> entrySet = customProperties.entrySet();
       Iterator<? extends Map.Entry<String, ?>> iterator = entrySet.iterator();
