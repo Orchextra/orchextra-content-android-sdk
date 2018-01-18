@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
+import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementSectionView;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -121,17 +122,19 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
     if (layerView != null) {
       showLoading();
       layerView.removeAllViews();
-      OCManager.getOcmCustomBehaviourDelegate()
-          .customizationForContent(customProperties, ViewType.GRID_CONTENT, customizations -> {
-            for (ViewCustomizationType viewCustomizationType : customizations) {
 
-              if (viewCustomizationType instanceof ViewLayer) {
-                View view = ((ViewLayer) viewCustomizationType).getView();
-                layerView.addView(view);
+      if (customProperties != null) {
+        OCManager.notifyCustomizationForContent(customProperties, ViewType.GRID_CONTENT, customizations -> {
+              for (ViewCustomizationType viewCustomizationType : customizations) {
+
+                if (viewCustomizationType instanceof ViewLayer) {
+                  View view = ((ViewLayer) viewCustomizationType).getView();
+                  layerView.addView(view);
+                }
               }
-            }
-            hideLoading();
-          });
+              hideLoading();
+            });
+      }
     }
   }
 

@@ -176,10 +176,6 @@ Add Comment C
     getInstance().ocmCustomBehaviourDelegate = ocmCustomBehaviourDelegate;
   }
 
-  public static OcmCustomBehaviourDelegate getOcmCustomBehaviourDelegate() {
-    return getInstance().ocmCustomBehaviourDelegate;
-  }
-
   static void setEventCallback(OnEventCallback onEventCallback) {
     getInstance().onEventCallback = onEventCallback;
   }

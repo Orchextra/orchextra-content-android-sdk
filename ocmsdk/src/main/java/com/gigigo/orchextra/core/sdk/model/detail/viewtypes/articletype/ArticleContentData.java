@@ -155,6 +155,9 @@ public class ArticleContentData extends UiBaseContentData {
                       if (canContinue) {
                         Ocm.processDeepLinks(elementUrl);
                       }
+
+                      flFA.setVisibility(View.GONE);
+                      faLoading.setVisibility(View.GONE);
                       return null;
                     }
               });
