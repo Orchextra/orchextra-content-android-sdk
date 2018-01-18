@@ -32,7 +32,6 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
   private final Context context;
   private final boolean thumbnailEnabled;
   private ProgressBar progress;
-  private boolean isDisabled = false;
   private boolean isLoading = false;
 
   private WeakReference<ImageView> imageViewWeakReference;
@@ -126,7 +125,6 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
 
               if (mainView != null) {
                 mainView.addView(view);
-                isDisabled = true;
               }
             }
           }
@@ -135,7 +133,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
   }
 
   @Override public void onClick(View v) {
-    if (!isDisabled && !isLoading) {
+    if (!isLoading) {
       super.onClick(v);
     }
   }

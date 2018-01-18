@@ -30,6 +30,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   private TextView articleTextButton;
   private ImageView articleImageButton;
   private ProgressBar progress;
+  private ArticleButtonElement articleElement;
   private boolean isDisabled = false;
   private boolean isLoading = false;
 
@@ -45,9 +46,12 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   private void bindTextButton(final ArticleButtonElement articleElement) {
+    this.articleElement = articleElement;
     articleTextButton.setVisibility(View.VISIBLE);
 
-    articleTextButton.setText(articleElement.getRender().getText());
+    if (!isLoading) {
+      articleTextButton.setText(articleElement.getRender().getText());
+    }
 
     try {
       articleTextButton.setTextColor(Color.parseColor(articleElement.getRender().getTextColor()));
@@ -136,11 +140,15 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
   private void showLoading() {
     progress.setVisibility(View.VISIBLE);
+    articleTextButton.setText("");
     isLoading = true;
   }
 
   private void hideLoading() {
     progress.setVisibility(View.GONE);
+    if (articleElement != null && articleElement.getRender() != null) {
+      articleTextButton.setText(articleElement.getRender().getText());
+    }
     isLoading = false;
   }
 }
