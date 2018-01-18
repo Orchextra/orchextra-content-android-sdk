@@ -117,6 +117,8 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
             }
             hideLoading();
           });
+    } else {
+      hideLoading();
     }
 
     switch (articleButtonElement.getRender().getType()) {

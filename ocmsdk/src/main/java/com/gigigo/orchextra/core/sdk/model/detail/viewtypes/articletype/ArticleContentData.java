@@ -161,6 +161,10 @@ public class ArticleContentData extends UiBaseContentData {
                   });
             } else {
               Ocm.processDeepLinks(elementUrl);
+
+              flFA.setVisibility(View.INVISIBLE);
+              faLoading.setVisibility(View.GONE);
+
             }
           }
         }
