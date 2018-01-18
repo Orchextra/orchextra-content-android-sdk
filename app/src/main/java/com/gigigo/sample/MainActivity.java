@@ -80,8 +80,11 @@ public class MainActivity extends AppCompatActivity {
       handler.postDelayed(() -> {
         List<ViewCustomizationType> viewCustomizationType = new ArrayList<>();
         viewCustomizationType.add(new Disabled());
-        View view = getLayoutInflater().inflate(R.layout.padlock_view, null);
-        viewCustomizationType.add(new ViewLayer(view));
+
+        if (customProperties.containsKey("lock")) {
+          View view = getLayoutInflater().inflate(R.layout.padlock_view, null);
+          viewCustomizationType.add(new ViewLayer(view));
+        }
 
         customizationListener.onGetCustomization(viewCustomizationType);
       }, 3000);

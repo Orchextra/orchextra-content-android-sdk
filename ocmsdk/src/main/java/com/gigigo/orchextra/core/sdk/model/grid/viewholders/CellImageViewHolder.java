@@ -29,6 +29,7 @@ import java.util.Map;
 public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
 
   private final WeakReference<View> mainLayoutWeakReference;
+  private final WeakReference<View> layerViewWR;
   private final Context context;
   private final boolean thumbnailEnabled;
   private ProgressBar progress;
@@ -49,6 +50,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
     imageViewWeakReference = new WeakReference<>(itemView.findViewById(R.id.cell_image_view));
     mainLayoutWeakReference =
         new WeakReference<>(itemView.findViewById(R.id.cell_image_content_layout));
+    layerViewWR = new WeakReference<>(itemView.findViewById(R.id.layer_view));
 
     progress = itemView.findViewById(R.id.notification_progress);
   }
@@ -114,22 +116,23 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
           });
     }
 
-    ViewGroup mainView = (ViewGroup) mainLayoutWeakReference.get();
+    ViewGroup layerView = (ViewGroup) layerViewWR.get();
 
-    showLoading();
-    OCManager.getOcmCustomBehaviourDelegate()
-        .customizationForContent(customProperties, ViewType.GRID_CONTENT, customizations -> {
-          for (ViewCustomizationType viewCustomizationType : customizations) {
-            if (viewCustomizationType instanceof ViewLayer) {
-              View view = ((ViewLayer) viewCustomizationType).getView();
+    if (layerView != null) {
+      showLoading();
+      layerView.removeAllViews();
+      OCManager.getOcmCustomBehaviourDelegate()
+          .customizationForContent(customProperties, ViewType.GRID_CONTENT, customizations -> {
+            for (ViewCustomizationType viewCustomizationType : customizations) {
 
-              if (mainView != null) {
-                mainView.addView(view);
+              if (viewCustomizationType instanceof ViewLayer) {
+                View view = ((ViewLayer) viewCustomizationType).getView();
+                layerView.addView(view);
               }
             }
-          }
-          hideLoading();
-        });
+            hideLoading();
+          });
+    }
   }
 
   @Override public void onClick(View v) {
