@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -30,6 +31,9 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
   private final WeakReference<View> mainLayoutWeakReference;
   private final Context context;
   private final boolean thumbnailEnabled;
+  private ProgressBar progress;
+  private boolean isDisabled = false;
+  private boolean isLoading = false;
 
   private WeakReference<ImageView> imageViewWeakReference;
   private WeakReference<ImageView> imageViewOverlayWeakReference;
@@ -46,6 +50,8 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
     imageViewWeakReference = new WeakReference<>(itemView.findViewById(R.id.cell_image_view));
     mainLayoutWeakReference =
         new WeakReference<>(itemView.findViewById(R.id.cell_image_content_layout));
+
+    progress = itemView.findViewById(R.id.notification_progress);
   }
 
   @Override public void bindTo(CellGridContentData item, final int position) {
@@ -111,6 +117,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
 
     ViewGroup mainView = (ViewGroup) mainLayoutWeakReference.get();
 
+    showLoading();
     OCManager.getOcmCustomBehaviourDelegate()
         .customizationForContent(customProperties, ViewType.GRID_CONTENT, customizations -> {
           for (ViewCustomizationType viewCustomizationType : customizations) {
@@ -119,9 +126,27 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
 
               if (mainView != null) {
                 mainView.addView(view);
+                isDisabled = true;
               }
             }
           }
+          hideLoading();
         });
+  }
+
+  @Override public void onClick(View v) {
+    if (!isDisabled && !isLoading) {
+      super.onClick(v);
+    }
+  }
+
+  private void showLoading() {
+    progress.setVisibility(View.VISIBLE);
+    isLoading = true;
+  }
+
+  private void hideLoading() {
+    progress.setVisibility(View.GONE);
+    isLoading = false;
   }
 }

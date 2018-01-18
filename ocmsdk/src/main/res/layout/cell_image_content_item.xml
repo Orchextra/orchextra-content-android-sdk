@@ -37,4 +37,12 @@
       android:layout_height="match_parent"
       android:background="@drawable/cell_selection"
       />
+
+  <FrameLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      >
+    <include layout="@layout/progress_red"/>
+  </FrameLayout>
 </FrameLayout>
