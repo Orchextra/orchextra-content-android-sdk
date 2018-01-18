@@ -156,8 +156,8 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     setAnimationImageView();
 
-    String elementUrl = getIntent().getStringExtra(EXTRA_ELEMENT_URL);
-    presenter.loadSection(elementUrl);
+    /*String elementUrl = getIntent().getStringExtra(EXTRA_ELEMENT_URL);
+    presenter.loadSection(elementUrl);*/
   }
 
   @Override public void setView(UiDetailBaseContentData uiContentView) {
