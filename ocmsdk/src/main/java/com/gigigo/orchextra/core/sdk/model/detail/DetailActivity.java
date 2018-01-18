@@ -94,6 +94,12 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     presenter.attachView(this);
   }
 
+  @Override protected void onResume() {
+    super.onResume();
+
+    presenter.loadSection(this.elementUrl);
+  }
+
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 

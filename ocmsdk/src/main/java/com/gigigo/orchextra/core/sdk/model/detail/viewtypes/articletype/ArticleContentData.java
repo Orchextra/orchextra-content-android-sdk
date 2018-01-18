@@ -46,7 +46,6 @@ public class ArticleContentData extends UiBaseContentData {
   private BaseRecyclerAdapter<ArticleElement<ArticleElementRender>> adapter;
   private int addictionalPadding;
   private boolean thumbnailEnabled;
-  private ArticleElement articleElement;
 
   public static ArticleContentData newInstance() {
     return new ArticleContentData();
@@ -78,8 +77,6 @@ public class ArticleContentData extends UiBaseContentData {
 
     flFA.setVisibility(View.INVISIBLE);
     faLoading.setVisibility(View.GONE);
-
-    processArticle(this.articleElement);
   }
 
   @Override public void onDestroy() {
@@ -140,10 +137,9 @@ public class ArticleContentData extends UiBaseContentData {
 
     adapter.setItemClickListener(new BaseViewHolder.OnItemClickListener() {
       @Override public void onItemClick(int i, View view) {
-        ArticleContentData.this.articleElement = adapter.getItem(i);
+        ArticleElement element = adapter.getItem(i);
 
-        processArticle(ArticleContentData.this.articleElement);
-        /*if (element instanceof ArticleButtonElement) {
+        if (element instanceof ArticleButtonElement) {
           flFA.setVisibility(View.VISIBLE);
           faLoading.setVisibility(View.VISIBLE);
 
@@ -169,7 +165,7 @@ public class ArticleContentData extends UiBaseContentData {
 
             }
           }
-        }*/
+        }
       }
     });
 
@@ -198,36 +194,6 @@ public class ArticleContentData extends UiBaseContentData {
     if (articleItemViewContainer != null) {
       articleItemViewContainer.setClipToPadding(false);
       articleItemViewContainer.setPadding(0, 0, 0, addictionalPadding);
-    }
-  }
-
-  private void processArticle(ArticleElement element) {
-    if (element instanceof ArticleButtonElement) {
-      flFA.setVisibility(View.VISIBLE);
-      faLoading.setVisibility(View.VISIBLE);
-
-      String elementUrl = ((ArticleButtonElement) element).getRender().getElementUrl();
-
-      if (elementUrl != null) {
-        if (element.getCustomProperties() != null) {
-          OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(),
-              ViewType.BUTTON_ELEMENT, canContinue -> {
-                if (canContinue) {
-                  Ocm.processDeepLinks(elementUrl);
-                }
-
-                flFA.setVisibility(View.INVISIBLE);
-                faLoading.setVisibility(View.GONE);
-                return null;
-              });
-        } else {
-          Ocm.processDeepLinks(elementUrl);
-
-          flFA.setVisibility(View.INVISIBLE);
-          faLoading.setVisibility(View.GONE);
-
-        }
-      }
     }
   }
 }
