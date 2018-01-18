@@ -21,6 +21,7 @@ import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
+import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -364,7 +365,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
       if (element.getCustomProperties() != null && element.getCustomProperties() != null) {
         OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(),
-            new Function1<Boolean, Unit>() {
+            ViewType.GRID_CONTENT, new Function1<Boolean, Unit>() {
               @Override public Unit invoke(Boolean canContinue) {
                 if (canContinue) {
                   itemClickedContinue(element, view);

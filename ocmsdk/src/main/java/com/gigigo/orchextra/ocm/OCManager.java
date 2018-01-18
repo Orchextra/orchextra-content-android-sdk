@@ -297,9 +297,10 @@ Add Comment C
   }
 
   public static void notifyCustomBehaviourContinue(@NotNull Map<String, Object> customProperties,
-      Function1<Boolean, Unit> completion) {
+      ViewType viewType, Function1<Boolean, Unit> completion) {
     if (instance != null && instance.ocmCustomBehaviourDelegate != null) {
-      instance.ocmCustomBehaviourDelegate.contentNeedsValidation(customProperties, completion);
+      instance.ocmCustomBehaviourDelegate.contentNeedsValidation(customProperties,
+          viewType, completion);
     }
   }
 
