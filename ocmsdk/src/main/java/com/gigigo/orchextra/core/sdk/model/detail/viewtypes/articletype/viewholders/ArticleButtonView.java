@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.bumptech.glide.Priority;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
@@ -28,7 +29,9 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   private final Context context;
   private TextView articleTextButton;
   private ImageView articleImageButton;
+  private ProgressBar progress;
   private boolean isDisabled = false;
+  private boolean isLoading = false;
 
   public ArticleButtonView(Context context, ViewGroup parent) {
     super(context, parent, R.layout.view_article_button_item);
@@ -37,6 +40,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
     articleTextButton = itemView.findViewById(R.id.articleTextButton);
     articleImageButton = itemView.findViewById(R.id.articleImageButton);
+    progress = itemView.findViewById(R.id.notification_progress);
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -97,6 +101,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
   @Override public void bindTo(ArticleButtonElement articleButtonElement, int i) {
 
+    showLoading();
     OCManager.getOcmCustomBehaviourDelegate()
         .customizationForContent(articleButtonElement.getCustomProperties(),
             ViewType.BUTTON_ELEMENT, customizations -> {
@@ -105,6 +110,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
                   setButtonDisable();
                 }
               }
+              hideLoading();
             });
 
     switch (articleButtonElement.getRender().getType()) {
@@ -117,7 +123,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   }
 
   @Override public void onClick(View v) {
-    if (!isDisabled) {
+    if (!isDisabled && !isLoading) {
       super.onClick(v);
     }
   }
@@ -126,5 +132,15 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     articleTextButton.setBackgroundColor(
         ContextCompat.getColor(context, R.color.oc_background_detail_view_color));
     isDisabled = true;
+  }
+
+  private void showLoading() {
+    progress.setVisibility(View.VISIBLE);
+    isLoading = true;
+  }
+
+  private void hideLoading() {
+    progress.setVisibility(View.GONE);
+    isLoading = false;
   }
 }

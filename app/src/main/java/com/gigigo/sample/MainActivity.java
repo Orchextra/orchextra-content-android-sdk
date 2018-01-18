@@ -1,6 +1,7 @@
 package com.gigigo.sample;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -75,12 +76,15 @@ public class MainActivity extends AppCompatActivity {
     @Override public void customizationForContent(@NotNull Map<String, ?> customProperties,
         @NotNull ViewType viewType, @NotNull CustomizationListener customizationListener) {
 
-      List<ViewCustomizationType> viewCustomizationType = new ArrayList<>();
-      viewCustomizationType.add(new Disabled());
-      View view = getLayoutInflater().inflate(R.layout.padlock_view, null);
-      viewCustomizationType.add(new ViewLayer(view));
+      Handler handler = new Handler();
+      handler.postDelayed(() -> {
+        List<ViewCustomizationType> viewCustomizationType = new ArrayList<>();
+        viewCustomizationType.add(new Disabled());
+        View view = getLayoutInflater().inflate(R.layout.padlock_view, null);
+        viewCustomizationType.add(new ViewLayer(view));
 
-      customizationListener.onGetCustomization(viewCustomizationType);
+        customizationListener.onGetCustomization(viewCustomizationType);
+      }, 3000);
     }
 
     @Override public void contentNeedsValidation(@NotNull Map<String, ?> customProperties,

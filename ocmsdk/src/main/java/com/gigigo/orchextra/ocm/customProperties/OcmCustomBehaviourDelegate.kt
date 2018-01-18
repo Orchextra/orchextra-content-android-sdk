@@ -20,14 +20,14 @@ interface CustomizationListener {
 
 sealed class ViewCustomizationType
 
-class GrayScale() : ViewCustomizationType()
+class GrayScale : ViewCustomizationType()
 
-class DarkLayer() : ViewCustomizationType()
+class DarkLayer : ViewCustomizationType()
 
 class ViewLayer(val view: View) : ViewCustomizationType()
 
-class ErrorMessage() : ViewCustomizationType()
+class ErrorMessage : ViewCustomizationType()
 
-class Disabled() : ViewCustomizationType()
+class Disabled : ViewCustomizationType()
 
-class Hidden() : ViewCustomizationType()
+class Hidden : ViewCustomizationType()
