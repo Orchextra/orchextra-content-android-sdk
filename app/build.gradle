@@ -1,50 +1,91 @@
 apply plugin: 'com.android.application'
+
+apply from: '../ocmsdk/common_methods.gradle'
+apply from: '../ocmsdk/dependencies.gradle'
 apply from: 'variants.gradle'
+
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+def API_KEY = "API_KEY"
+def API_SECRET = "API_SECRET"
+def BUSSINES_UNIT = "BUSSINES_UNIT"
 
 android {
   signingConfigs {
     config {}
   }
-  compileSdkVersion 26
-  buildToolsVersion '26.0.2'
+  compileSdkVersion project.ext.androidCompileSdkVersion
+  buildToolsVersion project.ext.androidBuildToolsVersion
+
   defaultConfig {
-    applicationId "com.gigigo.sample"
-    minSdkVersion 18
-    targetSdkVersion 24 //asv?¿ why,24?
-    versionCode 1
-    versionName "1.0"
+    minSdkVersion project.ext.androidMinSdkVersion
+    targetSdkVersion project.ext.androidTargetSdkVersion
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
-    buildConfigField "String", "BUSSINES_UNIT", project.ext.bussines_unit
   }
+
   buildTypes {
     staging {
       debuggable true
       signingConfig signingConfigs.debug
-      buildConfigField "String", "API_KEY", project.ext.api_key_staging
-      buildConfigField "String", "API_SECRET", project.ext.api_secret_staging
     }
     debug {
       debuggable true
-      buildConfigField "String", "API_KEY", project.ext.api_key_debug
-      buildConfigField "String", "API_SECRET", project.ext.api_secret_debug
       signingConfig signingConfigs.debug
     }
     prerelease {
       debuggable true
-      buildConfigField "String", "API_KEY", project.ext.api_key_release
-      buildConfigField "String", "API_SECRET", project.ext.api_secret_release
       signingConfig signingConfigs.debug
       matchingFallbacks = ['release']
     }
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-      buildConfigField "String", "API_KEY", project.ext.api_key_release
-      buildConfigField "String", "API_SECRET", project.ext.api_secret_release
       signingConfig android.signingConfigs.debug
+    }
+  }
+
+  productFlavors.whenObjectAdded { flavor ->
+    flavor.versionCode generateAutoVersionCode()
+    flavor.versionName getVersionName(project.ext.version)
+  }
+
+  project.android.applicationVariants.all { variant ->
+
+    variant.productFlavors.each { flavor ->
+      println("Variant: " + variant.name)
+      println("Flavor:" + flavor.name)
+
+      def flavorData = project.ext[flavor.name]
+      def appName = flavorData.appName
+      def appId = flavorData.applicationId
+
+      println("**************************************************")
+      println("-------------" + flavor.name + "." + variant.buildType.name + "-------------")
+
+      println("****"+flavorData+"****")
+
+      setVariantApplicationId(variant, appId)
+      setVariantResValue(variant, appName, "app_name", STRING)
+
+      setVariantBuildConfigField(variant, project.ext.orchextraApiKey, API_KEY, STRING)
+      setVariantBuildConfigField(variant, project.ext.orchextraApiSecret, API_SECRET, STRING)
+      setVariantBuildConfigField(variant, flavorData.orchextraBussinesUnit, BUSSINES_UNIT, STRING)
+
+      println("--**********************************************************--")
+    }
+  }
+
+  flavorDimensions "sample"
+
+  productFlavors {
+    woah_IT {
+      dimension "sample"
+    }
+
+    woah_SR {
+      dimension "sample"
     }
   }
 
