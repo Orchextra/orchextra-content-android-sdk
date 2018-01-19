@@ -105,18 +105,22 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
   @Override public void bindTo(ArticleButtonElement articleButtonElement, int i) {
 
-    showLoading();
-    OCManager.getOcmCustomBehaviourDelegate()
-        .customizationForContent(articleButtonElement.getCustomProperties(),
-            ViewType.BUTTON_ELEMENT, customizations -> {
-              setButtonEnabled();
-              for (ViewCustomizationType viewCustomizationType : customizations) {
-                if (viewCustomizationType instanceof Disabled) {
-                  setButtonDisable();
-                }
+    if (articleButtonElement.getCustomProperties() != null) {
+      showLoading();
+
+      OCManager.notifyCustomizationForContent(articleButtonElement.getCustomProperties(),
+          ViewType.BUTTON_ELEMENT, customizations -> {
+            setButtonEnabled();
+            for (ViewCustomizationType viewCustomizationType : customizations) {
+              if (viewCustomizationType instanceof Disabled) {
+                setButtonDisable();
               }
-              hideLoading();
-            });
+            }
+            hideLoading();
+          });
+    } else {
+      hideLoading();
+    }
 
     switch (articleButtonElement.getRender().getType()) {
       case IMAGE:
@@ -144,6 +148,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
       articleTextButton.setBackgroundColor(
           Color.parseColor(articleElement.getRender().getBgColor()));
     }
+
     isDisabled = false;
   }
 

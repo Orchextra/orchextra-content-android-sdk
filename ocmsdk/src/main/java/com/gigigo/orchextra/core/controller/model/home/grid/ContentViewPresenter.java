@@ -26,8 +26,6 @@ import com.gigigo.orchextra.ocm.dto.UiMenu;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 public class ContentViewPresenter extends Presenter<ContentView> {
 
@@ -365,13 +363,11 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
       if (element.getCustomProperties() != null && element.getCustomProperties() != null) {
         OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(),
-            ViewType.GRID_CONTENT, new Function1<Boolean, Unit>() {
-              @Override public Unit invoke(Boolean canContinue) {
-                if (canContinue) {
-                  itemClickedContinue(element, view);
-                }
-                return null;
+            ViewType.GRID_CONTENT, canContinue -> {
+              if (canContinue) {
+                itemClickedContinue(element, view);
               }
+              return null;
             });
       } else {
         itemClickedContinue(element, view);

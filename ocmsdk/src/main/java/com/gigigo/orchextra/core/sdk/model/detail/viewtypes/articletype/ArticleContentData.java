@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.gigigo.baserecycleradapter.adapter.BaseRecyclerAdapter;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
@@ -36,8 +35,6 @@ import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 public class ArticleContentData extends UiBaseContentData {
 
@@ -116,10 +113,10 @@ public class ArticleContentData extends UiBaseContentData {
   }
 
   private void initViews(View view) {
-    articleItemViewContainer = (RecyclerView) view.findViewById(R.id.articleItemListLayout);
+    articleItemViewContainer = view.findViewById(R.id.articleItemListLayout);
 
-    flFA = (FrameLayout) view.findViewById(R.id.flFA);
-    faLoading = (ProgressBar) flFA.findViewById(R.id.progressFA);
+    flFA = view.findViewById(R.id.flFA);
+    faLoading = flFA.findViewById(R.id.progressFA);
   }
 
   private void initRecyclerView() {
@@ -148,18 +145,23 @@ public class ArticleContentData extends UiBaseContentData {
           String elementUrl = ((ArticleButtonElement) element).getRender().getElementUrl();
 
           if (elementUrl != null) {
-            if (element.getCustomProperties() != null && element.getCustomProperties() != null) {
+            if (element.getCustomProperties() != null) {
               OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(),
-                  ViewType.BUTTON_ELEMENT, new Function1<Boolean, Unit>() {
-                    @Override public Unit invoke(Boolean canContinue) {
-                      if (canContinue) {
-                        Ocm.processDeepLinks(elementUrl);
-                      }
-                      return null;
+                  ViewType.BUTTON_ELEMENT, canContinue -> {
+                    if (canContinue) {
+                      Ocm.processDeepLinks(elementUrl);
                     }
-              });
+
+                    flFA.setVisibility(View.INVISIBLE);
+                    faLoading.setVisibility(View.GONE);
+                    return null;
+                  });
             } else {
               Ocm.processDeepLinks(elementUrl);
+
+              flFA.setVisibility(View.INVISIBLE);
+              faLoading.setVisibility(View.GONE);
+
             }
           }
         }
