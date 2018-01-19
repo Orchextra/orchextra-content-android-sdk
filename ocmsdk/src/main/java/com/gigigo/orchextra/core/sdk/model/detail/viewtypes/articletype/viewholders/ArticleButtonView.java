@@ -144,7 +144,9 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   }
 
   private void setButtonEnabled() {
-    if (articleElement != null && articleElement.getRender() != null) {
+    if (articleElement != null
+        && articleElement.getRender() != null
+        && articleElement.getRender().getBgColor() != null) {
       articleTextButton.setBackgroundColor(
           Color.parseColor(articleElement.getRender().getBgColor()));
     }
