@@ -76,6 +76,8 @@ public class ArticleContentData extends UiBaseContentData {
 
     flFA.setVisibility(View.INVISIBLE);
     faLoading.setVisibility(View.GONE);
+
+    adapter.notifyDataSetChanged();
   }
 
   @Override public void onDestroy() {
