@@ -17,7 +17,7 @@ public class FederatedAuthorizationDataMapper
     FederatedAuthorization model = new FederatedAuthorization();
 
     if (data != null) {
-      model.setActive(data.isActive());
+      model.setActive(data.getActive());
       model.setType(data.getType());
       model.setKeys(mapper.externalClassToModel(data.getKeys()));
     }
