@@ -109,6 +109,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     OCManager.getOcmCustomBehaviourDelegate()
         .customizationForContent(articleButtonElement.getCustomProperties(),
             ViewType.BUTTON_ELEMENT, customizations -> {
+              setButtonEnabled();
               for (ViewCustomizationType viewCustomizationType : customizations) {
                 if (viewCustomizationType instanceof Disabled) {
                   setButtonDisable();
@@ -136,6 +137,14 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     articleTextButton.setBackgroundColor(
         ContextCompat.getColor(context, R.color.oc_background_detail_view_color));
     isDisabled = true;
+  }
+
+  private void setButtonEnabled() {
+    if (articleElement != null && articleElement.getRender() != null) {
+      articleTextButton.setBackgroundColor(
+          Color.parseColor(articleElement.getRender().getBgColor()));
+    }
+    isDisabled = false;
   }
 
   private void showLoading() {
