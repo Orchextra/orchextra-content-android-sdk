@@ -1,4 +1,4 @@
-package com.gigigo.sample;
+package com.gigigo.orchextra.ocm.sample;
 
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
@@ -17,10 +17,10 @@ import com.squareup.leakcanary.LeakCanary;
 public class App extends MultiDexApplication {
 
   /**
-  / Project credentials are moved to variants.gradle file
+   * / Project credentials are moved to variants.gradle file
    */
 
-  private OnRequiredLoginCallback onDoRequiredLoginCallback =  new OnRequiredLoginCallback() {
+  private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
     @Override public void doRequiredLogin() {
 
     }
@@ -105,7 +105,7 @@ public class App extends MultiDexApplication {
         .setShowReadArticles(true)
         //.setVuforiaImpl(new ImageRecognitionVuforiaImpl())
         .setTransformReadArticleMode(ImageTransformReadArticle.BITMAP_TRANSFORM)
-       // .setVuforiaImpl(new ImageRecognitionVuforiaImpl())
+        // .setVuforiaImpl(new ImageRecognitionVuforiaImpl())
         .setMaxReadArticles(100)
         .setOrchextraCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET)
         .setContentLanguage("EN")

@@ -1,4 +1,4 @@
-package com.gigigo.sample;
+package com.gigigo.orchextra.ocm.sample;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

@@ -1,4 +1,4 @@
-package com.gigigo.sample;
+package com.gigigo.orchextra.ocm.sample;
 
 import android.content.Context;
 import android.content.Intent;
