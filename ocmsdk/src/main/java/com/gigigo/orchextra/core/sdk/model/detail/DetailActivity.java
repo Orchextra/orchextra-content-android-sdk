@@ -94,12 +94,6 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     presenter.attachView(this);
   }
 
-  @Override protected void onResume() {
-    super.onResume();
-
-    presenter.loadSection(this.elementUrl);
-  }
-
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
@@ -156,8 +150,8 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     setAnimationImageView();
 
-    /*String elementUrl = getIntent().getStringExtra(EXTRA_ELEMENT_URL);
-    presenter.loadSection(elementUrl);*/
+    String elementUrl = getIntent().getStringExtra(EXTRA_ELEMENT_URL);
+    presenter.loadSection(elementUrl);
   }
 
   @Override public void setView(UiDetailBaseContentData uiContentView) {

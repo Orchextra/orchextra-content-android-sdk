@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.gigigo.baserecycleradapter.adapter.BaseRecyclerAdapter;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
@@ -114,10 +113,10 @@ public class ArticleContentData extends UiBaseContentData {
   }
 
   private void initViews(View view) {
-    articleItemViewContainer = (RecyclerView) view.findViewById(R.id.articleItemListLayout);
+    articleItemViewContainer = view.findViewById(R.id.articleItemListLayout);
 
-    flFA = (FrameLayout) view.findViewById(R.id.flFA);
-    faLoading = (ProgressBar) flFA.findViewById(R.id.progressFA);
+    flFA = view.findViewById(R.id.flFA);
+    faLoading = flFA.findViewById(R.id.progressFA);
   }
 
   private void initRecyclerView() {

@@ -113,6 +113,8 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
             for (ViewCustomizationType viewCustomizationType : customizations) {
               if (viewCustomizationType instanceof Disabled) {
                 setButtonDisable();
+              } else {
+                setButtonEnable();
               }
             }
             hideLoading();
@@ -140,6 +142,10 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     articleTextButton.setBackgroundColor(
         ContextCompat.getColor(context, R.color.oc_background_detail_view_color));
     isDisabled = true;
+  }
+
+  private void setButtonEnable() {
+    isDisabled = false;
   }
 
   private void showLoading() {
