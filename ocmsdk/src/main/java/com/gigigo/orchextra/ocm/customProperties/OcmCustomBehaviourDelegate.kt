@@ -2,20 +2,16 @@ package com.gigigo.orchextra.ocm.customProperties
 
 import android.view.View
 
-interface OcmCustomBehaviourDelegate {
+interface OcmCustomBehaviourDelegate{
   fun contentNeedsValidation(customProperties: Map<String, Any>, viewType: ViewType, completion: (Boolean) -> Unit)
   fun customizationForContent(customProperties: Map<String, Any>,
-      viewType: ViewType, customizationListener: CustomizationListener)
+      viewType: ViewType, onGetCustomization: (List<ViewCustomizationType>) -> Unit)
 }
 
 enum class ViewType {
   GRID_CONTENT,
   BUTTON_ELEMENT,
   VIDEO_ELEMENT
-}
-
-interface CustomizationListener {
-  fun onGetCustomization(customizations: List<ViewCustomizationType>)
 }
 
 sealed class ViewCustomizationType
