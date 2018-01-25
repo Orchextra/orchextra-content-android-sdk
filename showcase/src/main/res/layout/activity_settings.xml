@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
-    tools:context="com.gigigo.sample.settings.SettingsActivity"
+    tools:context="com.gigigo.orchextra.ocm.sample.settings.SettingsActivity"
     >
 
   <android.support.design.widget.AppBarLayout

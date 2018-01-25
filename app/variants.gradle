@@ -1,51 +1,22 @@
-project.ext {
+ext {
+  basePackageName = "OCM SDK"
+  baseApplicationId = "com.gigigo.orchextra.ocm.sample"
 
-  bussines_unit = '"it"'
+  version = [major: 1, minor: 0, patch: '0-beta']
 
-  /** RELEASE */
-  //WOAH RELEASE
-//  api_key_release = '"8286702045adf5a3ad816f70ecb80e4c91fbb8de"'
-//  api_secret_release = '"eab37080130215ced60eb9d5ff729049749ec205"'
+  orchextraApiKey = [debug  : '8286702045adf5a3ad816f70ecb80e4c91fbb8de',
+                     staging: 'adfc8ba4340828a054bf061f692707a197af96cb',
+                     release: 'ef08c4dccb7649b9956296a863db002a68240be2']
 
-  //WOAH MARKETS RELEASE
-  api_key_release = '"ef08c4dccb7649b9956296a863db002a68240be2"'
-  api_secret_release = '"6bc18c500546f253699f61c11a62827679178400"'
+  orchextraApiSecret = [debug  : 'eab37080130215ced60eb9d5ff729049749ec205',
+                        staging: '677cf75a17aeec144ee402c281ad3a732d736a8a',
+                        release: '6bc18c500546f253699f61c11a62827679178400']
 
-  //WOAH QA RELEASE
-//  api_key_release = '"ad46332237cbb9fd38ad38470a9bee6d4892d770"'
-//  api_secret_release = '"f5e2dd3ba0de46964775fc1b48c4895c73d263c5"'
+  woah_IT = [orchextraBussinesUnit: "it",
+             applicationId        : "${baseApplicationId}.it",
+             appName              : "${basePackageName} IT"]
 
-  //REPSOL RELEASE
-  //  api_key_release = '"7bb9fa0f9b7a02846383fd6284d3c74b8155644c"'
-  //  api_secret_release = '"3295dc8de90300e2977e6cec5b28b614fc644934"'
-
-  /** DEBUG */
-
-  //WOAH Debug
-  api_key_debug = '"8286702045adf5a3ad816f70ecb80e4c91fbb8de"'
-  api_secret_debug = '"eab37080130215ced60eb9d5ff729049749ec205"'
-
-  //REPSOL DEBUG
-  //  api_key_debug = '"53cf8785f1f02b5a69adbddee58bb33b6094eb5b"'
-  //  api_secret_debug = '"e1d718aefde8aab04621a7acf1771dfbf5884fef"'
-
-  /** STAGING */
-
-  //[UAT][CSE] - WOAH SITC STAGING
-  api_key_staging = '"adfc8ba4340828a054bf061f692707a197af96cb"'
-  api_secret_staging = '"677cf75a17aeec144ee402c281ad3a732d736a8a"'
-
-  //ANDROID SDK - STAGING
-//  api_key_staging = '"34a4654b9804eab82aae05b2a5f949eb2a9f412c"'
-//  api_secret_staging = '"2d5bce79e3e6e9cabf6d7b040d84519197dc22f3"'
-
-  //[UAT][INTERNAL] DEMO APP
-//  api_key_staging = '"338d65a6572be208f25a9a5815861543adaa4abb"'
-//  api_secret_staging = '"b29dac01598f9d8e2102aef73ac816c0786843ef"'
-
-
-
-
-
-
+  woah_SR = [orchextraBussinesUnit: "sr",
+             applicationId        : "${baseApplicationId}.sr",
+             appName              : "${basePackageName} SR"]
 }

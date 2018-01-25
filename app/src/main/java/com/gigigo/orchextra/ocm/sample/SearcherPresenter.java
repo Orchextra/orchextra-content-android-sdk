@@ -1,4 +1,4 @@
-package com.gigigo.sample;
+package com.gigigo.orchextra.ocm.sample;
 
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
