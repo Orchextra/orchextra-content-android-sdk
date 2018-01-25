@@ -17,7 +17,6 @@ import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
-import com.gigigo.orchextra.ocm.customProperties.CustomizationListener;
 import com.gigigo.orchextra.ocm.customProperties.Disabled;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
@@ -74,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
   private OcmCustomBehaviourDelegate customPropertiesDelegate = new OcmCustomBehaviourDelegate() {
 
     @Override public void customizationForContent(@NotNull Map<String, ?> customProperties,
-        @NotNull ViewType viewType, @NotNull CustomizationListener customizationListener) {
+        @NotNull ViewType viewType, @NotNull
+        Function1<? super List<? extends ViewCustomizationType>, Unit> onGetCustomization) {
 
       Handler handler = new Handler();
       handler.postDelayed(() -> {
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
           viewCustomizationType.add(new ViewLayer(view));
         }
 
-        customizationListener.onGetCustomization(viewCustomizationType);
+        onGetCustomization.invoke(viewCustomizationType);
       }, 3000);
     }
 

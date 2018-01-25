@@ -28,8 +28,8 @@ import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
-import com.gigigo.orchextra.ocm.customProperties.CustomizationListener;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
+import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
@@ -47,6 +47,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -295,13 +296,14 @@ Add Comment C
   public static void notifyCustomBehaviourContinue(@NotNull Map<String, Object> customProperties,
       ViewType viewType, Function1<Boolean, Unit> completion) {
     if (instance != null && instance.ocmCustomBehaviourDelegate != null) {
-      instance.ocmCustomBehaviourDelegate.contentNeedsValidation(customProperties,
-          viewType, completion);
+      instance.ocmCustomBehaviourDelegate.contentNeedsValidation(customProperties, viewType,
+          completion);
     }
   }
 
   public static void notifyCustomizationForContent(@NotNull Map<String, Object> customProperties,
-      ViewType viewType, CustomizationListener customizationListener) {
+      ViewType viewType,
+      Function1<? super List<? extends ViewCustomizationType>, Unit> customizationListener) {
     if (instance != null && instance.ocmCustomBehaviourDelegate != null) {
       instance.ocmCustomBehaviourDelegate.customizationForContent(customProperties, viewType,
           customizationListener);

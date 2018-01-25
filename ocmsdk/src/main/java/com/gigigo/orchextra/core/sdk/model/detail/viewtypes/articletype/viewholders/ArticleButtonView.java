@@ -117,6 +117,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
               }
             }
             hideLoading();
+            return null;
           });
     } else {
       hideLoading();

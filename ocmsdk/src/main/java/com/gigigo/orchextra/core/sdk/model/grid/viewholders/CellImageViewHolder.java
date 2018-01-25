@@ -133,6 +133,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                 }
               }
               hideLoading();
+              return null;
             });
       }
     }
