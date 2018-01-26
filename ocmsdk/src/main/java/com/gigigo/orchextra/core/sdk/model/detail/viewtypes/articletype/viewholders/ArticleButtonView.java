@@ -103,6 +103,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   }
 
   @Override public void bindTo(ArticleButtonElement articleButtonElement, int i) {
+    this.articleElement = articleButtonElement;
 
     if (articleButtonElement.getCustomProperties() != null) {
       showLoading();
@@ -155,8 +156,12 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   }
 
   private void showLoading() {
-    articleTextButton.setBackgroundColor(
-        Color.parseColor(articleElement.getRender().getBgColor().replace("#", "#1A")));
+    if (this.articleElement != null
+        && this.articleElement.getRender() != null
+        && this.articleElement.getRender().getBgColor() != null) {
+      articleTextButton.setBackgroundColor(
+          Color.parseColor(this.articleElement.getRender().getBgColor().replace("#", "#1A")));
+    }
     progress.setVisibility(View.VISIBLE);
     articleTextButton.setText("");
     isLoading = true;
