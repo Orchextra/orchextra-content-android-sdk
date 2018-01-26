@@ -40,6 +40,6 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center"
       >
-    <include layout="@layout/progress_red"/>
+    <include layout="@layout/progress_red_button"/>
   </FrameLayout>
 </FrameLayout>

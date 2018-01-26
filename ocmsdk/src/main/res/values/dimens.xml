@@ -33,6 +33,7 @@
   <dimen name="ocm_margin_article_small_button">40dp</dimen>
   <dimen name="ocm_margin_article_medium_button">20dp</dimen>
   <dimen name="ocm_margin_article_big_button">10dp</dimen>
+  <dimen name="button_spinner_size">20dp</dimen>
 
 
 
