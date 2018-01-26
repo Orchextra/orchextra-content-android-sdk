@@ -50,12 +50,19 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
     if (!isLoading) {
       articleTextButton.setText(articleElement.getRender().getText());
+    } else {
+      if (this.articleElement != null
+          && this.articleElement.getRender() != null
+          && this.articleElement.getRender().getBgColor() != null) {
+        articleTextButton.setBackgroundColor(
+            Color.parseColor(this.articleElement.getRender().getBgColor().replace("#", "#1A")));
+      }
     }
 
     try {
       articleTextButton.setTextColor(Color.parseColor(articleElement.getRender().getTextColor()));
 
-      if (!isDisabled) {
+      if (!isLoading && !isDisabled) {
         articleTextButton.setBackgroundColor(
             Color.parseColor(articleElement.getRender().getBgColor()));
       }
@@ -156,12 +163,6 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   }
 
   private void showLoading() {
-    if (this.articleElement != null
-        && this.articleElement.getRender() != null
-        && this.articleElement.getRender().getBgColor() != null) {
-      articleTextButton.setBackgroundColor(
-          Color.parseColor(this.articleElement.getRender().getBgColor().replace("#", "#1A")));
-    }
     progress.setVisibility(View.VISIBLE);
     articleTextButton.setText("");
     isLoading = true;
