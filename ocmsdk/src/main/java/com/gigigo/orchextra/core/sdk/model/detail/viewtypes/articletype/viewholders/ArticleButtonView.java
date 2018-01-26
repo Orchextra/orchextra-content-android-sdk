@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -140,7 +139,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
   private void setButtonDisable() {
     articleTextButton.setBackgroundColor(
-        ContextCompat.getColor(context, R.color.oc_background_detail_view_color));
+        Color.parseColor(articleElement.getRender().getBgColor().replace("#", "#4D")));
     isDisabled = true;
   }
 
@@ -156,6 +155,8 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   }
 
   private void showLoading() {
+    articleTextButton.setBackgroundColor(
+        Color.parseColor(articleElement.getRender().getBgColor().replace("#", "#1A")));
     progress.setVisibility(View.VISIBLE);
     articleTextButton.setText("");
     isLoading = true;
