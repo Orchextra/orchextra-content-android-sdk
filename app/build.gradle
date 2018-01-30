@@ -69,8 +69,8 @@ android {
       setVariantApplicationId(variant, appId)
       setVariantResValue(variant, appName, "app_name", STRING)
 
-      setVariantBuildConfigField(variant, project.ext.orchextraApiKey, API_KEY, STRING)
-      setVariantBuildConfigField(variant, project.ext.orchextraApiSecret, API_SECRET, STRING)
+      setVariantBuildConfigField(variant, flavorData.orchextraApiKey, API_KEY, STRING)
+      setVariantBuildConfigField(variant, flavorData.orchextraApiSecret, API_SECRET, STRING)
       setVariantBuildConfigField(variant, flavorData.orchextraBussinesUnit, BUSSINES_UNIT, STRING)
 
       println("--**********************************************************--")
@@ -80,11 +80,16 @@ android {
   flavorDimensions "sample"
 
   productFlavors {
+    woah_DEMO {
+      dimension "sample"
+    }
+
+
     woah_IT {
       dimension "sample"
     }
 
-    woah_SR {
+    woah_RS {
       dimension "sample"
     }
   }

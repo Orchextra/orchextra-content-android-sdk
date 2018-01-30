@@ -4,19 +4,29 @@ ext {
 
   version = [major: 1, minor: 0, patch: '0-beta']
 
-  orchextraApiKey = [debug  : '8286702045adf5a3ad816f70ecb80e4c91fbb8de',
-                     staging: 'adfc8ba4340828a054bf061f692707a197af96cb',
-                     release: 'ef08c4dccb7649b9956296a863db002a68240be2']
+  woah_DEMO = [orchextraBussinesUnit: "demo",
+               applicationId        : "${baseApplicationId}.demo",
+               appName              : "${basePackageName} DEMO",
 
-  orchextraApiSecret = [debug  : 'eab37080130215ced60eb9d5ff729049749ec205',
-                        staging: '677cf75a17aeec144ee402c281ad3a732d736a8a',
-                        release: '6bc18c500546f253699f61c11a62827679178400']
+               orchextraApiKey      : "ad46332237cbb9fd38ad38470a9bee6d4892d770",
+               orchextraApiSecret   : "f5e2dd3ba0de46964775fc1b48c4895c73d263c5"]
 
   woah_IT = [orchextraBussinesUnit: "it",
              applicationId        : "${baseApplicationId}.it",
-             appName              : "${basePackageName} IT"]
+             appName              : "${basePackageName} IT",
 
-  woah_SR = [orchextraBussinesUnit: "sr",
-             applicationId        : "${baseApplicationId}.sr",
-             appName              : "${basePackageName} SR"]
+             orchextraApiKey      : [debug  : '8286702045adf5a3ad816f70ecb80e4c91fbb8de',
+                                     staging: 'adfc8ba4340828a054bf061f692707a197af96cb',
+                                     release: 'ef08c4dccb7649b9956296a863db002a68240be2'],
+
+             orchextraApiSecret   : [debug  : 'eab37080130215ced60eb9d5ff729049749ec205',
+                                     staging: '677cf75a17aeec144ee402c281ad3a732d736a8a',
+                                     release: '6bc18c500546f253699f61c11a62827679178400']]
+
+  woah_RS = [orchextraBussinesUnit: "rs",
+             applicationId        : "${baseApplicationId}.rs",
+             appName              : "${basePackageName} RS",
+
+             orchextraApiKey      : "ad46332237cbb9fd38ad38470a9bee6d4892d770",
+             orchextraApiSecret   : "f5e2dd3ba0de46964775fc1b48c4895c73d263c5"]
 }

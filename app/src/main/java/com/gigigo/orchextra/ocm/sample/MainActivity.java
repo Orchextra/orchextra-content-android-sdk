@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         List<ViewCustomizationType> viewCustomizationType = new ArrayList<>();
         viewCustomizationType.add(new Disabled());
 
-        if (customProperties.containsKey("lock")) {
+        if (customProperties.containsKey("requiredAuth") && customProperties.containsValue("logged")) {
           View view = getLayoutInflater().inflate(R.layout.padlock_view, null);
           viewCustomizationType.add(new ViewLayer(view));
         }
@@ -100,26 +100,27 @@ public class MainActivity extends AppCompatActivity {
         String property = next.getKey();
         Object value = next.getValue();
 
-        //TODO: check custom properties
+        Handler handler = new Handler();
         switch (property) {
-          case "requireAuth":
+          case "requiredAuth":
+            completion.invoke(true);
+            handler.postDelayed(() -> {
 
-            break;
-          case "loyalty":
-
+              /*
+              if(value.equals("logged")) {
+                completion.invoke(false);
+                Toast.makeText(MainActivity.this, "can't continue, requires authorization", Toast.LENGTH_SHORT).show();
+              }
+              else {
+                completion.invoke(true);
+              }
+              */
+            }, 3000);
             break;
         }
       }
-
-      completion.invoke(true);
     }
 
-    public ViewCustomizationType[] customizationForContent(@NotNull Map<String, ?> customProperties,
-        @NotNull ViewType viewType) {
-
-      //TODO: check properties to apply customization
-      return new ViewCustomizationType[0];
-    }
   };
 
   private List<UiMenu> oldUiMenuList;
