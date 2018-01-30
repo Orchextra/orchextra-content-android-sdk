@@ -4,7 +4,7 @@ project.ext {
   androidMinSdkVersion = 18
   androidBuildToolsVersion = '26.0.2'
   androidTargetSdkVersion = 26
-  supportVersion = '26.0.2' //asv dont touch the box(dontcallmewhite)
+  supportVersion = '26.0.2'
 
   libraries = [androidSupportDesign    : "com.android.support:design:${supportVersion}",
                androidCustomtabs       : "com.android.support:customtabs:${supportVersion}",
@@ -32,7 +32,7 @@ project.ext {
                //               oxvuforiaimplementation    : 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6',
 
                doubleViewPager         : 'com.github.nuborisar:customViewPager:0.8RC',
-               autofitTextView         : 'com.github.GigigoGreenLabs:AutoFitTextView:0.7RC',
+               autofitTextView         : 'com.github.GigigoGreenLabs:AutoFitTextView:0.11RC',
 
                rxAndroid               : 'io.reactivex.rxjava2:rxandroid:2.0.1',
                rxJava                  : 'io.reactivex.rxjava2:rxjava:2.1.0',
