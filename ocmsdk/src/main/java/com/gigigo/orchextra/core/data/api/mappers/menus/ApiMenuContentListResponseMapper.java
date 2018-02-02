@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.data.api.mappers.menus;
 
+import android.util.Log;
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
@@ -30,6 +31,8 @@ public class ApiMenuContentListResponseMapper
   }
 
   @Override public MenuContentData externalClassToModel(ApiMenuContentData data) {
+    final long time = System.currentTimeMillis();
+
     MenuContentData model = new MenuContentData();
 
     List<MenuContent> menuContentList = new ArrayList<>();
@@ -54,6 +57,8 @@ public class ApiMenuContentListResponseMapper
     model.setElementsCache(elementCacheItemMap);
     model.setFromCloud(data.isFromCloud());
 
+
+    Log.v("TT - ApiMenuContentData", (System.currentTimeMillis() - time) / 1000 + "");
     return model;
   }
 }

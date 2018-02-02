@@ -1,16 +1,38 @@
 package com.gigigo.orchextra.core.data.api.mappers.article
 
+import android.util.Log
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElementRender
-import com.gigigo.orchextra.core.domain.entities.article.*
-import com.gigigo.orchextra.core.domain.entities.article.base.*
+import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement
+import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElementRender
+import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement
+import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElementRender
+import com.gigigo.orchextra.core.domain.entities.article.ArticleImageAndTextElement
+import com.gigigo.orchextra.core.domain.entities.article.ArticleImageAndTextElementRender
+import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement
+import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElementRender
+import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement
+import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElementRender
+import com.gigigo.orchextra.core.domain.entities.article.ArticleTextAndImageElement
+import com.gigigo.orchextra.core.domain.entities.article.ArticleTextAndImageElementRender
+import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElement
+import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElementRender
+import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElement
+import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElementRender
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonSize
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonType
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElementRender
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleTypeSection
 import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat
 
 class ApiArticleElementMapper : ExternalClassToModelMapper<ApiArticleElement, ArticleElement<ArticleElementRender>> {
 
   override fun externalClassToModel(
       data: ApiArticleElement): ArticleElement<ArticleElementRender>? {
+    val time = System.currentTimeMillis()
+
     val articleTypeSection = ArticleTypeSection.convertStringToEnum(data.type)
 
     val model = createArticleElementByType(articleTypeSection, data.render)
@@ -21,6 +43,9 @@ class ApiArticleElementMapper : ExternalClassToModelMapper<ApiArticleElement, Ar
     data.customProperties?.let {
       model.customProperties = data.customProperties
     }
+
+    val currentTime = System.currentTimeMillis() - time
+    Log.v("TT - ApiArticleElement", ("" + currentTime/1000))
 
     return model
   }

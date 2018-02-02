@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.data.api.mappers.contentdata;
 
+import android.util.Log;
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
@@ -23,6 +24,8 @@ public class ApiContentDataResponseMapper
   }
 
   @Override public ContentData externalClassToModel(ApiSectionContentData data) {
+    final long time = System.currentTimeMillis();
+
     ContentData model = new ContentData();
 
     model.setContent(apiContentItemMapper.externalClassToModel(data.getContent()));
@@ -44,6 +47,8 @@ public class ApiContentDataResponseMapper
     model.setVersion(data.getVersion());
     model.setExpiredAt(data.getExpireAt());
     model.setFromCloud(data.isFromCloud());
+
+    Log.v("TT - ApiContentData", (System.currentTimeMillis() - time) / 1000 + "");
 
     return model;
   }

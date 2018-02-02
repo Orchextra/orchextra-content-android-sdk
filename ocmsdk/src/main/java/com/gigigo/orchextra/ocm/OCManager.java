@@ -182,10 +182,12 @@ Add Comment C
   }
 
   static void getMenus(DataRequest menuRequest, final OCManagerCallbacks.Menus menusCallback) {
+    final long time = System.currentTimeMillis();
     if (instance != null) {
       instance.ocmViewGenerator.getMenu(menuRequest,
           new OcmViewGenerator.GetMenusViewGeneratorCallback() {
             @Override public void onGetMenusLoaded(UiMenuData menus) {
+              Log.v("TT - LOADED menus", (System.currentTimeMillis() - time) / 1000 + "");
               if (menus != null
                   && menus.getUiMenuList() != null
                   && menus.getUiMenuList().size() > 0) {
@@ -204,9 +206,12 @@ Add Comment C
 
   static void generateSectionView(UiMenu uiMenu, String filter, int imagesToDownload,
       final OCManagerCallbacks.Section sectionCallback) {
+    final long time = System.currentTimeMillis();
+
     instance.ocmViewGenerator.generateSectionView(uiMenu, filter, imagesToDownload,
         new OcmViewGenerator.GetSectionViewGeneratorCallback() {
           @Override public void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData) {
+            Log.v("TT - LOADED sections", (System.currentTimeMillis() - time) / 1000 + "");
             sectionCallback.onSectionLoaded(uiGridBaseContentData);
           }
 

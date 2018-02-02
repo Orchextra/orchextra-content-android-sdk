@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.controller;
 
+import android.util.Log;
 import com.gigigo.orchextra.core.data.rxException.ApiDetailNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSearchNotFoundException;
@@ -13,8 +14,8 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
-import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
@@ -371,6 +372,8 @@ public class OcmControllerImp implements OcmController {
 
   private UiMenuData transformMenu(MenuContentData menuContentData) {
 
+    final long time = System.currentTimeMillis();
+
     UiMenuData uiMenuData = new UiMenuData();
 
     List<UiMenu> menuList = new  ArrayList<>();
@@ -405,6 +408,8 @@ public class OcmControllerImp implements OcmController {
     }
 
     uiMenuData.setUiMenuList(menuList);
+
+    Log.v("TT - UiMenuData", (System.currentTimeMillis() - time) / 1000 + "");
 
     return uiMenuData;
   }

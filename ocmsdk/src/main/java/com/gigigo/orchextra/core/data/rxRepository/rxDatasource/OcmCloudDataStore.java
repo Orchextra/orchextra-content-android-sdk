@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
@@ -49,23 +50,33 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<ApiMenuContentData> getMenuEntity() {
+
+    final long time = System.currentTimeMillis();
+
     return ocmApiService.getMenuDataRx()
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putMenus)
         .doOnNext(apiMenuContentData -> addSectionsToCache(apiMenuContentData))
-        .doOnNext(apiMenuContentData -> apiMenuContentData.setFromCloud(true));
+        .doOnNext(apiMenuContentData -> {
+          apiMenuContentData.setFromCloud(true);
+          Log.v("TT - MenuEntity", (System.currentTimeMillis() - time) / 1000 + "");
+        });
   }
 
   @Override public Observable<ApiSectionContentData> getSectionEntity(String contentUrl,
       final int numberOfElementsToDownload) {
+
+    final long time = System.currentTimeMillis();
+
     return ocmApiService.getSectionDataRx(contentUrl, withThumbnails)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(contentUrl))
         .doOnNext(ocmCache::putSection)
+        .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload))
         .doOnNext(apiSectionContentData -> {
-          addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload);
-        })
-        .doOnNext(apiSectionContentData -> apiSectionContentData.setFromCloud(true));
+          apiSectionContentData.setFromCloud(true);
+          Log.v("TT - SectionEntity", (System.currentTimeMillis() - time) / 1000 + "");
+        });
   }
 
   private void addSectionsToCache(ApiMenuContentData apiMenuContentData) {
