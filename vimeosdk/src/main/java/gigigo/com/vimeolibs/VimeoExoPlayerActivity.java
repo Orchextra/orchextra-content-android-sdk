@@ -134,12 +134,14 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
   }
 
   public static void open(Context mContext, VimeoInfo info) {
-    Intent i = new Intent(mContext, VimeoExoPlayerActivity.class);
-    if (info != null) {
-      i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    if (mContext != null) {
+      Intent i = new Intent(mContext, VimeoExoPlayerActivity.class);
+      if (info != null) {
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      }
+      i.putExtra(VIMEO_INFO_DATA, info);
+      mContext.startActivity(i);
     }
-    i.putExtra(VIMEO_INFO_DATA, info);
-    mContext.startActivity(i);
   }
 
   private void setBlurBackGround() {
