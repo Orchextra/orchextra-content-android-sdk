@@ -269,14 +269,16 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
   }
 
   private void openFullscreenDialog() {
-    ((ViewGroup) simpleExoPlayerView.getParent()).removeView(simpleExoPlayerView);
-    mFullScreenDialog.addContentView(simpleExoPlayerView,
-        new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT));
-    mFullScreenIcon.setImageDrawable(
-        ContextCompat.getDrawable(VimeoExoPlayerActivity.this, R.drawable.ic_fullscreen_skrink));
-    mExoPlayerFullscreen = true;
-    mFullScreenDialog.show();
+    if (simpleExoPlayerView != null
+        && simpleExoPlayerView.getParent() != null
+        && mFullScreenDialog != null) {
+      ((ViewGroup) simpleExoPlayerView.getParent()).removeView(simpleExoPlayerView);
+      mFullScreenDialog.addContentView(simpleExoPlayerView,
+          new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+      mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(VimeoExoPlayerActivity.this, R.drawable.ic_fullscreen_skrink));
+      mExoPlayerFullscreen = true;
+      mFullScreenDialog.show();
+    }
   }
 
   private void closeFullscreenDialog() {
