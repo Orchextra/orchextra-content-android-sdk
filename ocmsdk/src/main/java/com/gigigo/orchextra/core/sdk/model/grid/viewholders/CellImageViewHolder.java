@@ -116,6 +116,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
           });
     }
 
+    hideLoading();
     ViewGroup layerView = (ViewGroup) layerViewWR.get();
 
     if (layerView != null) {
