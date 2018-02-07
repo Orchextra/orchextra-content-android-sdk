@@ -148,7 +148,7 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
                     element.getSegmentation() != null ? element.getSegmentation().getRequiredAuth()
                         : null;
 
-                if (requiredAuth != null && checkLoginAuth(requiredAuth)) {
+                if (requiredAuth == null || checkLoginAuth(requiredAuth)) {
 
                   getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
                       activity, view);
