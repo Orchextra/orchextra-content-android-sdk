@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.controller.model.searcher;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -143,7 +144,11 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
                   imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
                 }
 
-                if (checkLoginAuth(element.getSegmentation().getRequiredAuth())) {
+                RequiredAuthoritation requiredAuth =
+                    element.getSegmentation() != null ? element.getSegmentation().getRequiredAuth()
+                        : null;
+
+                if (requiredAuth != null && checkLoginAuth(requiredAuth)) {
 
                   getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
                       activity, view);
@@ -164,9 +169,8 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
     }
   }
 
-  private boolean checkLoginAuth(RequiredAuthoritation requiredAuthoritation) {
-    return authoritation.isAuthorizatedUser() || !requiredAuthoritation.equals(
-        RequiredAuthoritation.LOGGED);
+  private boolean checkLoginAuth(@NonNull RequiredAuthoritation requiredAuth) {
+    return authoritation.isAuthorizatedUser() || !requiredAuth.equals(RequiredAuthoritation.LOGGED);
   }
 
   public void updateUi() {
