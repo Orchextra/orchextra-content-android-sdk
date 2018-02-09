@@ -64,7 +64,7 @@ public class VimeoManager {
     new Thread(new Runnable() {
       @Override public void run() {
         final Response<Video> videoResponse =
-            mApiClient.fetchVideoSync("/videos/" + videoId, CacheControl.FORCE_NETWORK, null);
+            mApiClient.fetchVideoSync("/videos/" + videoId, CacheControl.FORCE_NETWORK, "pictures.uri,files");
         //todo ejecutar en otro hilo
         new Handler(Looper.getMainLooper()).post(new Runnable() {
           @Override public void run() {
