@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.sdk;
 
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
@@ -86,11 +87,11 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
       if (elementCache.getRender().getFormat() == VideoFormat.YOUTUBE) {
         getSectionViewGeneratorCallback.onSectionViewLoaded(
-            YoutubeFragment.newInstance(elementCache.getRender().getSource()));
+            YoutubeFragment.newInstance(elementCache.getRender().getSource(), Configuration.ORIENTATION_PORTRAIT));
       } else if (elementCache.getRender().getFormat() == VideoFormat.VIMEO) {
         //TODO Return vimeo fragment
         getSectionViewGeneratorCallback.onSectionViewLoaded(
-            YoutubeFragment.newInstance(elementCache.getRender().getSource()));
+            YoutubeFragment.newInstance(elementCache.getRender().getSource(), Configuration.ORIENTATION_PORTRAIT));
       }
 
       OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);

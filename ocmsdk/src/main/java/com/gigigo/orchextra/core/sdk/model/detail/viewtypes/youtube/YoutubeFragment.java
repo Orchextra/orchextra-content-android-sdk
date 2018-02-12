@@ -1,16 +1,23 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube;
 
 import android.annotation.TargetApi;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -31,11 +38,15 @@ public class YoutubeFragment extends UiGridBaseContentData {
   private static final String EXTRA_IS_PLAYING = "EXTRA_IS_PLAYING";
   private static final String YOUTUBE_FRAGMENT = "YOUTUBE_FRAGMENT";
   private static final String EXTRA_YOUTUBE_ID = "EXTRA_YOUTUBE_ID";
+  private static final String EXTRA_YOUTUBE_ORIENTATION = "EXTRA_YOUTUBE_ORIENTATION";
+
+  private static final String TAG = YoutubeFragment.class.getSimpleName();
 
   private RelativeLayout youtubeLayoutContainer;
   private ImageView imgBlurBackground;
 
   private String youtubeId;
+  private int orientation;
   private BitmapImageViewTarget mImageCallback;
   private int playedVideo;
   private boolean isPlaying;
@@ -56,12 +67,29 @@ public class YoutubeFragment extends UiGridBaseContentData {
             YouTubeInitializationResult error) {
         }
       };
+  private Boolean isVertical;
 
-  public static YoutubeFragment newInstance(String youtubeId) {
+  public int getScreenOrientation() {
+    Display getOrient = getActivity().getWindowManager().getDefaultDisplay();
+    int orientation;
+    if (getOrient.getWidth() == getOrient.getHeight()) {
+      orientation = Configuration.ORIENTATION_SQUARE;
+    } else {
+      if (getOrient.getWidth() < getOrient.getHeight()) {
+        orientation = Configuration.ORIENTATION_PORTRAIT;
+      } else {
+        orientation = Configuration.ORIENTATION_LANDSCAPE;
+      }
+    }
+    return orientation;
+  }
+
+  public static YoutubeFragment newInstance(String youtubeId, int orientation) {
     YoutubeFragment youtubeElements = new YoutubeFragment();
 
     Bundle bundle = new Bundle();
     bundle.putString(EXTRA_YOUTUBE_ID, youtubeId);
+    bundle.putInt(EXTRA_YOUTUBE_ORIENTATION, orientation);
     youtubeElements.setArguments(bundle);
 
     return youtubeElements;
@@ -88,11 +116,27 @@ public class YoutubeFragment extends UiGridBaseContentData {
         WeakReference<Bitmap> resizedbitmap =
             new WeakReference<>(Bitmap.createBitmap(bitmap, 0, 45, 480, 270));
         imgBlurBackground.setImageBitmap(resizedbitmap.get());
+
+        boolean isVertical = false;
+        int midleImage = bitmap.getHeight() / 2;
+        for (int i = 0; i < 20; i++) {
+          int pixel = bitmap.getPixel(i, midleImage);
+          int r = Color.red(pixel);
+          int g = Color.green(pixel);
+          int b = Color.blue(pixel);
+          if (r == 0 && g == 0 && b == 0) {
+            isVertical = true;
+          } else {
+            isVertical = false;
+            break;
+          }
+        }
+
+        initYoutubeFragment(isVertical, mView);
       }
     };
 
     initThumbnail();
-    initYoutubeFragment();
 
     return mView;
   }
@@ -128,8 +172,29 @@ public class YoutubeFragment extends UiGridBaseContentData {
         .into(mImageCallback);
   }
 
-  private void initYoutubeFragment() {
+  private void initYoutubeFragment(Boolean isVertical, View mView) {
+    this.isVertical = isVertical;
     try {
+      orientation = getArguments().getInt(EXTRA_YOUTUBE_ORIENTATION);
+
+      if (!TextUtils.isEmpty(youtubeId)) {
+        Log.e("+++", "TextUtils.isEmpty(youtubeId) " + youtubeId + "orientation" + orientation);
+        if (isVertical || orientation == Configuration.ORIENTATION_LANDSCAPE) {
+          //Toast.makeText(YoutubeFragment.this.getActivity(), "ES VERTICAL", Toast.LENGTH_LONG).show();
+          setYoutubeFragmentToView(mView, LinearLayout.LayoutParams.MATCH_PARENT);
+          if (isVertical) {
+            Log.d(TAG, "video is PORTRAIT");
+            YoutubeFragment.this.getActivity()
+                .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+          }
+        } else {
+          //Toast.makeText(YoutubeFragment.this.getActivity(), "ES HORIZONTAL", Toast.LENGTH_LONG).show();
+          Log.d(TAG, "video is LANDSCAPE");
+          setYoutubeFragmentToView(mView, LinearLayout.LayoutParams.WRAP_CONTENT);
+        }
+      }
+
+
       YouTubePlayerFragment youTubePlayerFragment2 = YouTubePlayerFragment.newInstance();
       youTubePlayerFragment2.initialize(BuildConfig.YOUTUBE_DEVELOPER_KEY, onInitializedListener);
 
@@ -142,13 +207,30 @@ public class YoutubeFragment extends UiGridBaseContentData {
     }
   }
 
+  private void setYoutubeFragmentToView(View mView, int h) {
+
+    // Gets linearlayout
+    FrameLayout layout = mView.findViewById(R.id.youtubePlayerFragmentContent);
+    // Gets the layout params that will allow you to resize the layout
+    ViewGroup.LayoutParams params = layout.getLayoutParams();
+    Log.e("***", "************************\n\n\n\n\n\n\n PASO************************");
+
+    params.height = h; //LinearLayout.LayoutParams.WRAP_CONTENT.;
+    params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+    layout.setLayoutParams(params);
+  }
+
   public void setYouTubePlayer(final YouTubePlayer player) {
     try {
       if (player == null) {
         return;
       }
 
-      player.setShowFullscreenButton(true);
+      if (this.isVertical) {
+        player.setShowFullscreenButton(false);
+      } else {
+        player.setShowFullscreenButton(true);
+      }
       player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
 
       if (playedVideo >= 0) {
