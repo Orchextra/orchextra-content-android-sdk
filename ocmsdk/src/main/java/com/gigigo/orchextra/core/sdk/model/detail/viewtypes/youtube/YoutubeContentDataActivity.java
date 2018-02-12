@@ -2,8 +2,10 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.view.Display;
 import com.gigigo.orchextra.core.sdk.di.base.BaseActivity;
 import com.gigigo.orchextra.ocmsdk.R;
 
@@ -34,7 +36,7 @@ public class YoutubeContentDataActivity extends BaseActivity {
 
       String videoId = getIntent().getStringExtra(EXTRA_YOUTUBE_VIDEO_ID);
       // videoId = "17uHCHfgs60";//"ikO91fQBsTQ";
-      youtubeElementsFragment = YoutubeFragment.newInstance(videoId);
+      youtubeElementsFragment = YoutubeFragment.newInstance(videoId, getScreenOrientation());
       FragmentManager fragmentManager = getSupportFragmentManager();
       fragmentManager.beginTransaction()
           .replace(R.id.youtube_main_container, youtubeElementsFragment, TAG_RETAINED_FRAGMENT)
@@ -53,5 +55,20 @@ public class YoutubeContentDataActivity extends BaseActivity {
 
       fm.beginTransaction().remove(youtubeElementsFragment).commit();
     }
+  }
+
+  public int getScreenOrientation() {
+    Display getOrient = getWindowManager().getDefaultDisplay();
+    int orientation;
+    if (getOrient.getWidth() == getOrient.getHeight()) {
+      orientation = Configuration.ORIENTATION_SQUARE;
+    } else {
+      if (getOrient.getWidth() < getOrient.getHeight()) {
+        orientation = Configuration.ORIENTATION_PORTRAIT;
+      } else {
+        orientation = Configuration.ORIENTATION_LANDSCAPE;
+      }
+    }
+    return orientation;
   }
 }
