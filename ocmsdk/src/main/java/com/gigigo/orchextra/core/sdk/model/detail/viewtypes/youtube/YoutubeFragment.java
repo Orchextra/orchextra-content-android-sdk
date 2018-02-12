@@ -67,6 +67,7 @@ public class YoutubeFragment extends UiGridBaseContentData {
             YouTubeInitializationResult error) {
         }
       };
+  private Boolean isVertical;
 
   public int getScreenOrientation() {
     Display getOrient = getActivity().getWindowManager().getDefaultDisplay();
@@ -172,6 +173,7 @@ public class YoutubeFragment extends UiGridBaseContentData {
   }
 
   private void initYoutubeFragment(Boolean isVertical, View mView) {
+    this.isVertical = isVertical;
     try {
       orientation = getArguments().getInt(EXTRA_YOUTUBE_ORIENTATION);
 
@@ -224,7 +226,11 @@ public class YoutubeFragment extends UiGridBaseContentData {
         return;
       }
 
-      player.setShowFullscreenButton(true);
+      if (this.isVertical) {
+        player.setShowFullscreenButton(false);
+      } else {
+        player.setShowFullscreenButton(true);
+      }
       player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
 
       if (playedVideo >= 0) {
