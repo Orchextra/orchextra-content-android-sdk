@@ -1,8 +1,13 @@
 package gigigo.com.vimeolibs;
 
+import android.content.Context;
+import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import com.vimeo.networking.Configuration;
 import com.vimeo.networking.VimeoClient;
 import com.vimeo.networking.model.Video;
@@ -58,35 +63,30 @@ public class VimeoManager {
     }
   }
 
-  public void getVideoVimeoInfo(final String videoId, final boolean isMobileConection,
+  public void getVideoVimeoInfo(final Context context, final String videoId, final boolean isMobileConection,
       final boolean isWifiConnection, final boolean isFastConnection,
       final VimeoCallback callback) {
     new Thread(new Runnable() {
       @Override public void run() {
         final Response<Video> videoResponse =
-            mApiClient.fetchVideoSync("/videos/" + videoId, CacheControl.FORCE_NETWORK, "pictures.uri,files");
+            mApiClient.fetchVideoSync("/videos/" + videoId, CacheControl.FORCE_NETWORK, null);
         //todo ejecutar en otro hilo
         new Handler(Looper.getMainLooper()).post(new Runnable() {
           @Override public void run() {
             if (videoResponse != null && videoResponse.body() != null) {
               VimeoInfo info = new VimeoInfo();
               //region  determine quality from connection
-              int thumbIdx = 0;
-              int videoIdx = 0;
+              int videoIdx;
               if (isFastConnection) {
                 if (isWifiConnection) {
-                  thumbIdx = VimeoQuality.THUMB_HD.ordinal();
                   videoIdx = VimeoQuality.HDFULL.ordinal();
                 } else {
-                  thumbIdx = VimeoQuality.THUMB_SD.ordinal();
                   videoIdx = VimeoQuality.HDREADY.ordinal();
                 }
               } else {
                 if (isWifiConnection) {
-                  thumbIdx = VimeoQuality.THUMB_SD.ordinal();
                   videoIdx = VimeoQuality.SD.ordinal();
                 } else {
-                  thumbIdx = VimeoQuality.THUMB_SD.ordinal();
                   videoIdx = VimeoQuality.SDLOW.ordinal();
                 }
               }
@@ -97,20 +97,29 @@ public class VimeoManager {
                   && videoResponse.body().files.size() < videoIdx + 1) {
                 videoIdx = 0;
               }
-              if (videoResponse.body().pictures != null
-                  && videoResponse.body().pictures.sizes.size() < thumbIdx + 1) {
-                thumbIdx = 0;
-              }
 
-              if (videoResponse.body().getDownload() != null
-                  && videoResponse.body().getDownload().size() >= videoIdx + 1
+              if (videoResponse.body().files != null
+                  && videoResponse.body().files.size() >= videoIdx + 1
                   && videoResponse.body().pictures != null
-                  && videoResponse.body().pictures.sizes.size() >= thumbIdx + 1) {
+                  && videoResponse.body().pictures.uri != null) {
                 info.setVideoPath(videoResponse.body().files.get(videoIdx).getLink());
                 Log.e("", info.getVideoPath());
-                info.setThumbPath(videoResponse.body().pictures.sizes.get(
-                    thumbIdx).link); //todo put the best qualty THUMB_HD, check if always have this quality
-                Log.e("", info.getThumbPath());
+
+                String[] split = videoResponse.body().pictures.uri.split("/");
+                if(split.length >=4 ) {
+                  String previewId = split[4];
+                  WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                  Display display = wm.getDefaultDisplay();
+                  Point size = new Point();
+                  display.getSize(size);
+                  int width = size.x;
+                  int height = width * 9 / 16;
+                  String thumbnail =
+                      String.format("https://i.vimeocdn.com/video/%s_%sx%s.jpg?r=pad", previewId,
+                          width, height);
+                  info.setThumbPath(thumbnail);
+                  Log.e("", info.getThumbPath());
+                }
                 if (videoResponse.body().width > videoResponse.body().height) {
                   info.setVertical(false);
                 } else {

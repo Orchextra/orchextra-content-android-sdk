@@ -65,7 +65,7 @@ public class ActionHandler {
       //more 4 dagger
       ConnectionUtilsImp conn = new ConnectionUtilsImp(ocmContextProvider.getCurrentActivity());
       //get vimeo data from sdk vimeo
-      vmManager.getVideoVimeoInfo(videoId, conn.isConnectedMobile(), conn.isConnectedWifi(),
+      vmManager.getVideoVimeoInfo(ocmContextProvider.getCurrentActivity(), videoId, conn.isConnectedMobile(), conn.isConnectedWifi(),
           conn.isConnectedMobile(), new VimeoCallback() {
             @Override public void onSuccess(VimeoInfo vimeoInfo) {
               VimeoExoPlayerActivity.open(ocmContextProvider.getCurrentActivity(), vimeoInfo);

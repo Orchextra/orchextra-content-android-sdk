@@ -35,7 +35,7 @@ public final class Ocm {
     VimeoManager vmManager = new VimeoManager(builder);
     ConnectionUtilsImp conn = new ConnectionUtilsImp(context);
 
-    vmManager.getVideoVimeoInfo(VideoId, conn.isConnectedMobile(), conn.isConnectedWifi(),
+    vmManager.getVideoVimeoInfo(context, VideoId, conn.isConnectedMobile(), conn.isConnectedWifi(),
         conn.isConnectedMobile(), new VimeoCallback() {
           @Override public void onSuccess(VimeoInfo vimeoInfo) {
             VimeoExoPlayerActivity.open(context, vimeoInfo);
