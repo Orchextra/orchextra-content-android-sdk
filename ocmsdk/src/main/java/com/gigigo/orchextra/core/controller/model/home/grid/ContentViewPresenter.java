@@ -16,7 +16,6 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
-import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -58,14 +57,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     getView().showProgressView(true);
 
     loadSection(false, uiMenu, filter, false);
-  }
-
-  public void loadSection(UiMenu uiMenu) {
-    loadSection(false, uiMenu, filter, false);
-  }
-
-  public void loadSection(boolean forceReload) {
-    loadSection(forceReload, uiMenu, filter, false);
   }
 
   public void loadSection(UiMenu uiMenu, String filter) {
@@ -190,7 +181,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         hasToCheckNewContent = false;
         break;
       case REFRESH:
-        //loadSection();
         getView().showNewExistingContent();
         hasToCheckNewContent = false;
         break;
@@ -234,7 +224,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       if (contentItem != null
           && contentItem.getLayout() != null
           && contentItem.getElements() != null) {
-        //&& hasFilter(contentItem)) {
 
         listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
 
@@ -252,16 +241,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       getView().showProgressView(false);
     }
   }
-
-  //private boolean hasFilter(ContentItem contentItem){
-  //  if(filter!=null && !filter.isEmpty()){
-  //    if(contentItem.getTags()!=null){
-  //      return contentItem.getTags().contains(filter);
-  //    }
-  //    return false;
-  //  }
-  //  return true;
-  //}
 
   private void renderError() {
     if (getView() != null) {
@@ -339,7 +318,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       indexPattern = ++indexPattern % pattern.size();
     }
 
-    //TODO Resolve clip to padding flashing when last row is 3 items 1x1. Remove * 2 multiplier above
     if (cellGridContentDataList.size() > 0) {
       for (int i = 0; i < 3 * 2 * padding; i++) {
         CellBlankElement cellElement = new CellBlankElement();
@@ -376,8 +354,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   }
 
   private void itemClickedContinue(Element element, View view) {
-    //TODO: why not use Ocm.processDeepLinks(elementUrl) instead??
-
     WeakReference<View> viewWeakReference = new WeakReference<>(view);
 
     ocmController.getDetails(element.getElementUrl(),
@@ -388,28 +364,18 @@ public class ContentViewPresenter extends Presenter<ContentView> {
               imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
             }
 
-            if (getView() != null) {
-              OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
-              OCManager.addArticleToReadedArticles(element.getSlug());
-              System.out.println("CELL_CLICKED: " + element.getSlug());
+            OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
+            OCManager.addArticleToReadedArticles(element.getSlug());
+            System.out.println("CELL_CLICKED: " + element.getSlug());
 
-              if (elementCache.getType()
-                  != ElementCacheType.WEBVIEW)//|| imageUrlToExpandInPreview!="" )
-              {
+            if (elementCache.getType() != ElementCacheType.WEBVIEW) {
+              if (getView() != null) {
                 getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
                     viewWeakReference.get());
-                //getView().navigateToDetailView(elementCache, viewWeakReference.get());
-              } else {
-                OcmWebViewActivity.open(viewWeakReference.get().getContext(),
-                    elementCache.getRender(), elementCache.getName());
-                //  if (imageUrlToExpandInPreview != "") {
-                //    OcmWebViewActivity.open(viewWeakReference.get().getContext(),
-                //        elementCache.getRender().getUrl(),elementCache.getName());
-                //  } else {
-                //    OcmWebViewActivity.open(viewWeakReference.get().getContext(),
-                //        elementCache.getRender().getUrl(),elementCache.getName(),imageUrlToExpandInPreview);
-                //  }
               }
+            } else {
+              OcmWebViewActivity.open(viewWeakReference.get().getContext(),
+                  elementCache.getRender(), elementCache.getName());
             }
           }
 
@@ -422,16 +388,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
             getView().contentNotAvailable();
           }
         });
-  }
-
-  private boolean checkElementNeedAuthUser(Element element) {
-    return !checkUserHasPermissionsToShowElement(element.getSegmentation().getRequiredAuth());
-  }
-
-  private boolean checkUserHasPermissionsToShowElement(
-      RequiredAuthoritation requiredAuthoritation) {
-    return authoritation.isAuthorizatedUser() || !requiredAuthoritation.equals(
-        RequiredAuthoritation.LOGGED);
   }
 
   public void setFilter(String filter) {
