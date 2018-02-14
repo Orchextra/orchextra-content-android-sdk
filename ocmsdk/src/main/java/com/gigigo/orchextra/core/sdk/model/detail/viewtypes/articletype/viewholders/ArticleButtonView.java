@@ -112,12 +112,12 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   @Override public void bindTo(ArticleButtonElement articleButtonElement, int i) {
     this.articleElement = articleButtonElement;
 
+    setButtonEnabled();
     if (articleButtonElement.getCustomProperties() != null) {
       showLoading();
 
       OCManager.notifyCustomizationForContent(articleButtonElement.getCustomProperties(),
           ViewType.BUTTON_ELEMENT, customizations -> {
-            setButtonEnabled();
             for (ViewCustomizationType viewCustomizationType : customizations) {
               if (viewCustomizationType instanceof Disabled) {
                 setButtonDisable();
