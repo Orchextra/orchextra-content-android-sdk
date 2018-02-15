@@ -4,7 +4,9 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -25,6 +27,7 @@ import com.gigigo.orchextra.ocmsdk.R;
 
 public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
+  private static final String TAG = "ArticleButtonView";
   private final Context context;
   private TextView articleTextButton;
   private ImageView articleImageButton;
@@ -60,13 +63,19 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     }
 
     try {
-      articleTextButton.setTextColor(Color.parseColor(articleElement.getRender().getTextColor()));
+      Handler handler = new Handler();
+      handler.postDelayed(() -> {
+        articleTextButton.setTextColor(Color.parseColor(articleElement.getRender().getTextColor()));
 
-      if (!isLoading && !isDisabled) {
-        articleTextButton.setBackgroundColor(
-            Color.parseColor(articleElement.getRender().getBgColor()));
-      }
-    } catch (Exception ignored) {
+        if (!isLoading && !isDisabled) {
+          String colorCode = articleElement.getRender().getBgColor();
+
+          Log.d(TAG, "setBackgroundColor: " + colorCode);
+          articleTextButton.setBackgroundColor(Color.parseColor(colorCode));
+        }
+      }, 100);
+    } catch (Exception e) {
+      Log.e(TAG, "setTextColor error", e);
     }
 
     ViewGroup.LayoutParams lp = getLayoutParams(articleElement);
