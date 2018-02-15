@@ -1,12 +1,9 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -32,7 +29,6 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   private TextView articleTextButton;
   private ImageView articleImageButton;
   private ProgressBar progress;
-  private ArticleButtonElement articleElement;
   private boolean isDisabled = false;
   private boolean isLoading = false;
 
@@ -46,36 +42,27 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     progress = itemView.findViewById(R.id.notification_progress);
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  private void bindTextButton(final ArticleButtonElement articleElement) {
-    this.articleElement = articleElement;
+  private void bindTextButton(@NonNull final ArticleButtonElement articleElement) {
     articleTextButton.setVisibility(View.VISIBLE);
+
+    if (articleElement.getRender() == null) {
+      return;
+    }
 
     if (!isLoading) {
       articleTextButton.setText(articleElement.getRender().getText());
     } else {
-      if (this.articleElement != null
-          && this.articleElement.getRender() != null
-          && this.articleElement.getRender().getBgColor() != null) {
+      if (articleElement.getRender() != null && articleElement.getRender().getBgColor() != null) {
         articleTextButton.setBackgroundColor(
-            Color.parseColor(this.articleElement.getRender().getBgColor().replace("#", "#1A")));
+            Color.parseColor(articleElement.getRender().getBgColor().replace("#", "#1A")));
       }
     }
 
-    try {
-      Handler handler = new Handler();
-      handler.postDelayed(() -> {
-        articleTextButton.setTextColor(Color.parseColor(articleElement.getRender().getTextColor()));
+    articleTextButton.setTextColor(Color.parseColor(articleElement.getRender().getTextColor()));
 
-        if (!isLoading && !isDisabled) {
-          String colorCode = articleElement.getRender().getBgColor();
-
-          Log.d(TAG, "setBackgroundColor: " + colorCode);
-          articleTextButton.setBackgroundColor(Color.parseColor(colorCode));
-        }
-      }, 100);
-    } catch (Exception e) {
-      Log.e(TAG, "setTextColor error", e);
+    if (!isLoading && !isDisabled) {
+      articleTextButton.setBackgroundColor(
+          Color.parseColor(articleElement.getRender().getBgColor()));
     }
 
     ViewGroup.LayoutParams lp = getLayoutParams(articleElement);
@@ -119,32 +106,34 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   }
 
   @Override public void bindTo(ArticleButtonElement articleButtonElement, int i) {
-    this.articleElement = articleButtonElement;
 
-    setButtonEnabled();
+    Handler handler = new Handler();
+    handler.postDelayed(() -> {
+      switch (articleButtonElement.getRender().getType()) {
+        case IMAGE:
+          bindImageButton(articleButtonElement);
+          break;
+        case DEFAULT:
+          bindTextButton(articleButtonElement);
+      }
+    }, 100);
+
     if (articleButtonElement.getCustomProperties() != null) {
       showLoading();
 
       OCManager.notifyCustomizationForContent(articleButtonElement.getCustomProperties(),
           ViewType.BUTTON_ELEMENT, customizations -> {
+            setButtonEnabled(articleButtonElement);
             for (ViewCustomizationType viewCustomizationType : customizations) {
               if (viewCustomizationType instanceof Disabled) {
-                setButtonDisable();
+                setButtonDisable(articleButtonElement);
               }
             }
-            hideLoading();
+            hideLoading(articleButtonElement);
             return null;
           });
     } else {
-      hideLoading();
-    }
-
-    switch (articleButtonElement.getRender().getType()) {
-      case IMAGE:
-        bindImageButton(articleButtonElement);
-        break;
-      case DEFAULT:
-        bindTextButton(articleButtonElement);
+      hideLoading(articleButtonElement);
     }
   }
 
@@ -154,16 +143,16 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     }
   }
 
-  private void setButtonDisable() {
-    articleTextButton.setBackgroundColor(
-        Color.parseColor(articleElement.getRender().getBgColor().replace("#", "#4D")));
-    isDisabled = true;
+  private void setButtonDisable(@NonNull ArticleButtonElement articleElement) {
+    if (articleElement.getRender() != null) {
+      articleTextButton.setBackgroundColor(
+          Color.parseColor(articleElement.getRender().getBgColor().replace("#", "#4D")));
+      isDisabled = true;
+    }
   }
 
-  private void setButtonEnabled() {
-    if (articleElement != null
-        && articleElement.getRender() != null
-        && articleElement.getRender().getBgColor() != null) {
+  private void setButtonEnabled(@NonNull ArticleButtonElement articleElement) {
+    if (articleElement.getRender() != null && articleElement.getRender().getBgColor() != null) {
       articleTextButton.setBackgroundColor(
           Color.parseColor(articleElement.getRender().getBgColor()));
     }
@@ -177,9 +166,9 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     isLoading = true;
   }
 
-  private void hideLoading() {
+  private void hideLoading(@NonNull ArticleButtonElement articleElement) {
     progress.setVisibility(View.GONE);
-    if (articleElement != null && articleElement.getRender() != null) {
+    if (articleElement.getRender() != null) {
       articleTextButton.setText(articleElement.getRender().getText());
     }
     isLoading = false;
