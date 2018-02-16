@@ -1,10 +1,11 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders;
 
 import android.content.Context;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
@@ -24,9 +25,7 @@ import com.gigigo.orchextra.ocmsdk.R;
 public class ArticleRichTextView extends BaseViewHolder<ArticleRichTextElement> {
 
   private TextView articleRichText;
-
   private OcmContextProvider ocmContextProvider;
-
   private ConnectionUtils connectionUtils;
 
   public ArticleRichTextView(Context context, ViewGroup parent) {
@@ -34,7 +33,7 @@ public class ArticleRichTextView extends BaseViewHolder<ArticleRichTextElement> 
 
     connectionUtils = new ConnectionUtilsImp(context);
 
-    articleRichText = (TextView) itemView.findViewById(R.id.article_rich_text);
+    articleRichText = itemView.findViewById(R.id.article_rich_text);
     ocmContextProvider = OCManager.getOcmContextProvider();
   }
 
@@ -49,8 +48,8 @@ public class ArticleRichTextView extends BaseViewHolder<ArticleRichTextElement> 
         } else {
           View rootView = ((ViewGroup) ocmContextProvider.getCurrentActivity()
               .findViewById(android.R.id.content)).getChildAt(0);
-          Snackbar.make(rootView, R.string.oc_error_content_not_available_without_internet, Toast.LENGTH_SHORT).show();
-
+          Snackbar.make(rootView, R.string.oc_error_content_not_available_without_internet,
+              Toast.LENGTH_SHORT).show();
         }
       }
     };
@@ -70,9 +69,13 @@ public class ArticleRichTextView extends BaseViewHolder<ArticleRichTextElement> 
     text.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
-  @Override public void bindTo(ArticleRichTextElement richTextElement, int position) {
-    if (!TextUtils.isEmpty(richTextElement.getRender().getHtml())) {
-      setTextViewHTML(articleRichText, richTextElement.getRender().getHtml());
-    }
+  @Override
+  public void bindTo(@NonNull final ArticleRichTextElement richTextElement, int position) {
+
+    final String htmlText =
+        richTextElement.getRender() != null ? richTextElement.getRender().getHtml() : "";
+
+    Handler handler = new Handler();
+    handler.postDelayed(() -> setTextViewHTML(articleRichText, htmlText), 100);
   }
 }
