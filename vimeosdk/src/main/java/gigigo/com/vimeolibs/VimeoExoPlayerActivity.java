@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -202,7 +203,7 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
     } else {
       hideStatusBar();
       newConfig.orientation = android.content.res.Configuration.ORIENTATION_PORTRAIT;
-      super.onConfigurationChanged(null);
+      super.onConfigurationChanged(new Configuration());
     }
     if (newConfig.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
       if (!isVertical) openFullscreenDialog();
