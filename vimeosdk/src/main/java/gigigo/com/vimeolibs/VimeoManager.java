@@ -63,7 +63,7 @@ public class VimeoManager {
     }
   }
 
-  public void getVideoVimeoInfo(final Context context, final String videoId, final boolean isMobileConection,
+  public void getVideoVimeoInfo(final Context context, final String videoId,
       final boolean isWifiConnection, final boolean isFastConnection,
       final VimeoCallback callback) {
     new Thread(new Runnable() {

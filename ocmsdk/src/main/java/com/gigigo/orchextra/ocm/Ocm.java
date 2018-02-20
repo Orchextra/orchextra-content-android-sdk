@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
-import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
@@ -18,34 +17,10 @@ import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.wrapper.CrmUser;
-import gigigo.com.vimeolibs.VimeoBuilder;
-import gigigo.com.vimeolibs.VimeoCallback;
-import gigigo.com.vimeolibs.VimeoExoPlayerActivity;
-import gigigo.com.vimeolibs.VimeoInfo;
-import gigigo.com.vimeolibs.VimeoManager;
 import java.util.Map;
 import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
 public final class Ocm {
-@Deprecated
-  public static void TestVimeoVideoFeature(final Context context, String access_token,
-      String VideoId) {
-  VimeoExoPlayerActivity.open(context, null);
-    VimeoBuilder builder = new VimeoBuilder(access_token);
-    VimeoManager vmManager = new VimeoManager(builder);
-    ConnectionUtilsImp conn = new ConnectionUtilsImp(context);
-
-    vmManager.getVideoVimeoInfo(context, VideoId, conn.isConnectedMobile(), conn.isConnectedWifi(),
-        conn.isConnectedMobile(), new VimeoCallback() {
-          @Override public void onSuccess(VimeoInfo vimeoInfo) {
-            VimeoExoPlayerActivity.open(context, vimeoInfo);
-          }
-
-          @Override public void onError(Exception e) {
-            System.out.println("Error VimeoCallbacak" + e.toString());
-          }
-        });
-  }
 
   private static QueryStringGenerator queryStringGenerator;
 
@@ -286,11 +261,9 @@ public final class Ocm {
     OCManager.setNewOrchextraCredentials(apiKey, apiSecret, onCredentialCallback);
   }
 
-  public static void start(
-      OcmCredentialCallback onCredentialCallback) {
+  public static void start(OcmCredentialCallback onCredentialCallback) {
     OCManager.start(onCredentialCallback);
   }
-
 
   /**
    * Set a business unit

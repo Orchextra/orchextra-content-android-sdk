@@ -8,6 +8,7 @@ project.ext {
 
   libraries = [androidSupportDesign    : "com.android.support:design:${supportVersion}",
                androidCustomtabs       : "com.android.support:customtabs:${supportVersion}",
+               androidAppCompat        : "com.android.support:appcompat-v7:${supportVersion}",
 
                daggerCompiler          : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
                dagger                  : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
@@ -54,7 +55,9 @@ project.ext {
                    assertj          : 'org.assertj:assertj-core:3.8.0',
                    androidTestRunner: 'com.android.support.test:runner:0.4.1',
                    androidTestRules : 'com.android.support.test:rules:0.4.1',
-                   espresso         : 'com.android.support.test.espresso:espresso-core:2.2.1',
+                   espresso         : 'com.android.support.test.espresso:espresso-core:2.2.2',
                    mockWebServer    : 'com.squareup.okhttp:mockwebserver:2.6.0',
                    assertj          : 'org.assertj:assertj-core:1.7.1']
+
+  modules = [vimeo: project(':vimeosdk')]
 }
