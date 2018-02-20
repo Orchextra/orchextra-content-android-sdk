@@ -181,7 +181,7 @@ import retrofit2.Response;
 
         videoManager.getVideoVimeoInfo(context, videoId, isWifiConnection, isFastConnection, new VimeoCallback() {
           @Override public void onSuccess(VimeoInfo vimeoInfo) {
-            //ocmCache.putVideo(vimeoInfo);
+            ocmCache.putVideo(vimeoInfo);
             emitter.onNext(vimeoInfo);
           }
 

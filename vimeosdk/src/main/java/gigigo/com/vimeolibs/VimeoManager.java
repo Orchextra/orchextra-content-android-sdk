@@ -73,6 +73,8 @@ public class VimeoManager {
           @Override public void run() {
             if (videoResponse != null && videoResponse.body() != null) {
               VimeoInfo info = new VimeoInfo();
+              info.setId(videoId);
+
               //region  determine quality from connection
               int videoIdx;
               if (isFastConnection) {

@@ -137,12 +137,10 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void putVideo(VimeoInfo videoInfo) {
-    /*
     if (videoInfo != null && videoInfo.getKey() != null) {
       kache.evict(videoInfo.getKey());
       kache.put(videoInfo);
     }
-    */
   }
 
   @Override public boolean isVideoCached(String videoId) {

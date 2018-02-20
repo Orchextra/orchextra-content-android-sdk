@@ -1,13 +1,20 @@
 package gigigo.com.vimeolibs
 
+import com.mskn73.kache.Kacheable
+import com.mskn73.kache.annotations.KacheLife
 import java.io.Serializable
 
+
+@KacheLife(expiresTime = 1000 * 60 * 60 * 24) // 1 day
 class VimeoInfo(var id: String,
     var videoPath: String,
     var thumbPath: String,
-    var isVertical: Boolean = false) : Serializable {
+    var isVertical: Boolean = false) : Serializable, Kacheable {
 
   constructor() : this("", "", "")
+
+  override val key: String
+    get() = id
 }
 
 /*

@@ -54,6 +54,8 @@ dependencies {
   api project.libraries.imageloaderGlideBlur
   api project.libraries.rxJava
 
+  api project.libraries.kache
+
   androidTestImplementation(project.testLibraries.espresso, {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
