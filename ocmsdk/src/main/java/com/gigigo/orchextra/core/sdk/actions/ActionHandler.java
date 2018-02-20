@@ -37,10 +37,11 @@ public class ActionHandler {
   private final ConnectionUtils connectionUtils;
   private GetVideo getVideo;
 
-  public ActionHandler(OcmContextProvider ocmContextProvider) {
+  public ActionHandler(OcmContextProvider ocmContextProvider, GetVideo getVideo) {
     this.ocmContextProvider = ocmContextProvider;
     this.connectionUtils = new ConnectionUtilsImp(ocmContextProvider.getApplicationContext());
     this.orchextra = new OxManagerImpl();
+    this.getVideo = getVideo;
   }
 
   public void processDeepLink(String uri) {
@@ -56,8 +57,6 @@ public class ActionHandler {
       //show loading
       VimeoExoPlayerActivity.open(ocmContextProvider.getCurrentActivity(), null);
 
-      VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
-      VimeoManager vmManager = new VimeoManager(builder);
       //more 4 dagger
       ConnectionUtilsImp conn = new ConnectionUtilsImp(ocmContextProvider.getCurrentActivity());
       //get vimeo data from sdk vimeo
@@ -71,7 +70,7 @@ public class ActionHandler {
         @Override public void onError(Exception e) {
           System.out.println("Error VimeoCallback" + e.toString());
         }
-      }), GetVideo.Params.Companion.forVideo(videoId, connectionUtils.isConnectedWifi(), connectionUtils.isConnectedMobile()), PriorityScheduler.Priority.HIGH);
+      }), GetVideo.Params.Companion.forVideo(ocmContextProvider.getCurrentActivity(), false, videoId, connectionUtils.isConnectedWifi(), connectionUtils.isConnectedMobile()), PriorityScheduler.Priority.HIGH);
     }
   }
 

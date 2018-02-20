@@ -1,11 +1,14 @@
 package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
+import android.content.Context;
 import android.util.Log;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
+import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
+import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
@@ -49,6 +52,11 @@ import orchextra.javax.inject.Singleton;
 
     return ocmCache.getDetail(slug).doOnNext(apiElementData ->
         Log.v("TT - DISK - Details", (System.currentTimeMillis() - time) / 1000 + ""));
+  }
+
+  @Override public Observable<VimeoInfo> getVideoById(Context context, String videoId, boolean isWifiConnection,
+      boolean isFastConnection) {
+    return ocmCache.getVideo(videoId);
   }
 
   @Override public Observable<ApiVersionKache> getVersion() {

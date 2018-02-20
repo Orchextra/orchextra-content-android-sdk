@@ -116,7 +116,7 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
     if (vimeoInfo != null) {
       vimeoLink = vimeoInfo.getVideoPath();
       thumbBackground = vimeoInfo.getThumbPath();
-      isVertical = vimeoInfo.isVertical;
+      isVertical = vimeoInfo.isVertical();
       if (isVertical) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mExo_fullscreen_icon.setVisibility(View.GONE);

@@ -1,9 +1,20 @@
-package gigigo.com.vimeolibs;
+package gigigo.com.vimeolibs
 
 /**
  * Created by nubor on 05/10/2017.
  */
 
+class VimeoBuilder(token: String) {
+  var noket = ""
+  var clientId = ""
+  var clientSecret = ""
+  var scope = "private public video_files"
+
+  init {
+    this.noket = token
+  }
+}
+/*
 public class VimeoBuilder {
   String noket = "";
   String client_id = "";
@@ -45,3 +56,5 @@ public class VimeoBuilder {
     return this;
   }
 }
+
+ */

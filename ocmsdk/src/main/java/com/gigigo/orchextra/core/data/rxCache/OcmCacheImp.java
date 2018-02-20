@@ -9,10 +9,12 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
+import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.CacheDir;
 import com.mskn73.kache.Kache;
+import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
 import java.io.File;
 import orchextra.javax.inject.Inject;
@@ -119,6 +121,36 @@ import orchextra.javax.inject.Singleton;
 
   @Override public boolean isDetailExpired(String slug) {
     return kache.isExpired(slug, ApiElementData.class);
+  }
+
+  @Override public Observable<VimeoInfo> getVideo(String videoId) {
+    return Observable.create(emitter -> {
+      VimeoInfo vimeoInfo = (VimeoInfo) kache.get(VimeoInfo.class, videoId);
+
+      if (vimeoInfo != null) {
+        emitter.onNext(vimeoInfo);
+        emitter.onComplete();
+      } else {
+        emitter.onError(new ApiSectionNotFoundException());
+      }
+    });
+  }
+
+  @Override public void putVideo(VimeoInfo videoInfo) {
+    /*
+    if (videoInfo != null && videoInfo.getKey() != null) {
+      kache.evict(videoInfo.getKey());
+      kache.put(videoInfo);
+    }
+    */
+  }
+
+  @Override public boolean isVideoCached(String videoId) {
+    return kache.isCached(videoId);
+  }
+
+  @Override public boolean isVideoExpired(String videoId) {
+    return kache.isExpired(videoId, VimeoInfo.class);
   }
 
   @Override public void evictAll(boolean images, boolean data) {

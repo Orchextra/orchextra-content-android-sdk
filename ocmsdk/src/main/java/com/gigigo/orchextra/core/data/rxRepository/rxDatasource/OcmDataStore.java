@@ -1,9 +1,12 @@
 package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
+import android.content.Context;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
+import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
+import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
 
 /**
@@ -19,7 +22,8 @@ public interface OcmDataStore {
   /**
    * Get an {@link Observable} which will emit a {@link ApiSectionContentData}.
    */
-  Observable<ApiSectionContentData> getSectionEntity(String elementUrl, int numberOfElementsToDownload);
+  Observable<ApiSectionContentData> getSectionEntity(String elementUrl,
+      int numberOfElementsToDownload);
 
   /**
    * Get an {@link Observable} which will emit a {@link ApiSectionContentData}.
@@ -30,6 +34,9 @@ public interface OcmDataStore {
    * Get an {@link Observable} which will emit a {@link ApiElementData}.
    */
   Observable<ApiElementData> getElementById(String slug);
+
+  Observable<VimeoInfo> getVideoById(Context context, String videoId, boolean isWifiConnection,
+      boolean isFastConnection);
 
   Observable<ApiVersionKache> getVersion();
 

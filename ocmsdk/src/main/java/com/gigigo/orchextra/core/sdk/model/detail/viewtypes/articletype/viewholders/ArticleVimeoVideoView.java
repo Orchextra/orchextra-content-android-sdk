@@ -13,22 +13,15 @@ import com.bumptech.glide.request.target.Target;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElement;
-import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
-import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetVideo;
 import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.ocm.views.MoreContentArrowView;
-import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.vimeo.networking.model.Video;
 import gigigo.com.vimeolibs.VideoObserver;
-import gigigo.com.vimeolibs.VimeoBuilder;
 import gigigo.com.vimeolibs.VimeoCallback;
 import gigigo.com.vimeolibs.VimeoExoPlayerActivity;
 import gigigo.com.vimeolibs.VimeoInfo;
-import gigigo.com.vimeolibs.VimeoManager;
-import io.reactivex.observers.DisposableObserver;
 
 public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoElement> {
 
@@ -53,55 +46,55 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
     //todo truchingvimeo
     View.OnClickListener onVimeoThumbnailClickListener = v -> {
       if (connectionUtils.hasConnection()) {
-               if (mVimeoInfo != null) VimeoExoPlayerActivity.open(context, mVimeoInfo);
+        if (mVimeoInfo != null) VimeoExoPlayerActivity.open(context, mVimeoInfo);
       } else {
         Snackbar.make(imgThumb, R.string.oc_error_content_not_available_without_internet,
             Toast.LENGTH_SHORT).show();
       }
     };
-    //todo truchingvimeo
-    //poner en dagger el resto ok
-    VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
-    VimeoManager vmManager = new VimeoManager(builder);
 
     getVideo.execute(new VideoObserver(new VimeoCallback() {
 
-      @Override public void onSuccess(VimeoInfo vimeoInfo) {
-        mVimeoInfo = vimeoInfo;
-        String strImgForBlur = mVimeoInfo.getThumbPath();
+          @Override public void onSuccess(VimeoInfo vimeoInfo) {
+            mVimeoInfo = vimeoInfo;
+            String strImgForBlur = mVimeoInfo.getThumbPath();
 
-        if(mVimeoInfo.isVertical()){
-          imgThumb.setMaxHeight((int) MoreContentArrowView.convertDpToPixel(192,context.getApplicationContext()));
-          imgThumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        }
+            if (mVimeoInfo.isVertical()) {
+              imgThumb.setMaxHeight(
+                  (int) MoreContentArrowView.convertDpToPixel(192, context.getApplicationContext()));
+              imgThumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
 
-        Glide.with(context.getApplicationContext())
+            Glide.with(context.getApplicationContext())
 
-            .load(strImgForBlur)
-            //.asBitmap()
-            // .transform(new BlurTransformation(context, 20))
-            .listener(new RequestListener<String, GlideDrawable>() {
-              @Override public boolean onException(Exception e, String model,
-                  Target<GlideDrawable> target, boolean isFirstResource) {
-                return false;
-              }
+                .load(strImgForBlur)
+                //.asBitmap()
+                // .transform(new BlurTransformation(context, 20))
+                .listener(new RequestListener<String, GlideDrawable>() {
+                  @Override
+                  public boolean onException(Exception e, String model, Target<GlideDrawable> target,
+                      boolean isFirstResource) {
+                    return false;
+                  }
 
-              @Override public boolean onResourceReady(GlideDrawable resource, String model,
-                  Target<GlideDrawable> target, boolean isFromMemoryCache,
-                  boolean isFirstResource) {
-                imgPlay.setVisibility(View.VISIBLE);
-                return false;
-              }
-            })
+                  @Override public boolean onResourceReady(GlideDrawable resource, String model,
+                      Target<GlideDrawable> target, boolean isFromMemoryCache,
+                      boolean isFirstResource) {
+                    imgPlay.setVisibility(View.VISIBLE);
+                    return false;
+                  }
+                })
 
-            .into(imgThumb);
-        imgPlay.setOnClickListener(onVimeoThumbnailClickListener);
-        imgThumb.setOnClickListener(onVimeoThumbnailClickListener);
-      }
+                .into(imgThumb);
+            imgPlay.setOnClickListener(onVimeoThumbnailClickListener);
+            imgThumb.setOnClickListener(onVimeoThumbnailClickListener);
+          }
 
-      @Override public void onError(Exception e) {
-        System.out.println("Error VimeoCallbacak" + e.toString());
-      }
-    }), GetVideo.Params.Companion.forVideo(articleElement.getRender().getSource(), connectionUtils.isConnectedWifi(), connectionUtils.isConnectedMobile()), PriorityScheduler.Priority.HIGH);
+          @Override public void onError(Exception e) {
+            System.out.println("Error VimeoCallbacak" + e.toString());
+          }
+        }), GetVideo.Params.Companion.forVideo(context, false, articleElement.getRender().getSource(),
+        connectionUtils.isConnectedWifi(), connectionUtils.isConnectedMobile()),
+        PriorityScheduler.Priority.HIGH);
   }
 }

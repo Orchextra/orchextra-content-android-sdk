@@ -1,12 +1,18 @@
-package gigigo.com.vimeolibs;
+package gigigo.com.vimeolibs
 
-import java.io.Serializable;
+import java.io.Serializable
 
-/**
- * Created by nubor on 04/10/2017.
- */
+class VimeoInfo(var id: String,
+    var videoPath: String,
+    var thumbPath: String,
+    var isVertical: Boolean = false) : Serializable {
 
+  constructor() : this("", "", "")
+}
+
+/*
 public class VimeoInfo implements Serializable {
+  String id;
   String videoPath;
   String thumbPath;
   boolean isVertical;
@@ -18,6 +24,14 @@ public class VimeoInfo implements Serializable {
     this.videoPath = videoPath;
     this.thumbPath = thumbPath;
     this.isVertical = isVertical;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getVideoPath() {
@@ -44,3 +58,5 @@ public class VimeoInfo implements Serializable {
     isVertical = vertical;
   }
 }
+
+ */

@@ -1,77 +1,29 @@
-package gigigo.com.vimeolibs;
+package com.gigigo.orchextra.core.data.api.mappers.video
 
-import android.content.Context;
-import android.graphics.Point;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
-import com.vimeo.networking.Configuration;
-import com.vimeo.networking.VimeoClient;
-import com.vimeo.networking.model.Video;
-import okhttp3.CacheControl;
-import retrofit2.Response;
+import android.util.Log
+import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
+import com.vimeo.networking.model.Video
+import gigigo.com.vimeolibs.VimeoInfo
+import retrofit2.Response
 
-/**
- * Created by nubor on 04/10/2017.
- */
+class ApiVideoDataMapper() : ExternalClassToModelMapper<Response<Video>, VimeoInfo> {
 
-public class VimeoManager {
-  private static String noket_ssecca = "";
-  private static String clientID = "";
-  private static String clientSecret = "";
-  private static String scope = "";
-  private static VimeoClient vimeoApiClient;
+  override fun externalClassToModel(data: Response<Video>): VimeoInfo {
+    val time = System.currentTimeMillis()
 
-  //flow open vimeo video
-  //1º get videoid
-  //2º instanciate VimeoManeger(accesotken)
-  //3º Se llama a getVideoVimeoInfo y en el resultado el callback se recibe el VimeoInfo
-  //4º hide loading se llama a VimeoExoPlayerActivity.open(vimeoinfo)
-  //flow update accessToken
-  //1ºget new accesstoken in ocm ocnfig
-  //2ºdecrupt accesstoken use then
-  //3º keep encrypt in prferences or wherever
+    val model = VimeoInfo()
 
-  public VimeoManager(VimeoBuilder builder) {
-    Configuration.Builder configBuilder;
-    if (builder != null) {
-      noket_ssecca = builder.getNoket();
-      clientID = builder.getClientId();
-      clientSecret = builder.getClientSecret();
-      scope = builder.getScope();
 
-      if (noket_ssecca != null && !noket_ssecca.equals("")) {
-        configBuilder = new Configuration.Builder(noket_ssecca);
-        VimeoClient.initialize(configBuilder.build());
-        vimeoApiClient = VimeoClient.getInstance();
-      } else {
-        if (clientID != null
-            && !clientID.equals("")
-            && clientSecret != null
-            && !clientSecret.equals("")
-            && scope != null
-            && !scope.equals("")) {
+    val currentTime = System.currentTimeMillis() - time
+    Log.v("TT - ApiVideoDataMapper", ("" + currentTime / 1000))
 
-          configBuilder = new Configuration.Builder(clientID, clientSecret, scope);
-          VimeoClient.initialize(configBuilder.build());
-          vimeoApiClient = VimeoClient.getInstance();
-        }
-      }
-    }
+
+    return model
   }
+}
 
-  public void getVideoVimeoInfo(final Context context, final String videoId, final boolean isWifiConnection,
-      final boolean isFastConnection, final VimeoCallback callback) {
-
-    final Response<Video> videoResponse =
-            vimeoApiClient.fetchVideoSync("/videos/" + videoId, CacheControl.FORCE_NETWORK, "pictures.uri,files");
-
-
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-          @Override public void run() {
-            if (videoResponse != null && videoResponse.body() != null) {
+/*
+if (videoResponse != null && videoResponse.body() != null) {
               VimeoInfo info = new VimeoInfo();
               //region  determine quality from connection
               int videoIdx;
@@ -134,11 +86,4 @@ public class VimeoManager {
                   "No data retrive from Vimeo video, maybe this is not a video from provided accesstoken account"
                       + videoId));
             }
-          }
-        });
-  }
-
-  public void updateAccessToken(String access_token) {
-    //todo maybe in the fiture the accesstoken come from de back, DANGER sniffer, ocm config must be
-  }
-}
+ */
