@@ -206,10 +206,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
   }
 
-  @Override public void showAuthDialog(String elementUrl) {
-    OCManager.notifyRequiredLoginToContinue(elementUrl);
-  }
-
   @Override public void showProgressView(boolean isVisible) {
     if (progressView != null) {
       progressView.setVisibility(isVisible ? View.VISIBLE : View.GONE);

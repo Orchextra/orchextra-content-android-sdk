@@ -167,8 +167,4 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
 
     super.onDestroy();
   }
-
-  @Override public void showAuthDialog() {
-    OCManager.notifyRequiredLoginToContinue();
-  }
 }

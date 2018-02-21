@@ -52,7 +52,7 @@ public class OcmSchemeHandler {
           if (elementRequiredUserToBeLogged(elementCache)) {
             // Save url of the element that require login
             elementURL = elementUrl;
-            OCManager.notifyRequiredLoginToContinue(elementURL);
+            //OCManager.notifyRequiredLoginToContinue(elementURL);
           } else {
             executeAction(elementCache, finalElementUri, null, null);
           }
@@ -95,7 +95,7 @@ public class OcmSchemeHandler {
           if (elementRequiredUserToBeLogged(elementCache)) {
             // Save url of the element that require login
             processElementURL = elementUrl;
-            OCManager.notifyRequiredLoginToContinue(processElementURL);
+            //OCManager.notifyRequiredLoginToContinue(processElementURL);
           } else {
             executeAction(elementCache, finalElementUri, urlImageToExpand, imageViewWeakReference);
           }

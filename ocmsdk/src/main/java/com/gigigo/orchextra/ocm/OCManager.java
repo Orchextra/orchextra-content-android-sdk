@@ -27,7 +27,6 @@ import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
-import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
@@ -149,7 +148,6 @@ Add Comment C
   @Inject OcmSchemeHandler schemeHandler;
   @Inject OcmStyleUi ocmStyleUi;
   @Inject OcmController ocmController;
-  private OnRequiredLoginCallback onRequiredLoginCallback;
   private OnEventCallback onEventCallback;
   private String language;
   private InjectorImpl injector;
@@ -166,10 +164,6 @@ Add Comment C
 
   static void initSdk(Application application) {
     getInstance().initOcm(application);
-  }
-
-  static void setDoRequiredLoginCallback(OnRequiredLoginCallback onRequiredLoginCallback) {
-    getInstance().onRequiredLoginCallback = onRequiredLoginCallback;
   }
 
   public static void setCustomBehaviourDelegate(
@@ -281,18 +275,6 @@ Add Comment C
       return null;
     }
     return instance.injector;
-  }
-
-  public static void notifyRequiredLoginToContinue() {
-    if (instance != null && instance.onRequiredLoginCallback != null) {
-      instance.onRequiredLoginCallback.doRequiredLogin();
-    }
-  }
-
-  public static void notifyRequiredLoginToContinue(String elementUrl) {
-    if (instance != null && instance.onRequiredLoginCallback != null) {
-      instance.onRequiredLoginCallback.doRequiredLogin(elementUrl);
-    }
   }
 
   public static void notifyCustomBehaviourContinue(@NotNull Map<String, Object> customProperties,

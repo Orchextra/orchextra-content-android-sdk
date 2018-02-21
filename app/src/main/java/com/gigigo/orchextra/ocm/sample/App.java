@@ -9,26 +9,12 @@ import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
-import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.squareup.leakcanary.LeakCanary;
 
 //import com.gigigo.vuforiaimplementation.ImageRecognitionVuforiaImpl;
 
 public class App extends MultiDexApplication {
 
-  /**
-   * / Project credentials are moved to variants.gradle file
-   */
-
-  private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
-    @Override public void doRequiredLogin() {
-
-    }
-
-    @Override public void doRequiredLogin(String elementUrl) {
-
-    }
-  };
   private OnEventCallback onEventCallback = new OnEventCallback() {
     @Override public void doEvent(OcmEvent event, Object data) {
     }

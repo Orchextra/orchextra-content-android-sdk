@@ -12,6 +12,4 @@ public interface SearcherLayoutInterface {
   void showProgressView(boolean isVisible);
 
   void showEmptyView(boolean isVisible);
-
-  void showAuthDialog();
 }

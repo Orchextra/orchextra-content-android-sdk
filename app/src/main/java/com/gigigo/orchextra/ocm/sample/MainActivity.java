@@ -16,7 +16,6 @@ import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
-import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.customProperties.Disabled;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
@@ -58,17 +57,6 @@ public class MainActivity extends AppCompatActivity {
               false);
         }
       };
-
-  private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
-    @Override public void doRequiredLogin() {
-      Toast.makeText(getApplicationContext(), "Item needs permissions", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override public void doRequiredLogin(String elementUrl) {
-      Toast.makeText(getApplicationContext(), "Item needs permissions" + elementUrl,
-          Toast.LENGTH_SHORT).show();
-    }
-  };
 
   private OcmCustomBehaviourDelegate customPropertiesDelegate = new OcmCustomBehaviourDelegate() {
 
@@ -164,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     initViews();
 
-    Ocm.setOnDoRequiredLoginCallback(onDoRequiredLoginCallback);
     Ocm.setCustomBehaviourDelegate(customPropertiesDelegate);
 
     startCredentials();

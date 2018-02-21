@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import com.bumptech.glide.load.Transformation;
 import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
-import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.wrapper.ImageRecognition;
 
 public final class OcmBuilder {

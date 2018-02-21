@@ -14,8 +14,6 @@ public interface ContentView {
 
   void showErrorView(boolean isVisible);
 
-  void showAuthDialog(String elementUrl);
-
   void showProgressView(boolean isVisible);
 
   void showNewExistingContent();
