@@ -123,12 +123,12 @@ import orchextra.javax.inject.Singleton;
     return kache.isExpired(slug, ApiElementData.class);
   }
 
-  @Override public Observable<VimeoInfo> getVideo(String videoId) {
+  @Override public Observable<ApiVideoData> getVideo(String videoId) {
     return Observable.create(emitter -> {
-      VimeoInfo vimeoInfo = (VimeoInfo) kache.get(VimeoInfo.class, videoId);
+      ApiVideoData videoData = (ApiVideoData) kache.get(ApiVideoData.class, videoId);
 
-      if (vimeoInfo != null) {
-        emitter.onNext(vimeoInfo);
+      if (videoData != null) {
+        emitter.onNext(videoData);
         emitter.onComplete();
       } else {
         emitter.onError(new ApiSectionNotFoundException());
@@ -136,10 +136,10 @@ import orchextra.javax.inject.Singleton;
     });
   }
 
-  @Override public void putVideo(VimeoInfo videoInfo) {
-    if (videoInfo != null && videoInfo.getKey() != null) {
-      kache.evict(videoInfo.getKey());
-      kache.put(videoInfo);
+  @Override public void putVideo(ApiVideoData videoData) {
+    if (videoData != null && videoData.getKey() != null) {
+      kache.evict(videoData.getKey());
+      kache.put(videoData);
     }
   }
 

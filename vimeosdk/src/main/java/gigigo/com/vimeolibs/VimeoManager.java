@@ -37,7 +37,7 @@ public class VimeoManager {
   public VimeoManager(VimeoBuilder builder) {
     Configuration.Builder configBuilder;
     if (builder != null) {
-      noket_ssecca = builder.getNoket();
+      noket_ssecca = builder.getToken();
       clientID = builder.getClientId();
       clientSecret = builder.getClientSecret();
       scope = builder.getScope();
@@ -73,7 +73,6 @@ public class VimeoManager {
           @Override public void run() {
             if (videoResponse != null && videoResponse.body() != null) {
               VimeoInfo info = new VimeoInfo();
-              info.setId(videoId);
 
               //region  determine quality from connection
               int videoIdx;
