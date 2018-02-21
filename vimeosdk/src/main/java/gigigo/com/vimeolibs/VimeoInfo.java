@@ -9,15 +9,13 @@ import java.io.Serializable;
 public class VimeoInfo implements Serializable {
   String videoPath;
   String thumbPath;
-  boolean isVertical;
 
   public VimeoInfo() {
   }
 
-  public VimeoInfo(String videoPath, String thumbPath, boolean isVertical) {
+  public VimeoInfo(String videoPath, String thumbPath) {
     this.videoPath = videoPath;
     this.thumbPath = thumbPath;
-    this.isVertical = isVertical;
   }
 
   public String getVideoPath() {
@@ -34,13 +32,5 @@ public class VimeoInfo implements Serializable {
 
   public void setThumbPath(String thumbPath) {
     this.thumbPath = thumbPath;
-  }
-
-  public boolean isVertical() {
-    return isVertical;
-  }
-
-  public void setVertical(boolean vertical) {
-    isVertical = vertical;
   }
 }

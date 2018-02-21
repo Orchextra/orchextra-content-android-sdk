@@ -120,11 +120,7 @@ public class VimeoManager {
                   info.setThumbPath(thumbnail);
                   Log.e("", info.getThumbPath());
                 }
-                if (videoResponse.body().width > videoResponse.body().height) {
-                  info.setVertical(false);
-                } else {
-                  info.setVertical(true);
-                }
+
                 callback.onSuccess(info);
               } else {
                 callback.onError(new Exception(
