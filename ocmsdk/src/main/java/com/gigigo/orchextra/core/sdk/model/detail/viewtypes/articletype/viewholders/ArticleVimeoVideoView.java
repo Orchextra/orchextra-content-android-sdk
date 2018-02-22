@@ -63,10 +63,8 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
             mVimeoInfo = vimeoInfo;
             String strImgForBlur = mVimeoInfo.getThumbPath();
 
-            if(mVimeoInfo.isVertical()){
-              imgThumb.setMaxHeight((int) MoreContentArrowView.convertDpToPixel(192,context.getApplicationContext()));
-              imgThumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            }
+            imgThumb.setMaxHeight((int) MoreContentArrowView.convertDpToPixel(192,context.getApplicationContext()));
+            imgThumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             Glide.with(context.getApplicationContext())
 
