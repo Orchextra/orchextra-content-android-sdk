@@ -246,12 +246,14 @@ Add Comment C
     return instance.ocmViewGenerator.generateSearchView();
   }
 
+  //TODO: remove this, its related to old segmentation
   static void setUserIsAuthorizated(boolean isAuthorizated) {
     if (instance != null) {
       instance.authoritation.setAuthorizatedUser(isAuthorizated);
     }
   }
 
+  //TODO: remove this, its related to old segmentation
   static void setLoggedAction(String elementUrl) {
     if (instance != null) {
       instance.schemeHandler.processElementUrl(elementUrl);

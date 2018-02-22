@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.controller.model.searcher;
 
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,14 +13,10 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
-import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocm.OcmEvent;
-import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocmsdk.R;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -157,20 +152,17 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
       imageViewToExpandInDetail = (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
     }
 
-    OCManager.processElementUrl(element.getElementUrl(), imageViewToExpandInDetail, new OcmSchemeHandler.ProcessElementCallback() {
-      @Override public void onProcessElementSuccess(ElementCache elementCache) {
+    OCManager.processElementUrl(element.getElementUrl(), imageViewToExpandInDetail,
+        new OcmSchemeHandler.ProcessElementCallback() {
+          @Override public void onProcessElementSuccess(ElementCache elementCache) {
 
-        System.out.println("CELL_CLICKED: " + element.getSlug());
-      }
+            System.out.println("CELL_CLICKED: " + element.getSlug());
+          }
 
-      @Override public void onProcessElementFail(Exception exception) {
-        exception.printStackTrace();
-      }
-    });
-  }
-
-  private boolean checkLoginAuth(@NonNull RequiredAuthoritation requiredAuth) {
-    return authoritation.isAuthorizatedUser() || !requiredAuth.equals(RequiredAuthoritation.LOGGED);
+          @Override public void onProcessElementFail(Exception exception) {
+            exception.printStackTrace();
+          }
+        });
   }
 
   public void updateUi() {

@@ -39,11 +39,15 @@ public class DetailPresenter extends Presenter<DetailView> {
 
     CrmUser crmUser = new CrmUser(userId, null, null);
     Ocm.bindUser(crmUser);
+
+    //TODO: remove this, its related to old segmentation
     Ocm.setUserIsAuthorizated(true);
     Ocm.start(new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
         if (!accessToken.equals(DetailPresenter.this.accessToken)) {
           DetailPresenter.this.accessToken = accessToken;
+
+          //TODO: remove this, its related to old segmentation
           getView().redirectToAction();
         }
       }

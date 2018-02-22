@@ -16,7 +16,6 @@ import com.gigigo.orchextra.core.data.api.mappers.elementcache.FederatedAuthoriz
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSectionViewMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSegmentationMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentMapper;
 import orchextra.dagger.Module;
@@ -30,14 +29,9 @@ import orchextra.javax.inject.Singleton;
     return new ApiElementSectionViewMapper();
   }
 
-  @Singleton @Provides ApiElementSegmentationMapper provideAApiElementSegmentationMapper() {
-    return new ApiElementSegmentationMapper();
-  }
-
   @Singleton @Provides ApiElementMapper provideApiElementMapper(
-      ApiElementSegmentationMapper apiMenuItemSegmentationMapper,
       ApiElementSectionViewMapper apiMenuItemViewMapper) {
-    return new ApiElementMapper(apiMenuItemSegmentationMapper, apiMenuItemViewMapper);
+    return new ApiElementMapper(apiMenuItemViewMapper);
   }
 
   @Singleton @Provides ApiMenuContentMapper provideApiMenuContentMapper(
@@ -76,10 +70,9 @@ import orchextra.javax.inject.Singleton;
   @Singleton @Provides ApiElementCacheMapper provideApiElementCacheMapper(
       ApiElementCacheRenderMapper apiElementCacheItemRenderMapper,
       ApiElementCachePreviewMapper apiElementCachePreviewMapper,
-      ApiElementCacheShareMapper apiElementCacheShareMapper,
-      ApiElementSegmentationMapper apiElementSegmentationMapper) {
+      ApiElementCacheShareMapper apiElementCacheShareMapper) {
     return new ApiElementCacheMapper(apiElementCacheItemRenderMapper, apiElementCachePreviewMapper,
-        apiElementCacheShareMapper, apiElementSegmentationMapper);
+        apiElementCacheShareMapper);
   }
 
   @Singleton @Provides ApiElementDataMapper provideApiElementDataMapper(

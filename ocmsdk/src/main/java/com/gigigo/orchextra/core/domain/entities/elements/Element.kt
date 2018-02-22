@@ -2,7 +2,6 @@ package com.gigigo.orchextra.core.domain.entities.elements
 
 class Element {
 
-  var segmentation: ElementSegmentation? = null
   var customProperties: Map<String, Any>? = null
   var sectionView: ElementSectionView? = null
   var slug: String? = null
