@@ -1,7 +1,5 @@
 package com.gigigo.orchextra.ocm.sample;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -10,13 +8,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
-import com.gigigo.orchextra.Orchextra;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
-import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.customProperties.Disabled;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
@@ -25,7 +21,6 @@ import com.gigigo.orchextra.ocm.customProperties.ViewLayer;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -71,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
         List<ViewCustomizationType> viewCustomizationType = new ArrayList<>();
         viewCustomizationType.add(new Disabled());
 
-        if (customProperties.containsKey("requiredAuth") && customProperties.containsValue("logged")) {
+        if (customProperties.containsKey("requiredAuth") && customProperties.containsValue(
+            "logged")) {
           View view = getLayoutInflater().inflate(R.layout.padlock_view, null);
           viewCustomizationType.add(new ViewLayer(view));
         }
@@ -95,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
           case "requiredAuth":
             //completion.invoke(true);
             handler.postDelayed(() -> {
-              if(value.equals("logged")) {
+              if (value.equals("logged")) {
                 completion.invoke(false);
-                Toast.makeText(MainActivity.this, "can't continue, requires authorization", Toast.LENGTH_SHORT).show();
-              }
-              else {
+                Toast.makeText(MainActivity.this, "can't continue, requires authorization",
+                    Toast.LENGTH_SHORT).show();
+              } else {
                 completion.invoke(true);
               }
             }, 3000);
@@ -107,24 +103,9 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     }
-
   };
 
   private List<UiMenu> oldUiMenuList;
-
-  public static boolean deleteDir(File dir) {
-    if (dir != null && dir.isDirectory()) {
-      String[] children = dir.list();
-      for (int i = 0; i < children.length; i++) {
-        boolean success = deleteDir(new File(dir, children[i]));
-        if (!success) {
-          return false;
-        }
-      }
-    }
-
-    return dir.delete();
-  }
 
   @Override protected void onResume() {
     super.onResume();
@@ -139,11 +120,6 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
-
-    //ReadedArticles
-    //if (OCManager.getShowReadArticles() && adapter != null) {
-    //  adapter.reloadSections();
-    //}
   }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -176,18 +152,6 @@ public class MainActivity extends AppCompatActivity {
         SearcherActivity.open(MainActivity.this);
       }
     });
-
-    //fabChange.setOnClickListener(new View.OnClickListener() {
-    //  @Override public void onClick(View v) {
-    //    startCredentials();
-    //if (OCManager.getShowReadArticles() && adapter != null) {
-    //OCManager.transform+=1;
-    //adapter.reloadSections();
-    //Toast.makeText(MainActivity.this, "Refresh grid from integratied app if readed articles are enabled transform number"
-    //    + OCManager.transform, Toast.LENGTH_LONG).show();
-    //}
-    //}
-    //});
 
     newContentMainContainer = findViewById(R.id.newContentMainContainer);
 

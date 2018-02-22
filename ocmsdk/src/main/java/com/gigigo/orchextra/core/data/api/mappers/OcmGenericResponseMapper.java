@@ -14,8 +14,8 @@ public class OcmGenericResponseMapper<Model, Data>
     super(mapper);
   }
 
-  @Override protected BusinessError createBusinessError(ApiErrorResponse apiErrorResponse,
-      Data result) {
+  @Override
+  protected BusinessError createBusinessError(ApiErrorResponse apiErrorResponse, Data result) {
 
     if (apiErrorResponse != null) {
       int code = apiErrorResponse.getCode();
@@ -34,3 +34,4 @@ public class OcmGenericResponseMapper<Model, Data>
     return businessError;
   }
 }
+
