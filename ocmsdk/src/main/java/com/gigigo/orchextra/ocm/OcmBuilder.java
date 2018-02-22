@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import com.bumptech.glide.load.Transformation;
 import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
-import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.wrapper.ImageRecognition;
 
 public final class OcmBuilder {
@@ -16,7 +15,6 @@ public final class OcmBuilder {
 
   private Class notificationActivityClass;
   private String contentLanguage;
-  private OnRequiredLoginCallback onRequiredLoginCallback;
   private OnEventCallback onEventCallback;
 
   private String oxSenderId;
@@ -93,15 +91,6 @@ public final class OcmBuilder {
   }
 
   /**
-   * Callback to know when the user need to be logged in the app.
-   */
-  @Deprecated public OcmBuilder setOnDoRequiredLoginCallback(
-      OnRequiredLoginCallback onRequiredLoginCallback) {
-    this.onRequiredLoginCallback = onRequiredLoginCallback;
-    return this;
-  }
-
-  /**
    * Receive events which are produced when user do some actions
    */
   public OcmBuilder setOnEventCallback(OnEventCallback onEventCallback) {
@@ -146,9 +135,6 @@ public final class OcmBuilder {
     return oxSecret;
   }
 
-  @Deprecated OnRequiredLoginCallback getOnRequiredLoginCallback() {
-    return onRequiredLoginCallback;
-  }
 
   OnEventCallback getOnEventCallback() {
     return onEventCallback;

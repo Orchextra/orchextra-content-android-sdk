@@ -10,7 +10,6 @@ import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
-import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
@@ -63,7 +62,6 @@ public final class Ocm {
     OCManager.initSdk(ocmBuilder.getApp());
 
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
-    OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
 
     OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
@@ -96,7 +94,6 @@ public final class Ocm {
 
     OCManager.initSdk(ocmBuilder.getApp());
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
-    OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
 
     OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
@@ -137,7 +134,6 @@ public final class Ocm {
     Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
     System.out.println("appOn6.2");
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
-    OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
     System.out.println("appOn6.3");
     OCManager.initSdk(app);
@@ -325,10 +321,6 @@ public final class Ocm {
     OCManager.closeDetailView();
   }
 
-  public static void setOnDoRequiredLoginCallback(
-      OnRequiredLoginCallback onDoRequiredLoginCallback) {
-    OCManager.setDoRequiredLoginCallback(onDoRequiredLoginCallback);
-  }
 
   public static void setCustomBehaviourDelegate(
       OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
