@@ -8,6 +8,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
+import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -15,6 +16,8 @@ import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.squareup.leakcanary.LeakCanary;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class App extends MultiDexApplication {
 
@@ -25,7 +28,6 @@ public class App extends MultiDexApplication {
   private static final String OCM_DEEPLINK_ELEMENT_PATH = "element";
   private static final String SLUG_DEEPLINK_START_PATH = "slug=";
   private static final String URLSCHEME = "urlscheme";
-
 
   private OnEventCallback onEventCallback = new OnEventCallback() {
     @Override public void doEvent(OcmEvent event, Object data) {
@@ -116,6 +118,7 @@ public class App extends MultiDexApplication {
       }
     }
   }
+
   @Override public void onCreate() {
     context = this;
 
@@ -130,7 +133,8 @@ public class App extends MultiDexApplication {
     MultiDex.install(this);
 
     OcmBuilder ocmBuilder = new OcmBuilder(this)
-        .setNotificationActivityClass(MainActivity.class)
+        .setNotificationActivityClass(new ArrayList<>(
+        Arrays.asList(MainActivity.class.toString(), DetailActivity.class.toString())))
         .setShowReadArticles(true)
         //.setVuforiaImpl(new ImageRecognitionVuforiaImpl())
         .setTransformReadArticleMode(ImageTransformReadArticle.BITMAP_TRANSFORM)

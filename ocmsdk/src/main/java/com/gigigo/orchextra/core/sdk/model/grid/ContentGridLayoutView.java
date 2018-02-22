@@ -8,18 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.core.controller.model.home.grid.ContentView;
 import com.gigigo.orchextra.core.controller.model.home.grid.ContentViewPresenter;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
-import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalViewPager;
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -33,7 +29,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   public boolean bIsSliderActive = false;
   public int mTime = 0;
   @Inject ContentViewPresenter presenter;
-  @Inject Authoritation authoritation;
   private UiListedBaseContentData uiListedBaseContentData;
   UiListedBaseContentData.ListedContentListener listedContentListener =
       new UiListedBaseContentData.ListedContentListener() {
@@ -169,8 +164,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       uiListedBaseContentData = new SpannedGridRecyclerView(context);
 
       uiListedBaseContentData.setListedContentListener(listedContentListener);
-      uiListedBaseContentData.setParams(clipToPadding, addictionalPadding, authoritation,
-          thumbnailEnabled);
+      uiListedBaseContentData.setParams(clipToPadding, addictionalPadding, thumbnailEnabled);
       uiListedBaseContentData.setData(cellDataList);
 
       listedDataContainer.removeAllViews();
@@ -186,7 +180,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
 
     uiListedBaseContentData.setListedContentListener(listedContentListener);
-    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding, authoritation,
+    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding,
         thumbnailEnabled);
     uiListedBaseContentData.setData(cellDataList);
 

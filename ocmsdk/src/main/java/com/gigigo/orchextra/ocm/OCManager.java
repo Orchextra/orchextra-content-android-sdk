@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
@@ -144,7 +143,6 @@ Add Comment C
   @Inject OcmContextProvider ocmContextProvider;
   @Inject OcmViewGenerator ocmViewGenerator;
   @Inject OxSession oxSession;
-  @Inject Authoritation authoritation;
   @Inject OcmSchemeHandler schemeHandler;
   @Inject OcmStyleUi ocmStyleUi;
   @Inject OcmController ocmController;
@@ -165,8 +163,7 @@ Add Comment C
     getInstance().initOcm(application);
   }
 
-  static void setCustomBehaviourDelegate(
-      OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
+  static void setCustomBehaviourDelegate(OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
     getInstance().ocmCustomBehaviourDelegate = ocmCustomBehaviourDelegate;
   }
 
@@ -233,14 +230,16 @@ Add Comment C
 
   static void processDeepLinks(String elementUrl) {
     if (instance != null) {
-      instance.schemeHandler.processElementUrl(elementUrl);
+      instance.schemeHandler.processDeepLinks(elementUrl);
     }
   }
 
-  public static void processElementUrl(String elementUrl, ImageView imageViewToExpandInDetail, OcmSchemeHandler.ProcessElementCallback processElementCallback) {
+  public static void processElementUrl(String elementUrl, ImageView imageViewToExpandInDetail,
+      OcmSchemeHandler.ProcessElementCallback processElementCallback) {
 
     if (instance != null) {
-      instance.schemeHandler.processElementUrl(elementUrl, imageViewToExpandInDetail, processElementCallback);
+      instance.schemeHandler.processElementUrl(elementUrl, imageViewToExpandInDetail,
+          processElementCallback);
     }
   }
 
@@ -294,7 +293,7 @@ Add Comment C
     }
   }
 
-  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
+  static void initOrchextra(String oxKey, String oxSecret, List<String> notificationActivityClass,
       String senderId) {
     if (OCManager.instance != null) {
       Application app = (Application) instance.ocmContextProvider.getApplicationContext();
@@ -410,7 +409,7 @@ Add Comment C
     return instance;
   }
 
-  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
+  static void initOrchextra(String oxKey, String oxSecret, List<String> notificationActivityClass,
       String senderId, ImageRecognition vuforia) {
     if (OCManager.instance != null) {
       Application app = (Application) instance.ocmContextProvider.getApplicationContext();
@@ -624,12 +623,12 @@ Add Comment C
   }
 
   private void initOrchextra(Application app, String oxKey, String oxSecret,
-      Class notificationActivityClass, String senderId) {
+      List<String> notificationActivityClass, String senderId) {
     initOrchextra(app, oxKey, oxSecret, notificationActivityClass, senderId, null);
   }
 
   private void initOrchextra(Application app, String oxKey, String oxSecret,
-      Class notificationActivityClass, String senderId, ImageRecognition vuforia) {
+      List<String> notificationActivityClass, String senderId, ImageRecognition vuforia) {
     System.out.println("appOn6.6.1");
     OxManager.Config config = new OxManager.Config.Builder().setApiKey(oxKey)
         .setApiSecret(oxSecret)

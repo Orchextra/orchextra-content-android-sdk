@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import java.util.List;
 
@@ -19,13 +18,11 @@ public abstract class UiListedBaseContentData extends LinearLayout {
   protected View loadingView;
   protected ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
   protected int addictionalPadding;
-  protected Authoritation authoritation;
   protected boolean thumbnailEnabled;
 
   //4 carrusel
   public boolean bIsSliderActive = false;
   public int mTime = 0;
-
 
   public UiListedBaseContentData(Context context) {
     super(context);
@@ -65,10 +62,10 @@ public abstract class UiListedBaseContentData extends LinearLayout {
     this.listedContentListener = listedContentListener;
   }
 
-  public void setParams(ClipToPadding clipToPadding, int addictionalPadding, Authoritation authoritation, boolean thumbnailEnabled) {
+  public void setParams(ClipToPadding clipToPadding, int addictionalPadding,
+      boolean thumbnailEnabled) {
     this.clipToPadding = clipToPadding;
     this.addictionalPadding = addictionalPadding;
-    this.authoritation = authoritation;
     this.thumbnailEnabled = thumbnailEnabled;
 
     init();

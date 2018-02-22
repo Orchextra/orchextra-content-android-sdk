@@ -2,6 +2,7 @@ package com.gigigo.orchextra.wrapper;
 
 import android.app.Application;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
+import java.util.List;
 
 /**
  * Created by alex on 01/12/2017.
@@ -38,7 +39,7 @@ public interface OxManager {
   final class Config {
     String apiKey;
     String apiSecret;
-    Class notificationActivityClass;
+    List<String> notificationActivityClass;
     String senderId;
     ImageRecognition vuforia;
     OrchextraCompletionCallback orchextraCompletionCallback;
@@ -60,7 +61,7 @@ public interface OxManager {
       return apiSecret;
     }
 
-    public Class getNotificationActivityClass() {
+    public List<String> getNotificationActivityClass() {
       return notificationActivityClass;
     }
 
@@ -79,7 +80,7 @@ public interface OxManager {
     public static final class Builder {
       String apiKey;
       String apiSecret;
-      Class notificationActivityClass;
+      List<String> notificationActivityClass;
       String senderId;
       ImageRecognition vuforia;
       OrchextraCompletionCallback orchextraCompletionCallback;
@@ -98,7 +99,7 @@ public interface OxManager {
         return this;
       }
 
-      public Builder setNotificationActivityClass(Class notificationActivityClass) {
+      public Builder setNotificationActivityClass(List<String> notificationActivityClass) {
         this.notificationActivityClass = notificationActivityClass;
         return this;
       }

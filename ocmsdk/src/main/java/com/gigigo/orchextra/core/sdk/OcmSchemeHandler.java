@@ -9,14 +9,12 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import java.lang.ref.WeakReference;
 import kotlin.Unit;
@@ -27,33 +25,29 @@ public class OcmSchemeHandler {
   private final OcmContextProvider contextProvider;
   private final OcmController ocmController;
   private final ActionHandler actionHandler;
-  private final Authoritation authoritation;
-  private String elementURL;
-  private String processElementURL;
 
   public OcmSchemeHandler(OcmContextProvider contextProvider, OcmController ocmController,
-      ActionHandler actionHandler, Authoritation authoritation) {
+      ActionHandler actionHandler) {
     this.contextProvider = contextProvider;
     this.ocmController = ocmController;
     this.actionHandler = actionHandler;
-    this.authoritation = authoritation;
   }
 
-  public void processElementUrl(final String elementUrl) {
+  public void processDeepLinks(final String elementUrl) {
     ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
-          if(elementCache.getCustomProperties() != null) {
-            OCManager.notifyCustomBehaviourContinue(elementCache.getCustomProperties(), null, new Function1<Boolean, Unit>() {
-              @Override public Unit invoke(Boolean canContinue) {
-                if(canContinue) {
-                  executeAction(elementCache, elementUrl, null, null);
-                }
-                return null;
-              }
-            });
-          }
-          else {
+          if (elementCache.getCustomProperties() != null) {
+            OCManager.notifyCustomBehaviourContinue(elementCache.getCustomProperties(), null,
+                new Function1<Boolean, Unit>() {
+                  @Override public Unit invoke(Boolean canContinue) {
+                    if (canContinue) {
+                      executeAction(elementCache, elementUrl, null, null);
+                    }
+                    return null;
+                  }
+                });
+          } else {
             executeAction(elementCache, elementUrl, null, null);
           }
         }
@@ -69,7 +63,8 @@ public class OcmSchemeHandler {
     });
   }
 
-  public void processElementUrl(String elementUrl, ImageView imageViewToExpandInDetail, ProcessElementCallback processElementCallback) {
+  public void processElementUrl(String elementUrl, ImageView imageViewToExpandInDetail,
+      ProcessElementCallback processElementCallback) {
     WeakReference<ImageView> imageViewWeakReference =
         new WeakReference<>(imageViewToExpandInDetail);
 
@@ -98,7 +93,8 @@ public class OcmSchemeHandler {
     });
   }
 
-  public void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand, WeakReference<ImageView> imageViewToExpandInDetail) {
+  public void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
+      WeakReference<ImageView> imageViewToExpandInDetail) {
 
     boolean hasPreview = cachedElement.getPreview() != null;
 
@@ -159,9 +155,12 @@ public class OcmSchemeHandler {
     }
   }
 
-  private void processDetailActivity(String elementUrl, String urlImageToExpand, WeakReference<ImageView> imageViewToExpandInDetail) {
-    int widthScreen = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(contextProvider.getCurrentActivity());
-    int heightScreen = DeviceUtils.calculateHeightDeviceInImmersiveMode(contextProvider.getCurrentActivity());
+  private void processDetailActivity(String elementUrl, String urlImageToExpand,
+      WeakReference<ImageView> imageViewToExpandInDetail) {
+    int widthScreen =
+        DeviceUtils.calculateRealWidthDeviceInImmersiveMode(contextProvider.getCurrentActivity());
+    int heightScreen =
+        DeviceUtils.calculateHeightDeviceInImmersiveMode(contextProvider.getCurrentActivity());
 
     ImageView imageView = null;
     if (imageViewToExpandInDetail != null) {
@@ -210,6 +209,7 @@ public class OcmSchemeHandler {
 
   public interface ProcessElementCallback {
     void onProcessElementSuccess(ElementCache elementCache);
+
     void onProcessElementFail(Exception exception);
   }
 }

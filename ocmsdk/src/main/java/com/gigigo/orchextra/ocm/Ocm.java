@@ -22,6 +22,7 @@ import gigigo.com.vimeolibs.VimeoCallback;
 import gigigo.com.vimeolibs.VimeoExoPlayerActivity;
 import gigigo.com.vimeolibs.VimeoInfo;
 import gigigo.com.vimeolibs.VimeoManager;
+import java.util.List;
 import java.util.Map;
 import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
@@ -56,7 +57,7 @@ public final class Ocm {
     OcmBuilder ocmBuilder = new OcmBuilder(app);
     String oxKey = "FAKE_KEY";
     String oxSecret = "FAKE_SECRET";
-    Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
+    List<String> notificationActivityClass = ocmBuilder.getNotificationActivityClass();
 
     //Initialization has to be done after setting callbacks because getting them could be null.
     OCManager.initSdk(ocmBuilder.getApp());
@@ -90,7 +91,7 @@ public final class Ocm {
     String oxKey = "FAKE_KEY";
     String oxSecret = "FAKE_SECRET";
 
-    Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
+    List<String> notificationActivityClass = ocmBuilder.getNotificationActivityClass();
 
     OCManager.initSdk(ocmBuilder.getApp());
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
@@ -131,7 +132,7 @@ public final class Ocm {
     System.out.println("appOn6.1");
     String oxKey = ocmBuilder.getOxKey();
     String oxSecret = ocmBuilder.getOxSecret();
-    Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
+    List<String> notificationActivityClass = ocmBuilder.getNotificationActivityClass();
     System.out.println("appOn6.2");
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());

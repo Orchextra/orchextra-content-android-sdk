@@ -13,26 +13,21 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> {
 
-  private final Authoritation authoritation;
   private final OcmController ocmController;
 
   private String textToSearch;
   private List<Cell> cellGridContentDataList;
 
-  public SearcherLayoutPresenter(OcmController ocmController, Authoritation authoritation) {
-
+  public SearcherLayoutPresenter(OcmController ocmController) {
     this.ocmController = ocmController;
-    this.authoritation = authoritation;
   }
 
   @Override public void onViewAttached() {

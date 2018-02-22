@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.LENGTH_INDEFINITE).show();
           }
         });
-    
+
     Ocm.start();//likewoah
   }
 
@@ -228,9 +228,6 @@ public class MainActivity extends AppCompatActivity {
   private void getContent() {
     Ocm.setOnLoadDataContentSectionFinished(new OnLoadContentSectionFinishedCallback() {
       @Override public void onLoadContentSectionFinished() {
-        Toast.makeText(MainActivity.this, "LLega", Toast.LENGTH_LONG).show();
-
-        //if (!oldUiMenuData.isFromCloud()) {
         Ocm.getMenus(DataRequest.FIRST_CACHE, new OcmCallbacks.Menus() {
           @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
             List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
@@ -250,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
 
           }
         });
-        //}
       }
     });
 

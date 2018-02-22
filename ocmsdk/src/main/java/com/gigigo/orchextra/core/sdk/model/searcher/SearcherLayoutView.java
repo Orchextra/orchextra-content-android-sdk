@@ -3,12 +3,10 @@ package com.gigigo.orchextra.core.sdk.model.searcher;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -17,12 +15,9 @@ import com.gigigo.multiplegridrecyclerview.viewholder.CellBlankViewHolder;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutInterface;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutPresenter;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
-import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.grid.factory.ElementsViewHolderFactory;
 import com.gigigo.orchextra.core.sdk.model.grid.viewholders.CellImageViewHolder;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -32,7 +27,6 @@ import orchextra.javax.inject.Inject;
 public class SearcherLayoutView extends UiSearchBaseContentData implements SearcherLayoutInterface {
 
   @Inject SearcherLayoutPresenter presenter;
-  @Inject Authoritation authoritation;
 
   private Context context;
 

@@ -14,25 +14,19 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
-import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocmsdk.R;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContentViewPresenter extends Presenter<ContentView> {
 
-  private final Authoritation authoritation;
   private final OcmController ocmController;
 
   private UiMenu uiMenu;
@@ -43,10 +37,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private boolean hasToCheckNewContent = false;
   private int padding;
 
-  public ContentViewPresenter(OcmController ocmController, Authoritation authoritation) {
-
+  public ContentViewPresenter(OcmController ocmController) {
     this.ocmController = ocmController;
-    this.authoritation = authoritation;
   }
 
   @Override public void onViewAttached() {
@@ -364,18 +356,19 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       imageViewToExpandInDetail = view.findViewById(R.id.image_to_expand_in_detail);
     }
 
-    OCManager.processElementUrl(element.getElementUrl(), imageViewToExpandInDetail, new OcmSchemeHandler.ProcessElementCallback() {
-      @Override public void onProcessElementSuccess(ElementCache elementCache) {
-        OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
-        OCManager.addArticleToReadedArticles(element.getSlug());
-        System.out.println("CELL_CLICKED: " + element.getSlug());
-      }
+    OCManager.processElementUrl(element.getElementUrl(), imageViewToExpandInDetail,
+        new OcmSchemeHandler.ProcessElementCallback() {
+          @Override public void onProcessElementSuccess(ElementCache elementCache) {
+            OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
+            OCManager.addArticleToReadedArticles(element.getSlug());
+            System.out.println("CELL_CLICKED: " + element.getSlug());
+          }
 
-      @Override public void onProcessElementFail(Exception exception) {
-        exception.printStackTrace();
-        getView().contentNotAvailable();
-      }
-    });
+          @Override public void onProcessElementFail(Exception exception) {
+            exception.printStackTrace();
+            getView().contentNotAvailable();
+          }
+        });
   }
 
   public void setFilter(String filter) {

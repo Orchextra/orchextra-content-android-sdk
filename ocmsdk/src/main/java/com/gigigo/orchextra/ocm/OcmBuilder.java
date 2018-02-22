@@ -6,6 +6,7 @@ import com.bumptech.glide.load.Transformation;
 import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.wrapper.ImageRecognition;
+import java.util.List;
 
 public final class OcmBuilder {
 
@@ -13,7 +14,7 @@ public final class OcmBuilder {
   private String oxKey;
   private String oxSecret;
 
-  private Class notificationActivityClass;
+  private List<String> notificationActivityClass;
   private String contentLanguage;
   private OnEventCallback onEventCallback;
 
@@ -109,7 +110,7 @@ public final class OcmBuilder {
   /**
    * Set the home/main activity which receives the actions of the sdk like to show notifications
    */
-  public OcmBuilder setNotificationActivityClass(Class notificationActivityClass) {
+  public OcmBuilder setNotificationActivityClass(List<String> notificationActivityClass) {
     this.notificationActivityClass = notificationActivityClass;
     return this;
   }
@@ -144,7 +145,7 @@ public final class OcmBuilder {
     return contentLanguage;
   }
 
-  Class getNotificationActivityClass() {
+  List<String> getNotificationActivityClass() {
     return notificationActivityClass;
   }
 }
