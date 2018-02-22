@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.sdk.model.searcher;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -131,6 +132,10 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
 
   @Override public void showEmptyView(boolean isVisible) {
     emptyLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+  }
+
+  @Override public void contentNotAvailable() {
+    //Snackbar.make(listedDataContainer, R.string.oc_error_content_not_available_without_internet, Snackbar.LENGTH_SHORT).show();
   }
 
   @Override public void setData(List<Cell> cellGridContentDataList) {

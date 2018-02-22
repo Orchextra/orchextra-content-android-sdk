@@ -6,7 +6,8 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement
 import com.gigigo.orchextra.core.domain.entities.elements.Element
 import java.util.ArrayList
 
-class ApiElementMapper(private val apiMenuItemViewMapper: ApiElementSectionViewMapper) : ExternalClassToModelMapper<ApiElement, Element> {
+class ApiElementMapper(
+    private val apiMenuItemViewMapper: ApiElementSectionViewMapper) : ExternalClassToModelMapper<ApiElement, Element> {
 
   override fun externalClassToModel(data: ApiElement): Element? {
     val time = System.currentTimeMillis()
@@ -43,7 +44,7 @@ class ApiElementMapper(private val apiMenuItemViewMapper: ApiElementSectionViewM
     }
 
     val currentTime = System.currentTimeMillis() - time
-    Log.v("TT - ApiElement", ("" + currentTime/1000))
+    Log.v("TT - ApiElement", ("" + currentTime / 1000))
 
 
     return model

@@ -45,6 +45,10 @@ class ApiElementCacheMapper(
       share?.let {
         model.share = apiElementCacheShareMapper.externalClassToModel(share)
       }
+
+      customProperties?.let {
+        model.customProperties = data.customProperties
+      }
     }
 
     val currentTime = System.currentTimeMillis() - time

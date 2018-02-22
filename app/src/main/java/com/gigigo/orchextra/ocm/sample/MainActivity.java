@@ -1,5 +1,7 @@
 package com.gigigo.orchextra.ocm.sample;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -91,10 +93,8 @@ public class MainActivity extends AppCompatActivity {
         Handler handler = new Handler();
         switch (property) {
           case "requiredAuth":
-            completion.invoke(true);
+            //completion.invoke(true);
             handler.postDelayed(() -> {
-
-              /*
               if(value.equals("logged")) {
                 completion.invoke(false);
                 Toast.makeText(MainActivity.this, "can't continue, requires authorization", Toast.LENGTH_SHORT).show();
@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
               else {
                 completion.invoke(true);
               }
-              */
             }, 3000);
             break;
         }
@@ -216,27 +215,8 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.LENGTH_INDEFINITE).show();
           }
         });
-
-    Ocm.setOnCustomSchemeReceiver(new OnCustomSchemeReceiver() {
-      @Override public void onReceive(String customScheme) {
-        // Toast.makeText(MainActivity.this, customScheme, Toast.LENGTH_SHORT).show();
-        Orchextra.startScannerActivity();
-      }
-    });
+    
     Ocm.start();//likewoah
-  }
-
-  public void clearApplicationData() {
-    File cache = getCacheDir();
-    File appDir = new File(cache.getParent());
-    if (appDir.exists()) {
-      String[] children = appDir.list();
-      for (String s : children) {
-        if (!s.equals("lib")) {
-          deleteDir(new File(appDir, s));
-        }
-      }
-    }
   }
 
   private List<UiMenu> copy(List<UiMenu> list) {

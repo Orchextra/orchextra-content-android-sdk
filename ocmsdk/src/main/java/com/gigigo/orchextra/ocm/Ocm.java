@@ -261,22 +261,6 @@ public final class Ocm {
   }
 
   /**
-   * Provide when the user app is logged in.
-   */
-  //TODO: remove this, its related to old segmentation
-  public static void setUserIsAuthorizated(boolean isAuthorizated) {
-    OCManager.setUserIsAuthorizated(isAuthorizated);
-  }
-
-  /**
-   * Provide when the action requires the user to be logged.
-   */
-  //TODO: remove this, its related to old segmentation
-  public static void setLoggedAction(String elementUrl) {
-    OCManager.setLoggedAction(elementUrl);
-  }
-
-  /**
    * Start or restart the sdk with a new credentials
    */
   public static void startWithCredentials(String apiKey, String apiSecret,

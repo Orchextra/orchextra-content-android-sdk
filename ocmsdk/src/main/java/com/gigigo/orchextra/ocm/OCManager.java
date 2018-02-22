@@ -159,14 +159,13 @@ Add Comment C
   private UiMenu uiMenuToNotifyWhenSectionIsLoaded;
   private boolean isShowReadedArticles = false;
   private int maxReadArticles = 100;
-  //public static int transform = -1;
   private com.bumptech.glide.load.Transformation<Bitmap> readArticlesBitmapTransform;
 
   static void initSdk(Application application) {
     getInstance().initOcm(application);
   }
 
-  public static void setCustomBehaviourDelegate(
+  static void setCustomBehaviourDelegate(
       OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
     getInstance().ocmCustomBehaviourDelegate = ocmCustomBehaviourDelegate;
   }
@@ -215,7 +214,7 @@ Add Comment C
         });
   }
 
-  public static void clearData(boolean images, boolean data,
+  static void clearData(boolean images, boolean data,
       final OCManagerCallbacks.Clear clearCallback) {
     if (instance != null) {
 
@@ -231,6 +230,13 @@ Add Comment C
       });
     }
   }
+
+  static void processDeepLinks(String elementUrl) {
+    if (instance != null) {
+      instance.schemeHandler.processElementUrl(elementUrl);
+    }
+  }
+
   public static void processElementUrl(String elementUrl, ImageView imageViewToExpandInDetail, OcmSchemeHandler.ProcessElementCallback processElementCallback) {
 
     if (instance != null) {
@@ -238,7 +244,7 @@ Add Comment C
     }
   }
 
-  public static UiDetailBaseContentData generateDetailView(String elementUrl) {
+  static UiDetailBaseContentData generateDetailView(String elementUrl) {
     return instance.ocmViewGenerator.generateDetailView(elementUrl);
   }
 
@@ -246,29 +252,9 @@ Add Comment C
     return instance.ocmViewGenerator.generateSearchView();
   }
 
-  //TODO: remove this, its related to old segmentation
-  static void setUserIsAuthorizated(boolean isAuthorizated) {
-    if (instance != null) {
-      instance.authoritation.setAuthorizatedUser(isAuthorizated);
-    }
-  }
-
-  //TODO: remove this, its related to old segmentation
-  static void setLoggedAction(String elementUrl) {
-    if (instance != null) {
-      instance.schemeHandler.processElementUrl(elementUrl);
-    }
-  }
-
   static void setStyleUi(OcmStyleUiBuilder ocmUiBuilder) {
     if (instance != null) {
       instance.ocmStyleUi.setStyleUi(ocmUiBuilder);
-    }
-  }
-
-  static void processDeepLinks(String path) {
-    if (instance != null) {
-      instance.schemeHandler.processElementUrl(path);
     }
   }
 

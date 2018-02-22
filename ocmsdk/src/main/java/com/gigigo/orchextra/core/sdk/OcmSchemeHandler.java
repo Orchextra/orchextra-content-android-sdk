@@ -9,8 +9,6 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
-import com.gigigo.orchextra.core.domain.entities.elements.ElementSegmentation;
-import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
@@ -18,8 +16,11 @@ import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import java.lang.ref.WeakReference;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 public class OcmSchemeHandler {
 
@@ -39,22 +40,21 @@ public class OcmSchemeHandler {
   }
 
   public void processElementUrl(final String elementUrl) {
-    String elementUri = elementUrl;
-    if (elementURL != null) {
-      elementUri = elementURL;
-      elementURL = null;
-    }
-
-    String finalElementUri = elementUri;
-    ocmController.getDetails(elementUri, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
-          if (elementRequiredUserToBeLogged(elementCache)) {
-            // Save url of the element that require login
-            elementURL = elementUrl;
-            //OCManager.notifyRequiredLoginToContinue(elementURL);
-          } else {
-            executeAction(elementCache, finalElementUri, null, null);
+          if(elementCache.getCustomProperties() != null) {
+            OCManager.notifyCustomBehaviourContinue(elementCache.getCustomProperties(), null, new Function1<Boolean, Unit>() {
+              @Override public Unit invoke(Boolean canContinue) {
+                if(canContinue) {
+                  executeAction(elementCache, elementUrl, null, null);
+                }
+                return null;
+              }
+            });
+          }
+          else {
+            executeAction(elementCache, elementUrl, null, null);
           }
         }
       }
@@ -70,18 +70,10 @@ public class OcmSchemeHandler {
   }
 
   public void processElementUrl(String elementUrl, ImageView imageViewToExpandInDetail, ProcessElementCallback processElementCallback) {
-
     WeakReference<ImageView> imageViewWeakReference =
         new WeakReference<>(imageViewToExpandInDetail);
 
-    String elementUri = elementUrl;
-    if (processElementURL != null) {
-      elementUri = processElementURL;
-      processElementURL = null;
-    }
-
-    String finalElementUri = elementUri;
-    ocmController.getDetails(elementUri, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
 
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
@@ -92,13 +84,7 @@ public class OcmSchemeHandler {
             urlImageToExpand = elementCache.getPreview().getImageUrl();
           }
 
-          if (elementRequiredUserToBeLogged(elementCache)) {
-            // Save url of the element that require login
-            processElementURL = elementUrl;
-            //OCManager.notifyRequiredLoginToContinue(processElementURL);
-          } else {
-            executeAction(elementCache, finalElementUri, urlImageToExpand, imageViewWeakReference);
-          }
+          executeAction(elementCache, elementUrl, urlImageToExpand, imageViewWeakReference);
         }
       }
 
@@ -110,56 +96,6 @@ public class OcmSchemeHandler {
         processElementCallback.onProcessElementFail(new NetworkConnectionException());
       }
     });
-  }
-
-  /*
-  public void processElementUrl(String elementUrl, String urlImageToExpand, int widthScreen,
-      int heightScreen, ImageView imageViewToExpandInDetail) {
-
-    WeakReference<ImageView> imageViewWeakReference =
-        new WeakReference<>(imageViewToExpandInDetail);
-
-    String elementUri = elementUrl;
-    if (processElementURL != null) {
-      elementUri = processElementURL;
-      processElementURL = null;
-    }
-
-    String finalElementUri = elementUri;
-    ocmController.getDetails(elementUri, new OcmController.GetDetailControllerCallback() {
-      @Override public void onGetDetailLoaded(ElementCache elementCache) {
-        if (elementCache != null) {
-          if (elementRequiredUserToBeLogged(elementCache)) {
-            // Save url of the element that require login
-            processElementURL = elementUrl;
-            OCManager.notifyRequiredLoginToContinue(processElementURL);
-          } else {
-            executeAction(elementCache, finalElementUri, urlImageToExpand, widthScreen,
-                heightScreen, imageViewWeakReference);
-          }
-        }
-      }
-
-      @Override public void onGetDetailFails(Exception e) {
-        e.printStackTrace();
-      }
-
-      @Override public void onGetDetailNoAvailable(Exception e) {
-        e.printStackTrace();
-      }
-    });
-  }
-  */
-
-  private boolean elementRequiredUserToBeLogged(ElementCache elementCache){
-    ElementSegmentation segmentation = elementCache.getSegmentation();
-
-    boolean loggedRequired = false;
-    if(segmentation!=null) {
-      loggedRequired = RequiredAuthoritation.LOGGED.equals(segmentation.getRequiredAuth());
-    }
-
-    return loggedRequired && !authoritation.isAuthorizatedUser();
   }
 
   public void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand, WeakReference<ImageView> imageViewToExpandInDetail) {

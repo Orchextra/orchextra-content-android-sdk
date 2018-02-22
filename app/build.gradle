@@ -80,10 +80,21 @@ android {
   flavorDimensions "sample"
 
   productFlavors {
+    woah_Unknown {
+      dimension "sample"
+    }
+
     woah_DEMO {
       dimension "sample"
     }
 
+    woah_SecurityScan {
+      dimension "sample"
+    }
+
+    woah_CSE_2017 {
+      dimension "sample"
+    }
 
     woah_IT {
       dimension "sample"

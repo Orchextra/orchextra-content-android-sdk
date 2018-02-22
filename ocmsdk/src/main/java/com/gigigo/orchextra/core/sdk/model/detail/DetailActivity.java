@@ -208,10 +208,6 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     }
   }
 
-  @Override public void redirectToAction() {
-    Ocm.setLoggedAction(this.elementUrl);
-  }
-
   @Override protected void onDestroy() {
     unbindDrawables(parentContainer);
     System.gc();

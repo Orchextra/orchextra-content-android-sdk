@@ -13,6 +13,4 @@ public interface DetailView {
   void finishView(boolean showingPreview);
 
   void setAnimationImageView();
-
-  void redirectToAction(); //TODO: remove this redirect, its related to old segmentation
 }

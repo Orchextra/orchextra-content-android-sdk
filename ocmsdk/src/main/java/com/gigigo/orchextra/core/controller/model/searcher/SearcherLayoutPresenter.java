@@ -16,6 +16,7 @@ import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.ArrayList;
 import java.util.List;
@@ -155,12 +156,13 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
     OCManager.processElementUrl(element.getElementUrl(), imageViewToExpandInDetail,
         new OcmSchemeHandler.ProcessElementCallback() {
           @Override public void onProcessElementSuccess(ElementCache elementCache) {
-
+            //OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
             System.out.println("CELL_CLICKED: " + element.getSlug());
           }
 
           @Override public void onProcessElementFail(Exception exception) {
             exception.printStackTrace();
+            getView().contentNotAvailable();
           }
         });
   }
