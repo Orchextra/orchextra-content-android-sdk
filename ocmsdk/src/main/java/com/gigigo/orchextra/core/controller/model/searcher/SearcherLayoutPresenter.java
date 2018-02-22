@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.multiplegridrecyclerview.entities.CellBlankElement;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
@@ -15,6 +16,12 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
+import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
+import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.OcmEvent;
+import com.gigigo.orchextra.ocm.customProperties.ViewType;
+import com.gigigo.orchextra.ocmsdk.R;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,38 +142,31 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
 
       Element element = (Element) cellGridContentDataList.get(position).getData();
 
-      ocmController.getDetails(element.getElementUrl(),
-          new OcmController.GetDetailControllerCallback() {
-            @Override public void onGetDetailLoaded(ElementCache elementCache) {
-              if (getView() != null) {
-                String imageUrlToExpandInPreview = null;
-                if (elementCache.getPreview() != null) {
-                  imageUrlToExpandInPreview = elementCache.getPreview().getImageUrl();
-                }
+      if (element == null) {
+        return;
+      }
 
-                RequiredAuthoritation requiredAuth =
-                    element.getSegmentation() != null ? element.getSegmentation().getRequiredAuth()
-                        : null;
-
-                if (requiredAuth == null || checkLoginAuth(requiredAuth)) {
-
-                  getView().navigateToDetailView(element.getElementUrl(), imageUrlToExpandInPreview,
-                      activity, view);
-                } else {
-                  getView().showAuthDialog();
-                }
-              }
-            }
-
-            @Override public void onGetDetailFails(Exception e) {
-              e.printStackTrace();
-            }
-
-            @Override public void onGetDetailNoAvailable(Exception e) {
-              e.printStackTrace();
-            }
-          });
+      itemClickedContinue(element, activity, view);
     }
+  }
+
+  private void itemClickedContinue(Element element, AppCompatActivity activity, View view) {
+    ImageView imageViewToExpandInDetail = null;
+
+    if (view != null) {
+      imageViewToExpandInDetail = (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
+    }
+
+    OCManager.processElementUrl(element.getElementUrl(), imageViewToExpandInDetail, new OcmSchemeHandler.ProcessElementCallback() {
+      @Override public void onProcessElementSuccess(ElementCache elementCache) {
+
+        System.out.println("CELL_CLICKED: " + element.getSlug());
+      }
+
+      @Override public void onProcessElementFail(Exception exception) {
+        exception.printStackTrace();
+      }
+    });
   }
 
   private boolean checkLoginAuth(@NonNull RequiredAuthoritation requiredAuth) {

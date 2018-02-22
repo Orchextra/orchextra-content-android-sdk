@@ -14,6 +14,7 @@ import com.gigigo.orchextra.core.controller.model.home.grid.ContentView;
 import com.gigigo.orchextra.core.controller.model.home.grid.ContentViewPresenter;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
+import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalViewPager;
@@ -203,22 +204,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     if (errorView != null) {
       errorView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
-  }
-
-  @Override
-  public void navigateToDetailView(String elementUrl, String urlImageToExpand, View view) {
-    if (view != null) {
-      final ImageView imageViewToExpandInDetail =
-          (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
-
-      OCManager.generateDetailView(elementUrl, urlImageToExpand,
-          DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context),
-          DeviceUtils.calculateHeightDeviceInImmersiveMode(context), imageViewToExpandInDetail);
-    }
-  }
-
-  @Override public void showAuthDialog(String elementUrl) {
-    OCManager.notifyRequiredLoginToContinue(elementUrl);
   }
 
   @Override public void showProgressView(boolean isVisible) {
