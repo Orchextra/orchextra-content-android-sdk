@@ -305,6 +305,8 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       }
     }
 
+    //TODO: check this "ñapa" to remove cellblankelements and provide application to put bottom padding
+    /*
     while (cellGridContentDataList.size() % 3 != 0) {
       CellBlankElement cellBlankElement = new CellBlankElement();
       cellBlankElement.setColumn(1 * auxPadding);
@@ -322,7 +324,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         cellGridContentDataList.add(cellElement);
       }
     }
-
+*/
     return cellGridContentDataList;
   }
 

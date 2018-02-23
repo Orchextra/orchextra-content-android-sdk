@@ -228,9 +228,9 @@ Add Comment C
     }
   }
 
-  static void processDeepLinks(String elementUrl) {
+  static void processRedirectElementUrl(String elementUrl) {
     if (instance != null) {
-      instance.schemeHandler.processDeepLinks(elementUrl);
+      instance.schemeHandler.processRedirectElementUrl(elementUrl);
     }
   }
 
@@ -375,7 +375,7 @@ Add Comment C
     instance.oxManager.stop();
   }
 
-  public static void returnOcCustomSchemeCallback(String customScheme) {
+  public static void returnOnCustomSchemeCallback(String customScheme) {
 
     instance.oxManager.callOnCustomSchemeReceiver(customScheme);
   }

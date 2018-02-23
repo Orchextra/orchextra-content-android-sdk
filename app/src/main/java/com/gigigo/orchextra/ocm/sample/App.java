@@ -22,8 +22,6 @@ import java.util.Arrays;
 public class App extends MultiDexApplication {
 
   private Context context;
-  private static final String WOAH_DEEPLINK_SECTION_PATH = "section";
-  private static final String WOAH_DEEPLINK_CONTENT_PATH = "content";
   private static final String OCM_DEEPLINK_START_PATH = "ocm";
   private static final String OCM_DEEPLINK_ELEMENT_PATH = "element";
   private static final String SLUG_DEEPLINK_START_PATH = "slug=";
@@ -72,9 +70,9 @@ public class App extends MultiDexApplication {
       String path = data.getPath();
       String query = data.getQuery();
 
-      GGGLogImpl.log("DeepLink Host: " + host);
-      GGGLogImpl.log("DeepLink Path: " + path);
-      GGGLogImpl.log("DeepLink Query: " + query);
+      System.out.println("DeepLink Host: " + host);
+      System.out.println("DeepLink Path: " + path);
+      System.out.println("DeepLink Query: " + query);
 
       if (query != null && !query.isEmpty()) {
         int indexOfSlug = query.indexOf(SLUG_DEEPLINK_START_PATH);
@@ -95,26 +93,15 @@ public class App extends MultiDexApplication {
         path = path.substring(1, path.length());
       }
 
-      if (host != null) {
-        if (host.startsWith(WOAH_DEEPLINK_SECTION_PATH)) {
-          path = WOAH_DEEPLINK_SECTION_PATH + "/" + path;
-        } else if (host.startsWith(WOAH_DEEPLINK_CONTENT_PATH)) {
-          path = WOAH_DEEPLINK_CONTENT_PATH + "/" + path;
-        }
-      }
-
-      if (path.toUpperCase().startsWith(WOAH_DEEPLINK_SECTION_PATH.toUpperCase())
-          || path.toUpperCase().startsWith(WOAH_DEEPLINK_CONTENT_PATH.toUpperCase())) {
-
-        path = path.substring(path.indexOf("/") + 1, path.length());
-
-        System.out.println("navigateToSection " + path);
-      } else if (path.toUpperCase().startsWith(OCM_DEEPLINK_START_PATH.toUpperCase())
+      if (path.toUpperCase().startsWith(OCM_DEEPLINK_START_PATH.toUpperCase())
           || path.toUpperCase().startsWith(OCM_DEEPLINK_ELEMENT_PATH.toUpperCase())) {
 
         path = path.substring(path.indexOf("/") + 1, path.length());
 
         Ocm.processDeepLinks(path);
+      }
+      else {
+        System.out.println("navigateToSection " + path);
       }
     }
   }

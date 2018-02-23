@@ -20,6 +20,8 @@ import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElemen
 import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElement;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElementRender;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleBlankView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleButtonView;
@@ -151,7 +153,15 @@ public class ArticleContentData extends UiBaseContentData {
               OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(),
                   ViewType.BUTTON_ELEMENT, canContinue -> {
                     if (canContinue) {
-                      Ocm.processDeepLinks(elementUrl);
+                      Ocm.processElementUrl(elementUrl, null, new OcmSchemeHandler.ProcessElementCallback() {
+                        @Override public void onProcessElementSuccess(ElementCache elementCache) {
+
+                        }
+
+                        @Override public void onProcessElementFail(Exception exception) {
+
+                        }
+                      });
                     }
 
                     flFA.setVisibility(View.INVISIBLE);
@@ -159,7 +169,15 @@ public class ArticleContentData extends UiBaseContentData {
                     return null;
                   });
             } else {
-              Ocm.processDeepLinks(elementUrl);
+              Ocm.processElementUrl(elementUrl, null, new OcmSchemeHandler.ProcessElementCallback() {
+                @Override public void onProcessElementSuccess(ElementCache elementCache) {
+
+                }
+
+                @Override public void onProcessElementFail(Exception exception) {
+
+                }
+              });
 
               flFA.setVisibility(View.INVISIBLE);
               faLoading.setVisibility(View.GONE);

@@ -33,7 +33,7 @@ public class OcmSchemeHandler {
     this.actionHandler = actionHandler;
   }
 
-  public void processDeepLinks(final String elementUrl) {
+  public void processRedirectElementUrl(final String elementUrl) {
     ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
@@ -166,7 +166,7 @@ public class OcmSchemeHandler {
     if (imageViewToExpandInDetail != null) {
       imageView = imageViewToExpandInDetail.get();
     }
-    openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen, imageView);
+    DetailActivity.open(contextProvider.getCurrentActivity(), elementUrl, urlImageToExpand, widthScreen, heightScreen, imageView);
   }
 
   private void processVideo(VideoFormat format, String source, ElementCache cachedElement) {
@@ -199,12 +199,6 @@ public class OcmSchemeHandler {
 
   private void processDeepLink(String uri) {
     actionHandler.processDeepLink(uri);
-  }
-
-  private void openDetailActivity(String elementUrl, String urlImageToExpand, int widthScreen,
-      int heightScreen, ImageView imageViewToExpandInDetail) {
-    DetailActivity.open(contextProvider.getCurrentActivity(), elementUrl, urlImageToExpand,
-        widthScreen, heightScreen, imageViewToExpandInDetail);
   }
 
   public interface ProcessElementCallback {

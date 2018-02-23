@@ -39,7 +39,7 @@ public class ActionHandler {
   }
 
   public void processDeepLink(String uri) {
-    OCManager.returnOcCustomSchemeCallback(uri);
+    OCManager.returnOnCustomSchemeCallback(uri);
   }
 
   public void launchYoutubePlayer(String videoId) {

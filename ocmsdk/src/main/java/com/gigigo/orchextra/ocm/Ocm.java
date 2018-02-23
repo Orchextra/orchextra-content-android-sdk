@@ -3,9 +3,11 @@ package com.gigigo.orchextra.ocm;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
+import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
@@ -127,18 +129,13 @@ public final class Ocm {
    * class
    */
   public static void initialize(OcmBuilder ocmBuilder) {
-    System.out.println("appOn6.1");
     Application app = ocmBuilder.getApp();
-    System.out.println("appOn6.1");
     String oxKey = ocmBuilder.getOxKey();
     String oxSecret = ocmBuilder.getOxSecret();
     List<String> notificationActivityClass = ocmBuilder.getNotificationActivityClass();
-    System.out.println("appOn6.2");
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
-    System.out.println("appOn6.3");
     OCManager.initSdk(app);
-    System.out.println("appOn6.4");
     OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
     if (ocmBuilder.getShowReadArticles() && ocmBuilder.getTransformReadArticleMode()
         .equals(ImageTransformReadArticle.BITMAP_TRANSFORM)) {
@@ -149,11 +146,11 @@ public final class Ocm {
         OCManager.setBitmapTransformReadArticles(ocmBuilder.getCustomBitmapTransformReadArticle());
       }
     }
-    System.out.println("appOn6.5");
+
     if (ocmBuilder.getShowReadArticles()) {
       OCManager.setMaxReadArticles(ocmBuilder.getMaxReadArticles());
     }
-    System.out.println("appOn6.6");
+
     if (ocmBuilder.getVuforiaImpl() != null) {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
           ocmBuilder.getOxSenderId(), ocmBuilder.getVuforiaImpl());
@@ -161,7 +158,6 @@ public final class Ocm {
       OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
           ocmBuilder.getOxSenderId());
     }
-    System.out.println("appOn6.7");
   }
 
   /**
@@ -251,7 +247,15 @@ public final class Ocm {
    * The sdk does an action when deep link is provided and exists in dashboard
    */
   public static void processDeepLinks(String path) {
-    OCManager.processDeepLinks(path);
+    OCManager.processRedirectElementUrl(path);
+  }
+
+  /**
+   * The sdk does an action when deep link is provided and exists in dashboard
+   */
+  public static void processElementUrl(String elementUrl, ImageView imageViewToExpandInDetail,
+      OcmSchemeHandler.ProcessElementCallback processElementCallback)  {
+    OCManager.processElementUrl(elementUrl, imageViewToExpandInDetail, processElementCallback);
   }
 
   /**
