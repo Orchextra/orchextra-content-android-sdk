@@ -1,9 +1,11 @@
 package com.gigigo.orchextra.core.data.rxRepository;
 
+import android.content.Context;
 import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentDataResponseMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
 import com.gigigo.orchextra.core.data.api.mappers.version.ApiVersionMapper;
+import com.gigigo.orchextra.core.data.api.mappers.video.ApiVideoDataMapper;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDiskDataStore;
@@ -13,6 +15,7 @@ import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
+import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
 import java.util.Map;
 import orchextra.javax.inject.Inject;
@@ -94,6 +97,12 @@ import orchextra.javax.inject.Singleton;
   @Override public Observable<ElementData> getDetail(boolean forceReload, String elementUrl) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForDetail(forceReload, elementUrl);
     return ocmDataStore.getElementById(elementUrl).map(apiElementDataMapper::externalClassToModel);
+  }
+
+  @Override public Observable<VimeoInfo> getVideo(Context context, boolean forceReload, String videoId, boolean isWifiConnection,
+      boolean isFastConnection) {
+    OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForVideo(forceReload, videoId, isWifiConnection, isFastConnection);
+    return ocmDataStore.getVideoById(context, videoId, isWifiConnection, isFastConnection);
   }
 
   @Override public Observable<ContentData> doSearch(String textToSearch) {

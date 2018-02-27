@@ -1,23 +1,25 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+apply from: '../ocmsdk/dependencies.gradle'
+
 group = 'com.github.Orchextra'
 
 android {
-  compileSdkVersion 26
-  buildToolsVersion '26.0.2'
+  compileSdkVersion project.androidCompileSdkVersion
+  buildToolsVersion project.androidBuildToolsVersion
 
   defaultConfig {
-    minSdkVersion 17
-    targetSdkVersion 26
-    versionCode 1
-    versionName "1.0"
+    minSdkVersion project.androidMinSdkVersion
+    targetSdkVersion project.androidTargetSdkVersion
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   buildTypes {
-
     staging {
       debuggable true
     }
@@ -33,8 +35,6 @@ android {
     }
   }
 
-
-
   flavorDimensions "ocm"
 
   productFlavors {
@@ -43,21 +43,19 @@ android {
     }
   }
 
-
   //true to publish all flavour artifacts
   // publishNonDefault true
   defaultPublishConfig "ocmRelease"
 }
 dependencies {
+  implementation project.libraries.androidAppCompat
+  api project.libraries.vimeoNetworking
+  api project.libraries.exoplayer
+  api project.libraries.imageloaderGlideBlur
+  api project.libraries.rxJava
 
-  androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+  androidTestImplementation(project.testLibraries.espresso, {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  implementation "com.android.support:appcompat-v7:26.0.2"
-  testImplementation 'junit:junit:4.12'
-
-  api 'com.vimeo.networking:vimeo-networking:1.1.1'
-  api 'com.google.android.exoplayer:exoplayer:r2.5.3'
-  //todo this mustbe only interface and the impl(glide or whatever)on the VimeoBuilder
-  api 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01'
+  testImplementation project.testLibraries.junit
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -19,11 +18,11 @@ import retrofit2.Response;
  */
 
 public class VimeoManager {
-  private static String mNoket_ssecca = "";
-  private static String mClient_ID = "";
-  private static String mClient_Secret = "";
-  private static String mScope = "";
-  private static VimeoClient mApiClient;
+  private static String noket_ssecca = "";
+  private static String clientID = "";
+  private static String clientSecret = "";
+  private static String scope = "";
+  private static VimeoClient vimeoApiClient;
 
   //flow open vimeo video
   //1º get videoid
@@ -38,43 +37,43 @@ public class VimeoManager {
   public VimeoManager(VimeoBuilder builder) {
     Configuration.Builder configBuilder;
     if (builder != null) {
-      mNoket_ssecca = builder.getNoket();
-      mClient_ID = builder.getClient_id();
-      mClient_Secret = builder.getClient_secret();
-      mScope = builder.getScope();
+      noket_ssecca = builder.getToken();
+      clientID = builder.getClientId();
+      clientSecret = builder.getClientSecret();
+      scope = builder.getScope();
 
-      if (mNoket_ssecca != null && !mNoket_ssecca.equals("")) {
-        configBuilder = new Configuration.Builder(mNoket_ssecca);
+      if (noket_ssecca != null && !noket_ssecca.equals("")) {
+        configBuilder = new Configuration.Builder(noket_ssecca);
         VimeoClient.initialize(configBuilder.build());
-        mApiClient = VimeoClient.getInstance();
+        vimeoApiClient = VimeoClient.getInstance();
       } else {
-        if (mClient_ID != null
-            && !mClient_ID.equals("")
-            && mClient_Secret != null
-            && !mClient_Secret.equals("")
-            && mScope != null
-            && !mScope.equals("")) {
+        if (clientID != null
+            && !clientID.equals("")
+            && clientSecret != null
+            && !clientSecret.equals("")
+            && scope != null
+            && !scope.equals("")) {
 
-          configBuilder = new Configuration.Builder(mClient_ID, mClient_Secret, mScope);
+          configBuilder = new Configuration.Builder(clientID, clientSecret, scope);
           VimeoClient.initialize(configBuilder.build());
-          mApiClient = VimeoClient.getInstance();
+          vimeoApiClient = VimeoClient.getInstance();
         }
       }
     }
   }
 
-  public void getVideoVimeoInfo(final Context context, final String videoId, final boolean isMobileConection,
-      final boolean isWifiConnection, final boolean isFastConnection,
-      final VimeoCallback callback) {
-    new Thread(new Runnable() {
-      @Override public void run() {
-        final Response<Video> videoResponse =
-            mApiClient.fetchVideoSync("/videos/" + videoId, CacheControl.FORCE_NETWORK, "pictures.uri,files");
-        //todo ejecutar en otro hilo
+  public void getVideoVimeoInfo(final Context context, final String videoId, final boolean isWifiConnection,
+      final boolean isFastConnection, final VimeoCallback callback) {
+
+    final Response<Video> videoResponse =
+            vimeoApiClient.fetchVideoSync("/videos/" + videoId, CacheControl.FORCE_NETWORK, "pictures.uri,files");
+
+
         new Handler(Looper.getMainLooper()).post(new Runnable() {
           @Override public void run() {
             if (videoResponse != null && videoResponse.body() != null) {
               VimeoInfo info = new VimeoInfo();
+
               //region  determine quality from connection
               int videoIdx;
               if (isFastConnection) {
@@ -134,8 +133,6 @@ public class VimeoManager {
             }
           }
         });
-      }
-    }).start();
   }
 
   public void updateAccessToken(String access_token) {

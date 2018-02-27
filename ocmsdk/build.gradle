@@ -257,7 +257,7 @@ dependencies {
   api project.libraries.gpuImage//4 readarticles
 
 
-  api project(':vimeosdk')
+  api project.modules.vimeo
 
   //TEST
   testImplementation project.testLibraries.junit

@@ -95,6 +95,30 @@ import orchextra.javax.inject.Singleton;
     return ocmDataStore;
   }
 
+  public OcmDataStore getDataStoreForVideo(boolean force, String videoId, boolean isWifiConnection,
+      boolean isFastConnection) {
+
+    OcmDataStore ocmDataStore;
+
+    if (!connectionUtils.hasConnection()) return getDiskDataStore();
+
+    if (force) {
+      Log.i(TAG, "CLOUD - Video");
+      ocmDataStore = getCloudDataStore();
+    } else {
+      OcmCache cache = diskDataStore.getOcmCache();
+      if (cache.isVideoCached(videoId) && !cache.isVideoExpired(videoId)) {
+        Log.i(TAG, "DISK  - Video");
+        ocmDataStore = getDiskDataStore();
+      } else {
+        Log.i(TAG, "CLOUD - Video");
+        ocmDataStore = getCloudDataStore();
+      }
+    }
+
+    return ocmDataStore;
+  }
+
   public OcmDataStore getCloudDataStore() {
     return cloudDataStore;
   }

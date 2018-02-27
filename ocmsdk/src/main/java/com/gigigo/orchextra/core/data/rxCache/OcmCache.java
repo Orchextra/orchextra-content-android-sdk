@@ -5,6 +5,7 @@ import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
+import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import io.reactivex.Observable;
 
 public interface OcmCache {
@@ -32,6 +33,14 @@ public interface OcmCache {
   boolean isDetailCached(String slug);
 
   boolean isDetailExpired(String slug);
+
+  Observable<ApiVideoData> getVideo(String videoId);
+
+  void putVideo(ApiVideoData videoData);
+
+  boolean isVideoCached(String videoId);
+
+  boolean isVideoExpired(String videoId);
 
   void evictAll(boolean images, boolean data);
 

@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -11,6 +12,7 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
+import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageData;
@@ -19,10 +21,25 @@ import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.receiver.WifiReceiver;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocmsdk.BuildConfig;
+import com.vimeo.networking.VimeoClient;
+import com.vimeo.networking.model.Video;
+import gigigo.com.vimeolibs.VimeoBuilder;
+import gigigo.com.vimeolibs.VimeoCallback;
+import gigigo.com.vimeolibs.VimeoInfo;
+import gigigo.com.vimeolibs.VimeoManager;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.Iterator;
+import okhttp3.CacheControl;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
+import retrofit2.Response;
 
 /**
  * Created by francisco.hernandez on 23/5/17.
@@ -153,6 +170,36 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.getElementByIdRx(slug, withThumbnails)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putDetail);
+  }
+
+  @Override public Observable<VimeoInfo> getVideoById(Context context, String videoId, boolean isWifiConnection,
+      boolean isFastConnection) {
+    Observable<VimeoInfo> videoObservable = Observable.create(new ObservableOnSubscribe<VimeoInfo>() {
+      @Override public void subscribe(ObservableEmitter<VimeoInfo> emitter) throws Exception {
+        VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
+        VimeoManager videoManager = new VimeoManager(builder);
+
+        videoManager.getVideoVimeoInfo(context, videoId, isWifiConnection, isFastConnection, new VimeoCallback() {
+          @Override public void onSuccess(VimeoInfo vimeoInfo) {
+            ApiVideoData videoData = new ApiVideoData(vimeoInfo);
+            ocmCache.putVideo(videoData);
+            emitter.onNext(vimeoInfo);
+          }
+
+          @Override public void onError(Exception exception) {
+            emitter.onError(exception);
+          }
+        });
+      }
+    });
+
+
+    videoObservable
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe();
+
+    return videoObservable;
   }
 
   @Override public Observable<ApiVersionKache> getVersion() {
