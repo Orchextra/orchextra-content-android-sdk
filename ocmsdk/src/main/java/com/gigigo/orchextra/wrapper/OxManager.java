@@ -39,7 +39,7 @@ public interface OxManager {
   final class Config {
     String apiKey;
     String apiSecret;
-    List<String> notificationActivityClass;
+    Class notificationActivityClass;
     String senderId;
     ImageRecognition vuforia;
     OrchextraCompletionCallback orchextraCompletionCallback;
@@ -61,7 +61,7 @@ public interface OxManager {
       return apiSecret;
     }
 
-    public List<String> getNotificationActivityClass() {
+    public Class getNotificationActivityClass() {
       return notificationActivityClass;
     }
 
@@ -80,7 +80,7 @@ public interface OxManager {
     public static final class Builder {
       String apiKey;
       String apiSecret;
-      List<String> notificationActivityClass;
+      Class notificationActivityClass;
       String senderId;
       ImageRecognition vuforia;
       OrchextraCompletionCallback orchextraCompletionCallback;
@@ -99,7 +99,7 @@ public interface OxManager {
         return this;
       }
 
-      public Builder setNotificationActivityClass(List<String> notificationActivityClass) {
+      public Builder setNotificationActivityClass(Class notificationActivityClass) {
         this.notificationActivityClass = notificationActivityClass;
         return this;
       }

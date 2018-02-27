@@ -59,7 +59,7 @@ public final class Ocm {
     OcmBuilder ocmBuilder = new OcmBuilder(app);
     String oxKey = "FAKE_KEY";
     String oxSecret = "FAKE_SECRET";
-    List<String> notificationActivityClass = ocmBuilder.getNotificationActivityClass();
+    Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
 
     //Initialization has to be done after setting callbacks because getting them could be null.
     OCManager.initSdk(ocmBuilder.getApp());
@@ -93,7 +93,7 @@ public final class Ocm {
     String oxKey = "FAKE_KEY";
     String oxSecret = "FAKE_SECRET";
 
-    List<String> notificationActivityClass = ocmBuilder.getNotificationActivityClass();
+    Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
 
     OCManager.initSdk(ocmBuilder.getApp());
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
@@ -132,7 +132,7 @@ public final class Ocm {
     Application app = ocmBuilder.getApp();
     String oxKey = ocmBuilder.getOxKey();
     String oxSecret = ocmBuilder.getOxSecret();
-    List<String> notificationActivityClass = ocmBuilder.getNotificationActivityClass();
+    Class notificationActivityClass = ocmBuilder.getNotificationActivityClass();
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
     OCManager.initSdk(app);

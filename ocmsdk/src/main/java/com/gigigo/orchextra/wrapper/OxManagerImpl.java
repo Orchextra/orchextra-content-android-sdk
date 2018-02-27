@@ -75,7 +75,7 @@ public class OxManagerImpl implements OxManager {
         });
 
     if (config.getNotificationActivityClass() != null) {
-      builder.setNotificationActivityClass(config.getNotificationActivityClass());
+      builder.setNotificationActivityClass(config.getNotificationActivityClass().toString());
     }
 
     if (config.getSenderId() != null && !config.getSenderId().equals("")) {
