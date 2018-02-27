@@ -72,14 +72,33 @@ public class OcmSchemeHandler {
 
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
-          processElementCallback.onProcessElementSuccess(elementCache);
+          if (elementCache.getCustomProperties() != null) {
+            OCManager.notifyCustomBehaviourContinue(elementCache.getCustomProperties(), null,
+                new Function1<Boolean, Unit>() {
+                  @Override public Unit invoke(Boolean canContinue) {
+                    if (canContinue) {
+                      processElementCallback.onProcessElementSuccess(elementCache);
 
-          String urlImageToExpand = null;
-          if (elementCache != null && elementCache.getPreview() != null) {
-            urlImageToExpand = elementCache.getPreview().getImageUrl();
+                      String urlImageToExpand = null;
+                      if (elementCache != null && elementCache.getPreview() != null) {
+                        urlImageToExpand = elementCache.getPreview().getImageUrl();
+                      }
+
+                      executeAction(elementCache, elementUrl, urlImageToExpand, imageViewWeakReference);
+                    }
+                    return null;
+                  }
+                });
+          } else {
+            processElementCallback.onProcessElementSuccess(elementCache);
+
+            String urlImageToExpand = null;
+            if (elementCache != null && elementCache.getPreview() != null) {
+              urlImageToExpand = elementCache.getPreview().getImageUrl();
+            }
+
+            executeAction(elementCache, elementUrl, urlImageToExpand, imageViewWeakReference);
           }
-
-          executeAction(elementCache, elementUrl, urlImageToExpand, imageViewWeakReference);
         }
       }
 
@@ -93,7 +112,7 @@ public class OcmSchemeHandler {
     });
   }
 
-  public void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
+  private void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
       WeakReference<ImageView> imageViewToExpandInDetail) {
 
     boolean hasPreview = cachedElement.getPreview() != null;

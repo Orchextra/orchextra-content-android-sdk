@@ -80,7 +80,7 @@ android {
   flavorDimensions "sample"
 
   productFlavors {
-    woah_Unknown {
+    woah_QA {
       dimension "sample"
     }
 
