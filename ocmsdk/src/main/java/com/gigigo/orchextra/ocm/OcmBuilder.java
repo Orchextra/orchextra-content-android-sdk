@@ -14,7 +14,7 @@ public final class OcmBuilder {
   private String oxKey;
   private String oxSecret;
 
-  private List<String> notificationActivityClass;
+  private Class notificationActivityClass;
   private String contentLanguage;
   private OnEventCallback onEventCallback;
 
@@ -110,7 +110,7 @@ public final class OcmBuilder {
   /**
    * Set the home/main activity which receives the actions of the sdk like to show notifications
    */
-  public OcmBuilder setNotificationActivityClass(List<String> notificationActivityClass) {
+  public OcmBuilder setNotificationActivityClass(Class notificationActivityClass) {
     this.notificationActivityClass = notificationActivityClass;
     return this;
   }
@@ -145,7 +145,7 @@ public final class OcmBuilder {
     return contentLanguage;
   }
 
-  List<String> getNotificationActivityClass() {
+  Class getNotificationActivityClass() {
     return notificationActivityClass;
   }
 }

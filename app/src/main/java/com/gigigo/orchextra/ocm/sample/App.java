@@ -120,8 +120,7 @@ public class App extends MultiDexApplication {
     MultiDex.install(this);
 
     OcmBuilder ocmBuilder = new OcmBuilder(this)
-        .setNotificationActivityClass(new ArrayList<>(
-        Arrays.asList(MainActivity.class.toString(), DetailActivity.class.toString())))
+        .setNotificationActivityClass(MainActivity.class)
         .setShowReadArticles(true)
         //.setVuforiaImpl(new ImageRecognitionVuforiaImpl())
         .setTransformReadArticleMode(ImageTransformReadArticle.BITMAP_TRANSFORM)

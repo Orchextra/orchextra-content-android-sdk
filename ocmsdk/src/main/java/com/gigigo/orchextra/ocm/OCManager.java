@@ -293,7 +293,7 @@ Add Comment C
     }
   }
 
-  static void initOrchextra(String oxKey, String oxSecret, List<String> notificationActivityClass,
+  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
       String senderId) {
     if (OCManager.instance != null) {
       Application app = (Application) instance.ocmContextProvider.getApplicationContext();
@@ -409,7 +409,7 @@ Add Comment C
     return instance;
   }
 
-  static void initOrchextra(String oxKey, String oxSecret, List<String> notificationActivityClass,
+  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
       String senderId, ImageRecognition vuforia) {
     if (OCManager.instance != null) {
       Application app = (Application) instance.ocmContextProvider.getApplicationContext();
@@ -623,12 +623,12 @@ Add Comment C
   }
 
   private void initOrchextra(Application app, String oxKey, String oxSecret,
-      List<String> notificationActivityClass, String senderId) {
+      Class notificationActivityClass, String senderId) {
     initOrchextra(app, oxKey, oxSecret, notificationActivityClass, senderId, null);
   }
 
   private void initOrchextra(Application app, String oxKey, String oxSecret,
-      List<String> notificationActivityClass, String senderId, ImageRecognition vuforia) {
+      Class notificationActivityClass, String senderId, ImageRecognition vuforia) {
     System.out.println("appOn6.6.1");
     OxManager.Config config = new OxManager.Config.Builder().setApiKey(oxKey)
         .setApiSecret(oxSecret)
