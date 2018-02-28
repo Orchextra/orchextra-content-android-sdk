@@ -14,6 +14,7 @@ import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
+import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.Ocm;
@@ -96,16 +97,13 @@ public class ActionHandler {
     if (currentActivity != null) {
       Intent intent = new Intent(Intent.ACTION_VIEW);
 
-      if (federatedAuth != null) {
-        if (federatedAuth != null
-            && federatedAuth.isActive()
-            && Ocm.getQueryStringGenerator() != null) {
+      try {
+        if (federatedAuth != null && federatedAuth.isActive() && Ocm.getQueryStringGenerator() != null) {
 
           Ocm.getQueryStringGenerator().createQueryString(federatedAuth, queryString -> {
             if (queryString != null && !queryString.isEmpty()) {
               String urlWithQueryParams = FAUtils.addQueryParamsToUrl(queryString, url);
-              System.out.println(
-                  "Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
+              System.out.println("Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
               if (urlWithQueryParams != null) {
                 intent.setData(Uri.parse(urlWithQueryParams));
                 currentActivity.startActivity(intent);
@@ -122,11 +120,10 @@ public class ActionHandler {
           intent.setData(Uri.parse(url));
           currentActivity.startActivity(intent);
         }
-      } else {
-        intent.setData(Uri.parse(url));
-        currentActivity.startActivity(intent);
       }
-      //currentActivity.startActivity(intent);
+      catch (Exception e) {
+        OcmWebViewActivity.open(currentActivity, url,"");
+      }
     } else {
       //todo falta que si no hay currentactivity lo lanze en webview
     }
