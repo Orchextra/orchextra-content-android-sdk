@@ -47,7 +47,9 @@ android {
   // publishNonDefault true
   defaultPublishConfig "ocmRelease"
 }
+
 dependencies {
+  implementation project.libraries.kotlinStdlib
   implementation project.libraries.androidAppCompat
   api project.libraries.vimeoNetworking
   api project.libraries.exoplayer

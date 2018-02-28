@@ -13,22 +13,18 @@ import com.gigigo.orchextra.core.domain.rxInteractor.GetVideo;
 import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleVimeoVideoView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.federatedAuth.FAUtils;
-import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import com.gigigo.orchextra.ocmsdk.R;
 import com.gigigo.orchextra.wrapper.OxManager;
 import com.gigigo.orchextra.wrapper.OxManagerImpl;
 import gigigo.com.vimeolibs.VideoObserver;
-import gigigo.com.vimeolibs.VimeoBuilder;
 import gigigo.com.vimeolibs.VimeoCallback;
 import gigigo.com.vimeolibs.VimeoExoPlayerActivity;
 import gigigo.com.vimeolibs.VimeoInfo;
-import gigigo.com.vimeolibs.VimeoManager;
 
 public class ActionHandler {
 
@@ -57,20 +53,33 @@ public class ActionHandler {
       //show loading
       VimeoExoPlayerActivity.open(ocmContextProvider.getCurrentActivity(), null);
 
-      //more 4 dagger
-      ConnectionUtilsImp conn = new ConnectionUtilsImp(ocmContextProvider.getCurrentActivity());
-      //get vimeo data from sdk vimeo
-
       getVideo.execute(new VideoObserver(new VimeoCallback() {
+            @Override public void onSuccess(VimeoInfo vimeoInfo) {
+              VimeoExoPlayerActivity.openVideo(ocmContextProvider.getCurrentActivity(), vimeoInfo);
+            }
 
-        @Override public void onSuccess(VimeoInfo vimeoInfo) {
-          VimeoExoPlayerActivity.open(ocmContextProvider.getCurrentActivity(), vimeoInfo);
-        }
+            @Override public void onError(Exception e) {
+              System.out.println("Error VimeoCallback" + e.toString());
+            }
+          }), GetVideo.Params.Companion.forVideo(ocmContextProvider.getCurrentActivity(), false,
+          videoId, connectionUtils.isConnectedWifi(), connectionUtils.isConnectedMobile()),
+          PriorityScheduler.Priority.HIGH);
+    }
+  }
 
-        @Override public void onError(Exception e) {
-          System.out.println("Error VimeoCallback" + e.toString());
-        }
-      }), GetVideo.Params.Companion.forVideo(ocmContextProvider.getCurrentActivity(), false, videoId, connectionUtils.isConnectedWifi(), connectionUtils.isConnectedMobile()), PriorityScheduler.Priority.HIGH);
+  public void getVimeoInfo(String videoId, VideoObserver videoObserver) {
+    if (videoId != null && !videoId.equals("")) {
+      getVideo.execute(new VideoObserver(new VimeoCallback() {
+            @Override public void onSuccess(VimeoInfo vimeoInfo) {
+              videoObserver.onNext(vimeoInfo);
+            }
+
+            @Override public void onError(Exception e) {
+              videoObserver.onError(e);
+            }
+          }), GetVideo.Params.Companion.forVideo(ocmContextProvider.getCurrentActivity(), false,
+          videoId, connectionUtils.isConnectedWifi(), connectionUtils.isConnectedMobile()),
+          PriorityScheduler.Priority.HIGH);
     }
   }
 

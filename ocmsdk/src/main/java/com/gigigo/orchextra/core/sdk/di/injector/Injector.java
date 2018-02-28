@@ -22,6 +22,7 @@ import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailParentContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.ArticleContentData;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.articles.ContentArticleHomeLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
@@ -35,6 +36,8 @@ public interface Injector {
   void injectSearcherLayoutView(SearcherLayoutView searcherLayoutView);
 
   void injectDetailContentData(DetailParentContentData detailParentContentData);
+
+  void injectArticleContentData(ArticleContentData articleContentData);
 
   void injectImagesService(ImagesService imagesService);
 

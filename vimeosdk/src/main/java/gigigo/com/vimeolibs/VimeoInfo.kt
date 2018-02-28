@@ -4,8 +4,7 @@ import java.io.Serializable
 
 class VimeoInfo(var id: String,
     var videoPath: String,
-    var thumbPath: String,
-    var isVertical: Boolean = false) : Serializable {
+    var thumbPath: String) : Serializable {
 
   constructor() : this("", "", "")
 }

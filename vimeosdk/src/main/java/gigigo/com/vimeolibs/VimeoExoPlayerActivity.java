@@ -5,12 +5,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -55,21 +53,131 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
   private static final String VIMEO_INFO_DATA = "VIMEO_INFO_DATA";
 
   private SimpleExoPlayerView simpleExoPlayerView;
-  private MediaSource mVideoSource;
-  private boolean mExoPlayerFullscreen = false;
-  private ImageView mFullScreenIcon;
-  private Dialog mFullScreenDialog;
+  private MediaSource videoSource;
+  private boolean isInFullscreen = false;
+  private ImageView fullScreenIcon;
+  private Dialog fullScreenDialog;
 
-  private int mResumeWindow;
-  private long mResumePosition;
+  private int resumeWindow;
+  private long resumePosition;
   private String vimeoLink;
   private String thumbBackground;
-  private boolean isVertical;
-  FrameLayout main_media_frame;
-  ImageView mImageView, mExo_fullscreen_icon;
-  boolean isVideoLoaded = false;
-  //ProgressDialog progDailog;
-  ProgressBar mPbLoading;
+  FrameLayout mainMediaFrame;
+  ImageView backgroundImage;
+  ProgressBar progressBar;
+
+  private static VimeoExoPlayerActivity instance;
+
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    instance = this;
+
+    setContentView(R.layout.exo_player_activity);
+
+    hideStatusBar();
+
+    backgroundImage = findViewById(R.id.background_image);
+    mainMediaFrame = findViewById(R.id.main_media_frame);
+    progressBar = findViewById(R.id.progress_bar);
+
+    if (savedInstanceState != null) {
+      resumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
+      resumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION);
+      isInFullscreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
+      vimeoLink = savedInstanceState.getString(STATE_VIMEO_LINK);
+    }
+
+    VimeoInfo vimeoInfo = (VimeoInfo) getIntent().getSerializableExtra(VIMEO_INFO_DATA);
+    if (vimeoInfo != null) {
+      play(vimeoInfo);
+    } else {
+      progressBar.setVisibility(View.VISIBLE);
+    }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    outState.putInt(STATE_RESUME_WINDOW, resumeWindow);
+    outState.putLong(STATE_RESUME_POSITION, resumePosition);
+    outState.putBoolean(STATE_PLAYER_FULLSCREEN, isInFullscreen);
+    outState.putString(STATE_VIMEO_LINK, vimeoLink);
+
+    super.onSaveInstanceState(outState);
+  }
+
+  @Override public void onConfigurationChanged(android.content.res.Configuration newConfig) {
+    hideStatusBar();
+    super.onConfigurationChanged(newConfig);
+
+    if (newConfig.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
+      openFullscreen();
+    } else if (newConfig.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT) {
+      closeFullscreen();
+    }
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    instance = null;
+    if (progressBar != null) progressBar = null;
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+
+    if (!TextUtils.isEmpty(vimeoLink)) {
+      hideStatusBar();
+      initializeExoPlayer();
+      prepareExoPlayer();
+    }
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    if (!TextUtils.isEmpty(vimeoLink)) {
+      resumeWindow = simpleExoPlayerView.getPlayer().getCurrentWindowIndex();
+      resumePosition = Math.max(0, simpleExoPlayerView.getPlayer().getContentPosition());
+
+      if (simpleExoPlayerView != null && simpleExoPlayerView.getPlayer() != null) {
+        simpleExoPlayerView.getPlayer().stop();
+        simpleExoPlayerView.getPlayer().release();
+        simpleExoPlayerView.getPlayer().clearVideoSurface();
+      }
+
+      if (fullScreenDialog != null) fullScreenDialog.dismiss();
+    }
+  }
+
+  public static void open(Context context, VimeoInfo vimeoInfo) {
+    if (context != null) {
+      Intent i = new Intent(context, VimeoExoPlayerActivity.class);
+      if (vimeoInfo != null) {
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      }
+      i.putExtra(VIMEO_INFO_DATA, vimeoInfo);
+      context.startActivity(i);
+    }
+  }
+
+  public static void openVideo(Context context, VimeoInfo vimeoInfo) {
+    if (instance == null) {
+      open(context, vimeoInfo);
+    } else {
+      instance.play(vimeoInfo);
+    }
+  }
+
+  private void play(VimeoInfo vimeoInfo) {
+    if (vimeoInfo != null) {
+      vimeoLink = vimeoInfo.getVideoPath();
+      thumbBackground = vimeoInfo.getThumbPath();
+
+      loadBackgroundThumbnail();
+      initializeExoPlayer();
+      progressBar.setVisibility(View.GONE);
+    } else {
+      progressBar.setVisibility(View.VISIBLE);
+    }
+  }
 
   private void hideStatusBar() {
     try {
@@ -86,137 +194,42 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
     }
   }
 
-  @Override protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.exo_player_activity);
+  public void loadBackgroundThumbnail() {
+    if (backgroundImage != null) {
+      BitmapImageViewTarget  mImageCallback = new BitmapImageViewTarget(backgroundImage) {
+        @Override public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
 
-    //region fullscreen
+          int width = 480;
+          if (width > bitmap.getWidth()) {
+            width = bitmap.getWidth();
+          }
 
-    //Window window = getWindow();
-    //WindowManager.LayoutParams winParams = window.getAttributes();
-    //winParams.flags &= ~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-    //window.setAttributes(winParams);
-    //window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-    hideStatusBar();
-    //endregion
+          int y = 45;
+          int height = 270;
+          if (y + height > bitmap.getHeight()) {
+            height = bitmap.getHeight() - y;
+          }
 
-    mImageView = (ImageView) findViewById(R.id.imgBackBlur);
-    main_media_frame = (FrameLayout) findViewById(R.id.main_media_frame);
-    mExo_fullscreen_icon = (ImageView) findViewById(R.id.exo_fullscreen_icon);
+          WeakReference<Bitmap> resizedBitmap =
+              new WeakReference<>(Bitmap.createBitmap(bitmap, 0, y, width, height));
 
-    mPbLoading = (ProgressBar) findViewById(R.id.pbLoading);
-
-    if (savedInstanceState != null) {
-      mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
-      mResumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION);
-      mExoPlayerFullscreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
-      vimeoLink = savedInstanceState.getString(STATE_VIMEO_LINK);
-    }
-
-    VimeoInfo vimeoInfo = (VimeoInfo) getIntent().getSerializableExtra(VIMEO_INFO_DATA);
-    if (vimeoInfo != null) {
-      vimeoLink = vimeoInfo.getVideoPath();
-      thumbBackground = vimeoInfo.getThumbPath();
-
-      setBlurBackGround();
-      initializeExoPlayer();
-      mPbLoading.setVisibility(View.GONE);
-    } else {
-      //todo loading, make UX, this make a leak
-      // progDailog = ProgressDialog.show(this, "", "", true);
-      mPbLoading.setVisibility(View.VISIBLE);
-    }
-  }
-
-  public static void open(Context mContext, VimeoInfo info) {
-    if (mContext != null) {
-      Intent i = new Intent(mContext, VimeoExoPlayerActivity.class);
-      if (info != null) {
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-      }
-      i.putExtra(VIMEO_INFO_DATA, info);
-      mContext.startActivity(i);
-    }
-  }
-
-  private void setBlurBackGround() {
-    //todo use iamgeloader ijected from OCM, but we need interface somewhere...
-
-    if (mImageView != null) {
-      loadThumbNail(thumbBackground);
-    }
-  }
-
-  //region imageloader
-  BitmapImageViewTarget mImageCallback;
-
-  public void loadThumbNail(String url) {
-    mImageCallback = new BitmapImageViewTarget(mImageView) {
-
-      @Override
-      public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-
-        int width = 480;
-        if (width > bitmap.getWidth()) {
-          width = bitmap.getWidth();
+          BitmapDrawable ob = new BitmapDrawable(getResources(), resizedBitmap.get());
+          mainMediaFrame.setBackground(ob);
         }
+      };
 
-        int y = 45;
-        int height = 270;
-        if (y + height > bitmap.getHeight()) {
-          height = bitmap.getHeight() - y;
-        }
-
-        WeakReference<Bitmap> resizedbitmap =
-            new WeakReference<>(Bitmap.createBitmap(bitmap, 0, y, width, height));
-
-        BitmapDrawable ob = new BitmapDrawable(getResources(), resizedbitmap.get());
-        main_media_frame.setBackground(ob);
-/*
-        WeakReference<Bitmap> resizedbitmap =
-            new WeakReference<>(Bitmap.createBitmap(bitmap, 0, 45, 480, 270));
-        BitmapDrawable ob = new BitmapDrawable(getResources(), resizedbitmap.get());
-        main_media_frame.setBackground(ob);
-*/
-
-      }
-    };
-    Glide.with(this)
-        .load(url)
-        .asBitmap()
-        .transform(new BlurTransformation(VimeoExoPlayerActivity.this, 20))
-        .into(mImageCallback);
-  }
-
-  //endregion
-
-  @Override public void onConfigurationChanged(android.content.res.Configuration newConfig) {
-    if (!isVertical) {
-      hideStatusBar();
-      super.onConfigurationChanged(newConfig);
-    } else {
-      hideStatusBar();
-      newConfig.orientation = android.content.res.Configuration.ORIENTATION_PORTRAIT;
-      super.onConfigurationChanged(new Configuration());
+      Glide.with(this)
+          .load(thumbBackground)
+          .asBitmap()
+          .transform(new BlurTransformation(VimeoExoPlayerActivity.this, 20))
+          .into(mImageCallback);
     }
-    if (newConfig.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
-      if (!isVertical) openFullscreenDialog();
-    } else if (newConfig.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT) {
-      if (!isVertical) closeFullscreenDialog();
-    }
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    //if (progDailog != null) progDailog.dismiss();
-    if (mPbLoading != null) mPbLoading = null;
-    //destruir el reproductor
   }
 
   private void initializeExoPlayer() {
     if (simpleExoPlayerView == null) {
 
-      simpleExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
+      simpleExoPlayerView = findViewById(R.id.exoplayer_view);
       initFullscreenDialog();
       initFullscreenButton();
 
@@ -233,31 +246,21 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
 
       ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 
-      mVideoSource =
-          new ExtractorMediaSource(daUri, dataSourceFactory, extractorsFactory, null, null);
+      videoSource = new ExtractorMediaSource(daUri, dataSourceFactory, extractorsFactory, null, null);
 
       prepareExoPlayer();
     }
 
-    if (mExoPlayerFullscreen) {
-      openFullscreenDialog();
+    if (isInFullscreen) {
+      openFullscreen();
     }
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    outState.putInt(STATE_RESUME_WINDOW, mResumeWindow);
-    outState.putLong(STATE_RESUME_POSITION, mResumePosition);
-    outState.putBoolean(STATE_PLAYER_FULLSCREEN, mExoPlayerFullscreen);
-    outState.putString(STATE_VIMEO_LINK, vimeoLink);
-
-    super.onSaveInstanceState(outState);
-  }
-
   private void initFullscreenDialog() {
-    mFullScreenDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+    fullScreenDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
       public void onBackPressed() {
-        if (mExoPlayerFullscreen) {
-          closeFullscreenDialog();
+        if (isInFullscreen) {
+          closeFullscreen();
           setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         }
         super.onBackPressed();
@@ -265,49 +268,44 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
     };
   }
 
-  private void openFullscreenDialog() {
-    if (simpleExoPlayerView != null
-        && simpleExoPlayerView.getParent() != null
-        && mFullScreenDialog != null) {
-      ((ViewGroup) simpleExoPlayerView.getParent()).removeView(simpleExoPlayerView);
-      mFullScreenDialog.addContentView(simpleExoPlayerView,
-          new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-              ViewGroup.LayoutParams.MATCH_PARENT));
-      mFullScreenIcon.setImageDrawable(
-          ContextCompat.getDrawable(VimeoExoPlayerActivity.this, R.drawable.ic_fullscreen_skrink));
-      mExoPlayerFullscreen = true;
-      mFullScreenDialog.show();
-    }
-  }
-
-  private void closeFullscreenDialog() {
-    if (simpleExoPlayerView != null
-        && simpleExoPlayerView.getParent() != null
-        && mFullScreenDialog != null) {
-      ((ViewGroup) simpleExoPlayerView.getParent()).removeView(simpleExoPlayerView);
-      ((FrameLayout) findViewById(R.id.main_media_frame)).addView(simpleExoPlayerView);
-      mExoPlayerFullscreen = false;
-      mFullScreenDialog.dismiss();
-      mFullScreenIcon.setImageDrawable(
-          ContextCompat.getDrawable(VimeoExoPlayerActivity.this, R.drawable.ic_fullscreen_expand));
-    }
-  }
-
   private void initFullscreenButton() {
     PlaybackControlView controlView = simpleExoPlayerView.findViewById(R.id.exo_controller);
-    mFullScreenIcon = controlView.findViewById(R.id.exo_fullscreen_icon);
-    FrameLayout mFullScreenButton = controlView.findViewById(R.id.exo_fullscreen_button);
-    mFullScreenButton.setOnClickListener(new View.OnClickListener() {
+    fullScreenIcon = controlView.findViewById(R.id.exo_fullscreen_icon);
+    FrameLayout fullscreenButton = controlView.findViewById(R.id.exo_fullscreen_button);
+    fullscreenButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        if (!mExoPlayerFullscreen) {
-          openFullscreenDialog();
-          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        if (!isInFullscreen) {
+          openFullscreen();
+
         } else {
-          closeFullscreenDialog();
-          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+          closeFullscreen();
         }
       }
     });
+  }
+
+  private void openFullscreen() {
+    if (simpleExoPlayerView != null && simpleExoPlayerView.getParent() != null && fullScreenDialog != null) {
+      ((ViewGroup) simpleExoPlayerView.getParent()).removeView(simpleExoPlayerView);
+      fullScreenDialog.addContentView(simpleExoPlayerView,
+          new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+              ViewGroup.LayoutParams.MATCH_PARENT));
+      fullScreenIcon.setImageResource(R.drawable.ic_fullscreen_skrink);
+      isInFullscreen = true;
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+      fullScreenDialog.show();
+    }
+  }
+
+  private void closeFullscreen() {
+    if (simpleExoPlayerView != null && simpleExoPlayerView.getParent() != null && fullScreenDialog != null) {
+      ((ViewGroup) simpleExoPlayerView.getParent()).removeView(simpleExoPlayerView);
+      ((FrameLayout) findViewById(R.id.main_media_frame)).addView(simpleExoPlayerView);
+      isInFullscreen = false;
+      fullScreenIcon.setImageResource(R.drawable.ic_fullscreen_expand);
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+      fullScreenDialog.dismiss();
+    }
   }
 
   private void prepareExoPlayer() {
@@ -326,43 +324,14 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
             loadControl);
     simpleExoPlayerView.setPlayer(player);
 
-    boolean haveResumePosition = mResumeWindow != C.INDEX_UNSET;
+    boolean haveResumePosition = resumeWindow != C.INDEX_UNSET;
 
     if (haveResumePosition) {
-      simpleExoPlayerView.getPlayer().seekTo(mResumeWindow, mResumePosition);
+      simpleExoPlayerView.getPlayer().seekTo(resumeWindow, resumePosition);
     }
 
-    simpleExoPlayerView.getPlayer().prepare(mVideoSource);
+    simpleExoPlayerView.getPlayer().prepare(videoSource);
     simpleExoPlayerView.getPlayer().setPlayWhenReady(true);
     simpleExoPlayerView.setVisibility(View.VISIBLE);
-  }
-
-  @Override protected void onResume() {
-    super.onResume();
-
-    if (!TextUtils.isEmpty(vimeoLink)) {
-      hideStatusBar();
-      initializeExoPlayer();
-      prepareExoPlayer();
-    } else {
-      //todo something ??
-    }
-  }
-
-  @Override protected void onPause() {
-    super.onPause();
-    if (!TextUtils.isEmpty(vimeoLink)) {
-      mResumeWindow = simpleExoPlayerView.getPlayer().getCurrentWindowIndex();
-      mResumePosition = Math.max(0, simpleExoPlayerView.getPlayer().getContentPosition());
-
-      if (simpleExoPlayerView != null && simpleExoPlayerView.getPlayer() != null) {
-
-        simpleExoPlayerView.getPlayer().stop();
-        simpleExoPlayerView.getPlayer().release();
-        simpleExoPlayerView.getPlayer().clearVideoSurface();
-      }
-
-      if (mFullScreenDialog != null) mFullScreenDialog.dismiss();
-    }
   }
 }

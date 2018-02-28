@@ -1,16 +1,13 @@
 package com.gigigo.orchextra.core.domain.rxRepository;
 
 import android.content.Context;
+import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
-
-/**
- * Created by francisco.hernandez on 22/5/17.
- */
 
 public interface OcmRepository {
 

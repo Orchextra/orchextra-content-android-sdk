@@ -172,10 +172,10 @@ import retrofit2.Response;
         .doOnNext(ocmCache::putDetail);
   }
 
-  @Override public Observable<VimeoInfo> getVideoById(Context context, String videoId, boolean isWifiConnection,
+  @Override public Observable<ApiVideoData> getVideoById(Context context, String videoId, boolean isWifiConnection,
       boolean isFastConnection) {
-    Observable<VimeoInfo> videoObservable = Observable.create(new ObservableOnSubscribe<VimeoInfo>() {
-      @Override public void subscribe(ObservableEmitter<VimeoInfo> emitter) throws Exception {
+    Observable<ApiVideoData> videoObservable = Observable.create(new ObservableOnSubscribe<ApiVideoData>() {
+      @Override public void subscribe(ObservableEmitter<ApiVideoData> emitter) throws Exception {
         VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
         VimeoManager videoManager = new VimeoManager(builder);
 
@@ -183,7 +183,7 @@ import retrofit2.Response;
           @Override public void onSuccess(VimeoInfo vimeoInfo) {
             ApiVideoData videoData = new ApiVideoData(vimeoInfo);
             ocmCache.putVideo(videoData);
-            emitter.onNext(vimeoInfo);
+            emitter.onNext(videoData);
           }
 
           @Override public void onError(Exception exception) {
@@ -192,7 +192,6 @@ import retrofit2.Response;
         });
       }
     });
-
 
     videoObservable
         .subscribeOn(Schedulers.io())

@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.data.rxRepository;
 
 import android.content.Context;
+import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentDataResponseMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
@@ -31,17 +32,19 @@ import orchextra.javax.inject.Singleton;
   private final ApiContentDataResponseMapper apiContentDataResponseMapper;
   private final ApiElementDataMapper apiElementDataMapper;
   private final ApiVersionMapper apiVersionMapper;
+  private final ApiVideoDataMapper apiVideoDataMapper;
 
   @Inject public OcmDataRepository(OcmDataStoreFactory ocmDataStoreFactory,
       ApiMenuContentListResponseMapper apiMenuContentListResponseMapper,
       ApiContentDataResponseMapper apiContentDataResponseMapper,
       ApiElementDataMapper apiElementDataMapper,
-      ApiVersionMapper apiVersionMapper) {
+      ApiVersionMapper apiVersionMapper, ApiVideoDataMapper apiVideoDataMapper) {
     this.ocmDataStoreFactory = ocmDataStoreFactory;
     this.apiMenuContentListResponseMapper = apiMenuContentListResponseMapper;
     this.apiContentDataResponseMapper = apiContentDataResponseMapper;
     this.apiElementDataMapper = apiElementDataMapper;
     this.apiVersionMapper = apiVersionMapper;
+    this.apiVideoDataMapper = apiVideoDataMapper;
   }
 
   @Override public Observable<VersionData> getVersion() {
@@ -102,7 +105,7 @@ import orchextra.javax.inject.Singleton;
   @Override public Observable<VimeoInfo> getVideo(Context context, boolean forceReload, String videoId, boolean isWifiConnection,
       boolean isFastConnection) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForVideo(forceReload, videoId, isWifiConnection, isFastConnection);
-    return ocmDataStore.getVideoById(context, videoId, isWifiConnection, isFastConnection);
+    return ocmDataStore.getVideoById(context, videoId, isWifiConnection, isFastConnection).map(apiVideoDataMapper::externalClassToModel);
   }
 
   @Override public Observable<ContentData> doSearch(String textToSearch) {

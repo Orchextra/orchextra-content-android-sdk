@@ -29,6 +29,9 @@ import com.gigigo.orchextra.core.sdk.model.detail.DetailActivityComponent;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DaggerDetailContentDataComponent;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailContentDataComponent;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailParentContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.ArticleContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.ArticleContentDataComponent;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.DaggerArticleContentDataComponent;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutViewComponent;
 import com.gigigo.orchextra.core.sdk.model.grid.DaggerContentGridLayoutViewComponent;
@@ -80,6 +83,13 @@ public class InjectorImpl implements Injector {
         DaggerDetailContentDataComponent.builder().ocmComponent(ocmComponent).build();
 
     detailContentDataComponent.injectDetailContentData(detailParentContentData);
+  }
+
+  @Override public void injectArticleContentData(ArticleContentData articleContentData) {
+    ArticleContentDataComponent articleContentDataComponent =
+        DaggerArticleContentDataComponent.builder().ocmComponent(ocmComponent).build();
+
+    articleContentDataComponent.injectArticleContentData(articleContentData);
   }
 
   @Override public void injectImagesService(ImagesService imagesService) {

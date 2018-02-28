@@ -13,26 +13,12 @@ import com.vimeo.networking.model.Video;
 import okhttp3.CacheControl;
 import retrofit2.Response;
 
-/**
- * Created by nubor on 04/10/2017.
- */
-
 public class VimeoManager {
   private static String noket_ssecca = "";
   private static String clientID = "";
   private static String clientSecret = "";
   private static String scope = "";
   private static VimeoClient vimeoApiClient;
-
-  //flow open vimeo video
-  //1º get videoid
-  //2º instanciate VimeoManeger(accesotken)
-  //3º Se llama a getVideoVimeoInfo y en el resultado el callback se recibe el VimeoInfo
-  //4º hide loading se llama a VimeoExoPlayerActivity.open(vimeoinfo)
-  //flow update accessToken
-  //1ºget new accesstoken in ocm ocnfig
-  //2ºdecrupt accesstoken use then
-  //3º keep encrypt in prferences or wherever
 
   public VimeoManager(VimeoBuilder builder) {
     Configuration.Builder configBuilder;
@@ -73,6 +59,7 @@ public class VimeoManager {
           @Override public void run() {
             if (videoResponse != null && videoResponse.body() != null) {
               VimeoInfo info = new VimeoInfo();
+              info.setId(videoId);
 
               //region  determine quality from connection
               int videoIdx;
@@ -133,9 +120,5 @@ public class VimeoManager {
             }
           }
         });
-  }
-
-  public void updateAccessToken(String access_token) {
-    //todo maybe in the fiture the accesstoken come from de back, DANGER sniffer, ocm config must be
   }
 }

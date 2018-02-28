@@ -13,10 +13,6 @@ import io.reactivex.Observable;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
-/**
- * Created by francisco.hernandez on 23/5/17.
- */
-
 @Singleton public class OcmDiskDataStore implements OcmDataStore {
   private final OcmCache ocmCache;
 
@@ -54,7 +50,7 @@ import orchextra.javax.inject.Singleton;
         Log.v("TT - DISK - Details", (System.currentTimeMillis() - time) / 1000 + ""));
   }
 
-  @Override public Observable<VimeoInfo> getVideoById(Context context, String videoId, boolean isWifiConnection,
+  @Override public Observable<ApiVideoData> getVideoById(Context context, String videoId, boolean isWifiConnection,
       boolean isFastConnection) {
     return ocmCache.getVideo(videoId);
   }

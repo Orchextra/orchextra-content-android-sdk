@@ -35,7 +35,7 @@ public interface OcmDataStore {
    */
   Observable<ApiElementData> getElementById(String slug);
 
-  Observable<VimeoInfo> getVideoById(Context context, String videoId, boolean isWifiConnection,
+  Observable<ApiVideoData> getVideoById(Context context, String videoId, boolean isWifiConnection,
       boolean isFastConnection);
 
   Observable<ApiVersionKache> getVersion();

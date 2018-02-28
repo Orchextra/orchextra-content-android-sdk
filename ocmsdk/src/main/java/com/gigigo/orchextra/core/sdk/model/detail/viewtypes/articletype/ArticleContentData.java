@@ -22,6 +22,7 @@ import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElementRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
+import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleBlankView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleButtonView;
@@ -37,6 +38,7 @@ import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
+import orchextra.javax.inject.Inject;
 
 public class ArticleContentData extends UiBaseContentData {
 
@@ -47,6 +49,7 @@ public class ArticleContentData extends UiBaseContentData {
   private BaseRecyclerAdapter<ArticleElement<ArticleElementRender>> adapter;
   private int addictionalPadding;
   private boolean thumbnailEnabled;
+  @Inject ActionHandler actionHandler;
 
   public static ArticleContentData newInstance() {
     return new ArticleContentData();
@@ -66,11 +69,19 @@ public class ArticleContentData extends UiBaseContentData {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.view_article_elements_item, container, false);
 
+    initDi();
     initViews(view);
     initRecyclerView();
     setClipToPaddingBottomSize(ClipToPadding.PADDING_NONE, addictionalPadding);
 
     return view;
+  }
+
+  private void initDi() {
+    Injector injector = OCManager.getInjector();
+    if (injector != null) {
+      injector.injectArticleContentData(this);
+    }
   }
 
   @Override public void onResume() {
@@ -125,7 +136,7 @@ public class ArticleContentData extends UiBaseContentData {
 
   private void initRecyclerView() {
     ArticleContentDataFactory factory =
-        new ArticleContentDataFactory(getContext(), thumbnailEnabled);
+        new ArticleContentDataFactory(getContext(), thumbnailEnabled, actionHandler);
     adapter = new BaseRecyclerAdapter(factory);
 
     adapter.bind(ArticleYoutubeVideoElement.class, ArticleYoutubeVideoView.class);

@@ -2,7 +2,6 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype;
 
 import android.content.Context;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolderFactory;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
@@ -11,6 +10,8 @@ import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElement;
+import com.gigigo.orchextra.core.domain.rxInteractor.GetVideo;
+import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleBlankView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleButtonView;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.ArticleHeaderView;
@@ -23,17 +24,19 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhold
 public class ArticleContentDataFactory extends BaseViewHolderFactory {
 
   private final boolean thumbnailEnabled;
+  private final ActionHandler actionHandler;
 
-  public ArticleContentDataFactory(Context context, boolean thumbnailEnabled) {
+  public ArticleContentDataFactory(Context context, boolean thumbnailEnabled, ActionHandler actionHandler) {
     super(context);
     this.thumbnailEnabled = thumbnailEnabled;
+    this.actionHandler = actionHandler;
   }
 
   @Override public BaseViewHolder create(Class valueClass, ViewGroup parent) {
     if (valueClass == ArticleYoutubeVideoElement.class) {
       return new ArticleYoutubeVideoView(context, parent);
     } else if (valueClass == ArticleVimeoVideoElement.class) {
-      return new ArticleVimeoVideoView(context, parent);
+      return new ArticleVimeoVideoView(context, parent,actionHandler);
     } else if (valueClass == ArticleRichTextElement.class) {
       return new ArticleRichTextView(context, parent);
     } else if (valueClass == ArticleImageElement.class) {

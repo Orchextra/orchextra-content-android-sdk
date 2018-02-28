@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
