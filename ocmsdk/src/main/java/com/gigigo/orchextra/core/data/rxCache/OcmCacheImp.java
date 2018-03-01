@@ -148,7 +148,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public boolean isVideoExpired(String videoId) {
-    return kache.isExpired(videoId, VimeoInfo.class);
+    return kache.isExpired(videoId, ApiVideoData.class);
   }
 
   @Override public void evictAll(boolean images, boolean data) {
