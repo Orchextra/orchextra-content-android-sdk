@@ -26,7 +26,6 @@ import com.gigigo.orchextra.core.sdk.di.base.BaseInjectionActivity;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -42,10 +41,6 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   private static final String EXTRA_IMAGE_TO_EXPAND_URL = "EXTRA_IMAGE_TO_EXPAND_URL";
   private static final String EXTRA_WIDTH_IMAGE_TO_EXPAND_URL = "EXTRA_WIDTH_IMAGE_TO_EXPAND_URL";
   private static final String EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL = "EXTRA_HEIGHT_IMAGE_TO_EXPAND_URL";
-  private static final int NATIVE_LOGIN = 0x32;
-  private static final String LOGGED_USER_UUID = "LOGGED_USER_UUID";
-
-  private String elementUrl;
 
   @Inject DetailPresenter presenter;
   OnFinishViewListener onFinishViewListener = new OnFinishViewListener() {
@@ -88,25 +83,8 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     animationImageView = (ImageView) findViewById(R.id.animationImageView);
 
-    this.elementUrl = getIntent().getExtras().getString(DetailActivity.EXTRA_ELEMENT_URL);
-
     //CoordinatorDetail with click event recreate the view and preview is showed when return in video activity, so dont move
     presenter.attachView(this);
-  }
-
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-
-     if (requestCode == NATIVE_LOGIN) {
-      if (resultCode == Activity.RESULT_OK) {
-        if (data != null && data.getExtras() != null) {
-          String uuid = data.getExtras().getString(LOGGED_USER_UUID);
-          if (uuid != null) {
-            presenter.setLoginUserFromNativeLogin(uuid);
-          }
-        }
-      }
-    }
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP) @Override
