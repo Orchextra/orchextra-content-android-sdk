@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders;
 
 import android.content.Context;
+import android.os.Handler;
 import android.text.Html;
 import android.util.Base64;
 import android.view.ViewGroup;
@@ -65,7 +66,12 @@ public class ArticleHeaderView extends BaseViewHolder<ArticleHeaderElement> {
     setImage(articleElement.getRender().getImageUrl(), articleElement.getRender().getImageThumb());
 
     if (articleElement.getRender().getHtml() != null) {
-      articleHeaderText.setText(Html.fromHtml(articleElement.getRender().getHtml()));
+
+      Handler handler = new Handler();
+      handler.postDelayed(() -> {
+        articleHeaderText.setText(Html.fromHtml(articleElement.getRender().getHtml()));
+      }, 100);
+
     }
   }
 }
