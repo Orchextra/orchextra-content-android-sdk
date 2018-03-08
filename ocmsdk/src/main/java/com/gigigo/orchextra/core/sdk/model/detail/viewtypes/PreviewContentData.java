@@ -2,7 +2,9 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,9 +100,13 @@ public class PreviewContentData extends UiBaseContentData {
       setImage();
       setBackgroundShadow();
 
-      previewTitle.setText(preview.getText());
-      if (preview.getText() == null || (preview.getText() != null && preview.getText().isEmpty())) {
+      Handler handler = new Handler();
+      handler.postDelayed(() -> previewTitle.setText(preview.getText()), 1000);
+
+      if (TextUtils.isEmpty(preview.getText())) {
         previewBackgroundShadow.setVisibility(View.GONE);
+      }else{
+        previewBackgroundShadow.setVisibility(View.VISIBLE);
       }
 
       if (preview.getBehaviour().equals(ElementCacheBehaviour.SWIPE)) {
