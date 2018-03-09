@@ -53,12 +53,18 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
       articleTextButton.setText(articleElement.getRender().getText());
     } else {
       if (articleElement.getRender() != null && articleElement.getRender().getBgColor() != null) {
-        articleTextButton.setBackgroundColor(
-            Color.parseColor(articleElement.getRender().getBgColor().replace("#", "#1A")));
+
+        String bgColor = articleElement.getRender().getBgColor();
+        if (bgColor != null) {
+          articleTextButton.setBackgroundColor(Color.parseColor(bgColor.replace("#", "#1A")));
+        }
       }
     }
 
-    articleTextButton.setTextColor(Color.parseColor(articleElement.getRender().getTextColor()));
+    String textColor = articleElement.getRender().getTextColor();
+    if (textColor != null) {
+      articleTextButton.setTextColor(Color.parseColor(textColor));
+    }
 
     if (!isLoading && !isDisabled) {
       articleTextButton.setBackgroundColor(
