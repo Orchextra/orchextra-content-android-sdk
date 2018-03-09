@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -156,6 +157,8 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
       if (bgColor != null) {
         articleTextButton.setBackgroundColor(Color.parseColor(bgColor.replace("#", "#4D")));
       }
+
+      articleImageButton.setColorFilter(0xC1807F7F, PorterDuff.Mode.MULTIPLY);
       isDisabled = true;
     }
   }
@@ -165,7 +168,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
       articleTextButton.setBackgroundColor(
           Color.parseColor(articleElement.getRender().getBgColor()));
     }
-
+    articleImageButton.clearColorFilter();
     isDisabled = false;
   }
 
