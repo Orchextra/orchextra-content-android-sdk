@@ -158,7 +158,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
         articleTextButton.setBackgroundColor(Color.parseColor(bgColor.replace("#", "#4D")));
       }
 
-      articleImageButton.setColorFilter(0xBBFFFFFF, PorterDuff.Mode.MULTIPLY);
+      articleImageButton.setColorFilter(0xBBFFFFFF, PorterDuff.Mode.SRC_ATOP);
       isDisabled = true;
     }
   }
