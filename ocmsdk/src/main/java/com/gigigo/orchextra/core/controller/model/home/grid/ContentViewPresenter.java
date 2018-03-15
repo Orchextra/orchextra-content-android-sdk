@@ -283,7 +283,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     int indexPattern = 0;
     List<ContentItemPattern> pattern = contentItem.getLayout().getPattern();
 
-    List<Element> elements = contentItem.getElements().subList(0,5);
+    List<Element> elements = contentItem.getElements();
 
     List<Cell> cellGridContentDataList = new ArrayList<>();
 
