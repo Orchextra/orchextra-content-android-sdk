@@ -4,6 +4,13 @@ ext {
 
   version = [major: 1, minor: 0, patch: '0-beta']
 
+  woah_Showcase= [orchextraBussinesUnit: "demo",
+            applicationId        : "${baseApplicationId}.showcase",
+            appName              : "${basePackageName} Showcase app",
+
+            orchextraApiKey      : "33ecdcbe03d60cb530e6ae13a531a3c9cf3c150e",
+            orchextraApiSecret   : "be772ab61e2571230c596aa95237cc618023befb"]
+
   woah_QA= [orchextraBussinesUnit: "demo",
                   applicationId        : "${baseApplicationId}.qa",
                   appName              : "${basePackageName} QA",
