@@ -222,13 +222,12 @@ Add Comment C
         });
   }
 
-  static void clearData(boolean images, boolean data,
+  public static void clearData(boolean images, boolean data,
       final OCManagerCallbacks.Clear clearCallback) {
     if (instance != null) {
 
       instance.ocmController.clearCache(images, data, new OcmController.ClearCacheCallback() {
         @Override public void onClearCacheSuccess() {
-          // clearCookiesFedexAuth();
           clearCallback.onDataClearedSuccessfull();
         }
 
@@ -236,9 +235,10 @@ Add Comment C
           clearCallback.onDataClearFails(e);
         }
       });
+    } else {
+      clearCallback.onDataClearFails(new Exception("instance != null"));
     }
   }
-
 
   public static void processElementUrl(String elementUrl, ImageView imageViewToExpandInDetail,
       OcmSchemeHandler.ProcessElementCallback processElementCallback) {
@@ -590,7 +590,7 @@ Add Comment C
 
   static void setLoggedAction(String elementUrl) {
     if (instance != null) {
-      instance.schemeHandler.processElementUrl(elementUrl);
+      instance.schemeHandler.processElementUrl(elementUrl, null, null);
     }
   }
 

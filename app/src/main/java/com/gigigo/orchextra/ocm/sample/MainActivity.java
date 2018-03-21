@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
+import com.gigigo.orchextra.ocm.OCManagerCallbacks;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         BuildConfig.BUSSINES_UNIT, new OcmWrapper.OnStartWithCredentialsCallback() {
           @Override public void onCredentialReceiver(String accessToken) {
             Log.d(TAG, "onCredentialReceiver()");
-            runOnUiThread(() -> getContent());
+            runOnUiThread(() -> clearData());
           }
 
           @Override public void onCredentailError() {
@@ -203,6 +204,20 @@ public class MainActivity extends AppCompatActivity {
     List<UiMenu> copyList = new ArrayList<>();
     copyList.addAll(list);
     return copyList;
+  }
+
+  private void clearData() {
+    Ocm.clearData(true, true, new OCManagerCallbacks.Clear() {
+      @Override public void onDataClearedSuccessfull() {
+        Log.d(TAG, "onDataClearedSuccessfull");
+        runOnUiThread(() -> getContent());
+      }
+
+      @Override public void onDataClearFails(Exception e) {
+        Log.e(TAG, "onDataClearFails");
+        Toast.makeText(MainActivity.this, "Clear data fail!", Toast.LENGTH_SHORT).show();
+      }
+    });
   }
 
   private void getContent() {

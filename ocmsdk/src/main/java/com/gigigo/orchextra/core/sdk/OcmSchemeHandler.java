@@ -11,8 +11,6 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
-import com.gigigo.orchextra.core.domain.entities.elements.ElementSegmentation;
-import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
@@ -76,67 +74,40 @@ public class OcmSchemeHandler {
     });
   }
 
-  public void processElementUrl(final String elementUrl) {
-    String elementUri = elementUrl;
-    if (elementURL != null) {
-      elementUri = elementURL;
-      elementURL = null;
-    }
-
-    String finalElementUri = elementUri;
-    ocmController.getDetails(elementUri, new OcmController.GetDetailControllerCallback() {
-      @Override public void onGetDetailLoaded(ElementCache elementCache) {
-        if (elementCache != null) {
-          if (elementRequiredUserToBeLogged(elementCache)) {
-            // Save url of the element that require login
-            elementURL = elementUrl;
-            //OCManager.notifyRequiredLoginToContinue(elementURL);
-          } else {
-            executeAction(elementCache, finalElementUri, null, null);
-          }
-        }
-      }
-
-      @Override public void onGetDetailFails(Exception e) {
-        e.printStackTrace();
-      }
-
-      @Override public void onGetDetailNoAvailable(Exception e) {
-        e.printStackTrace();
-      }
-    });
-  }
-
   public void processElementUrl(String elementUrl, ImageView imageViewToExpandInDetail,
       ProcessElementCallback processElementCallback) {
-
     WeakReference<ImageView> imageViewWeakReference =
         new WeakReference<>(imageViewToExpandInDetail);
 
-    String elementUri = elementUrl;
-    if (processElementURL != null) {
-      elementUri = processElementURL;
-      processElementURL = null;
-    }
-
-    String finalElementUri = elementUri;
-    ocmController.getDetails(elementUri, new OcmController.GetDetailControllerCallback() {
+    ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
 
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
-          processElementCallback.onProcessElementSuccess(elementCache);
+          if (elementCache.getCustomProperties() != null) {
+            OCManager.notifyCustomBehaviourContinue(elementCache.getCustomProperties(), null,
+                canContinue -> {
+                  if (canContinue) {
+                    processElementCallback.onProcessElementSuccess(elementCache);
 
-          String urlImageToExpand = null;
-          if (elementCache != null && elementCache.getPreview() != null) {
-            urlImageToExpand = elementCache.getPreview().getImageUrl();
-          }
+                    String urlImageToExpand = null;
+                    if (elementCache != null && elementCache.getPreview() != null) {
+                      urlImageToExpand = elementCache.getPreview().getImageUrl();
+                    }
 
-          if (elementRequiredUserToBeLogged(elementCache)) {
-            // Save url of the element that require login
-            processElementURL = elementUrl;
-            //OCManager.notifyRequiredLoginToContinue(processElementURL);
+                    executeAction(elementCache, elementUrl, urlImageToExpand,
+                        imageViewWeakReference);
+                  }
+                  return null;
+                });
           } else {
-            executeAction(elementCache, finalElementUri, urlImageToExpand, imageViewWeakReference);
+            processElementCallback.onProcessElementSuccess(elementCache);
+
+            String urlImageToExpand = null;
+            if (elementCache != null && elementCache.getPreview() != null) {
+              urlImageToExpand = elementCache.getPreview().getImageUrl();
+            }
+
+            executeAction(elementCache, elementUrl, urlImageToExpand, imageViewWeakReference);
           }
         }
       }
@@ -149,56 +120,6 @@ public class OcmSchemeHandler {
         processElementCallback.onProcessElementFail(new NetworkConnectionException());
       }
     });
-  }
-
-  /*
-  public void processElementUrl(String elementUrl, String urlImageToExpand, int widthScreen,
-      int heightScreen, ImageView imageViewToExpandInDetail) {
-
-    WeakReference<ImageView> imageViewWeakReference =
-        new WeakReference<>(imageViewToExpandInDetail);
-
-    String elementUri = elementUrl;
-    if (processElementURL != null) {
-      elementUri = processElementURL;
-      processElementURL = null;
-    }
-
-    String finalElementUri = elementUri;
-    ocmController.getDetails(elementUri, new OcmController.GetDetailControllerCallback() {
-      @Override public void onGetDetailLoaded(ElementCache elementCache) {
-        if (elementCache != null) {
-          if (elementRequiredUserToBeLogged(elementCache)) {
-            // Save url of the element that require login
-            processElementURL = elementUrl;
-            OCManager.notifyRequiredLoginToContinue(processElementURL);
-          } else {
-            executeAction(elementCache, finalElementUri, urlImageToExpand, widthScreen,
-                heightScreen, imageViewWeakReference);
-          }
-        }
-      }
-
-      @Override public void onGetDetailFails(Exception e) {
-        e.printStackTrace();
-      }
-
-      @Override public void onGetDetailNoAvailable(Exception e) {
-        e.printStackTrace();
-      }
-    });
-  }
-  */
-
-  private boolean elementRequiredUserToBeLogged(ElementCache elementCache) {
-    ElementSegmentation segmentation = elementCache.getSegmentation();
-
-    boolean loggedRequired = false;
-    if (segmentation != null) {
-      loggedRequired = RequiredAuthoritation.LOGGED.equals(segmentation.getRequiredAuth());
-    }
-
-    return loggedRequired && !authoritation.isAuthorizatedUser();
   }
 
   public void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
@@ -320,7 +241,7 @@ public class OcmSchemeHandler {
 
         String action = uri.replaceAll("^[a-z]*://openScanner/", "");
         Log.d(TAG, "Code: " + code + " Action: " + action);
-        processElementUrl(action);
+        processElementUrl(action, null, null);
       });
     } else {
       actionHandler.processDeepLink(uri);
