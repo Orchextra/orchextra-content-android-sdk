@@ -2,12 +2,16 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
 import android.content.Context;
 import android.util.Log;
-import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
-import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
-import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
+import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentDataResponseMapper;
+import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
+import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
+import com.gigigo.orchextra.core.data.api.mappers.version.ApiVersionMapper;
+import com.gigigo.orchextra.core.data.api.mappers.video.ApiVideoDataMapper;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
+import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
+import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
 import orchextra.javax.inject.Inject;
@@ -16,47 +20,65 @@ import orchextra.javax.inject.Singleton;
 @Singleton public class OcmDiskDataStore implements OcmDataStore {
   private final OcmCache ocmCache;
 
-  @Inject public OcmDiskDataStore(OcmCache ocmCache) {
+  private final ApiVersionMapper apiVersionMapper;
+  private final ApiMenuContentListResponseMapper apiMenuContentListResponseMapper;
+  private final ApiContentDataResponseMapper apiContentDataResponseMapper;
+  private final ApiElementDataMapper apiElementDataMapper;
+  private final ApiVideoDataMapper apiVideoDataMapper;
+
+  @Inject public OcmDiskDataStore(OcmCache ocmCache, ApiVersionMapper apiVersionMapper,
+      ApiMenuContentListResponseMapper apiMenuContentListResponseMapper,
+      ApiContentDataResponseMapper apiContentDataResponseMapper,
+      ApiElementDataMapper apiElementDataMapper, ApiVideoDataMapper apiVideoDataMapper) {
     this.ocmCache = ocmCache;
+
+    this.apiVersionMapper = apiVersionMapper;
+    this.apiMenuContentListResponseMapper = apiMenuContentListResponseMapper;
+    this.apiContentDataResponseMapper = apiContentDataResponseMapper;
+    this.apiElementDataMapper = apiElementDataMapper;
+    this.apiVideoDataMapper = apiVideoDataMapper;
   }
 
-  @Override public Observable<ApiMenuContentData> getMenuEntity() {
+  @Override public Observable<VersionData> getVersion() {
+    return ocmCache.getVersion().map(apiVersionMapper::externalClassToModel);
+  }
+
+  @Override public Observable<MenuContentData> getMenuEntity() {
     final long time = System.currentTimeMillis();
 
     return ocmCache.getMenus().doOnNext(apiMenuContentData -> {
       apiMenuContentData.setFromCloud(false);
       Log.v("TT - DISK - Menus", (System.currentTimeMillis() - time) / 1000 + "");
-    });
-}
+    }).map(apiMenuContentListResponseMapper::externalClassToModel);
+  }
 
-  @Override public Observable<ApiSectionContentData> getSectionEntity(String elementUrl, int numberOfElementsToDownload) {
+  @Override public Observable<ContentData> getSectionEntity(String elementUrl,
+      int numberOfElementsToDownload) {
     final long time = System.currentTimeMillis();
 
     return ocmCache.getSection(elementUrl).doOnNext(apiSectionContentData -> {
       apiSectionContentData.setFromCloud(false);
 
       Log.v("TT - DISK - Sections", (System.currentTimeMillis() - time) / 1000 + "");
-    });
+    }).map(apiContentDataResponseMapper::externalClassToModel);
   }
 
-  @Override public Observable<ApiSectionContentData> searchByText(String section) {
+  @Override public Observable<ContentData> searchByText(String section) {
     return null;
   }
 
-  @Override public Observable<ApiElementData> getElementById(String slug) {
+  @Override public Observable<ElementData> getElementById(String slug) {
     final long time = System.currentTimeMillis();
 
-    return ocmCache.getDetail(slug).doOnNext(apiElementData ->
-        Log.v("TT - DISK - Details", (System.currentTimeMillis() - time) / 1000 + ""));
+    return ocmCache.getDetail(slug)
+        .doOnNext(apiElementData -> Log.v("TT - DISK - Details",
+            (System.currentTimeMillis() - time) / 1000 + ""))
+        .map(apiElementDataMapper::externalClassToModel);
   }
 
-  @Override public Observable<ApiVideoData> getVideoById(Context context, String videoId, boolean isWifiConnection,
-      boolean isFastConnection) {
-    return ocmCache.getVideo(videoId);
-  }
-
-  @Override public Observable<ApiVersionKache> getVersion() {
-    return ocmCache.getVersion();
+  @Override public Observable<VimeoInfo> getVideoById(Context context, String videoId,
+      boolean isWifiConnection, boolean isFastConnection) {
+    return ocmCache.getVideo(videoId).map(apiVideoDataMapper::externalClassToModel);
   }
 
   @Override public boolean isFromCloud() {
