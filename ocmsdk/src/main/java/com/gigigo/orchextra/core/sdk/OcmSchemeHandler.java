@@ -87,10 +87,12 @@ public class OcmSchemeHandler {
             OCManager.notifyCustomBehaviourContinue(elementCache.getCustomProperties(), null,
                 canContinue -> {
                   if (canContinue) {
-                    processElementCallback.onProcessElementSuccess(elementCache);
+                    if (processElementCallback != null) {
+                      processElementCallback.onProcessElementSuccess(elementCache);
+                    }
 
                     String urlImageToExpand = null;
-                    if (elementCache != null && elementCache.getPreview() != null) {
+                    if (elementCache.getPreview() != null) {
                       urlImageToExpand = elementCache.getPreview().getImageUrl();
                     }
 
@@ -100,7 +102,9 @@ public class OcmSchemeHandler {
                   return null;
                 });
           } else {
-            processElementCallback.onProcessElementSuccess(elementCache);
+            if (processElementCallback != null) {
+              processElementCallback.onProcessElementSuccess(elementCache);
+            }
 
             String urlImageToExpand = null;
             if (elementCache != null && elementCache.getPreview() != null) {
