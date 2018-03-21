@@ -3,7 +3,7 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'kotlin'
 
 buildscript {
-  ext.kotlin_version = '1.2.21'
+  ext.kotlin_version = '1.2.30'
   repositories {
     google()
     jcenter()
@@ -36,6 +36,7 @@ allprojects {
     mavenCentral()
     maven { url "https://jitpack.io" }
     maven { url "https://maven.google.com" }
+    maven { url "https://dl.bintray.com/gigigo-desarrollo/maven" }
   }
    tasks.withType(JavaCompile) {
     sourceCompatibility = "1.7"

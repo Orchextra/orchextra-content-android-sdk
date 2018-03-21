@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
-import com.gigigo.orchextra.sdk.application.applifecycle.ActivityLifecyleWrapper;
 import java.util.Iterator;
 import java.util.Stack;
 

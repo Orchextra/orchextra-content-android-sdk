@@ -29,7 +29,7 @@ import gigigo.com.vimeolibs.VimeoInfo;
 
 public class ActionHandler {
 
-  OxManager orchextra;
+  private final OxManager oxManager;
   private final OcmContextProvider ocmContextProvider;
   private final ConnectionUtils connectionUtils;
   private GetVideo getVideo;
@@ -37,7 +37,7 @@ public class ActionHandler {
   public ActionHandler(OcmContextProvider ocmContextProvider, GetVideo getVideo) {
     this.ocmContextProvider = ocmContextProvider;
     this.connectionUtils = new ConnectionUtilsImp(ocmContextProvider.getApplicationContext());
-    this.orchextra = new OxManagerImpl();
+    this.oxManager = new OxManagerImpl();
     this.getVideo = getVideo;
   }
 
@@ -85,11 +85,15 @@ public class ActionHandler {
   }
 
   public void launchOxVuforia() {
-    orchextra.startImageRecognition();
+    oxManager.startImageRecognition();
   }
 
   public void lauchOxScan() {
-    orchextra.startScanner();
+    oxManager.startScanner();
+  }
+
+  public void scanCode(OxManager.ScanCodeListener scanCodeListener) {
+    oxManager.scanCode(scanCodeListener);
   }
 
   public void launchExternalBrowser(final String url, FederatedAuthorization federatedAuth) {
@@ -98,12 +102,15 @@ public class ActionHandler {
       Intent intent = new Intent(Intent.ACTION_VIEW);
 
       try {
-        if (federatedAuth != null && federatedAuth.isActive() && Ocm.getQueryStringGenerator() != null) {
+        if (federatedAuth != null
+            && federatedAuth.isActive()
+            && Ocm.getQueryStringGenerator() != null) {
 
           Ocm.getQueryStringGenerator().createQueryString(federatedAuth, queryString -> {
             if (queryString != null && !queryString.isEmpty()) {
               String urlWithQueryParams = FAUtils.addQueryParamsToUrl(queryString, url);
-              System.out.println("Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
+              System.out.println(
+                  "Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
               if (urlWithQueryParams != null) {
                 intent.setData(Uri.parse(urlWithQueryParams));
                 currentActivity.startActivity(intent);
@@ -120,9 +127,8 @@ public class ActionHandler {
           intent.setData(Uri.parse(url));
           currentActivity.startActivity(intent);
         }
-      }
-      catch (Exception e) {
-        OcmWebViewActivity.open(currentActivity, url,"");
+      } catch (Exception e) {
+        OcmWebViewActivity.open(currentActivity, url, "");
       }
     } else {
       //todo falta que si no hay currentactivity lo lanze en webview
