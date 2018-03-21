@@ -28,8 +28,6 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 public class OcmSchemeHandler {
 
@@ -261,6 +259,7 @@ public class OcmSchemeHandler {
         }
         break;
       default:
+        Log.w(TAG, "Unknow type: " + type);
         processDetailActivity(elementUrl, urlImageToExpand, imageViewToExpandInDetail);
         break;
     }
