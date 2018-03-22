@@ -2,15 +2,22 @@ project.ext {
 
   androidCompileSdkVersion = 26
   androidMinSdkVersion = 18
-  androidBuildToolsVersion = '26.0.2'
-  androidTargetSdkVersion = 26
-  supportVersion = '26.0.2'
+  androidBuildToolsVersion = '27.0.0'
+  androidTargetSdkVersion = 27
+  supportVersion = '27.0.0'
 
   libraries = [androidSupportDesign    : "com.android.support:design:${supportVersion}",
                androidCustomtabs       : "com.android.support:customtabs:${supportVersion}",
                androidAppCompat        : "com.android.support:appcompat-v7:${supportVersion}",
 
+               archLifecycleExtensions : 'android.arch.lifecycle:extensions:1.0.0',
+               archLifecycleCompiler   : 'android.arch.lifecycle:compiler:1.0.0',
+               archPersistenceRuntime  : 'android.arch.persistence.room:runtime:1.0.0',
+               archPersistenceCompiler : 'android.arch.persistence.room:compiler:1.0.0',
+
                kotlinStdlib            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
+               coroutinesCore          : 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.3',
+               coroutinesAndroid       : 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.22.3',
 
                daggerCompiler          : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
                dagger                  : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",

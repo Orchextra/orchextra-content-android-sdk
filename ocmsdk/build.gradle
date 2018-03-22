@@ -253,6 +253,14 @@ dependencies {
 
   api project.libraries.kache
 
+  implementation project.libraries.kotlinStdlib
+  implementation project.libraries.coroutinesCore
+  implementation project.libraries.coroutinesAndroid
+
+  compile project.libraries.archLifecycleExtensions
+  compile project.libraries.archPersistenceRuntime
+  annotationProcessor project.libraries.archLifecycleCompiler
+  annotationProcessor project.libraries.archPersistenceCompiler
 
   api project.libraries.gpuImage//4 readarticles
 
