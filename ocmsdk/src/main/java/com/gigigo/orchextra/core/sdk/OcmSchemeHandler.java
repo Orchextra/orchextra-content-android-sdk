@@ -183,8 +183,12 @@ public class OcmSchemeHandler {
           processVideo(render.getFormat(), render.getSource(), cachedElement);
         }
         break;
+      case NONE:
+        Log.w(TAG, "Type: NONE");
+        processRedirectElementUrl(elementUrl);
+        break;
       default:
-        Log.w(TAG, "Unknow type: " + type);
+        Log.w(TAG, "Default type: " + type);
         processDetailActivity(elementUrl, urlImageToExpand, imageViewToExpandInDetail);
         break;
     }
