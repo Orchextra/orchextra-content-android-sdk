@@ -9,8 +9,6 @@ import android.webkit.WebStorage;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.OcmController;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
-import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;

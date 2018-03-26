@@ -7,6 +7,7 @@ import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
 import com.gigigo.orchextra.core.data.api.mappers.version.ApiVersionMapper;
 import com.gigigo.orchextra.core.data.api.mappers.video.ApiVideoDataMapper;
+import com.gigigo.orchextra.core.data.database.mappers.DbVersionMapper;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
@@ -20,19 +21,19 @@ import orchextra.javax.inject.Singleton;
 @Singleton public class OcmDiskDataStore implements OcmDataStore {
   private final OcmCache ocmCache;
 
-  private final ApiVersionMapper apiVersionMapper;
+  private final DbVersionMapper dbVersionMapper;
   private final ApiMenuContentListResponseMapper apiMenuContentListResponseMapper;
   private final ApiContentDataResponseMapper apiContentDataResponseMapper;
   private final ApiElementDataMapper apiElementDataMapper;
   private final ApiVideoDataMapper apiVideoDataMapper;
 
-  @Inject public OcmDiskDataStore(OcmCache ocmCache, ApiVersionMapper apiVersionMapper,
+  @Inject public OcmDiskDataStore(OcmCache ocmCache, DbVersionMapper dbVersionMapper,
       ApiMenuContentListResponseMapper apiMenuContentListResponseMapper,
       ApiContentDataResponseMapper apiContentDataResponseMapper,
       ApiElementDataMapper apiElementDataMapper, ApiVideoDataMapper apiVideoDataMapper) {
     this.ocmCache = ocmCache;
 
-    this.apiVersionMapper = apiVersionMapper;
+    this.dbVersionMapper = dbVersionMapper;
     this.apiMenuContentListResponseMapper = apiMenuContentListResponseMapper;
     this.apiContentDataResponseMapper = apiContentDataResponseMapper;
     this.apiElementDataMapper = apiElementDataMapper;
@@ -40,7 +41,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<VersionData> getVersion() {
-    return ocmCache.getVersion().map(apiVersionMapper::externalClassToModel);
+    return ocmCache.getVersion().map(dbVersionMapper::externalClassToModel);
   }
 
   @Override public Observable<MenuContentData> getMenuEntity() {

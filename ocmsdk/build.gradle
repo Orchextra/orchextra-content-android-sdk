@@ -10,9 +10,10 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 group = 'com.github.Orchextra'
-version ='ocmVersion'
+version = 'ocmVersion'
 
 
 apply from: 'variants.gradle'
@@ -37,12 +38,18 @@ android {
     versionName "1.0"
     //asv mandatory for realm(not exits realm.so version for mips64, armeabi
     ndk {
-      abiFilters "armeabi-v7a","x86_64","x86","mips","arm64-v8a"
+      abiFilters "armeabi-v7a", "x86_64", "x86", "mips", "arm64-v8a"
     }
     configurations {
       compile.exclude group: "org.jetbrains", module: "annotations"
     }
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    javaCompileOptions {
+      annotationProcessorOptions {
+        arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+      }
+    }
   }
   buildTypes {
     staging {
@@ -137,19 +144,18 @@ jacocoAndroidUnitTestReport {
 //  ocmDebugImplementation
 //}
 
-if( android.productFlavors.size() > 0 ) {
+if (android.productFlavors.size() > 0) {
   android.libraryVariants.all { variant ->
     // Publish a main artifact, otherwise the maven pom is not generated
     //if( variant.name == android.defaultPublishConfig ) {
     def bundleTask = tasks["bundle${name.capitalize()}"]
     artifacts {
-      println('BUNDLE!'+bundleTask.archivePath)
-      println('classifier!'+variant.name)
-      println('builtBy!'+bundleTask.name)
+      println('BUNDLE!' + bundleTask.archivePath)
+      println('classifier!' + variant.name)
+      println('builtBy!' + bundleTask.name)
       archives(bundleTask.archivePath) {
         classifier variant.name
         builtBy bundleTask
-
       }
     }
   }
@@ -166,10 +172,15 @@ task finalize {
 
   println('finally!')
 }
-finalize.dependsOn(ocmsdk:install)
+finalize.dependsOn(ocmsdk: install)
 //install.finalizedBy(finalize)
-install.dependsOn(ocmsdk:build)
+install.dependsOn(ocmsdk: build)
 
+kotlin {
+  experimental {
+    coroutines "enable"
+  }
+}
 
 
 dependencies {
@@ -192,8 +203,10 @@ dependencies {
   api project.libraries.gggJavaLib
 
   //Dagger
+  kapt 'com.squareup:javapoet:1.7.0'
+  //Dagger 2.2 bundles an older version of JavaPoet. Must explicitly add apt 'com.squareup:javapoet:1.7.0' before apt 'com.google.dagger:dagger-compiler:2.2' to fix this.
   implementation project.libraries.dagger
-  annotationProcessor project.libraries.daggerCompiler
+  kapt project.libraries.daggerCompiler
 
   //Image Loader Glide/Blur
   api project.libraries.imageloaderGlideBlur
@@ -221,7 +234,7 @@ dependencies {
      exclude module: 'support-v4'
    }
  */
-/*asv old compiles ox gradle 2.3.3*/
+  /*asv old compiles ox gradle 2.3.3*/
   stagingApi(project.libraries.orchextrasdkStaging) {
     transitive = true
     exclude module: 'support-v4'
@@ -234,12 +247,11 @@ dependencies {
     transitive = true
     exclude module: 'support-v4'
   }
-//asv new ox with gradle 3.0.0
+  //asv new ox with gradle 3.0.0
 
   //api('com.github.Orchextra.orchextra-android-sdk:orchextrasdk-control:525Test')
 
   //customs Views
-
 
   api project.libraries.doubleViewPager
   api project.libraries.autofitTextView
@@ -257,15 +269,14 @@ dependencies {
   implementation project.libraries.coroutinesCore
   implementation project.libraries.coroutinesAndroid
 
-  annotationProcessor project.libraries.archLifecycleCompiler
-  annotationProcessor project.libraries.archPersistenceCompiler
+  kapt project.libraries.archLifecycleCompiler
+  kapt project.libraries.archPersistenceCompiler
   compile project.libraries.archLifecycleExtensions
   compile project.libraries.archPersistenceRuntime
   compile project.libraries.archPersistenceRxJava2
   testCompile project.libraries.archPersistenceTesting
 
-  api project.libraries.gpuImage//4 readarticles
-
+  api project.libraries.gpuImage //4 readarticles
 
   api project.modules.vimeo
 
@@ -274,3 +285,4 @@ dependencies {
   testImplementation project.testLibraries.assertj
   testImplementation project.testLibraries.mockito
 }
+

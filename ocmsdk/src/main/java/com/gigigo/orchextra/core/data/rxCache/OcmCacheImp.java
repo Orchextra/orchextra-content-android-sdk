@@ -10,9 +10,12 @@ import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
 import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
+import com.gigigo.orchextra.core.data.database.OcmDatabase;
+import com.gigigo.orchextra.core.data.database.entities.DbVersionData;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.CacheDir;
+import com.gigigo.orchextra.ocm.Ocm;
 import com.mskn73.kache.Kache;
 import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
@@ -20,12 +23,9 @@ import java.io.File;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
-/**
- * Created by francisco.hernandez on 23/5/17.
- */
 
 @Singleton public class OcmCacheImp implements OcmCache {
-
+  private final OcmDatabase ocmDatabase;
   private final Kache kache;
   private final Context mContext;
 
@@ -33,8 +33,39 @@ import orchextra.javax.inject.Singleton;
   public static final String VERSION_KEY = "VERSION_KEY";
 
   @Inject public OcmCacheImp(Context context, @CacheDir String cacheDir) {
+    this.ocmDatabase = OcmDatabase.Companion.create(context);
     this.kache = new Kache(context, cacheDir);
     this.mContext = context;
+  }
+
+  @Override public void putVersion(ApiVersionKache apiVersionKache) {
+    DbVersionData versionData = new DbVersionData();
+    versionData.setId(VERSION_KEY);
+    versionData.setVersion(apiVersionKache.getVersion());
+    ocmDatabase.versionDao().insertVersion(versionData);
+  }
+
+  @Override public Observable<DbVersionData> getVersion() {
+    return Observable.create(emitter -> {
+          DbVersionData versionData = ocmDatabase.versionDao().fetchVersion(DbVersionData.VERSION_KEY);
+
+          if (versionData != null) {
+
+            emitter.onNext(versionData);
+            emitter.onComplete();
+          } else {
+            emitter.onNext(null);
+          }
+        });
+  }
+
+  @Override public boolean isVersionCached() {
+    int versionDataCount = ocmDatabase.versionDao().hasVersion(DbVersionData.VERSION_KEY);
+    return (versionDataCount == 1);
+  }
+
+  @Override public boolean isVersionExpired() {
+    return false;
   }
 
   @Override public Observable<ApiMenuContentData> getMenus() {
@@ -187,36 +218,5 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Context getContext() {
     return mContext;
-  }
-
-  @Override public void putVersion(ApiVersionKache apiVersionKache) {
-    if (apiVersionKache != null && !TextUtils.isEmpty(apiVersionKache.getVersion())) {
-      kache.evict(VERSION_KEY);
-      kache.put(apiVersionKache);
-    }
-  }
-
-  @Override public Observable<ApiVersionKache> getVersion() {
-
-    return Observable.create(emitter -> {
-      ApiVersionKache apiVersionKache =
-          (ApiVersionKache) kache.get(ApiVersionKache.class, VERSION_KEY);
-
-      if (apiVersionKache != null) {
-
-        emitter.onNext(apiVersionKache);
-        emitter.onComplete();
-      } else {
-        emitter.onNext(null);
-      }
-    });
-  }
-
-  @Override public boolean isVersionCached() {
-    return kache.isCached(VERSION_KEY);
-  }
-
-  @Override public boolean isVersionExpired() {
-    return kache.isExpired(VERSION_KEY, ApiVersionKache.class);
   }
 }

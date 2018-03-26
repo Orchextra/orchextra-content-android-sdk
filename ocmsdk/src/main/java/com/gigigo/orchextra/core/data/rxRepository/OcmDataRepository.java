@@ -85,8 +85,7 @@ import orchextra.javax.inject.Singleton;
   public Observable<VimeoInfo> getVideo(Context context, boolean forceReload, String videoId,
       boolean isWifiConnection, boolean isFastConnection) {
     OcmDataStore ocmDataStore =
-        ocmDataStoreFactory.getDataStoreForVideo(forceReload, videoId, isWifiConnection,
-            isFastConnection);
+        ocmDataStoreFactory.getDataStoreForVideo(forceReload, videoId);
     return ocmDataStore.getVideoById(context, videoId, isWifiConnection, isFastConnection);
   }
 

@@ -6,9 +6,18 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
 import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
+import com.gigigo.orchextra.core.data.database.entities.DbVersionData;
 import io.reactivex.Observable;
 
 public interface OcmCache {
+
+  void putVersion(ApiVersionKache apiVersionKache);
+
+  Observable<DbVersionData> getVersion();
+
+  boolean isVersionCached();
+
+  boolean isVersionExpired();
 
   Observable<ApiMenuContentData> getMenus();
 
@@ -45,12 +54,4 @@ public interface OcmCache {
   void evictAll(boolean images, boolean data);
 
   Context getContext();
-
-  void putVersion(ApiVersionKache apiVersionKache);
-
-  Observable<ApiVersionKache> getVersion();
-
-  boolean isVersionCached();
-
-  boolean isVersionExpired();
 }
