@@ -11,6 +11,8 @@ public interface OcmWrapper {
 
   void setContentLanguage(String languageCode);
 
+  void scanCode(ScanCodeListener scanCodeListener);
+
   interface OnStartWithCredentialsCallback {
     void onCredentialReceiver(String accessToken);
 
@@ -21,5 +23,9 @@ public interface OcmWrapper {
     void onSuccess();
 
     void onError(String error);
+  }
+
+  interface ScanCodeListener {
+    void onCodeScan(String code);
   }
 }

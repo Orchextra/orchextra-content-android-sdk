@@ -31,6 +31,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.orchextra.ocm.callbacks.ScanCodeListener;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
@@ -685,6 +686,12 @@ Add Comment C
       instance.oxManager.bindUser(crmUser, statusListener);
     } else {
       Log.e(TAG, "setErrorListener with null instance");
+    }
+  }
+
+  public static void scanCode(ScanCodeListener scanCodeListener) {
+    if (instance != null) {
+      instance.oxManager.scanCode(scanCodeListener::onCodeScan);
     }
   }
 

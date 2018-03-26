@@ -85,6 +85,10 @@ public class OcmWrapperImp implements OcmWrapper {
     Ocm.setContentLanguage(languageCode);
   }
 
+  @Override public void scanCode(ScanCodeListener scanCodeListener) {
+    Ocm.scanCode(scanCodeListener::onCodeScan);
+  }
+
   private OnCustomSchemeReceiver onCustomSchemeReceiver =
       scheme -> Log.i(TAG, "OnCustomSchemeReceiver: " + scheme);
 

@@ -160,23 +160,13 @@ public class MainActivity extends AppCompatActivity {
   private void initViews() {
     tabLayout = findViewById(R.id.tabLayout);
     viewpager = findViewById(R.id.viewpager);
-    //View fabReload = findViewById(R.id.fabReload);
     View fabSearch = findViewById(R.id.fabSearch);
-    View fabClean = findViewById(R.id.fabClean);
+    View scannerButton = findViewById(R.id.scannerButton);
 
-    fabClean.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        //Orchextra.startScannerActivity();
-        //Orchextra.startImageRecognition();
-        adapter.setEmotion("happy");
-      }
-    });
+    scannerButton.setOnClickListener(v -> ocmWrapper.scanCode(
+        code -> Toast.makeText(MainActivity.this, "Code: " + code, Toast.LENGTH_SHORT).show()));
 
-    fabSearch.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        SearcherActivity.open(MainActivity.this);
-      }
-    });
+    fabSearch.setOnClickListener(v -> SearcherActivity.open(MainActivity.this));
 
     newContentMainContainer = findViewById(R.id.newContentMainContainer);
 

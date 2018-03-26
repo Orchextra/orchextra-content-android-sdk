@@ -13,6 +13,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.orchextra.ocm.callbacks.ScanCodeListener;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
@@ -246,5 +247,9 @@ public final class Ocm {
   public static void setOnLoadDataContentSectionFinished(
       OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback) {
     OCManager.setOnLoadDataContentSectionFinished(onLoadContentSectionFinishedCallback);
+  }
+
+  public static void scanCode(ScanCodeListener scanCodeListener) {
+    OCManager.scanCode(scanCodeListener);
   }
 }
