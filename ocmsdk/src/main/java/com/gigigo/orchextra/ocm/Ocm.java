@@ -252,4 +252,8 @@ public final class Ocm {
   public static void scanCode(ScanCodeListener scanCodeListener) {
     OCManager.scanCode(scanCodeListener);
   }
+
+  public static void openScanner() {
+    OCManager.openScanner();
+  }
 }

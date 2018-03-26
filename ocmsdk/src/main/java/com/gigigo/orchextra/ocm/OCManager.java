@@ -695,6 +695,12 @@ Add Comment C
     }
   }
 
+  public static void openScanner() {
+    if (instance != null) {
+      instance.oxManager.startScanner();
+    }
+  }
+
   public static void setOnCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {
     OCManager.instance.oxManager.setCustomSchemeReceiver(onCustomSchemeReceiver);
   }
