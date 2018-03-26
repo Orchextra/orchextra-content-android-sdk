@@ -257,10 +257,12 @@ dependencies {
   implementation project.libraries.coroutinesCore
   implementation project.libraries.coroutinesAndroid
 
-  compile project.libraries.archLifecycleExtensions
-  compile project.libraries.archPersistenceRuntime
   annotationProcessor project.libraries.archLifecycleCompiler
   annotationProcessor project.libraries.archPersistenceCompiler
+  compile project.libraries.archLifecycleExtensions
+  compile project.libraries.archPersistenceRuntime
+  compile project.libraries.archPersistenceRxJava2
+  testCompile project.libraries.archPersistenceTesting
 
   api project.libraries.gpuImage//4 readarticles
 

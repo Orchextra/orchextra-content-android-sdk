@@ -25,7 +25,7 @@ ext {
                        orchextraApiKey      : "ef08c4dccb7649b9956296a863db002a68240be2",
                        orchextraApiSecret   : "6bc18c500546f253699f61c11a62827679178400"]
 
-  woah_DEMO = [orchextraBussinesUnit: "it",
+  woah_DEMO = [orchextraBussinesUnit: "demo",
                applicationId        : "${baseApplicationId}.demo",
                appName              : "${basePackageName} DEMO",
 
