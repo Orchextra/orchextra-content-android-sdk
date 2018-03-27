@@ -11,7 +11,7 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
+import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
 import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentDataResponseMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
@@ -87,8 +87,8 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<VersionData> getVersion() {
     return ocmApiService.getVersionDataRx()
-        .map(apiVersionResponse -> new ApiVersionKache(apiVersionResponse.getData()))
-        .filter(apiVersionKache -> apiVersionKache != null)
+        .map(apiVersionResponse -> new ApiVersionData(apiVersionResponse.getData()))
+        .filter(apiVersionData -> apiVersionData != null)
         .doOnNext(ocmCache::putVersion)
         .map(apiVersionMapper::externalClassToModel);
   }
@@ -103,7 +103,6 @@ import orchextra.javax.inject.Singleton;
         .doOnNext(apiMenuContentData -> addSectionsToCache(apiMenuContentData))
         .doOnNext(apiMenuContentData -> {
           apiMenuContentData.setFromCloud(true);
-          Log.v("TT - MenuEntity", (System.currentTimeMillis() - time) / 1000 + "");
         })
         .map(apiMenuContentListResponseMapper::externalClassToModel);
   }

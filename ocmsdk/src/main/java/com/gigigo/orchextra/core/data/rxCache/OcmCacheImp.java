@@ -1,36 +1,37 @@
 package com.gigigo.orchextra.core.data.rxCache;
 
 import android.content.Context;
-import android.text.TextUtils;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
+import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
 import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.data.database.OcmDatabase;
+import com.gigigo.orchextra.core.data.database.entities.DbElementCache;
+import com.gigigo.orchextra.core.data.database.entities.DbMenuContent;
+import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData;
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
+import com.gigigo.orchextra.core.data.rxRepository.DbMappersKt;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.CacheDir;
-import com.gigigo.orchextra.ocm.Ocm;
 import com.mskn73.kache.Kache;
-import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
-
 
 @Singleton public class OcmCacheImp implements OcmCache {
   private final OcmDatabase ocmDatabase;
   private final Kache kache;
   private final Context mContext;
-
-  public static final String MENU_KEY = "MENU_KEY";
-  public static final String VERSION_KEY = "VERSION_KEY";
 
   @Inject public OcmCacheImp(Context context, @CacheDir String cacheDir) {
     this.ocmDatabase = OcmDatabase.Companion.create(context);
@@ -38,25 +39,18 @@ import orchextra.javax.inject.Singleton;
     this.mContext = context;
   }
 
-  @Override public void putVersion(ApiVersionKache apiVersionKache) {
-    DbVersionData versionData = new DbVersionData();
-    versionData.setId(VERSION_KEY);
-    versionData.setVersion(apiVersionKache.getVersion());
-    ocmDatabase.versionDao().insertVersion(versionData);
-  }
-
+  //region VERSION
   @Override public Observable<DbVersionData> getVersion() {
     return Observable.create(emitter -> {
-          DbVersionData versionData = ocmDatabase.versionDao().fetchVersion(DbVersionData.VERSION_KEY);
+      DbVersionData versionData = ocmDatabase.versionDao().fetchVersion(DbVersionData.VERSION_KEY);
 
-          if (versionData != null) {
-
-            emitter.onNext(versionData);
-            emitter.onComplete();
-          } else {
-            emitter.onNext(null);
-          }
-        });
+      if (versionData != null) {
+        emitter.onNext(versionData);
+        emitter.onComplete();
+      } else {
+        emitter.onNext(null);
+      }
+    });
   }
 
   @Override public boolean isVersionCached() {
@@ -68,13 +62,29 @@ import orchextra.javax.inject.Singleton;
     return false;
   }
 
-  @Override public Observable<ApiMenuContentData> getMenus() {
-    return Observable.create(emitter -> {
-      ApiMenuContentData apiMenuContentData =
-          (ApiMenuContentData) kache.get(ApiMenuContentData.class, MENU_KEY);
+  @Override public void putVersion(ApiVersionData apiVersionData) {
+    DbVersionData versionData = DbMappersKt.toDbVersionData(apiVersionData);
+    ocmDatabase.versionDao().insertVersion(versionData);
+  }
+  //endregion
 
-      if (apiMenuContentData != null) {
-        emitter.onNext(apiMenuContentData);
+  //region MENUS
+  @Override public Observable<DbMenuContentData> getMenus() {
+    return Observable.create(emitter -> {
+      DbMenuContentData menuContentData = new DbMenuContentData();
+
+      List<DbMenuContent> contentList = ocmDatabase.menuDao().fetchMenus();
+      menuContentData.setMenuContentList(contentList);
+
+      List<DbElementCache> elementsCacheList = ocmDatabase.elementCacheDao().fetchElementsCache();
+      Map<String, DbElementCache> elementsCache = new HashMap<>();
+      for (DbElementCache element : elementsCacheList) {
+        elementsCache.put(element.getSlug(), element);
+      }
+      menuContentData.setElementsCache(elementsCache);
+
+      if (menuContentData != null) {
+        emitter.onNext(menuContentData);
         emitter.onComplete();
       } else {
         emitter.onError(new ApiMenuNotFoundException());
@@ -82,20 +92,33 @@ import orchextra.javax.inject.Singleton;
     });
   }
 
-  @Override public void putMenus(ApiMenuContentData apiMenuContentData) {
-    if (apiMenuContentData != null) {
-      kache.evict(MENU_KEY);
-      kache.put(apiMenuContentData);
-    }
-  }
-
   @Override public boolean isMenuCached() {
-    return kache.isCached(MENU_KEY);
+    int menuDataCount = ocmDatabase.menuDao().hasMenus("");
+    return (menuDataCount == 1);
   }
 
   @Override public boolean isMenuExpired() {
-    return kache.isExpired(MENU_KEY, ApiMenuContentDataResponse.class);
+    return false;
   }
+
+  @Override public void putMenus(ApiMenuContentData apiMenuContentData) {
+    if (apiMenuContentData != null) {
+      DbMenuContentData menuContentData = DbMappersKt.toDbMenuContentData(apiMenuContentData);
+
+      for (DbMenuContent menu : menuContentData.getMenuContentList()) {
+        ocmDatabase.menuDao().insertMenu(menu);
+      }
+
+      Iterator<Map.Entry<String, DbElementCache>> iterator = menuContentData.getElementsCache().entrySet().iterator();
+      while (iterator.hasNext()) {
+        Map.Entry<String, DbElementCache> element = iterator.next();
+        ocmDatabase.elementCacheDao().insertElementCache(element.getValue());
+      }
+
+      //TODO: insert "menus" "elements" and join table
+    }
+  }
+  //endregion
 
   @Override public Observable<ApiSectionContentData> getSection(final String elementUrl) {
     return Observable.create(emitter -> {

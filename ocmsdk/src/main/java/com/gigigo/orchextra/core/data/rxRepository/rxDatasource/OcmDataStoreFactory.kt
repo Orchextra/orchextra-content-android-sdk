@@ -42,7 +42,7 @@ class OcmDataStoreFactory
       async(bgContext) {
         var dataStore: OcmDataStore
 
-        if (diskDataStore.ocmCache.isVersionCached) {
+        if (diskDataStore.ocmCache.isVersionCached()) {
           Log.i(TAG, "DISK - Version")
           dataStore = diskDataStore
         } else {
@@ -63,7 +63,7 @@ class OcmDataStoreFactory
       cloudDataStore
     } else {
       val cache = diskDataStore.ocmCache
-      if (cache.isMenuCached && !cache.isMenuExpired) {
+      if (cache.isMenuCached() && !cache.isMenuExpired()) {
         Log.i(TAG, "DISK  - Menus")
         diskDataStore
       } else {

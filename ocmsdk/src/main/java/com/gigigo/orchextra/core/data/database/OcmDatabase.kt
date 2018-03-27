@@ -3,20 +3,35 @@ package com.gigigo.orchextra.core.data.database
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.TypeConverters
 import android.content.Context
+import com.gigigo.orchextra.core.data.database.converters.Converters
+import com.gigigo.orchextra.core.data.database.dao.DbElementCacheDao
+import com.gigigo.orchextra.core.data.database.dao.DbElementDao
+import com.gigigo.orchextra.core.data.database.dao.DbMenuContentDao
 import com.gigigo.orchextra.core.data.database.dao.DbVersionDataDao
+import com.gigigo.orchextra.core.data.database.entities.DbElement
+import com.gigigo.orchextra.core.data.database.entities.DbElementCache
+import com.gigigo.orchextra.core.data.database.entities.DbMenuContent
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData
 
-@Database(entities = arrayOf(DbVersionData::class), version = 1, exportSchema = true)
+@Database(
+    entities = arrayOf(DbVersionData::class, DbMenuContent::class, DbElement::class, DbElementCache::class),
+    version = 1, exportSchema = true)
+@TypeConverters(value = arrayOf(Converters::class))
 abstract class OcmDatabase : RoomDatabase() {
 
   abstract fun versionDao(): DbVersionDataDao
+  abstract fun menuDao(): DbMenuContentDao
+  abstract fun elementDao(): DbElementDao
+  abstract fun elementCacheDao(): DbElementCacheDao
 
   companion object {
     private val DEFAULT_DATABASE_NAME = "ocm.db"
 
     @JvmOverloads
-    fun create(context: Context, useInMemory: Boolean = false, dbName: String = DEFAULT_DATABASE_NAME): OcmDatabase {
+    fun create(context: Context, useInMemory: Boolean = false,
+        dbName: String = DEFAULT_DATABASE_NAME): OcmDatabase {
       val databaseBuilder: RoomDatabase.Builder<OcmDatabase>
       if (useInMemory) {
         databaseBuilder = Room.inMemoryDatabaseBuilder(context, OcmDatabase::class.java)
