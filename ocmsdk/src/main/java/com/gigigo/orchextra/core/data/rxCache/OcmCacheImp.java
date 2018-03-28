@@ -6,29 +6,26 @@ import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
 import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.data.database.OcmDatabase;
-import com.gigigo.orchextra.core.data.database.entities.DbElementCache;
-import com.gigigo.orchextra.core.data.database.entities.DbMenuContent;
-import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData;
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData;
+import com.gigigo.orchextra.core.data.database.entities.DbVideoData;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.data.rxRepository.DbMappersKt;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.CacheDir;
 import com.mskn73.kache.Kache;
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Calendar;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
 @Singleton public class OcmCacheImp implements OcmCache {
+  public static final String MENU_KEY = "MENU_KEY";
   private final OcmDatabase ocmDatabase;
   private final Kache kache;
   private final Context mContext;
@@ -68,23 +65,13 @@ import orchextra.javax.inject.Singleton;
   }
   //endregion
 
-  //region MENUS
-  @Override public Observable<DbMenuContentData> getMenus() {
+  @Override public Observable<ApiMenuContentData> getMenus() {
     return Observable.create(emitter -> {
-      DbMenuContentData menuContentData = new DbMenuContentData();
+      ApiMenuContentData apiMenuContentData =
+          (ApiMenuContentData) kache.get(ApiMenuContentData.class, MENU_KEY);
 
-      List<DbMenuContent> contentList = ocmDatabase.menuDao().fetchMenus();
-      menuContentData.setMenuContentList(contentList);
-
-      List<DbElementCache> elementsCacheList = ocmDatabase.elementCacheDao().fetchElementsCache();
-      Map<String, DbElementCache> elementsCache = new HashMap<>();
-      for (DbElementCache element : elementsCacheList) {
-        elementsCache.put(element.getSlug(), element);
-      }
-      menuContentData.setElementsCache(elementsCache);
-
-      if (menuContentData != null) {
-        emitter.onNext(menuContentData);
+      if (apiMenuContentData != null) {
+        emitter.onNext(apiMenuContentData);
         emitter.onComplete();
       } else {
         emitter.onError(new ApiMenuNotFoundException());
@@ -92,33 +79,20 @@ import orchextra.javax.inject.Singleton;
     });
   }
 
+  @Override public void putMenus(ApiMenuContentData apiMenuContentData) {
+    if (apiMenuContentData != null) {
+      kache.evict(MENU_KEY);
+      kache.put(apiMenuContentData);
+    }
+  }
+
   @Override public boolean isMenuCached() {
-    int menuDataCount = ocmDatabase.menuDao().hasMenus("");
-    return (menuDataCount == 1);
+    return kache.isCached(MENU_KEY);
   }
 
   @Override public boolean isMenuExpired() {
-    return false;
+    return kache.isExpired(MENU_KEY, ApiMenuContentDataResponse.class);
   }
-
-  @Override public void putMenus(ApiMenuContentData apiMenuContentData) {
-    if (apiMenuContentData != null) {
-      DbMenuContentData menuContentData = DbMappersKt.toDbMenuContentData(apiMenuContentData);
-
-      for (DbMenuContent menu : menuContentData.getMenuContentList()) {
-        ocmDatabase.menuDao().insertMenu(menu);
-      }
-
-      Iterator<Map.Entry<String, DbElementCache>> iterator = menuContentData.getElementsCache().entrySet().iterator();
-      while (iterator.hasNext()) {
-        Map.Entry<String, DbElementCache> element = iterator.next();
-        ocmDatabase.elementCacheDao().insertElementCache(element.getValue());
-      }
-
-      //TODO: insert "menus" "elements" and join table
-    }
-  }
-  //endregion
 
   @Override public Observable<ApiSectionContentData> getSection(final String elementUrl) {
     return Observable.create(emitter -> {
@@ -177,9 +151,10 @@ import orchextra.javax.inject.Singleton;
     return kache.isExpired(slug, ApiElementData.class);
   }
 
-  @Override public Observable<ApiVideoData> getVideo(String videoId) {
+  //region VIDEO
+  @Override public Observable<DbVideoData> getVideo(String videoId) {
     return Observable.create(emitter -> {
-      ApiVideoData videoData = (ApiVideoData) kache.get(ApiVideoData.class, videoId);
+      DbVideoData videoData = ocmDatabase.videoDao().fetchVideo(videoId);
 
       if (videoData != null) {
         emitter.onNext(videoData);
@@ -191,19 +166,33 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void putVideo(ApiVideoData videoData) {
-    if (videoData != null && videoData.getKey() != null) {
-      kache.evict(videoData.getKey());
-      kache.put(videoData);
-    }
+    Observable.create(emitter -> {
+      DbVideoData video = DbMappersKt.toDbVideoData(videoData);
+      Long now = getTodayPlusDays(0);
+      video.setExpireAt(now);
+
+      ocmDatabase.videoDao().insertVideo(video);
+      emitter.onComplete();
+    }).subscribeOn(Schedulers.io()).subscribe();
   }
 
   @Override public boolean isVideoCached(String videoId) {
-    return kache.isCached(videoId);
+    int videoDataCount = ocmDatabase.videoDao().hasVideo(videoId);
+    return (videoDataCount == 1);
   }
 
   @Override public boolean isVideoExpired(String videoId) {
-    return kache.isExpired(videoId, ApiVideoData.class);
+    Long maxExpiredTime = getTodayPlusDays(1);
+    int videoDataCount = ocmDatabase.videoDao().hasExpiredVideo(videoId, maxExpiredTime);
+    return (videoDataCount == 1);
   }
+
+  private long getTodayPlusDays(int daysAgo) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DATE, daysAgo);
+    return calendar.getTime().getTime();
+  }
+  //endregion
 
   @Override public void evictAll(boolean images, boolean data) {
     if (data) trimCache(mContext, "kache");

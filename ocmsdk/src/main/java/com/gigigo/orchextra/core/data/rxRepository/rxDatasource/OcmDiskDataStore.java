@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentDataResponseMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
-import com.gigigo.orchextra.core.data.api.mappers.video.ApiVideoDataMapper;
+import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxRepository.DbMappersKt;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
@@ -19,18 +19,19 @@ import orchextra.javax.inject.Singleton;
 @Singleton public class OcmDiskDataStore implements OcmDataStore {
   private final OcmCache ocmCache;
 
+  private final ApiMenuContentListResponseMapper apiMenuContentListResponseMapper;
   private final ApiContentDataResponseMapper apiContentDataResponseMapper;
   private final ApiElementDataMapper apiElementDataMapper;
-  private final ApiVideoDataMapper apiVideoDataMapper;
 
   @Inject public OcmDiskDataStore(OcmCache ocmCache,
+      ApiMenuContentListResponseMapper apiMenuContentListResponseMapper,
       ApiContentDataResponseMapper apiContentDataResponseMapper,
-      ApiElementDataMapper apiElementDataMapper, ApiVideoDataMapper apiVideoDataMapper) {
+      ApiElementDataMapper apiElementDataMapper) {
     this.ocmCache = ocmCache;
 
+    this.apiMenuContentListResponseMapper = apiMenuContentListResponseMapper;
     this.apiContentDataResponseMapper = apiContentDataResponseMapper;
     this.apiElementDataMapper = apiElementDataMapper;
-    this.apiVideoDataMapper = apiVideoDataMapper;
   }
 
   @Override public Observable<VersionData> getVersion() {
@@ -38,8 +39,14 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<MenuContentData> getMenuEntity() {
-    return ocmCache.getMenus().map(dbMenuContentData -> DbMappersKt.toMenuContentData(dbMenuContentData));
+    final long time = System.currentTimeMillis();
+
+    return ocmCache.getMenus().doOnNext(apiMenuContentData -> {
+      apiMenuContentData.setFromCloud(false);
+      Log.v("TT - DISK - Menus", (System.currentTimeMillis() - time) / 1000 + "");
+    }).map(apiMenuContentListResponseMapper::externalClassToModel);
   }
+
 
   @Override public Observable<ContentData> getSectionEntity(String elementUrl,
       int numberOfElementsToDownload) {
@@ -67,7 +74,7 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Observable<VimeoInfo> getVideoById(Context context, String videoId,
       boolean isWifiConnection, boolean isFastConnection) {
-    return ocmCache.getVideo(videoId).map(apiVideoDataMapper::externalClassToModel);
+    return ocmCache.getVideo(videoId).map(videoData -> DbMappersKt.toVimeoInfo(videoData));
   }
 
   @Override public boolean isFromCloud() {

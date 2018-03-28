@@ -120,25 +120,35 @@ class OcmDataStoreFactory
   }
 
   fun getDataStoreForVideo(force: Boolean, videoId: String): OcmDataStore {
-
-    val ocmDataStore: OcmDataStore
-
     if (!connectionUtils.hasConnection()) return diskDataStore
 
-    ocmDataStore = if (force) {
-      Log.i(TAG, "CLOUD - Video")
-      cloudDataStore
-    } else {
-      val cache = diskDataStore.ocmCache
-      if (cache.isVideoCached(videoId) && !cache.isVideoExpired(videoId)) {
-        Log.i(TAG, "DISK  - Video")
-        diskDataStore
-      } else {
-        Log.i(TAG, "CLOUD - Video")
-        cloudDataStore
-      }
+    lateinit var dataStore: OcmDataStore
+
+    runBlocking {
+      dataStore = dataStoreForVideo(force, videoId).await()
     }
 
-    return ocmDataStore
+    return dataStore
   }
+
+  private fun dataStoreForVideo(force: Boolean, videoId: String) =
+      async(bgContext) {
+        var dataStore: OcmDataStore
+
+        dataStore = if (force) {
+          Log.i(TAG, "CLOUD - Video")
+          cloudDataStore
+        } else {
+          val cache = diskDataStore.ocmCache
+          if (cache.isVideoCached(videoId) && !cache.isVideoExpired(videoId)) {
+            Log.i(TAG, "DISK  - Video")
+            diskDataStore
+          } else {
+            Log.i(TAG, "CLOUD - Video")
+            cloudDataStore
+          }
+        }
+
+        dataStore
+      }
 }

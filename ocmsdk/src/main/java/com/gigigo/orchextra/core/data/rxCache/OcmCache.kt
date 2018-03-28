@@ -6,8 +6,8 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData
 import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData
-import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData
+import com.gigigo.orchextra.core.data.database.entities.DbVideoData
 import io.reactivex.Observable
 
 interface OcmCache {
@@ -19,7 +19,7 @@ interface OcmCache {
   fun isVersionExpired(): Boolean
   fun putVersion(apiVersionData: ApiVersionData)
 
-  fun getMenus(): Observable<DbMenuContentData>
+  fun getMenus(): Observable<ApiMenuContentData>
   fun isMenuCached(): Boolean
   fun isMenuExpired(): Boolean
   fun putMenus(apiMenuContentData: ApiMenuContentData)
@@ -34,7 +34,7 @@ interface OcmCache {
   fun isDetailExpired(slug: String): Boolean
   fun putDetail(apiElementData: ApiElementData)
 
-  fun getVideo(videoId: String): Observable<ApiVideoData>
+  fun getVideo(videoId: String): Observable<DbVideoData>
   fun isVideoCached(videoId: String): Boolean
   fun isVideoExpired(videoId: String): Boolean
   fun putVideo(videoData: ApiVideoData)

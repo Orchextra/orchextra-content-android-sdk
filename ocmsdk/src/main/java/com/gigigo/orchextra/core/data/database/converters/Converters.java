@@ -1,31 +1,46 @@
 package com.gigigo.orchextra.core.data.database.converters;
 
 import android.arch.persistence.room.TypeConverter;
-import com.gigigo.orchextra.core.data.database.entities.DbArticleElement;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
+import java.util.Date;
 
 public class Converters {
-  @TypeConverter public static List<DbArticleElement> fromJsonToList(String value) {
+  @TypeConverter public static Date fromTimestamp(Long value) {
+    return value == null ? null : new Date(value);
+  }
+
+  @TypeConverter public static Long dateToTimestamp(Date date) {
+    return date == null ? null : date.getTime();
+  }
+
+/*
+  @TypeConverter public static List<DbArticleElement> fromJsonToListArticle(String value) {
     Type listType = new TypeToken<List<DbArticleElement>>() { }.getType();
     return new Gson().fromJson(value, listType);
   }
 
-  @TypeConverter public static String fromListToJson(List<DbArticleElement> list) {
+  @TypeConverter public static String fromListArticleToJson(List<DbArticleElement> list) {
     Gson gson = new Gson();
     String json = gson.toJson(list);
     return json;
   }
 
   @TypeConverter public static List<String> fromJsonToListString(String value) {
-    Type listType = new TypeToken<List<DbArticleElement>>() { }.getType();
+    Type listType = new TypeToken<List<String>>() { }.getType();
     return new Gson().fromJson(value, listType);
   }
 
   @TypeConverter public static String fromListStringToJson(List<String> list) {
+    Gson gson = new Gson();
+    String json = gson.toJson(list);
+    return json;
+  }
+
+  @TypeConverter public static List<String> fromJsonToListFloat(String value) {
+    Type listType = new TypeToken<List<Float>>() { }.getType();
+    return new Gson().fromJson(value, listType);
+  }
+
+  @TypeConverter public static String fromListFloatToJson(List<Float> list) {
     Gson gson = new Gson();
     String json = gson.toJson(list);
     return json;
@@ -52,4 +67,5 @@ public class Converters {
     String json = gson.toJson(map);
     return json;
   }
+  */
 }

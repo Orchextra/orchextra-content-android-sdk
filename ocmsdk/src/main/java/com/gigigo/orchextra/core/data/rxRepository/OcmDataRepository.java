@@ -84,13 +84,12 @@ import orchextra.javax.inject.Singleton;
   @Override
   public Observable<VimeoInfo> getVideo(Context context, boolean forceReload, String videoId,
       boolean isWifiConnection, boolean isFastConnection) {
-    OcmDataStore ocmDataStore =
-        ocmDataStoreFactory.getDataStoreForVideo(forceReload, videoId);
+    OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForVideo(forceReload, videoId);
     return ocmDataStore.getVideoById(context, videoId, isWifiConnection, isFastConnection);
   }
 
   @Override public Observable<Void> clear(boolean images, boolean data) {
-    OcmDiskDataStore ocmDataStore = (OcmDiskDataStore) ocmDataStoreFactory.getDiskDataStore();
+    OcmDiskDataStore ocmDataStore = ocmDataStoreFactory.getDiskDataStore();
     ocmDataStore.getOcmCache().evictAll(images, data);
     return Observable.empty();
   }

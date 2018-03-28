@@ -17,12 +17,12 @@ import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentDataResp
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
 import com.gigigo.orchextra.core.data.api.mappers.version.ApiVersionMapper;
-import com.gigigo.orchextra.core.data.api.mappers.video.ApiVideoDataMapper;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageData;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
+import com.gigigo.orchextra.core.data.rxRepository.DbMappersKt;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
@@ -59,16 +59,14 @@ import orchextra.javax.inject.Singleton;
   private final ApiMenuContentListResponseMapper apiMenuContentListResponseMapper;
   private final ApiContentDataResponseMapper apiContentDataResponseMapper;
   private final ApiElementDataMapper apiElementDataMapper;
-  private final ApiVideoDataMapper apiVideoDataMapper;
 
   private Integer withThumbnails = null; //For default, thumbnails are enabled
 
   @Inject public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,
-      @NonNull OcmImageCache ocmImageCache,
-      ApiVersionMapper apiVersionMapper,
+      @NonNull OcmImageCache ocmImageCache, ApiVersionMapper apiVersionMapper,
       ApiMenuContentListResponseMapper apiMenuContentListResponseMapper,
       ApiContentDataResponseMapper apiContentDataResponseMapper,
-      ApiElementDataMapper apiElementDataMapper, ApiVideoDataMapper apiVideoDataMapper) {
+      ApiElementDataMapper apiElementDataMapper) {
     this.ocmApiService = ocmApiService;
     this.ocmCache = ocmCache;
     this.ocmImageCache = ocmImageCache;
@@ -76,7 +74,6 @@ import orchextra.javax.inject.Singleton;
     this.apiMenuContentListResponseMapper = apiMenuContentListResponseMapper;
     this.apiContentDataResponseMapper = apiContentDataResponseMapper;
     this.apiElementDataMapper = apiElementDataMapper;
-    this.apiVideoDataMapper = apiVideoDataMapper;
 
     Injector injector = OCManager.getInjector();
     if (injector != null) {
@@ -233,7 +230,7 @@ import orchextra.javax.inject.Singleton;
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
 
-    return videoObservable.map(apiVideoDataMapper::externalClassToModel);
+    return videoObservable.map(apiVideoData -> DbMappersKt.toVimeoInfo(apiVideoData));
   }
 
   @Override public boolean isFromCloud() {
