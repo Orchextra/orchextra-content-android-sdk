@@ -293,30 +293,32 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
     int auxPadding = padding == 0 ? 1 : padding;
 
-    for (int i = 0; i < elements.size(); i++) {
-      Element element = elements.get(i);
+    if (!pattern.isEmpty()) {
+      for (int i = 0; i < elements.size(); i++) {
+        Element element = elements.get(i);
 
-      if (TextUtils.isEmpty(filter) || element.getTags().contains(filter)) {
+        if (TextUtils.isEmpty(filter) || element.getTags().contains(filter)) {
 
-        CellGridContentData cell = new CellGridContentData();
-        cell.setData(element);
-        cell.setColumn(pattern.get(indexPattern).getColumn() * auxPadding);
-        cell.setRow(pattern.get(indexPattern).getRow() * auxPadding);
+          CellGridContentData cell = new CellGridContentData();
+          cell.setData(element);
+          cell.setColumn(pattern.get(indexPattern).getColumn() * auxPadding);
+          cell.setRow(pattern.get(indexPattern).getRow() * auxPadding);
+
+          indexPattern = ++indexPattern % pattern.size();
+
+          cellGridContentDataList.add(cell);
+        }
+      }
+
+      //TODO: check this "ñapa" to remove cellblankelements and provide application to put bottom padding
+      while (cellGridContentDataList.size() % 3 != 0) {
+        CellBlankElement cellBlankElement = new CellBlankElement();
+        cellBlankElement.setColumn(1 * auxPadding);
+        cellBlankElement.setRow(1 * auxPadding);
+        cellGridContentDataList.add(cellBlankElement);
 
         indexPattern = ++indexPattern % pattern.size();
-
-        cellGridContentDataList.add(cell);
       }
-    }
-
-    //TODO: check this "ñapa" to remove cellblankelements and provide application to put bottom padding
-    while (cellGridContentDataList.size() % 3 != 0) {
-      CellBlankElement cellBlankElement = new CellBlankElement();
-      cellBlankElement.setColumn(1 * auxPadding);
-      cellBlankElement.setRow(1 * auxPadding);
-      cellGridContentDataList.add(cellBlankElement);
-
-      indexPattern = ++indexPattern % pattern.size();
     }
 
     if (cellGridContentDataList.size() > 0) {
