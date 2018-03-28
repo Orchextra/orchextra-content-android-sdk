@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "02387939c2146909c63ea76ed62d737e",
+    "identityHash": "b51d40e90fc27678c4d7f38983a6f302",
     "entities": [
       {
         "tableName": "version",
@@ -24,6 +24,234 @@
         "primaryKey": {
           "columnNames": [
             "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "menu",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, PRIMARY KEY(`slug`))",
+        "fields": [
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "slug"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "element",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, `tags` TEXT, `custom_properties` TEXT, `element_url` TEXT, `name` TEXT, `view_text` TEXT, `view_image_url` TEXT, `view_image_thumb` TEXT, PRIMARY KEY(`slug`))",
+        "fields": [
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tags",
+            "columnName": "tags",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "customProperties",
+            "columnName": "custom_properties",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "elementUrl",
+            "columnName": "element_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sectionView.text",
+            "columnName": "view_text",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sectionView.imageUrl",
+            "columnName": "view_image_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sectionView.imageThumb",
+            "columnName": "view_image_thumb",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "slug"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "element_cache",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, `type` TEXT, `tags` TEXT, `custom_properties` TEXT, `name` TEXT, `updated_at` INTEGER NOT NULL, `preview_image_url` TEXT, `preview_text` TEXT, `preview_behaviour` TEXT, `preview_image_thumb` TEXT, `render_content_url` TEXT, `render_url` TEXT, `render_title` TEXT, `render_elements` TEXT, `render_scheme_uri` TEXT, `render_source` TEXT, `render_format` TEXT, `render_federated_active` INTEGER, `render_federated_type` TEXT, `render_federated_cid_site_name` TEXT, `share_url` TEXT, `share_text` TEXT, PRIMARY KEY(`slug`))",
+        "fields": [
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tags",
+            "columnName": "tags",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "customProperties",
+            "columnName": "custom_properties",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "preview.imageUrl",
+            "columnName": "preview_image_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "preview.text",
+            "columnName": "preview_text",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "preview.behaviour",
+            "columnName": "preview_behaviour",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "preview.imageThumb",
+            "columnName": "preview_image_thumb",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "render.contentUrl",
+            "columnName": "render_content_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "render.url",
+            "columnName": "render_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "render.title",
+            "columnName": "render_title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "render.elements",
+            "columnName": "render_elements",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "render.schemeUri",
+            "columnName": "render_scheme_uri",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "render.source",
+            "columnName": "render_source",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "render.format",
+            "columnName": "render_format",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "render.federatedAuth.active",
+            "columnName": "render_federated_active",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "render.federatedAuth.type",
+            "columnName": "render_federated_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "render.federatedAuth.keys.siteName",
+            "columnName": "render_federated_cid_site_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "share.url",
+            "columnName": "share_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "share.text",
+            "columnName": "share_text",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "slug"
           ],
           "autoGenerate": false
         },
@@ -71,7 +299,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"02387939c2146909c63ea76ed62d737e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b51d40e90fc27678c4d7f38983a6f302\")"
     ]
   }
 }

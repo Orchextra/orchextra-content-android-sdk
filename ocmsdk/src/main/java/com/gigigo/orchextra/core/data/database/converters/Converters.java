@@ -1,7 +1,13 @@
 package com.gigigo.orchextra.core.data.database.converters;
 
 import android.arch.persistence.room.TypeConverter;
+import com.gigigo.orchextra.core.data.database.entities.DbArticleElement;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class Converters {
   @TypeConverter public static Date fromTimestamp(Long value) {
@@ -12,9 +18,9 @@ public class Converters {
     return date == null ? null : date.getTime();
   }
 
-/*
   @TypeConverter public static List<DbArticleElement> fromJsonToListArticle(String value) {
-    Type listType = new TypeToken<List<DbArticleElement>>() { }.getType();
+    Type listType = new TypeToken<List<DbArticleElement>>() {
+    }.getType();
     return new Gson().fromJson(value, listType);
   }
 
@@ -25,7 +31,8 @@ public class Converters {
   }
 
   @TypeConverter public static List<String> fromJsonToListString(String value) {
-    Type listType = new TypeToken<List<String>>() { }.getType();
+    Type listType = new TypeToken<List<String>>() {
+    }.getType();
     return new Gson().fromJson(value, listType);
   }
 
@@ -35,8 +42,9 @@ public class Converters {
     return json;
   }
 
-  @TypeConverter public static List<String> fromJsonToListFloat(String value) {
-    Type listType = new TypeToken<List<Float>>() { }.getType();
+  @TypeConverter public static List<Float> fromJsonToListFloat(String value) {
+    Type listType = new TypeToken<List<Float>>() {
+    }.getType();
     return new Gson().fromJson(value, listType);
   }
 
@@ -47,7 +55,8 @@ public class Converters {
   }
 
   @TypeConverter public static List<? extends List<?>> fromJsonToListList(String value) {
-    Type listType = new TypeToken<List<? extends List<?>>>() { }.getType();
+    Type listType = new TypeToken<List<? extends List<?>>>() {
+    }.getType();
     return new Gson().fromJson(value, listType);
   }
 
@@ -58,7 +67,8 @@ public class Converters {
   }
 
   @TypeConverter public static Map<String, ? extends Object> fromJsonToMap(String value) {
-    Type mapType = new TypeToken<Map<String, ? extends Object>>() { }.getType();
+    Type mapType = new TypeToken<Map<String, ? extends Object>>() {
+    }.getType();
     return new Gson().fromJson(value, mapType);
   }
 
@@ -67,5 +77,4 @@ public class Converters {
     String json = gson.toJson(map);
     return json;
   }
-  */
 }

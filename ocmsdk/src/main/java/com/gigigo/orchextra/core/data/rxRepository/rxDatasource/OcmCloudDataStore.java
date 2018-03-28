@@ -87,7 +87,7 @@ import orchextra.javax.inject.Singleton;
         .map(apiVersionResponse -> new ApiVersionData(apiVersionResponse.getData()))
         .filter(apiVersionData -> apiVersionData != null)
         .doOnNext(ocmCache::putVersion)
-        .map(apiVersionMapper::externalClassToModel);
+        .map(apiVersionData -> DbMappersKt.toVersionData(apiVersionData));
   }
 
   @Override public Observable<MenuContentData> getMenuEntity() {
