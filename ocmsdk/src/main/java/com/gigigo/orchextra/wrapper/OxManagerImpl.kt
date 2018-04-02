@@ -102,6 +102,10 @@ class OxManagerImpl : OxManager {
     orchextra.getCrmManager().bindUser(crm, { statusListener.onSuccess() })
   }
 
+  override fun unBindUser(statusListener: StatusListener) {
+    orchextra.getCrmManager().unbindUser { statusListener.onSuccess() }
+  }
+
   override fun setCustomSchemeReceiver(customSchemeReceiver: OnCustomSchemeReceiver) {
     orchextra.setCustomActionListener { customSchemeReceiver.onReceive(it) }
   }

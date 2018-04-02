@@ -25,6 +25,8 @@ interface OxManager {
 
   fun bindUser(crmUser: CrmUser, statusListener: StatusListener)
 
+  fun unBindUser(statusListener: StatusListener)
+
   fun setCustomSchemeReceiver(customSchemeReceiver: OnCustomSchemeReceiver)
 
   fun onCustomScheme(customScheme: String)

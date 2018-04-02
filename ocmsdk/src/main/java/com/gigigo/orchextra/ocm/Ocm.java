@@ -206,6 +206,10 @@ public final class Ocm {
     OCManager.bindUser(crmUser, statusListener);
   }
 
+  public static void unBindUser(OxManager.StatusListener statusListener) {
+    OCManager.unBindUser(statusListener);
+  }
+
   public static void stop() {
     OCManager.stop();
   }

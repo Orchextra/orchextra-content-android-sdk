@@ -685,7 +685,15 @@ Add Comment C
     if (instance != null) {
       instance.oxManager.bindUser(crmUser, statusListener);
     } else {
-      Log.e(TAG, "setErrorListener with null instance");
+      Log.e(TAG, "bindUser with null instance");
+    }
+  }
+
+  static void unBindUser(OxManager.StatusListener statusListener) {
+    if (instance != null) {
+      instance.oxManager.unBindUser(statusListener);
+    } else {
+      Log.e(TAG, "unBindUser with null instance");
     }
   }
 
