@@ -68,6 +68,8 @@ android {
     }
   }
 
+  //kapt { generateStubs = true }
+
   project.android.libraryVariants.all { variant ->
 
     variant.productFlavors.each { flavor ->

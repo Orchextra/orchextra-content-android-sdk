@@ -14,9 +14,7 @@ import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
 import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentDataResponseMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
-import com.gigigo.orchextra.core.data.api.mappers.version.ApiVersionMapper;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageData;
@@ -44,10 +42,6 @@ import java.util.Iterator;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
-/**
- * Created by francisco.hernandez on 23/5/17.
- */
-
 @Singleton public class OcmCloudDataStore implements OcmDataStore {
 
   private static final int MAX_ARTICLES = Integer.MAX_VALUE;
@@ -55,25 +49,20 @@ import orchextra.javax.inject.Singleton;
   private final OcmCache ocmCache;
   private final OcmImageCache ocmImageCache;
 
-  private final ApiVersionMapper apiVersionMapper;
   private final ApiMenuContentListResponseMapper apiMenuContentListResponseMapper;
   private final ApiContentDataResponseMapper apiContentDataResponseMapper;
-  private final ApiElementDataMapper apiElementDataMapper;
 
   private Integer withThumbnails = null; //For default, thumbnails are enabled
 
   @Inject public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,
-      @NonNull OcmImageCache ocmImageCache, ApiVersionMapper apiVersionMapper,
+      @NonNull OcmImageCache ocmImageCache,
       ApiMenuContentListResponseMapper apiMenuContentListResponseMapper,
-      ApiContentDataResponseMapper apiContentDataResponseMapper,
-      ApiElementDataMapper apiElementDataMapper) {
+      ApiContentDataResponseMapper apiContentDataResponseMapper) {
     this.ocmApiService = ocmApiService;
     this.ocmCache = ocmCache;
     this.ocmImageCache = ocmImageCache;
-    this.apiVersionMapper = apiVersionMapper;
     this.apiMenuContentListResponseMapper = apiMenuContentListResponseMapper;
     this.apiContentDataResponseMapper = apiContentDataResponseMapper;
-    this.apiElementDataMapper = apiElementDataMapper;
 
     Injector injector = OCManager.getInjector();
     if (injector != null) {
@@ -91,9 +80,6 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<MenuContentData> getMenuEntity() {
-
-    final long time = System.currentTimeMillis();
-
     return ocmApiService.getMenuDataRx()
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putMenus)
@@ -199,7 +185,11 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.getElementByIdRx(slug, withThumbnails)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putDetail)
-        .map(apiElementDataMapper::externalClassToModel);
+        .map(apiElementData -> {
+          ElementData elementData = new ElementData();
+          //DbMappersKt toElementData(apiElementData);
+          return elementData;
+        });
   }
 
   @Override public Observable<VimeoInfo> getVideoById(Context context, String videoId,

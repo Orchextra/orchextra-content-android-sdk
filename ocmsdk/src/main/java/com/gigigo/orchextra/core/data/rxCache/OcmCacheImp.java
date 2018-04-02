@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.data.rxCache;
 import android.content.Context;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
+import com.gigigo.orchextra.core.data.CalendarExtensionsKt;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
@@ -15,6 +16,7 @@ import com.gigigo.orchextra.core.data.database.entities.DbVideoData;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.data.rxRepository.DbMappersKt;
+import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.CacheDir;
 import com.mskn73.kache.Kache;
 import io.reactivex.Observable;
@@ -65,6 +67,7 @@ import orchextra.javax.inject.Singleton;
   }
   //endregion
 
+  //region MENU
   @Override public Observable<ApiMenuContentData> getMenus() {
     return Observable.create(emitter -> {
       ApiMenuContentData apiMenuContentData =
@@ -93,7 +96,9 @@ import orchextra.javax.inject.Singleton;
   @Override public boolean isMenuExpired() {
     return kache.isExpired(MENU_KEY, ApiMenuContentDataResponse.class);
   }
+  //endregion
 
+  //region ELEMENT
   @Override public Observable<ApiSectionContentData> getSection(final String elementUrl) {
     return Observable.create(emitter -> {
       ApiSectionContentData apiSectionContentData =
@@ -122,13 +127,23 @@ import orchextra.javax.inject.Singleton;
   @Override public boolean isSectionExpired(String elementUrl) {
     return kache.isExpired(elementUrl, ApiSectionContentData.class);
   }
+  //endregion
 
-  @Override public Observable<ApiElementData> getDetail(String slug) {
+  //region ELEMENT
+  @Override public Observable<ElementData> getDetail(String slug) {
     return Observable.create(emitter -> {
-      ApiElementData apiElementData = (ApiElementData) kache.get(ApiElementData.class, slug);
+      /*
+      DbElementCache elementCacheData = ocmDatabase.elementCacheDao().fetchElementCache(slug);
 
-      if (apiElementData != null) {
-        emitter.onNext(apiElementData);
+      ElementData elementData = new ElementData();
+      elementData.setElement(DbMappersKt.toElementCache(elementCacheData));
+      */
+
+      ApiElementData apiElementData = (ApiElementData) kache.get(ApiElementData.class, slug);
+      ElementData elementData = new ElementData(); //DbMappersKt.toElementData(apiElementData);
+
+      if (elementData != null) {
+        emitter.onNext(elementData);
         emitter.onComplete();
       } else {
         emitter.onError(new ApiSectionNotFoundException());
@@ -136,20 +151,30 @@ import orchextra.javax.inject.Singleton;
     });
   }
 
+  @Override public boolean isDetailCached(String slug) {
+    /*
+    int detailDataCount = ocmDatabase.elementCacheDao().hasElementCache(slug);
+    return (detailDataCount == 1);
+    */
+    return false;
+  }
+
+  @Override public boolean isDetailExpired(String slug) {
+    return false;
+  }
+
   @Override public void putDetail(ApiElementData apiElementData) {
-    if (apiElementData != null && apiElementData.getKey() != null) {
+    /*
+    ElementData elementData = DbMappersKt.toElementData(apiElementData);
+    DbElementCache elementCacheData = DbMappersKt.toDbElementCache(elementData.getElement());
+    ocmDatabase.elementCacheDao().insertElementCache(elementCacheData);
+    */
+    if (apiElementData != null) {
       kache.evict(apiElementData.getKey());
       kache.put(apiElementData);
     }
   }
-
-  @Override public boolean isDetailCached(String slug) {
-    return kache.isCached(slug);
-  }
-
-  @Override public boolean isDetailExpired(String slug) {
-    return kache.isExpired(slug, ApiElementData.class);
-  }
+  //endregion
 
   //region VIDEO
   @Override public Observable<DbVideoData> getVideo(String videoId) {
@@ -168,9 +193,8 @@ import orchextra.javax.inject.Singleton;
   @Override public void putVideo(ApiVideoData videoData) {
     Observable.create(emitter -> {
       DbVideoData video = DbMappersKt.toDbVideoData(videoData);
-      Long now = getTodayPlusDays(0);
-      video.setExpireAt(now);
-
+      //Long maxExpiredTime = CalendarExtensionsKt.getTodayPlusDays(Calendar.getInstance(),1);
+      //video.setExpireAt(maxExpiredTime);
       ocmDatabase.videoDao().insertVideo(video);
       emitter.onComplete();
     }).subscribeOn(Schedulers.io()).subscribe();
@@ -182,7 +206,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public boolean isVideoExpired(String videoId) {
-    Long maxExpiredTime = getTodayPlusDays(1);
+    Long maxExpiredTime = CalendarExtensionsKt.getTodayPlusDays(Calendar.getInstance(),1);
     int videoDataCount = ocmDatabase.videoDao().hasExpiredVideo(videoId, maxExpiredTime);
     return (videoDataCount == 1);
   }

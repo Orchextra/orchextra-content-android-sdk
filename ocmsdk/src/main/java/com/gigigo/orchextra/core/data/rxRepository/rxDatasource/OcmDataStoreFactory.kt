@@ -98,26 +98,37 @@ class OcmDataStoreFactory
   }
 
   fun getDataStoreForDetail(force: Boolean, slug: String): OcmDataStore {
-    val ocmDataStore: OcmDataStore
-
     if (!connectionUtils.hasConnection()) return diskDataStore
 
-    ocmDataStore = if (force) {
-      Log.i(TAG, "CLOUD - Detail")
-      cloudDataStore
-    } else {
-      val cache = diskDataStore.ocmCache
-      if (cache.isDetailCached(slug) && !cache.isDetailExpired(slug)) {
-        Log.i(TAG, "DISK  - Detail")
-        diskDataStore
-      } else {
-        Log.i(TAG, "CLOUD - Detail")
-        cloudDataStore
-      }
+    lateinit var dataStore: OcmDataStore
+
+    runBlocking {
+      dataStore = dataStoreForDetail(force, slug).await()
     }
 
-    return ocmDataStore
+    return dataStore
   }
+
+  private fun dataStoreForDetail(force: Boolean, slug: String) =
+      async(bgContext) {
+        var dataStore: OcmDataStore
+
+        dataStore = if (force) {
+          Log.i(TAG, "CLOUD - Detail")
+          cloudDataStore
+        } else {
+          val cache = diskDataStore.ocmCache
+          if (cache.isDetailCached(slug) && !cache.isDetailExpired(slug)) {
+            Log.i(TAG, "DISK  - Detail")
+            diskDataStore
+          } else {
+            Log.i(TAG, "CLOUD - Detail")
+            cloudDataStore
+          }
+        }
+
+        dataStore
+      }
 
   fun getDataStoreForVideo(force: Boolean, videoId: String): OcmDataStore {
     if (!connectionUtils.hasConnection()) return diskDataStore

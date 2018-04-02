@@ -66,13 +66,13 @@ public class Converters {
     return json;
   }
 
-  @TypeConverter public static Map<String, ? extends Object> fromJsonToMap(String value) {
-    Type mapType = new TypeToken<Map<String, ? extends Object>>() {
+  @TypeConverter public static Map<String, String> fromJsonToMap(String value) {
+    Type mapType = new TypeToken<Map<String, String>>() {
     }.getType();
     return new Gson().fromJson(value, mapType);
   }
 
-  @TypeConverter public static String fromMapToJson(Map<String, ? extends Object> map) {
+  @TypeConverter public static String fromMapToJson(Map<String, String> map) {
     Gson gson = new Gson();
     String json = gson.toJson(map);
     return json;

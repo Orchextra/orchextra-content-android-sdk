@@ -3,8 +3,6 @@ package com.gigigo.orchextra.core.data.database.entities
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
-import android.arch.persistence.room.Ignore
 
 
 @Entity(tableName = "version", primaryKeys = arrayOf("id"))
@@ -17,6 +15,7 @@ data class DbVersionData(
   }
 }
 
+/*
 data class DbMenuContentData @JvmOverloads constructor(
     var isFromCloud: Boolean = false,
     var menuContentList: List<DbMenuContent>? = emptyList(),
@@ -58,19 +57,20 @@ data class DbElementSectionView(
     @ColumnInfo(name = "image_url") var imageUrl: String? = "",
     @ColumnInfo(name = "image_thumb") var imageThumb: String? = ""
 )
-
+*/
 
 @Entity(tableName = "element_cache", primaryKeys = arrayOf("slug"))
 data class DbElementCache(
     var slug: String = "",
     var type: String? = "",
-    var tags: List<String>? = emptyList(), //TODO: converter
+    var tags: List<String>? = emptyList(),
     @Embedded(prefix = "preview_") var preview: DbElementCachePreview? = DbElementCachePreview(),
     @Embedded(prefix = "render_") var render: DbElementCacheRender? = DbElementCacheRender(),
     @Embedded(prefix = "share_") var share: DbElementCacheShare? = DbElementCacheShare(),
-    @ColumnInfo(name = "custom_properties") var customProperties: Map<String, Any>? = emptyMap(), //TODO: converter
+    @ColumnInfo(name = "custom_properties") var customProperties: Map<String, String>? = emptyMap(),
     var name: String? = "",
-    @ColumnInfo(name = "updated_at") var updatedAt: Long = 0)
+    @ColumnInfo(name = "updated_at") var updatedAt: Long = 0
+)
 
 data class DbElementCachePreview(
     @ColumnInfo(name = "image_url") var imageUrl: String? = "",
@@ -97,7 +97,7 @@ data class DbElementCacheShare(
 
 data class DbArticleElement(
     var type: String? = "",
-    @ColumnInfo(name = "custom_properties") var customProperties: Map<String, Any>? = emptyMap(),
+    @ColumnInfo(name = "custom_properties") var customProperties: Map<String, String>? = emptyMap(),
     @Embedded(prefix = "render_") var render: DbArticleElementRender? = DbArticleElementRender()
 )
 
@@ -109,7 +109,7 @@ data class DbArticleElementRender(
     var format: String? = "",
     var source: String? = "",
     @ColumnInfo(name = "image_thumb") var imageThumb: String? = "",
-    var ratios: List<Float>? = emptyList(),  //TODO: converter
+    var ratios: List<Float>? = emptyList(),
     var type: String? = "",
     var size: String? = "",
     @ColumnInfo(name = "text_color") var textColor: String? = "",
@@ -126,9 +126,9 @@ data class DbCidKeyData(@ColumnInfo(name = "site_name") var siteName: String? = 
 
 @Entity(tableName = "video", primaryKeys = arrayOf("id"))
 data class DbVideoData(
-    var id : String = "",
+    var id: String = "",
     @Embedded(prefix = "vimeo_") var element: DbVimeoInfo? = DbVimeoInfo(),
-    @ColumnInfo(name = "expire_at") var expireAt : Long? = -1
+    @ColumnInfo(name = "expire_at") var expireAt: Long? = -1
 )
 
 data class DbVimeoInfo(
