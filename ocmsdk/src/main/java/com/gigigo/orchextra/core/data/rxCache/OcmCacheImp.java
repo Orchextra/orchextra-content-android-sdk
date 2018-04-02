@@ -4,6 +4,7 @@ import android.content.Context;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.CalendarExtensionsKt;
+import com.gigigo.orchextra.core.data.DbMappersKt;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
@@ -11,11 +12,11 @@ import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
 import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.data.database.OcmDatabase;
+import com.gigigo.orchextra.core.data.database.entities.DbElementCache;
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData;
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
-import com.gigigo.orchextra.core.data.rxRepository.DbMappersKt;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.CacheDir;
 import com.mskn73.kache.Kache;
@@ -132,15 +133,15 @@ import orchextra.javax.inject.Singleton;
   //region ELEMENT
   @Override public Observable<ElementData> getDetail(String slug) {
     return Observable.create(emitter -> {
-      /*
       DbElementCache elementCacheData = ocmDatabase.elementCacheDao().fetchElementCache(slug);
 
       ElementData elementData = new ElementData();
       elementData.setElement(DbMappersKt.toElementCache(elementCacheData));
-      */
 
+      /*
       ApiElementData apiElementData = (ApiElementData) kache.get(ApiElementData.class, slug);
       ElementData elementData = new ElementData(); //DbMappersKt.toElementData(apiElementData);
+      */
 
       if (elementData != null) {
         emitter.onNext(elementData);
@@ -152,11 +153,8 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public boolean isDetailCached(String slug) {
-    /*
     int detailDataCount = ocmDatabase.elementCacheDao().hasElementCache(slug);
     return (detailDataCount == 1);
-    */
-    return false;
   }
 
   @Override public boolean isDetailExpired(String slug) {
@@ -164,15 +162,16 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void putDetail(ApiElementData apiElementData) {
-    /*
     ElementData elementData = DbMappersKt.toElementData(apiElementData);
     DbElementCache elementCacheData = DbMappersKt.toDbElementCache(elementData.getElement());
     ocmDatabase.elementCacheDao().insertElementCache(elementCacheData);
-    */
+
+    /*
     if (apiElementData != null) {
       kache.evict(apiElementData.getKey());
       kache.put(apiElementData);
     }
+    */
   }
   //endregion
 

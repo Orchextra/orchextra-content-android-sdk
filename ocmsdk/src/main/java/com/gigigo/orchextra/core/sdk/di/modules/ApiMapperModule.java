@@ -7,12 +7,6 @@ import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentDataResp
 import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentItemLayoutMapper;
 import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentItemMapper;
 import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentItemPatternMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCachePreviewMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheRenderMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheShareMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elementcache.CidKeyDataMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elementcache.FederatedAuthorizationDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSectionViewMapper;
@@ -39,57 +33,18 @@ import orchextra.javax.inject.Singleton;
     return new ApiMenuContentMapper(apiMenuItemMapper);
   }
 
-  @Singleton @Provides ApiArticleElementMapper provideApiArticleElementMapper() {
-    return new ApiArticleElementMapper();
-  }
-
-  @Singleton @Provides CidKeyDataMapper provideCidKeyDataMapper() {
-    return new CidKeyDataMapper();
-  }
-
-  @Singleton @Provides FederatedAuthorizationDataMapper provideFederatedAuthorizationDataMapper(
-      CidKeyDataMapper cidKeyDataMapper) {
-    return new FederatedAuthorizationDataMapper(cidKeyDataMapper);
-  }
-
-  @Singleton @Provides ApiElementCacheRenderMapper provideApiElementCacheRenderMapper(
-      ApiArticleElementMapper apiArticleElementMapper,
-      FederatedAuthorizationDataMapper federatedAuthorizationDataMapper) {
-    return new ApiElementCacheRenderMapper(apiArticleElementMapper,
-        federatedAuthorizationDataMapper);
-  }
-
-  @Singleton @Provides ApiElementCachePreviewMapper provideApiElementCachePreviewMapper() {
-    return new ApiElementCachePreviewMapper();
-  }
-
-  @Singleton @Provides ApiElementCacheShareMapper provideApiElementCacheShareMapper() {
-    return new ApiElementCacheShareMapper();
-  }
-
-  @Singleton @Provides ApiElementCacheMapper provideApiElementCacheMapper(
-      ApiElementCacheRenderMapper apiElementCacheItemRenderMapper,
-      ApiElementCachePreviewMapper apiElementCachePreviewMapper,
-      ApiElementCacheShareMapper apiElementCacheShareMapper) {
-    return new ApiElementCacheMapper(apiElementCacheItemRenderMapper, apiElementCachePreviewMapper,
-        apiElementCacheShareMapper);
-  }
-
-  @Singleton @Provides ApiElementDataMapper provideApiElementDataMapper(
-      ApiElementCacheMapper apiElementCacheMapper) {
-    return new ApiElementDataMapper(apiElementCacheMapper);
+  @Singleton @Provides ApiElementDataMapper provideApiElementDataMapper() {
+    return new ApiElementDataMapper();
   }
 
   @Singleton @Provides @Named("MapperApiMenuResponse")
-  ApiGenericResponseMapper provideApiMenuMapper(ApiMenuContentMapper apiMenuContentMapper,
-      ApiElementCacheMapper apiElementCacheItemMapper) {
-    return new OcmGenericResponseMapper(
-        new ApiMenuContentListResponseMapper(apiMenuContentMapper, apiElementCacheItemMapper));
+  ApiGenericResponseMapper provideApiMenuMapper(ApiMenuContentMapper apiMenuContentMapper) {
+    return new OcmGenericResponseMapper(new ApiMenuContentListResponseMapper(apiMenuContentMapper));
   }
 
   @Singleton @Provides ApiContentDataResponseMapper provideApiContentDataResponseMapper(
-      ApiContentItemMapper apiContentItemMapper, ApiElementCacheMapper apiElementCacheMapper) {
-    return new ApiContentDataResponseMapper(apiContentItemMapper, apiElementCacheMapper);
+      ApiContentItemMapper apiContentItemMapper) {
+    return new ApiContentDataResponseMapper(apiContentItemMapper);
   }
 
   @Singleton @Provides ApiContentItemPatternMapper provideApiContentItemPatternMapper() {
@@ -107,10 +62,8 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Singleton @Provides @Named("MapperApiHomeResponse")
-  ApiGenericResponseMapper provideApiHomeMapper(ApiContentItemMapper apiContentItemMapper,
-      ApiElementCacheMapper apiElementCacheMapper) {
-    return new OcmGenericResponseMapper(
-        new ApiContentDataResponseMapper(apiContentItemMapper, apiElementCacheMapper));
+  ApiGenericResponseMapper provideApiHomeMapper(ApiContentItemMapper apiContentItemMapper) {
+    return new OcmGenericResponseMapper(new ApiContentDataResponseMapper(apiContentItemMapper));
   }
 
   @Singleton @Provides @Named("MapperApiElementCacheResponse")

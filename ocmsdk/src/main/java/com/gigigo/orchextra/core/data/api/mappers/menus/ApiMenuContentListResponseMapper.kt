@@ -3,7 +3,7 @@ package com.gigigo.orchextra.core.data.api.mappers.menus
 import android.util.Log
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData
-import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheMapper
+import com.gigigo.orchextra.core.data.toElementCache
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContent
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData
@@ -14,8 +14,8 @@ import java.util.HashMap
 
 @Singleton
 class ApiMenuContentListResponseMapper @Inject
-constructor(private val apiMenuContentMapper: ApiMenuContentMapper,
-    private val apiElementCacheItemMapper: ApiElementCacheMapper) : ExternalClassToModelMapper<ApiMenuContentData, MenuContentData> {
+constructor(
+    private val apiMenuContentMapper: ApiMenuContentMapper) : ExternalClassToModelMapper<ApiMenuContentData, MenuContentData> {
 
   override fun externalClassToModel(data: ApiMenuContentData): MenuContentData {
     val time = System.currentTimeMillis()
@@ -36,7 +36,7 @@ constructor(private val apiMenuContentMapper: ApiMenuContentMapper,
         val apiElementCacheItem = data.elementsCache[key]
 
         apiElementCacheItem?.let {
-          elementCacheItemMap[key] = apiElementCacheItemMapper.externalClassToModel(it)
+          elementCacheItemMap[key] = it.toElementCache() //apiElementCacheItemMapper.externalClassToModel(it)
         }
       }
     }

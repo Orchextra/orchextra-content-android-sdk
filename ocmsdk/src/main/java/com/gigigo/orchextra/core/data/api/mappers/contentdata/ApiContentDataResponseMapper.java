@@ -2,9 +2,9 @@ package com.gigigo.orchextra.core.data.api.mappers.contentdata;
 
 import android.util.Log;
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
+import com.gigigo.orchextra.core.data.DbMappersKt;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
-import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheMapper;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import java.util.HashMap;
@@ -15,12 +15,9 @@ public class ApiContentDataResponseMapper
     implements ExternalClassToModelMapper<ApiSectionContentData, ContentData> {
 
   private final ApiContentItemMapper apiContentItemMapper;
-  private final ApiElementCacheMapper apiElementCacheMapper;
 
-  public ApiContentDataResponseMapper(ApiContentItemMapper apiContentItemMapper,
-      ApiElementCacheMapper apiElementCacheMapper) {
+  public ApiContentDataResponseMapper(ApiContentItemMapper apiContentItemMapper) {
     this.apiContentItemMapper = apiContentItemMapper;
-    this.apiElementCacheMapper = apiElementCacheMapper;
   }
 
   @Override public ContentData externalClassToModel(ApiSectionContentData data) {
@@ -36,7 +33,7 @@ public class ApiContentDataResponseMapper
       for (String key : keySet) {
         ApiElementCache apiElementCache = data.getElementsCache().get(key);
 
-        ElementCache elementCache = apiElementCacheMapper.externalClassToModel(apiElementCache);
+        ElementCache elementCache = DbMappersKt.toElementCache(apiElementCache); //apiElementCacheMapper.externalClassToModel(apiElementCache);
 
         elementCacheMap.put(key, elementCache);
       }
