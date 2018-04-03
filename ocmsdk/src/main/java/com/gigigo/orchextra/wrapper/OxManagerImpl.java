@@ -1,7 +1,7 @@
 package com.gigigo.orchextra.wrapper;
 
 import android.app.Application;
-import android.util.Log;
+import android.content.Context;
 import com.gigigo.imagerecognitioninterface.ImageRecognitionCredentials;
 import com.gigigo.orchextra.CustomSchemeReceiver;
 import com.gigigo.orchextra.Orchextra;
@@ -12,7 +12,6 @@ import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import orchextra.javax.inject.Inject;
 
 /**
  * Created by alex on 01/12/2017.
@@ -23,6 +22,7 @@ public class OxManagerImpl implements OxManager {
   private static final String TAG = "OxManagerImpl";
   private OnCustomSchemeReceiver onCustomSchemeReceiver;
   private HashMap<CrmUser.Gender, com.gigigo.orchextra.CrmUser.Gender> genders;
+  private final Context context;
 
   //cambio para el inicio selectivo, MEJORAR,
   //necesitamos un contexto para q la funcion setNewOrchextracredentials pueda comprobar las preferences
@@ -31,7 +31,8 @@ public class OxManagerImpl implements OxManager {
   private CustomSchemeReceiver onOxCustomSchemeReceiver =
       customScheme -> callOnCustomSchemeReceiver(customScheme);
 
-  @Inject public OxManagerImpl() {
+  public OxManagerImpl(Context context) {
+    this.context = context;
     genders = new HashMap<>();
     genders.put(CrmUser.Gender.GenderFemale, com.gigigo.orchextra.CrmUser.Gender.GenderFemale);
     genders.put(CrmUser.Gender.GenderMale, com.gigigo.orchextra.CrmUser.Gender.GenderMale);
@@ -161,24 +162,7 @@ public class OxManagerImpl implements OxManager {
   }
 
   @Override public void scanCode(ScanCodeListener scanCodeListener) {
-    Log.d(TAG,
-        "scanCode------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    Log.d(TAG,
-        "scanCode------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    Log.d(TAG,
-        "scanCode------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    Log.d(TAG,
-        "scanCode------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    Log.d(TAG,
-        "scanCode------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    Log.d(TAG,
-        "scanCode------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    Log.d(TAG,
-        "scanCode------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    Log.d(TAG,
-        "scanCode------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    Log.d(TAG,
-        "scanCode------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
     // TODO not implemented
+    ScannerActivity.Navigator.open(context);
   }
 }

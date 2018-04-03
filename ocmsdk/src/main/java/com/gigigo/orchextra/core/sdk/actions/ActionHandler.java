@@ -37,7 +37,7 @@ public class ActionHandler {
   public ActionHandler(OcmContextProvider ocmContextProvider, GetVideo getVideo) {
     this.ocmContextProvider = ocmContextProvider;
     this.connectionUtils = new ConnectionUtilsImp(ocmContextProvider.getApplicationContext());
-    this.orchextra = new OxManagerImpl();
+    this.orchextra = new OxManagerImpl(ocmContextProvider.getApplicationContext());
     this.getVideo = getVideo;
   }
 

@@ -57,4 +57,11 @@
   <color name="oc_status_bar_color">#333</color>
   <color name="oc_read_background">#333</color>
 
+  <color name="ox_scanner_background">#00ffffff</color>
+
+  <color name="ox_primary">#ee524f</color>
+  <color name="ox_primary_dark">#d44947</color>
+  <color name="ox_primary_light">#FFCDD2</color>
+  <color name="ox_accent">#3399ff</color>
+
 </resources>

@@ -54,6 +54,12 @@
       android:theme="@style/OcmAppTheme"
       android:windowSoftInputMode="adjustResize"/>
 
+    <activity
+        android:name="com.gigigo.orchextra.wrapper.ScannerActivity"
+        android:theme="@style/OxAppTheme.NoActionBar"
+        android:screenOrientation="portrait">
+    </activity>
+
   </application>
 
 </manifest>
