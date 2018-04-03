@@ -3,7 +3,7 @@ package com.gigigo.orchextra.core.data.api.mappers.elements
 import android.util.Log
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData
-import com.gigigo.orchextra.core.data.toElementCache
+import com.gigigo.orchextra.core.data.mappers.toElementCache
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData
 
 class ApiElementDataMapper : ExternalClassToModelMapper<ApiElementData, ElementData> {

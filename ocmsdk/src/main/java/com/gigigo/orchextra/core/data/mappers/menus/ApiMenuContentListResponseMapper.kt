@@ -3,7 +3,7 @@ package com.gigigo.orchextra.core.data.api.mappers.menus
 import android.util.Log
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData
-import com.gigigo.orchextra.core.data.toElementCache
+import com.gigigo.orchextra.core.data.mappers.toElementCache
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContent
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData
