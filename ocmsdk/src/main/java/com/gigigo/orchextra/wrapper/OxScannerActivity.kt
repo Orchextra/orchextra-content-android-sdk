@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.ViewGroup
 import android.widget.Toast
 import com.gigigo.orchextra.ocmsdk.R
+import com.gigigo.orchextra.wrapper.OxManager.ScanCodeListener
 import me.dm7.barcodescanner.zbar.Result
 import me.dm7.barcodescanner.zbar.ZBarScannerView
 
@@ -47,9 +48,8 @@ class ScannerActivity : AppCompatActivity(), ZBarScannerView.ResultHandler {
   }
 
   override fun handleResult(rawResult: Result) {
-
     Log.d(TAG, "Result: " + rawResult.contents)
-
+    scanCodeListener?.onCodeScan(rawResult.contents)
     finish()
     handler.postDelayed({ scannerView.resumeCameraPreview(this@ScannerActivity) }, 2000)
   }
@@ -100,11 +100,18 @@ class ScannerActivity : AppCompatActivity(), ZBarScannerView.ResultHandler {
     scannerView.stopCamera()
   }
 
+  override fun onDestroy() {
+    super.onDestroy()
+    scanCodeListener = null
+  }
+
   companion object Navigator {
     private const val TAG = "ScannerActivity"
     private const val PERMISSIONS_REQUEST = 0x132
+    private var scanCodeListener: ScanCodeListener? = null
 
-    fun open(context: Context) {
+    fun open(context: Context, scanCodeListener: ScanCodeListener) {
+      this.scanCodeListener = scanCodeListener
       val intent = Intent(context, ScannerActivity::class.java)
       intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
       context.startActivity(intent)

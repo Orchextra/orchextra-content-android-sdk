@@ -162,7 +162,6 @@ public class OxManagerImpl implements OxManager {
   }
 
   @Override public void scanCode(ScanCodeListener scanCodeListener) {
-    // TODO not implemented
-    ScannerActivity.Navigator.open(context);
+    ScannerActivity.Navigator.open(context, scanCodeListener);
   }
 }
