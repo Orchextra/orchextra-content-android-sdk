@@ -9,7 +9,7 @@ enum class VideoFormat constructor(val videoFormat: String) : Serializable {
 
   companion object {
 
-    fun convertStringToType(format: String): VideoFormat {
+    fun convertStringToType(format: String?): VideoFormat {
       for (value in VideoFormat.values()) {
         if (value.videoFormat.equals(format, true)) {
           return value

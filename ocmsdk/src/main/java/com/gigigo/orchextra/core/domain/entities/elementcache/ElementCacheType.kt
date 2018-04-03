@@ -19,7 +19,7 @@ enum class ElementCacheType constructor(val type: String) : Serializable {
 
   companion object {
 
-    fun convertStringToEnum(type: String): ElementCacheType {
+    fun convertStringToEnum(type: String?): ElementCacheType {
       for (value in ElementCacheType.values()) {
         if (value.type.equals(type, true)) {
           return value

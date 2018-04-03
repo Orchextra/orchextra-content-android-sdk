@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.data.api.mappers.contentdata;
+package com.gigigo.orchextra.core.data.mappers.contentdata;
 
 import android.util.Log;
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;

@@ -1,17 +1,16 @@
 package com.gigigo.orchextra.core.sdk.di.modules;
 
 import com.gigigo.ggglib.network.mappers.ApiGenericResponseMapper;
-import com.gigigo.orchextra.core.data.api.mappers.OcmGenericResponseMapper;
-import com.gigigo.orchextra.core.data.api.mappers.article.ApiArticleElementMapper;
-import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentDataResponseMapper;
-import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentItemLayoutMapper;
-import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentItemMapper;
-import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentItemPatternMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementSectionViewMapper;
-import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
-import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentMapper;
+import com.gigigo.orchextra.core.data.mappers.OcmGenericResponseMapper;
+import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentDataResponseMapper;
+import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentItemLayoutMapper;
+import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentItemMapper;
+import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentItemPatternMapper;
+import com.gigigo.orchextra.core.data.mappers.elements.ApiElementDataMapper;
+import com.gigigo.orchextra.core.data.mappers.elements.ApiElementMapper;
+import com.gigigo.orchextra.core.data.mappers.elements.ApiElementSectionViewMapper;
+import com.gigigo.orchextra.core.data.mappers.menus.ApiMenuContentListResponseMapper;
+import com.gigigo.orchextra.core.data.mappers.menus.ApiMenuContentMapper;
 import orchextra.dagger.Module;
 import orchextra.dagger.Provides;
 import orchextra.javax.inject.Named;

@@ -1,9 +1,9 @@
-package com.gigigo.orchextra.core.data.api.mappers.menus
+package com.gigigo.orchextra.core.data.mappers.menus
 
 import android.util.Log
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent
-import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper
+import com.gigigo.orchextra.core.data.mappers.elements.ApiElementMapper
 import com.gigigo.orchextra.core.domain.entities.elements.Element
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContent
 import java.util.ArrayList

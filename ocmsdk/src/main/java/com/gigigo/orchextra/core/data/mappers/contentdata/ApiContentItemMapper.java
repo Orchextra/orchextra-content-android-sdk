@@ -1,10 +1,10 @@
-package com.gigigo.orchextra.core.data.api.mappers.contentdata;
+package com.gigigo.orchextra.core.data.mappers.contentdata;
 
 import android.util.Log;
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiContentItem;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
-import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper;
+import com.gigigo.orchextra.core.data.mappers.elements.ApiElementMapper;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.sdk.utils.DateUtils;

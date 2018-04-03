@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.data.api.mappers;
+package com.gigigo.orchextra.core.data.mappers;
 
 import com.gigigo.gggjavalib.business.model.BusinessContentType;
 import com.gigigo.gggjavalib.business.model.BusinessError;

@@ -4,7 +4,6 @@ import android.content.Context;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.CalendarExtensionsKt;
-import com.gigigo.orchextra.core.data.DbMappersKt;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
@@ -15,6 +14,7 @@ import com.gigigo.orchextra.core.data.database.OcmDatabase;
 import com.gigigo.orchextra.core.data.database.entities.DbElementCache;
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData;
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData;
+import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
@@ -138,11 +138,6 @@ import orchextra.javax.inject.Singleton;
       ElementData elementData = new ElementData();
       elementData.setElement(DbMappersKt.toElementCache(elementCacheData));
 
-      /*
-      ApiElementData apiElementData = (ApiElementData) kache.get(ApiElementData.class, slug);
-      ElementData elementData = new ElementData(); //DbMappersKt.toElementData(apiElementData);
-      */
-
       if (elementData != null) {
         emitter.onNext(elementData);
         emitter.onComplete();
@@ -165,13 +160,6 @@ import orchextra.javax.inject.Singleton;
     ElementData elementData = DbMappersKt.toElementData(apiElementData);
     DbElementCache elementCacheData = DbMappersKt.toDbElementCache(elementData.getElement());
     ocmDatabase.elementCacheDao().insertElementCache(elementCacheData);
-
-    /*
-    if (apiElementData != null) {
-      kache.evict(apiElementData.getKey());
-      kache.put(apiElementData);
-    }
-    */
   }
   //endregion
 
@@ -208,12 +196,6 @@ import orchextra.javax.inject.Singleton;
     Long maxExpiredTime = CalendarExtensionsKt.getTodayPlusDays(Calendar.getInstance(),1);
     int videoDataCount = ocmDatabase.videoDao().hasExpiredVideo(videoId, maxExpiredTime);
     return (videoDataCount == 1);
-  }
-
-  private long getTodayPlusDays(int daysAgo) {
-    Calendar calendar = Calendar.getInstance();
-    calendar.add(Calendar.DATE, daysAgo);
-    return calendar.getTime().getTime();
   }
   //endregion
 

@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.core.data
+package com.gigigo.orchextra.core.data.mappers
 
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElementRender
@@ -23,18 +23,24 @@ import com.gigigo.orchextra.core.data.database.entities.DbVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData.Companion.VERSION_KEY
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData
 import com.gigigo.orchextra.core.data.database.entities.DbVimeoInfo
+import com.gigigo.orchextra.core.data.getTodayPlusDays
+import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElementRender
+import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElementRender
+import com.gigigo.orchextra.core.domain.entities.article.ArticleImageAndTextElement
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageAndTextElementRender
+import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElementRender
+import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElementRender
+import com.gigigo.orchextra.core.domain.entities.article.ArticleTextAndImageElement
 import com.gigigo.orchextra.core.domain.entities.article.ArticleTextAndImageElementRender
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElement
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElementRender
 import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElement
 import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElementRender
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonSize
-import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonSize.Companion
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonType
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElementRender
@@ -212,6 +218,7 @@ fun ApiElementCache.toElementCache(): ElementCache = with(this) {
   return elementCache
 }
 
+/*
 private fun ApiElementCache.toDbElementCache(): DbElementCache = with(this) {
   val elementCache = DbElementCache()
   elementCache.slug = slug
@@ -225,6 +232,7 @@ private fun ApiElementCache.toDbElementCache(): DbElementCache = with(this) {
   elementCache.updatedAt = updatedAt
   return elementCache
 }
+*/
 
 fun ElementCache.toDbElementCache(): DbElementCache = with(this) {
   val elementCache = DbElementCache()
@@ -235,7 +243,8 @@ fun ElementCache.toDbElementCache(): DbElementCache = with(this) {
   elementCache.render = render?.toDbElementCacheRender()
   elementCache.share = share?.toDbElementCacheShare()
   elementCache.tags = tags
-  elementCache.type = type.toString()
+  elementCache.type = type?.type
+  elementCache.updatedAt = updateAt
   return elementCache
 }
 
@@ -261,22 +270,22 @@ fun ApiElementCachePreview.toElementCachePreview(): ElementCachePreview = with(t
   elementCache.behaviour = ElementCacheBehaviour.convertStringToEnum(behaviour)
   return elementCache
 }
-
+/*
 private fun ApiElementCachePreview.toDbElementCachePreview(): DbElementCachePreview = with(this) {
   val elementCache = DbElementCachePreview()
   elementCache.text = text
   elementCache.imageUrl = imageUrl
   elementCache.imageThumb = imageThumb
-  elementCache.behaviour = behaviour
+  elementCache.cacheBehaviour = cacheBehaviour
   return elementCache
 }
-
+*/
 private fun ElementCachePreview.toDbElementCachePreview(): DbElementCachePreview = with(this) {
   val elementCache = DbElementCachePreview()
   elementCache.text = text
   elementCache.imageUrl = imageUrl
   elementCache.imageThumb = imageThumb
-  elementCache.behaviour = behaviour.toString()
+  elementCache.behaviour = behaviour?.cacheBehaviour
   return elementCache
 }
 
@@ -307,7 +316,7 @@ fun ApiElementCacheRender.toElementCacheRender(): ElementCacheRender = with(this
   elementCacheRender.federatedAuth = federatedAuth?.toFederatedAuthorization()
   return elementCacheRender
 }
-
+/*
 private fun ApiElementCacheRender.toDbElementCacheRender(): DbElementCacheRender = with(this) {
   val elementCacheRender = DbElementCacheRender()
   elementCacheRender.contentUrl = contentUrl
@@ -326,7 +335,7 @@ private fun ApiElementCacheRender.toDbElementCacheRender(): DbElementCacheRender
   elementCacheRender.federatedAuth = federatedAuth?.toDbFederatedAuthorizationData()
   return elementCacheRender
 }
-
+*/
 private fun ElementCacheRender.toDbElementCacheRender(): DbElementCacheRender = with(this) {
   var elementCacheRender = DbElementCacheRender()
   elementCacheRender.contentUrl = contentUrl
@@ -341,7 +350,7 @@ private fun ElementCacheRender.toDbElementCacheRender(): DbElementCacheRender = 
 
   elementCacheRender.schemeUri = schemeUri
   elementCacheRender.source = source
-  elementCacheRender.format = format.toString()
+  elementCacheRender.format = format?.videoFormat
   elementCacheRender.federatedAuth = federatedAuth?.toDbFederatedAuthorizationData()
   return elementCacheRender
 }
@@ -371,14 +380,14 @@ fun ApiElementCacheShare.toElementCacheShare(): ElementCacheShare = with(this) {
   elementCache.url = url
   return elementCache
 }
-
+/*
 private fun ApiElementCacheShare.toDbElementCacheShare(): DbElementCacheShare = with(this) {
   val elementCache = DbElementCacheShare()
   elementCache.text = text
   elementCache.url = url
   return elementCache
 }
-
+*/
 private fun ElementCacheShare.toDbElementCacheShare(): DbElementCacheShare = with(this) {
   val elementCache = DbElementCacheShare()
   elementCache.text = text
@@ -394,16 +403,11 @@ private fun DbElementCacheShare.toElementCacheShare(): ElementCacheShare = with(
 }
 
 private fun Map<String, Any>.toDbCustomProperties(): Map<String, String> = with(this) {
-  var map = HashMap<String, String>()
-  val iterator = iterator()
-  while(iterator.hasNext()) {
-    val next = iterator.next()
-    val key = next.key
-    val value = next.value
-
-    if(value is String) map.put(key, value)
+  val map = HashMap<String, String>()
+  for (next in iterator()) {
+    val (key,value) = next
+    map[key] = value.toString()
   }
-
   return map
 }
 
@@ -500,31 +504,79 @@ private fun <T>ArticleElement<T>.toDbArticleElement(): DbArticleElement = with(t
   val articleElement = DbArticleElement()
   articleElement.customProperties = customProperties?.toDbCustomProperties()
 
-//TODO: save type
-  /*
-  val render : T
-  when(this) {
-    is ArticleHeaderElementRender -> {}
-    is ArticleImageElementRender -> {}
-    is ArticleVimeoVideoElementRender, is ArticleYoutubeVideoElementRender -> {}
-    is ArticleRichTextElementRender -> {}
-    is ArticleImageAndTextElementRender -> {}
-    is ArticleTextAndImageElementRender -> {}
-    is ArticleButtonElementRender -> {}
+  val articleElementRender = DbArticleElementRender()
+  val articleRender = render
+  when(articleRender) {
+    is ArticleHeaderElementRender -> {
+      articleElement.type = ArticleTypeSection.HEADER.typeSection
+
+      articleElementRender.html = articleRender.html
+      articleElementRender.imageUrl = articleRender.imageUrl
+      articleElementRender.imageThumb = articleRender.imageThumb
+    }
+    is ArticleImageElementRender -> {
+      articleElement.type = ArticleTypeSection.IMAGE.typeSection
+
+      articleElementRender.elementUrl = articleRender.elementUrl
+      articleElementRender.imageUrl = articleRender.imageUrl
+      articleElementRender.imageThumb = articleRender.imageThumb
+    }
+    is ArticleVimeoVideoElementRender -> {
+      articleElement.type = ArticleTypeSection.VIDEO.typeSection
+      articleElementRender.format = VideoFormat.VIMEO.videoFormat
+
+      articleElementRender.source = articleRender.source
+    }
+    is ArticleYoutubeVideoElementRender -> {
+      articleElement.type = ArticleTypeSection.VIDEO.typeSection
+      articleElementRender.format = VideoFormat.YOUTUBE.videoFormat
+
+      articleElementRender.source = articleRender.source
+    }
+    is ArticleRichTextElementRender -> {
+      articleElement.type = ArticleTypeSection.RICH_TEXT.typeSection
+
+      articleElementRender.text = articleRender.html
+    }
+    is ArticleImageAndTextElementRender -> {
+      articleElement.type = ArticleTypeSection.IMAGE_AND_TEXT.typeSection
+
+      articleElementRender.text = articleRender.text
+      articleElementRender.imageUrl = articleRender.imageUrl
+      articleElementRender.ratios = articleRender.ratios
+    }
+    is ArticleTextAndImageElementRender -> {
+      articleElement.type = ArticleTypeSection.TEXT_AND_IMAGE.typeSection
+
+      articleElementRender.text = articleRender.text
+      articleElementRender.imageUrl = articleRender.imageUrl
+      articleElementRender.ratios = articleRender.ratios
+    }
+    is ArticleButtonElementRender -> {
+      articleElement.type = ArticleTypeSection.BUTTON.typeSection
+
+      articleElementRender.type = articleRender.type?.typeButton
+      articleElementRender.size = articleRender.size?.size
+      articleElementRender.elementUrl = articleRender.elementUrl
+      articleElementRender.text = articleRender.text
+      articleElementRender.textColor = articleRender.textColor
+      articleElementRender.bgColor = articleRender.bgColor
+      articleElementRender.imageUrl = articleRender.imageUrl
+    }
     else -> {}
   }
-  articleElement.render = render
-  */
+  articleElement.render = articleElementRender
+
   return articleElement
 }
 
 private fun <T>DbArticleElement.toArticleElement(): ArticleElement<T> = with(this) {
-  val articleElement = ArticleElement<T>()
-  articleElement.customProperties = customProperties
+  lateinit var articleElement: ArticleElement<T>
 
   val articleType = ArticleTypeSection.convertStringToEnum(type)
   val articleElementRender = when(articleType) {
     ArticleTypeSection.HEADER -> {
+      articleElement = ArticleHeaderElement() as ArticleElement<T>
       val headerRender = ArticleHeaderElementRender()
       headerRender.html = render?.html
       headerRender.imageUrl = render?.imageUrl
@@ -532,6 +584,7 @@ private fun <T>DbArticleElement.toArticleElement(): ArticleElement<T> = with(thi
       headerRender as T
     }
     ArticleTypeSection.IMAGE -> {
+      articleElement = ArticleImageElement() as ArticleElement<T>
       val imageRender = ArticleImageElementRender()
       imageRender.elementUrl = render?.elementUrl
       imageRender.imageUrl = render?.imageUrl
@@ -540,25 +593,29 @@ private fun <T>DbArticleElement.toArticleElement(): ArticleElement<T> = with(thi
     }
     ArticleTypeSection.VIDEO -> {
       val videoFormat = VideoFormat.convertStringToType(render?.format)
-      val elementRender = when(videoFormat) {
+      val videoRender = when(videoFormat) {
         VideoFormat.YOUTUBE -> {
+          articleElement = ArticleYoutubeVideoElement() as ArticleElement<T>
           val videoElement = ArticleYoutubeVideoElementRender()
           videoElement.source = render?.source
         }
         VideoFormat.VIMEO -> {
+          articleElement = ArticleVimeoVideoElement() as ArticleElement<T>
           val videoElement = ArticleVimeoVideoElementRender()
           videoElement.source = render?.source
         }
         else -> null
       }
-      elementRender
+      videoRender as T
     }
     ArticleTypeSection.RICH_TEXT -> {
+      articleElement = ArticleRichTextElement() as ArticleElement<T>
       val richTextRender = ArticleRichTextElementRender()
-      richTextRender.html = render?.html
+      richTextRender.html = render?.text
       richTextRender as T
     }
     ArticleTypeSection.IMAGE_AND_TEXT -> {
+      articleElement = ArticleImageAndTextElement() as ArticleElement<T>
       val imageTextRender = ArticleImageAndTextElementRender()
       imageTextRender.text = render?.text
       imageTextRender.imageUrl = render?.imageUrl
@@ -566,6 +623,7 @@ private fun <T>DbArticleElement.toArticleElement(): ArticleElement<T> = with(thi
       imageTextRender as T
     }
     ArticleTypeSection.TEXT_AND_IMAGE -> {
+      articleElement = ArticleTextAndImageElement() as ArticleElement<T>
       val textImageRender = ArticleTextAndImageElementRender()
       textImageRender.text = render?.text
       textImageRender.imageUrl = render?.imageUrl
@@ -573,6 +631,7 @@ private fun <T>DbArticleElement.toArticleElement(): ArticleElement<T> = with(thi
       textImageRender as T
     }
     ArticleTypeSection.BUTTON -> {
+      articleElement = ArticleButtonElement() as ArticleElement<T>
       val buttonRender = ArticleButtonElementRender()
       buttonRender.type = ArticleButtonType.convertFromString(render?.type)
       buttonRender.size = ArticleButtonSize.convertFromString(render?.size)
@@ -583,13 +642,18 @@ private fun <T>DbArticleElement.toArticleElement(): ArticleElement<T> = with(thi
       buttonRender.imageUrl = render?.imageUrl
       buttonRender as T
     }
-    ArticleTypeSection.NONE -> { null }
+    ArticleTypeSection.NONE -> {
+      articleElement = ArticleElement()
+      null
+    }
   }
-  articleElement.render = articleElementRender as T
+  articleElement.render = articleElementRender
+
+  articleElement.customProperties = customProperties
   return articleElement
 }
 
-
+/*
 private fun ApiArticleElementRender.toArticleElementRender(): ArticleElementRender = with(this) {
   val articleType = ArticleTypeSection.convertStringToEnum(type)
   val articleElementRender = when(articleType) {
@@ -657,6 +721,7 @@ private fun ApiArticleElementRender.toArticleElementRender(): ArticleElementRend
 
   return articleElementRender as ArticleElementRender
 }
+*/
 
 private fun ApiArticleElementRender.toDbArticleElementRender(): DbArticleElementRender = with(this) {
   val articleElementRender = DbArticleElementRender()
@@ -674,7 +739,7 @@ private fun ApiArticleElementRender.toDbArticleElementRender(): DbArticleElement
   articleElementRender.bgColor = bgColor
   return articleElementRender
 }
-
+/*
 private fun ArticleElementRender.toDbArticleElementRender(): DbArticleElementRender = with(this) {
   val articleElementRender = DbArticleElementRender()
   when(this) {
@@ -689,7 +754,8 @@ private fun ArticleElementRender.toDbArticleElementRender(): DbArticleElementRen
   }
   return articleElementRender
 }
-
+*/
+/*
 private fun DbArticleElementRender.toArticleElementRender(): ArticleElementRender = with(this) {
   val articleElementRender : ArticleElementRender
 
@@ -707,7 +773,7 @@ private fun DbArticleElementRender.toArticleElementRender(): ArticleElementRende
   //TODO
   return articleElementRender
 }
-
+*/
 
 fun FederatedAuthorizationData.toFederatedAuthorization(): FederatedAuthorization = with(this) {
   val federatedAuthorization = FederatedAuthorization()
