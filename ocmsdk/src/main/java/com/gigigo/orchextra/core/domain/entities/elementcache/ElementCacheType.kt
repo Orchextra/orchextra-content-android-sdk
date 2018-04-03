@@ -2,7 +2,7 @@ package com.gigigo.orchextra.core.domain.entities.elementcache
 
 import java.io.Serializable
 
-enum class ElementCacheType private constructor(private val type: String) : Serializable {
+enum class ElementCacheType constructor(val type: String) : Serializable {
   ARTICLE("article"),
   CARDS("cards"),
   VUFORIA("vuforia"),
@@ -20,9 +20,8 @@ enum class ElementCacheType private constructor(private val type: String) : Seri
   companion object {
 
     fun convertStringToEnum(type: String): ElementCacheType {
-      val values = ElementCacheType.values()
-      for (value in values) {
-        if (value.type.equals(type, ignoreCase = true)) {
+      for (value in ElementCacheType.values()) {
+        if (value.type.equals(type, true)) {
           return value
         }
       }
