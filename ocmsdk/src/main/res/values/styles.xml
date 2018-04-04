@@ -52,6 +52,9 @@
   <style name="OxAppTheme.NoActionBar">
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
+    <item name="colorPrimary">@color/ox_primary</item>
+    <item name="colorPrimaryDark">@color/ox_primary_dark</item>
+    <item name="colorAccent">@color/ox_accent</item>
   </style>
 
   <style name="OxAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

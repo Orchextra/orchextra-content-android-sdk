@@ -11,8 +11,10 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.gigigo.orchextra.core.sdk.ui.views.toolbars.DetailToolbarView
 import com.gigigo.orchextra.ocmsdk.R
 import com.gigigo.orchextra.wrapper.OxManager.ScanCodeListener
 import me.dm7.barcodescanner.zbar.Result
@@ -30,6 +32,17 @@ class ScannerActivity : AppCompatActivity(), ZBarScannerView.ResultHandler {
     scannerView = ZBarScannerView(this)
     val contentFrame = findViewById<ViewGroup>(R.id.content_frame)
     contentFrame.addView(scannerView)
+    setToolbar()
+  }
+
+  private fun setToolbar() {
+    val ocmToolbar = findViewById<View>(R.id.ocmToolbar) as DetailToolbarView
+    ocmToolbar.setShareButtonVisible(false)
+    ocmToolbar.switchBetweenButtonAndToolbar(false, true, false)
+    ocmToolbar.blockSwipeEvents(true)
+    ocmToolbar.setOnClickBackButtonListener { v -> finish() }
+    ocmToolbar.setToolbarTitle("")
+    ocmToolbar.setToolbarIcon(R.drawable.ox_close)
   }
 
   override fun handleResult(rawResult: Result) {

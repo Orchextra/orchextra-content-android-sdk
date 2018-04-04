@@ -209,6 +209,7 @@ public class ArticleContentData extends UiBaseContentData {
 
   public void showErrorView(boolean isVisible) {
     emptyLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    articleItemViewContainer.setVisibility(!isVisible ? View.VISIBLE : View.GONE);
   }
 
   public void addItems(List<ArticleElement<ArticleElementRender>> articleElementList) {
