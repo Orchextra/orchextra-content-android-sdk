@@ -234,7 +234,7 @@ Add Comment C
 
   static void processRedirectElementUrl(String elementUrl) {
     if (instance != null) {
-      instance.schemeHandler.processRedirectElementUrl(elementUrl);
+      instance.schemeHandler.processRedirectElementUrl(elementUrl, null);
     }
   }
 

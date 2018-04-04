@@ -32,8 +32,6 @@ public class OcmSchemeHandler {
   private final OcmContextProvider contextProvider;
   private final OcmController ocmController;
   private final ActionHandler actionHandler;
-  private String elementURL;
-  private String processElementURL;
   private Map<String, String> customParams = new HashMap<>();
 
   public OcmSchemeHandler(OcmContextProvider contextProvider, OcmController ocmController,
@@ -43,7 +41,8 @@ public class OcmSchemeHandler {
     this.actionHandler = actionHandler;
   }
 
-  public void processRedirectElementUrl(final String elementUrl) {
+  public void processRedirectElementUrl(final String elementUrl,
+      final ProcessElementCallback processElementCallback) {
     ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
@@ -51,12 +50,12 @@ public class OcmSchemeHandler {
             OCManager.notifyCustomBehaviourContinue(elementCache.getCustomProperties(), null,
                 canContinue -> {
                   if (canContinue) {
-                    executeAction(elementCache, elementUrl, null, null);
+                    executeAction(elementCache, elementUrl, null, null, processElementCallback);
                   }
                   return null;
                 });
           } else {
-            executeAction(elementCache, elementUrl, null, null);
+            executeAction(elementCache, elementUrl, null, null, processElementCallback);
           }
         }
       }
@@ -94,7 +93,7 @@ public class OcmSchemeHandler {
                     }
 
                     executeAction(elementCache, elementUrl, urlImageToExpand,
-                        imageViewWeakReference);
+                        imageViewWeakReference, processElementCallback);
                   }
                   return null;
                 });
@@ -108,7 +107,8 @@ public class OcmSchemeHandler {
               urlImageToExpand = elementCache.getPreview().getImageUrl();
             }
 
-            executeAction(elementCache, elementUrl, urlImageToExpand, imageViewWeakReference);
+            executeAction(elementCache, elementUrl, urlImageToExpand, imageViewWeakReference,
+                processElementCallback);
           }
         }
       }
@@ -127,8 +127,9 @@ public class OcmSchemeHandler {
     });
   }
 
-  public void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
-      WeakReference<ImageView> imageViewToExpandInDetail) {
+  private void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
+      WeakReference<ImageView> imageViewToExpandInDetail,
+      ProcessElementCallback processElementCallback) {
 
     boolean hasPreview = cachedElement.getPreview() != null;
 
@@ -176,7 +177,7 @@ public class OcmSchemeHandler {
       case DEEP_LINK:
         OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
-          processDeepLink(render.getSchemeUri());
+          processDeepLink(render.getSchemeUri(), processElementCallback);
         }
         break;
       case VIDEO:
@@ -186,7 +187,7 @@ public class OcmSchemeHandler {
         break;
       case NONE:
         Log.w(TAG, "Type: NONE");
-        processRedirectElementUrl(elementUrl);
+        processRedirectElementUrl(elementUrl, processElementCallback);
         break;
       default:
         Log.w(TAG, "Default type: " + type);
@@ -241,7 +242,7 @@ public class OcmSchemeHandler {
     actionHandler.launchExternalBrowser(url, federatedAuth);
   }
 
-  private void processDeepLink(String uri) {
+  private void processDeepLink(String uri, ProcessElementCallback processElementCallback) {
     Log.d(TAG, "processDeepLink: " + uri);
 
     if (uri.contains("openScanner")) {
@@ -250,15 +251,7 @@ public class OcmSchemeHandler {
 
         String action = uri.replaceAll("^[a-z]*://openScanner/", "");
         Log.d(TAG, "Code: " + code + " Action: " + action);
-        processElementUrl(action, null, new ProcessElementCallback() {
-          @Override public void onProcessElementSuccess(ElementCache elementCache) {
-            Log.d(TAG, "onProcessElementSuccess()");
-          }
-
-          @Override public void onProcessElementFail(Exception exception) {
-            Log.e(TAG, "onProcessElementFail()", exception);
-          }
-        });
+        processElementUrl(action, null, processElementCallback);
       });
     } else {
       actionHandler.processDeepLink(uri);
