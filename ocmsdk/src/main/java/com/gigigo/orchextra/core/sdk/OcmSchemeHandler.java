@@ -75,6 +75,10 @@ public class OcmSchemeHandler {
     WeakReference<ImageView> imageViewWeakReference =
         new WeakReference<>(imageViewToExpandInDetail);
 
+    if (processElementCallback == null) {
+      Log.e(TAG, "processElementCallback == null");
+    }
+
     ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
 
       @Override public void onGetDetailLoaded(ElementCache elementCache) {

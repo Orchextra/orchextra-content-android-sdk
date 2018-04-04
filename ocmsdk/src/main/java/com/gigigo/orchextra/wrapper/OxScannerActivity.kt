@@ -10,7 +10,6 @@ import android.os.Handler
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.Toast
@@ -31,20 +30,6 @@ class ScannerActivity : AppCompatActivity(), ZBarScannerView.ResultHandler {
     scannerView = ZBarScannerView(this)
     val contentFrame = findViewById<ViewGroup>(R.id.content_frame)
     contentFrame.addView(scannerView)
-
-    initToolbar()
-  }
-
-  private fun initToolbar() {
-
-    val toolbar = findViewById<Toolbar>(R.id.ox_toolbar)
-
-    setSupportActionBar(toolbar)
-    supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    supportActionBar?.setDisplayShowHomeEnabled(true)
-
-    toolbar.setNavigationOnClickListener { onBackPressed() }
-    title = ""
   }
 
   override fun handleResult(rawResult: Result) {

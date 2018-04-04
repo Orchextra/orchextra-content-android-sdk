@@ -232,7 +232,7 @@ public final class Ocm {
    * The sdk does an action when deep link is provided and exists in dashboard
    */
   public static void processElementUrl(String elementUrl, ImageView imageViewToExpandInDetail,
-      OcmSchemeHandler.ProcessElementCallback processElementCallback)  {
+      OcmSchemeHandler.ProcessElementCallback processElementCallback) {
     OCManager.processElementUrl(elementUrl, imageViewToExpandInDetail, processElementCallback);
   }
 
@@ -287,7 +287,6 @@ public final class Ocm {
   public static void closeDetailView() {
     OCManager.closeDetailView();
   }
-
 
   public static void setCustomBehaviourDelegate(
       OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
