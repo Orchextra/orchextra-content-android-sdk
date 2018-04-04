@@ -104,7 +104,7 @@ public class OcmSchemeHandler {
             }
 
             String urlImageToExpand = null;
-            if (elementCache != null && elementCache.getPreview() != null) {
+            if (elementCache.getPreview() != null) {
               urlImageToExpand = elementCache.getPreview().getImageUrl();
             }
 
@@ -114,11 +114,15 @@ public class OcmSchemeHandler {
       }
 
       @Override public void onGetDetailFails(Exception e) {
-        processElementCallback.onProcessElementFail(e);
+        if (processElementCallback != null) {
+          processElementCallback.onProcessElementFail(e);
+        }
       }
 
       @Override public void onGetDetailNoAvailable(Exception e) {
-        processElementCallback.onProcessElementFail(new NetworkConnectionException());
+        if (processElementCallback != null) {
+          processElementCallback.onProcessElementFail(new NetworkConnectionException());
+        }
       }
     });
   }
@@ -246,7 +250,15 @@ public class OcmSchemeHandler {
 
         String action = uri.replaceAll("^[a-z]*://openScanner/", "");
         Log.d(TAG, "Code: " + code + " Action: " + action);
-        processElementUrl(action, null, null);
+        processElementUrl(action, null, new ProcessElementCallback() {
+          @Override public void onProcessElementSuccess(ElementCache elementCache) {
+            Log.d(TAG, "onProcessElementSuccess()");
+          }
+
+          @Override public void onProcessElementFail(Exception exception) {
+            Log.e(TAG, "onProcessElementFail()", exception);
+          }
+        });
       });
     } else {
       actionHandler.processDeepLink(uri);
