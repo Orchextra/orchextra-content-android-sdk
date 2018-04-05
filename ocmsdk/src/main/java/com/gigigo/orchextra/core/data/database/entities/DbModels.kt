@@ -3,12 +3,14 @@ package com.gigigo.orchextra.core.data.database.entities
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.Ignore
 
 
 @Entity(tableName = "version", primaryKeys = arrayOf("id"))
 data class DbVersionData(
     var id: String = VERSION_KEY,
-    var version: String = "") {
+    var version: String? = "") {
   companion object {
     @JvmField
     val VERSION_KEY = "VERSION_KEY"
@@ -19,7 +21,8 @@ data class DbVersionData(
 data class DbMenuContentData @JvmOverloads constructor(
     var isFromCloud: Boolean = false,
     var menuContentList: List<DbMenuContent>? = emptyList(),
-    var elementsCache: Map<String, DbElementCache>? = emptyMap())
+    var elementsCache: Map<String, DbElementCache>? = emptyMap()
+)
 
 
 @Entity(tableName = "menu", primaryKeys = arrayOf("slug"))
@@ -44,20 +47,19 @@ data class DbMenuElementJoin(
 @Entity(tableName = "element", primaryKeys = arrayOf("slug"))
 data class DbElement(
     var slug: String = "",
-    var tags: List<String>? = emptyList(), //TODO: converter
-    @ColumnInfo(name = "custom_properties") var customProperties: Map<String, Any>? = emptyMap(), //TODO: converter
+    var tags: List<String>? = emptyList(),
+    @ColumnInfo(name = "custom_properties") var customProperties: Map<String, String>? = emptyMap(),
     @Embedded(prefix = "view_") var sectionView: DbElementSectionView? = DbElementSectionView(),
     @ColumnInfo(name = "element_url") var elementUrl: String? = "",
     var name: String? = ""
     //var dates: List<List<String>> = emptyList()
 )
-
+*/
 data class DbElementSectionView(
     var text: String? = "",
     @ColumnInfo(name = "image_url") var imageUrl: String? = "",
     @ColumnInfo(name = "image_thumb") var imageThumb: String? = ""
 )
-*/
 
 @Entity(tableName = "element_cache", primaryKeys = arrayOf("slug"))
 data class DbElementCache(
@@ -83,7 +85,7 @@ data class DbElementCacheRender(
     @ColumnInfo(name = "content_url") var contentUrl: String? = "",
     var url: String? = "",
     var title: String? = "",
-    var elements: List<DbArticleElement>? = emptyList(), //TODO: converter
+    var elements: List<DbArticleElement>? = emptyList(),
     @ColumnInfo(name = "scheme_uri") var schemeUri: String? = "",
     var source: String? = "",
     var format: String? = "",

@@ -13,19 +13,14 @@ import com.bumptech.glide.request.target.Target;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElement;
-import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
-import com.gigigo.orchextra.core.domain.rxInteractor.GetVideo;
-import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
-import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.views.MoreContentArrowView;
 import com.gigigo.orchextra.ocmsdk.R;
 import gigigo.com.vimeolibs.VideoObserver;
 import gigigo.com.vimeolibs.VimeoCallback;
 import gigigo.com.vimeolibs.VimeoExoPlayerActivity;
 import gigigo.com.vimeolibs.VimeoInfo;
-import gigigo.com.vimeolibs.VimeoManager;
 import org.jetbrains.annotations.NotNull;
 
 public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoElement> {
@@ -59,42 +54,43 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
       }
     };
 
-    actionHandler.getVimeoInfo(articleElement.getRender().getSource(), new VideoObserver(new VimeoCallback() {
-      @Override public void onSuccess(@NotNull VimeoInfo vimeoInfo) {
-        mVimeoInfo = vimeoInfo;
-        String strImgForBlur = mVimeoInfo.getThumbPath();
+    actionHandler.getVimeoInfo(articleElement.getRender().getSource(),
+        new VideoObserver(new VimeoCallback() {
+          @Override public void onSuccess(@NotNull VimeoInfo vimeoInfo) {
+            mVimeoInfo = vimeoInfo;
+            String strImgForBlur = mVimeoInfo.getThumbPath();
 
-        imgThumb.setMaxHeight((int) MoreContentArrowView.convertDpToPixel(192,context.getApplicationContext()));
-        imgThumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imgThumb.setMaxHeight(
+                (int) MoreContentArrowView.convertDpToPixel(192, context.getApplicationContext()));
+            imgThumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        Glide.with(context.getApplicationContext())
+            Glide.with(context.getApplicationContext())
 
-            .load(strImgForBlur)
-            //.asBitmap()
-            // .transform(new BlurTransformation(context, 20))
-            .listener(new RequestListener<String, GlideDrawable>() {
-              @Override
-              public boolean onException(Exception e, String model, Target<GlideDrawable> target,
-                  boolean isFirstResource) {
-                return false;
-              }
+                .load(strImgForBlur)
+                //.asBitmap()
+                // .transform(new BlurTransformation(context, 20))
+                .listener(new RequestListener<String, GlideDrawable>() {
+                  @Override public boolean onException(Exception e, String model,
+                      Target<GlideDrawable> target, boolean isFirstResource) {
+                    return false;
+                  }
 
-              @Override public boolean onResourceReady(GlideDrawable resource, String model,
-                  Target<GlideDrawable> target, boolean isFromMemoryCache,
-                  boolean isFirstResource) {
-                imgPlay.setVisibility(View.VISIBLE);
-                return false;
-              }
-            })
+                  @Override public boolean onResourceReady(GlideDrawable resource, String model,
+                      Target<GlideDrawable> target, boolean isFromMemoryCache,
+                      boolean isFirstResource) {
+                    imgPlay.setVisibility(View.VISIBLE);
+                    return false;
+                  }
+                })
 
-            .into(imgThumb);
-        imgPlay.setOnClickListener(onVimeoThumbnailClickListener);
-        imgThumb.setOnClickListener(onVimeoThumbnailClickListener);
-      }
+                .into(imgThumb);
+            imgPlay.setOnClickListener(onVimeoThumbnailClickListener);
+            imgThumb.setOnClickListener(onVimeoThumbnailClickListener);
+          }
 
-      @Override public void onError(@NotNull Exception e) {
-        System.out.println("Error VimeoCallbacak" + e.toString());
-      }
-    }));
+          @Override public void onError(@NotNull Exception e) {
+            System.out.println("Error VimeoCallbacak" + e.toString());
+          }
+        }));
   }
 }

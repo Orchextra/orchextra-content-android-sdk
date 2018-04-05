@@ -13,6 +13,7 @@ import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
 import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
+import com.gigigo.orchextra.core.data.database.entities.DbVersionData;
 import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentDataResponseMapper;
 import com.gigigo.orchextra.core.data.mappers.menus.ApiMenuContentListResponseMapper;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
@@ -75,7 +76,10 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.getVersionDataRx()
         .map(apiVersionResponse -> new ApiVersionData(apiVersionResponse.getData()))
         .filter(apiVersionData -> apiVersionData != null)
-        .doOnNext(ocmCache::putVersion)
+        .doOnNext(apiVersionData -> {
+          VersionData versionData = DbMappersKt.toVersionData(apiVersionData);
+          this.ocmCache.putVersion(versionData);
+        })
         .map(apiVersionData -> DbMappersKt.toVersionData(apiVersionData));
   }
 
@@ -135,7 +139,9 @@ import orchextra.javax.inject.Singleton;
         ApiElementData apiElementData = new ApiElementData(
             apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
         if (i < imagestodownload) addImageToQueue(apiElementData);
-        ocmCache.putDetail(apiElementData);
+
+        ElementData elementData = DbMappersKt.toElementData(apiElementData);
+        ocmCache.putDetail(elementData);
       }
       i++;
     }
@@ -184,19 +190,21 @@ import orchextra.javax.inject.Singleton;
   @Override public Observable<ElementData> getElementById(String slug) {
     return ocmApiService.getElementByIdRx(slug, withThumbnails)
         .map(dataResponse -> dataResponse.getResult())
-        .doOnNext(ocmCache::putDetail)
+        .doOnNext(apiElementData -> {
+          ElementData elementData = DbMappersKt.toElementData(apiElementData);
+          ocmCache.putDetail(elementData);
+        })
         .map(apiElementData -> {
-          ElementData elementData = new ElementData();
-          //DbMappersKt toElementData(apiElementData);
+          ElementData elementData = DbMappersKt.toElementData(apiElementData);
           return elementData;
         });
   }
 
   @Override public Observable<VimeoInfo> getVideoById(Context context, String videoId,
       boolean isWifiConnection, boolean isFastConnection) {
-    Observable<ApiVideoData> videoObservable =
-        Observable.create(new ObservableOnSubscribe<ApiVideoData>() {
-          @Override public void subscribe(ObservableEmitter<ApiVideoData> emitter)
+    Observable<VimeoInfo> videoObservable =
+        Observable.create(new ObservableOnSubscribe<VimeoInfo>() {
+          @Override public void subscribe(ObservableEmitter<VimeoInfo> emitter)
               throws Exception {
             VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
             VimeoManager videoManager = new VimeoManager(builder);
@@ -204,9 +212,8 @@ import orchextra.javax.inject.Singleton;
             videoManager.getVideoVimeoInfo(context, videoId, isWifiConnection, isFastConnection,
                 new VimeoCallback() {
                   @Override public void onSuccess(VimeoInfo vimeoInfo) {
-                    ApiVideoData videoData = new ApiVideoData(vimeoInfo);
-                    ocmCache.putVideo(videoData);
-                    emitter.onNext(videoData);
+                    ocmCache.putVideo(vimeoInfo);
+                    emitter.onNext(vimeoInfo);
                   }
 
                   @Override public void onError(Exception exception) {
@@ -220,7 +227,7 @@ import orchextra.javax.inject.Singleton;
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
 
-    return videoObservable.map(apiVideoData -> DbMappersKt.toVimeoInfo(apiVideoData));
+    return videoObservable;
   }
 
   @Override public boolean isFromCloud() {

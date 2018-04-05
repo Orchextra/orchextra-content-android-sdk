@@ -7,19 +7,22 @@ import android.arch.persistence.room.TypeConverters
 import android.content.Context
 import com.gigigo.orchextra.core.data.database.converters.Converters
 import com.gigigo.orchextra.core.data.database.dao.DbElementCacheDao
+import com.gigigo.orchextra.core.data.database.dao.DbMenuContentDao
 import com.gigigo.orchextra.core.data.database.dao.DbVersionDataDao
 import com.gigigo.orchextra.core.data.database.dao.DbVideoDao
 import com.gigigo.orchextra.core.data.database.entities.DbElementCache
+//import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData
 
 @Database(
-    entities = arrayOf(DbVersionData::class, DbElementCache::class, DbVideoData::class),
+    entities = arrayOf(DbVersionData::class, /*DbMenuContentData::class, */DbElementCache::class, DbVideoData::class),
     version = 1, exportSchema = true)
 @TypeConverters(value = arrayOf(Converters::class))
 abstract class OcmDatabase : RoomDatabase() {
 
   abstract fun versionDao(): DbVersionDataDao
+  //abstract fun menunDao(): DbMenuContentDao
   abstract fun elementCacheDao(): DbElementCacheDao
   abstract fun videoDao(): DbVideoDao
 

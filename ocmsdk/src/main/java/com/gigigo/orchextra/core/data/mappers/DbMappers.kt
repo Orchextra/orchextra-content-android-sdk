@@ -67,6 +67,13 @@ fun ApiVersionData.toDbVersionData(): DbVersionData = with(this) {
   return versionData
 }
 
+fun VersionData.toDbVersionData(): DbVersionData = with(this) {
+  val versionData = DbVersionData()
+  versionData.id = VERSION_KEY
+  versionData.version = version
+  return versionData
+}
+
 fun ApiVersionData.toVersionData(): VersionData = with(this) {
   val versionData = VersionData()
   versionData.version = version
@@ -845,6 +852,7 @@ fun ApiElementData.toElementData(): ElementData {
 //endregion
 
 //region VIDEO
+/*
 fun ApiVideoData.toVimeoInfo(): VimeoInfo = with(this) {
   val video = VimeoInfo()
   video.id = element.id
@@ -852,14 +860,16 @@ fun ApiVideoData.toVimeoInfo(): VimeoInfo = with(this) {
   video.videoPath = element.videoPath
   return video
 }
-
-fun ApiVideoData.toDbVideoData(): DbVideoData {
+*/
+/*
+fun ApiVideoData.toDbVideoData(): DbVideoData = with(this) {
   val video = DbVideoData()
   video.id = element.id
   video.element = element.toDbVimeoInfo()
-  video.expireAt = Calendar.getInstance().getTodayPlusDays(1)
   return video
 }
+*/
+
 
 fun DbVideoData.toVimeoInfo(): VimeoInfo = with(this) {
   val video = VimeoInfo()
@@ -869,10 +879,17 @@ fun DbVideoData.toVimeoInfo(): VimeoInfo = with(this) {
   return video
 }
 
-private fun VimeoInfo.toDbVimeoInfo(): DbVimeoInfo {
+private fun VimeoInfo.toDbVimeoInfo(): DbVimeoInfo = with(this){
   val vimeo = DbVimeoInfo()
   vimeo.videoPath = videoPath
   vimeo.thumbPath = thumbPath
   return vimeo
+}
+
+fun VimeoInfo.toDbVideoData(): DbVideoData = with(this){
+  val video = DbVideoData()
+  video.id = id
+  video.element = toDbVimeoInfo()
+  return video
 }
 //endregion

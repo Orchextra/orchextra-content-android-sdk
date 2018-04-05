@@ -3,13 +3,10 @@ package com.gigigo.orchextra.core.data.rxCache;
 import android.content.Context;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
-import com.gigigo.orchextra.core.data.CalendarExtensionsKt;
+import com.gigigo.orchextra.core.data.DateUtilsKt;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
-import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
-import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.data.database.OcmDatabase;
 import com.gigigo.orchextra.core.data.database.entities.DbElementCache;
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData;
@@ -18,12 +15,13 @@ import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
+import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.CacheDir;
 import com.mskn73.kache.Kache;
+import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import java.io.File;
-import java.util.Calendar;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
@@ -62,9 +60,9 @@ import orchextra.javax.inject.Singleton;
     return false;
   }
 
-  @Override public void putVersion(ApiVersionData apiVersionData) {
-    DbVersionData versionData = DbMappersKt.toDbVersionData(apiVersionData);
-    ocmDatabase.versionDao().insertVersion(versionData);
+  @Override public void putVersion(VersionData versionData) {
+    DbVersionData dbVersionData = DbMappersKt.toDbVersionData(versionData);
+    ocmDatabase.versionDao().insertVersion(dbVersionData);
   }
   //endregion
 
@@ -156,8 +154,7 @@ import orchextra.javax.inject.Singleton;
     return false;
   }
 
-  @Override public void putDetail(ApiElementData apiElementData) {
-    ElementData elementData = DbMappersKt.toElementData(apiElementData);
+  @Override public void putDetail(ElementData elementData) {
     DbElementCache elementCacheData = DbMappersKt.toDbElementCache(elementData.getElement());
     ocmDatabase.elementCacheDao().insertElementCache(elementCacheData);
   }
@@ -177,12 +174,12 @@ import orchextra.javax.inject.Singleton;
     });
   }
 
-  @Override public void putVideo(ApiVideoData videoData) {
+  @Override public void putVideo(VimeoInfo vimeoInfo) {
     Observable.create(emitter -> {
-      DbVideoData video = DbMappersKt.toDbVideoData(videoData);
-      //Long maxExpiredTime = CalendarExtensionsKt.getTodayPlusDays(Calendar.getInstance(),1);
-      //video.setExpireAt(maxExpiredTime);
-      ocmDatabase.videoDao().insertVideo(video);
+      DbVideoData dbVideoData = DbMappersKt.toDbVideoData(vimeoInfo);
+      Long maxExpiredTime = DateUtilsKt.getTodayPlusDays(1);
+      dbVideoData.setExpireAt(maxExpiredTime);
+      ocmDatabase.videoDao().insertVideo(dbVideoData);
       emitter.onComplete();
     }).subscribeOn(Schedulers.io()).subscribe();
   }
@@ -193,8 +190,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public boolean isVideoExpired(String videoId) {
-    Long maxExpiredTime = CalendarExtensionsKt.getTodayPlusDays(Calendar.getInstance(),1);
-    int videoDataCount = ocmDatabase.videoDao().hasExpiredVideo(videoId, maxExpiredTime);
+    int videoDataCount = ocmDatabase.videoDao().hasExpiredVideo(videoId, DateUtilsKt.getToday());
     return (videoDataCount == 1);
   }
   //endregion
