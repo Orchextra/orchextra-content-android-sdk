@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.ForeignKey.CASCADE
 import android.arch.persistence.room.Ignore
 
 
@@ -17,9 +18,7 @@ data class DbVersionData(
   }
 }
 
-/*
 data class DbMenuContentData @JvmOverloads constructor(
-    var isFromCloud: Boolean = false,
     var menuContentList: List<DbMenuContent>? = emptyList(),
     var elementsCache: Map<String, DbElementCache>? = emptyMap()
 )
@@ -33,10 +32,8 @@ data class DbMenuContent(
 
 @Entity(tableName = "menu_element_join",
     foreignKeys = arrayOf(
-        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("menu_slug"),
-            entity = DbMenuContent::class),
-        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"),
-            entity = DbElement::class)),
+        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("menu_slug"), entity = DbMenuContent::class, onDelete = CASCADE),
+        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"), entity = DbElement::class, onDelete = CASCADE)),
     primaryKeys = arrayOf("menu_slug", "element_slug")
 )
 data class DbMenuElementJoin(
@@ -51,14 +48,24 @@ data class DbElement(
     @ColumnInfo(name = "custom_properties") var customProperties: Map<String, String>? = emptyMap(),
     @Embedded(prefix = "view_") var sectionView: DbElementSectionView? = DbElementSectionView(),
     @ColumnInfo(name = "element_url") var elementUrl: String? = "",
-    var name: String? = ""
-    //var dates: List<List<String>> = emptyList()
+    var name: String? = "",
+    var dates: DbElementScheduleDates = DbElementScheduleDates()   //"dates":[["2017-11-05T16:11:00.000Z","2018-05-30T15:11:00.00"]]
 )
-*/
+
 data class DbElementSectionView(
     var text: String? = "",
     @ColumnInfo(name = "image_url") var imageUrl: String? = "",
     @ColumnInfo(name = "image_thumb") var imageThumb: String? = ""
+)
+
+@Entity(tableName = "element_schedule_dates",
+    foreignKeys = arrayOf(ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"), entity = DbElement::class, onDelete = CASCADE)),
+    primaryKeys = arrayOf("slug"))
+data class DbElementScheduleDates(
+    @ColumnInfo(name = "element_slug") var elementSlug: String = "",
+    @ColumnInfo(name = "date_start") var dateStart: Long? = -1,
+    @ColumnInfo(name = "date_end") var dateEnd: Long? = -1
+    //var dates: List<List<String>> = emptyList()   "dates":[["2017-11-05T16:11:00.000Z","2018-05-30T15:11:00.00"]]
 )
 
 @Entity(tableName = "element_cache", primaryKeys = arrayOf("slug"))

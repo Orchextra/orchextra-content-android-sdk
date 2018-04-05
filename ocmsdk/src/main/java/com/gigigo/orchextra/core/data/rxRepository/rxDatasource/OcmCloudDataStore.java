@@ -12,10 +12,7 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
-import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
-import com.gigigo.orchextra.core.data.database.entities.DbVersionData;
 import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentDataResponseMapper;
-import com.gigigo.orchextra.core.data.mappers.menus.ApiMenuContentListResponseMapper;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
@@ -50,19 +47,16 @@ import orchextra.javax.inject.Singleton;
   private final OcmCache ocmCache;
   private final OcmImageCache ocmImageCache;
 
-  private final ApiMenuContentListResponseMapper apiMenuContentListResponseMapper;
   private final ApiContentDataResponseMapper apiContentDataResponseMapper;
 
   private Integer withThumbnails = null; //For default, thumbnails are enabled
 
   @Inject public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,
       @NonNull OcmImageCache ocmImageCache,
-      ApiMenuContentListResponseMapper apiMenuContentListResponseMapper,
       ApiContentDataResponseMapper apiContentDataResponseMapper) {
     this.ocmApiService = ocmApiService;
     this.ocmCache = ocmCache;
     this.ocmImageCache = ocmImageCache;
-    this.apiMenuContentListResponseMapper = apiMenuContentListResponseMapper;
     this.apiContentDataResponseMapper = apiContentDataResponseMapper;
 
     Injector injector = OCManager.getInjector();
@@ -83,15 +77,15 @@ import orchextra.javax.inject.Singleton;
         .map(apiVersionData -> DbMappersKt.toVersionData(apiVersionData));
   }
 
-  @Override public Observable<MenuContentData> getMenuEntity() {
+  @Override public Observable<MenuContentData> getMenus() {
     return ocmApiService.getMenuDataRx()
         .map(dataResponse -> dataResponse.getResult())
-        .doOnNext(ocmCache::putMenus)
-        .doOnNext(apiMenuContentData -> addSectionsToCache(apiMenuContentData))
         .doOnNext(apiMenuContentData -> {
-          apiMenuContentData.setFromCloud(true);
+          MenuContentData menuContentData = DbMappersKt.toMenuContentData(apiMenuContentData);
+          ocmCache.putMenus(menuContentData);
         })
-        .map(apiMenuContentListResponseMapper::externalClassToModel);
+        .doOnNext(apiMenuContentData -> addSectionsToCache(apiMenuContentData))
+        .map(apiMenuContentData -> DbMappersKt.toMenuContentData(apiMenuContentData));
   }
 
   @Override public Observable<ContentData> getSectionEntity(String contentUrl,

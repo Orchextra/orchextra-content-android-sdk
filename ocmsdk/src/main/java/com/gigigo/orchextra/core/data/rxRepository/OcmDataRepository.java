@@ -28,9 +28,9 @@ import orchextra.javax.inject.Singleton;
     return ocmDataStore.getVersion();
   }
 
-  @Override public Observable<MenuContentData> getMenu(boolean forceReload) {
+  @Override public Observable<MenuContentData> getMenus(boolean forceReload) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForMenus(forceReload);
-    return ocmDataStore.getMenuEntity();
+    return ocmDataStore.getMenus();
   }
 
   @Override

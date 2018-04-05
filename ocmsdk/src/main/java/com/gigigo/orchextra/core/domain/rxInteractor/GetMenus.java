@@ -21,7 +21,7 @@ public class GetMenus extends UseCase<MenuContentData, GetMenus.Params> {
   }
 
   @Override Observable<MenuContentData> buildUseCaseObservable(Params params) {
-    return this.ocmRepository.getMenu(params.forceReload);
+    return this.ocmRepository.getMenus(params.forceReload);
   }
 
   public static final class Params {

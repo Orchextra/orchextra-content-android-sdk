@@ -41,7 +41,7 @@ constructor(
       }
     }
     model.elementsCache = elementCacheItemMap
-    model.isFromCloud = data.isFromCloud
+    model.isFromCloud = true
 
 
     Log.v("TT - ApiMenuContentData", ((System.currentTimeMillis() - time) / 1000).toString() + "")

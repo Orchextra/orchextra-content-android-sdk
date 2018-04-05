@@ -16,7 +16,6 @@ class ApiMenuContentMapper(
 
     val model = MenuContent()
 
-    model.id = data.id
     model.slug = data.slug
 
     val menuItemList = ArrayList<Element>()

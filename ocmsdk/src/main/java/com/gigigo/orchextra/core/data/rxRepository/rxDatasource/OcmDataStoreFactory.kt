@@ -54,26 +54,37 @@ class OcmDataStoreFactory
       }
 
   fun getDataStoreForMenus(force: Boolean): OcmDataStore {
-    val ocmDataStore: OcmDataStore
+    //if (!connectionUtils.hasConnection()) return diskDataStore
 
-    if (!connectionUtils.hasConnection()) return diskDataStore
+    lateinit var dataStore: OcmDataStore
 
-    ocmDataStore = if (force) {
-      Log.i(TAG, "CLOUD - Menus")
-      cloudDataStore
-    } else {
-      val cache = diskDataStore.ocmCache
-      if (cache.isMenuCached() && !cache.isMenuExpired()) {
-        Log.i(TAG, "DISK  - Menus")
-        diskDataStore
-      } else {
-        Log.i(TAG, "CLOUD - Menus")
-        cloudDataStore
-      }
+    runBlocking {
+      dataStore = dataStoreForMenus(force).await()
     }
 
-    return ocmDataStore
+    return dataStore
   }
+
+  private fun dataStoreForMenus(force: Boolean) =
+      async(bgContext) {
+        var dataStore: OcmDataStore
+
+        dataStore = if (force) {
+          Log.i(TAG, "CLOUD - Menus")
+          cloudDataStore
+        } else {
+          val cache = diskDataStore.ocmCache
+          if (cache.hasMenusCached()) {
+            Log.i(TAG, "DISK  - Menus")
+            diskDataStore
+          } else {
+            Log.i(TAG, "CLOUD - Menus")
+            cloudDataStore
+          }
+        }
+
+        dataStore
+      }
 
   fun getDataStoreForSections(force: Boolean, section: String): OcmDataStore {
     val ocmDataStore: OcmDataStore

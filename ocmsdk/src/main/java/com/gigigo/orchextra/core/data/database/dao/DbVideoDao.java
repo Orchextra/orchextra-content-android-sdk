@@ -15,4 +15,6 @@ import java.util.List;
   @Query("SELECT COUNT(*) FROM video WHERE id = :id AND expire_at < :timestamp ") int hasExpiredVideo(String id, Long timestamp);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE) void insertVideo(DbVideoData videoData);
+
+  @Query("DELETE FROM video") void deleteAll();
 }

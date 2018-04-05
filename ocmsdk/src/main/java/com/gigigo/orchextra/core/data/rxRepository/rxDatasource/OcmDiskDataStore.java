@@ -2,9 +2,8 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
 import android.content.Context;
 import android.util.Log;
-import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentDataResponseMapper;
-import com.gigigo.orchextra.core.data.mappers.menus.ApiMenuContentListResponseMapper;
 import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
+import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentDataResponseMapper;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
@@ -18,14 +17,11 @@ import orchextra.javax.inject.Singleton;
 @Singleton public class OcmDiskDataStore implements OcmDataStore {
   private final OcmCache ocmCache;
 
-  private final ApiMenuContentListResponseMapper apiMenuContentListResponseMapper;
   private final ApiContentDataResponseMapper apiContentDataResponseMapper;
 
   @Inject public OcmDiskDataStore(OcmCache ocmCache,
-      ApiMenuContentListResponseMapper apiMenuContentListResponseMapper,
       ApiContentDataResponseMapper apiContentDataResponseMapper) {
     this.ocmCache = ocmCache;
-    this.apiMenuContentListResponseMapper = apiMenuContentListResponseMapper;
     this.apiContentDataResponseMapper = apiContentDataResponseMapper;
   }
 
@@ -33,13 +29,8 @@ import orchextra.javax.inject.Singleton;
     return ocmCache.getVersion().map(dbVersionData -> DbMappersKt.toVersionData(dbVersionData));
   }
 
-  @Override public Observable<MenuContentData> getMenuEntity() {
-    final long time = System.currentTimeMillis();
-
-    return ocmCache.getMenus().doOnNext(apiMenuContentData -> {
-      apiMenuContentData.setFromCloud(false);
-      Log.v("TT - DISK - Menus", (System.currentTimeMillis() - time) / 1000 + "");
-    }).map(apiMenuContentListResponseMapper::externalClassToModel);
+  @Override public Observable<MenuContentData> getMenus() {
+    return ocmCache.getMenus().map(dbMenuContentData -> DbMappersKt.toMenuContentData(dbMenuContentData));
   }
 
   @Override public Observable<ContentData> getSectionEntity(String elementUrl,

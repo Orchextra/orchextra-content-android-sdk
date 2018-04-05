@@ -10,8 +10,8 @@ project.ext {
                androidCustomtabs       : "com.android.support:customtabs:${supportVersion}",
                androidAppCompat        : "com.android.support:appcompat-v7:${supportVersion}",
 
-               archLifecycleExtensions : 'android.arch.lifecycle:extensions:1.0.0',
-               archLifecycleCompiler   : 'android.arch.lifecycle:compiler:1.0.0',
+               archLifecycleExtensions : 'android.arch.lifecycle:extensions:1.1.1',
+               archLifecycleCompiler   : 'android.arch.lifecycle:compiler:1.1.1',
                archPersistenceRuntime  : 'android.arch.persistence.room:runtime:1.0.0',
                archPersistenceRxJava2  : 'android.arch.persistence.room:rxjava2:1.0.0',
                archPersistenceCompiler : 'android.arch.persistence.room:compiler:1.0.0',

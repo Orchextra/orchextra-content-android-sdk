@@ -18,6 +18,8 @@ version = 'ocmVersion'
 
 apply from: 'variants.gradle'
 
+def OCM_DIMENSION = "ocm"
+
 def CONCURRENT_INTERACTORS = "CONCURRENT_INTERACTORS"
 def RETROFIT_LOG = "RETROFIT_LOG"
 
@@ -112,11 +114,11 @@ android {
   }
 
 
-  flavorDimensions "ocm"
+  flavorDimensions OCM_DIMENSION
 
   productFlavors {
     ocm {
-      dimension "ocm"
+      dimension OCM_DIMENSION
     }
   }
 

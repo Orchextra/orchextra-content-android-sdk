@@ -5,16 +5,22 @@ import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.DateUtilsKt;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import com.gigigo.orchextra.core.data.database.OcmDatabase;
+import com.gigigo.orchextra.core.data.database.entities.DbElement;
 import com.gigigo.orchextra.core.data.database.entities.DbElementCache;
+import com.gigigo.orchextra.core.data.database.entities.DbMenuContent;
+import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData;
+import com.gigigo.orchextra.core.data.database.entities.DbMenuElementJoin;
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData;
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData;
 import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContent;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.CacheDir;
 import com.mskn73.kache.Kache;
@@ -22,11 +28,14 @@ import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 
 @Singleton public class OcmCacheImp implements OcmCache {
-  public static final String MENU_KEY = "MENU_KEY";
   private final OcmDatabase ocmDatabase;
   private final Kache kache;
   private final Context mContext;
@@ -67,13 +76,27 @@ import orchextra.javax.inject.Singleton;
   //endregion
 
   //region MENU
-  @Override public Observable<ApiMenuContentData> getMenus() {
+  @Override public Observable<DbMenuContentData> getMenus() {
     return Observable.create(emitter -> {
-      ApiMenuContentData apiMenuContentData =
-          (ApiMenuContentData) kache.get(ApiMenuContentData.class, MENU_KEY);
+      List<DbMenuContent> dbMenuContentList = ocmDatabase.menuDao().fetchMenus();
+      List<DbElementCache> dbElementCacheList = ocmDatabase.elementCacheDao().fetchElementsCache();
 
-      if (apiMenuContentData != null) {
-        emitter.onNext(apiMenuContentData);
+      for (DbMenuContent dbMenuContent : dbMenuContentList) {
+        List<DbElement> dbElementList = ocmDatabase.elementDao().fetchMenuElements(dbMenuContent.getSlug());
+        dbMenuContent.setElements(dbElementList);
+      }
+
+      DbMenuContentData dbMenuContentData = new DbMenuContentData();
+      dbMenuContentData.setMenuContentList(dbMenuContentList);
+
+      Map<String, DbElementCache> dbElementCacheMap = new HashMap<>(dbElementCacheList.size());
+      for (DbElementCache dbElementCache : dbElementCacheList) {
+        dbElementCacheMap.put(dbElementCache.getSlug(), dbElementCache);
+      }
+      dbMenuContentData.setElementsCache(dbElementCacheMap);
+
+      if (dbMenuContentData != null) {
+        emitter.onNext(dbMenuContentData);
         emitter.onComplete();
       } else {
         emitter.onError(new ApiMenuNotFoundException());
@@ -81,23 +104,39 @@ import orchextra.javax.inject.Singleton;
     });
   }
 
-  @Override public void putMenus(ApiMenuContentData apiMenuContentData) {
-    if (apiMenuContentData != null) {
-      kache.evict(MENU_KEY);
-      kache.put(apiMenuContentData);
+  @Override public void putMenus(MenuContentData menuContentData) {
+    for (MenuContent menuContent : menuContentData.getMenuContentList()) {
+      DbMenuContent dbMenuContent = DbMappersKt.toDbMenuContent(menuContent);
+      ocmDatabase.menuDao().insertMenu(dbMenuContent);
+
+      for(Element element : menuContent.getElements()) {
+        DbElement dbElement = DbMappersKt.toDbElement(element);
+        ocmDatabase.elementDao().insertElement(dbElement);
+
+        DbMenuElementJoin dbMenuElementJoin = new DbMenuElementJoin(dbMenuContent.getSlug(), dbElement.getSlug());
+        ocmDatabase.elementDao().insertMenuElement(dbMenuElementJoin);
+      }
+    }
+
+    List<ElementCache> elementCacheList = new ArrayList<>(menuContentData.getElementsCache().values());
+    putElementsCache(elementCacheList);
+  }
+
+  private void putElementsCache(List<ElementCache> elements) {
+    for (ElementCache elementCache: elements) {
+      ElementData elementData = new ElementData();
+      elementData.setElement(elementCache);
+      putDetail(elementData);
     }
   }
 
-  @Override public boolean isMenuCached() {
-    return kache.isCached(MENU_KEY);
-  }
-
-  @Override public boolean isMenuExpired() {
-    return kache.isExpired(MENU_KEY, ApiMenuContentDataResponse.class);
+  @Override public boolean hasMenusCached() {
+    int versionDataCount = ocmDatabase.menuDao().hasMenus();
+    return (versionDataCount == 1);
   }
   //endregion
 
-  //region ELEMENT
+  //region SECTION
   @Override public Observable<ApiSectionContentData> getSection(final String elementUrl) {
     return Observable.create(emitter -> {
       ApiSectionContentData apiSectionContentData =
@@ -196,7 +235,9 @@ import orchextra.javax.inject.Singleton;
   //endregion
 
   @Override public void evictAll(boolean images, boolean data) {
-    if (data) trimCache(mContext, "kache");
+    if (data) {
+      ocmDatabase.deleteAll();
+    }
     if (images) trimCache(mContext, "images");
   }
 

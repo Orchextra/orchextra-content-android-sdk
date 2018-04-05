@@ -4,7 +4,7 @@ class Element {
 
   var customProperties: Map<String, Any>? = null
   var sectionView: ElementSectionView? = null
-  var slug: String? = null
+  var slug: String = ""
   var elementUrl: String? = null
   var tags: List<String>? = null
   var name: String? = null

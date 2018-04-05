@@ -17,4 +17,6 @@ import java.util.List;
 
   @Insert(onConflict = OnConflictStrategy.REPLACE) void insertElementCache(
       DbElementCache elementCache);
+
+  @Query("DELETE FROM element_cache") void deleteAll();
 }

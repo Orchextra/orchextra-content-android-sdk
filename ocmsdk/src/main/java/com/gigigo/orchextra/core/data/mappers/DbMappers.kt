@@ -8,17 +8,25 @@ import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCacheRender
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCacheShare
 import com.gigigo.orchextra.core.data.api.dto.elementcache.CidKeyData
 import com.gigigo.orchextra.core.data.api.dto.elementcache.FederatedAuthorizationData
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData
 import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData
 import com.gigigo.orchextra.core.data.database.entities.DbArticleElement
 import com.gigigo.orchextra.core.data.database.entities.DbArticleElementRender
 import com.gigigo.orchextra.core.data.database.entities.DbCidKeyData
+import com.gigigo.orchextra.core.data.database.entities.DbElement
 import com.gigigo.orchextra.core.data.database.entities.DbElementCache
 import com.gigigo.orchextra.core.data.database.entities.DbElementCachePreview
 import com.gigigo.orchextra.core.data.database.entities.DbElementCacheRender
 import com.gigigo.orchextra.core.data.database.entities.DbElementCacheShare
+import com.gigigo.orchextra.core.data.database.entities.DbElementSectionView
 import com.gigigo.orchextra.core.data.database.entities.DbFederatedAuthorizationData
+import com.gigigo.orchextra.core.data.database.entities.DbMenuContent
+import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData.Companion.VERSION_KEY
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData
@@ -54,7 +62,11 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization
 import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat
+import com.gigigo.orchextra.core.domain.entities.elements.Element
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData
+import com.gigigo.orchextra.core.domain.entities.elements.ElementSectionView
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContent
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData
 import com.gigigo.orchextra.core.domain.entities.version.VersionData
 import gigigo.com.vimeolibs.VimeoInfo
 import java.util.Calendar
@@ -89,10 +101,31 @@ fun DbVersionData.toVersionData(): VersionData = with(this) {
 //endregion
 
 //region MENU
-/*
-fun DbMenuContentData.toMenuContentData(): MenuContentData = with(this) {
+fun ApiMenuContentData.toDbMenuContentData(): DbMenuContentData = with(this) {
+  val menuContentData = DbMenuContentData()
+  val menus = ArrayList<DbMenuContent>()
+  menuContentList?.let {
+    for (menuContentItem in it) {
+      menus.add(menuContentItem.toDbMenuContent())
+    }
+  }
+  menuContentData.menuContentList = menus
+
+  val elements = HashMap<String, DbElementCache>()
+  elementsCache?.let {
+    val elementsList = it.entries
+    for ((key, value) in elementsList) {
+      elements[key] = value.toDbElementCache()
+    }
+  }
+  menuContentData.elementsCache = elements
+
+  return menuContentData
+}
+
+fun ApiMenuContentData.toMenuContentData(): MenuContentData = with(this) {
   val menuContent = MenuContentData()
-  menuContent.isFromCloud = isFromCloud
+  menuContent.isFromCloud = true
 
   val menus = ArrayList<MenuContent>()
   menuContentList?.let {
@@ -114,41 +147,26 @@ fun DbMenuContentData.toMenuContentData(): MenuContentData = with(this) {
   return menuContent
 }
 
-fun ApiMenuContentData.toDbMenuContentData(): DbMenuContentData = with(this) {
-  val menuContentData = DbMenuContentData()
-  menuContentData.isFromCloud = false
+fun DbMenuContentData.toMenuContentData(): MenuContentData = with(this) {
+  val menuContent = MenuContentData()
+  menuContent.isFromCloud = false
 
-  val menus = ArrayList<DbMenuContent>()
+  val menus = ArrayList<MenuContent>()
   menuContentList?.let {
     for (menuContentItem in it) {
-      menus.add(menuContentItem.toDbMenuContent())
+      menus.add(menuContentItem.toMenuContent())
     }
   }
-  menuContentData.menuContentList = menus
+  menuContent.menuContentList = menus
 
-  val elements = HashMap<String, DbElementCache>()
+  val elements = HashMap<String, ElementCache>()
   elementsCache?.let {
     val elementsList = it.entries
     for ((key, value) in elementsList) {
-      elements[key] = value.toDbElementCache()
+      elements[key] = value.toElementCache()
     }
   }
-  menuContentData.elementsCache = elements
-
-  return menuContentData
-}
-
-private fun DbMenuContent.toMenuContent(): MenuContent = with(this) {
-  val menuContent = MenuContent()
-  menuContent.slug = slug
-
-  val elementsList = ArrayList<Element>()
-  elements?.let {
-    for (elementItem in it) {
-      elementsList.add(elementItem.toElement())
-    }
-  }
-  menuContent.elements = elementsList
+  menuContent.elementsCache = elements
 
   return menuContent
 }
@@ -165,11 +183,94 @@ private fun ApiMenuContent.toDbMenuContent(): DbMenuContent {
   menuContent.elements = elementsList
   return menuContent
 }
-*/
+
+fun MenuContent.toDbMenuContent(): DbMenuContent {
+  val menuContent = DbMenuContent()
+  menuContent.slug = slug
+  val elementsList = ArrayList<DbElement>()
+  elements?.let {
+    for (elementItem in it) {
+      elementsList.add(elementItem.toDbElement())
+    }
+  }
+  menuContent.elements = elementsList
+  return menuContent
+}
+
+private fun ApiMenuContent.toMenuContent(): MenuContent {
+  val menuContent = MenuContent()
+  menuContent.slug = slug
+
+  val elementsList = ArrayList<Element>()
+  elements?.let {
+    for (elementItem in it) {
+      elementsList.add(elementItem.toElement())
+    }
+  }
+  menuContent.elements = elementsList
+
+  return menuContent
+}
+
+private fun DbMenuContent.toMenuContent(): MenuContent = with(this) {
+  val menuContent = MenuContent()
+  menuContent.slug = slug
+
+  val elementsList = ArrayList<Element>()
+  elements?.let {
+    for (elementItem in it) {
+      elementsList.add(elementItem.toElement())
+    }
+  }
+  menuContent.elements = elementsList
+
+  return menuContent
+}
 //endregion
 
 //region ELEMENT
-/*
+fun ApiElementData.toElementData(): ElementData {
+  val elementData = ElementData()
+  elementData.element = element.toElementCache()
+  return elementData
+}
+
+private fun ApiElement.toDbElement(): DbElement = with(this) {
+  val element = DbElement()
+  element.slug = slug
+  element.name = name
+  element.customProperties = customProperties?.toDbCustomProperties()
+  element.elementUrl = elementUrl
+  element.sectionView = sectionView?.toDbElementSectionView()
+  element.tags = tags
+  //element.dates = dates
+  return element
+}
+
+fun Element.toDbElement(): DbElement = with(this) {
+  val element = DbElement()
+  element.slug = slug
+  element.name = name
+  element.customProperties = customProperties?.toDbCustomProperties()
+  element.elementUrl = elementUrl
+  element.sectionView = sectionView?.toDbElementSectionView()
+  element.tags = tags
+  //element.dates = dates
+  return element
+}
+
+private fun ApiElement.toElement(): Element = with(this) {
+  val element = Element()
+  element.slug = slug
+  element.name = name
+  element.customProperties = customProperties
+  element.elementUrl = elementUrl
+  element.sectionView = sectionView?.toElementSectionView()
+  element.tags = tags
+  //element.dates = dates
+  return element
+}
+
 private fun DbElement.toElement(): Element = with(this) {
   val element = Element()
   element.slug = slug
@@ -182,15 +283,27 @@ private fun DbElement.toElement(): Element = with(this) {
   return element
 }
 
-private fun ApiElement.toDbElement(): DbElement = with(this) {
-  val element = DbElement()
-  element.slug = slug
-  element.name = name
-  element.customProperties = customProperties
-  element.elementUrl = elementUrl
-  element.sectionView = sectionView?.toDbElementSectionView()
-  element.tags = tags
-  //element.dates = dates
+private fun ApiElementSectionView.toDbElementSectionView(): DbElementSectionView = with(this) {
+  val element = DbElementSectionView()
+  element.text = text
+  element.imageUrl = imageUrl
+  element.imageThumb = imageThumb
+  return element
+}
+
+private fun ApiElementSectionView.toElementSectionView(): ElementSectionView = with(this) {
+  val element = ElementSectionView()
+  element.text = text
+  element.imageUrl = imageUrl
+  element.imageThumb = imageThumb
+  return element
+}
+
+private fun ElementSectionView.toDbElementSectionView(): DbElementSectionView = with(this) {
+  val element = DbElementSectionView()
+  element.text = text
+  element.imageUrl = imageUrl
+  element.imageThumb = imageThumb
   return element
 }
 
@@ -201,15 +314,6 @@ private fun DbElementSectionView.toElementSectionView(): ElementSectionView = wi
   element.imageThumb = imageThumb
   return element
 }
-
-private fun ApiElementSectionView.toDbElementSectionView(): DbElementSectionView = with(this) {
-  val element = DbElementSectionView()
-  element.text = text
-  element.imageUrl = imageUrl
-  element.imageThumb = imageThumb
-  return element
-}
-*/
 
 fun ApiElementCache.toElementCache(): ElementCache = with(this) {
   val elementCache = ElementCache()
@@ -225,7 +329,6 @@ fun ApiElementCache.toElementCache(): ElementCache = with(this) {
   return elementCache
 }
 
-/*
 private fun ApiElementCache.toDbElementCache(): DbElementCache = with(this) {
   val elementCache = DbElementCache()
   elementCache.slug = slug
@@ -239,7 +342,6 @@ private fun ApiElementCache.toDbElementCache(): DbElementCache = with(this) {
   elementCache.updatedAt = updatedAt
   return elementCache
 }
-*/
 
 fun ElementCache.toDbElementCache(): DbElementCache = with(this) {
   val elementCache = DbElementCache()
@@ -277,16 +379,16 @@ fun ApiElementCachePreview.toElementCachePreview(): ElementCachePreview = with(t
   elementCache.behaviour = ElementCacheBehaviour.convertStringToEnum(behaviour)
   return elementCache
 }
-/*
+
 private fun ApiElementCachePreview.toDbElementCachePreview(): DbElementCachePreview = with(this) {
   val elementCache = DbElementCachePreview()
   elementCache.text = text
   elementCache.imageUrl = imageUrl
   elementCache.imageThumb = imageThumb
-  elementCache.cacheBehaviour = cacheBehaviour
+  elementCache.behaviour = behaviour
   return elementCache
 }
-*/
+
 private fun ElementCachePreview.toDbElementCachePreview(): DbElementCachePreview = with(this) {
   val elementCache = DbElementCachePreview()
   elementCache.text = text
@@ -323,7 +425,7 @@ fun ApiElementCacheRender.toElementCacheRender(): ElementCacheRender = with(this
   elementCacheRender.federatedAuth = federatedAuth?.toFederatedAuthorization()
   return elementCacheRender
 }
-/*
+
 private fun ApiElementCacheRender.toDbElementCacheRender(): DbElementCacheRender = with(this) {
   val elementCacheRender = DbElementCacheRender()
   elementCacheRender.contentUrl = contentUrl
@@ -342,7 +444,7 @@ private fun ApiElementCacheRender.toDbElementCacheRender(): DbElementCacheRender
   elementCacheRender.federatedAuth = federatedAuth?.toDbFederatedAuthorizationData()
   return elementCacheRender
 }
-*/
+
 private fun ElementCacheRender.toDbElementCacheRender(): DbElementCacheRender = with(this) {
   var elementCacheRender = DbElementCacheRender()
   elementCacheRender.contentUrl = contentUrl
@@ -387,14 +489,14 @@ fun ApiElementCacheShare.toElementCacheShare(): ElementCacheShare = with(this) {
   elementCache.url = url
   return elementCache
 }
-/*
+
 private fun ApiElementCacheShare.toDbElementCacheShare(): DbElementCacheShare = with(this) {
   val elementCache = DbElementCacheShare()
   elementCache.text = text
   elementCache.url = url
   return elementCache
 }
-*/
+
 private fun ElementCacheShare.toDbElementCacheShare(): DbElementCacheShare = with(this) {
   val elementCache = DbElementCacheShare()
   elementCache.text = text
@@ -841,14 +943,6 @@ private fun DbCidKeyData.toCidKey(): CidKey {
 
 //region SECTION
 //TODO: mappers for ApiSectionContentData, ApiContentItem, ApiContentItemLayout, ApiContentItemPattern
-//endregion
-
-//region ELEMENT
-fun ApiElementData.toElementData(): ElementData {
-  val elementData = ElementData()
-  elementData.element = element.toElementCache()
-  return elementData
-}
 //endregion
 
 //region VIDEO

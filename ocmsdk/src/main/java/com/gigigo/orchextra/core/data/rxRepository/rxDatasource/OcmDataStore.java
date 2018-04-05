@@ -15,7 +15,7 @@ public interface OcmDataStore {
 
   Observable<VersionData> getVersion();
 
-  Observable<MenuContentData> getMenuEntity();
+  Observable<MenuContentData> getMenus();
 
   Observable<ContentData> getSectionEntity(String elementUrl, int numberOfElementsToDownload);
 
