@@ -5,12 +5,19 @@ import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.DateUtilsKt;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
+import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
+import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
 import com.gigigo.orchextra.core.data.database.OcmDatabase;
 import com.gigigo.orchextra.core.data.database.entities.DbElement;
 import com.gigigo.orchextra.core.data.database.entities.DbElementCache;
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContent;
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData;
 import com.gigigo.orchextra.core.data.database.entities.DbMenuElementJoin;
+import com.gigigo.orchextra.core.data.database.entities.DbScheduleDates;
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData;
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData;
 import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
@@ -30,6 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import orchextra.javax.inject.Inject;
@@ -69,8 +77,8 @@ import orchextra.javax.inject.Singleton;
     return false;
   }
 
-  @Override public void putVersion(VersionData versionData) {
-    DbVersionData dbVersionData = DbMappersKt.toDbVersionData(versionData);
+  @Override public void putVersion(ApiVersionData apiVersionData) {
+    DbVersionData dbVersionData = DbMappersKt.toDbVersionData(apiVersionData);
     ocmDatabase.versionDao().insertVersion(dbVersionData);
   }
   //endregion
@@ -84,6 +92,11 @@ import orchextra.javax.inject.Singleton;
       for (DbMenuContent dbMenuContent : dbMenuContentList) {
         List<DbElement> dbElementList = ocmDatabase.elementDao().fetchMenuElements(dbMenuContent.getSlug());
         dbMenuContent.setElements(dbElementList);
+
+        for(DbElement dbElement : dbElementList) {
+          List<DbScheduleDates> dbScheduleDatesList = ocmDatabase.scheduleDatesDao().fetchSchedule(dbElement.getSlug());
+          dbElement.setDates(dbScheduleDatesList);
+        }
       }
 
       DbMenuContentData dbMenuContentData = new DbMenuContentData();
@@ -91,7 +104,7 @@ import orchextra.javax.inject.Singleton;
 
       Map<String, DbElementCache> dbElementCacheMap = new HashMap<>(dbElementCacheList.size());
       for (DbElementCache dbElementCache : dbElementCacheList) {
-        dbElementCacheMap.put(dbElementCache.getSlug(), dbElementCache);
+        dbElementCacheMap.put(dbElementCache.getKey(), dbElementCache);
       }
       dbMenuContentData.setElementsCache(dbElementCacheMap);
 
@@ -104,29 +117,34 @@ import orchextra.javax.inject.Singleton;
     });
   }
 
-  @Override public void putMenus(MenuContentData menuContentData) {
-    for (MenuContent menuContent : menuContentData.getMenuContentList()) {
-      DbMenuContent dbMenuContent = DbMappersKt.toDbMenuContent(menuContent);
+  @Override public void putMenus(ApiMenuContentData apiMenuContentData) {
+    for (ApiMenuContent apiMenuContent : apiMenuContentData.getMenuContentList()) {
+      DbMenuContent dbMenuContent = DbMappersKt.toDbMenuContent(apiMenuContent);
       ocmDatabase.menuDao().insertMenu(dbMenuContent);
 
-      for(Element element : menuContent.getElements()) {
-        DbElement dbElement = DbMappersKt.toDbElement(element);
+      for(ApiElement apiElement : apiMenuContent.getElements()) {
+        DbElement dbElement = DbMappersKt.toDbElement(apiElement);
         ocmDatabase.elementDao().insertElement(dbElement);
+
+        //TODO: insert schedules
+        if(apiElement.getDates() != null) {
+          List<DbScheduleDates> dbScheduleDates = DbMappersKt.toDbScheduleDates(apiElement.getDates(), dbElement.getSlug());
+          for (DbScheduleDates scheduleDate : dbScheduleDates) {
+            ocmDatabase.scheduleDatesDao().insertSchedule(scheduleDate);
+          }
+        }
 
         DbMenuElementJoin dbMenuElementJoin = new DbMenuElementJoin(dbMenuContent.getSlug(), dbElement.getSlug());
         ocmDatabase.elementDao().insertMenuElement(dbMenuElementJoin);
       }
     }
 
-    List<ElementCache> elementCacheList = new ArrayList<>(menuContentData.getElementsCache().values());
-    putElementsCache(elementCacheList);
-  }
-
-  private void putElementsCache(List<ElementCache> elements) {
-    for (ElementCache elementCache: elements) {
-      ElementData elementData = new ElementData();
-      elementData.setElement(elementCache);
-      putDetail(elementData);
+    Iterator<Map.Entry<String, ApiElementCache>> iterator = apiMenuContentData.getElementsCache().entrySet().iterator();
+    while(iterator.hasNext()) {
+      Map.Entry<String, ApiElementCache> next = iterator.next();
+      ApiElementData apiElementData = new ApiElementData(next.getValue());
+      String key = next.getKey();
+      putDetail(apiElementData, key);
     }
   }
 
@@ -193,8 +211,8 @@ import orchextra.javax.inject.Singleton;
     return false;
   }
 
-  @Override public void putDetail(ElementData elementData) {
-    DbElementCache elementCacheData = DbMappersKt.toDbElementCache(elementData.getElement());
+  @Override public void putDetail(ApiElementData apiElementData, String key) {
+    DbElementCache elementCacheData = DbMappersKt.toDbElementCache(apiElementData.getElement(), key);
     ocmDatabase.elementCacheDao().insertElementCache(elementCacheData);
   }
   //endregion

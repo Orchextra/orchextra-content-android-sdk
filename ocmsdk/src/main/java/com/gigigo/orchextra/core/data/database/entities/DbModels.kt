@@ -49,7 +49,7 @@ data class DbElement(
     @Embedded(prefix = "view_") var sectionView: DbElementSectionView? = DbElementSectionView(),
     @ColumnInfo(name = "element_url") var elementUrl: String? = "",
     var name: String? = "",
-    var dates: DbElementScheduleDates = DbElementScheduleDates()   //"dates":[["2017-11-05T16:11:00.000Z","2018-05-30T15:11:00.00"]]
+    @Ignore var dates: List<DbScheduleDates> = emptyList()  //"dates":[["2017-11-05T16:11:00.000Z","2018-05-30T15:11:00.00"]]
 )
 
 data class DbElementSectionView(
@@ -58,18 +58,19 @@ data class DbElementSectionView(
     @ColumnInfo(name = "image_thumb") var imageThumb: String? = ""
 )
 
-@Entity(tableName = "element_schedule_dates",
-    foreignKeys = arrayOf(ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"), entity = DbElement::class, onDelete = CASCADE)),
+@Entity(tableName = "schedule_dates",
+    foreignKeys = arrayOf(ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("slug"), entity = DbElement::class, onDelete = CASCADE)),
     primaryKeys = arrayOf("slug"))
-data class DbElementScheduleDates(
-    @ColumnInfo(name = "element_slug") var elementSlug: String = "",
+data class DbScheduleDates(
+    @ColumnInfo(name = "slug") var slug: String = "",
     @ColumnInfo(name = "date_start") var dateStart: Long? = -1,
     @ColumnInfo(name = "date_end") var dateEnd: Long? = -1
     //var dates: List<List<String>> = emptyList()   "dates":[["2017-11-05T16:11:00.000Z","2018-05-30T15:11:00.00"]]
 )
 
-@Entity(tableName = "element_cache", primaryKeys = arrayOf("slug"))
+@Entity(tableName = "element_cache", primaryKeys = arrayOf("slug", "key"))
 data class DbElementCache(
+    var key: String = "",
     var slug: String = "",
     var type: String? = "",
     var tags: List<String>? = emptyList(),

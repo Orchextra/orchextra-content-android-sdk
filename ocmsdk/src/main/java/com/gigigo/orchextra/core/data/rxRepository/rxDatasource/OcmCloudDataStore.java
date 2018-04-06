@@ -70,20 +70,14 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.getVersionDataRx()
         .map(apiVersionResponse -> new ApiVersionData(apiVersionResponse.getData()))
         .filter(apiVersionData -> apiVersionData != null)
-        .doOnNext(apiVersionData -> {
-          VersionData versionData = DbMappersKt.toVersionData(apiVersionData);
-          this.ocmCache.putVersion(versionData);
-        })
+        .doOnNext(this.ocmCache::putVersion)
         .map(apiVersionData -> DbMappersKt.toVersionData(apiVersionData));
   }
 
   @Override public Observable<MenuContentData> getMenus() {
     return ocmApiService.getMenuDataRx()
         .map(dataResponse -> dataResponse.getResult())
-        .doOnNext(apiMenuContentData -> {
-          MenuContentData menuContentData = DbMappersKt.toMenuContentData(apiMenuContentData);
-          ocmCache.putMenus(menuContentData);
-        })
+        .doOnNext(ocmCache::putMenus)
         .doOnNext(apiMenuContentData -> addSectionsToCache(apiMenuContentData))
         .map(apiMenuContentData -> DbMappersKt.toMenuContentData(apiMenuContentData));
   }
@@ -130,12 +124,10 @@ import orchextra.javax.inject.Singleton;
       ApiElement apiElement = iterator.next();
       addImageToQueue(apiElement.getSectionView());
       if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
-        ApiElementData apiElementData = new ApiElementData(
-            apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
+        ApiElementData apiElementData = new ApiElementData(apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
         if (i < imagestodownload) addImageToQueue(apiElementData);
 
-        ElementData elementData = DbMappersKt.toElementData(apiElementData);
-        ocmCache.putDetail(elementData);
+        ocmCache.putDetail(apiElementData, apiElement.getElementUrl());
       }
       i++;
     }
@@ -185,8 +177,7 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.getElementByIdRx(slug, withThumbnails)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiElementData -> {
-          ElementData elementData = DbMappersKt.toElementData(apiElementData);
-          ocmCache.putDetail(elementData);
+          ocmCache.putDetail(apiElementData, apiElementData.getElement().getSlug());
         })
         .map(apiElementData -> {
           ElementData elementData = DbMappersKt.toElementData(apiElementData);

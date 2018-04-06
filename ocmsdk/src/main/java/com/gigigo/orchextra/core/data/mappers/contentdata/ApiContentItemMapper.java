@@ -4,7 +4,7 @@ import android.util.Log;
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiContentItem;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
-import com.gigigo.orchextra.core.data.mappers.elements.ApiElementMapper;
+import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.sdk.utils.DateUtils;
@@ -15,12 +15,9 @@ public class ApiContentItemMapper
     implements ExternalClassToModelMapper<ApiContentItem, ContentItem> {
 
   private final ApiContentItemLayoutMapper apiContentItemLayoutMapper;
-  private final ApiElementMapper apiElementMapper;
 
-  public ApiContentItemMapper(ApiContentItemLayoutMapper apiContentItemLayoutMapper,
-      ApiElementMapper apiElementMapper) {
+  public ApiContentItemMapper(ApiContentItemLayoutMapper apiContentItemLayoutMapper) {
     this.apiContentItemLayoutMapper = apiContentItemLayoutMapper;
-    this.apiElementMapper = apiElementMapper;
   }
 
   @Override public ContentItem externalClassToModel(ApiContentItem data) {
@@ -45,7 +42,7 @@ public class ApiContentItemMapper
       for (ApiElement apiElement : data.getElements()) {
 
         if (DateUtils.isBetweenTwoDates(apiElement.getDates())) {
-          Element element = apiElementMapper.externalClassToModel(apiElement);
+          Element element = DbMappersKt.toElement(apiElement); //apiElementMapper.externalClassToModel(apiElement);
           if (element != null) {
             elementList.add(element);
           }

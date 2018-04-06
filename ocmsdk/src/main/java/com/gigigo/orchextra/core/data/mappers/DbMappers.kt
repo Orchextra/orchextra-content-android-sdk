@@ -14,7 +14,6 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData
-import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData
 import com.gigigo.orchextra.core.data.database.entities.DbArticleElement
 import com.gigigo.orchextra.core.data.database.entities.DbArticleElementRender
 import com.gigigo.orchextra.core.data.database.entities.DbCidKeyData
@@ -27,11 +26,11 @@ import com.gigigo.orchextra.core.data.database.entities.DbElementSectionView
 import com.gigigo.orchextra.core.data.database.entities.DbFederatedAuthorizationData
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContent
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData
+import com.gigigo.orchextra.core.data.database.entities.DbScheduleDates
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData.Companion.VERSION_KEY
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData
 import com.gigigo.orchextra.core.data.database.entities.DbVimeoInfo
-import com.gigigo.orchextra.core.data.getTodayPlusDays
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElementRender
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement
@@ -69,7 +68,8 @@ import com.gigigo.orchextra.core.domain.entities.menus.MenuContent
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData
 import com.gigigo.orchextra.core.domain.entities.version.VersionData
 import gigigo.com.vimeolibs.VimeoInfo
-import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 //region VERSION
 fun ApiVersionData.toDbVersionData(): DbVersionData = with(this) {
@@ -115,7 +115,7 @@ fun ApiMenuContentData.toDbMenuContentData(): DbMenuContentData = with(this) {
   elementsCache?.let {
     val elementsList = it.entries
     for ((key, value) in elementsList) {
-      elements[key] = value.toDbElementCache()
+      elements[key] = value.toDbElementCache(key)
     }
   }
   menuContentData.elementsCache = elements
@@ -171,7 +171,7 @@ fun DbMenuContentData.toMenuContentData(): MenuContentData = with(this) {
   return menuContent
 }
 
-private fun ApiMenuContent.toDbMenuContent(): DbMenuContent {
+fun ApiMenuContent.toDbMenuContent(): DbMenuContent {
   val menuContent = DbMenuContent()
   menuContent.slug = slug
   val elementsList = ArrayList<DbElement>()
@@ -197,7 +197,7 @@ fun MenuContent.toDbMenuContent(): DbMenuContent {
   return menuContent
 }
 
-private fun ApiMenuContent.toMenuContent(): MenuContent {
+fun ApiMenuContent.toMenuContent(): MenuContent {
   val menuContent = MenuContent()
   menuContent.slug = slug
 
@@ -235,7 +235,7 @@ fun ApiElementData.toElementData(): ElementData {
   return elementData
 }
 
-private fun ApiElement.toDbElement(): DbElement = with(this) {
+fun ApiElement.toDbElement(): DbElement = with(this) {
   val element = DbElement()
   element.slug = slug
   element.name = name
@@ -243,7 +243,19 @@ private fun ApiElement.toDbElement(): DbElement = with(this) {
   element.elementUrl = elementUrl
   element.sectionView = sectionView?.toDbElementSectionView()
   element.tags = tags
-  //element.dates = dates
+  element.dates = dates?.toDbScheduleDates(slug) ?: emptyList()
+  return element
+}
+
+fun ApiElement.toElement(): Element = with(this) {
+  val element = Element()
+  element.slug = slug
+  element.name = name
+  element.customProperties = customProperties
+  element.elementUrl = elementUrl
+  element.sectionView = sectionView?.toElementSectionView()
+  element.tags = tags
+  element.dates = dates ?: emptyList()
   return element
 }
 
@@ -255,19 +267,7 @@ fun Element.toDbElement(): DbElement = with(this) {
   element.elementUrl = elementUrl
   element.sectionView = sectionView?.toDbElementSectionView()
   element.tags = tags
-  //element.dates = dates
-  return element
-}
-
-private fun ApiElement.toElement(): Element = with(this) {
-  val element = Element()
-  element.slug = slug
-  element.name = name
-  element.customProperties = customProperties
-  element.elementUrl = elementUrl
-  element.sectionView = sectionView?.toElementSectionView()
-  element.tags = tags
-  //element.dates = dates
+  element.dates = dates.toDbScheduleDates(slug)
   return element
 }
 
@@ -279,7 +279,8 @@ private fun DbElement.toElement(): Element = with(this) {
   element.elementUrl = elementUrl
   element.sectionView = sectionView?.toElementSectionView()
   element.tags = tags
-  //element.dates = dates
+  element.dates = dates.toScheduleDates()
+
   return element
 }
 
@@ -291,7 +292,7 @@ private fun ApiElementSectionView.toDbElementSectionView(): DbElementSectionView
   return element
 }
 
-private fun ApiElementSectionView.toElementSectionView(): ElementSectionView = with(this) {
+fun ApiElementSectionView.toElementSectionView(): ElementSectionView = with(this) {
   val element = ElementSectionView()
   element.text = text
   element.imageUrl = imageUrl
@@ -315,6 +316,36 @@ private fun DbElementSectionView.toElementSectionView(): ElementSectionView = wi
   return element
 }
 
+
+fun List<List<String>>.toDbScheduleDates(slug: String): List<DbScheduleDates> = with(this) {
+  var scheduleDates: List<DbScheduleDates> = emptyList()
+  scheduleDates = map {
+    it.size
+    try {
+      var start = it[0]
+      var end = it[1]
+
+      val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH)
+      var dateStart = formatter.parse(start)
+      var dateEnd = formatter.parse(end)
+
+      //"2017-11-05T16:11:00.000Z","2018-05-30T15:11:00.00"
+      DbScheduleDates(slug, dateStart?.time, dateEnd?.time)
+    } catch (e: Exception) {
+
+    }
+  } as List<DbScheduleDates>
+
+  return scheduleDates
+}
+
+private fun List<DbScheduleDates>.toScheduleDates(): List<List<String>> = with(this) {
+  var scheduleDates: List<List<String>> = emptyList()
+  map { listOf(it.dateStart, it.dateEnd) }
+  return scheduleDates
+}
+
+
 fun ApiElementCache.toElementCache(): ElementCache = with(this) {
   val elementCache = ElementCache()
   elementCache.slug = slug
@@ -329,8 +360,9 @@ fun ApiElementCache.toElementCache(): ElementCache = with(this) {
   return elementCache
 }
 
-private fun ApiElementCache.toDbElementCache(): DbElementCache = with(this) {
+fun ApiElementCache.toDbElementCache(key: String): DbElementCache = with(this) {
   val elementCache = DbElementCache()
+  elementCache.key = key
   elementCache.slug = slug
   elementCache.name = name
   elementCache.customProperties = customProperties?.toDbCustomProperties()
@@ -343,8 +375,9 @@ private fun ApiElementCache.toDbElementCache(): DbElementCache = with(this) {
   return elementCache
 }
 
-fun ElementCache.toDbElementCache(): DbElementCache = with(this) {
+fun ElementCache.toDbElementCache(key: String): DbElementCache = with(this) {
   val elementCache = DbElementCache()
+  elementCache.key = key
   elementCache.slug = slug
   elementCache.name = name
   elementCache.customProperties = customProperties?.toDbCustomProperties()
@@ -514,18 +547,18 @@ private fun DbElementCacheShare.toElementCacheShare(): ElementCacheShare = with(
 private fun Map<String, Any>.toDbCustomProperties(): Map<String, String> = with(this) {
   val map = HashMap<String, String>()
   for (next in iterator()) {
-    val (key,value) = next
+    val (key, value) = next
     map[key] = value.toString()
   }
   return map
 }
 
-fun <T>ApiArticleElement.toArticleElement(): ArticleElement<T> = with(this) {
+fun <T> ApiArticleElement.toArticleElement(): ArticleElement<T> = with(this) {
   val articleElement = ArticleElement<T>()
   articleElement.customProperties = customProperties
 
   val articleType = ArticleTypeSection.convertStringToEnum(type)
-  val articleElementRender = when(articleType) {
+  val articleElementRender = when (articleType) {
     ArticleTypeSection.HEADER -> {
       var elementRender = ArticleHeaderElementRender()
       with(elementRender) {
@@ -546,14 +579,16 @@ fun <T>ApiArticleElement.toArticleElement(): ArticleElement<T> = with(this) {
     }
     ArticleTypeSection.VIDEO -> {
       val videoFormat = VideoFormat.convertStringToType(render?.format)
-      val elementRender = when(videoFormat) {
+      val elementRender = when (videoFormat) {
         VideoFormat.YOUTUBE -> {
-          val videoElement = ArticleYoutubeVideoElementRender()
-          videoElement.source = render?.source
+          val videoElementRender = ArticleYoutubeVideoElementRender()
+          videoElementRender.source = render?.source
+          videoElementRender as T
         }
         VideoFormat.VIMEO -> {
-          val videoElement = ArticleVimeoVideoElementRender()
-          videoElement.source = render?.source
+          val videoElementRender = ArticleVimeoVideoElementRender()
+          videoElementRender.source = render?.source
+          videoElementRender as T
         }
         else -> null
       }
@@ -595,7 +630,9 @@ fun <T>ApiArticleElement.toArticleElement(): ArticleElement<T> = with(this) {
       }
       elementRender
     }
-    else -> {  ArticleButtonElementRender()}
+    else -> {
+      ArticleButtonElementRender()
+    }
   }
   articleElement.render = articleElementRender as T
   return articleElement
@@ -609,13 +646,13 @@ private fun ApiArticleElement.toDbArticleElement(): DbArticleElement = with(this
   return articleElement
 }
 
-private fun <T>ArticleElement<T>.toDbArticleElement(): DbArticleElement = with(this) {
+private fun <T> ArticleElement<T>.toDbArticleElement(): DbArticleElement = with(this) {
   val articleElement = DbArticleElement()
   articleElement.customProperties = customProperties?.toDbCustomProperties()
 
   val articleElementRender = DbArticleElementRender()
   val articleRender = render
-  when(articleRender) {
+  when (articleRender) {
     is ArticleHeaderElementRender -> {
       articleElement.type = ArticleTypeSection.HEADER.typeSection
 
@@ -672,18 +709,19 @@ private fun <T>ArticleElement<T>.toDbArticleElement(): DbArticleElement = with(t
       articleElementRender.bgColor = articleRender.bgColor
       articleElementRender.imageUrl = articleRender.imageUrl
     }
-    else -> {}
+    else -> {
+    }
   }
   articleElement.render = articleElementRender
 
   return articleElement
 }
 
-private fun <T>DbArticleElement.toArticleElement(): ArticleElement<T> = with(this) {
+private fun <T> DbArticleElement.toArticleElement(): ArticleElement<T> = with(this) {
   lateinit var articleElement: ArticleElement<T>
 
   val articleType = ArticleTypeSection.convertStringToEnum(type)
-  val articleElementRender = when(articleType) {
+  val articleElementRender = when (articleType) {
     ArticleTypeSection.HEADER -> {
       articleElement = ArticleHeaderElement() as ArticleElement<T>
       val headerRender = ArticleHeaderElementRender()
@@ -702,16 +740,18 @@ private fun <T>DbArticleElement.toArticleElement(): ArticleElement<T> = with(thi
     }
     ArticleTypeSection.VIDEO -> {
       val videoFormat = VideoFormat.convertStringToType(render?.format)
-      val videoRender = when(videoFormat) {
+      val videoRender = when (videoFormat) {
         VideoFormat.YOUTUBE -> {
           articleElement = ArticleYoutubeVideoElement() as ArticleElement<T>
-          val videoElement = ArticleYoutubeVideoElementRender()
-          videoElement.source = render?.source
+          val videoElementRender = ArticleYoutubeVideoElementRender()
+          videoElementRender.source = render?.source
+          videoElementRender as T
         }
         VideoFormat.VIMEO -> {
           articleElement = ArticleVimeoVideoElement() as ArticleElement<T>
-          val videoElement = ArticleVimeoVideoElementRender()
-          videoElement.source = render?.source
+          val videoElementRender = ArticleVimeoVideoElementRender()
+          videoElementRender.source = render?.source
+          videoElementRender as T
         }
         else -> null
       }
@@ -832,7 +872,8 @@ private fun ApiArticleElementRender.toArticleElementRender(): ArticleElementRend
 }
 */
 
-private fun ApiArticleElementRender.toDbArticleElementRender(): DbArticleElementRender = with(this) {
+private fun ApiArticleElementRender.toDbArticleElementRender(): DbArticleElementRender = with(
+    this) {
   val articleElementRender = DbArticleElementRender()
   articleElementRender.text = text
   articleElementRender.imageUrl = imageUrl
@@ -892,7 +933,8 @@ fun FederatedAuthorizationData.toFederatedAuthorization(): FederatedAuthorizatio
   return federatedAuthorization
 }
 
-fun FederatedAuthorizationData.toDbFederatedAuthorizationData(): DbFederatedAuthorizationData = with(this) {
+fun FederatedAuthorizationData.toDbFederatedAuthorizationData(): DbFederatedAuthorizationData = with(
+    this) {
   val federatedAuthorization = DbFederatedAuthorizationData()
   federatedAuthorization.type = type
   federatedAuthorization.active = active
@@ -900,7 +942,8 @@ fun FederatedAuthorizationData.toDbFederatedAuthorizationData(): DbFederatedAuth
   return federatedAuthorization
 }
 
-private fun FederatedAuthorization.toDbFederatedAuthorizationData(): DbFederatedAuthorizationData = with(this) {
+private fun FederatedAuthorization.toDbFederatedAuthorizationData(): DbFederatedAuthorizationData = with(
+    this) {
   val federatedAuthorization = DbFederatedAuthorizationData()
   federatedAuthorization.type = type
   federatedAuthorization.active = isActive
@@ -908,7 +951,8 @@ private fun FederatedAuthorization.toDbFederatedAuthorizationData(): DbFederated
   return federatedAuthorization
 }
 
-private fun DbFederatedAuthorizationData.toFederatedAuthorization(): FederatedAuthorization = with(this) {
+private fun DbFederatedAuthorizationData.toFederatedAuthorization(): FederatedAuthorization = with(
+    this) {
   val federatedAuthorization = FederatedAuthorization()
   federatedAuthorization.type = type
   federatedAuthorization.isActive = active
@@ -973,14 +1017,14 @@ fun DbVideoData.toVimeoInfo(): VimeoInfo = with(this) {
   return video
 }
 
-private fun VimeoInfo.toDbVimeoInfo(): DbVimeoInfo = with(this){
+private fun VimeoInfo.toDbVimeoInfo(): DbVimeoInfo = with(this) {
   val vimeo = DbVimeoInfo()
   vimeo.videoPath = videoPath
   vimeo.thumbPath = thumbPath
   return vimeo
 }
 
-fun VimeoInfo.toDbVideoData(): DbVideoData = with(this){
+fun VimeoInfo.toDbVideoData(): DbVideoData = with(this) {
   val video = DbVideoData()
   video.id = id
   video.element = toDbVimeoInfo()

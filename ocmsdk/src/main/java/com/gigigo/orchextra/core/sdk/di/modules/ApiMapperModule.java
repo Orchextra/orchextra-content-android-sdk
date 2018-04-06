@@ -7,8 +7,6 @@ import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentItemLayoutMa
 import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentItemMapper;
 import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentItemPatternMapper;
 import com.gigigo.orchextra.core.data.mappers.elements.ApiElementDataMapper;
-import com.gigigo.orchextra.core.data.mappers.elements.ApiElementMapper;
-import com.gigigo.orchextra.core.data.mappers.elements.ApiElementSectionViewMapper;
 import com.gigigo.orchextra.core.data.mappers.menus.ApiMenuContentListResponseMapper;
 import com.gigigo.orchextra.core.data.mappers.menus.ApiMenuContentMapper;
 import orchextra.dagger.Module;
@@ -18,18 +16,8 @@ import orchextra.javax.inject.Singleton;
 
 @Module public class ApiMapperModule {
 
-  @Singleton @Provides ApiElementSectionViewMapper provideApiElementSectionViewMapper() {
-    return new ApiElementSectionViewMapper();
-  }
-
-  @Singleton @Provides ApiElementMapper provideApiElementMapper(
-      ApiElementSectionViewMapper apiMenuItemViewMapper) {
-    return new ApiElementMapper(apiMenuItemViewMapper);
-  }
-
-  @Singleton @Provides ApiMenuContentMapper provideApiMenuContentMapper(
-      ApiElementMapper apiMenuItemMapper) {
-    return new ApiMenuContentMapper(apiMenuItemMapper);
+  @Singleton @Provides ApiMenuContentMapper provideApiMenuContentMapper() {
+    return new ApiMenuContentMapper();
   }
 
   @Singleton @Provides ApiElementDataMapper provideApiElementDataMapper() {
@@ -37,8 +25,8 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Singleton @Provides @Named("MapperApiMenuResponse")
-  ApiGenericResponseMapper provideApiMenuMapper(ApiMenuContentMapper apiMenuContentMapper) {
-    return new OcmGenericResponseMapper(new ApiMenuContentListResponseMapper(apiMenuContentMapper));
+  ApiGenericResponseMapper provideApiMenuMapper() {
+    return new OcmGenericResponseMapper(new ApiMenuContentListResponseMapper());
   }
 
   @Singleton @Provides ApiContentDataResponseMapper provideApiContentDataResponseMapper(
@@ -56,8 +44,8 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Singleton @Provides ApiContentItemMapper provideApiContentItemMapper(
-      ApiContentItemLayoutMapper apiContentItemLayoutMapper, ApiElementMapper apiElementMapper) {
-    return new ApiContentItemMapper(apiContentItemLayoutMapper, apiElementMapper);
+      ApiContentItemLayoutMapper apiContentItemLayoutMapper) {
+    return new ApiContentItemMapper(apiContentItemLayoutMapper);
   }
 
   @Singleton @Provides @Named("MapperApiHomeResponse")

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e58828a7518401a2d078a1ca6243ac6f",
+    "identityHash": "90b86e7917c08727d1898d1811feb663",
     "entities": [
       {
         "tableName": "version",
@@ -113,6 +113,50 @@
         "foreignKeys": []
       },
       {
+        "tableName": "schedule_dates",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, `date_start` INTEGER, `date_end` INTEGER, PRIMARY KEY(`slug`), FOREIGN KEY(`slug`) REFERENCES `element`(`slug`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateStart",
+            "columnName": "date_start",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dateEnd",
+            "columnName": "date_end",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "slug"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "element",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "slug"
+            ],
+            "referencedColumns": [
+              "slug"
+            ]
+          }
+        ]
+      },
+      {
         "tableName": "menu_element_join",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_slug` TEXT NOT NULL, `element_slug` TEXT NOT NULL, PRIMARY KEY(`menu_slug`, `element_slug`), FOREIGN KEY(`menu_slug`) REFERENCES `menu`(`slug`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`element_slug`) REFERENCES `element`(`slug`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
@@ -164,8 +208,14 @@
       },
       {
         "tableName": "element_cache",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, `type` TEXT, `tags` TEXT, `custom_properties` TEXT, `name` TEXT, `updated_at` INTEGER NOT NULL, `preview_image_url` TEXT, `preview_text` TEXT, `preview_behaviour` TEXT, `preview_image_thumb` TEXT, `render_content_url` TEXT, `render_url` TEXT, `render_title` TEXT, `render_elements` TEXT, `render_scheme_uri` TEXT, `render_source` TEXT, `render_format` TEXT, `render_federated_active` INTEGER, `render_federated_type` TEXT, `render_federated_cid_site_name` TEXT, `share_url` TEXT, `share_text` TEXT, PRIMARY KEY(`slug`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`key` TEXT NOT NULL, `slug` TEXT NOT NULL, `type` TEXT, `tags` TEXT, `custom_properties` TEXT, `name` TEXT, `updated_at` INTEGER NOT NULL, `preview_image_url` TEXT, `preview_text` TEXT, `preview_behaviour` TEXT, `preview_image_thumb` TEXT, `render_content_url` TEXT, `render_url` TEXT, `render_title` TEXT, `render_elements` TEXT, `render_scheme_uri` TEXT, `render_source` TEXT, `render_format` TEXT, `render_federated_active` INTEGER, `render_federated_type` TEXT, `render_federated_cid_site_name` TEXT, `share_url` TEXT, `share_text` TEXT, PRIMARY KEY(`slug`, `key`))",
         "fields": [
+          {
+            "fieldPath": "key",
+            "columnName": "key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
           {
             "fieldPath": "slug",
             "columnName": "slug",
@@ -301,7 +351,8 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "slug"
+            "slug",
+            "key"
           ],
           "autoGenerate": false
         },
@@ -349,7 +400,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e58828a7518401a2d078a1ca6243ac6f\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"90b86e7917c08727d1898d1811feb663\")"
     ]
   }
 }

@@ -392,8 +392,7 @@ public class OcmControllerImp implements OcmController {
         uiMenu.setElementUrl(element.getElementUrl());
 
         if (menuContentData.getElementsCache() != null) {
-          ElementCache elementCache =
-              menuContentData.getElementsCache().get(element.getElementUrl());
+          ElementCache elementCache = menuContentData.getElementsCache().get(element.getElementUrl());
           if (elementCache != null) {
             uiMenu.setElementCache(elementCache);
             uiMenu.setUpdateAt(elementCache.getUpdateAt());
