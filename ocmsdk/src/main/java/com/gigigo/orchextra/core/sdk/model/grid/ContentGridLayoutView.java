@@ -16,6 +16,7 @@ import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalViewPager;
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
+import com.gigigo.orchextra.core.sdk.model.grid.verticalviewpager.VerticalViewPager;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -27,7 +28,7 @@ import orchextra.javax.inject.Inject;
 public class ContentGridLayoutView extends UiGridBaseContentData implements ContentView {
 
   public boolean bIsSliderActive = false;
-  public int mTime = 0;
+  public int mTime = 100;
   @Inject ContentViewPresenter presenter;
   private UiListedBaseContentData uiListedBaseContentData;
   UiListedBaseContentData.ListedContentListener listedContentListener =
@@ -155,6 +156,10 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
         break;
       case CAROUSEL:
         setDataCarousel(cellDataList);
+        break;
+      case FULLSCREEN:
+        setDataFullScreen(cellDataList);
+        break;
     }
   }
 
@@ -176,6 +181,20 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
   private void setDataCarousel(List<Cell> cellDataList) {
     uiListedBaseContentData = new HorizontalViewPager(context);
+
+    if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
+
+    uiListedBaseContentData.setListedContentListener(listedContentListener);
+    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding,
+        thumbnailEnabled);
+    uiListedBaseContentData.setData(cellDataList);
+
+    listedDataContainer.removeAllViews();
+    listedDataContainer.addView(uiListedBaseContentData);
+  }
+
+  private void setDataFullScreen(List<Cell> cellDataList) {
+    uiListedBaseContentData = new VerticalViewPager(context);
 
     if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
 
