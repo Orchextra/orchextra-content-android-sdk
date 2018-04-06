@@ -94,7 +94,8 @@ import orchextra.javax.inject.Singleton;
         dbMenuContent.setElements(dbElementList);
 
         for(DbElement dbElement : dbElementList) {
-          List<DbScheduleDates> dbScheduleDatesList = ocmDatabase.scheduleDatesDao().fetchSchedule(dbElement.getSlug());
+          Long today = DateUtilsKt.getToday();
+          List<DbScheduleDates> dbScheduleDatesList = ocmDatabase.scheduleDatesDao().fetchSlugOnTime(dbElement.getSlug(), today);
           dbElement.setDates(dbScheduleDatesList);
         }
       }
