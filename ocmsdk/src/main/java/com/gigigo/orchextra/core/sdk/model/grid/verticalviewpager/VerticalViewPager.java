@@ -1,134 +1,81 @@
 package com.gigigo.orchextra.core.sdk.model.grid.verticalviewpager;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import com.gigigo.multiplegridrecyclerview.entities.Cell;
-import com.gigigo.orchextra.ocm.views.CircleIndicator;
-import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
-import com.gigigo.orchextra.ocmsdk.R;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class VerticalViewPager extends UiListedBaseContentData {
-
-  private ViewPager listedHorizontalViewPager;
-  private CircleIndicator indicator;
-  private VerticalViewPagerAdapter adapter;
-  private FragmentManager fragmentManager;
-  int mLoops = 1;
+/**
+ * Uses a combination of a PageTransformer and swapping X & Y coordinates
+ * of touch events to create the illusion of a vertically scrolling ViewPager.
+ *
+ * Requires API 11+
+ */
+public class VerticalViewPager extends ViewPager {
 
   public VerticalViewPager(Context context) {
     super(context);
+    init();
   }
 
-  public VerticalViewPager(Context context, @Nullable AttributeSet attrs) {
+  public VerticalViewPager(Context context, AttributeSet attrs) {
     super(context, attrs);
+    init();
   }
 
-  public VerticalViewPager(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
+  private void init() {
+    // The majority of the magic happens here
+    setPageTransformer(true, new VerticalPageTransformer());
+    // The easiest way to get rid of the overscroll drawing that happens on the left and right
+    setOverScrollMode(OVER_SCROLL_NEVER);
   }
 
-  @Override protected void init() {
-    fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
+  private class VerticalPageTransformer implements ViewPager.PageTransformer {
 
-    View view = inflateLayout();
-    initViews(view);
-    initViewPager();
-  }
+    @Override public void transformPage(View view, float position) {
 
-  private View inflateLayout() {
-    LayoutInflater inflater =
-        (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    return inflater.inflate(R.layout.view_horizontal_viewpager_item, this, true);
-  }
+      if (position < -1) { // [-Infinity,-1)
+        // This page is way off-screen to the left.
+        view.setAlpha(0);
+      } else if (position <= 1) { // [-1,1]
+        view.setAlpha(1);
 
-  private void initViews(View view) {
-    listedHorizontalViewPager = view.findViewById(R.id.listedHorizontalViewPager);
-    indicator = view.findViewById(R.id.ci_indicator);
-  }
+        // Counteract the default slide transition
+        view.setTranslationX(view.getWidth() * -position);
 
-  private void initViewPager() {
-    if (listedHorizontalViewPager != null) {
-      adapter = new VerticalViewPagerAdapter(fragmentManager, listedContentListener);
-      listedHorizontalViewPager.setAdapter(adapter);
-    }
-  }
-
-  @Override public void setData(List<Cell> cellDataList) {
-    if (listedHorizontalViewPager != null) {
-
-      adapter.setItems(cellDataList);
-      indicator.setViewPager(listedHorizontalViewPager);
-
-      if (bIsSliderActive) {
-        mLoops = 20;
-        this.setViewPagerAutoSlideTime(mTime);
-        startSlider(mTime, cellDataList.size() * mLoops);
-      } else {
-        mLoops = 1;
+        //set Y position to swipe in from top
+        float yPosition = position * view.getHeight();
+        view.setTranslationY(yPosition);
+      } else { // (1,+Infinity]
+        // This page is way off-screen to the right.
+        view.setAlpha(0);
       }
-      indicator.setLoops(mLoops);
-      indicator.setRealSize(cellDataList.size());
-      adapter.setLoops(mLoops);
     }
   }
 
-  @Override public void scrollToTop() {
+  /**
+   * Swaps the X and Y coordinates of your touch event.
+   */
+  private MotionEvent swapXY(MotionEvent ev) {
+    float width = getWidth();
+    float height = getHeight();
 
+    float newX = (ev.getY() / height) * width;
+    float newY = (ev.getX() / width) * height;
+
+    ev.setLocation(newX, newY);
+
+    return ev;
   }
 
-  @Override public void showErrorView() {
-    if (listedHorizontalViewPager != null) {
-      listedHorizontalViewPager.setVisibility(View.GONE);
-      errorView.setVisibility(View.VISIBLE);
-    }
+  @Override public boolean onInterceptTouchEvent(MotionEvent ev) {
+    boolean intercepted = super.onInterceptTouchEvent(swapXY(ev));
+    swapXY(ev); // return touch coordinates to original reference frame for any child views
+    return intercepted;
   }
 
-  @Override public void showEmptyView() {
-    if (listedHorizontalViewPager != null) {
-      listedHorizontalViewPager.setVisibility(View.GONE);
-      emptyView.setVisibility(View.VISIBLE);
-    }
-  }
-
-  @Override public void showProgressView(boolean isVisible) {
-    if (loadingView != null) {
-      loadingView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-    }
-  }
-
-  private static Handler mHandler = new Handler(Looper.getMainLooper());
-  int currentPage = 0;
-
-  public void setViewPagerAutoSlideTime(final int time) {
-    bIsSliderActive = true;
-    mTime = time;
-  }
-
-  private void startSlider(final int time, final int NUM_PAGES) {
-
-    final Runnable update = () -> {
-      if (currentPage > NUM_PAGES - 1) {
-        currentPage = 0;
-      }
-      listedHorizontalViewPager.setCurrentItem(currentPage, true);
-
-      currentPage = currentPage + 1;
-    };
-    new Timer().schedule(new TimerTask() {
-      @Override public void run() {
-        mHandler.post(update);
-      }
-    }, 500, time);
+  @Override public boolean onTouchEvent(MotionEvent ev) {
+    return super.onTouchEvent(swapXY(ev));
   }
 }

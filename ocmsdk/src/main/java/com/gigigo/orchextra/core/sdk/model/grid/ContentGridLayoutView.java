@@ -16,7 +16,7 @@ import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalViewPager;
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
-import com.gigigo.orchextra.core.sdk.model.grid.verticalviewpager.VerticalViewPager;
+import com.gigigo.orchextra.core.sdk.model.grid.verticalviewpager.VerticalViewContent;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -194,7 +194,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   private void setDataFullScreen(List<Cell> cellDataList) {
-    uiListedBaseContentData = new VerticalViewPager(context);
+    uiListedBaseContentData = new VerticalViewContent(context);
 
     if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
 

@@ -14,9 +14,9 @@ import com.gigigo.orchextra.ocmsdk.R;
 public class VerticalItemPageFragment extends Fragment {
 
   private CellCarouselContentData cell;
-  private ImageView horizontalItemImageView;
-  private OnClickHorizontalItem onClickHorizontalItem;
-  private View horizontalItemContainer;
+  private ImageView verticalItemImageView;
+  private OnItemClick onClickVerticalItem;
+  private View verticalItemContainer;
 
   public static VerticalItemPageFragment newInstance() {
     return new VerticalItemPageFragment();
@@ -25,7 +25,7 @@ public class VerticalItemPageFragment extends Fragment {
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_horizontal_item_pager_view, container, false);
+    View view = inflater.inflate(R.layout.fragment_vertical_item_pager_view, container, false);
 
     initViews(view);
 
@@ -33,8 +33,8 @@ public class VerticalItemPageFragment extends Fragment {
   }
 
   private void initViews(View view) {
-    horizontalItemContainer = view.findViewById(R.id.horizontalItemContainer);
-    horizontalItemImageView = (ImageView) view.findViewById(R.id.horizontalItemImageView);
+    verticalItemContainer = view.findViewById(R.id.verticalItemContainer);
+    verticalItemImageView = view.findViewById(R.id.verticalItemImageView);
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -49,14 +49,14 @@ public class VerticalItemPageFragment extends Fragment {
 
       String imageUrl = cell.getData().getSectionView().getImageUrl();
 
-      OcmImageLoader.load(this, imageUrl).into(horizontalItemImageView);
+      OcmImageLoader.load(this, imageUrl).into(verticalItemImageView);
     }
   }
 
   private void setListeners() {
-    horizontalItemImageView.setOnClickListener(v -> {
-      if (onClickHorizontalItem != null) {
-        onClickHorizontalItem.onClickItem(horizontalItemContainer);
+    verticalItemImageView.setOnClickListener(v -> {
+      if (onClickVerticalItem != null) {
+        onClickVerticalItem.onClickItem(verticalItemContainer);
       }
     });
   }
@@ -65,11 +65,11 @@ public class VerticalItemPageFragment extends Fragment {
     this.cell = cell;
   }
 
-  public void setOnClickHorizontalItem(OnClickHorizontalItem onClickHorizontalItem) {
-    this.onClickHorizontalItem = onClickHorizontalItem;
+  public void setOnClickItem(OnItemClick onClickHorizontalItem) {
+    this.onClickVerticalItem = onClickHorizontalItem;
   }
 
-  public interface OnClickHorizontalItem {
+  public interface OnItemClick {
     void onClickItem(View view);
   }
 }

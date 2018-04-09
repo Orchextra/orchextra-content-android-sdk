@@ -11,7 +11,6 @@ import java.util.List;
 public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
 
   private final UiListedBaseContentData.ListedContentListener listedContentListener;
-  private int mLoops = 1;
   private List<Cell> cellDataList;
 
   public VerticalViewPagerAdapter(FragmentManager fm,
@@ -21,14 +20,10 @@ public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
   }
 
   @Override public Fragment getItem(int position) {
-    int realSize = 1;
-    if (getCount() > 0) realSize = getCount() / mLoops;
-
-    if (mLoops > 1) position = position % realSize;
     final int finalPosition = position;
 
     VerticalItemPageFragment verticalItemPageFragment = VerticalItemPageFragment.newInstance();
-    verticalItemPageFragment.setOnClickHorizontalItem(view -> {
+    verticalItemPageFragment.setOnClickItem(view -> {
       if (listedContentListener != null) {
         listedContentListener.onItemClicked(finalPosition, view);
       }
@@ -43,16 +38,11 @@ public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
   }
 
   @Override public int getCount() {
-    return cellDataList != null ? cellDataList.size() * mLoops : 0;
+    return cellDataList != null ? cellDataList.size() : 0;
   }
 
   public void setItems(List<Cell> cellDataList) {
     this.cellDataList = cellDataList;
-    notifyDataSetChanged();
-  }
-
-  public void setLoops(int mLoops) {
-    this.mLoops = mLoops;
     notifyDataSetChanged();
   }
 }
