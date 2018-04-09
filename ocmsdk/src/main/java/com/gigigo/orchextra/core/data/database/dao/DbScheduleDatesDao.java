@@ -10,9 +10,9 @@ import com.gigigo.orchextra.core.data.database.entities.DbScheduleDates;
 import java.util.List;
 
 @Dao public interface DbScheduleDatesDao {
-  @Query("SELECT * FROM schedule_dates WHERE slug = :slug") List<DbScheduleDates> fetchSchedule(String slug);
+  @Query("SELECT * FROM schedule_dates WHERE element_slug = :slug") List<DbScheduleDates> fetchSchedule(String slug);
 
-  @Query("SELECT * FROM schedule_dates WHERE slug = :slug AND date_start < :timestamp AND date_end > :timestamp") List<DbScheduleDates> fetchSlugOnTime(String slug, Long timestamp);
+  @Query("SELECT * FROM schedule_dates WHERE element_slug = :slug AND date_start < :timestamp AND date_end > :timestamp") List<DbScheduleDates> fetchSlugOnTime(String slug, Long timestamp);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE) void insertSchedule(DbScheduleDates scheduleDates);
 

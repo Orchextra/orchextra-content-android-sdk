@@ -25,7 +25,7 @@ public class ApiContentItemLayoutMapper
     ContentItemLayout model = new ContentItemLayout();
 
     model.setName(data.getName());
-    model.setType(ContentItemTypeLayout.convertStringToEnum(data.getType()));
+    model.setType(ContentItemTypeLayout.Companion.convertFromString(data.getType()));
 
     List<ContentItemPattern> patternList = new ArrayList<>();
     if (data.getPattern() != null) {

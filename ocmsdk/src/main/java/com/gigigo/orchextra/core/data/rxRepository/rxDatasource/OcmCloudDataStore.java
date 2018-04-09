@@ -3,16 +3,15 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
+import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
-import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentDataResponseMapper;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
@@ -47,17 +46,13 @@ import orchextra.javax.inject.Singleton;
   private final OcmCache ocmCache;
   private final OcmImageCache ocmImageCache;
 
-  private final ApiContentDataResponseMapper apiContentDataResponseMapper;
-
   private Integer withThumbnails = null; //For default, thumbnails are enabled
 
   @Inject public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,
-      @NonNull OcmImageCache ocmImageCache,
-      ApiContentDataResponseMapper apiContentDataResponseMapper) {
+      @NonNull OcmImageCache ocmImageCache) {
     this.ocmApiService = ocmApiService;
     this.ocmCache = ocmCache;
     this.ocmImageCache = ocmImageCache;
-    this.apiContentDataResponseMapper = apiContentDataResponseMapper;
 
     Injector injector = OCManager.getInjector();
     if (injector != null) {
@@ -78,40 +73,24 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.getMenuDataRx()
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putMenus)
-        .doOnNext(apiMenuContentData -> addSectionsToCache(apiMenuContentData))
+        //.doOnNext(apiMenuContentData -> saveSections(apiMenuContentData))
         .map(apiMenuContentData -> DbMappersKt.toMenuContentData(apiMenuContentData));
   }
 
-  @Override public Observable<ContentData> getSectionEntity(String contentUrl,
+  @Override public Observable<ContentData> getSection(String contentUrl,
       final int numberOfElementsToDownload) {
-
-    final long time = System.currentTimeMillis();
-
     return ocmApiService.getSectionDataRx(contentUrl, withThumbnails)
         .map(dataResponse -> dataResponse.getResult())
-        .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(contentUrl))
-        .doOnNext(ocmCache::putSection)
-        .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData,
-            numberOfElementsToDownload))
-        .doOnNext(apiSectionContentData -> {
-          apiSectionContentData.setFromCloud(true);
-          Log.v("TT - SectionEntity", (System.currentTimeMillis() - time) / 1000 + "");
-        })
-        .map(apiContentDataResponseMapper::externalClassToModel);
+        .doOnNext(apiSectionContentData -> ocmCache.putSection(apiSectionContentData, contentUrl))
+        //.doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload))
+        .map(apiSectionContentData -> DbMappersKt.toContentData(apiSectionContentData));
   }
 
-  private void addSectionsToCache(ApiMenuContentData apiMenuContentData) {
-    Iterator<ApiMenuContent> menuContentIterator =
-        apiMenuContentData.getMenuContentList().iterator();
-    while (menuContentIterator.hasNext()) {
-      Iterator<ApiElement> elementIterator = menuContentIterator.next().getElements().iterator();
-      while (elementIterator.hasNext()) {
-        ApiElement apiElement = elementIterator.next();
-        if (apiMenuContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
-          ApiSectionContentData contentData = new ApiSectionContentData();
-          contentData.setKey(apiElement.getElementUrl());
-          ocmCache.putSection(contentData);
-        }
+  private void saveSections(ApiMenuContentData apiMenuContentData) {
+    for (ApiMenuContent apiMenuContent : apiMenuContentData.getMenuContentList()) {
+      for (ApiElement apiElement : apiMenuContent.getElements()) {
+        ApiSectionContentData contentData = new ApiSectionContentData();
+        ocmCache.putSection(contentData, apiElement.getElementUrl());
       }
     }
   }
@@ -124,7 +103,8 @@ import orchextra.javax.inject.Singleton;
       ApiElement apiElement = iterator.next();
       addImageToQueue(apiElement.getSectionView());
       if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
-        ApiElementData apiElementData = new ApiElementData(apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
+        ApiElementData apiElementData = new ApiElementData(
+            apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
         if (i < imagestodownload) addImageToQueue(apiElementData);
 
         ocmCache.putDetail(apiElementData, apiElement.getElementUrl());
@@ -170,7 +150,7 @@ import orchextra.javax.inject.Singleton;
   @Override public Observable<ContentData> searchByText(String section) {
     return ocmApiService.searchRx(section)
         .map(dataResponse -> dataResponse.getResult())
-        .map(apiContentDataResponseMapper::externalClassToModel);
+        .map(apiSectionContentData -> DbMappersKt.toContentData(apiSectionContentData));
   }
 
   @Override public Observable<ElementData> getElementById(String slug) {
@@ -189,8 +169,7 @@ import orchextra.javax.inject.Singleton;
       boolean isWifiConnection, boolean isFastConnection) {
     Observable<VimeoInfo> videoObservable =
         Observable.create(new ObservableOnSubscribe<VimeoInfo>() {
-          @Override public void subscribe(ObservableEmitter<VimeoInfo> emitter)
-              throws Exception {
+          @Override public void subscribe(ObservableEmitter<VimeoInfo> emitter) throws Exception {
             VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
             VimeoManager videoManager = new VimeoManager(builder);
 

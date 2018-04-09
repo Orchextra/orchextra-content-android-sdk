@@ -2,6 +2,10 @@ package com.gigigo.orchextra.core.data.mappers
 
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElementRender
+import com.gigigo.orchextra.core.data.api.dto.content.ApiContentItem
+import com.gigigo.orchextra.core.data.api.dto.content.ApiContentItemLayout
+import com.gigigo.orchextra.core.data.api.dto.content.ApiContentItemPattern
+import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCachePreview
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCacheRender
@@ -17,6 +21,9 @@ import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbArticleElement
 import com.gigigo.orchextra.core.data.database.entities.DbArticleElementRender
 import com.gigigo.orchextra.core.data.database.entities.DbCidKeyData
+import com.gigigo.orchextra.core.data.database.entities.DbContentItem
+import com.gigigo.orchextra.core.data.database.entities.DbContentItemLayout
+import com.gigigo.orchextra.core.data.database.entities.DbContentItemPattern
 import com.gigigo.orchextra.core.data.database.entities.DbElement
 import com.gigigo.orchextra.core.data.database.entities.DbElementCache
 import com.gigigo.orchextra.core.data.database.entities.DbElementCachePreview
@@ -27,6 +34,7 @@ import com.gigigo.orchextra.core.data.database.entities.DbFederatedAuthorization
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContent
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData
 import com.gigigo.orchextra.core.data.database.entities.DbScheduleDates
+import com.gigigo.orchextra.core.data.database.entities.DbSectionContentData
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData.Companion.VERSION_KEY
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData
@@ -52,6 +60,11 @@ import com.gigigo.orchextra.core.domain.entities.article.base.ArticleButtonType
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElementRender
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleTypeSection
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemLayout
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout
 import com.gigigo.orchextra.core.domain.entities.elementcache.CidKey
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour
@@ -325,11 +338,10 @@ fun List<List<String>>.toDbScheduleDates(slug: String): List<DbScheduleDates> = 
       var start = it[0]
       var end = it[1]
 
-      val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH)
+      val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH)
       var dateStart = formatter.parse(start)
       var dateEnd = formatter.parse(end)
 
-      //"2017-11-05T16:11:00.000Z","2018-05-30T15:11:00.00"
       DbScheduleDates(slug, dateStart?.time, dateEnd?.time)
     } catch (e: Exception) {
 
@@ -986,7 +998,164 @@ private fun DbCidKeyData.toCidKey(): CidKey {
 //endregion
 
 //region SECTION
-//TODO: mappers for ApiSectionContentData, ApiContentItem, ApiContentItemLayout, ApiContentItemPattern
+fun ApiSectionContentData.toDbSectionContentData(key: String): DbSectionContentData = with(this) {
+  var sectionContentData = DbSectionContentData()
+  sectionContentData.key = key
+  sectionContentData.content = content?.toDbContentItem()
+  sectionContentData.version = version
+  sectionContentData.expireAt = expireAt?.toLong()
+  /*
+  val elementList = ArrayList<String>()
+  elementsCache?.forEach {
+    elementList.add(it.toDbElement())
+  }
+  sectionContentData.elementsCache = elementList
+  */
+  return sectionContentData
+}
+
+fun ApiSectionContentData.toContentData(): ContentData = with(this) {
+  var sectionContentData = ContentData()
+  sectionContentData.content = content?.toContentItem()
+  sectionContentData.version = version
+  sectionContentData.expiredAt = expireAt.toString()
+  sectionContentData.isFromCloud = true
+  /*
+  val elementList = ArrayList<String>()
+  elementsCache?.forEach {
+    elementList.add(it.toDbElement())
+  }
+  sectionContentData.elementsCache = elementList
+  */
+  return sectionContentData
+}
+
+fun DbSectionContentData.toContentData(): ContentData = with(this) {
+  var sectionContentData = ContentData()
+  sectionContentData.content = content?.toContentItem()
+  sectionContentData.version = version
+  sectionContentData.expiredAt = expireAt.toString()
+  sectionContentData.isFromCloud = false
+  /*
+  val elementList = ArrayList<String>()
+  elementsCache?.forEach {
+    elementList.add(it.toDbElement())
+  }
+  sectionContentData.elementsCache = elementList
+  */
+  return sectionContentData
+}
+
+fun ApiContentItem.toDbContentItem(): DbContentItem = with(this) {
+  var contentItem = DbContentItem()
+  contentItem.slug = slug
+  contentItem.type = type
+  contentItem.tags = tags
+  contentItem.layout = layout?.toDbContentItemLayout()
+
+  val elementList = ArrayList<DbElement>()
+  elements?.forEach {
+    elementList.add(it.toDbElement())
+  }
+  contentItem.elements = elementList
+
+  return contentItem
+}
+
+fun ApiContentItem.toContentItem(): ContentItem = with(this) {
+  var contentItem = ContentItem()
+  contentItem.slug = slug
+  contentItem.type = type
+  contentItem.tags = tags
+  contentItem.layout = layout?.toContentItemLayout()
+
+  val elementList = ArrayList<Element>()
+  elements?.forEach {
+    elementList.add(it.toElement())
+  }
+  contentItem.elements = elementList
+
+  return contentItem
+}
+
+fun DbContentItem.toContentItem(): ContentItem = with(this) {
+  var contentItem = ContentItem()
+  contentItem.slug = slug
+  contentItem.type = type
+  contentItem.tags = tags
+  contentItem.layout = layout?.toContentItemLayout()
+
+  val elementList = ArrayList<Element>()
+  elements?.forEach {
+    elementList.add(it.toElement())
+  }
+  contentItem.elements = elementList
+
+  return contentItem
+}
+
+fun ApiContentItemLayout.toDbContentItemLayout(): DbContentItemLayout = with(this) {
+  var contentItemLayout = DbContentItemLayout()
+  contentItemLayout.name = name
+  contentItemLayout.type = type
+
+  val contentItemPatternList = ArrayList<DbContentItemPattern>()
+  pattern?.forEach {
+    contentItemPatternList.add(it.toDbContentItemPattern())
+  }
+  contentItemLayout.pattern = contentItemPatternList
+
+  return contentItemLayout
+}
+
+fun ApiContentItemLayout.toContentItemLayout(): ContentItemLayout = with(this) {
+  var contentItemLayout = ContentItemLayout()
+  contentItemLayout.name = name
+  contentItemLayout.type = ContentItemTypeLayout.convertFromString(type)
+
+  val contentItemPatternList = ArrayList<ContentItemPattern>()
+  pattern?.forEach {
+    contentItemPatternList.add(it.toContentItemPattern())
+  }
+  contentItemLayout.pattern = contentItemPatternList
+
+  return contentItemLayout
+}
+
+fun DbContentItemLayout.toContentItemLayout(): ContentItemLayout = with(this) {
+  var contentItemLayout = ContentItemLayout()
+  contentItemLayout.name = name
+  contentItemLayout.type = ContentItemTypeLayout.convertFromString(type)
+
+  val contentItemPatternList = ArrayList<ContentItemPattern>()
+  pattern?.forEach {
+    contentItemPatternList.add(it.toContentItemPattern())
+  }
+  contentItemLayout.pattern = contentItemPatternList
+
+  return contentItemLayout
+}
+
+fun ApiContentItemPattern.toDbContentItemPattern(): DbContentItemPattern = with(this) {
+  var contentItemPattern = DbContentItemPattern()
+  contentItemPattern.row = row
+  contentItemPattern.column = column
+  return contentItemPattern
+}
+
+fun ApiContentItemPattern.toContentItemPattern(): ContentItemPattern = with(this) {
+  var contentItemPattern = ContentItemPattern()
+  contentItemPattern.row = row
+  contentItemPattern.column = column
+  return contentItemPattern
+}
+
+fun DbContentItemPattern.toContentItemPattern(): ContentItemPattern = with(this) {
+  var contentItemPattern = ContentItemPattern()
+  contentItemPattern.row = row
+  contentItemPattern.column = column
+  return contentItemPattern
+}
 //endregion
 
 //region VIDEO
@@ -1007,7 +1176,6 @@ fun ApiVideoData.toDbVideoData(): DbVideoData = with(this) {
   return video
 }
 */
-
 
 fun DbVideoData.toVimeoInfo(): VimeoInfo = with(this) {
   val video = VimeoInfo()

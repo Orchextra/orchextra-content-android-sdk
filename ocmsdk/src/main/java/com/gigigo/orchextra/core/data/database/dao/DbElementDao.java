@@ -13,6 +13,8 @@ import java.util.List;
 
   @Query("SELECT DISTINCT element.* FROM element INNER JOIN menu_element_join WHERE menu_slug = :menuSlug") List<DbElement> fetchMenuElements(String menuSlug);
 
+  @Query("SELECT DISTINCT element.* FROM element INNER JOIN schedule_dates WHERE slug = :slug AND date_start < :timestamp AND date_end > :timestamp") List<DbElement> fetchMenuElementsOnTime(String slug, Long timestamp);
+
   @Query("SELECT COUNT(*) FROM element WHERE slug = :slug") int hasElement(String slug);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE) void insertElement(DbElement element);

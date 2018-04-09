@@ -86,27 +86,38 @@ class OcmDataStoreFactory
         dataStore
       }
 
-  fun getDataStoreForSections(force: Boolean, section: String): OcmDataStore {
-    val ocmDataStore: OcmDataStore
-
+  fun getDataStoreForSection(force: Boolean, section: String): OcmDataStore {
     if (!connectionUtils.hasConnection()) return diskDataStore
 
-    ocmDataStore = if (force) {
-      Log.i(TAG, "CLOUD - Sections")
-      cloudDataStore
-    } else {
-      val cache = diskDataStore.ocmCache
-      if (cache.isSectionCached(section) && !cache.isSectionExpired(section)) {
-        Log.i(TAG, "DISK  - Sections")
-        diskDataStore
-      } else {
-        Log.i(TAG, "CLOUD - Sections")
-        cloudDataStore
-      }
+    lateinit var dataStore: OcmDataStore
+
+    runBlocking {
+      dataStore = dataStoreForSection(force, section).await()
     }
 
-    return ocmDataStore
+    return dataStore
   }
+
+  private fun dataStoreForSection(force: Boolean, section: String) =
+      async(bgContext) {
+        var dataStore: OcmDataStore
+
+        dataStore = if (force) {
+          Log.i(TAG, "CLOUD - Sections")
+          cloudDataStore
+        } else {
+          val cache = diskDataStore.ocmCache
+          if (cache.isSectionCached(section) && !cache.isSectionExpired(section)) {
+            Log.i(TAG, "DISK  - Sections")
+            diskDataStore
+          } else {
+            Log.i(TAG, "CLOUD - Sections")
+            cloudDataStore
+          }
+        }
+
+        dataStore
+      }
 
   fun getDataStoreForDetail(force: Boolean, slug: String): OcmDataStore {
     if (!connectionUtils.hasConnection()) return diskDataStore

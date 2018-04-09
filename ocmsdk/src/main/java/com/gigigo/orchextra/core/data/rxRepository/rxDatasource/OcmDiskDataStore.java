@@ -1,9 +1,7 @@
 package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
 import android.content.Context;
-import android.util.Log;
 import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
-import com.gigigo.orchextra.core.data.mappers.contentdata.ApiContentDataResponseMapper;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
@@ -17,12 +15,8 @@ import orchextra.javax.inject.Singleton;
 @Singleton public class OcmDiskDataStore implements OcmDataStore {
   private final OcmCache ocmCache;
 
-  private final ApiContentDataResponseMapper apiContentDataResponseMapper;
-
-  @Inject public OcmDiskDataStore(OcmCache ocmCache,
-      ApiContentDataResponseMapper apiContentDataResponseMapper) {
+  @Inject public OcmDiskDataStore(OcmCache ocmCache) {
     this.ocmCache = ocmCache;
-    this.apiContentDataResponseMapper = apiContentDataResponseMapper;
   }
 
   @Override public Observable<VersionData> getVersion() {
@@ -30,18 +24,14 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<MenuContentData> getMenus() {
-    return ocmCache.getMenus().map(dbMenuContentData -> DbMappersKt.toMenuContentData(dbMenuContentData));
+    return ocmCache.getMenus()
+        .map(dbMenuContentData -> DbMappersKt.toMenuContentData(dbMenuContentData));
   }
 
-  @Override public Observable<ContentData> getSectionEntity(String elementUrl,
-      int numberOfElementsToDownload) {
-    final long time = System.currentTimeMillis();
-
-    return ocmCache.getSection(elementUrl).doOnNext(apiSectionContentData -> {
-      apiSectionContentData.setFromCloud(false);
-
-      Log.v("TT - DISK - Sections", (System.currentTimeMillis() - time) / 1000 + "");
-    }).map(apiContentDataResponseMapper::externalClassToModel);
+  @Override
+  public Observable<ContentData> getSection(String elementUrl, int numberOfElementsToDownload) {
+    return ocmCache.getSection(elementUrl)
+        .map(dbSectionContentData -> DbMappersKt.toContentData(dbSectionContentData));
   }
 
   @Override public Observable<ContentData> searchByText(String section) {

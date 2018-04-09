@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.data.rxRepository;
 
 import android.content.Context;
+import com.gigigo.orchextra.core.data.DateUtilsKt;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDiskDataStore;
@@ -37,9 +38,9 @@ import orchextra.javax.inject.Singleton;
   public Observable<ContentData> getSectionElements(boolean forceReload, String contentUrl,
       int numberOfElementsToDownload) {
     OcmDataStore ocmDataStore =
-        ocmDataStoreFactory.getDataStoreForSections(forceReload, contentUrl);
+        ocmDataStoreFactory.getDataStoreForSection(forceReload, contentUrl);
     Observable<ContentData> contentDataObservable =
-        ocmDataStore.getSectionEntity(contentUrl, numberOfElementsToDownload);
+        ocmDataStore.getSection(contentUrl, numberOfElementsToDownload);
 
     if (!ocmDataStore.isFromCloud()) {
       final boolean[] hasTobeUpdated = { false };
@@ -66,8 +67,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   private boolean checkDate(Long updateAt) {
-    //TODO Change to expiredAt
-    long current = System.currentTimeMillis();
+    long current = DateUtilsKt.getToday();
     return updateAt > current;
   }
 

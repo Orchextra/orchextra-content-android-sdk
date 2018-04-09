@@ -23,7 +23,6 @@ data class DbMenuContentData @JvmOverloads constructor(
     var elementsCache: Map<String, DbElementCache>? = emptyMap()
 )
 
-
 @Entity(tableName = "menu", primaryKeys = arrayOf("slug"))
 data class DbMenuContent(
     var slug: String = "",
@@ -49,7 +48,7 @@ data class DbElement(
     @Embedded(prefix = "view_") var sectionView: DbElementSectionView? = DbElementSectionView(),
     @ColumnInfo(name = "element_url") var elementUrl: String? = "",
     var name: String? = "",
-    @Ignore var dates: List<DbScheduleDates> = emptyList()  //"dates":[["2017-11-05T16:11:00.000Z","2018-05-30T15:11:00.00"]]
+    @Ignore var dates: List<DbScheduleDates> = emptyList()
 )
 
 data class DbElementSectionView(
@@ -59,13 +58,12 @@ data class DbElementSectionView(
 )
 
 @Entity(tableName = "schedule_dates",
-    foreignKeys = arrayOf(ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("slug"), entity = DbElement::class, onDelete = CASCADE)),
-    primaryKeys = arrayOf("slug"))
+    foreignKeys = arrayOf(ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"), entity = DbElement::class, onDelete = CASCADE)),
+    primaryKeys = arrayOf("element_slug"))
 data class DbScheduleDates(
-    @ColumnInfo(name = "slug") var slug: String = "",
+    @ColumnInfo(name = "element_slug") var slug: String = "",
     @ColumnInfo(name = "date_start") var dateStart: Long? = -1,
     @ColumnInfo(name = "date_end") var dateEnd: Long? = -1
-    //var dates: List<List<String>> = emptyList()   "dates":[["2017-11-05T16:11:00.000Z","2018-05-30T15:11:00.00"]]
 )
 
 @Entity(tableName = "element_cache", primaryKeys = arrayOf("slug", "key"))
@@ -146,29 +144,42 @@ data class DbVimeoInfo(
     var thumbPath: String? = ""
 )
 
-/*
-@Entity(tableName = "sections")
+
+@Entity(tableName = "section", primaryKeys = arrayOf("key"))
 data class DbSectionContentData(
-    @Embedded(prefix = "content_")val content: DbContentItem? = DbContentItem(),
-    @ColumnInfo(name = "elements_cache")val elementsCache: Map<String, ApiElementCache>? = emptyMap(),
-    val version: String? = null,
-    @ColumnInfo(name = "expire_at") val expireAt: String? = null,
-    @ColumnInfo(name = "is_from_cloud")var isFromCloud: Boolean = false
+    var key: String = "",
+    @Embedded(prefix = "content_") var content: DbContentItem? = DbContentItem(),
+    @Ignore @ColumnInfo(name = "elements_cache") var elementsCache: Map<String, DbElementCache>? = emptyMap(),
+    var version: String? = null,
+    @ColumnInfo(name = "expire_at") var expireAt: Long? = -1
 )
 
 data class DbContentItem(
-    val slug: String = "",
-    val type: String? = "",
-    val tags: List<String>? = emptyList(),
-    @Embedded(prefix = "layout_") val layout: DbContentItemLayout? = DbContentItemLayout(),
-    val elements: List<DbElement>? = emptyList())
+    var slug: String = "",
+    var type: String? = "",
+    var tags: List<String>? = emptyList(),
+    @Embedded(prefix = "layout_") var layout: DbContentItemLayout? = DbContentItemLayout(),
+    @Ignore var elements: List<DbElement>? = emptyList()
+)
+
+@Entity(tableName = "section_element_join",
+//    foreignKeys = arrayOf(
+//        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("section_slug"), entity = DbSectionContentData::class, onDelete = CASCADE),
+//        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"), entity = DbElementCache::class, onDelete = CASCADE)),
+    primaryKeys = arrayOf("section_slug", "element_slug")
+)
+data class DbSectionElementJoin(
+    @ColumnInfo(name = "section_slug") var sectionSlug: String = "",
+    @ColumnInfo(name = "element_slug") var elementSlug: String = ""
+)
 
 data class DbContentItemLayout(
-    val name: String? = "",
-    val pattern: List<DbContentItemPattern>? = emptyList(),
-    val type: String? = "")
+    var name: String? = "",
+    var pattern: List<DbContentItemPattern>? = emptyList(),
+    var type: String? = ""
+)
 
 data class DbContentItemPattern(
-    val row: Int = 0,
-    val column: Int = 0)
-*/
+    var row: Int = 0,
+    var column: Int = 0
+)

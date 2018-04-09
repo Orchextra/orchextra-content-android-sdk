@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "90b86e7917c08727d1898d1811feb663",
+    "identityHash": "78b439c8b08de2f1e9c08b64859b8b73",
     "entities": [
       {
         "tableName": "version",
@@ -44,6 +44,101 @@
         "primaryKey": {
           "columnNames": [
             "slug"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "section",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`key` TEXT NOT NULL, `version` TEXT, `expire_at` INTEGER, `content_slug` TEXT, `content_type` TEXT, `content_tags` TEXT, `content_layout_name` TEXT, `content_layout_pattern` TEXT, `content_layout_type` TEXT, PRIMARY KEY(`key`))",
+        "fields": [
+          {
+            "fieldPath": "key",
+            "columnName": "key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "expireAt",
+            "columnName": "expire_at",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "content.slug",
+            "columnName": "content_slug",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "content.type",
+            "columnName": "content_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "content.tags",
+            "columnName": "content_tags",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "content.layout.name",
+            "columnName": "content_layout_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "content.layout.pattern",
+            "columnName": "content_layout_pattern",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "content.layout.type",
+            "columnName": "content_layout_type",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "key"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "section_element_join",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`section_slug` TEXT NOT NULL, `element_slug` TEXT NOT NULL, PRIMARY KEY(`section_slug`, `element_slug`))",
+        "fields": [
+          {
+            "fieldPath": "sectionSlug",
+            "columnName": "section_slug",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "elementSlug",
+            "columnName": "element_slug",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "section_slug",
+            "element_slug"
           ],
           "autoGenerate": false
         },
@@ -114,11 +209,11 @@
       },
       {
         "tableName": "schedule_dates",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, `date_start` INTEGER, `date_end` INTEGER, PRIMARY KEY(`slug`), FOREIGN KEY(`slug`) REFERENCES `element`(`slug`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`element_slug` TEXT NOT NULL, `date_start` INTEGER, `date_end` INTEGER, PRIMARY KEY(`element_slug`), FOREIGN KEY(`element_slug`) REFERENCES `element`(`slug`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "slug",
-            "columnName": "slug",
+            "columnName": "element_slug",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -137,7 +232,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "slug"
+            "element_slug"
           ],
           "autoGenerate": false
         },
@@ -148,7 +243,7 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "slug"
+              "element_slug"
             ],
             "referencedColumns": [
               "slug"
@@ -400,7 +495,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"90b86e7917c08727d1898d1811feb663\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"78b439c8b08de2f1e9c08b64859b8b73\")"
     ]
   }
 }

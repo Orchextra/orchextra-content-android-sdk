@@ -54,7 +54,7 @@ import static org.mockito.Mockito.verify;
     Observable<ApiSectionContentDataResponse> fakeObservable = Observable.just(fakeApiSection);
     given(mockRestApi.getSectionDataRx(FAKE_SECTION, FAKE_THUMBNAILS)).willReturn(fakeObservable);
 
-    ocmCloudDataStore.getSectionEntity(FAKE_SECTION, anyInt());
+    ocmCloudDataStore.getSection(FAKE_SECTION, anyInt());
 
     verify(mockRestApi).getSectionDataRx(FAKE_SECTION, FAKE_THUMBNAILS);
   }

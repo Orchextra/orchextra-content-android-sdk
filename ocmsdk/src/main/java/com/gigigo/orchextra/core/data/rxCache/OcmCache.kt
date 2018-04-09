@@ -6,6 +6,7 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData
+import com.gigigo.orchextra.core.data.database.entities.DbSectionContentData
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData
@@ -25,8 +26,8 @@ interface OcmCache {
   fun hasMenusCached(): Boolean
   fun putMenus(apiMenuContentData: ApiMenuContentData)
 
-  fun getSection(elementUrl: String): Observable<ApiSectionContentData>
-  fun putSection(apiSectionContentData: ApiSectionContentData)
+  fun getSection(elementUrl: String): Observable<DbSectionContentData>
+  fun putSection(apiSectionContentData: ApiSectionContentData, key: String)
   fun isSectionCached(elementUrl: String): Boolean
   fun isSectionExpired(elementUrl: String): Boolean
 

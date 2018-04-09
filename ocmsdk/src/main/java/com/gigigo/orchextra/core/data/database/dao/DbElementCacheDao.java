@@ -10,8 +10,7 @@ import java.util.List;
 @Dao public interface DbElementCacheDao {
   @Query("SELECT * FROM element_cache") List<DbElementCache> fetchElementsCache();
 
-  @Query("SELECT * FROM element_cache WHERE slug = :slug") DbElementCache fetchElementCache(
-      String slug);
+  @Query("SELECT * FROM element_cache WHERE slug = :slug") DbElementCache fetchElementCache(String slug);
 
   @Query("SELECT COUNT(*) FROM element_cache WHERE slug = :slug") int hasElementCache(String slug);
 
