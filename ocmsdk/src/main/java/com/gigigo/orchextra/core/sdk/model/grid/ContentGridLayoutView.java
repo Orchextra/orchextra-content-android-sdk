@@ -196,8 +196,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private void setDataFullScreen(List<Cell> cellDataList) {
     uiListedBaseContentData = new VerticalViewContent(context);
 
-    if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
-
     uiListedBaseContentData.setListedContentListener(listedContentListener);
     uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding,
         thumbnailEnabled);

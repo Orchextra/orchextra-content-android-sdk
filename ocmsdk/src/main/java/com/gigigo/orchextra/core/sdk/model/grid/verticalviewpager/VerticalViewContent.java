@@ -14,6 +14,7 @@ import java.util.List;
 
 public class VerticalViewContent extends UiListedBaseContentData {
 
+  private static final String TAG = "VerticalViewContent";
   private VerticalViewPager viewPager;
   private VerticalViewPagerAdapter adapter;
   private FragmentManager fragmentManager;
@@ -55,9 +56,9 @@ public class VerticalViewContent extends UiListedBaseContentData {
     }
   }
 
-  @Override public void setData(List<Cell> cellDataList) {
+  @Override public void setData(List<Cell> data) {
     if (viewPager != null) {
-      adapter.setItems(cellDataList);
+      adapter.setItems(data);
     }
   }
 

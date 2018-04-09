@@ -6,12 +6,14 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
 
   private final UiListedBaseContentData.ListedContentListener listedContentListener;
-  private List<Cell> cellDataList;
+  private List<Cell> cellDataList = new ArrayList<>();
 
   public VerticalViewPagerAdapter(FragmentManager fm,
       UiListedBaseContentData.ListedContentListener listedContentListener) {
@@ -19,18 +21,17 @@ public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
     this.listedContentListener = listedContentListener;
   }
 
-  @Override public Fragment getItem(int position) {
-    final int finalPosition = position;
+  @Override public Fragment getItem(final int position) {
 
     VerticalItemPageFragment verticalItemPageFragment = VerticalItemPageFragment.newInstance();
     verticalItemPageFragment.setOnClickItem(view -> {
       if (listedContentListener != null) {
-        listedContentListener.onItemClicked(finalPosition, view);
+        listedContentListener.onItemClicked(position, view);
       }
     });
 
-    if (cellDataList.get(finalPosition) instanceof CellCarouselContentData) {
-      CellCarouselContentData cell = (CellCarouselContentData) cellDataList.get(finalPosition);
+    if (cellDataList.get(position) instanceof CellCarouselContentData) {
+      CellCarouselContentData cell = (CellCarouselContentData) cellDataList.get(position);
       verticalItemPageFragment.setCell(cell);
     }
 
@@ -38,11 +39,12 @@ public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
   }
 
   @Override public int getCount() {
-    return cellDataList != null ? cellDataList.size() : 0;
+    return cellDataList.size();
   }
 
-  public void setItems(List<Cell> cellDataList) {
-    this.cellDataList = cellDataList;
+  public void setItems(Collection<Cell> cellDataList) {
+    this.cellDataList.clear();
+    this.cellDataList.addAll(cellDataList);
     notifyDataSetChanged();
   }
 }
