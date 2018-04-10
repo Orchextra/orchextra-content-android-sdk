@@ -6,18 +6,13 @@ import android.net.Uri;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
-import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
-import com.squareup.leakcanary.LeakCanary;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class App extends MultiDexApplication {
 
@@ -93,34 +88,24 @@ public class App extends MultiDexApplication {
         path = path.substring(1, path.length());
       }
 
-      if (path.toUpperCase().startsWith(OCM_DEEPLINK_START_PATH.toUpperCase())
-          || path.toUpperCase().startsWith(OCM_DEEPLINK_ELEMENT_PATH.toUpperCase())) {
+      if (path.toUpperCase().startsWith(OCM_DEEPLINK_START_PATH.toUpperCase()) || path.toUpperCase()
+          .startsWith(OCM_DEEPLINK_ELEMENT_PATH.toUpperCase())) {
 
         path = path.substring(path.indexOf("/") + 1, path.length());
 
         Ocm.processDeepLinks(path);
-      }
-      else {
+      } else {
         System.out.println("navigateToSection " + path);
       }
     }
   }
 
   @Override public void onCreate() {
-    context = this;
-
-    enableStrictMode();
     super.onCreate();
-    if (LeakCanary.isInAnalyzerProcess(this)) {
-      //This process is dedicated to LeakCanary for heap analysis.
-      //You should not init your app in this process.
-      return;
-    }
-    LeakCanary.install(this);
+    context = this;
     MultiDex.install(this);
 
-    OcmBuilder ocmBuilder = new OcmBuilder(this)
-        .setNotificationActivityClass(MainActivity.class)
+    OcmBuilder ocmBuilder = new OcmBuilder(this).setNotificationActivityClass(MainActivity.class)
         .setShowReadArticles(true)
         //.setVuforiaImpl(new ImageRecognitionVuforiaImpl())
         .setTransformReadArticleMode(ImageTransformReadArticle.BITMAP_TRANSFORM)
@@ -141,9 +126,7 @@ public class App extends MultiDexApplication {
             .setEnabledStatusBar(false);
 
     Ocm.setStyleUi(ocmStyleUiBuilder);
-
     Ocm.setBusinessUnit(BuildConfig.BUSSINES_UNIT);
-
     Ocm.setOnCustomSchemeReceiver(onCustomSchemeReceiver);
   }
 
