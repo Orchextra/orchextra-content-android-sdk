@@ -178,8 +178,9 @@ import orchextra.javax.inject.Singleton;
     ApiContentItem sectionContentItem = apiSectionContentData.getContent();
     if(sectionContentItem != null) {
       for (ApiElement element : sectionContentItem.getElements()) {
-      DbSectionElementJoin dbSectionElementJoin = new DbSectionElementJoin(sectionContentItem.getSlug(), element.getSlug());
-      ocmDatabase.sectionDao().insertSectionElement((dbSectionElementJoin));
+        ocmDatabase.elementDao().insertElement(DbMappersKt.toDbElement(element));
+        DbSectionElementJoin dbSectionElementJoin = new DbSectionElementJoin(sectionContentItem.getSlug(), element.getSlug());
+        ocmDatabase.sectionDao().insertSectionElement((dbSectionElementJoin));
       }
     }
 
