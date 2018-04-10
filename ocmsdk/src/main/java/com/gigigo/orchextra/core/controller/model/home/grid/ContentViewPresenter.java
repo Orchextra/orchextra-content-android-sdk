@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.controller.model.home.grid;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -28,6 +29,7 @@ import java.util.List;
 public class ContentViewPresenter extends Presenter<ContentView> {
 
   private final OcmController ocmController;
+  private static final String TAG = "ContentViewPresenter";
 
   private UiMenu uiMenu;
   private int imagesToDownload = 21;
@@ -252,12 +254,38 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       case CAROUSEL:
         return calculateCarouselCells(contentItem);
       case GRID:
+        return calculateGridCells(contentItem);
+      case FULLSCREEN:
+        return calculateFullScreenCells(contentItem);
       default:
+        Log.wtf(TAG, "Unknow type: " + contentItem.getLayout().getType());
         return calculateGridCells(contentItem);
     }
   }
 
   private List<Cell> calculateCarouselCells(ContentItem contentItem) {
+    List<Element> elements = contentItem.getElements();
+
+    List<Cell> cellGridContentDataList = new ArrayList<>();
+
+    for (int i = 0; i < elements.size(); i++) {
+      Element element = elements.get(i);
+
+      if (TextUtils.isEmpty(filter) || element.getTags().contains(filter)) {
+
+        CellCarouselContentData cell = new CellCarouselContentData();
+        cell.setData(element);
+        cell.setColumn(1);
+        cell.setRow(1);
+
+        cellGridContentDataList.add(cell);
+      }
+    }
+
+    return cellGridContentDataList;
+  }
+
+  private List<Cell> calculateFullScreenCells(ContentItem contentItem) {
     List<Element> elements = contentItem.getElements();
 
     List<Cell> cellGridContentDataList = new ArrayList<>();
@@ -289,19 +317,21 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
     int auxPadding = padding == 0 ? 1 : padding;
 
-    for (int i = 0; i < elements.size(); i++) {
-      Element element = elements.get(i);
+    if (!pattern.isEmpty()) {
+      for (int i = 0; i < elements.size(); i++) {
+        Element element = elements.get(i);
 
-      if (TextUtils.isEmpty(filter) || element.getTags().contains(filter)) {
+        if (TextUtils.isEmpty(filter) || element.getTags().contains(filter)) {
 
-        CellGridContentData cell = new CellGridContentData();
-        cell.setData(element);
-        cell.setColumn(pattern.get(indexPattern).getColumn() * auxPadding);
-        cell.setRow(pattern.get(indexPattern).getRow() * auxPadding);
+          CellGridContentData cell = new CellGridContentData();
+          cell.setData(element);
+          cell.setColumn(pattern.get(indexPattern).getColumn() * auxPadding);
+          cell.setRow(pattern.get(indexPattern).getRow() * auxPadding);
 
-        indexPattern = ++indexPattern % pattern.size();
+          indexPattern = ++indexPattern % pattern.size();
 
-        cellGridContentDataList.add(cell);
+          cellGridContentDataList.add(cell);
+        }
       }
     }
 
