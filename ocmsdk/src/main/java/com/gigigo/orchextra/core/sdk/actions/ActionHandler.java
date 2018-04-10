@@ -37,7 +37,7 @@ public class ActionHandler {
   public ActionHandler(OcmContextProvider ocmContextProvider, GetVideo getVideo) {
     this.ocmContextProvider = ocmContextProvider;
     this.connectionUtils = new ConnectionUtilsImp(ocmContextProvider.getApplicationContext());
-    this.orchextra = new OxManagerImpl();
+    this.orchextra = new OxManagerImpl(ocmContextProvider.getApplicationContext());
     this.getVideo = getVideo;
   }
 
@@ -92,18 +92,25 @@ public class ActionHandler {
     orchextra.startScanner();
   }
 
+  public void scanCode(OxManager.ScanCodeListener scanCodeListener) {
+    orchextra.scanCode(scanCodeListener);
+  }
+
   public void launchExternalBrowser(final String url, FederatedAuthorization federatedAuth) {
     Activity currentActivity = ocmContextProvider.getCurrentActivity();
     if (currentActivity != null) {
       Intent intent = new Intent(Intent.ACTION_VIEW);
 
       try {
-        if (federatedAuth != null && federatedAuth.isActive() && Ocm.getQueryStringGenerator() != null) {
+        if (federatedAuth != null
+            && federatedAuth.isActive()
+            && Ocm.getQueryStringGenerator() != null) {
 
           Ocm.getQueryStringGenerator().createQueryString(federatedAuth, queryString -> {
             if (queryString != null && !queryString.isEmpty()) {
               String urlWithQueryParams = FAUtils.addQueryParamsToUrl(queryString, url);
-              System.out.println("Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
+              System.out.println(
+                  "Main ContentWebViewGridLayout federatedAuth url: " + urlWithQueryParams);
               if (urlWithQueryParams != null) {
                 intent.setData(Uri.parse(urlWithQueryParams));
                 currentActivity.startActivity(intent);
@@ -120,9 +127,8 @@ public class ActionHandler {
           intent.setData(Uri.parse(url));
           currentActivity.startActivity(intent);
         }
-      }
-      catch (Exception e) {
-        OcmWebViewActivity.open(currentActivity, url,"");
+      } catch (Exception e) {
+        OcmWebViewActivity.open(currentActivity, url, "");
       }
     } else {
       //todo falta que si no hay currentactivity lo lanze en webview

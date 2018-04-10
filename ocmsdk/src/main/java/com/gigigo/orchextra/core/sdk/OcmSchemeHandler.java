@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.sdk;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.data.rxException.NetworkConnectionException;
 import com.gigigo.orchextra.core.domain.OcmController;
@@ -14,17 +16,23 @@ import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.ui.OcmWebViewActivity;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
+import com.gigigo.orchextra.core.sdk.utils.swipeback.UrlUtilsKt;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
+import com.gigigo.orchextra.ocm.callbacks.CustomUrlCallback;
+import com.gigigo.orchextra.wrapper.OxManager;
 import java.lang.ref.WeakReference;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OcmSchemeHandler {
 
+  private static final String TAG = "OcmSchemeHandler";
   private final OcmContextProvider contextProvider;
   private final OcmController ocmController;
   private final ActionHandler actionHandler;
+  private Map<String, String> customParams = new HashMap<>();
 
   public OcmSchemeHandler(OcmContextProvider contextProvider, OcmController ocmController,
       ActionHandler actionHandler) {
@@ -33,22 +41,21 @@ public class OcmSchemeHandler {
     this.actionHandler = actionHandler;
   }
 
-  public void processRedirectElementUrl(final String elementUrl) {
+  public void processRedirectElementUrl(final String elementUrl,
+      final ProcessElementCallback processElementCallback) {
     ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementCache.getCustomProperties() != null) {
             OCManager.notifyCustomBehaviourContinue(elementCache.getCustomProperties(), null,
-                new Function1<Boolean, Unit>() {
-                  @Override public Unit invoke(Boolean canContinue) {
-                    if (canContinue) {
-                      executeAction(elementCache, elementUrl, null, null);
-                    }
-                    return null;
+                canContinue -> {
+                  if (canContinue) {
+                    executeAction(elementCache, elementUrl, null, null, processElementCallback);
                   }
+                  return null;
                 });
           } else {
-            executeAction(elementCache, elementUrl, null, null);
+            executeAction(elementCache, elementUrl, null, null, processElementCallback);
           }
         }
       }
@@ -68,52 +75,65 @@ public class OcmSchemeHandler {
     WeakReference<ImageView> imageViewWeakReference =
         new WeakReference<>(imageViewToExpandInDetail);
 
+    if (processElementCallback == null) {
+      Log.e(TAG, "processElementCallback == null");
+    }
+
     ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
 
       @Override public void onGetDetailLoaded(ElementCache elementCache) {
         if (elementCache != null) {
           if (elementCache.getCustomProperties() != null) {
             OCManager.notifyCustomBehaviourContinue(elementCache.getCustomProperties(), null,
-                new Function1<Boolean, Unit>() {
-                  @Override public Unit invoke(Boolean canContinue) {
-                    if (canContinue) {
+                canContinue -> {
+                  if (canContinue) {
+                    if (processElementCallback != null) {
                       processElementCallback.onProcessElementSuccess(elementCache);
-
-                      String urlImageToExpand = null;
-                      if (elementCache != null && elementCache.getPreview() != null) {
-                        urlImageToExpand = elementCache.getPreview().getImageUrl();
-                      }
-
-                      executeAction(elementCache, elementUrl, urlImageToExpand, imageViewWeakReference);
                     }
-                    return null;
+
+                    String urlImageToExpand = null;
+                    if (elementCache.getPreview() != null) {
+                      urlImageToExpand = elementCache.getPreview().getImageUrl();
+                    }
+
+                    executeAction(elementCache, elementUrl, urlImageToExpand,
+                        imageViewWeakReference, processElementCallback);
                   }
+                  return null;
                 });
           } else {
-            processElementCallback.onProcessElementSuccess(elementCache);
+            if (processElementCallback != null) {
+              processElementCallback.onProcessElementSuccess(elementCache);
+            }
 
             String urlImageToExpand = null;
-            if (elementCache != null && elementCache.getPreview() != null) {
+            if (elementCache.getPreview() != null) {
               urlImageToExpand = elementCache.getPreview().getImageUrl();
             }
 
-            executeAction(elementCache, elementUrl, urlImageToExpand, imageViewWeakReference);
+            executeAction(elementCache, elementUrl, urlImageToExpand, imageViewWeakReference,
+                processElementCallback);
           }
         }
       }
 
       @Override public void onGetDetailFails(Exception e) {
-        processElementCallback.onProcessElementFail(e);
+        if (processElementCallback != null) {
+          processElementCallback.onProcessElementFail(e);
+        }
       }
 
       @Override public void onGetDetailNoAvailable(Exception e) {
-        processElementCallback.onProcessElementFail(new NetworkConnectionException());
+        if (processElementCallback != null) {
+          processElementCallback.onProcessElementFail(new NetworkConnectionException());
+        }
       }
     });
   }
 
   private void executeAction(ElementCache cachedElement, String elementUrl, String urlImageToExpand,
-      WeakReference<ImageView> imageViewToExpandInDetail) {
+      WeakReference<ImageView> imageViewToExpandInDetail,
+      ProcessElementCallback processElementCallback) {
 
     boolean hasPreview = cachedElement.getPreview() != null;
 
@@ -141,6 +161,7 @@ public class OcmSchemeHandler {
       case WEBVIEW:
         OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
+          render.setUrl(processUrl(render.getUrl()));
           OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "");
         }
         break;
@@ -148,19 +169,19 @@ public class OcmSchemeHandler {
       case BROWSER:
         OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
-          processCustomTabs(render.getUrl(), render.getFederatedAuth());
+          processCustomTabs(processUrl(render.getUrl()), render.getFederatedAuth());
         }
         break;
       case EXTERNAL_BROWSER:
         OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
-          processExternalBrowser(render.getUrl(), render.getFederatedAuth());
+          processExternalBrowser(processUrl(render.getUrl()), render.getFederatedAuth());
         }
         break;
       case DEEP_LINK:
         OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
-          processDeepLink(render.getSchemeUri());
+          processDeepLink(render.getSchemeUri(), processElementCallback);
         }
         break;
       case VIDEO:
@@ -168,7 +189,12 @@ public class OcmSchemeHandler {
           processVideo(render.getFormat(), render.getSource(), cachedElement);
         }
         break;
+      case NONE:
+        Log.w(TAG, "Type: NONE");
+        processRedirectElementUrl(elementUrl, processElementCallback);
+        break;
       default:
+        Log.w(TAG, "Default type: " + type);
         processDetailActivity(elementUrl, urlImageToExpand, imageViewToExpandInDetail);
         break;
     }
@@ -185,7 +211,7 @@ public class OcmSchemeHandler {
     if (imageViewToExpandInDetail != null) {
       imageView = imageViewToExpandInDetail.get();
     }
-    DetailActivity.open(contextProvider.getCurrentActivity(), elementUrl, urlImageToExpand, widthScreen, heightScreen, imageView);
+    openDetailActivity(elementUrl, urlImageToExpand, widthScreen, heightScreen, imageView);
   }
 
   private void processVideo(VideoFormat format, String source, ElementCache cachedElement) {
@@ -212,12 +238,64 @@ public class OcmSchemeHandler {
     actionHandler.lauchOxScan();
   }
 
+  private void processScanCode(OxManager.ScanCodeListener scanCodeListener) {
+    actionHandler.scanCode(scanCodeListener);
+  }
+
   private void processExternalBrowser(String url, FederatedAuthorization federatedAuth) {
     actionHandler.launchExternalBrowser(url, federatedAuth);
   }
 
-  private void processDeepLink(String uri) {
-    actionHandler.processDeepLink(uri);
+  private void processDeepLink(String uri, ProcessElementCallback processElementCallback) {
+    Log.d(TAG, "processDeepLink: " + uri);
+
+    if (uri.contains("openScanner")) {
+      processScanCode(code -> {
+        customParams.put("#code#", code);
+
+        String action = uri.replaceAll("^[a-z]*://openScanner/", "");
+        Log.d(TAG, "Code: " + code + " Action: " + action);
+        processElementUrl(action, null, processElementCallback);
+      });
+    } else {
+      actionHandler.processDeepLink(uri);
+    }
+  }
+
+  private void openDetailActivity(String elementUrl, String urlImageToExpand, int widthScreen,
+      int heightScreen, ImageView imageViewToExpandInDetail) {
+    DetailActivity.open(contextProvider.getCurrentActivity(), elementUrl, urlImageToExpand,
+        widthScreen, heightScreen, imageViewToExpandInDetail);
+  }
+
+  @NonNull private String processUrl(@NonNull String url) {
+
+    List<String> params = UrlUtilsKt.getUrlParameters(url);
+
+    if (params.isEmpty()) {
+      return url;
+    } else {
+      String newUrl = url;
+
+      for (String param : params) {
+        if (customParams.containsKey(param)) {
+          newUrl = newUrl.replace(param, customParams.get(param));
+        }
+      }
+
+      CustomUrlCallback customUrlCallback = OCManager.getCustomUrlCallback();
+      if (customUrlCallback != null) {
+        Map<String, String> map = customUrlCallback.actionNeedsValues(params);
+        for (String param : params) {
+          if (map.containsKey(param)) {
+            newUrl = newUrl.replace(param, map.get(param));
+          }
+        }
+      } else {
+        Log.e(TAG, "customUrlCallback is null");
+      }
+      return newUrl;
+    }
   }
 
   public interface ProcessElementCallback {

@@ -13,6 +13,7 @@ import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
+import com.gigigo.orchextra.ocm.callbacks.ScanCodeListener;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
@@ -20,6 +21,7 @@ import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.wrapper.CrmUser;
+import com.gigigo.orchextra.wrapper.OxManager;
 import java.util.Map;
 import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
@@ -230,7 +232,7 @@ public final class Ocm {
    * The sdk does an action when deep link is provided and exists in dashboard
    */
   public static void processElementUrl(String elementUrl, ImageView imageViewToExpandInDetail,
-      OcmSchemeHandler.ProcessElementCallback processElementCallback)  {
+      OcmSchemeHandler.ProcessElementCallback processElementCallback) {
     OCManager.processElementUrl(elementUrl, imageViewToExpandInDetail, processElementCallback);
   }
 
@@ -286,7 +288,6 @@ public final class Ocm {
     OCManager.closeDetailView();
   }
 
-
   public static void setCustomBehaviourDelegate(
       OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
     OCManager.setCustomBehaviourDelegate(ocmCustomBehaviourDelegate);
@@ -307,5 +308,13 @@ public final class Ocm {
   public static void setOnLoadDataContentSectionFinished(
       OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback) {
     OCManager.setOnLoadDataContentSectionFinished(onLoadContentSectionFinishedCallback);
+  }
+
+  public static void scanCode(ScanCodeListener scanCodeListener) {
+    OCManager.scanCode(scanCodeListener);
+  }
+
+  public static void openScanner() {
+    OCManager.openScanner();
   }
 }

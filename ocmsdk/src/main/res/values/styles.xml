@@ -13,12 +13,12 @@
   <style name="OcmAppTheme.AppBarOverlay" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
   <style name="TextAppearanceDialogMessage" parent="@android:style/TextAppearance.Holo.Medium">
-  <item name="android:textStyle">italic</item>
-  <item name="android:textSize">14sp</item>
-  <item name="android:scrollbars">none</item>
-</style>
+    <item name="android:textStyle">italic</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:scrollbars">none</item>
+  </style>
 
-<!--need it for custom text of the buttons in applivery-->
+  <!--need it for custom text of the buttons in applivery-->
   <style name="AlertDialogTheme">
     <item name="colorAccent">@color/black</item>
     <item name="android:textColor">@color/black</item>
@@ -43,4 +43,21 @@
     <item name="android:windowNoTitle">true</item>
   </style>
 
+  <style name="OxAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <item name="colorPrimary">@color/ox_primary</item>
+    <item name="colorPrimaryDark">@color/ox_primary_dark</item>
+    <item name="colorAccent">@color/ox_accent</item>
+  </style>
+
+  <style name="OxAppTheme.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+    <item name="colorPrimary">@color/ox_primary</item>
+    <item name="colorPrimaryDark">@color/ox_primary_dark</item>
+    <item name="colorAccent">@color/ox_accent</item>
+  </style>
+
+  <style name="OxAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+  <style name="OxAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 </resources>

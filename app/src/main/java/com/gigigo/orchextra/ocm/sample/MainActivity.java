@@ -137,11 +137,16 @@ public class MainActivity extends AppCompatActivity {
     tabLayout = findViewById(R.id.tabLayout);
     viewpager = findViewById(R.id.viewpager);
     //View fabReload = findViewById(R.id.fabReload);
+
     View fabSearch = findViewById(R.id.fabSearch);
+    fabSearch.setOnClickListener(v -> SearcherActivity.open(MainActivity.this));
+
+    View scannerButton = findViewById(R.id.scannerButton);
+    scannerButton.setOnClickListener(v -> Ocm.scanCode(
+        code -> Toast.makeText(MainActivity.this, "Code: " + code, Toast.LENGTH_SHORT).show()));
+
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
-
-    fabSearch.setOnClickListener(v -> SearcherActivity.open(MainActivity.this));
 
     newContentMainContainer = findViewById(R.id.newContentMainContainer);
 

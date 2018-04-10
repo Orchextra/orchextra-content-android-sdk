@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.wrapper;
 
 import android.app.Application;
+import android.content.Context;
 import com.gigigo.imagerecognitioninterface.ImageRecognitionCredentials;
 import com.gigigo.orchextra.CustomSchemeReceiver;
 import com.gigigo.orchextra.Orchextra;
@@ -11,7 +12,6 @@ import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import orchextra.javax.inject.Inject;
 
 /**
  * Created by alex on 01/12/2017.
@@ -19,8 +19,10 @@ import orchextra.javax.inject.Inject;
 
 public class OxManagerImpl implements OxManager {
 
+  private static final String TAG = "OxManagerImpl";
   private OnCustomSchemeReceiver onCustomSchemeReceiver;
   private HashMap<CrmUser.Gender, com.gigigo.orchextra.CrmUser.Gender> genders;
+  private final Context context;
 
   //cambio para el inicio selectivo, MEJORAR,
   //necesitamos un contexto para q la funcion setNewOrchextracredentials pueda comprobar las preferences
@@ -29,8 +31,8 @@ public class OxManagerImpl implements OxManager {
   private CustomSchemeReceiver onOxCustomSchemeReceiver =
       customScheme -> callOnCustomSchemeReceiver(customScheme);
 
-  @Inject
-  public OxManagerImpl() {
+  public OxManagerImpl(Context context) {
+    this.context = context;
     genders = new HashMap<>();
     genders.put(CrmUser.Gender.GenderFemale, com.gigigo.orchextra.CrmUser.Gender.GenderFemale);
     genders.put(CrmUser.Gender.GenderMale, com.gigigo.orchextra.CrmUser.Gender.GenderMale);
@@ -89,23 +91,23 @@ public class OxManagerImpl implements OxManager {
               config.getVuforia().setContextProvider(contextProvider);
             }
 
-            @Override
-            public void startImageRecognition(
+            @Override public void startImageRecognition(
                 ImageRecognitionCredentials imageRecognitionCredentials) {
-              config.getVuforia().startImageRecognition(
-                  new com.gigigo.orchextra.wrapper.ImageRecognitionCredentials() {
-                    @Override public String getClientAccessKey() {
-                      return imageRecognitionCredentials.getClientAccessKey();
-                    }
+              config.getVuforia()
+                  .startImageRecognition(
+                      new com.gigigo.orchextra.wrapper.ImageRecognitionCredentials() {
+                        @Override public String getClientAccessKey() {
+                          return imageRecognitionCredentials.getClientAccessKey();
+                        }
 
-                    @Override public String getLicensekey() {
-                      return imageRecognitionCredentials.getLicensekey();
-                    }
+                        @Override public String getLicensekey() {
+                          return imageRecognitionCredentials.getLicensekey();
+                        }
 
-                    @Override public String getClientSecretKey() {
-                      return imageRecognitionCredentials.getClientSecretKey();
-                    }
-                  });
+                        @Override public String getClientSecretKey() {
+                          return imageRecognitionCredentials.getClientSecretKey();
+                        }
+                      });
             }
           });
     }
@@ -120,8 +122,9 @@ public class OxManagerImpl implements OxManager {
   }
 
   @Override public void bindUser(CrmUser crmUser) {
-    com.gigigo.orchextra.CrmUser crmUserOx = new com.gigigo.orchextra.CrmUser(crmUser.getCrmId(),
-        crmUser.getBirthdate(), genders.get(crmUser.getGender()));
+    com.gigigo.orchextra.CrmUser crmUserOx =
+        new com.gigigo.orchextra.CrmUser(crmUser.getCrmId(), crmUser.getBirthdate(),
+            genders.get(crmUser.getGender()));
 
     Orchextra.bindUser(crmUserOx);
     Orchextra.commitConfiguration();
@@ -156,5 +159,9 @@ public class OxManagerImpl implements OxManager {
   @Override
   public void updateSDKCredentials(String apiKey, String apiSecret, boolean forceCallback) {
     Orchextra.updateSDKCredentials(apiKey, apiSecret, forceCallback);
+  }
+
+  @Override public void scanCode(ScanCodeListener scanCodeListener) {
+    ScannerActivity.Navigator.open(context, scanCodeListener);
   }
 }

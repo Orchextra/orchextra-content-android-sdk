@@ -47,7 +47,8 @@ import orchextra.javax.inject.Singleton;
     return new OcmViewGeneratorImp(ocmController, detailElementsViewPresenterProvides);
   }
 
-  @Singleton @Provides ActionHandler provideActionHandler(OcmContextProvider ocmContextProvider, GetVideo getVideo) {
+  @Singleton @Provides ActionHandler provideActionHandler(OcmContextProvider ocmContextProvider,
+      GetVideo getVideo) {
     return new ActionHandler(ocmContextProvider, getVideo);
   }
 
@@ -61,6 +62,6 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Singleton @Provides OxManager provideOxManager() {
-    return new OxManagerImpl();
+    return new OxManagerImpl(app);
   }
 }
