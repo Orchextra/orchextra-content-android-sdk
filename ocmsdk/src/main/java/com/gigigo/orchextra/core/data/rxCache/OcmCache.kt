@@ -5,11 +5,11 @@ import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData
 import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData
+import com.gigigo.orchextra.core.data.database.entities.DbElementData
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData
 import com.gigigo.orchextra.core.data.database.entities.DbSectionContentData
 import com.gigigo.orchextra.core.data.database.entities.DbVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData
-import com.gigigo.orchextra.core.domain.entities.elements.ElementData
 import gigigo.com.vimeolibs.VimeoInfo
 import io.reactivex.Observable
 
@@ -31,7 +31,7 @@ interface OcmCache {
   fun isSectionCached(elementUrl: String): Boolean
   fun isSectionExpired(elementUrl: String): Boolean
 
-  fun getDetail(slug: String): Observable<ElementData>
+  fun getDetail(slug: String): Observable<DbElementData>
   fun isDetailCached(slug: String): Boolean
   fun isDetailExpired(slug: String): Boolean
   fun putDetail(apiElementData: ApiElementData, key: String)

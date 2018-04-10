@@ -15,6 +15,7 @@ import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
 import com.gigigo.orchextra.core.data.database.OcmDatabase;
 import com.gigigo.orchextra.core.data.database.entities.DbElement;
 import com.gigigo.orchextra.core.data.database.entities.DbElementCache;
+import com.gigigo.orchextra.core.data.database.entities.DbElementData;
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContent;
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData;
 import com.gigigo.orchextra.core.data.database.entities.DbMenuElementJoin;
@@ -206,15 +207,15 @@ import orchextra.javax.inject.Singleton;
   //endregion
 
   //region ELEMENT
-  @Override public Observable<ElementData> getDetail(String slug) {
+  @Override public Observable<DbElementData> getDetail(String slug) {
     return Observable.create(emitter -> {
-      DbElementCache elementCacheData = ocmDatabase.elementCacheDao().fetchElementCache(slug);
+      DbElementCache dbElementCacheData = ocmDatabase.elementCacheDao().fetchElementCache(slug);
 
-      ElementData elementData = new ElementData();
-      elementData.setElement(DbMappersKt.toElementCache(elementCacheData));
+      DbElementData dbElementData = new DbElementData();
+      dbElementData.setElement(dbElementCacheData);
 
-      if (elementData != null) {
-        emitter.onNext(elementData);
+      if (dbElementData != null) {
+        emitter.onNext(dbElementData);
         emitter.onComplete();
       } else {
         emitter.onError(new ApiSectionNotFoundException());

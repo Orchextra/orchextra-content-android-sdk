@@ -66,6 +66,10 @@ data class DbScheduleDates(
     @ColumnInfo(name = "date_end") var dateEnd: Long? = -1
 )
 
+data class DbElementData(
+    var element: DbElementCache? = null
+)
+
 @Entity(tableName = "element_cache", primaryKeys = arrayOf("slug", "key"))
 data class DbElementCache(
     var key: String = "",
@@ -163,9 +167,9 @@ data class DbContentItem(
 )
 
 @Entity(tableName = "section_element_join",
-//    foreignKeys = arrayOf(
-//        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("section_slug"), entity = DbSectionContentData::class, onDelete = CASCADE),
-//        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"), entity = DbElementCache::class, onDelete = CASCADE)),
+    /*foreignKeys = arrayOf(
+        ForeignKey(parentColumns = arrayOf("content_slug"), childColumns = arrayOf("section_slug"), entity = DbSectionContentData::class, onDelete = CASCADE),
+        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"), entity = DbElement::class, onDelete = CASCADE)),*/
     primaryKeys = arrayOf("section_slug", "element_slug")
 )
 data class DbSectionElementJoin(

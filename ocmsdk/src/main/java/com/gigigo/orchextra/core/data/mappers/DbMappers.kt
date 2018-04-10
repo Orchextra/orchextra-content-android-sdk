@@ -29,6 +29,7 @@ import com.gigigo.orchextra.core.data.database.entities.DbElementCache
 import com.gigigo.orchextra.core.data.database.entities.DbElementCachePreview
 import com.gigigo.orchextra.core.data.database.entities.DbElementCacheRender
 import com.gigigo.orchextra.core.data.database.entities.DbElementCacheShare
+import com.gigigo.orchextra.core.data.database.entities.DbElementData
 import com.gigigo.orchextra.core.data.database.entities.DbElementSectionView
 import com.gigigo.orchextra.core.data.database.entities.DbFederatedAuthorizationData
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContent
@@ -385,6 +386,12 @@ fun ApiElementCache.toDbElementCache(key: String): DbElementCache = with(this) {
   elementCache.type = type
   elementCache.updatedAt = updatedAt
   return elementCache
+}
+
+fun DbElementData.toElementData(): ElementData = with(this) {
+  val elementData = ElementData()
+  elementData.element = element?.toElementCache()
+  return elementData
 }
 
 fun ElementCache.toDbElementCache(key: String): DbElementCache = with(this) {
