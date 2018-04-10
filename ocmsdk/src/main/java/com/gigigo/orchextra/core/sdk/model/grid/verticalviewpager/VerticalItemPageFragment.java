@@ -3,6 +3,7 @@ package com.gigigo.orchextra.core.sdk.model.grid.verticalviewpager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.gigigo.orchextra.ocmsdk.R;
 
 public class VerticalItemPageFragment extends Fragment {
 
+  private static final String TAG = "VerticalItemPageFr";
   private CellCarouselContentData cell;
   private ImageView verticalItemImageView;
   private OnItemClick onClickVerticalItem;
@@ -32,23 +34,23 @@ public class VerticalItemPageFragment extends Fragment {
     return view;
   }
 
-  private void initViews(View view) {
-    verticalItemContainer = view.findViewById(R.id.verticalItemContainer);
-    verticalItemImageView = view.findViewById(R.id.verticalItemImageView);
-  }
-
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
     setImage();
     setListeners();
   }
 
+  private void initViews(View view) {
+    verticalItemContainer = view.findViewById(R.id.verticalItemContainer);
+    verticalItemImageView = view.findViewById(R.id.verticalItemImageView);
+  }
+
   private void setImage() {
     if (cell != null) {
-
       String imageUrl = cell.getData().getSectionView().getImageUrl();
-
+      Log.d(TAG, "Data name: " + cell.getData().getName());
+      Log.d(TAG, "Image url: " + imageUrl);
       OcmImageLoader.load(this, imageUrl).into(verticalItemImageView);
     }
   }
