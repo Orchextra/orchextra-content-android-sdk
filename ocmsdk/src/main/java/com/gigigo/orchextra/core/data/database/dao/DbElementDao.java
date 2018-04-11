@@ -11,7 +11,7 @@ import java.util.List;
 @Dao public interface DbElementDao {
   @Query("SELECT * FROM element WHERE slug = :slug") DbElement fetchElement(String slug);
 
-  @Query("SELECT DISTINCT element.* FROM element INNER JOIN menu_element_join WHERE menu_slug = :menuSlug") List<DbElement> fetchMenuElements(String menuSlug);
+  @Query("SELECT DISTINCT element.* FROM element INNER JOIN menu_element_join ON element_slug = slug WHERE menu_slug = :menuSlug") List<DbElement> fetchMenuElements(String menuSlug);
 
   @Query("SELECT DISTINCT element.* FROM element INNER JOIN schedule_dates WHERE slug = :slug AND date_start < :timestamp AND date_end > :timestamp") List<DbElement> fetchMenuElementsOnTime(String slug, Long timestamp);
 

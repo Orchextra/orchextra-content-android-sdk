@@ -82,7 +82,7 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.getSectionDataRx(contentUrl, withThumbnails)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> ocmCache.putSection(apiSectionContentData, contentUrl))
-        //.doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload))
+        .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload))
         .map(apiSectionContentData -> DbMappersKt.toContentData(apiSectionContentData));
   }
 

@@ -93,12 +93,14 @@ fun ApiVersionData.toDbVersionData(): DbVersionData = with(this) {
   return versionData
 }
 
+/*
 fun VersionData.toDbVersionData(): DbVersionData = with(this) {
   val versionData = DbVersionData()
   versionData.id = VERSION_KEY
   versionData.version = version
   return versionData
 }
+*/
 
 fun ApiVersionData.toVersionData(): VersionData = with(this) {
   val versionData = VersionData()
@@ -115,6 +117,7 @@ fun DbVersionData.toVersionData(): VersionData = with(this) {
 //endregion
 
 //region MENU
+/*
 fun ApiMenuContentData.toDbMenuContentData(): DbMenuContentData = with(this) {
   val menuContentData = DbMenuContentData()
   val menus = ArrayList<DbMenuContent>()
@@ -136,6 +139,7 @@ fun ApiMenuContentData.toDbMenuContentData(): DbMenuContentData = with(this) {
 
   return menuContentData
 }
+*/
 
 fun ApiMenuContentData.toMenuContentData(): MenuContentData = with(this) {
   val menuContent = MenuContentData()
@@ -197,7 +201,7 @@ fun ApiMenuContent.toDbMenuContent(): DbMenuContent {
   menuContent.elements = elementsList
   return menuContent
 }
-
+/*
 fun MenuContent.toDbMenuContent(): DbMenuContent {
   val menuContent = DbMenuContent()
   menuContent.slug = slug
@@ -210,6 +214,7 @@ fun MenuContent.toDbMenuContent(): DbMenuContent {
   menuContent.elements = elementsList
   return menuContent
 }
+*/
 
 fun ApiMenuContent.toMenuContent(): MenuContent {
   val menuContent = MenuContent()
@@ -273,6 +278,7 @@ fun ApiElement.toElement(): Element = with(this) {
   return element
 }
 
+/*
 fun Element.toDbElement(): DbElement = with(this) {
   val element = DbElement()
   element.slug = slug
@@ -284,6 +290,7 @@ fun Element.toDbElement(): DbElement = with(this) {
   element.dates = dates.toDbScheduleDates(slug)
   return element
 }
+*/
 
 private fun DbElement.toElement(): Element = with(this) {
   val element = Element()
@@ -314,6 +321,7 @@ fun ApiElementSectionView.toElementSectionView(): ElementSectionView = with(this
   return element
 }
 
+/*
 private fun ElementSectionView.toDbElementSectionView(): DbElementSectionView = with(this) {
   val element = DbElementSectionView()
   element.text = text
@@ -321,6 +329,7 @@ private fun ElementSectionView.toDbElementSectionView(): DbElementSectionView = 
   element.imageThumb = imageThumb
   return element
 }
+*/
 
 private fun DbElementSectionView.toElementSectionView(): ElementSectionView = with(this) {
   val element = ElementSectionView()
@@ -394,6 +403,7 @@ fun DbElementData.toElementData(): ElementData = with(this) {
   return elementData
 }
 
+/*
 fun ElementCache.toDbElementCache(key: String): DbElementCache = with(this) {
   val elementCache = DbElementCache()
   elementCache.key = key
@@ -408,6 +418,7 @@ fun ElementCache.toDbElementCache(key: String): DbElementCache = with(this) {
   elementCache.updatedAt = updateAt
   return elementCache
 }
+*/
 
 fun DbElementCache.toElementCache(): ElementCache = with(this) {
   val elementCache = ElementCache()
@@ -441,6 +452,7 @@ private fun ApiElementCachePreview.toDbElementCachePreview(): DbElementCachePrev
   return elementCache
 }
 
+/*
 private fun ElementCachePreview.toDbElementCachePreview(): DbElementCachePreview = with(this) {
   val elementCache = DbElementCachePreview()
   elementCache.text = text
@@ -449,6 +461,7 @@ private fun ElementCachePreview.toDbElementCachePreview(): DbElementCachePreview
   elementCache.behaviour = behaviour?.cacheBehaviour
   return elementCache
 }
+*/
 
 private fun DbElementCachePreview.toElementCachePreview(): ElementCachePreview = with(this) {
   val elementCache = ElementCachePreview()
@@ -497,6 +510,7 @@ private fun ApiElementCacheRender.toDbElementCacheRender(): DbElementCacheRender
   return elementCacheRender
 }
 
+/*
 private fun ElementCacheRender.toDbElementCacheRender(): DbElementCacheRender = with(this) {
   var elementCacheRender = DbElementCacheRender()
   elementCacheRender.contentUrl = contentUrl
@@ -515,6 +529,7 @@ private fun ElementCacheRender.toDbElementCacheRender(): DbElementCacheRender = 
   elementCacheRender.federatedAuth = federatedAuth?.toDbFederatedAuthorizationData()
   return elementCacheRender
 }
+*/
 
 private fun DbElementCacheRender.toElementCacheRender(): ElementCacheRender = with(this) {
   var elementCacheRender = ElementCacheRender()
@@ -549,12 +564,14 @@ private fun ApiElementCacheShare.toDbElementCacheShare(): DbElementCacheShare = 
   return elementCache
 }
 
+/*
 private fun ElementCacheShare.toDbElementCacheShare(): DbElementCacheShare = with(this) {
   val elementCache = DbElementCacheShare()
   elementCache.text = text
   elementCache.url = url
   return elementCache
 }
+*/
 
 private fun DbElementCacheShare.toElementCacheShare(): ElementCacheShare = with(this) {
   val elementCache = ElementCacheShare()
@@ -665,6 +682,7 @@ private fun ApiArticleElement.toDbArticleElement(): DbArticleElement = with(this
   return articleElement
 }
 
+/*
 private fun <T> ArticleElement<T>.toDbArticleElement(): DbArticleElement = with(this) {
   val articleElement = DbArticleElement()
   articleElement.customProperties = customProperties?.toDbCustomProperties()
@@ -735,6 +753,7 @@ private fun <T> ArticleElement<T>.toDbArticleElement(): DbArticleElement = with(
 
   return articleElement
 }
+*/
 
 private fun <T> DbArticleElement.toArticleElement(): ArticleElement<T> = with(this) {
   lateinit var articleElement: ArticleElement<T>
@@ -908,6 +927,7 @@ private fun ApiArticleElementRender.toDbArticleElementRender(): DbArticleElement
   articleElementRender.bgColor = bgColor
   return articleElementRender
 }
+
 /*
 private fun ArticleElementRender.toDbArticleElementRender(): DbArticleElementRender = with(this) {
   val articleElementRender = DbArticleElementRender()
@@ -961,14 +981,15 @@ fun FederatedAuthorizationData.toDbFederatedAuthorizationData(): DbFederatedAuth
   return federatedAuthorization
 }
 
-private fun FederatedAuthorization.toDbFederatedAuthorizationData(): DbFederatedAuthorizationData = with(
-    this) {
+/*
+private fun FederatedAuthorization.toDbFederatedAuthorizationData(): DbFederatedAuthorizationData = with(this) {
   val federatedAuthorization = DbFederatedAuthorizationData()
   federatedAuthorization.type = type
   federatedAuthorization.active = isActive
   federatedAuthorization.keys = keys.toDbCidKeyData()
   return federatedAuthorization
 }
+*/
 
 private fun DbFederatedAuthorizationData.toFederatedAuthorization(): FederatedAuthorization = with(
     this) {
@@ -991,11 +1012,13 @@ private fun CidKeyData.toDbCidKeyData(): DbCidKeyData? {
   return cidKeyData
 }
 
+/*
 private fun CidKey.toDbCidKeyData(): DbCidKeyData? {
   val cidKeyData = DbCidKeyData()
   cidKeyData.siteName = siteName
   return cidKeyData
 }
+*/
 
 private fun DbCidKeyData.toCidKey(): CidKey {
   val cidKeyData = CidKey()
@@ -1006,55 +1029,73 @@ private fun DbCidKeyData.toCidKey(): CidKey {
 
 //region SECTION
 fun ApiSectionContentData.toDbSectionContentData(key: String): DbSectionContentData = with(this) {
-  var sectionContentData = DbSectionContentData()
+  val sectionContentData = DbSectionContentData()
   sectionContentData.key = key
   sectionContentData.content = content?.toDbContentItem()
   sectionContentData.version = version
   sectionContentData.expireAt = expireAt?.toLong()
-  /*
-  val elementList = ArrayList<String>()
+
+  val elementMap = HashMap<String, DbElementCache>()
+
   elementsCache?.forEach {
-    elementList.add(it.toDbElement())
+    val auxElement =
+        when (it.value) {
+          is ApiElementCache -> it.value.toDbElementCache(key)
+          else -> DbElementCache()
+        }
+    elementMap[it.key] = auxElement
   }
-  sectionContentData.elementsCache = elementList
-  */
+  sectionContentData.elementsCache = elementMap
+
   return sectionContentData
 }
 
 fun ApiSectionContentData.toContentData(): ContentData = with(this) {
-  var sectionContentData = ContentData()
+  val sectionContentData = ContentData()
   sectionContentData.content = content?.toContentItem()
   sectionContentData.version = version
   sectionContentData.expiredAt = expireAt.toString()
   sectionContentData.isFromCloud = true
-  /*
-  val elementList = ArrayList<String>()
+
+  val elementMap = HashMap<String, ElementCache>()
+
   elementsCache?.forEach {
-    elementList.add(it.toDbElement())
+    val auxElement =
+        when (it.value) {
+          is ApiElementCache -> it.value.toElementCache()
+          else -> ElementCache()
+        }
+    elementMap[it.key] = auxElement
   }
-  sectionContentData.elementsCache = elementList
-  */
+  sectionContentData.elementsCache = elementMap
+
   return sectionContentData
 }
 
 fun DbSectionContentData.toContentData(): ContentData = with(this) {
-  var sectionContentData = ContentData()
+  val sectionContentData = ContentData()
   sectionContentData.content = content?.toContentItem()
   sectionContentData.version = version
   sectionContentData.expiredAt = expireAt.toString()
   sectionContentData.isFromCloud = false
-  /*
-  val elementList = ArrayList<String>()
+
+  val elementMap = HashMap<String, ElementCache>()
+
   elementsCache?.forEach {
-    elementList.add(it.toDbElement())
+    val auxElement =
+        when (it.value) {
+          is DbElementCache -> it.value.toElementCache()
+          else -> ElementCache()
+        }
+    elementMap[it.key] = auxElement
   }
-  sectionContentData.elementsCache = elementList
-  */
+  sectionContentData.elementsCache = elementMap
+
   return sectionContentData
 }
 
 fun ApiContentItem.toDbContentItem(): DbContentItem = with(this) {
-  var contentItem = DbContentItem()
+  val contentItem = DbContentItem()
   contentItem.slug = slug
   contentItem.type = type
   contentItem.tags = tags
@@ -1070,7 +1111,7 @@ fun ApiContentItem.toDbContentItem(): DbContentItem = with(this) {
 }
 
 fun ApiContentItem.toContentItem(): ContentItem = with(this) {
-  var contentItem = ContentItem()
+  val contentItem = ContentItem()
   contentItem.slug = slug
   contentItem.type = type
   contentItem.tags = tags
@@ -1086,7 +1127,7 @@ fun ApiContentItem.toContentItem(): ContentItem = with(this) {
 }
 
 fun DbContentItem.toContentItem(): ContentItem = with(this) {
-  var contentItem = ContentItem()
+  val contentItem = ContentItem()
   contentItem.slug = slug
   contentItem.type = type
   contentItem.tags = tags
@@ -1102,7 +1143,7 @@ fun DbContentItem.toContentItem(): ContentItem = with(this) {
 }
 
 fun ApiContentItemLayout.toDbContentItemLayout(): DbContentItemLayout = with(this) {
-  var contentItemLayout = DbContentItemLayout()
+  val contentItemLayout = DbContentItemLayout()
   contentItemLayout.name = name
   contentItemLayout.type = type
 
@@ -1116,7 +1157,7 @@ fun ApiContentItemLayout.toDbContentItemLayout(): DbContentItemLayout = with(thi
 }
 
 fun ApiContentItemLayout.toContentItemLayout(): ContentItemLayout = with(this) {
-  var contentItemLayout = ContentItemLayout()
+  val contentItemLayout = ContentItemLayout()
   contentItemLayout.name = name
   contentItemLayout.type = ContentItemTypeLayout.convertFromString(type)
 
@@ -1130,7 +1171,7 @@ fun ApiContentItemLayout.toContentItemLayout(): ContentItemLayout = with(this) {
 }
 
 fun DbContentItemLayout.toContentItemLayout(): ContentItemLayout = with(this) {
-  var contentItemLayout = ContentItemLayout()
+  val contentItemLayout = ContentItemLayout()
   contentItemLayout.name = name
   contentItemLayout.type = ContentItemTypeLayout.convertFromString(type)
 
@@ -1144,21 +1185,21 @@ fun DbContentItemLayout.toContentItemLayout(): ContentItemLayout = with(this) {
 }
 
 fun ApiContentItemPattern.toDbContentItemPattern(): DbContentItemPattern = with(this) {
-  var contentItemPattern = DbContentItemPattern()
+  val contentItemPattern = DbContentItemPattern()
   contentItemPattern.row = row
   contentItemPattern.column = column
   return contentItemPattern
 }
 
 fun ApiContentItemPattern.toContentItemPattern(): ContentItemPattern = with(this) {
-  var contentItemPattern = ContentItemPattern()
+  val contentItemPattern = ContentItemPattern()
   contentItemPattern.row = row
   contentItemPattern.column = column
   return contentItemPattern
 }
 
 fun DbContentItemPattern.toContentItemPattern(): ContentItemPattern = with(this) {
-  var contentItemPattern = ContentItemPattern()
+  val contentItemPattern = ContentItemPattern()
   contentItemPattern.row = row
   contentItemPattern.column = column
   return contentItemPattern
