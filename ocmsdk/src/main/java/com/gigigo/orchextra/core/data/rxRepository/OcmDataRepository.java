@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.data.rxRepository;
 
 import android.content.Context;
+import android.support.annotation.MainThread;
+import android.support.annotation.WorkerThread;
 import com.gigigo.orchextra.core.data.DateUtilsKt;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
@@ -25,7 +27,9 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<VersionData> getVersion() {
+    System.out.println("*****GETVERSION 1 THREAD "+Thread.currentThread().getName());
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForVersion();
+    System.out.println("*****GETVERSION 2 THREAD "+Thread.currentThread().getName());
     return ocmDataStore.getVersion();
   }
 
@@ -88,6 +92,7 @@ import orchextra.javax.inject.Singleton;
     return ocmDataStore.getVideoById(context, videoId, isWifiConnection, isFastConnection);
   }
 
+  @WorkerThread
   @Override public Observable<Void> clear(boolean images, boolean data) {
     OcmDiskDataStore ocmDataStore = ocmDataStoreFactory.getDiskDataStore();
     ocmDataStore.getOcmCache().evictAll(images, data);

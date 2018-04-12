@@ -27,7 +27,6 @@ import com.gigigo.orchextra.core.data.database.entities.DbVideoData;
 import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
-import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.CacheDir;
 import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
@@ -51,7 +50,10 @@ import orchextra.javax.inject.Singleton;
 
   //region VERSION
   @Override public Observable<DbVersionData> getVersion() {
+    System.out.println("*****GETVERSION GET CACHE THREAD "+ Thread.currentThread().getName());
     return Observable.create(emitter -> {
+
+      System.out.println("*****GETVERSION GET CACHE EMITTER THREAD "+ Thread.currentThread().getName());
       DbVersionData versionData = ocmDatabase.versionDao().fetchVersion(DbVersionData.VERSION_KEY);
 
       if (versionData != null) {
@@ -64,6 +66,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public boolean isVersionCached() {
+    System.out.println("*****GETVERSION CACHED ASYNC THREAD " + Thread.currentThread().getName());
     int versionDataCount = ocmDatabase.versionDao().hasVersion(DbVersionData.VERSION_KEY);
     return (versionDataCount == 1);
   }
@@ -73,6 +76,7 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void putVersion(ApiVersionData apiVersionData) {
+    System.out.println("*****GETVERSION PUT CACHE THREAD "+ Thread.currentThread().getName());
     DbVersionData dbVersionData = DbMappersKt.toDbVersionData(apiVersionData);
     ocmDatabase.versionDao().insertVersion(dbVersionData);
   }
@@ -276,7 +280,9 @@ import orchextra.javax.inject.Singleton;
 
   @Override public void evictAll(boolean images, boolean data) {
     if (data) {
-      ocmDatabase.deleteAll();
+      Observable.create(emitter -> {
+        ocmDatabase.deleteAll();
+      }).subscribeOn(Schedulers.io()).subscribe();
     }
     if (images) trimCache(mContext, "images");
   }

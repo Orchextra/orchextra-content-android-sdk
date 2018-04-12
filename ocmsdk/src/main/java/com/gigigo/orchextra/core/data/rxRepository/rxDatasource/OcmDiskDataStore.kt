@@ -25,6 +25,7 @@ import orchextra.javax.inject.Singleton
 class OcmDiskDataStore @Inject constructor(val ocmCache: OcmCache) : OcmDataStore {
 
   override fun getVersion(): Observable<VersionData> {
+    println("*****GETVERSION DISK THREAD ${Thread.currentThread().name}")
     return ocmCache.getVersion().map(DbVersionData::toVersionData)
   }
 

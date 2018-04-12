@@ -62,6 +62,8 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<VersionData> getVersion() {
+    System.out.println("*****GETVERSION CLOUD THREAD "+Thread.currentThread().getName());
+
     return ocmApiService.getVersionDataRx()
         .map(apiVersionResponse -> new ApiVersionData(apiVersionResponse.getData()))
         .filter(apiVersionData -> apiVersionData != null)

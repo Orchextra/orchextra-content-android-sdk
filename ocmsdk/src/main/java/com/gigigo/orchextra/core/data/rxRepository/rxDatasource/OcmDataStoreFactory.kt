@@ -32,6 +32,7 @@ class OcmDataStoreFactory
     lateinit var dataStore: OcmDataStore
 
     runBlocking {
+      println("*****GETVERSION RUNBLOCKING THREAD " + Thread.currentThread().name)
       dataStore = dataStoreForVersion().await()
     }
 
@@ -40,6 +41,8 @@ class OcmDataStoreFactory
 
   private fun dataStoreForVersion() =
       async(bgContext) {
+
+        println("*****GETVERSION ASYNC THREAD " + Thread.currentThread().name)
         var dataStore: OcmDataStore
 
         if (diskDataStore.ocmCache.isVersionCached()) {
