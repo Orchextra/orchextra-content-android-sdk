@@ -114,12 +114,10 @@ public class PreviewContentData extends UiBaseContentData {
   }
 
   private void showShadow() {
-    //previewBackgroundShadow.setVisibility(View.VISIBLE);
     previewBackgroundShadow.animate().alpha(1.0f).setDuration(1000);
   }
 
   private void hideShadow() {
-    //previewBackgroundShadow.setVisibility(View.GONE);
     previewBackgroundShadow.animate().alpha(0.0f).setDuration(1000);
   }
 
