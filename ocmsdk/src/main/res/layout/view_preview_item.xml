@@ -4,12 +4,14 @@
     android:id="@+id/previewContentMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     >
   <ImageView
       android:id="@+id/preview_image"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:adjustViewBounds="true"
+      android:alpha="0.0"
       android:scaleType="centerCrop"
       />
 
@@ -18,6 +20,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:adjustViewBounds="false"
+      android:alpha="0.0"
       android:background="@drawable/bg_preview"
       />
 

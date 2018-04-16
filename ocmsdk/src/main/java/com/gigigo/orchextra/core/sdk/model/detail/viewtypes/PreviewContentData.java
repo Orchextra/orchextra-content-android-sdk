@@ -8,17 +8,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
-import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
@@ -87,11 +83,11 @@ public class PreviewContentData extends UiBaseContentData {
 
   private void initView(View view) {
     previewContentMainLayout = view.findViewById(R.id.previewContentMainLayout);
-    previewImage = (ImageView) view.findViewById(R.id.preview_image);
-    previewBackgroundShadow = (ImageView) view.findViewById(R.id.preview_background);
-    previewTitle = (TextView) view.findViewById(R.id.preview_title);
+    previewImage = view.findViewById(R.id.preview_image);
+    previewBackgroundShadow = view.findViewById(R.id.preview_background);
+    previewTitle = view.findViewById(R.id.preview_title);
     goToArticleButton = view.findViewById(R.id.go_to_article_button);
-    MoreContentArrowView imgAnim = (MoreContentArrowView) view.findViewById(R.id.imgMoreContain);
+    MoreContentArrowView imgAnim = view.findViewById(R.id.imgMoreContain);
     imgAnim.anim(32, -1);
   }
 
@@ -104,9 +100,9 @@ public class PreviewContentData extends UiBaseContentData {
       handler.postDelayed(() -> previewTitle.setText(preview.getText()), 1000);
 
       if (TextUtils.isEmpty(preview.getText())) {
-        previewBackgroundShadow.setVisibility(View.GONE);
-      }else{
-        previewBackgroundShadow.setVisibility(View.VISIBLE);
+        hideShadow();
+      } else {
+        showShadow();
       }
 
       if (preview.getBehaviour().equals(ElementCacheBehaviour.SWIPE)) {
@@ -115,6 +111,16 @@ public class PreviewContentData extends UiBaseContentData {
 
       setAnimations();
     }
+  }
+
+  private void showShadow() {
+    //previewBackgroundShadow.setVisibility(View.VISIBLE);
+    previewBackgroundShadow.animate().alpha(1.0f).setDuration(1000);
+  }
+
+  private void hideShadow() {
+    //previewBackgroundShadow.setVisibility(View.GONE);
+    previewBackgroundShadow.animate().alpha(0.0f).setDuration(1000);
   }
 
   private void setBackgroundShadow() {
@@ -152,37 +158,9 @@ public class PreviewContentData extends UiBaseContentData {
 
       String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, width, height);
 
-      Glide.with(this).load(generatedImageUrl).into(previewImage);
-
-      OcmImageLoader.load(this, generatedImageUrl)
-          .priority(Priority.NORMAL)
-          .diskCacheStrategy(DiskCacheStrategy.ALL)
-          .override(width, height)
-          .into(previewImage);
-
-      animateAlphaBecauseOfCollapseEnterTransitionImage();
+      Glide.with(PreviewContentData.this).load(generatedImageUrl).into(previewImage);
+      previewImage.animate().alpha(1.0f).setDuration(850);
     }
-  }
-
-  private void animateAlphaBecauseOfCollapseEnterTransitionImage() {
-    previewImage.setAlpha(0f);
-    Animation animation = new AlphaAnimation(0.0f, 1.0f);
-    animation.setDuration(1000);
-    animation.setStartOffset(1000);
-    animation.setAnimationListener(new Animation.AnimationListener() {
-      @Override public void onAnimationStart(Animation animation) {
-
-      }
-
-      @Override public void onAnimationEnd(Animation animation) {
-        previewImage.setAlpha(1f);
-      }
-
-      @Override public void onAnimationRepeat(Animation animation) {
-
-      }
-    });
-    previewImage.startAnimation(animation);
   }
 
   private void setListeners() {

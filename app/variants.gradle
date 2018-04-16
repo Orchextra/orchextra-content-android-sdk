@@ -39,7 +39,7 @@ ext {
                    orchextraApiKey      : [release: "8286702045adf5a3ad816f70ecb80e4c91fbb8de"],
                    orchextraApiSecret   : [release: "eab37080130215ced60eb9d5ff729049749ec205"]]
 
-  woah_IT = [orchextraBussinesUnit: "oat-it",
+  woah_IT = [orchextraBussinesUnit: "pl",
              applicationId        : "${baseApplicationId}.it",
              appName              : "${basePackageName} IT",
 
