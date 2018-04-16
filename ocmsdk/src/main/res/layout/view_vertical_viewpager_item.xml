@@ -5,7 +5,7 @@
     >
 
   <com.gigigo.orchextra.core.sdk.model.grid.verticalviewpager.VerticalViewPager
-      android:id="@+id/listedVerticalViewPager"
+      android:id="@+id/verticalViewPager"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       />

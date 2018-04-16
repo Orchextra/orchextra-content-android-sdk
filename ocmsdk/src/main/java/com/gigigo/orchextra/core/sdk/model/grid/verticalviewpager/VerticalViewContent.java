@@ -14,10 +14,8 @@ import java.util.List;
 
 public class VerticalViewContent extends UiListedBaseContentData {
 
-  private static final String TAG = "VerticalViewContent";
   private VerticalViewPager viewPager;
   private VerticalViewPagerAdapter adapter;
-  private FragmentManager fragmentManager;
 
   public VerticalViewContent(Context context) {
     super(context);
@@ -32,8 +30,6 @@ public class VerticalViewContent extends UiListedBaseContentData {
   }
 
   @Override protected void init() {
-    fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
-
     View view = inflateLayout();
     initViews(view);
     initViewPager();
@@ -46,11 +42,13 @@ public class VerticalViewContent extends UiListedBaseContentData {
   }
 
   private void initViews(View view) {
-    viewPager = view.findViewById(R.id.listedVerticalViewPager);
+    viewPager = view.findViewById(R.id.verticalViewPager);
   }
 
   private void initViewPager() {
     if (viewPager != null) {
+      FragmentManager fragmentManager =
+          ((FragmentActivity) getContext()).getSupportFragmentManager();
       adapter = new VerticalViewPagerAdapter(fragmentManager, listedContentListener);
       viewPager.setAdapter(adapter);
     }
@@ -58,12 +56,14 @@ public class VerticalViewContent extends UiListedBaseContentData {
 
   @Override public void setData(List<Cell> data) {
     if (viewPager != null) {
-      adapter.setItems(data);
+      adapter.setData(data);
     }
   }
 
   @Override public void scrollToTop() {
-
+    if (viewPager != null) {
+      viewPager.setCurrentItem(0);
+    }
   }
 
   @Override public void showErrorView() {
