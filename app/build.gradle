@@ -104,6 +104,10 @@ android {
       dimension "sample"
     }
 
+    woah_PL {
+      dimension "sample"
+    }
+
     woah_RS {
       dimension "sample"
     }
