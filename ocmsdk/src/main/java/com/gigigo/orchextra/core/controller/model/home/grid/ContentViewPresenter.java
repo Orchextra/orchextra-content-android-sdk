@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.controller.model.home.grid;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -30,6 +31,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   private final Authoritation authoritation;
   private final OcmController ocmController;
+  private static final String TAG = "ContentViewPresenter";
 
   private UiMenu uiMenu;
   private int imagesToDownload = 21;
@@ -256,12 +258,38 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       case CAROUSEL:
         return calculateCarouselCells(contentItem);
       case GRID:
+        return calculateGridCells(contentItem);
+      case FULLSCREEN:
+        return calculateFullScreenCells(contentItem);
       default:
+        Log.wtf(TAG, "Unknow type: " + contentItem.getLayout().getType());
         return calculateGridCells(contentItem);
     }
   }
 
   private List<Cell> calculateCarouselCells(ContentItem contentItem) {
+    List<Element> elements = contentItem.getElements();
+
+    List<Cell> cellGridContentDataList = new ArrayList<>();
+
+    for (int i = 0; i < elements.size(); i++) {
+      Element element = elements.get(i);
+
+      if (TextUtils.isEmpty(filter) || element.getTags().contains(filter)) {
+
+        CellCarouselContentData cell = new CellCarouselContentData();
+        cell.setData(element);
+        cell.setColumn(1);
+        cell.setRow(1);
+
+        cellGridContentDataList.add(cell);
+      }
+    }
+
+    return cellGridContentDataList;
+  }
+
+  private List<Cell> calculateFullScreenCells(ContentItem contentItem) {
     List<Element> elements = contentItem.getElements();
 
     List<Cell> cellGridContentDataList = new ArrayList<>();

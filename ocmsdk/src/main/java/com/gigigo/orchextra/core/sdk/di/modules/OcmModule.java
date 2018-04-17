@@ -52,7 +52,9 @@ import orchextra.javax.inject.Singleton;
     return new Authoritation();
   }
 
-  @Singleton @Provides ActionHandler provideActionHandler(OcmContextProvider ocmContextProvider, GetVideo getVideo) {
+  @Singleton @Provides ActionHandler provideActionHandler(OcmContextProvider ocmContextProvider,
+      GetVideo getVideo) {
+
     return new ActionHandler(ocmContextProvider, getVideo);
   }
 

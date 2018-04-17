@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.bumptech.glide.Glide;
 import com.gigigo.baserecycleradapter.adapter.BaseRecyclerAdapter;
-import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleHeaderElement;
@@ -46,6 +45,7 @@ public class ArticleContentData extends UiBaseContentData {
   private RecyclerView articleItemViewContainer;
   private FrameLayout flFA;
   private View faLoading;
+  private View emptyLayout;
   private BaseRecyclerAdapter<ArticleElement<ArticleElementRender>> adapter;
   private int addictionalPadding;
   private boolean thumbnailEnabled;
@@ -94,8 +94,6 @@ public class ArticleContentData extends UiBaseContentData {
   }
 
   @Override public void onDestroy() {
-    System.out.println(
-        "----onDestroy------------------------------------------artivcle content data");
     if (articleItemViewContainer != null) {
       unbindDrawables(articleItemViewContainer);
       System.gc();
@@ -132,6 +130,7 @@ public class ArticleContentData extends UiBaseContentData {
 
     flFA = view.findViewById(R.id.flFA);
     faLoading = flFA.findViewById(R.id.progressFA);
+    emptyLayout = view.findViewById(R.id.ocm_empty_layout);
   }
 
   private void initRecyclerView() {
@@ -149,51 +148,50 @@ public class ArticleContentData extends UiBaseContentData {
 
     adapter.setMillisIntervalToAvoidDoubleClick(1500);
 
-    adapter.setItemClickListener(new BaseViewHolder.OnItemClickListener() {
-      @Override public void onItemClick(int i, View view) {
-        ArticleElement element = adapter.getItem(i);
+    adapter.setItemClickListener((i, view) -> {
+      ArticleElement element = adapter.getItem(i);
 
-        if (element instanceof ArticleButtonElement) {
-          flFA.setVisibility(View.VISIBLE);
-          faLoading.setVisibility(View.VISIBLE);
+      if (element instanceof ArticleButtonElement) {
+        flFA.setVisibility(View.VISIBLE);
+        faLoading.setVisibility(View.VISIBLE);
 
-          String elementUrl = ((ArticleButtonElement) element).getRender().getElementUrl();
+        String elementUrl = ((ArticleButtonElement) element).getRender().getElementUrl();
 
-          if (elementUrl != null) {
-            if (element.getCustomProperties() != null) {
-              OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(),
-                  ViewType.BUTTON_ELEMENT, canContinue -> {
-                    if (canContinue) {
-                      Ocm.processElementUrl(elementUrl, null, new OcmSchemeHandler.ProcessElementCallback() {
-                        @Override public void onProcessElementSuccess(ElementCache elementCache) {
+        if (elementUrl != null) {
+          if (element.getCustomProperties() != null) {
+            OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(),
+                ViewType.BUTTON_ELEMENT, canContinue -> {
+                  if (canContinue) {
+                    Ocm.processElementUrl(elementUrl, null,
+                        new OcmSchemeHandler.ProcessElementCallback() {
+                          @Override public void onProcessElementSuccess(ElementCache elementCache) {
+                            showErrorView(false);
+                          }
 
-                        }
+                          @Override public void onProcessElementFail(Exception exception) {
+                            showErrorView(true);
+                          }
+                        });
+                  }
 
-                        @Override public void onProcessElementFail(Exception exception) {
+                  flFA.setVisibility(View.INVISIBLE);
+                  faLoading.setVisibility(View.GONE);
+                  return null;
+                });
+          } else {
+            Ocm.processElementUrl(elementUrl, null, new OcmSchemeHandler.ProcessElementCallback() {
+              @Override public void onProcessElementSuccess(ElementCache elementCache) {
+                showErrorView(false);
+              }
 
-                        }
-                      });
-                    }
+              @Override public void onProcessElementFail(Exception exception) {
 
-                    flFA.setVisibility(View.INVISIBLE);
-                    faLoading.setVisibility(View.GONE);
-                    return null;
-                  });
-            } else {
-              Ocm.processElementUrl(elementUrl, null, new OcmSchemeHandler.ProcessElementCallback() {
-                @Override public void onProcessElementSuccess(ElementCache elementCache) {
+                showErrorView(true);
+              }
+            });
 
-                }
-
-                @Override public void onProcessElementFail(Exception exception) {
-
-                }
-              });
-
-              flFA.setVisibility(View.INVISIBLE);
-              faLoading.setVisibility(View.GONE);
-
-            }
+            flFA.setVisibility(View.INVISIBLE);
+            faLoading.setVisibility(View.GONE);
           }
         }
       }
@@ -207,6 +205,11 @@ public class ArticleContentData extends UiBaseContentData {
     if (articleElementList != null) {
       adapter.addAll(articleElementList);
     }
+  }
+
+  public void showErrorView(boolean isVisible) {
+    emptyLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    articleItemViewContainer.setVisibility(!isVisible ? View.VISIBLE : View.GONE);
   }
 
   public void addItems(List<ArticleElement<ArticleElementRender>> articleElementList) {

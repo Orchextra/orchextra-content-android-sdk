@@ -64,6 +64,7 @@ public final class OCManager {
 
   private static String TAG = "OCManager";
   private static OCManager instance;
+  private CustomUrlCallback customUrlCallback;
   private static OrchextraCompletionCallback mOrchextraCompletionCallback =
       new OrchextraCompletionCallback() {
         @Override public void onSuccess() {
@@ -169,7 +170,6 @@ Add Comment C
   private boolean isShowReadedArticles = false;
   private int maxReadArticles = 100;
   private com.bumptech.glide.load.Transformation<Bitmap> readArticlesBitmapTransform;
-  private CustomUrlCallback customUrlCallback;
 
   static void initSdk(Application application) {
     getInstance().initOcm(application);
@@ -597,7 +597,7 @@ Add Comment C
 
   static void processRedirectElementUrl(String elementUrl) {
     if (instance != null) {
-      instance.schemeHandler.processRedirectElementUrl(elementUrl);
+      instance.schemeHandler.processRedirectElementUrl(elementUrl, null);
     }
   }
 
