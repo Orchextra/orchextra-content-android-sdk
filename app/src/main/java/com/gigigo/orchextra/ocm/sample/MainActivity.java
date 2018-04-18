@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
@@ -136,22 +137,16 @@ public class MainActivity extends AppCompatActivity {
     tabLayout = findViewById(R.id.tabLayout);
     viewpager = findViewById(R.id.viewpager);
     //View fabReload = findViewById(R.id.fabReload);
+
     View fabSearch = findViewById(R.id.fabSearch);
-    View fabClean = findViewById(R.id.fabClean);
+    fabSearch.setOnClickListener(v -> SearcherActivity.open(MainActivity.this));
 
-    fabClean.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        //Orchextra.startScannerActivity();
-        //Orchextra.startImageRecognition();
-        adapter.setEmotion("happy");
-      }
-    });
+    View scannerButton = findViewById(R.id.scannerButton);
+    scannerButton.setOnClickListener(v -> Ocm.scanCode(
+        code -> Toast.makeText(MainActivity.this, "Code: " + code, Toast.LENGTH_SHORT).show()));
 
-    fabSearch.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        SearcherActivity.open(MainActivity.this);
-      }
-    });
+    Toolbar toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
 
     newContentMainContainer = findViewById(R.id.newContentMainContainer);
 
@@ -159,18 +154,13 @@ public class MainActivity extends AppCompatActivity {
     viewpager.setAdapter(adapter);
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
   }
-  //endregion
 
   private void startCredentials() {
     Ocm.startWithCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET,
         new OcmCredentialCallback() {
           @Override public void onCredentialReceiver(String accessToken) {
             //TODO Fix in Orchextra
-            runOnUiThread(new Runnable() {
-              @Override public void run() {
-                getContent();
-              }
-            });
+            runOnUiThread(() -> getContent());
           }
 
           @Override public void onCredentailError(String code) {
@@ -180,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
           }
         });
 
-    Ocm.start();//likewoah
+    Ocm.start();
   }
 
   private List<UiMenu> copy(List<UiMenu> list) {
@@ -277,13 +267,11 @@ public class MainActivity extends AppCompatActivity {
 
   private void showIconNewContent(final List<UiMenu> newMenus) {
     newContentMainContainer.setVisibility(View.VISIBLE);
-    newContentMainContainer.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        newContentMainContainer.setVisibility(View.GONE);
+    newContentMainContainer.setOnClickListener(v -> {
+      newContentMainContainer.setVisibility(View.GONE);
 
-        tabLayout.removeAllTabs();
-        onGoDetailView(newMenus);
-      }
+      tabLayout.removeAllTabs();
+      onGoDetailView(newMenus);
     });
   }
 

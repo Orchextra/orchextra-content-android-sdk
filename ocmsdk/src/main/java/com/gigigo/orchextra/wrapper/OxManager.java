@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.wrapper;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
-import java.util.List;
 
 /**
  * Created by alex on 01/12/2017.
@@ -36,6 +36,8 @@ public interface OxManager {
 
   void updateSDKCredentials(String apiKey, String apiSecret, boolean forceCallback);
 
+  void scanCode(ScanCodeListener scanCodeListener);
+
   final class Config {
     String apiKey;
     String apiSecret;
@@ -44,7 +46,7 @@ public interface OxManager {
     ImageRecognition vuforia;
     OrchextraCompletionCallback orchextraCompletionCallback;
 
-    public Config(Builder builder){
+    public Config(Builder builder) {
       apiKey = builder.apiKey;
       apiSecret = builder.apiSecret;
       notificationActivityClass = builder.notificationActivityClass;
@@ -124,5 +126,9 @@ public interface OxManager {
         return new Config(this);
       }
     }
+  }
+
+  interface ScanCodeListener {
+    void onCodeScan(@NonNull String code);
   }
 }

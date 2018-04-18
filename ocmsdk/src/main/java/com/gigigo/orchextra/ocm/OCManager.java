@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.webkit.WebStorage;
 import android.widget.ImageView;
@@ -21,11 +22,13 @@ import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.di.injector.InjectorImpl;
 import com.gigigo.orchextra.core.sdk.di.modules.OcmModule;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
+import com.gigigo.orchextra.ocm.callbacks.CustomUrlCallback;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
+import com.gigigo.orchextra.ocm.callbacks.ScanCodeListener;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
@@ -55,6 +58,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OCManager {
 
   private static OCManager instance;
+  private CustomUrlCallback customUrlCallback;
   private static OrchextraCompletionCallback mOrchextraCompletionCallback =
       new OrchextraCompletionCallback() {
         @Override public void onSuccess() {
@@ -230,7 +234,7 @@ Add Comment C
 
   static void processRedirectElementUrl(String elementUrl) {
     if (instance != null) {
-      instance.schemeHandler.processRedirectElementUrl(elementUrl);
+      instance.schemeHandler.processRedirectElementUrl(elementUrl, null);
     }
   }
 
@@ -654,5 +658,33 @@ Add Comment C
 
   public void writeReadArticles(ArrayList<String> readArticles) {
     saveSerializable(ocmContextProvider.getApplicationContext(), readArticles, READ_ARTICLES_FILE);
+  }
+
+  // Custom url
+
+  public static void setCustomUrlCallback(CustomUrlCallback customUrlCallback) {
+
+    getInstance().customUrlCallback = customUrlCallback;
+  }
+
+  public static void scanCode(ScanCodeListener scanCodeListener) {
+    if (instance != null) {
+      instance.oxManager.scanCode(scanCodeListener::onCodeScan);
+    }
+  }
+
+  public static void openScanner() {
+    if (instance != null) {
+      instance.oxManager.startScanner();
+    }
+  }
+
+  @Nullable public static CustomUrlCallback getCustomUrlCallback() {
+
+    if (getInstance() != null) {
+      return getInstance().customUrlCallback;
+    } else {
+      return null;
+    }
   }
 }

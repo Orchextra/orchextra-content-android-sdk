@@ -3,7 +3,7 @@ project.ext {
   //gigigo.desarrollo -> Google Console --> Orchextra2016 --> Woah Dev
   googleKey = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
 
-  ocmSdkVersion = [debug: 'ANDROID_1.0.0']
+  ocmSdkVersion = [debug: 'ANDROID_5.0.0']
 
   apiOcm = [release: 'https://cm.orchextra.io/',
             debug  : 'https://cm.q.orchextra.io/',

@@ -21,7 +21,7 @@
         android:layout_height="match_parent"
         android:text="Empty View"
         android:textSize="20dp"
-        android:textColor="#FFF"
+        android:textColor="@color/primary_text"
         />
   </FrameLayout>
 
@@ -41,7 +41,7 @@
         android:layout_height="match_parent"
         android:text="Error getting content..."
         android:textSize="20dp"
-        android:textColor="#FFF"
+        android:textColor="@color/primary_text"
         />
   </FrameLayout>
 

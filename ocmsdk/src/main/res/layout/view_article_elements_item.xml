@@ -8,6 +8,12 @@
     android:background="@color/oc_bg_article_content_color"
     >
 
+  <include
+      layout="@layout/ocm_retry_content_item"
+      android:id="@+id/ocm_empty_layout"
+      android:visibility="gone"
+      />
+
   <android.support.v7.widget.RecyclerView
       android:id="@+id/articleItemListLayout"
       android:layout_width="match_parent"
