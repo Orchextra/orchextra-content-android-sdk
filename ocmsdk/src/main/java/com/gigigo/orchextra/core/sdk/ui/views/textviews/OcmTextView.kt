@@ -18,6 +18,13 @@ class OcmTextView : AppCompatTextView {
   private val tvContext: Context
   private val tvAttrs: AttributeSet?
 
+  companion object {
+    const val TEXT_TYPE_LIGHT = "0"
+    const val TEXT_TYPE_MEDIUM = "1"
+    const val TEXT_TYPE_NORMAL = "2"
+    const val TEXT_TYPE_TITLE = "3"
+  }
+
   constructor(context: Context) : super(context) {
     tvContext = context
     tvAttrs = null
@@ -47,35 +54,52 @@ class OcmTextView : AppCompatTextView {
   }
 
   private fun initTextChangedListener() {
-    addTextChangedListener(object : TextWatcher {
-      override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+    if (isTitleTextView()) {
+      addTextChangedListener(object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
-      }
-
-      override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-      }
-
-      override fun afterTextChanged(s: Editable) {
-        if (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP) {
-          removeTextChangedListener(this)
-          if (!s.toString().isEmpty()) {
-            val newText = StringBuilder()
-            val length = s.length
-            for (i in 0 until length) {
-              newText.append(s[i]).append(" ")
-            }
-
-            text = newText
-          }
-          addTextChangedListener(this)
         }
-      }
-    })
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+        }
+
+        override fun afterTextChanged(s: Editable) {
+          if (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP) {
+            removeTextChangedListener(this)
+            if (!s.toString().isEmpty()) {
+              val newText = StringBuilder()
+              val length = s.length
+              for (i in 0 until length) {
+                newText.append(s[i]).append(" ")
+              }
+
+              text = newText
+            }
+            addTextChangedListener(this)
+          }
+        }
+      })
+    }
+  }
+
+  private fun isTitleTextView(): Boolean {
+    val a = context.theme.obtainStyledAttributes(
+        tvAttrs,
+        R.styleable.OcmTextViewTypeface,
+        0, 0)
+
+    val selectedTypeFace = a.getString(R.styleable.OcmTextViewTypeface_ocm_typeface)
+
+    if (selectedTypeFace == TEXT_TYPE_TITLE) {
+      return true
+    }
+
+    return false
   }
 
   private fun initLetterSpacing() {
-    if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+    if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP && isTitleTextView()) {
       letterSpacing = 0.2f
     }
   }
@@ -109,10 +133,10 @@ class OcmTextView : AppCompatTextView {
         val provideOcmStyleUi = OCManager.getInjector().provideOcmStyleUi()
 
         return when (selectedTypeFace) {
-          "0" -> provideOcmStyleUi.lightFontPath
-          "1" -> provideOcmStyleUi.mediumFontPath
-          "2" -> provideOcmStyleUi.normalFonPath
-          "3" -> provideOcmStyleUi.titleFontPath
+          TEXT_TYPE_LIGHT -> provideOcmStyleUi.lightFontPath
+          TEXT_TYPE_MEDIUM -> provideOcmStyleUi.mediumFontPath
+          TEXT_TYPE_NORMAL -> provideOcmStyleUi.normalFonPath
+          TEXT_TYPE_TITLE -> provideOcmStyleUi.titleFontPath
           else -> null
         }
       } finally {
