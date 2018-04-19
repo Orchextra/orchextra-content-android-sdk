@@ -23,17 +23,18 @@ public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
 
   @Override public Fragment getItem(final int position) {
 
-    VerticalItemPageFragment verticalItemPageFragment = VerticalItemPageFragment.newInstance();
+    CellCarouselContentData cell = (CellCarouselContentData) cellDataList.get(position);
+    String name = cell.getData().getName();
+    String imageUrl = cell.getData().getSectionView().getImageUrl();
+
+    VerticalItemPageFragment verticalItemPageFragment =
+        VerticalItemPageFragment.newInstance(name, imageUrl);
+
     verticalItemPageFragment.setOnClickItem(view -> {
       if (listedContentListener != null) {
         listedContentListener.onItemClicked(position, view);
       }
     });
-
-    if (cellDataList.get(position) instanceof CellCarouselContentData) {
-      CellCarouselContentData cell = (CellCarouselContentData) cellDataList.get(position);
-      verticalItemPageFragment.setCell(cell);
-    }
 
     return verticalItemPageFragment;
   }
@@ -42,7 +43,7 @@ public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
     return cellDataList.size();
   }
 
-  public void setItems(Collection<Cell> cellDataList) {
+  public void setData(Collection<Cell> cellDataList) {
     this.cellDataList.clear();
     this.cellDataList.addAll(cellDataList);
     notifyDataSetChanged();
