@@ -115,6 +115,6 @@ class OxManagerImpl : OxManager {
   }
 
   companion object {
-    private val TAG = "OxManagerImp"
+    private const val TAG = "OxManagerImp"
   }
 }

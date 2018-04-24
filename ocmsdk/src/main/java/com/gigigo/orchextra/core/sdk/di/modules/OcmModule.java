@@ -59,8 +59,8 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Singleton @Provides OcmSchemeHandler provideOcmSchemeHandler(OcmContextProvider contextProvider,
-      OcmController ocmController, ActionHandler actionHandler, Authoritation authoritation) {
-    return new OcmSchemeHandler(contextProvider, ocmController, actionHandler, authoritation);
+      OcmController ocmController, ActionHandler actionHandler) {
+    return new OcmSchemeHandler(contextProvider, ocmController, actionHandler);
   }
 
   @Singleton @Provides OcmStyleUi provideOcmStyleUi() {

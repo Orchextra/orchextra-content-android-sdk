@@ -11,7 +11,6 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
@@ -33,17 +32,13 @@ public class OcmSchemeHandler {
   private final OcmContextProvider contextProvider;
   private final OcmController ocmController;
   private final ActionHandler actionHandler;
-  private final Authoritation authoritation;
-  private String elementURL;
-  private String processElementURL;
   private Map<String, String> customParams = new HashMap<>();
 
   public OcmSchemeHandler(OcmContextProvider contextProvider, OcmController ocmController,
-      ActionHandler actionHandler, Authoritation authoritation) {
+      ActionHandler actionHandler) {
     this.contextProvider = contextProvider;
     this.ocmController = ocmController;
     this.actionHandler = actionHandler;
-    this.authoritation = authoritation;
   }
 
   public void processRedirectElementUrl(final String elementUrl,
