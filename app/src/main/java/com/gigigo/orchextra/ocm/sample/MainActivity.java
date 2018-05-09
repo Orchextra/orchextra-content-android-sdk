@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
               } else {
                 completion.invoke(true);
               }
-            }, 1000);
+            }, 500);
             break;
         }
       }

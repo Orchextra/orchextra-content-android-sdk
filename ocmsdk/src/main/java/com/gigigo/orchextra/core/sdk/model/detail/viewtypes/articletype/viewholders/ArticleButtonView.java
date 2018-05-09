@@ -3,6 +3,8 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -57,7 +59,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
         String bgColor = articleElement.getRender().getBgColor();
         if (bgColor != null) {
-          articleTextButton.setBackgroundColor(Color.parseColor(bgColor.replace("#", "#1A")));
+          setBackground(bgColor.replace("#", "#1A"));
         }
       }
     }
@@ -68,12 +70,24 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
     }
 
     if (!isLoading && !isDisabled) {
-      articleTextButton.setBackgroundColor(
-          Color.parseColor(articleElement.getRender().getBgColor()));
+      setBackground(articleElement.getRender().getBgColor());
     }
 
     ViewGroup.LayoutParams lp = getLayoutParams(articleElement);
     articleTextButton.setLayoutParams(lp);
+  }
+
+  private void setBackground(String color) {
+    articleTextButton.setBackground(makeSelector(Color.parseColor(color)));
+  }
+
+  private StateListDrawable makeSelector(int color) {
+    StateListDrawable res = new StateListDrawable();
+    res.setExitFadeDuration(400);
+    res.setAlpha(45);
+    res.addState(new int[] { android.R.attr.state_pressed }, new ColorDrawable(Color.GRAY));
+    res.addState(new int[] {}, new ColorDrawable(color));
+    return res;
   }
 
   @NonNull private ViewGroup.LayoutParams getLayoutParams(ArticleButtonElement articleElement) {
@@ -155,7 +169,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
       String bgColor = articleElement.getRender().getBgColor();
       if (bgColor != null) {
-        articleTextButton.setBackgroundColor(Color.parseColor(bgColor.replace("#", "#4D")));
+        setBackground(bgColor.replace("#", "#4D"));
       }
 
       articleImageButton.setColorFilter(0xBBFFFFFF, PorterDuff.Mode.SRC_ATOP);
@@ -165,8 +179,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
   private void setButtonEnabled(@NonNull ArticleButtonElement articleElement) {
     if (articleElement.getRender() != null && articleElement.getRender().getBgColor() != null) {
-      articleTextButton.setBackgroundColor(
-          Color.parseColor(articleElement.getRender().getBgColor()));
+      setBackground(articleElement.getRender().getBgColor());
     }
     articleImageButton.clearColorFilter();
     isDisabled = false;
