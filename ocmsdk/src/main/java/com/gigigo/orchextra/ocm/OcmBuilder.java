@@ -19,7 +19,9 @@ public final class OcmBuilder {
   private OnRequiredLoginCallback onRequiredLoginCallback;
   private OnEventCallback onEventCallback;
 
-  private String oxSenderId;
+  private String firebaseApiKey = "";
+  private String firebaseApplicationId = "";
+  private Boolean triggeringEnabled = true;
   private String businessUnit = "";
   private ImageRecognition vuforiaImpl;
   private boolean showReadArticles = false;
@@ -130,12 +132,30 @@ public final class OcmBuilder {
     return this;
   }
 
-  public String getOxSenderId() {
-    return oxSenderId;
+  public String getFirebaseApiKey() {
+    return firebaseApiKey;
   }
 
-  public OcmBuilder setOxSenderId(String oxSenderId) {
-    this.oxSenderId = oxSenderId;
+  public OcmBuilder setFirebaseApiKey(String firebaseApiKey) {
+    this.firebaseApiKey = firebaseApiKey;
+    return this;
+  }
+
+  public String getFirebaseApplicationId() {
+    return firebaseApplicationId;
+  }
+
+  public OcmBuilder setFirebaseApplicationId(String firebaseApplicationId) {
+    this.firebaseApplicationId = firebaseApplicationId;
+    return this;
+  }
+
+  public Boolean getTriggeringEnabled() {
+    return triggeringEnabled;
+  }
+
+  public OcmBuilder setTriggeringEnabled(Boolean triggeringEnabled) {
+    this.triggeringEnabled = triggeringEnabled;
     return this;
   }
 

@@ -8,4 +8,5 @@ data class OxConfig(
     val firebaseApiKey: String = "",
     val firebaseApplicationId: String = "",
     val deviceBusinessUnits: List<String> = arrayListOf(),
-    val notificationActivityClass: Class<Activity>? = null)
+    val notificationActivityClass: Class<Activity>? = null,
+    val triggeringEnabled: Boolean = true)

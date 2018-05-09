@@ -35,7 +35,8 @@ public class OcmWrapperImp implements OcmWrapper {
         .setOnEventCallback(eventCallback)
         .setContentLanguage("EN")
         .setBusinessUnit(businessUnit)
-        .setNotificationActivityClass(MainActivity.class);
+        .setNotificationActivityClass(MainActivity.class)
+        .setTriggeringEnabled(false);
 
     Ocm.initialize(ocmBuilder, new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {

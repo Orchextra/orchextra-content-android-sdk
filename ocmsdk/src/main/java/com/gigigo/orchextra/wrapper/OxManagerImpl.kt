@@ -43,8 +43,8 @@ class OxManagerImpl : OxManager {
         if (isReady) {
           orchextra.getTriggerManager().scanner = OxScannerImp.create(application)
           orchextra.getTriggerManager().geofence = OxGeofenceImp.create(application)
-          orchextra.getTriggerManager()
-              .indoorPositioning = OxIndoorPositioningImp.create(application)
+          orchextra.getTriggerManager().indoorPositioning = OxIndoorPositioningImp.create(
+              application)
 
           config.notificationActivityClass?.let {
             orchextra.setNotificationActivityClass(it)
@@ -66,6 +66,7 @@ class OxManagerImpl : OxManager {
     val options = OrchextraOptions.Builder().firebaseApiKey(config.firebaseApiKey)
         .firebaseApplicationId(config.firebaseApplicationId)
         .debuggable(true)
+        .triggeringEnabled(config.triggeringEnabled)
         .deviceBusinessUnits(config.deviceBusinessUnits)
         .build()
 

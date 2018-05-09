@@ -41,7 +41,6 @@ import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.wrapper.CrmUser;
-import com.gigigo.orchextra.wrapper.ImageRecognition;
 import com.gigigo.orchextra.wrapper.OrchextraCompletionCallback;
 import com.gigigo.orchextra.wrapper.OxConfig;
 import com.gigigo.orchextra.wrapper.OxManager;
@@ -617,10 +616,9 @@ Add Comment C
     }
   }
 
-  // Ox3
   static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
-      String senderId, ImageRecognition vuforia, @NonNull String businessUnit,
-      @Nullable final OcmCredentialCallback ocmCredentialCallback) {
+      String firebaseApiKey, String firebaseApplicationId, @NonNull String businessUnit,
+      @Nullable final OcmCredentialCallback ocmCredentialCallback, Boolean triggeringEnabled) {
 
     if (OCManager.instance != null) {
 
@@ -631,7 +629,8 @@ Add Comment C
 
       Application app = (Application) instance.ocmContextProvider.getApplicationContext();
       OxConfig oxConfig =
-          new OxConfig(oxKey, oxSecret, "", "", businessUnits, notificationActivityClass);
+          new OxConfig(oxKey, oxSecret, firebaseApiKey, firebaseApplicationId, businessUnits,
+              notificationActivityClass, triggeringEnabled);
 
       instance.oxManager.init(app, oxConfig, new OxManager.StatusListener() {
         @Override public void onSuccess() {

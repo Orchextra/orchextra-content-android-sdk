@@ -61,8 +61,9 @@ public final class Ocm {
       OCManager.setMaxReadArticles(ocmBuilder.getMaxReadArticles());
     }
 
-    OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass, ocmBuilder.getOxSenderId(),
-        ocmBuilder.getVuforiaImpl(), ocmBuilder.getBusinessUnit(), onCredentialCallback);
+    OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
+        ocmBuilder.getFirebaseApiKey(), ocmBuilder.getFirebaseApplicationId(),
+        ocmBuilder.getBusinessUnit(), onCredentialCallback, ocmBuilder.getTriggeringEnabled());
   }
 
   public static void getOxToken(final OcmCredentialCallback ocmCredentialCallback) {
