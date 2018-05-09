@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.wrapper
 
 import android.app.Application
-import android.util.Log
 import com.gigigo.orchextra.core.Orchextra
 import com.gigigo.orchextra.core.OrchextraErrorListener
 import com.gigigo.orchextra.core.OrchextraOptions
@@ -20,6 +19,7 @@ import com.gigigo.orchextra.wrapper.OxManager.TokenReceiver
 class OxManagerImpl : OxManager {
 
   private val orchextra = Orchextra
+  private var customSchemeReceiver: OnCustomSchemeReceiver? = null
   private val genders: HashMap<CrmUser.Gender, String> = HashMap()
 
   init {
@@ -107,14 +107,11 @@ class OxManagerImpl : OxManager {
   }
 
   override fun setCustomSchemeReceiver(customSchemeReceiver: OnCustomSchemeReceiver) {
+    this.customSchemeReceiver = customSchemeReceiver
     orchextra.setCustomActionListener { customSchemeReceiver.onReceive(it) }
   }
 
   override fun onCustomScheme(customScheme: String) {
-    Log.e(TAG, "onCustomScheme not implemented: $customScheme")
-  }
-
-  companion object {
-    private const val TAG = "OxManagerImp"
+    customSchemeReceiver?.onReceive(customScheme)
   }
 }
