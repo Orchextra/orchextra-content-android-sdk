@@ -84,7 +84,7 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   private StateListDrawable makeSelector(int color) {
     StateListDrawable res = new StateListDrawable();
     res.setExitFadeDuration(400);
-    res.setAlpha(45);
+    //res.setAlpha(45);
     res.addState(new int[] { android.R.attr.state_pressed }, new ColorDrawable(Color.GRAY));
     res.addState(new int[] {}, new ColorDrawable(color));
     return res;
