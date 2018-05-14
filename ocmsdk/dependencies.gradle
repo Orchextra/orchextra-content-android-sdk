@@ -5,7 +5,7 @@ project.ext {
   androidBuildToolsVersion = '26.0.2'
   androidTargetSdkVersion = 26
   supportVersion = '26.1.0'
-  oxVersion = '3.0-RC32'
+  oxVersion = '3.0-RC33'
   playVersion = '11.0.4' //11.4.2
 
   libraries = [androidSupportDesign      : "com.android.support:design:${supportVersion}",

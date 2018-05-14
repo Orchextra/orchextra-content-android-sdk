@@ -36,6 +36,7 @@ public class OcmWrapperImp implements OcmWrapper {
         .setContentLanguage("EN")
         .setBusinessUnit(businessUnit)
         .setNotificationActivityClass(MainActivity.class)
+        .setAnonymous(false)
         .setTriggeringEnabled(false);
 
     Ocm.initialize(ocmBuilder, new OcmCredentialCallback() {

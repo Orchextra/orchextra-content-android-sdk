@@ -63,7 +63,8 @@ public final class Ocm {
 
     OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
         ocmBuilder.getFirebaseApiKey(), ocmBuilder.getFirebaseApplicationId(),
-        ocmBuilder.getBusinessUnit(), onCredentialCallback, ocmBuilder.getTriggeringEnabled());
+        ocmBuilder.getBusinessUnit(), onCredentialCallback, ocmBuilder.getTriggeringEnabled(),
+        ocmBuilder.getAnonymous());
   }
 
   public static void getOxToken(final OcmCredentialCallback ocmCredentialCallback) {

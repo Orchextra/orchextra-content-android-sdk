@@ -22,6 +22,7 @@ public final class OcmBuilder {
   private String firebaseApiKey = "";
   private String firebaseApplicationId = "";
   private Boolean triggeringEnabled = true;
+  private Boolean anonymous = false;
   private String businessUnit = "";
   private ImageRecognition vuforiaImpl;
   private boolean showReadArticles = false;
@@ -156,6 +157,15 @@ public final class OcmBuilder {
 
   public OcmBuilder setTriggeringEnabled(Boolean triggeringEnabled) {
     this.triggeringEnabled = triggeringEnabled;
+    return this;
+  }
+
+  public Boolean getAnonymous() {
+    return anonymous;
+  }
+
+  public OcmBuilder setAnonymous(Boolean anonymous) {
+    this.anonymous = anonymous;
     return this;
   }
 
