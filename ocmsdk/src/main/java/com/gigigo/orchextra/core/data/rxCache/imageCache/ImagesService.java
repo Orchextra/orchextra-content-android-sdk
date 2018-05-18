@@ -33,7 +33,9 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void onDestroy() {
-    ocmImageCache.stop();
+    if (ocmImageCache != null) {
+      ocmImageCache.stop();
+    }
     super.onDestroy();
   }
 
