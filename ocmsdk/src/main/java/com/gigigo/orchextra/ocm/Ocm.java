@@ -28,6 +28,7 @@ import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 public final class Ocm {
 
   private static QueryStringGenerator queryStringGenerator;
+  private static ExceptionListener exceptionListener;
 
   public static final String OCM_PREFERENCES = "OCMpreferencez";
   public static final String OCM_CHANGE_CREDENTIALS_DONE = "ChangeCredentialsDONE";
@@ -214,6 +215,7 @@ public final class Ocm {
 
   public static void stop() {
     OCManager.stop();
+    exceptionListener = null;
   }
 
   public static void setOnCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {
@@ -261,5 +263,15 @@ public final class Ocm {
 
   public static void openScanner() {
     OCManager.openScanner();
+  }
+
+  public static void logException(Exception e) {
+    if (Ocm.exceptionListener != null) {
+      Ocm.exceptionListener.logException(e);
+    }
+  }
+
+  public static void setExceptionListener(ExceptionListener exceptionListener) {
+    Ocm.exceptionListener = exceptionListener;
   }
 }

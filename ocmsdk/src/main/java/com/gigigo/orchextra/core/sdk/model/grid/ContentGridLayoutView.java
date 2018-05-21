@@ -18,6 +18,7 @@ import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalVi
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
 import com.gigigo.orchextra.core.sdk.model.grid.verticalviewpager.VerticalViewContent;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
@@ -101,9 +102,18 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
     initView(view);
     setListeners();
-    presenter.attachView(this);
 
     return view;
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    try {
+      presenter.attachView(this);
+    } catch (NullPointerException e) {
+      Ocm.logException(e);
+    }
   }
 
   private void initDI() {
