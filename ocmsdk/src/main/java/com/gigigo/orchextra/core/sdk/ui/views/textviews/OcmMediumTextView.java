@@ -1,13 +1,13 @@
 package com.gigigo.orchextra.core.sdk.ui.views.textviews;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
-import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.core.sdk.ui.FontCache;
 import views.gigigo.com.textviewautofit.TextFitTextView;
+import com.gigigo.orchextra.ocm.OCManager;
 
 public class OcmMediumTextView extends TextFitTextView {
 
@@ -39,7 +39,7 @@ public class OcmMediumTextView extends TextFitTextView {
     if (injector != null) {
       OcmStyleUi styleUi = injector.provideOcmStyleUi();
       if (styleUi != null && !TextUtils.isEmpty(styleUi.getMediumFontPath())) {
-        setTypeface(Typeface.createFromAsset(context.getAssets(), styleUi.getMediumFontPath()));
+        this.setTypeface(FontCache.getFont(context, styleUi.getMediumFontPath()));
       }
     }
   }

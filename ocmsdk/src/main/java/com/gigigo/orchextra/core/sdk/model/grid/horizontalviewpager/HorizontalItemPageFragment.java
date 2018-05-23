@@ -8,17 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
-import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class HorizontalItemPageFragment extends Fragment {
 
-  private ImageLoader imageLoader;
   private CellCarouselContentData cell;
   private ImageView horizontalItemImageView;
-  private UiListedBaseContentData.ListedContentListener listedContentListener;
-  private View.OnClickListener onItemClickListener;
+  private OnClickHorizontalItem onClickHorizontalItem;
+  private View horizontalItemContainer;
 
   public static HorizontalItemPageFragment newInstance() {
     return new HorizontalItemPageFragment();
@@ -35,6 +33,7 @@ public class HorizontalItemPageFragment extends Fragment {
   }
 
   private void initViews(View view) {
+    horizontalItemContainer = view.findViewById(R.id.horizontalItemContainer);
     horizontalItemImageView = (ImageView) view.findViewById(R.id.horizontalItemImageView);
   }
 
@@ -46,23 +45,31 @@ public class HorizontalItemPageFragment extends Fragment {
   }
 
   private void setImage() {
-    String imageUrl = cell.getData().getSectionView().getImageUrl();
-    imageLoader.load(imageUrl).into(horizontalItemImageView);
+    if (cell != null) {
+
+      String imageUrl = cell.getData().getSectionView().getImageUrl();
+
+      OcmImageLoader.load(this, imageUrl).into(horizontalItemImageView);
+    }
   }
 
   private void setListeners() {
-    horizontalItemImageView.setOnClickListener(onItemClickListener);
-  }
-
-  public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = imageLoader;
+    horizontalItemImageView.setOnClickListener(v -> {
+      if (onClickHorizontalItem != null) {
+        onClickHorizontalItem.onClickItem(horizontalItemContainer);
+      }
+    });
   }
 
   public void setCell(CellCarouselContentData cell) {
     this.cell = cell;
   }
 
-  public void setOnItemClickListener(View.OnClickListener onItemClickListener) {
-    this.onItemClickListener = onItemClickListener;
+  public void setOnClickHorizontalItem(OnClickHorizontalItem onClickHorizontalItem) {
+    this.onClickHorizontalItem = onClickHorizontalItem;
+  }
+
+  public interface OnClickHorizontalItem {
+    void onClickItem(View view);
   }
 }

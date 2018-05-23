@@ -1,25 +1,24 @@
 package com.gigigo.orchextra.core.controller.model.detail;
 
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
-import com.gigigo.threaddecoratedview.views.qualifiers.NotDecorated;
-import com.gigigo.threaddecoratedview.views.qualifiers.ThreadDecoratedView;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 
-@ThreadDecoratedView
 public interface DetailElementsView {
 
-  @NotDecorated
   void initUi();
 
   void renderDetailViewWithPreview(UiBaseContentData previewContentData,
-      UiBaseContentData detailContentData, boolean canShare);
+      UiBaseContentData detailContentData, ElementCache elementCache);
 
-  void renderDetailView(UiBaseContentData detailContentData, boolean canShare);
+  void renderDetailView(UiBaseContentData detailContentData, ElementCache elementCache);
 
-  void renderPreview(UiBaseContentData previewContentData, boolean canShare);
+  void renderPreview(UiBaseContentData previewContentData, ElementCache elementCache);
 
   void showProgressView(boolean visible);
 
   void showEmptyView(boolean isEmpty);
 
   void shareElement(String shareText);
+
+  void finishView();
 }

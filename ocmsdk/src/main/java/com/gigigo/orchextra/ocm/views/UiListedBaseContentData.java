@@ -1,15 +1,15 @@
 package com.gigigo.orchextra.ocm.views;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.Context;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.View;
+import android.widget.LinearLayout;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
-import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.List;
 
-public abstract class UiListedBaseContentData extends UiBaseContentData {
+public abstract class UiListedBaseContentData extends LinearLayout {
 
   protected ListedContentListener listedContentListener;
 
@@ -17,8 +17,24 @@ public abstract class UiListedBaseContentData extends UiBaseContentData {
   protected View errorView;
   protected View loadingView;
   protected ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
-  protected Authoritation authoritation;
-  protected ImageLoader imageLoader;
+  protected int addictionalPadding;
+  protected boolean thumbnailEnabled;
+
+  //4 carrusel
+  public boolean bIsSliderActive = false;
+  public int mTime = 0;
+
+  public UiListedBaseContentData(Context context) {
+    super(context);
+  }
+
+  public UiListedBaseContentData(Context context, @Nullable AttributeSet attrs) {
+    super(context, attrs);
+  }
+
+  public UiListedBaseContentData(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+  }
 
   public abstract void setData(List<Cell> cellDataList);
 
@@ -29,18 +45,6 @@ public abstract class UiListedBaseContentData extends UiBaseContentData {
   public abstract void showEmptyView();
 
   public abstract void showProgressView(boolean isVisible);
-
-  public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = imageLoader;
-  }
-
-  public void setAuthoritation(Authoritation authoritation) {
-    this.authoritation = authoritation;
-  }
-
-  public void setClipToPadding(ClipToPadding clipToPadding) {
-    this.clipToPadding = clipToPadding;
-  }
 
   public void setEmptyViewLayout(View emptyView) {
     this.emptyView = emptyView;
@@ -57,6 +61,17 @@ public abstract class UiListedBaseContentData extends UiBaseContentData {
   public void setListedContentListener(ListedContentListener listedContentListener) {
     this.listedContentListener = listedContentListener;
   }
+
+  public void setParams(ClipToPadding clipToPadding, int addictionalPadding,
+      boolean thumbnailEnabled) {
+    this.clipToPadding = clipToPadding;
+    this.addictionalPadding = addictionalPadding;
+    this.thumbnailEnabled = thumbnailEnabled;
+
+    init();
+  }
+
+  protected abstract void init();
 
   public interface ListedContentListener {
     void reloadSection();

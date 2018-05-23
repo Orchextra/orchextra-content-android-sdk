@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.domain.entities.contentdata;
 
 public enum ContentItemTypeLayout {
   GRID("grid"),
+  FULLSCREEN("fullScreen"),
   CAROUSEL("carousel");
 
   private final String type;

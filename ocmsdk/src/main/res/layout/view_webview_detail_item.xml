@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/oc_bg_article_content_color">
+
+  <!--<ScrollView-->
+  <!--android:id="@+id/webviewClipToPaddingContainer"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"-->
+  <!--android:background="@color/oc_bg_article_content_color"-->
+  <!--android:isScrollContainer="true"-->
+  <!--android:clipToPadding="false">-->
+
+  <!--&lt;!&ndash;&gt;&ndash;&gt;<RelativeLayout-->
+  <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"-->
+  <!--android:paddingBottom="54dp"-->
+  <!--&gt;-->
+  <!--<com.gigigo.orchextra.core.sdk.ui.views.TouchyWebView-->
+  <!--android:id="@+id/ocm_webView"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="wrap_content"-->
+  <!--/>-->
+
+  <WebView
+    android:id="@+id/ocm_webView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     />
+  <!--android:layout_marginBottom="54dp"-->
+
+
+  <!--<com.gigigo.orchextra.core.sdk.ui.views.NestedWebView-->
+  <!--android:id="@+id/ocm_webView"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"-->
+  <!--android:layout_marginBottom="54dp"-->
+  <!--/>-->
+
+  <!--</RelativeLayout>-->
+  <!--</ScrollView>-->
+
+  <include
+    android:id="@+id/webview_progress"
+    layout="@layout/progress_red"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true" />
+
+</RelativeLayout>

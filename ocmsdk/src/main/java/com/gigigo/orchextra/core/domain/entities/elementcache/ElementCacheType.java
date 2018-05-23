@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.domain.entities.elementcache;
 
-public enum ElementCacheType {
+import java.io.Serializable;
+
+public enum ElementCacheType implements Serializable {
   ARTICLE("article"),
   CARDS("cards"),
   VUFORIA("vuforia"),
@@ -9,7 +11,7 @@ public enum ElementCacheType {
   BROWSER("browser"),                     //CUSTOM TABS
   EXTERNAL_BROWSER("externalBrowser"),    //CHROME
   VIDEO("video"),
-  GO_CONTENT("goContent"),
+  GO_CONTENT("openContent"),
   DEEP_LINK("deepLink"),
   IMAGE("image"),
   NONE("");

@@ -1,34 +1,141 @@
 apply plugin: 'com.android.application'
 
+apply from: '../ocmsdk/common_methods.gradle'
+apply from: '../ocmsdk/dependencies.gradle'
+apply from: 'variants.gradle'
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+def API_KEY = "API_KEY"
+def API_SECRET = "API_SECRET"
+def BUSSINES_UNIT = "BUSSINES_UNIT"
+
 android {
-  compileSdkVersion 24
-  buildToolsVersion "24.0.3"
+  signingConfigs {
+    config {}
+  }
+  compileSdkVersion project.ext.androidCompileSdkVersion
+  buildToolsVersion project.ext.androidBuildToolsVersion
 
   defaultConfig {
-    applicationId "com.gigigo.sample"
-    minSdkVersion 18
-    targetSdkVersion 24
-    versionCode 1
-    versionName "1.0"
+    minSdkVersion project.ext.androidMinSdkVersion
+    targetSdkVersion project.ext.androidTargetSdkVersion
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
   }
+
   buildTypes {
+    staging {
+      debuggable true
+      signingConfig signingConfigs.debug
+    }
+    debug {
+      debuggable true
+      signingConfig signingConfigs.debug
+    }
+    prerelease {
+      debuggable true
+      signingConfig signingConfigs.debug
+      matchingFallbacks = ['release']
+    }
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      signingConfig android.signingConfigs.debug
     }
   }
+
+  productFlavors.whenObjectAdded { flavor ->
+    flavor.versionCode generateAutoVersionCode()
+    flavor.versionName getVersionName(project.ext.version)
+  }
+
+  project.android.applicationVariants.all { variant ->
+
+    variant.productFlavors.each { flavor ->
+      println("Variant: " + variant.name)
+      println("Flavor:" + flavor.name)
+
+      def flavorData = project.ext[flavor.name]
+      def appName = flavorData.appName
+      def appId = flavorData.applicationId
+
+      println("**************************************************")
+      println("-------------" + flavor.name + "." + variant.buildType.name + "-------------")
+
+      println("****"+flavorData+"****")
+
+      setVariantApplicationId(variant, appId)
+      setVariantResValue(variant, appName, "app_name", STRING)
+
+      setVariantBuildConfigField(variant, flavorData.orchextraApiKey, API_KEY, STRING)
+      setVariantBuildConfigField(variant, flavorData.orchextraApiSecret, API_SECRET, STRING)
+      setVariantBuildConfigField(variant, flavorData.orchextraBussinesUnit, BUSSINES_UNIT, STRING)
+
+      println("--**********************************************************--")
+    }
+  }
+
+  flavorDimensions "sample"
+
+  productFlavors {
+    woah_Showcase {
+      dimension "sample"
+    }
+
+    woah_QA {
+      dimension "sample"
+    }
+
+    woah_DEMO {
+      dimension "sample"
+    }
+
+    woah_SecurityScan {
+      dimension "sample"
+    }
+
+    woah_CSE_2017 {
+      dimension "sample"
+    }
+
+    woah_IT {
+      dimension "sample"
+    }
+
+    woah_PL {
+      dimension "sample"
+    }
+
+    woah_RS {
+      dimension "sample"
+    }
+  }
+
   lintOptions {
     abortOnError false
   }
 
-  //buildToolsVersion '25.0.0'
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8 //this is 4 rx, no problem with ox 1_7
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
+
+
 dependencies {
-  //compile 'com.android.support:appcompat-v7:25.1.0'
-  compile project(path: ':ocmsdk')
-  compile 'com.squareup.leakcanary:leakcanary-android:1.5'
-  compile 'com.android.support:multidex:1.0.1'
+  api project(path: ':ocmsdk')
+  api 'com.android.support:multidex:1.0.2'
+
+
+  /*New dependencies*/
+  stagingImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+  debugImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+  prereleaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+  releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+
+  implementation 'com.android.support:support-v4:26.0.2'
+  implementation 'com.android.support:design:26.0.2'
 }

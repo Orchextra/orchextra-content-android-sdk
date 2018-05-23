@@ -26,7 +26,7 @@ public class MoreContentArrowView extends android.support.v7.widget.AppCompatIma
     super(context, attrs, defStyleAttr);
   }
 
-  public void Anim(float dp,int numRepe) {
+  public void anim(float dp,int numRepe) {
 
     ObjectAnimator animator1 =
         ObjectAnimator.ofFloat(this, "translationY", -1 * convertDpToPixel(dp, this.getContext()));

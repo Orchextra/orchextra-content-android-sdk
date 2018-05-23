@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <declare-styleable name="VerticalViewPager" >
-    <attr name="swipe_orientation" format="enum" >
-      <enum name="horizontal" value="0" />
-      <enum name="vertical" value="1" />
+  <declare-styleable name="VerticalViewContent">
+    <attr format="enum" name="swipe_orientation">
+      <enum name="horizontal" value="0"/>
+      <enum name="vertical" value="1"/>
+    </attr>
+  </declare-styleable>
+
+  <declare-styleable name="OcmTextViewTypeface">
+    <attr format="enum" name="ocm_typeface">
+      <enum name="light" value="0"/>
+      <enum name="medium" value="1"/>
+      <enum name="normal" value="2"/>
+      <enum name="title" value="3"/>
     </attr>
   </declare-styleable>
 

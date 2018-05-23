@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.domain.entities.elementcache;
 
-public class ElementCachePreview {
+import java.io.Serializable;
+
+public class ElementCachePreview implements Serializable {
 
   private String imageUrl;
   private String text;

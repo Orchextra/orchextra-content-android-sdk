@@ -7,44 +7,57 @@ import android.view.View;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
-import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.List;
 
 public class HorizontalViewPagerAdapter extends FragmentStatePagerAdapter {
 
-  private final ImageLoader imageLoader;
   private final UiListedBaseContentData.ListedContentListener listedContentListener;
+  private int mLoops = 1;
   private List<Cell> cellDataList;
 
-  public HorizontalViewPagerAdapter(FragmentManager fm, ImageLoader imageLoader, UiListedBaseContentData.ListedContentListener listedContentListener) {
+  public HorizontalViewPagerAdapter(FragmentManager fm,
+      UiListedBaseContentData.ListedContentListener listedContentListener) {
     super(fm);
-    this.imageLoader = imageLoader;
     this.listedContentListener = listedContentListener;
   }
 
-  @Override public Fragment getItem(final int position) {
-    CellCarouselContentData cell = (CellCarouselContentData) cellDataList.get(position);
+  @Override public Fragment getItem(int position) {
+    int realSize = 1;
+    if (getCount() > 0) realSize = getCount() / mLoops;
+
+    if (mLoops > 1) position = position % realSize;
+    final int finalPosition = position;
+
     HorizontalItemPageFragment horizontalItemPageFragment =
         HorizontalItemPageFragment.newInstance();
-    horizontalItemPageFragment.setImageLoader(imageLoader);
-    horizontalItemPageFragment.setOnItemClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (listedContentListener != null) {
-          listedContentListener.onItemClicked(position, v);
-        }
-      }
-    });
-    horizontalItemPageFragment.setCell(cell);
+    horizontalItemPageFragment.setOnClickHorizontalItem(
+        new HorizontalItemPageFragment.OnClickHorizontalItem() {
+          @Override public void onClickItem(View view) {
+            if (listedContentListener != null) {
+              listedContentListener.onItemClicked(finalPosition, view);
+            }
+          }
+        });
+
+    if (cellDataList.get(finalPosition) instanceof CellCarouselContentData) {
+      CellCarouselContentData cell = (CellCarouselContentData) cellDataList.get(finalPosition);
+      horizontalItemPageFragment.setCell(cell);
+    }
 
     return horizontalItemPageFragment;
   }
 
   @Override public int getCount() {
-    return cellDataList != null ? cellDataList.size() : 0;
+    return cellDataList != null ? cellDataList.size() * mLoops : 0;
   }
 
   public void setItems(List<Cell> cellDataList) {
     this.cellDataList = cellDataList;
+    notifyDataSetChanged();
+  }
+
+  public void setLoops(int mLoops) {
+    this.mLoops = mLoops;
     notifyDataSetChanged();
   }
 }

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <color name="black">#000</color>
+  <color name="white">#000</color>
+  <color name="transparent">#0000</color>
 
-  <color name="oc_button_color_pressed">#DFFF</color>
-  <color name="oc_button_color">#FFF</color>
+  <!-- Orchextra -->
+  <color name="color_primary_dark">#807f7f</color>
 
   <!-- More content -->
   <color name="oc_background_more_content_layout">#807f7f</color>
@@ -17,6 +19,7 @@
   <color name="oc_retry_content_button_text_color">#807f7f</color>
 
   <!-- Detail -->
+  <color name="oc_background_detail_view_color">#c1c1c1</color>
   <color name="oc_article_rich_text_color">#474747</color>
   <color name="oc_article_header_title_text_color">#4a4a4a</color>
   <color name="oc_preview_title_text_color">#FFF</color>
@@ -44,5 +47,21 @@
 
   <color name="oc_bg_blank_item_multiple_grid_color">#807f7f</color>
   <color name="oc_background_detail_toolbar">#999</color>
+  <color name="oc_color_text_toolbar">#FFF</color>
+
+  <color name="cell_selectioncolor">#4d000000</color>
+
+
+  <color name="oc_indicator_color">#ffffff</color>
+
+  <color name="oc_status_bar_color">#333</color>
+  <color name="oc_read_background">#333</color>
+
+  <color name="ox_scanner_background">#00ffffff</color>
+
+  <color name="ox_primary">#ee524f</color>
+  <color name="ox_primary_dark">#d44947</color>
+  <color name="ox_primary_light">#FFCDD2</color>
+  <color name="ox_accent">#3399ff</color>
 
 </resources>

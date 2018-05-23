@@ -1,48 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:autofit="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ocmtv="http://schemas.android.com/apk/res-auto"
     android:id="@+id/previewContentMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     >
   <ImageView
       android:id="@+id/preview_image"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:adjustViewBounds="true"/>
+      android:adjustViewBounds="true"
+      android:alpha="0.0"
+      android:scaleType="centerCrop"
+      />
 
   <ImageView
-    android:id="@+id/preview_background"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:adjustViewBounds="false"
-    android:background="@drawable/bg_preview" />
+      android:id="@+id/preview_background"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:adjustViewBounds="false"
+      android:alpha="0.0"
+      android:background="@drawable/bg_preview"
+      />
+
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       android:layout_gravity="center_vertical|end"
       android:orientation="vertical"
       >
 
-    <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmTitleTextView
+    <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmTextView
         android:id="@+id/preview_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center|end"
+        android:padding="5dp"
         android:layout_marginEnd="@dimen/oc_spacing_16"
-        android:layout_marginLeft="@dimen/oc_spacing_32"
-        android:layout_marginRight="@dimen/oc_spacing_16"
         android:layout_marginStart="@dimen/oc_spacing_32"
         android:layout_marginTop="@dimen/oc_spacing_48"
-        android:gravity="end"
-        android:maxLines="8"
+        android:background="#00000000"
+        android:gravity="center|end"
         android:textColor="@color/oc_preview_title_text_color"
         android:textSize="@dimen/oc_text_24"
-        autofit:minTextSize="@dimen/oc_text_11"
-      android:background="#00000000"
+        app:autoSizeMaxTextSize="@dimen/oc_text_24"
+        app:autoSizeTextType="uniform"
+        ocmtv:ocm_typeface="title"
         />
 
   </LinearLayout>
+
   <RelativeLayout
       android:id="@+id/go_to_article_button"
       android:layout_width="match_parent"

@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.viewholders;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
@@ -9,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.gigigo.ggglogger.GGGLogImpl;
-import com.gigigo.orchextra.core.domain.entities.article.ArticleVideoElement;
+import com.gigigo.orchextra.core.domain.entities.article.ArticleYoutubeVideoElement;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentDataActivity;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -22,7 +21,7 @@ public class CardVideoView extends CardDataView {
   private final Context context;
 
   private YouTubeThumbnailView youtubeThumbnail;
-  private ArticleVideoElement articleElement;
+  private ArticleYoutubeVideoElement articleElement;
 
   private YouTubeThumbnailLoader.OnThumbnailLoadedListener onThumbnailLoadedListener =
       new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
@@ -76,7 +75,7 @@ public class CardVideoView extends CardDataView {
         new YouTubeThumbnailView.OnInitializedListener() {
           @Override public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView,
               YouTubeThumbnailLoader youTubeThumbnailLoader) {
-            youTubeThumbnailLoader.setVideo(articleElement.getSource());
+            youTubeThumbnailLoader.setVideo(articleElement.getRender().getSource());
             youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
           }
 
@@ -90,7 +89,7 @@ public class CardVideoView extends CardDataView {
 
     View.OnClickListener onYoutubeThumbnailClickListener = new View.OnClickListener() {
       @Override public void onClick(View v) {
-        YoutubeContentDataActivity.open((Activity) context, articleElement.getSource());
+        YoutubeContentDataActivity.open(context.getApplicationContext(), articleElement.getRender().getSource());
         //YoutubeWebviewActivity.open(activity, articleElement.getSource());
       }
     };
@@ -99,7 +98,7 @@ public class CardVideoView extends CardDataView {
     youtubeThumbnail.setOnClickListener(onYoutubeThumbnailClickListener);
   }
 
-  public void setArticleElement(ArticleVideoElement articleElement) {
+  public void setArticleElement(ArticleYoutubeVideoElement articleElement) {
     this.articleElement = articleElement;
   }
 

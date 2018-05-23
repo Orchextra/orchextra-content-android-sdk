@@ -3,80 +3,83 @@ package com.gigigo.orchextra.core.sdk.model.grid;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
-import com.gigigo.orchextra.core.controller.model.grid.ContentView;
-import com.gigigo.orchextra.core.controller.model.grid.ContentViewPresenter;
+import com.gigigo.orchextra.core.controller.model.home.grid.ContentView;
+import com.gigigo.orchextra.core.controller.model.home.grid.ContentViewPresenter;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
-import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.core.sdk.model.grid.horizontalviewpager.HorizontalViewPager;
 import com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview.SpannedGridRecyclerView;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
-import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.core.sdk.model.grid.verticalviewpager.VerticalViewContent;
 import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.ocm.Ocm;
+import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.List;
 import orchextra.javax.inject.Inject;
 
 public class ContentGridLayoutView extends UiGridBaseContentData implements ContentView {
 
+  public boolean bIsSliderActive = false;
+  public int mTime = 100;
   @Inject ContentViewPresenter presenter;
-  @Inject ImageLoader imageLoader;
-  @Inject Authoritation authoritation;
-
+  private UiListedBaseContentData uiListedBaseContentData;
   UiListedBaseContentData.ListedContentListener listedContentListener =
       new UiListedBaseContentData.ListedContentListener() {
         @Override public void reloadSection() {
           if (presenter != null) {
-            presenter.reloadSection();
+            presenter.loadSectionAndNotifyMenu();
           }
+          uiListedBaseContentData.showProgressView(false);
         }
 
         @Override public void onItemClicked(int position, View view) {
           if (presenter != null) {
-            presenter.onItemClicked(position, (AppCompatActivity) getActivity(), view);
+            presenter.onItemClicked(position, view);
           }
         }
       };
-
-  private FragmentManager fragmentManager;
-  private UiListedBaseContentData uiListedBaseContentData;
   private ClipToPadding clipToPadding = ClipToPadding.PADDING_NONE;
+  private int addictionalPadding = 0;
   private Context context;
   private View retryButton;
   private View moreButton;
-  private String viewId;
+  private UiMenu uiMenu;
+  private int imagesToDownload;
   private String emotion;
   private View emptyView;
   private View errorView;
   private View progressView;
-  private View appEmptyView;
-  private View appErrorView;
+  private FrameLayout listedDataContainer;
+  private boolean thumbnailEnabled;
 
-  private View.OnClickListener onClickDiscoverMoreButtonListener = new View.OnClickListener() {
+  private View newContentContainer;
+  private final View.OnClickListener onNewContentClickListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
-      if (onLoadMoreContentListener != null) {
-        onLoadMoreContentListener.onLoadMoreContent();
+      newContentContainer.setVisibility(View.GONE);
+      if (presenter != null) {
+        presenter.loadSection();
       }
     }
   };
 
+  private View.OnClickListener onClickDiscoverMoreButtonListener = v -> {
+    if (onLoadMoreContentListener != null) {
+      onLoadMoreContentListener.onLoadMoreContent();
+    }
+  };
   private View.OnClickListener onClickRetryButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       if (presenter != null) {
-        presenter.reloadSection();
+        presenter.loadSection();
       }
     }
   };
@@ -90,11 +93,6 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     this.context = context;
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-  }
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -104,23 +102,39 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
     initView(view);
     setListeners();
-    presenter.attachView(this);
 
     return view;
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    try {
+      presenter.attachView(this);
+    } catch (NullPointerException e) {
+      Ocm.logException(e);
+    }
   }
 
   private void initDI() {
     Injector injector = OCManager.getInjector();
     if (injector != null) {
       injector.injectContentGridLayoutView(this);
+      thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
     }
   }
 
   private void initView(View view) {
-    emptyView = view.findViewById(R.id.ocm_empty_layout);
-    errorView = view.findViewById(R.id.ocm_error_layout);
+    if (emptyView == null) {
+      emptyView = view.findViewById(R.id.ocm_empty_layout);
+    }
+    if (errorView == null) {
+      errorView = view.findViewById(R.id.ocm_error_layout);
+    }
     retryButton = view.findViewById(R.id.ocm_retry_button);
     moreButton = view.findViewById(R.id.ocm_more_button);
+    listedDataContainer = (FrameLayout) view.findViewById(R.id.listedDataContainer);
+    newContentContainer = view.findViewById(R.id.newContentContainer);
   }
 
   private void setListeners() {
@@ -128,29 +142,21 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     moreButton.setOnClickListener(onClickDiscoverMoreButtonListener);
   }
 
-  private void setEmptyViewLayout(View emptyView) {
-    uiListedBaseContentData.setEmptyViewLayout(emptyView);
-  }
-
-  private void setErrorViewLayout(View errorView) {
-    uiListedBaseContentData.setErrorViewLayout(errorView);
-  }
-
-  private void setLoadingViewLayout() {
-    if (progressView != null) {
-      uiListedBaseContentData.setLoadingViewLayout(progressView);
-    }
-  }
-
-  public void setViewId(String viewId) {
-    this.viewId = viewId;
+  public void setViewId(UiMenu uiMenu, int imagesToDownload) {
+    this.uiMenu = uiMenu;
+    this.imagesToDownload = imagesToDownload;
   }
 
   @Override public void initUi() {
-    if (viewId != null) {
+    if (uiMenu != null && presenter != null) {
       presenter.setPadding(clipToPadding.getPadding());
-      presenter.loadSection(viewId, emotion);
+      presenter.setImagesToDownload(imagesToDownload);
+      presenter.loadSection(uiMenu, emotion);
     }
+  }
+
+  @Override public void onResume() {
+    super.onResume();
   }
 
   @Override public void setData(List<Cell> cellDataList, ContentItemTypeLayout type) {
@@ -160,82 +166,72 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
         break;
       case CAROUSEL:
         setDataCarousel(cellDataList);
+        break;
+      case FULLSCREEN:
+        setDataFullScreen(cellDataList);
+        break;
     }
   }
 
   private void setDataGrid(List<Cell> cellDataList) {
     if (uiListedBaseContentData == null) {
 
-      uiListedBaseContentData = SpannedGridRecyclerView.newInstance();
+      uiListedBaseContentData = new SpannedGridRecyclerView(context);
 
-      uiListedBaseContentData.setClipToPadding(clipToPadding);
-      uiListedBaseContentData.setImageLoader(imageLoader);
-      uiListedBaseContentData.setAuthoritation(authoritation);
-      setEmptyViewLayout(appEmptyView != null ? appEmptyView : emptyView);
-      setErrorViewLayout(appErrorView != null ? appErrorView : errorView);
-      setLoadingViewLayout();
       uiListedBaseContentData.setListedContentListener(listedContentListener);
+      uiListedBaseContentData.setParams(clipToPadding, addictionalPadding, thumbnailEnabled);
+      uiListedBaseContentData.setData(cellDataList);
 
-      fragmentManager.beginTransaction()
-          .replace(R.id.listedDataContainer, uiListedBaseContentData)
-          .commit();
+      listedDataContainer.removeAllViews();
+      listedDataContainer.addView(uiListedBaseContentData);
+    } else {
+      uiListedBaseContentData.setData(cellDataList);
     }
-    uiListedBaseContentData.setData(cellDataList);
   }
 
   private void setDataCarousel(List<Cell> cellDataList) {
-    if (uiListedBaseContentData == null) {
-      uiListedBaseContentData = HorizontalViewPager.newInstance();
+    uiListedBaseContentData = new HorizontalViewPager(context);
 
-      uiListedBaseContentData.setImageLoader(imageLoader);
-      uiListedBaseContentData.setAuthoritation(authoritation);
-      setEmptyViewLayout(appEmptyView != null ? appEmptyView : emptyView);
-      setErrorViewLayout(appErrorView != null ? appErrorView : errorView);
-      setLoadingViewLayout();
-      uiListedBaseContentData.setListedContentListener(listedContentListener);
+    if (this.bIsSliderActive) this.setViewPagerAutoSlideTime(this.mTime);
 
-      fragmentManager.beginTransaction()
-          .replace(R.id.listedDataContainer, uiListedBaseContentData)
-          .commit();
-    }
+    uiListedBaseContentData.setListedContentListener(listedContentListener);
+    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding,
+        thumbnailEnabled);
     uiListedBaseContentData.setData(cellDataList);
+
+    listedDataContainer.removeAllViews();
+    listedDataContainer.addView(uiListedBaseContentData);
   }
 
-  @Override public void showEmptyView() {
-    uiListedBaseContentData.showEmptyView();
+  private void setDataFullScreen(List<Cell> cellDataList) {
+    uiListedBaseContentData = new VerticalViewContent(context);
+
+    uiListedBaseContentData.setListedContentListener(listedContentListener);
+    uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding,
+        thumbnailEnabled);
+    uiListedBaseContentData.setData(cellDataList);
+
+    listedDataContainer.removeAllViews();
+    listedDataContainer.addView(uiListedBaseContentData);
   }
 
-  @Override public void showErrorView() {
-    uiListedBaseContentData.showErrorView();
-  }
-
-  @Override public void navigateToDetailView(String elementUrl, String urlImageToExpand,
-      AppCompatActivity activity, View view) {
-
-    ImageView imageViewToExpandInDetail =
-        (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
-
-    if (urlImageToExpand != null) {
-      String imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
-          DeviceUtils.calculateRealWidthDevice(context),
-          DeviceUtils.calculateRealHeightDevice(context));
-
-      imageLoader.load(imageUrl).into(imageViewToExpandInDetail);
+  @Override public void showEmptyView(boolean isVisible) {
+    if (emptyView != null) {
+      emptyView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
-
-    DetailActivity.open(activity, elementUrl, urlImageToExpand,
-        DeviceUtils.calculateRealWidthDevice(context),
-        DeviceUtils.calculateRealHeightDevice(context), imageViewToExpandInDetail);
   }
 
-  @Override public void showAuthDialog() {
-    OCManager.notifyRequiredLoginToContinue();
+  @Override public void showErrorView(boolean isVisible) {
+    if (errorView != null) {
+      errorView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
   }
 
   @Override public void showProgressView(boolean isVisible) {
-    if (uiListedBaseContentData == null) {
+    if (progressView != null) {
       progressView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-    } else {
+    }
+    if (uiListedBaseContentData != null) {
       uiListedBaseContentData.showProgressView(isVisible);
     }
   }
@@ -249,8 +245,10 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
   }
 
-  @Override public void setClipToPaddingBottomSize(ClipToPadding clipToPadding) {
+  @Override
+  public void setClipToPaddingBottomSize(ClipToPadding clipToPadding, int addictionalPadding) {
     this.clipToPadding = clipToPadding;
+    this.addictionalPadding = addictionalPadding;
   }
 
   @Override public void scrollToTop() {
@@ -260,22 +258,56 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void setEmptyView(View emptyView) {
-    this.appEmptyView = emptyView;
+    this.emptyView = emptyView;
   }
 
   public void setErrorView(View errorView) {
-    this.appErrorView = errorView;
+    this.errorView = errorView;
   }
 
   @Override public void setProgressView(View progressView) {
     this.progressView = progressView;
   }
 
-  @Override public void reloadSection() {
-    presenter.reloadSection();
+  @Override public void reloadSection(boolean hasToShowNewContentButton) {
+    if (presenter != null) {
+      presenter.setHasToCheckNewContent(hasToShowNewContentButton);
+      presenter.loadSection(!hasToShowNewContentButton, uiMenu, emotion, false);
+    }
   }
 
   public void setEmotion(String emotion) {
     this.emotion = emotion;
+  }
+
+  public void setViewPagerAutoSlideTime(int time) {
+    if (time > 0) {
+      this.mTime = time;
+      this.bIsSliderActive = true;
+      if (uiListedBaseContentData instanceof HorizontalViewPager) {
+        ((HorizontalViewPager) uiListedBaseContentData).setViewPagerAutoSlideTime(time);
+      }
+    } else {
+      System.out.println("You must set positive value");
+    }
+  }
+
+  @Override public void showNewExistingContent() {
+    newContentContainer.setVisibility(View.VISIBLE);
+    newContentContainer.setOnClickListener(onNewContentClickListener);
+  }
+
+  @Override public void onDestroy() {
+    if (presenter != null) {
+      presenter.destroy();
+      presenter.detachView();
+    }
+
+    super.onDestroy();
+  }
+
+  @Override public void contentNotAvailable() {
+    Snackbar.make(listedDataContainer, R.string.oc_error_content_not_available_without_internet,
+        Snackbar.LENGTH_SHORT).show();
   }
 }

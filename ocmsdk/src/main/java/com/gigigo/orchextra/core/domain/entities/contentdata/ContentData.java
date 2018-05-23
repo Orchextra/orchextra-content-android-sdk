@@ -7,6 +7,9 @@ public class ContentData {
 
   private ContentItem content;
   private Map<String, ElementCache> elementsCache;
+  private String version;
+  private String expiredAt;
+  private boolean fromCloud;
 
   public ContentItem getContent() {
     return content;
@@ -22,5 +25,29 @@ public class ContentData {
 
   public void setElementsCache(Map<String, ElementCache> elementsCache) {
     this.elementsCache = elementsCache;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  public String getExpiredAt() {
+    return expiredAt;
+  }
+
+  public void setExpiredAt(String expiredAt) {
+    this.expiredAt = expiredAt;
+  }
+
+  public boolean isFromCloud() {
+    return fromCloud;
+  }
+
+  public void setFromCloud(boolean fromCloud) {
+    this.fromCloud = fromCloud;
   }
 }

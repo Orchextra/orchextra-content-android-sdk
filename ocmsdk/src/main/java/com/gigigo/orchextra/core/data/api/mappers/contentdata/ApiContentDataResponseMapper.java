@@ -1,11 +1,12 @@
 package com.gigigo.orchextra.core.data.api.mappers.contentdata;
 
+import android.util.Log;
+import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
+import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
+import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheMapper;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
-import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
-import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
-import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +24,8 @@ public class ApiContentDataResponseMapper
   }
 
   @Override public ContentData externalClassToModel(ApiSectionContentData data) {
+    final long time = System.currentTimeMillis();
+
     ContentData model = new ContentData();
 
     model.setContent(apiContentItemMapper.externalClassToModel(data.getContent()));
@@ -40,6 +43,12 @@ public class ApiContentDataResponseMapper
     }
 
     model.setElementsCache(elementCacheMap);
+
+    model.setVersion(data.getVersion());
+    model.setExpiredAt(data.getExpireAt());
+    model.setFromCloud(data.isFromCloud());
+
+    Log.v("TT - ApiContentData", (System.currentTimeMillis() - time) / 1000 + "");
 
     return model;
   }

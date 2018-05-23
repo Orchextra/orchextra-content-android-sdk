@@ -2,30 +2,33 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheBehaviour;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
+import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewholders.listeners.PreviewFuntionalityListener;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
+import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.MoreContentArrowView;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class PreviewContentData extends UiBaseContentData {
 
   private Context context;
   private ElementCachePreview preview;
-  private ElementCacheShare share;
 
   private View previewContentMainLayout;
   private ImageView previewImage;
@@ -34,7 +37,7 @@ public class PreviewContentData extends UiBaseContentData {
   private View goToArticleButton;
 
   private PreviewFuntionalityListener previewFuntionalityListener;
-  private ImageLoader imageLoader;
+  private boolean statusBarEnabled;
 
   public static PreviewContentData newInstance() {
     return new PreviewContentData();
@@ -51,8 +54,16 @@ public class PreviewContentData extends UiBaseContentData {
     View view = inflater.inflate(R.layout.view_preview_item, container, false);
 
     init(view);
+    initDi();
 
     return view;
+  }
+
+  private void initDi() {
+    Injector injector = OCManager.getInjector();
+    if (injector != null) {
+      statusBarEnabled = injector.provideOcmStyleUi().isStatusBarEnabled();
+    }
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -66,31 +77,32 @@ public class PreviewContentData extends UiBaseContentData {
     this.preview = preview;
   }
 
-  public void setShare(ElementCacheShare share) {
-    this.share = share;
-  }
-
   private void init(View view) {
     initView(view);
   }
 
   private void initView(View view) {
     previewContentMainLayout = view.findViewById(R.id.previewContentMainLayout);
-    previewImage = (ImageView) view.findViewById(R.id.preview_image);
-    previewBackgroundShadow = (ImageView) view.findViewById(R.id.preview_background);
-    previewTitle = (TextView) view.findViewById(R.id.preview_title);
+    previewImage = view.findViewById(R.id.preview_image);
+    previewBackgroundShadow = view.findViewById(R.id.preview_background);
+    previewTitle = view.findViewById(R.id.preview_title);
     goToArticleButton = view.findViewById(R.id.go_to_article_button);
-    MoreContentArrowView imgAnim = (MoreContentArrowView) view.findViewById(R.id.imgMoreContain);
-    imgAnim.Anim(32, -1);
+    MoreContentArrowView imgAnim = view.findViewById(R.id.imgMoreContain);
+    imgAnim.anim(32, -1);
   }
 
   public void bindTo() {
     if (preview != null) {
       setImage();
+      setBackgroundShadow();
 
-      previewTitle.setText(preview.getText());
-      if (preview.getText() == null || (preview.getText() != null && preview.getText().isEmpty())) {
-        previewBackgroundShadow.setVisibility(View.GONE);
+      Handler handler = new Handler();
+      handler.postDelayed(() -> previewTitle.setText(preview.getText()), 1000);
+
+      if (TextUtils.isEmpty(preview.getText())) {
+        hideShadow();
+      } else {
+        showShadow();
       }
 
       if (preview.getBehaviour().equals(ElementCacheBehaviour.SWIPE)) {
@@ -101,8 +113,30 @@ public class PreviewContentData extends UiBaseContentData {
     }
   }
 
+  private void showShadow() {
+    previewBackgroundShadow.animate().alpha(1.0f).setDuration(1000);
+  }
+
+  private void hideShadow() {
+    previewBackgroundShadow.animate().alpha(0.0f).setDuration(1000);
+  }
+
+  private void setBackgroundShadow() {
+    int width, height;
+    if (!statusBarEnabled) {
+      width = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context);
+      height = DeviceUtils.calculateHeightDeviceInImmersiveMode(context);
+    } else {
+      width = DeviceUtils.calculateWidthDevice(context);
+      height = DeviceUtils.calculateHeightDevice(context);
+    }
+
+    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
+    previewBackgroundShadow.setLayoutParams(lp);
+  }
+
   private void setAnimations() {
-    Animation animation = AnimationUtils.loadAnimation(context, R.anim.settings_items);
+    Animation animation = AnimationUtils.loadAnimation(context, R.anim.oc_settings_items);
     previewTitle.startAnimation(animation);
   }
 
@@ -110,11 +144,20 @@ public class PreviewContentData extends UiBaseContentData {
     String imageUrl = preview.getImageUrl();
 
     if (imageUrl != null) {
-      String generatedImageUrl =
-          ImageGenerator.generateImageUrl(imageUrl, DeviceUtils.calculateRealWidthDevice(context),
-              DeviceUtils.calculateRealHeightDevice(context));
+      int width, height;
+      if (!statusBarEnabled) {
+        width = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(context);
+        height = DeviceUtils.calculateHeightDeviceInImmersiveMode(context);
+      } else {
+        width = DeviceUtils.calculateWidthDevice(context);
+        height = DeviceUtils.calculateHeightDevice(context);
+        previewImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+      }
 
-      imageLoader.load(generatedImageUrl).into(previewImage);
+      String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, width, height);
+
+      Glide.with(PreviewContentData.this).load(generatedImageUrl).into(previewImage);
+      previewImage.animate().alpha(1.0f).setDuration(850);
     }
   }
 
@@ -142,8 +185,37 @@ public class PreviewContentData extends UiBaseContentData {
     }
   }
 
-  public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = null;
-    this.imageLoader = imageLoader;
+  @Override public void onDestroy() {
+    if (previewContentMainLayout != null) {
+      unbindDrawables(previewContentMainLayout);
+      System.gc();
+
+      Glide.get(this.getContext()).clearMemory();
+      previewImage = null;
+      previewBackgroundShadow = null;
+      goToArticleButton = null;
+      ((ViewGroup) previewContentMainLayout).removeAllViews();
+      Glide.get(this.getContext()).clearMemory();
+
+      previewContentMainLayout = null;
+    }
+
+    if (getHost() != null) {
+      super.onDestroy();
+    }
+  }
+
+  private void unbindDrawables(View view) {
+    System.gc();
+    Runtime.getRuntime().gc();
+    if (view.getBackground() != null) {
+      view.getBackground().setCallback(null);
+    }
+    if (view instanceof ViewGroup) {
+      for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        unbindDrawables(((ViewGroup) view).getChildAt(i));
+      }
+      ((ViewGroup) view).removeAllViews();
+    }
   }
 }

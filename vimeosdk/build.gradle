@@ -1,0 +1,63 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+apply from: '../ocmsdk/dependencies.gradle'
+
+group = 'com.github.Orchextra'
+
+android {
+  compileSdkVersion project.androidCompileSdkVersion
+  buildToolsVersion project.androidBuildToolsVersion
+
+  defaultConfig {
+    minSdkVersion project.androidMinSdkVersion
+    targetSdkVersion project.androidTargetSdkVersion
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+
+  buildTypes {
+    staging {
+      debuggable true
+    }
+
+    debug {
+      debuggable true
+    }
+
+    release {
+      debuggable false
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  flavorDimensions "ocm"
+
+  productFlavors {
+    ocm {
+      dimension "ocm"
+    }
+  }
+
+  //true to publish all flavour artifacts
+  // publishNonDefault true
+  defaultPublishConfig "ocmRelease"
+}
+
+dependencies {
+  implementation project.libraries.kotlinStdlib
+  implementation project.libraries.androidAppCompat
+  api project.libraries.vimeoNetworking
+  api project.libraries.exoplayer
+  api project.libraries.imageloaderGlideBlur
+  api project.libraries.rxJava
+
+  androidTestImplementation(project.testLibraries.espresso, {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
+  testImplementation project.testLibraries.junit
+}

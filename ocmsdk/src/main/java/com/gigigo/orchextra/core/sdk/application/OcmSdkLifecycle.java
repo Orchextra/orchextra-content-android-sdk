@@ -3,13 +3,19 @@ package com.gigigo.orchextra.core.sdk.application;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
-import com.gigigo.orchextra.sdk.application.applifecycle.ActivityLifecyleWrapper;
+import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import java.util.Iterator;
 import java.util.Stack;
 
 public class OcmSdkLifecycle implements Application.ActivityLifecycleCallbacks {
 
+  private final PriorityScheduler priorityScheduler;
+
   private Stack<ActivityLifecyleWrapper> activityStack = new Stack<>();
+
+  public OcmSdkLifecycle(PriorityScheduler priorityScheduler) {
+    this.priorityScheduler = priorityScheduler;
+  }
 
   @Override public void onActivityCreated(Activity activity, Bundle bundle) {
   }
@@ -19,11 +25,11 @@ public class OcmSdkLifecycle implements Application.ActivityLifecycleCallbacks {
   }
 
   @Override public void onActivityResumed(Activity activity) {
-    activityStack.peek().setIsPaused(false);
+    if (!activityStack.isEmpty()) activityStack.peek().setIsPaused(false);
   }
 
   @Override public void onActivityPaused(Activity activity) {
-    activityStack.peek().setIsPaused(true);
+    if (!activityStack.isEmpty()) activityStack.peek().setIsPaused(true);
   }
 
   @Override public void onActivityStopped(Activity activity) {
@@ -34,6 +40,7 @@ public class OcmSdkLifecycle implements Application.ActivityLifecycleCallbacks {
   }
 
   @Override public void onActivityDestroyed(Activity activity) {
+    priorityScheduler.removeQueue();
   }
 
   private void removeActivityFromStack(Activity activity) {

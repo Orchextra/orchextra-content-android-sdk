@@ -50,8 +50,8 @@ public class CardRichTextDataView extends CardDataView {
   }
 
   private void bindTo() {
-    if (!TextUtils.isEmpty(richTextElement.getHtml())) {
-      cardRichText.setText(Html.fromHtml(richTextElement.getHtml()));
+    if (!TextUtils.isEmpty(richTextElement.getRender().getHtml())) {
+      cardRichText.setText(Html.fromHtml(richTextElement.getRender().getHtml()));
     }
   }
 

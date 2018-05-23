@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards;
 
-import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 

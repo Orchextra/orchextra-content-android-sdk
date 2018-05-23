@@ -9,15 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.bumptech.glide.Glide;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsView;
+import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
+import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
-import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
-import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
-import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocm.OcmEvent;
+import com.gigigo.orchextra.ocm.callbacks.OnFinishViewListener;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 
@@ -84,35 +83,43 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
   }
 
   @Override public void renderDetailViewWithPreview(UiBaseContentData previewContentData,
-      UiBaseContentData detailContentData, boolean canShare) {
+      UiBaseContentData detailContentData, ElementCache elementCache) {
 
-    addLayoutToCoordinatorLayoutView(previewContentData, detailContentData, canShare);
+    addLayoutToCoordinatorLayoutView(previewContentData, detailContentData, elementCache);
   }
 
   private void addLayoutToCoordinatorLayoutView(UiBaseContentData previewContentData,
-      UiBaseContentData detailContentData, boolean canShare) {
+      UiBaseContentData detailContentData, ElementCache elementCache) {
 
-    DetailCoordinatorLayoutContentData detailCoordinatorLayoutContentData =
-        DetailCoordinatorLayoutContentData.newInstance();
+    try {
+      if (isAdded()) {
+        DetailCoordinatorLayoutContentData detailCoordinatorLayoutContentData =
+            DetailCoordinatorLayoutContentData.newInstance();
 
-    detailCoordinatorLayoutContentData.setViews(previewContentData, detailContentData);
-    detailCoordinatorLayoutContentData.setOnFinishListener(onFinishListener);
-    if (canShare) {
-      detailCoordinatorLayoutContentData.setOnShareListener(onShareListener);
+        detailCoordinatorLayoutContentData.setViews(previewContentData, detailContentData);
+        detailCoordinatorLayoutContentData.setOnFinishListener(onFinishListener);
+        detailCoordinatorLayoutContentData.setArticleName(elementCache.getName());
+        if (elementCache.getShare() != null) {
+          detailCoordinatorLayoutContentData.setOnShareListener(onShareListener);
+        }
+
+        ((AppCompatActivity) context).getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.detail_container_layout, detailCoordinatorLayoutContentData)
+            .commit();
+      }
+    } catch (Exception ignored) {
     }
-
-    ((AppCompatActivity) context).getSupportFragmentManager()
-        .beginTransaction()
-        .replace(R.id.detail_container_layout, detailCoordinatorLayoutContentData)
-        .commit();
   }
 
-  @Override public void renderDetailView(UiBaseContentData detailContentData, boolean canShare) {
-    addLayoutToView(detailContentData, canShare);
+  @Override
+  public void renderDetailView(UiBaseContentData detailContentData, ElementCache elementCache) {
+    addLayoutToView(detailContentData, elementCache);
   }
 
-  @Override public void renderPreview(UiBaseContentData previewContentData, boolean canShare) {
-    addLayoutToView(previewContentData, canShare);
+  @Override
+  public void renderPreview(UiBaseContentData previewContentData, ElementCache elementCache) {
+    addLayoutToView(previewContentData, elementCache);
   }
 
   @Override public void showProgressView(boolean visible) {
@@ -135,21 +142,33 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
     startActivity(intent);
   }
 
-  private void addLayoutToView(UiBaseContentData uiBaseContentData, boolean canShare) {
-
-    DetailSimpleLayoutContentData detailSimpleLayoutContentData =
-        DetailSimpleLayoutContentData.newInstance();
-
-    detailSimpleLayoutContentData.setViews(uiBaseContentData);
-    detailSimpleLayoutContentData.setOnFinishListener(onFinishListener);
-    if (canShare) {
-      detailSimpleLayoutContentData.setOnShareListener(onShareListener);
+  @Override public void finishView() {
+    if (onFinishListener != null) {
+      onFinishListener.setAppbarExpanded(true);
+      onFinishListener.onFinish();
     }
+  }
 
-    ((AppCompatActivity) context).getSupportFragmentManager()
-        .beginTransaction()
-        .replace(R.id.detail_container_layout, detailSimpleLayoutContentData)
-        .commit();
+  private void addLayoutToView(UiBaseContentData uiBaseContentData, ElementCache elementCache) {
+    try {
+      if (isAdded()) {
+        DetailSimpleLayoutContentData detailSimpleLayoutContentData = DetailSimpleLayoutContentData.newInstance();
+
+        detailSimpleLayoutContentData.setViews(uiBaseContentData);
+        detailSimpleLayoutContentData.setOnFinishListener(onFinishListener);
+        detailSimpleLayoutContentData.setElementCache(elementCache);
+        detailSimpleLayoutContentData.setArticleName(elementCache.getName());
+        if (elementCache.getShare() != null) {
+          detailSimpleLayoutContentData.setOnShareListener(onShareListener);
+        }
+
+        ((AppCompatActivity) context).getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.detail_container_layout, detailSimpleLayoutContentData)
+            .commit();
+      }
+    } catch (Exception ignored) {
+    }
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -160,13 +179,16 @@ public class DetailLayoutContentData extends UiDetailBaseContentData implements 
     System.out.println("----------------------------------------------destroyview");
 
     if (context instanceof Activity) {
+
       if (presenter != null) {
-        presenter.detachView(this);
+        presenter.destroy();
+        presenter.detachView();
       }
       onFinishListener = null;
       ((Activity) context).finish();
     }
     this.context = null;
+    Glide.get(this.getContext()).clearMemory();
     super.onDestroyView();
   }
 

@@ -6,17 +6,17 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePrevie
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
+import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
+import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
-import java.util.List;
 
 public interface OcmViewGenerator {
 
-  List<UiMenu> getMenu();
-
-  UiGridBaseContentData generateGridView(String viewId, String filter);
+  void generateSectionView(UiMenu uiMenu, String filter, int imagesToDownload,
+      GetSectionViewGeneratorCallback getSectionViewGeneratorCallback);
 
   UiDetailBaseContentData generateDetailView(String elementUrl);
 
@@ -24,7 +24,8 @@ public interface OcmViewGenerator {
 
   UiBaseContentData generateDetailView(ElementCacheType type, ElementCacheRender elements);
 
-  String getImageUrl(String elementUrl);
+  void getImageUrl(String elementUrl,
+      GetDetailImageViewGeneratorCallback getDetailImageViewGeneratorCallback);
 
   UiSearchBaseContentData generateSearchView();
 
@@ -32,6 +33,25 @@ public interface OcmViewGenerator {
 
   UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
 
-  void releaseImageLoader();
+  void getMenu(DataRequest menuRequest, GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
+
+  // Callbacks
+  interface GetMenusViewGeneratorCallback {
+    void onGetMenusLoaded(UiMenuData menus);
+
+    void onGetMenusFails(Throwable e);
+  }
+
+  interface GetDetailImageViewGeneratorCallback {
+    void onGetImageLoaded(String imagePath);
+
+    void onGetImageError(Exception e);
+  }
+
+  interface GetSectionViewGeneratorCallback {
+    void onSectionViewLoaded(UiGridBaseContentData uiGridBaseContentData);
+
+    void onSectionViewFails(Exception e);
+  }
 }
 

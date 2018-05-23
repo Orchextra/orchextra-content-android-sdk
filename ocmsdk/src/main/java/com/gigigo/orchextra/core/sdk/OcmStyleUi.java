@@ -12,4 +12,10 @@ public interface OcmStyleUi {
   String getMediumFontPath();
 
   String getLightFontPath();
+
+  boolean isTitleToolbarEnabled();
+
+  boolean isStatusBarEnabled();
+
+  boolean isThumbnailEnabled();
 }

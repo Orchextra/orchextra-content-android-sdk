@@ -1,10 +1,10 @@
 package com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview;
 
-import android.os.Bundle;
+import android.content.Context;
 import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -22,21 +22,28 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
 
   private MultipleGridRecyclerView multipleGridRecyclerView;
 
-  private List<Cell> cellDataList;
-
-  public static SpannedGridRecyclerView newInstance() {
-    return new SpannedGridRecyclerView();
+  public SpannedGridRecyclerView(Context context) {
+    super(context);
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.view_spanned_grid_recycler_item, container, false);
+  public SpannedGridRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    super(context, attrs);
+  }
 
+  public SpannedGridRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+  }
+
+  @Override protected void init() {
+    View view = inflateLayout();
     initViews(view);
     initRecyclerView();
+  }
 
-    return view;
+  private View inflateLayout() {
+    LayoutInflater inflater =
+        (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    return inflater.inflate(R.layout.view_spanned_grid_recycler_item, this, true);
   }
 
   private void initViews(View view) {
@@ -48,9 +55,13 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
     setAdapterDataViewHolders();
 
     //TODO Resolve clip to padding flashing when last row is 3 items 1x1. Remove logic in presenter
-    int padding = (clipToPadding != null) ? clipToPadding.getPadding() : ClipToPadding.PADDING_NONE.getPadding();
+    int padding = (clipToPadding != null) ? clipToPadding.getPadding()
+        : ClipToPadding.PADDING_NONE.getPadding();
+
     multipleGridRecyclerView.setGridColumns(
         clipToPadding == ClipToPadding.PADDING_NONE ? 3 : 3 * padding);
+
+    multipleGridRecyclerView.setMillis(1500);
 
     multipleGridRecyclerView.setOnRefreshListener(new MultipleGridRecyclerView.OnRefreshListener() {
       @Override public void onRefresh() {
@@ -71,11 +82,14 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
     multipleGridRecyclerView.setEmptyViewLayout(emptyView);
     multipleGridRecyclerView.setErrorViewLayout(errorView);
     multipleGridRecyclerView.setLoadingViewLayout(loadingView);
+
+    multipleGridRecyclerView.overrideScollingVelocityY(0.4f);
+    multipleGridRecyclerView.setClipToPaddingSize(addictionalPadding);
   }
 
   private void setAdapterDataViewHolders() {
     ElementsViewHolderFactory factory =
-        new ElementsViewHolderFactory(getContext(), imageLoader, authoritation);
+        new ElementsViewHolderFactory(getContext(), thumbnailEnabled);
 
     multipleGridRecyclerView.setAdapterViewHolderFactory(factory);
 
@@ -87,16 +101,7 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
     multipleGridRecyclerView.setUndecoratedViewHolder(CellBlankViewHolder.class);
   }
 
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-
-    if (cellDataList != null) {
-      multipleGridRecyclerView.addAll(cellDataList);
-    }
-  }
-
   @Override public void setData(List<Cell> cellDataList) {
-    this.cellDataList = cellDataList;
     if (multipleGridRecyclerView != null) {
       multipleGridRecyclerView.addAll(cellDataList);
     }

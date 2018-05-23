@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import com.gigigo.orchextra.ocmsdk.R;
 
 public class ScrollBackButtonBehavior extends CoordinatorLayout.Behavior<ViewGroup> {
@@ -47,11 +46,11 @@ public class ScrollBackButtonBehavior extends CoordinatorLayout.Behavior<ViewGro
   }
 
   private void doVisibleAnimation(ViewGroup child) {
-    doAnimation(child, R.anim.scale_item_in);
+    doAnimation(child, R.anim.oc_scale_item_in);
   }
 
   private void doHideAnimation(ViewGroup child) {
-    doAnimation(child, R.anim.scale_item_out);
+    doAnimation(child, R.anim.oc_scale_item_out);
   }
 
   private void doAnimation(ViewGroup child, @AnimRes int animRes) {

@@ -1,9 +1,12 @@
 package com.gigigo.orchextra.ocm;
 
 import android.app.Application;
-import com.gigigo.orchextra.CustomSchemeReceiver;
+import android.graphics.Bitmap;
+import com.bumptech.glide.load.Transformation;
+import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
+import com.gigigo.orchextra.wrapper.ImageRecognition;
 
 public final class OcmBuilder {
 
@@ -15,6 +18,69 @@ public final class OcmBuilder {
   private String contentLanguage;
   private OnRequiredLoginCallback onRequiredLoginCallback;
   private OnEventCallback onEventCallback;
+
+  private String firebaseApiKey = "";
+  private String firebaseApplicationId = "";
+  private Boolean triggeringEnabled = true;
+  private Boolean anonymous = false;
+  private String businessUnit = "";
+  private ImageRecognition vuforiaImpl;
+  private boolean showReadArticles = false;
+  private ImageTransformReadArticle transformReadArticleMode = ImageTransformReadArticle.OVERLAY;
+  private int maxReadArticles = 100;
+
+  public int getMaxReadArticles() {
+    return maxReadArticles;
+  }
+
+  public OcmBuilder setMaxReadArticles(int maxReadArticles) {
+    this.maxReadArticles = maxReadArticles;
+    return this;
+  }
+
+  public Transformation<Bitmap> getCustomBitmapTransformReadArticle() {
+    return customBitmapTransformReadArticle;
+  }
+
+  public OcmBuilder setCustomBitmapTransformReadArticle(
+      Transformation<Bitmap> customBitmapTransformReadArticle) {
+    this.customBitmapTransformReadArticle = customBitmapTransformReadArticle;
+    return this;
+  }
+
+  private com.bumptech.glide.load.Transformation<Bitmap> customBitmapTransformReadArticle = null;
+
+  /**
+   * setter for do vuforia optional in ocm, setted from intetragion app
+   */
+  public OcmBuilder setVuforiaImpl(ImageRecognition vuforiaImpl) {
+    this.vuforiaImpl = vuforiaImpl;
+    return this;
+  }
+
+  public ImageRecognition getVuforiaImpl() {
+    return vuforiaImpl;
+  }
+
+  public ImageTransformReadArticle getTransformReadArticleMode() {
+    return transformReadArticleMode;
+  }
+
+  public OcmBuilder setTransformReadArticleMode(
+      ImageTransformReadArticle transformReadArticleMode) {
+    this.transformReadArticleMode = transformReadArticleMode;
+    return this;
+  }
+
+  public OcmBuilder setShowReadArticles(boolean isShowReadArticles) {
+    this.showReadArticles = isShowReadArticles;
+
+    return this;
+  }
+
+  public boolean getShowReadArticles() {
+    return showReadArticles;
+  }
 
   /**
    * Initialize the sdk with the Application context
@@ -32,7 +98,8 @@ public final class OcmBuilder {
   /**
    * Callback to know when the user need to be logged in the app.
    */
-  public OcmBuilder setOnDoRequiredLoginCallback(OnRequiredLoginCallback onRequiredLoginCallback) {
+  @Deprecated public OcmBuilder setOnDoRequiredLoginCallback(
+      OnRequiredLoginCallback onRequiredLoginCallback) {
     this.onRequiredLoginCallback = onRequiredLoginCallback;
     return this;
   }
@@ -42,6 +109,11 @@ public final class OcmBuilder {
    */
   public OcmBuilder setOnEventCallback(OnEventCallback onEventCallback) {
     this.onEventCallback = onEventCallback;
+    return this;
+  }
+
+  public OcmBuilder setBusinessUnit(String businessUnit) {
+    this.businessUnit = businessUnit;
     return this;
   }
 
@@ -61,6 +133,42 @@ public final class OcmBuilder {
     return this;
   }
 
+  public String getFirebaseApiKey() {
+    return firebaseApiKey;
+  }
+
+  public OcmBuilder setFirebaseApiKey(String firebaseApiKey) {
+    this.firebaseApiKey = firebaseApiKey;
+    return this;
+  }
+
+  public String getFirebaseApplicationId() {
+    return firebaseApplicationId;
+  }
+
+  public OcmBuilder setFirebaseApplicationId(String firebaseApplicationId) {
+    this.firebaseApplicationId = firebaseApplicationId;
+    return this;
+  }
+
+  public Boolean getTriggeringEnabled() {
+    return triggeringEnabled;
+  }
+
+  public OcmBuilder setTriggeringEnabled(Boolean triggeringEnabled) {
+    this.triggeringEnabled = triggeringEnabled;
+    return this;
+  }
+
+  public Boolean getAnonymous() {
+    return anonymous;
+  }
+
+  public OcmBuilder setAnonymous(Boolean anonymous) {
+    this.anonymous = anonymous;
+    return this;
+  }
+
   Application getApp() {
     return app;
   }
@@ -69,11 +177,15 @@ public final class OcmBuilder {
     return oxKey;
   }
 
+  public String getBusinessUnit() {
+    return businessUnit;
+  }
+
   String getOxSecret() {
     return oxSecret;
   }
 
-  OnRequiredLoginCallback getOnRequiredLoginCallback() {
+  @Deprecated OnRequiredLoginCallback getOnRequiredLoginCallback() {
     return onRequiredLoginCallback;
   }
 

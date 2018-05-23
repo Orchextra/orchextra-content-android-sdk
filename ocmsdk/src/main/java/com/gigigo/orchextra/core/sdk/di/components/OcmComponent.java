@@ -8,5 +8,6 @@ import orchextra.javax.inject.Singleton;
 
 @Singleton @Component(modules = OcmModule.class) public interface OcmComponent
     extends OcmModuleProvider {
+
   void injectOcm(OCManager instance);
 }

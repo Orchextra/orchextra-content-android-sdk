@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.ocm.views;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
@@ -12,7 +11,8 @@ public abstract class UiGridBaseContentData extends UiBaseContentData {
 
   public abstract void setFilter(String filter);
 
-  public abstract void setClipToPaddingBottomSize(ClipToPadding clipToPadding);
+  public abstract void setClipToPaddingBottomSize(ClipToPadding clipToPadding,
+      int addictionalPadding);
 
   public abstract void scrollToTop();
 
@@ -22,7 +22,7 @@ public abstract class UiGridBaseContentData extends UiBaseContentData {
 
   public abstract void setProgressView(View progressView);
 
-  public abstract void reloadSection();
+  public abstract void reloadSection(boolean hasToShowNewContentButton);
 
   public void setOnLoadMoreContentListener(OnLoadMoreContentListener onLoadMoreContentListener) {
     this.onLoadMoreContentListener = onLoadMoreContentListener;

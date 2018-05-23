@@ -1,10 +1,11 @@
 package com.gigigo.orchextra.core.data.api.mappers.contentdata;
 
+import android.util.Log;
+import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiContentItemLayout;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemLayout;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
-import com.gigigo.ggglib.mappers.ExternalClassToModelMapper;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,8 @@ public class ApiContentItemLayoutMapper
   }
 
   @Override public ContentItemLayout externalClassToModel(ApiContentItemLayout data) {
+    final long time = System.currentTimeMillis();
+
     ContentItemLayout model = new ContentItemLayout();
 
     model.setName(data.getName());
@@ -34,6 +37,7 @@ public class ApiContentItemLayoutMapper
       }
     }
     model.setPattern(patternList);
+    Log.v("TT - ApiContentItemLay", (System.currentTimeMillis() - time) / 1000 + "");
 
     return model;
   }

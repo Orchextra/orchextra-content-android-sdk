@@ -18,17 +18,29 @@
 
 package com.gigigo.orchextra.core.sdk.di.injector;
 
+import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
+import com.gigigo.orchextra.core.receiver.DaggerImagesServiceComponent;
+import com.gigigo.orchextra.core.receiver.ImagesServiceComponent;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
 import com.gigigo.orchextra.core.sdk.di.components.OcmComponent;
+import com.gigigo.orchextra.core.sdk.model.detail.DaggerDetailActivityComponent;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivityComponent;
+import com.gigigo.orchextra.core.sdk.model.detail.layouts.DaggerDetailContentDataComponent;
+import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailContentDataComponent;
+import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailParentContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.ArticleContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.ArticleContentDataComponent;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.DaggerArticleContentDataComponent;
+import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutViewComponent;
+import com.gigigo.orchextra.core.sdk.model.grid.DaggerContentGridLayoutViewComponent;
+import com.gigigo.orchextra.core.sdk.model.grid.articles.ContentArticleHomeLayoutView;
+import com.gigigo.orchextra.core.sdk.model.grid.articles.ContentArticleHomeLayoutViewComponent;
+import com.gigigo.orchextra.core.sdk.model.grid.articles.DaggerContentArticleHomeLayoutViewComponent;
+import com.gigigo.orchextra.core.sdk.model.searcher.DaggerSearcherLayoutViewComponent;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutViewComponent;
-import com.gigigo.orchextra.core.sdk.model.detail.DaggerDetailActivityComponent;
-import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
-import com.gigigo.orchextra.core.sdk.model.grid.DaggerContentGridLayoutViewComponent;
-import com.gigigo.orchextra.core.sdk.model.searcher.DaggerSearcherLayoutViewComponent;
 
 public class InjectorImpl implements Injector {
 
@@ -64,5 +76,34 @@ public class InjectorImpl implements Injector {
   @Override
   public OcmStyleUi provideOcmStyleUi() {
     return ocmComponent.provideOcmStyleUi();
+  }
+
+  @Override public void injectDetailContentData(DetailParentContentData detailParentContentData) {
+    DetailContentDataComponent detailContentDataComponent =
+        DaggerDetailContentDataComponent.builder().ocmComponent(ocmComponent).build();
+
+    detailContentDataComponent.injectDetailContentData(detailParentContentData);
+  }
+
+  @Override public void injectArticleContentData(ArticleContentData articleContentData) {
+    ArticleContentDataComponent articleContentDataComponent =
+        DaggerArticleContentDataComponent.builder().ocmComponent(ocmComponent).build();
+
+    articleContentDataComponent.injectArticleContentData(articleContentData);
+  }
+
+  @Override public void injectImagesService(ImagesService imagesService) {
+    ImagesServiceComponent
+        imagesServiceComponent = DaggerImagesServiceComponent.builder().ocmComponent(ocmComponent).build();
+    imagesServiceComponent.injectImagesService(imagesService);
+  }
+
+  @Override public void injectContentArticleHomeLayoutView(
+      ContentArticleHomeLayoutView contentArticleHomeLayoutView) {
+
+    ContentArticleHomeLayoutViewComponent component =
+        DaggerContentArticleHomeLayoutViewComponent.builder().ocmComponent(ocmComponent).build();
+
+    component.injectContentArticleHomeLayoutView(contentArticleHomeLayoutView);
   }
 }

@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -16,35 +15,25 @@ import com.gigigo.multiplegridrecyclerview.viewholder.CellBlankViewHolder;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutInterface;
 import com.gigigo.orchextra.core.controller.model.searcher.SearcherLayoutPresenter;
-import com.gigigo.orchextra.core.domain.OcmController;
-import com.gigigo.orchextra.core.domain.entities.elements.Element;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
-import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
 import com.gigigo.orchextra.core.sdk.model.grid.factory.ElementsViewHolderFactory;
 import com.gigigo.orchextra.core.sdk.model.grid.viewholders.CellImageViewHolder;
-import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
-import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
-import java.util.ArrayList;
 import java.util.List;
 import orchextra.javax.inject.Inject;
 
 public class SearcherLayoutView extends UiSearchBaseContentData implements SearcherLayoutInterface {
 
   @Inject SearcherLayoutPresenter presenter;
-  @Inject ImageLoader imageLoader;
-  @Inject Authoritation authoritation;
-  @Inject OcmController ocmController;
 
   private Context context;
 
   private MultipleGridRecyclerView recyclerView;
   private View emptyLayout;
   private View progressLayout;
+  private boolean thumbnailEnabled;
 
   public static SearcherLayoutView newInstance() {
     return new SearcherLayoutView();
@@ -71,6 +60,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
     Injector injector = OCManager.getInjector();
     if (injector != null) {
       injector.injectSearcherLayoutView(this);
+      thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
     }
   }
 
@@ -119,8 +109,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   }
 
   private void setAdapterDataViewHolders() {
-    ElementsViewHolderFactory factory =
-        new ElementsViewHolderFactory(context, imageLoader, authoritation);
+    ElementsViewHolderFactory factory = new ElementsViewHolderFactory(context, thumbnailEnabled);
 
     recyclerView.setAdapterViewHolderFactory(factory);
 
@@ -128,18 +117,19 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
     recyclerView.setAdapterDataViewHolder(CellBlankElement.class, CellBlankViewHolder.class);
 
     recyclerView.setUndecoratedViewHolder(CellBlankViewHolder.class);
+    recyclerView.overrideScollingVelocityY(0.4f);
   }
 
   @Override public void showProgressView(boolean isVisible) {
     recyclerView.showLoadingView(isVisible);
   }
 
-  @Override public void showEmptyView() {
-    recyclerView.showEmptyView();
+  @Override public void showEmptyView(boolean isVisible) {
+    emptyLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
   }
 
-  @Override public void hideEmptyView() {
-    emptyLayout.setVisibility(View.GONE);
+  @Override public void contentNotAvailable() {
+    //Snackbar.make(listedDataContainer, R.string.oc_error_content_not_available_without_internet, Snackbar.LENGTH_SHORT).show();
   }
 
   @Override public void setData(List<Cell> cellGridContentDataList) {
@@ -169,32 +159,11 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   }
 
   @Override public void onDestroy() {
-    presenter.detachView(this);
+    if (presenter != null) {
+      presenter.destroy();
+      presenter.detachView();
+    }
 
     super.onDestroy();
   }
-
-  @Override public void navigateToDetailView(String elementUrl, String urlImageToExpand,
-      AppCompatActivity activity, View view) {
-
-    ImageView imageViewToExpand = (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
-
-    String imageUrl = null;
-    if (urlImageToExpand != null) {
-      imageUrl = ImageGenerator.generateImageUrl(urlImageToExpand,
-          DeviceUtils.calculateRealWidthDevice(context),
-          DeviceUtils.calculateRealHeightDevice(context));
-
-      imageLoader.load(imageUrl).into(imageViewToExpand);
-    }
-
-    DetailActivity.open(activity, elementUrl, imageUrl,
-        DeviceUtils.calculateRealWidthDevice(context),
-        DeviceUtils.calculateRealHeightDevice(context), imageViewToExpand);
-  }
-
-  @Override public void showAuthDialog() {
-    OCManager.notifyRequiredLoginToContinue();
-  }
 }
-

@@ -1,27 +1,26 @@
 package com.gigigo.orchextra.core.sdk;
 
+import android.content.res.Configuration;
+import android.support.annotation.NonNull;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
-import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
-import com.gigigo.orchextra.core.domain.entities.elements.Element;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.CustomTabsContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
-import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
+import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElement;
+import com.gigigo.orchextra.core.domain.entities.article.base.ArticleElementRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
+import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
+import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
-import com.gigigo.orchextra.core.domain.entities.elements.Element;
-import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
+import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailLayoutContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.CustomTabsContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.DeepLinkContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.PreviewContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.ScanContentData;
@@ -30,14 +29,18 @@ import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.WebViewContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.ArticleContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.CardContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards.PreviewCardContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.vimeo.VimeoContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeContentData;
+import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.youtube.YoutubeFragment;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
+import com.gigigo.orchextra.core.sdk.model.grid.articles.ContentArticleHomeLayoutView;
 import com.gigigo.orchextra.core.sdk.model.searcher.SearcherLayoutView;
+import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
+import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
-import com.gigigo.ui.imageloader.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 import orchextra.javax.inject.Provider;
@@ -46,43 +49,96 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
 
   private final OcmController ocmController;
   private final Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvider;
-  private final ImageLoader imageLoader;
 
   public OcmViewGeneratorImp(OcmController ocmController,
-      Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvider,
-      ImageLoader imageLoader) {
+      Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvider) {
     this.ocmController = ocmController;
     this.detailElementsViewPresenterProvider = detailElementsViewPresenterProvider;
-    this.imageLoader = imageLoader;
   }
 
-  public List<UiMenu> getMenu() {
-    MenuContentData menuContentData = ocmController.getMenu(false);
-
-    List<UiMenu> menuList = new ArrayList<>();
-
-    if (menuContentData != null
-        && menuContentData.getMenuContentList() != null
-        && menuContentData.getMenuContentList().size() > 0) {
-      for (Element element : menuContentData.getMenuContentList().get(0).getElements()) {
-        UiMenu uiMenu = new UiMenu();
-
-        uiMenu.setSlug(element.getSlug());
-        uiMenu.setText(element.getSectionView().getText());
-        uiMenu.setElementUrl(element.getElementUrl());
-
-        menuList.add(uiMenu);
+  @Override public void getMenu(DataRequest menuRequest,
+      final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
+    ocmController.getMenu(menuRequest, new OcmController.GetMenusControllerCallback() {
+      @Override public void onGetMenusLoaded(UiMenuData menus) {
+        getMenusViewGeneratorCallback.onGetMenusLoaded(menus);
       }
-    }
 
-    return menuList;
+      @Override public void onGetMenusFails(Exception e) {
+        getMenusViewGeneratorCallback.onGetMenusFails(new ApiMenuNotFoundException(e));
+      }
+    });
   }
 
-  @Override public UiGridBaseContentData generateGridView(String viewId, String filter) {
+  @Override
+  public void generateSectionView(UiMenu uiMenu, String filter, final int imagesToDownload,
+      GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
+    
+    ElementCache elementCache = uiMenu.getElementCache();
+
+    if (elementCache.getType() == ElementCacheType.ARTICLE) {
+
+      getSectionViewGeneratorCallback.onSectionViewLoaded(
+          generateHomeArticleView(uiMenu));
+
+      OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
+
+    } else if (elementCache.getType() == ElementCacheType.VIDEO
+        && elementCache.getRender() != null) {
+
+      if (elementCache.getRender().getFormat() == VideoFormat.YOUTUBE) {
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            YoutubeFragment.newInstance(elementCache.getRender().getSource(), Configuration.ORIENTATION_PORTRAIT));
+      } else if (elementCache.getRender().getFormat() == VideoFormat.VIMEO) {
+        //TODO Return vimeo fragment
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            YoutubeFragment.newInstance(elementCache.getRender().getSource(), Configuration.ORIENTATION_PORTRAIT));
+      }
+
+      OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
+
+    } else if (elementCache.getType() == ElementCacheType.WEBVIEW
+        && elementCache.getRender() != null) {
+
+      if (elementCache.getRender().getFederatedAuth() != null
+          && elementCache.getRender().getFederatedAuth().getKeys() != null
+          && elementCache.getRender().getFederatedAuth().getKeys().getSiteName() != null
+          && elementCache.getRender().getFederatedAuth().isActive()) {
+
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            generateWebContentDataWithFederated(elementCache.getRender()));
+      } else {
+        getSectionViewGeneratorCallback.onSectionViewLoaded(
+            generateWebContentData(elementCache.getRender().getUrl()));
+      }
+
+      OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
+
+    } else if (elementCache.getRender() != null) {
+      getSectionViewGeneratorCallback.onSectionViewLoaded(generateGridContentData(uiMenu, imagesToDownload, filter));
+    }
+  }
+
+  private UiGridBaseContentData generateWebContentData(String url) {
+    return WebViewContentData.newInstance(url);
+  }
+
+  private UiGridBaseContentData generateWebContentDataWithFederated(ElementCacheRender render) {
+    return WebViewContentData.newInstance(render);
+  }
+
+  @NonNull
+  private UiGridBaseContentData generateGridContentData(UiMenu uiMenu, int imagesToDownload,
+      String filter) {
     ContentGridLayoutView contentGridLayoutView = ContentGridLayoutView.newInstance();
-    contentGridLayoutView.setViewId(viewId);
+    contentGridLayoutView.setViewId(uiMenu, imagesToDownload);
     contentGridLayoutView.setEmotion(filter);
     return contentGridLayoutView;
+  }
+
+  private UiGridBaseContentData generateHomeArticleView(UiMenu uiMenu) {
+    ContentArticleHomeLayoutView contentData = ContentArticleHomeLayoutView.newInstance();
+    contentData.setViewId(uiMenu);
+    return contentData;
   }
 
   @Override public UiSearchBaseContentData generateSearchView() {
@@ -96,26 +152,22 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return detailLayoutContentData;
   }
 
-  @Override
-  public UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share) {
+  @Override public UiBaseContentData generateCardPreview(ElementCachePreview preview,
+      ElementCacheShare share) {
     ElementCachePreviewCard previewCard = new ElementCachePreviewCard();
     List<ElementCachePreview> list = new ArrayList<>();
     list.add(preview);
     previewCard.setPreviewList(list);
 
     PreviewCardContentData previewCardContentData = PreviewCardContentData.newInstance();
-    previewCardContentData.setImageLoader(imageLoader);
     previewCardContentData.setPreview(previewCard);
-    previewCardContentData.setShare(share);
     return previewCardContentData;
   }
 
   @Override
   public UiBaseContentData generatePreview(ElementCachePreview preview, ElementCacheShare share) {
     PreviewContentData previewContentData = PreviewContentData.newInstance();
-    previewContentData.setImageLoader(imageLoader);
     previewContentData.setPreview(preview);
-    previewContentData.setShare(share);
     return previewContentData;
   }
 
@@ -126,71 +178,81 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
         if (render != null) {
           return generateArticleDetailView(render.getElements());
         }
+        break;
       case VUFORIA:
         if (render != null) {
           return generateVuforiaDetailView();
         }
+        break;
       case SCAN:
         if (render != null) {
           return generateScanDetailView();
         }
+        break;
       case WEBVIEW:
         if (render != null) {
-          return generateWebViewDetailView(render.getUrl());
+          return generateWebContentDataWithFederated(render);
         }
+        break;
       case BROWSER:
         if (render != null) {
-          return generateCustomTabsDetailView(render.getUrl());
+          return generateCustomTabsDetailView(render.getUrl(), render.getFederatedAuth());
         }
+        break;
       case EXTERNAL_BROWSER:
         if (render != null) {
-          return generateBrowserDetailView(render.getUrl());
+          return generateBrowserDetailView(render.getUrl(), render.getFederatedAuth());
         }
+        break;
       case VIDEO:
         if (render != null) {
-          return generateYoutubeDetailView(render.getSource());
+          return generateVideoDetailView(render);
         }
+        break;
       case DEEP_LINK:
         if (render != null) {
-          return generateDeepLinkView(render.getUri());
+          return generateDeepLinkView(render.getSchemeUri());
         }
+        break;
     }
     return null;
   }
 
-  @Override public String getImageUrl(String elementUrl) {
-    ElementCache cachedElement = ocmController.getCachedElement(elementUrl);
+  @Override public void getImageUrl(String elementUrl,
+      final GetDetailImageViewGeneratorCallback getDetailImageViewGeneratorCallback) {
+    ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
+      @Override public void onGetDetailLoaded(ElementCache elementCache) {
+        if (elementCache != null && elementCache.getPreview() != null) {
+          getDetailImageViewGeneratorCallback.onGetImageLoaded(
+              elementCache.getPreview().getImageUrl());
+        }
+      }
 
-    if (cachedElement != null && cachedElement.getPreview() != null) {
-      return cachedElement.getPreview().getImageUrl();
-    }
+      @Override public void onGetDetailFails(Exception e) {
+        e.printStackTrace();
+      }
 
-    return null;
+      @Override public void onGetDetailNoAvailable(Exception e) {
+        e.printStackTrace();
+      }
+    });
   }
 
-  private UiBaseContentData generateArticleDetailView(List<ArticleElement> elements) {
-    ArticleContentData articleContentData =
-        ArticleContentData.newInstance();
-    articleContentData.setImageLoader(imageLoader);
+  private UiBaseContentData generateArticleDetailView(List<ArticleElement<ArticleElementRender>> elements) {
+    ArticleContentData articleContentData = ArticleContentData.newInstance();
     articleContentData.addItems(elements);
     return articleContentData;
   }
 
-  @Override
-  public UiBaseContentData generateCardDetailView(ElementCache elements) {
-    CardContentData cardContentData =
-        CardContentData.newInstance();
-    cardContentData.setImageLoader(imageLoader);
+  @Override public UiBaseContentData generateCardDetailView(ElementCache elements) {
+    CardContentData cardContentData = CardContentData.newInstance();
     cardContentData.addItems(elements);
     return cardContentData;
   }
 
-  private UiBaseContentData generateWebViewDetailView(String url) {
-    return WebViewContentData.newInstance(url);
-  }
-
-  private UiBaseContentData generateCustomTabsDetailView(String url) {
-    return CustomTabsContentData.newInstance(url);
+  private UiBaseContentData generateCustomTabsDetailView(String url,
+      FederatedAuthorization federatedAuthorization) {
+    return CustomTabsContentData.newInstance(url, federatedAuthorization);
   }
 
   private UiBaseContentData generateVuforiaDetailView() {
@@ -201,20 +263,31 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     return ScanContentData.newInstance();
   }
 
-  private UiBaseContentData generateBrowserDetailView(String url) {
-    return BrowserContentData.newInstance(url);
+  private UiBaseContentData generateBrowserDetailView(String url,
+      FederatedAuthorization federatedAuthorization) {
+    return BrowserContentData.newInstance(url, federatedAuthorization);
   }
 
-  private UiBaseContentData generateYoutubeDetailView(String url) {
-    return YoutubeContentData.newInstance(url);
+  private UiBaseContentData generateVideoDetailView(ElementCacheRender render) {
+    switch (render.getFormat()) {
+      case YOUTUBE:
+        return generateYoutubeDetailView(render.getSource());
+      case VIMEO:
+        return generateVimeoDetailView(render.getSource());
+      default:
+        return null;
+    }
+  }
+
+  private UiBaseContentData generateYoutubeDetailView(String videoId) {
+    return YoutubeContentData.newInstance(videoId);
+  }
+
+  private UiBaseContentData generateVimeoDetailView(String videoId) {
+    return VimeoContentData.newInstance(videoId);
   }
 
   private UiBaseContentData generateDeepLinkView(String uri) {
     return DeepLinkContentData.newInstance(uri);
-  }
-
-  @Override public void releaseImageLoader() {
-   //todo release imageview for avoid memory leak of detailactivity
-
   }
 }

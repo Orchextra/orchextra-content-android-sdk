@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmNormalTextView
+<com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/article_rich_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/oc_bg_article_rich_text_color"
-    android:gravity="left"
+    android:layout_marginBottom="@dimen/oc_spacing_12"
     android:layout_marginLeft="@dimen/oc_spacing_8"
     android:layout_marginRight="@dimen/oc_spacing_8"
     android:layout_marginTop="@dimen/oc_spacing_12"
-    android:layout_marginBottom="@dimen/oc_spacing_12"
+    android:autoLink="web"
+    android:background="@color/oc_bg_article_rich_text_color"
+    android:gravity="left"
+    android:lineSpacingExtra="3dp"
     android:textColor="@color/oc_article_rich_text_color"
     android:textSize="@dimen/oc_text_18"
-    android:autoLink="web"
+    app:ocm_typeface="normal"
     />

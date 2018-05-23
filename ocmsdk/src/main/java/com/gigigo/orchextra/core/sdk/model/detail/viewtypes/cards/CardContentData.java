@@ -2,23 +2,17 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
-
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
-import java.util.List;
 
 public class CardContentData extends UiBaseContentData {
 
-  private ImageLoader imageLoader;
   private CardItemRecyclerViewContainer cardRecyclerViewContainer;
   private ElementCache elements;
-  private CardItemRecyclerViewContainer.OnChangeVerticalPageListener onChangeVerticalPageListener;
 
   public static CardContentData newInstance() {
     return new CardContentData();
@@ -46,14 +40,8 @@ public class CardContentData extends UiBaseContentData {
   }
 
   private void init() {
-    cardRecyclerViewContainer.setImageLoader(imageLoader);
     cardRecyclerViewContainer.addCards(elements);
-    cardRecyclerViewContainer.setOnChangeVerticalPageListener(onChangeVerticalPageListener);
     cardRecyclerViewContainer.initialize();
-  }
-
-  public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = imageLoader;
   }
 
   public void addItems(ElementCache elements) {

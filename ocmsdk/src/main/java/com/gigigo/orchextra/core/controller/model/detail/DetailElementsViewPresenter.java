@@ -2,9 +2,8 @@ package com.gigigo.orchextra.core.controller.model.detail;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import com.gigigo.interactorexecutor.base.Presenter;
-import com.gigigo.interactorexecutor.base.viewinjector.GenericViewInjector;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
+import com.gigigo.orchextra.core.controller.model.base.Presenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
@@ -23,9 +22,8 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
 
   private String elementUrl;
 
-  public DetailElementsViewPresenter(GenericViewInjector viewInjector, OcmController ocmController,
+  public DetailElementsViewPresenter(OcmController ocmController,
       OcmViewGenerator ocmViewGenerator) {
-    super(viewInjector);
     this.ocmController = ocmController;
     this.ocmViewGenerator = ocmViewGenerator;
   }
@@ -34,55 +32,67 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
     getView().initUi();
   }
 
-  @Override public void detachView(DetailElementsView view) {
-    super.detachView(view);
-    ocmViewGenerator.releaseImageLoader();
-   //  = null;
-  }
-
   public void loadSection(String elementUrl) {
     this.elementUrl = elementUrl;
 
     getView().showProgressView(true);
 
-    ElementCache cachedElement = ocmController.getCachedElement(elementUrl);
+    ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
+      @Override public void onGetDetailLoaded(ElementCache elementCache) {
+        if (getView() != null) {
+          if (elementCache != null) {
+            renderView(elementCache);
+            if (elementCache.getPreview() != null) {
+              OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, elementCache);
+            }
+          } else {
+            getView().finishView();
+          }
 
-    if (cachedElement != null) {
-      renderView(cachedElement);
-      OCManager.notifyEvent(OcmEvent.CONTENT_PREVIEW, cachedElement);
-    } else {
-      getView().showEmptyView(true);
-    }
+          getView().showProgressView(false);
+        }
+      }
 
-    getView().showProgressView(false);
+      @Override public void onGetDetailFails(Exception e) {
+        if (getView() != null) {
+          getView().showProgressView(false);
+        }
+      }
+
+      @Override public void onGetDetailNoAvailable(Exception e) {
+        if (getView() != null) {
+          getView().showProgressView(false);
+        }
+      }
+    });
   }
 
   private void renderView(ElementCache cachedElement) {
-    ElementCacheShare shareElement = cachedElement.getShare();
-
-    if (cachedElement.getType() == ElementCacheType.CARDS) {
-      UiBaseContentData contentData = generateCardView(cachedElement);
-      getView().renderDetailView(contentData, shareElement != null);
-    } else {
-      UiBaseContentData previewContentData =
-          generatePreview(cachedElement.getPreview(), shareElement);
-
-      UiBaseContentData detailContentData =
-          generateDetailView(cachedElement.getType(), cachedElement.getRender());
-
-      if (previewContentData != null && detailContentData != null) {
-        getView().renderDetailViewWithPreview(previewContentData, detailContentData,
-            shareElement != null);
-
-        getView().showEmptyView(false);
-      } else if (previewContentData != null) {
-        getView().renderPreview(previewContentData, shareElement != null);
-        getView().showEmptyView(false);
-      } else if (detailContentData != null) {
-        getView().renderDetailView(detailContentData, shareElement != null);
-        getView().showEmptyView(false);
+    if (getView() != null) {
+      if (cachedElement.getType() == ElementCacheType.CARDS) {
+        UiBaseContentData contentData = generateCardView(cachedElement);
+        getView().renderDetailView(contentData, cachedElement);
       } else {
-        getView().showEmptyView(true);
+        UiBaseContentData previewContentData =
+            generatePreview(cachedElement.getPreview(), cachedElement.getShare());
+
+        UiBaseContentData detailContentData =
+            generateDetailView(cachedElement.getType(), cachedElement.getRender());
+
+        if (previewContentData != null && detailContentData != null && getView() != null) {
+          getView().renderDetailViewWithPreview(previewContentData, detailContentData,
+              cachedElement);
+
+          getView().showEmptyView(false);
+        } else if (previewContentData != null) {
+          getView().renderPreview(previewContentData, cachedElement);
+          getView().showEmptyView(false);
+        } else if (detailContentData != null) {
+          getView().renderDetailView(detailContentData, cachedElement);
+          getView().showEmptyView(false);
+        } else {
+          getView().showEmptyView(true);
+        }
       }
     }
   }
@@ -107,13 +117,27 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
   }
 
   public void shareElement() {
-    ElementCache cachedElement = ocmController.getCachedElement(elementUrl);
+    ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
+      @Override public void onGetDetailLoaded(ElementCache elementCache) {
+        showShare(elementCache);
+      }
 
+      @Override public void onGetDetailFails(Exception e) {
+        e.printStackTrace();
+      }
+
+      @Override public void onGetDetailNoAvailable(Exception e) {
+        e.printStackTrace();
+      }
+    });
+  }
+
+  private void showShare(ElementCache cachedElement) {
     ElementCacheShare shareElement = cachedElement.getShare();
 
     String shareText = retrieveShareText(shareElement);
 
-    if (!TextUtils.isEmpty(shareText)) {
+    if (!TextUtils.isEmpty(shareText) && getView() != null) {
       getView().shareElement(shareText);
       OCManager.notifyEvent(OcmEvent.SHARE, cachedElement);
     }
@@ -130,5 +154,9 @@ public class DetailElementsViewPresenter extends Presenter<DetailElementsView> {
       share = (!TextUtils.isEmpty(shareText)) ? shareText : shareUrl;
     }
     return share;
+  }
+
+  public void destroy() {
+    ocmController.disposeUseCases();
   }
 }

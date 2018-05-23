@@ -1,21 +1,64 @@
 package com.gigigo.orchextra.core.domain;
 
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
-import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
-import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
+import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
+import com.gigigo.orchextra.core.domain.entities.version.VersionData;
+import com.gigigo.orchextra.ocm.dto.UiMenuData;
 
 public interface OcmController {
 
-  MenuContentData getMenu(boolean useCache);
+  void getMenu(DataRequest menuRequest, final GetMenusControllerCallback getMenusCallback);
 
-  ElementCache getCachedElement(String elementUrl);
+  void getSection(DataRequest forceToReload, final String section, int imagesToDownload,
+      final GetSectionControllerCallback getSectionControllerCallback);
 
-  String getContentUrlBySection(String section);
+  void getDetails(final String elementUrl,
+      final GetDetailControllerCallback getDetailControllerCallback);
 
-  ContentItem getSectionContentById(String section);
+  void search(String textToSearch, SearchControllerCallback searchControllerCallback);
 
-  void saveSectionContentData(String section, ContentData contentData);
+  void clearCache(boolean images, boolean data, final ClearCacheCallback clearCacheCallback);
 
-  void clearCache();
+  void disposeUseCases();
+
+  void refreshMenuData();
+
+  // Callbacks
+
+  interface GetVersionControllerCallback{
+    void onGetVersionLoaded(VersionData versionData);
+    void onGetVersionFails(Exception e);
+  }
+  interface GetMenusControllerCallback {
+    void onGetMenusLoaded(UiMenuData menus);
+
+    void onGetMenusFails(Exception e);
+  }
+
+  interface GetSectionControllerCallback {
+    void onGetSectionLoaded(ContentData contentData);
+
+    void onGetSectionFails(Exception e);
+  }
+
+  interface GetDetailControllerCallback {
+    void onGetDetailLoaded(ElementCache elementCache);
+
+    void onGetDetailFails(Exception e);
+
+    void onGetDetailNoAvailable(Exception e);
+  }
+
+  interface SearchControllerCallback {
+    void onSearchLoaded(ContentData contentData);
+
+    void onSearchFails(Exception e);
+  }
+
+  interface ClearCacheCallback {
+    void onClearCacheSuccess();
+
+    void onClearCacheFails(Exception e);
+  }
 }

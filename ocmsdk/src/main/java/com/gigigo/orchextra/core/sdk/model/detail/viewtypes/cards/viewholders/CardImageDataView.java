@@ -8,15 +8,15 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import com.bumptech.glide.Priority;
+import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageElement;
 import com.gigigo.orchextra.core.sdk.utils.DeviceUtils;
 import com.gigigo.orchextra.core.sdk.utils.ImageGenerator;
 import com.gigigo.orchextra.ocmsdk.R;
-import com.gigigo.ui.imageloader.ImageLoader;
 
 public class CardImageDataView extends CardDataView {
 
-  private ImageLoader imageLoader;
   private ImageView cardImagePlaceholder;
   private ArticleImageElement imageElement;
 
@@ -57,22 +57,20 @@ public class CardImageDataView extends CardDataView {
 
   private void bindTo() {
     if (imageElement != null) {
-      setImage(imageElement.getImageUrl(), imageElement.getImageThumb());
+      setImage(imageElement.getRender().getImageUrl(), imageElement.getRender().getImageThumb());
     }
   }
 
   private void setImage(final String imageUrl, String imageThumb) {
     ImageGenerator.generateThumbImage(imageThumb, cardImagePlaceholder);
 
-    int widthDevice = DeviceUtils.calculateRealWidthDevice(getContext());
+    int widthDevice = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(getContext());
 
     String generatedImageUrl = ImageGenerator.generateImageUrl(imageUrl, widthDevice);
 
-    imageLoader.load(generatedImageUrl).into(cardImagePlaceholder);
-  }
-
-  public void setImageLoader(ImageLoader imageLoader) {
-    this.imageLoader = imageLoader;
+    OcmImageLoader.load(getContext(), generatedImageUrl)
+        .priority(Priority.NORMAL)
+        .into(cardImagePlaceholder);
   }
 
   public void setImageElement(ArticleImageElement imageElement) {
