@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
+import com.gigigo.orchextra.core.data.api.dto.base.BaseApiResponse;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
@@ -22,24 +23,17 @@ import com.gigigo.orchextra.core.receiver.WifiReceiver;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
-import com.vimeo.networking.VimeoClient;
-import com.vimeo.networking.model.Video;
 import gigigo.com.vimeolibs.VimeoBuilder;
 import gigigo.com.vimeolibs.VimeoCallback;
 import gigigo.com.vimeolibs.VimeoInfo;
 import gigigo.com.vimeolibs.VimeoManager;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.Iterator;
-import okhttp3.CacheControl;
+import java.util.Objects;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
-import retrofit2.Response;
 
 /**
  * Created by francisco.hernandez on 23/5/17.
@@ -89,7 +83,8 @@ import retrofit2.Response;
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(contentUrl))
         .doOnNext(ocmCache::putSection)
-        .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload))
+        .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData,
+            numberOfElementsToDownload))
         .doOnNext(apiSectionContentData -> {
           apiSectionContentData.setFromCloud(true);
           Log.v("TT - SectionEntity", (System.currentTimeMillis() - time) / 1000 + "");
@@ -97,7 +92,8 @@ import retrofit2.Response;
   }
 
   private void addSectionsToCache(ApiMenuContentData apiMenuContentData) {
-    Iterator<ApiMenuContent> menuContentIterator = apiMenuContentData.getMenuContentList().iterator();
+    Iterator<ApiMenuContent> menuContentIterator =
+        apiMenuContentData.getMenuContentList().iterator();
     while (menuContentIterator.hasNext()) {
       Iterator<ApiElement> elementIterator = menuContentIterator.next().getElements().iterator();
       while (elementIterator.hasNext()) {
@@ -142,59 +138,53 @@ import retrofit2.Response;
 
   private void addImageToQueue(ApiElementData apiElementData) {
 
-    if (apiElementData.getElement() != null) {
-      //Preview
-      if (apiElementData.getElement().getPreview() != null) {
-        ocmImageCache.add(new ImageData(apiElementData.getElement().getPreview().getImageUrl(), 0));
-      }
-      //Render
-      if (apiElementData.getElement().getRender() != null
-          && apiElementData.getElement().getRender().getElements() != null) {
-        Iterator<ApiArticleElement> elementsIterator =
-            apiElementData.getElement().getRender().getElements().iterator();
-        while (elementsIterator.hasNext()) {
-          ApiArticleElement element = elementsIterator.next();
-          if (element.getRender() != null && element.getRender().getImageUrl() != null) {
-            ocmImageCache.add(new ImageData(element.getRender().getImageUrl(), 0));
-          }
+    //Preview
+    if (apiElementData.getElement().getPreview() != null) {
+      ocmImageCache.add(new ImageData(apiElementData.getElement().getPreview().getImageUrl(), 0));
+    }
+    //Render
+    if (apiElementData.getElement().getRender() != null
+        && apiElementData.getElement().getRender().getElements() != null) {
+      for (ApiArticleElement element : apiElementData.getElement().getRender().getElements()) {
+        if (element.getRender() != null && element.getRender().getImageUrl() != null) {
+          ocmImageCache.add(new ImageData(element.getRender().getImageUrl(), 0));
         }
       }
     }
   }
 
   @Override public Observable<ApiSectionContentData> searchByText(String section) {
-    return ocmApiService.searchRx(section).map(dataResponse -> dataResponse.getResult());
+    return ocmApiService.searchRx(section).map(BaseApiResponse::getResult);
   }
 
   @Override public Observable<ApiElementData> getElementById(String slug) {
     return ocmApiService.getElementByIdRx(slug, withThumbnails)
-        .map(dataResponse -> dataResponse.getResult())
+        .map(BaseApiResponse::getResult)
         .doOnNext(ocmCache::putDetail);
   }
 
-  @Override public Observable<ApiVideoData> getVideoById(Context context, String videoId, boolean isWifiConnection,
-      boolean isFastConnection) {
-    Observable<ApiVideoData> videoObservable = Observable.create(new ObservableOnSubscribe<ApiVideoData>() {
-      @Override public void subscribe(ObservableEmitter<ApiVideoData> emitter) throws Exception {
-        VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
-        VimeoManager videoManager = new VimeoManager(builder);
+  @Override public Observable<ApiVideoData> getVideoById(Context context, String videoId,
+      boolean isWifiConnection, boolean isFastConnection) {
+    Observable<ApiVideoData> videoObservable = Observable.create(emitter -> {
+      VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
+      VimeoManager videoManager = new VimeoManager(builder);
 
-        videoManager.getVideoVimeoInfo(context, videoId, isWifiConnection, isFastConnection, new VimeoCallback() {
-          @Override public void onSuccess(VimeoInfo vimeoInfo) {
-            ApiVideoData videoData = new ApiVideoData(vimeoInfo);
-            ocmCache.putVideo(videoData);
-            emitter.onNext(videoData);
-          }
+      videoManager.getVideoVimeoInfo(context, videoId, isWifiConnection, isFastConnection,
+          new VimeoCallback() {
+            @Override public void onSuccess(@NonNull VimeoInfo vimeoInfo) {
+              ApiVideoData videoData = new ApiVideoData(vimeoInfo);
+              ocmCache.putVideo(videoData);
+              emitter.onNext(videoData);
+            }
 
-          @Override public void onError(Exception exception) {
-            emitter.onError(exception);
-          }
-        });
-      }
+            @Override public void onError(@NonNull Throwable exception) {
+              // TODO This method throw OnErrorNotImplementedException and make crash the app. Issue WOAH-3214
+              //emitter.onError(exception);
+            }
+          });
     });
 
-    videoObservable
-        .subscribeOn(Schedulers.io())
+    videoObservable.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
 
@@ -203,8 +193,9 @@ import retrofit2.Response;
 
   @Override public Observable<ApiVersionKache> getVersion() {
     return ocmApiService.getVersionDataRx()
-        .map(apiVersionResponse -> new ApiVersionKache(apiVersionResponse.getData()))
-        .filter(apiVersionKache -> apiVersionKache != null)
+        .map(apiVersionResponse -> new ApiVersionKache(
+            Objects.requireNonNull(apiVersionResponse.getData())))
+        .filter(Objects::nonNull)
         .doOnNext(ocmCache::putVersion);
   }
 

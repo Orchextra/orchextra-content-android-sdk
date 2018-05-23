@@ -1,5 +1,6 @@
 package gigigo.com.vimeolibs
 
+import android.util.Log
 import io.reactivex.observers.DisposableObserver
 
 class VideoObserver(
@@ -13,6 +14,10 @@ class VideoObserver(
 
   override fun onError(e: Throwable) {
     getVideoCallback?.onError(Exception(e))
-    e.printStackTrace()
+    Log.e(TAG, "VideoObserver", e)
+  }
+
+  companion object {
+    private const val TAG = "VideoObserver"
   }
 }

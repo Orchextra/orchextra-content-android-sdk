@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ import gigigo.com.vimeolibs.VimeoInfo;
 
 public class ActionHandler {
 
+  private static final String TAG = "ActionHandler";
   private final OxManager oxManager;
   private final OcmContextProvider ocmContextProvider;
   private final ConnectionUtils connectionUtils;
@@ -59,8 +61,8 @@ public class ActionHandler {
               VimeoExoPlayerActivity.openVideo(ocmContextProvider.getCurrentActivity(), vimeoInfo);
             }
 
-            @Override public void onError(Exception e) {
-              System.out.println("Error VimeoCallback" + e.toString());
+            @Override public void onError(Throwable e) {
+              Log.e(TAG, "getVideo()", e);
             }
           }), GetVideo.Params.Companion.forVideo(ocmContextProvider.getCurrentActivity(), false,
           videoId, connectionUtils.isConnectedWifi(), connectionUtils.isConnectedMobile()),
@@ -75,7 +77,7 @@ public class ActionHandler {
               videoObserver.onNext(vimeoInfo);
             }
 
-            @Override public void onError(Exception e) {
+            @Override public void onError(Throwable e) {
               videoObserver.onError(e);
             }
           }), GetVideo.Params.Companion.forVideo(ocmContextProvider.getCurrentActivity(), false,
