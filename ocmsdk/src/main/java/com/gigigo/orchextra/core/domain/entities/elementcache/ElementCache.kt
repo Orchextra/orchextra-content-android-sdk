@@ -1,6 +1,8 @@
 package com.gigigo.orchextra.core.domain.entities.elementcache
 
+import com.gigigo.orchextra.core.domain.entities.elements.ElementSegmentation
 import java.io.Serializable
+
 
 class ElementCache : Serializable {
 
@@ -10,6 +12,7 @@ class ElementCache : Serializable {
   var preview: ElementCachePreview? = null
   var render: ElementCacheRender? = null
   var share: ElementCacheShare? = null
+  var segmentation: ElementSegmentation? = null
   var customProperties: Map<String, Any>? = null
   var name: String? = null
   var updateAt: Long = 0

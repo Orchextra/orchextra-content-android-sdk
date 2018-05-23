@@ -17,6 +17,7 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
+import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -28,6 +29,7 @@ import java.util.List;
 
 public class ContentViewPresenter extends Presenter<ContentView> {
 
+  private final Authoritation authoritation;
   private final OcmController ocmController;
   private static final String TAG = "ContentViewPresenter";
 
@@ -39,8 +41,10 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private boolean hasToCheckNewContent = false;
   private int padding;
 
-  public ContentViewPresenter(OcmController ocmController) {
+  public ContentViewPresenter(OcmController ocmController, Authoritation authoritation) {
+
     this.ocmController = ocmController;
+    this.authoritation = authoritation;
   }
 
   @Override public void onViewAttached() {
@@ -333,16 +337,16 @@ public class ContentViewPresenter extends Presenter<ContentView> {
           cellGridContentDataList.add(cell);
         }
       }
-    }
 
-    //TODO: check this "ñapa" to remove cellblankelements and provide application to put bottom padding
-    while (cellGridContentDataList.size() % 3 != 0) {
-      CellBlankElement cellBlankElement = new CellBlankElement();
-      cellBlankElement.setColumn(1 * auxPadding);
-      cellBlankElement.setRow(1 * auxPadding);
-      cellGridContentDataList.add(cellBlankElement);
+      //TODO: check this "ñapa" to remove cellblankelements and provide application to put bottom padding
+      while (cellGridContentDataList.size() % 3 != 0) {
+        CellBlankElement cellBlankElement = new CellBlankElement();
+        cellBlankElement.setColumn(1 * auxPadding);
+        cellBlankElement.setRow(1 * auxPadding);
+        cellGridContentDataList.add(cellBlankElement);
 
-      indexPattern = ++indexPattern % pattern.size();
+        indexPattern = ++indexPattern % pattern.size();
+      }
     }
 
     if (cellGridContentDataList.size() > 0) {

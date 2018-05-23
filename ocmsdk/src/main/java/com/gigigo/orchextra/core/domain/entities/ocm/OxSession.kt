@@ -9,8 +9,7 @@ class OxSession {
 
   var token: String? = null
 
-  val accessToken: String
-    get() = "Bearer " + token!!
+  fun getAccessToken(): String = "JWT $token"
 
   fun setCredentials(key: String, secret: String) {
     this.key = key

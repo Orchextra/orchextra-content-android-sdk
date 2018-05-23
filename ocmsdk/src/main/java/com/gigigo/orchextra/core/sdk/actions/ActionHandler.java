@@ -29,7 +29,7 @@ import gigigo.com.vimeolibs.VimeoInfo;
 
 public class ActionHandler {
 
-  OxManager orchextra;
+  private final OxManager oxManager;
   private final OcmContextProvider ocmContextProvider;
   private final ConnectionUtils connectionUtils;
   private GetVideo getVideo;
@@ -37,7 +37,7 @@ public class ActionHandler {
   public ActionHandler(OcmContextProvider ocmContextProvider, GetVideo getVideo) {
     this.ocmContextProvider = ocmContextProvider;
     this.connectionUtils = new ConnectionUtilsImp(ocmContextProvider.getApplicationContext());
-    this.orchextra = new OxManagerImpl(ocmContextProvider.getApplicationContext());
+    this.oxManager = new OxManagerImpl();
     this.getVideo = getVideo;
   }
 
@@ -85,15 +85,15 @@ public class ActionHandler {
   }
 
   public void launchOxVuforia() {
-    orchextra.startImageRecognition();
+    oxManager.startImageRecognition();
   }
 
   public void lauchOxScan() {
-    orchextra.startScanner();
+    oxManager.startScanner();
   }
 
   public void scanCode(OxManager.ScanCodeListener scanCodeListener) {
-    orchextra.scanCode(scanCodeListener);
+    oxManager.scanCode(scanCodeListener);
   }
 
   public void launchExternalBrowser(final String url, FederatedAuthorization federatedAuth) {
