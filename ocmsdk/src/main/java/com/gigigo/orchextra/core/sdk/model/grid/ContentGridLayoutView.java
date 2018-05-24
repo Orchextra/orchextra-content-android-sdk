@@ -102,18 +102,13 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
     initView(view);
     setListeners();
-
-    return view;
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
     try {
       presenter.attachView(this);
     } catch (NullPointerException e) {
       Ocm.logException(e);
     }
+
+    return view;
   }
 
   private void initDI() {

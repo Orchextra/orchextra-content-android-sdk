@@ -83,10 +83,6 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     setContentView(R.layout.activity_detail_layout);
 
     animationImageView = findViewById(R.id.animationImageView);
-  }
-
-  @Override protected void onResume() {
-    super.onResume();
 
     try {
       presenter.attachView(this);
