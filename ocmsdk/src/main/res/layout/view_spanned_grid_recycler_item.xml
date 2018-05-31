@@ -18,7 +18,7 @@
       />
 
   <com.gigigo.orchextra.ocm.views.ScrollableContentArrow
-      android:id="@+id/testview"
+      android:id="@+id/animated_arrow"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
