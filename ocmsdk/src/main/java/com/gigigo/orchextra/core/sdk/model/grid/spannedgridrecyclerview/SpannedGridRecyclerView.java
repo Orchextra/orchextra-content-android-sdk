@@ -2,9 +2,11 @@ package com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -21,6 +23,7 @@ import java.util.List;
 public class SpannedGridRecyclerView extends UiListedBaseContentData {
 
   private MultipleGridRecyclerView multipleGridRecyclerView;
+  private View testview;
 
   public SpannedGridRecyclerView(Context context) {
     super(context);
@@ -49,6 +52,8 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
   private void initViews(View view) {
     multipleGridRecyclerView =
         (MultipleGridRecyclerView) view.findViewById(R.id.multipleGridRecyclerView);
+
+    testview = view.findViewById(R.id.testview);
   }
 
   private void initRecyclerView() {
@@ -85,6 +90,21 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
 
     multipleGridRecyclerView.overrideScollingVelocityY(0.4f);
     multipleGridRecyclerView.setClipToPaddingSize(addictionalPadding);
+
+    multipleGridRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+      static final int SCROLL_DIRECTION_UP = -1;
+
+      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        super.onScrolled(recyclerView, dx, dy);
+
+        if (!recyclerView.canScrollVertically(SCROLL_DIRECTION_UP)) {
+          testview.setVisibility(VISIBLE);
+          // TODO: 31/5/18 mostrar el botón de scroll
+        } else {
+          testview.setVisibility(GONE);
+        }
+      }
+    });
   }
 
   private void setAdapterDataViewHolders() {

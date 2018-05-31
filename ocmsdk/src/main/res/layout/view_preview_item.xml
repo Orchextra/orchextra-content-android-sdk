@@ -69,7 +69,7 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="bottom"
         android:foregroundGravity="bottom"
-        android:src="@drawable/combined_shape"
+        android:src="@drawable/ic_combined_shape"
         />
 
   </RelativeLayout>
