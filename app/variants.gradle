@@ -51,7 +51,7 @@ ext {
                                      staging: '677cf75a17aeec144ee402c281ad3a732d736a8a',
                                      release: '6bc18c500546f253699f61c11a62827679178400']]
 
-  woah_HU = [orchextraBussinesUnit: "hu",
+  woah_HU = [orchextraBussinesUnit: "oat-hu",
              applicationId        : "${baseApplicationId}.hu",
              appName              : "${basePackageName} HU",
 

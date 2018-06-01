@@ -89,13 +89,19 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
       @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
 
-        if (!recyclerView.canScrollVertically(SCROLL_DIRECTION_UP)) {
+        if (!recyclerView.canScrollVertically(SCROLL_DIRECTION_UP) && isRecyclerScrollable(
+            recyclerView)) {
           animatedArrow.setVisibility(VISIBLE);
         } else {
           animatedArrow.setVisibility(GONE);
         }
       }
     });
+  }
+
+  private boolean isRecyclerScrollable(RecyclerView recyclerView) {
+    return recyclerView.computeHorizontalScrollRange() > recyclerView.getWidth()
+        || recyclerView.computeVerticalScrollRange() > recyclerView.getHeight();
   }
 
   private void setAdapterDataViewHolders() {
