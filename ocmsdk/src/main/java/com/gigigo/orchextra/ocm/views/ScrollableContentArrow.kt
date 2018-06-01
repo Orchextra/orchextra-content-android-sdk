@@ -15,6 +15,7 @@ class ScrollableContentArrow @JvmOverloads constructor(context: Context,
     defStyleAttr: Int = 0) : RelativeLayout(context, attrs, defStyleAttr) {
 
   val ANIMATION_DURATION: Long = 235
+  val TOTAL_ALPHA: Float = 0.75f
 
   init {
     LayoutInflater.from(context).inflate(R.layout.view_scrollable_content_arrow, this, true)
@@ -24,14 +25,14 @@ class ScrollableContentArrow @JvmOverloads constructor(context: Context,
 
   private fun animateArrow() {
 
-    arrow_1.animate().setDuration(ANIMATION_DURATION).alpha(1.0f)
+    arrow_1.animate().setDuration(ANIMATION_DURATION).alpha(TOTAL_ALPHA)
 
     Handler().postDelayed({
-      arrow_2.animate().setDuration(ANIMATION_DURATION).alpha(1.0f)
+      arrow_2.animate().setDuration(ANIMATION_DURATION).alpha(TOTAL_ALPHA)
     }, ANIMATION_DURATION)
 
     Handler().postDelayed({
-      arrow_3.animate().setDuration(ANIMATION_DURATION).alpha(1.0f)
+      arrow_3.animate().setDuration(ANIMATION_DURATION).alpha(TOTAL_ALPHA)
     }, ANIMATION_DURATION * 2)
 
     Handler().postDelayed({
