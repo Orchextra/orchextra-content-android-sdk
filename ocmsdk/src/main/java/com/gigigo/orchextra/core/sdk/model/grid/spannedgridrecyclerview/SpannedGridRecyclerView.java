@@ -82,7 +82,9 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
 
     multipleGridRecyclerView.overrideScollingVelocityY(0.4f);
     multipleGridRecyclerView.setClipToPaddingSize(addictionalPadding);
+  }
 
+  private void addRecyclerListener() {
     multipleGridRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
       static final int SCROLL_DIRECTION_UP = -1;
 

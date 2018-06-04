@@ -2,8 +2,10 @@ package com.gigigo.orchextra.core.sdk.model.grid.verticalviewpager;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ public class VerticalViewContent extends UiListedBaseContentData {
 
   private VerticalViewPager viewPager;
   private VerticalViewPagerAdapter adapter;
+  private View scrollableArrow;
 
   public VerticalViewContent(Context context) {
     super(context);
@@ -43,6 +46,7 @@ public class VerticalViewContent extends UiListedBaseContentData {
 
   private void initViews(View view) {
     viewPager = view.findViewById(R.id.verticalViewPager);
+    scrollableArrow = view.findViewById(R.id.scrollable_arrow);
   }
 
   private void initViewPager() {
@@ -51,6 +55,18 @@ public class VerticalViewContent extends UiListedBaseContentData {
           ((FragmentActivity) getContext()).getSupportFragmentManager();
       adapter = new VerticalViewPagerAdapter(fragmentManager, listedContentListener);
       viewPager.setAdapter(adapter);
+
+      viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        @Override public void onPageSelected(int position) {
+          super.onPageSelected(position);
+
+          if (position == 0) {
+            scrollableArrow.setVisibility(VISIBLE);
+          } else {
+            scrollableArrow.setVisibility(GONE);
+          }
+        }
+      });
     }
   }
 
