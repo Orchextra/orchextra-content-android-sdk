@@ -1,12 +1,12 @@
 project.ext {
 
-  androidCompileSdkVersion = 26
+  androidCompileSdkVersion = 27
   androidMinSdkVersion = 18
-  androidBuildToolsVersion = '26.0.2'
-  androidTargetSdkVersion = 26
-  supportVersion = '26.1.0'
-  oxVersion = '3.0-RC33'
-  playVersion = '11.0.4' //11.4.2
+  androidBuildToolsVersion = '27.0.3'
+  androidTargetSdkVersion = 27
+  supportVersion = '27.1.1'
+  oxVersion = '3.0-RC36'
+  playVersion = '15.0.1'
 
   libraries = [androidSupportDesign      : "com.android.support:design:${supportVersion}",
                androidCustomtabs         : "com.android.support:customtabs:${supportVersion}",
@@ -17,9 +17,9 @@ project.ext {
                daggerCompiler            : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
                dagger                    : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
 
-               gggJavaLib                : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:4.4',
-               ggglogger                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:4.4',
-               ggglib                    : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:4.4',
+               gggJavaLib                : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:4.6.4',
+               ggglogger                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:4.6.4',
+               ggglib                    : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:4.6.4',
 
                oxCoreStaging             : "com.gigigo.orchextra:core:${oxVersion}-S",
                oxCoreDebug               : "com.gigigo.orchextra:core:${oxVersion}-Q",
