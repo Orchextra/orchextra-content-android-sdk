@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
-import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
@@ -38,6 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 import java.util.Iterator;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
+import org.jetbrains.annotations.NotNull;
 
 @Singleton public class OcmCloudDataStore implements OcmDataStore {
 
@@ -177,13 +177,13 @@ import orchextra.javax.inject.Singleton;
 
             videoManager.getVideoVimeoInfo(context, videoId, isWifiConnection, isFastConnection,
                 new VimeoCallback() {
+                  @Override public void onError(@NotNull Throwable e) {
+                    emitter.onError(e);
+                  }
+
                   @Override public void onSuccess(VimeoInfo vimeoInfo) {
                     ocmCache.putVideo(vimeoInfo);
                     emitter.onNext(vimeoInfo);
-                  }
-
-                  @Override public void onError(Exception exception) {
-                    emitter.onError(exception);
                   }
                 });
           }
