@@ -2,19 +2,17 @@ package com.gigigo.orchextra.ocm.sample;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
+import com.gigigo.orchextra.ocm.OCManagerCallbacks;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
-import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
-import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
-import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
+import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.customProperties.Disabled;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
@@ -22,7 +20,10 @@ import com.gigigo.orchextra.ocm.customProperties.ViewLayer;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
+import com.gigigo.orchextra.ocm.sample.ocm.OcmWrapper;
+import com.gigigo.orchextra.ocm.sample.ocm.OcmWrapperImp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = "MainActivity";
+  private OcmWrapper ocmWrapper;
   private TabLayout tabLayout;
   private ViewPager viewpager;
   private ScreenSlidePagerAdapter adapter;
@@ -55,6 +58,17 @@ public class MainActivity extends AppCompatActivity {
               false);
         }
       };
+
+  private OnRequiredLoginCallback onDoRequiredLoginCallback = new OnRequiredLoginCallback() {
+    @Override public void doRequiredLogin() {
+      Toast.makeText(getApplicationContext(), "Item needs permissions", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override public void doRequiredLogin(String elementUrl) {
+      Toast.makeText(getApplicationContext(), "Item needs permissions" + elementUrl,
+          Toast.LENGTH_SHORT).show();
+    }
+  };
 
   private OcmCustomBehaviourDelegate customPropertiesDelegate = new OcmCustomBehaviourDelegate() {
 
@@ -99,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
               } else {
                 completion.invoke(true);
               }
-            }, 1000);
+            }, 500);
             break;
         }
       }
@@ -108,45 +122,51 @@ public class MainActivity extends AppCompatActivity {
 
   private List<UiMenu> oldUiMenuList;
 
-  @Override protected void onResume() {
-    super.onResume();
-
-    Ocm.setOnChangedMenuCallback(new OnChangedMenuCallback() {
-      @Override public void onChangedMenu(UiMenuData uiMenuData) {
-        boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, uiMenuData.getUiMenuList());
-        if (menuHasChanged) {
-          showIconNewContent(uiMenuData.getUiMenuList());
-        } else {
-          adapter.reloadSections(viewpager.getCurrentItem());
-        }
-      }
-    });
-  }
-
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     initViews();
 
-    Ocm.setCustomBehaviourDelegate(customPropertiesDelegate);
+    ocmWrapper = new OcmWrapperImp(getApplication());
 
-    startCredentials();
+    Ocm.setOnDoRequiredLoginCallback(onDoRequiredLoginCallback);
+    Ocm.setCustomBehaviourDelegate(customPropertiesDelegate);
+    Ocm.setCustomUrlCallback(parameters -> {
+
+      Map<String, String> map = new HashMap<>();
+      for (String parameter : parameters) {
+        map.put("TEST", "TEST");
+      }
+
+      return map;
+    });
+
+    initOcm();
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+
+    Ocm.setOnChangedMenuCallback(uiMenuData -> {
+      boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, uiMenuData.getUiMenuList());
+      if (menuHasChanged) {
+        showIconNewContent(uiMenuData.getUiMenuList());
+      } else {
+        adapter.reloadSections(viewpager.getCurrentItem());
+      }
+    });
   }
 
   private void initViews() {
     tabLayout = findViewById(R.id.tabLayout);
     viewpager = findViewById(R.id.viewpager);
-    //View fabReload = findViewById(R.id.fabReload);
-
     View fabSearch = findViewById(R.id.fabSearch);
-    fabSearch.setOnClickListener(v -> SearcherActivity.open(MainActivity.this));
-
     View scannerButton = findViewById(R.id.scannerButton);
-    scannerButton.setOnClickListener(v -> Ocm.scanCode(
+
+    scannerButton.setOnClickListener(v -> ocmWrapper.scanCode(
         code -> Toast.makeText(MainActivity.this, "Code: " + code, Toast.LENGTH_SHORT).show()));
 
-    Toolbar toolbar = findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
+    fabSearch.setOnClickListener(v -> SearcherActivity.open(MainActivity.this));
 
     newContentMainContainer = findViewById(R.id.newContentMainContainer);
 
@@ -155,22 +175,19 @@ public class MainActivity extends AppCompatActivity {
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
   }
 
-  private void startCredentials() {
-    Ocm.startWithCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET,
-        new OcmCredentialCallback() {
+  private void initOcm() {
+    ocmWrapper.startWithCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET,
+        BuildConfig.BUSSINES_UNIT, new OcmWrapper.OnStartWithCredentialsCallback() {
           @Override public void onCredentialReceiver(String accessToken) {
-            //TODO Fix in Orchextra
-            runOnUiThread(() -> getContent());
+            Log.d(TAG, "onCredentialReceiver()");
+            runOnUiThread(() -> clearData());
           }
 
-          @Override public void onCredentailError(String code) {
-            Snackbar.make(tabLayout,
-                "No Internet Connection: " + code + "\n check Credentials-Enviroment",
-                Snackbar.LENGTH_INDEFINITE).show();
+          @Override public void onCredentailError() {
+            Log.e(TAG, "onCredentailError");
+            Toast.makeText(MainActivity.this, "onCredentailError", Toast.LENGTH_SHORT).show();
           }
         });
-
-    Ocm.start();
   }
 
   private List<UiMenu> copy(List<UiMenu> list) {
@@ -179,10 +196,23 @@ public class MainActivity extends AppCompatActivity {
     return copyList;
   }
 
+  private void clearData() {
+    Ocm.clearData(true, true, new OCManagerCallbacks.Clear() {
+      @Override public void onDataClearedSuccessfull() {
+        Log.d(TAG, "onDataClearedSuccessfull");
+        runOnUiThread(() -> getContent());
+      }
+
+      @Override public void onDataClearFails(Exception e) {
+        Log.e(TAG, "onDataClearFails");
+        Toast.makeText(MainActivity.this, "Clear data fail!", Toast.LENGTH_SHORT).show();
+      }
+    });
+  }
+
   private void getContent() {
-    Ocm.setOnLoadDataContentSectionFinished(new OnLoadContentSectionFinishedCallback() {
-      @Override public void onLoadContentSectionFinished() {
-        Ocm.getMenus(DataRequest.FIRST_CACHE, new OcmCallbacks.Menus() {
+    Ocm.setOnLoadDataContentSectionFinished(
+        () -> Ocm.getMenus(DataRequest.FIRST_CACHE, new OcmCallbacks.Menus() {
           @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
             List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
             if (newUiMenuList == null) {
@@ -200,9 +230,7 @@ public class MainActivity extends AppCompatActivity {
           @Override public void onMenusFails(Throwable e) {
 
           }
-        });
-      }
-    });
+        }));
 
     Ocm.getMenus(DataRequest.ONLY_CACHE, new OcmCallbacks.Menus() {
       @Override public void onMenusLoaded(final UiMenuData oldUiMenuData) {
@@ -267,11 +295,13 @@ public class MainActivity extends AppCompatActivity {
 
   private void showIconNewContent(final List<UiMenu> newMenus) {
     newContentMainContainer.setVisibility(View.VISIBLE);
-    newContentMainContainer.setOnClickListener(v -> {
-      newContentMainContainer.setVisibility(View.GONE);
+    newContentMainContainer.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        newContentMainContainer.setVisibility(View.GONE);
 
-      tabLayout.removeAllTabs();
-      onGoDetailView(newMenus);
+        tabLayout.removeAllTabs();
+        onGoDetailView(newMenus);
+      }
     });
   }
 

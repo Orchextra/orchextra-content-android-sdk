@@ -2,10 +2,10 @@ package com.gigigo.orchextra.core.sdk.model.grid.spannedgridrecyclerview;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.multiplegridrecyclerview.entities.CellBlankElement;
@@ -21,6 +21,7 @@ import java.util.List;
 public class SpannedGridRecyclerView extends UiListedBaseContentData {
 
   private MultipleGridRecyclerView multipleGridRecyclerView;
+  private View animatedArrow;
 
   public SpannedGridRecyclerView(Context context) {
     super(context);
@@ -47,8 +48,8 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
   }
 
   private void initViews(View view) {
-    multipleGridRecyclerView =
-        (MultipleGridRecyclerView) view.findViewById(R.id.multipleGridRecyclerView);
+    multipleGridRecyclerView = view.findViewById(R.id.multipleGridRecyclerView);
+    animatedArrow = view.findViewById(R.id.animated_arrow);
   }
 
   private void initRecyclerView() {
@@ -63,19 +64,15 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
 
     multipleGridRecyclerView.setMillis(1500);
 
-    multipleGridRecyclerView.setOnRefreshListener(new MultipleGridRecyclerView.OnRefreshListener() {
-      @Override public void onRefresh() {
-        if (listedContentListener != null) {
-          listedContentListener.reloadSection();
-        }
+    multipleGridRecyclerView.setOnRefreshListener(() -> {
+      if (listedContentListener != null) {
+        listedContentListener.reloadSection();
       }
     });
 
-    multipleGridRecyclerView.setItemClickListener(new BaseViewHolder.OnItemClickListener() {
-      @Override public void onItemClick(int position, View view) {
-        if (listedContentListener != null) {
-          listedContentListener.onItemClicked(position, view);
-        }
+    multipleGridRecyclerView.setItemClickListener((position, view) -> {
+      if (listedContentListener != null) {
+        listedContentListener.onItemClicked(position, view);
       }
     });
 
@@ -85,6 +82,28 @@ public class SpannedGridRecyclerView extends UiListedBaseContentData {
 
     multipleGridRecyclerView.overrideScollingVelocityY(0.4f);
     multipleGridRecyclerView.setClipToPaddingSize(addictionalPadding);
+  }
+
+  private void addRecyclerListener() {
+    multipleGridRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+      static final int SCROLL_DIRECTION_UP = -1;
+
+      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        super.onScrolled(recyclerView, dx, dy);
+
+        if (!recyclerView.canScrollVertically(SCROLL_DIRECTION_UP) && isRecyclerScrollable(
+            recyclerView)) {
+          animatedArrow.setVisibility(VISIBLE);
+        } else {
+          animatedArrow.setVisibility(GONE);
+        }
+      }
+    });
+  }
+
+  private boolean isRecyclerScrollable(RecyclerView recyclerView) {
+    return recyclerView.computeHorizontalScrollRange() > recyclerView.getWidth()
+        || recyclerView.computeVerticalScrollRange() > recyclerView.getHeight();
   }
 
   private void setAdapterDataViewHolders() {

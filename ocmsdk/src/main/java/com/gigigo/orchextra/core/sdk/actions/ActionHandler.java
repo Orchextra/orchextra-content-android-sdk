@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -29,7 +30,8 @@ import gigigo.com.vimeolibs.VimeoInfo;
 
 public class ActionHandler {
 
-  OxManager orchextra;
+  private static final String TAG = "ActionHandler";
+  private final OxManager oxManager;
   private final OcmContextProvider ocmContextProvider;
   private final ConnectionUtils connectionUtils;
   private GetVideo getVideo;
@@ -37,7 +39,7 @@ public class ActionHandler {
   public ActionHandler(OcmContextProvider ocmContextProvider, GetVideo getVideo) {
     this.ocmContextProvider = ocmContextProvider;
     this.connectionUtils = new ConnectionUtilsImp(ocmContextProvider.getApplicationContext());
-    this.orchextra = new OxManagerImpl(ocmContextProvider.getApplicationContext());
+    this.oxManager = new OxManagerImpl();
     this.getVideo = getVideo;
   }
 
@@ -59,8 +61,8 @@ public class ActionHandler {
               VimeoExoPlayerActivity.openVideo(ocmContextProvider.getCurrentActivity(), vimeoInfo);
             }
 
-            @Override public void onError(Exception e) {
-              System.out.println("Error VimeoCallback" + e.toString());
+            @Override public void onError(Throwable e) {
+              Log.e(TAG, "getVideo()", e);
             }
           }), GetVideo.Params.Companion.forVideo(ocmContextProvider.getCurrentActivity(), false,
           videoId, connectionUtils.isConnectedWifi(), connectionUtils.isConnectedMobile()),
@@ -75,7 +77,7 @@ public class ActionHandler {
               videoObserver.onNext(vimeoInfo);
             }
 
-            @Override public void onError(Exception e) {
+            @Override public void onError(Throwable e) {
               videoObserver.onError(e);
             }
           }), GetVideo.Params.Companion.forVideo(ocmContextProvider.getCurrentActivity(), false,
@@ -85,15 +87,15 @@ public class ActionHandler {
   }
 
   public void launchOxVuforia() {
-    orchextra.startImageRecognition();
+    oxManager.startImageRecognition();
   }
 
   public void lauchOxScan() {
-    orchextra.startScanner();
+    oxManager.startScanner();
   }
 
   public void scanCode(OxManager.ScanCodeListener scanCodeListener) {
-    orchextra.scanCode(scanCodeListener);
+    oxManager.scanCode(scanCodeListener);
   }
 
   public void launchExternalBrowser(final String url, FederatedAuthorization federatedAuth) {

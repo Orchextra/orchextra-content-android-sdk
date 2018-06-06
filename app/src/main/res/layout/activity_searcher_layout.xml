@@ -14,7 +14,7 @@
       android:inputType="text"
       android:maxLines="1"
       android:textColor="@android:color/black"
-      android:textSize="@dimen/text_11"
+      android:textSize="11sp"
       />
 
   <FrameLayout

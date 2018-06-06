@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoElement> {
 
+  private static final String TAG = "ArticleVimeoVideoView";
+
   private final Context context;
   private final ConnectionUtils connectionUtils;
   private ActionHandler actionHandler;
@@ -38,8 +41,8 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
     connectionUtils = new ConnectionUtilsImp(context);
 
     this.context = context;
-    imgPlay = (ImageView) itemView.findViewById(R.id.imgPlay);
-    imgThumb = (ImageView) itemView.findViewById(R.id.imgThumb);
+    imgPlay = itemView.findViewById(R.id.imgPlay);
+    imgThumb = itemView.findViewById(R.id.imgThumb);
     this.actionHandler = actionHandler;
   }
 
@@ -60,9 +63,8 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
             mVimeoInfo = vimeoInfo;
             String strImgForBlur = mVimeoInfo.getThumbPath();
 
-            imgThumb.setMaxHeight(
-                (int) MoreContentArrowView.convertDpToPixel(192, context.getApplicationContext()));
-            imgThumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imgThumb.setMaxHeight((int) MoreContentArrowView.convertDpToPixel(192,context.getApplicationContext()));
+        imgThumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             Glide.with(context.getApplicationContext())
 
@@ -88,8 +90,8 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
             imgThumb.setOnClickListener(onVimeoThumbnailClickListener);
           }
 
-          @Override public void onError(@NotNull Exception e) {
-            System.out.println("Error VimeoCallbacak" + e.toString());
+          @Override public void onError(@NotNull Throwable e) {
+            Log.e(TAG, "getVimeoInfo()", e);
           }
         }));
   }

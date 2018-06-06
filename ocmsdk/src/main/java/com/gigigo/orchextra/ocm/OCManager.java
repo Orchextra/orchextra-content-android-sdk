@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.webkit.WebStorage;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
+import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
@@ -28,6 +30,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
+import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.callbacks.ScanCodeListener;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
@@ -38,9 +41,10 @@ import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.wrapper.CrmUser;
-import com.gigigo.orchextra.wrapper.ImageRecognition;
 import com.gigigo.orchextra.wrapper.OrchextraCompletionCallback;
+import com.gigigo.orchextra.wrapper.OxConfig;
 import com.gigigo.orchextra.wrapper.OxManager;
+import com.gigigo.orchextra.wrapper.OxManagerImpl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -57,6 +61,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class OCManager {
 
+  private static String TAG = "OCManager";
   private static OCManager instance;
   private CustomUrlCallback customUrlCallback;
   private static OrchextraCompletionCallback mOrchextraCompletionCallback =
@@ -142,15 +147,17 @@ Add Comment C
       };
   //region serialize list of read articles slugs
   private final String READ_ARTICLES_FILE = "read_articles_file.ocm";
-  @Inject OxManager oxManager;
+  private final OxManager oxManager;
   @Inject OcmSdkLifecycle ocmSdkLifecycle;
   @Inject OcmContextProvider ocmContextProvider;
   @Inject OcmViewGenerator ocmViewGenerator;
   @Inject OxSession oxSession;
+  @Inject Authoritation authoritation;
   @Inject OcmSchemeHandler schemeHandler;
   @Inject OcmStyleUi ocmStyleUi;
   @Inject OcmController ocmController;
   private OnEventCallback onEventCallback;
+  private OnRequiredLoginCallback onRequiredLoginCallback;
   private String language;
   private InjectorImpl injector;
   private Map<String, String> localStorage;
@@ -215,13 +222,12 @@ Add Comment C
         });
   }
 
-  static void clearData(boolean images, boolean data,
+  public static void clearData(boolean images, boolean data,
       final OCManagerCallbacks.Clear clearCallback) {
     if (instance != null) {
 
       instance.ocmController.clearCache(images, data, new OcmController.ClearCacheCallback() {
         @Override public void onClearCacheSuccess() {
-          // clearCookiesFedexAuth();
           clearCallback.onDataClearedSuccessfull();
         }
 
@@ -229,12 +235,8 @@ Add Comment C
           clearCallback.onDataClearFails(e);
         }
       });
-    }
-  }
-
-  static void processRedirectElementUrl(String elementUrl) {
-    if (instance != null) {
-      instance.schemeHandler.processRedirectElementUrl(elementUrl, null);
+    } else {
+      clearCallback.onDataClearFails(new Exception("instance != null"));
     }
   }
 
@@ -297,43 +299,6 @@ Add Comment C
     }
   }
 
-  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
-      String senderId) {
-    if (OCManager.instance != null) {
-      Application app = (Application) instance.ocmContextProvider.getApplicationContext();
-      OCManager.instance.initOrchextra(app, oxKey, oxSecret, notificationActivityClass, senderId);
-    }
-  }
-
-  static void setOrchextraBusinessUnit(String businessUnit) {
-    instance.oxManager.bindDevice(businessUnit);
-  }
-
-  //region Orchextra method
-
-  static void setNewOrchextraCredentials(final String apiKey, final String apiSecret,
-      final OcmCredentialCallback ocmCredentialCallback) {
-
-    instance.oxSession.setCredentials(apiKey, apiSecret);
-
-    instance.ocmCredentialCallback = ocmCredentialCallback;
-
-    //this is new for repsol, esto hace q el primer changecredentials pase por el 401 y llege correctamente el token
-    instance.oxManager.start();
-
-    //Some case the start() and changeCredentials() method has concurrency problems
-    instance.oxManager.updateSDKCredentials(apiKey, apiSecret, true);
-  }
-
-  public static void start(OcmCredentialCallback onCredentialCallback) {
-    instance.ocmCredentialCallback = onCredentialCallback;
-    instance.oxManager.start();
-  }
-
-  static void bindUser(CrmUser crmUser) {
-    instance.oxManager.bindUser(crmUser);
-  }
-
   public static Map<String, String> getLocalStorage() {
     if (instance == null) {
       System.out.println("main getLocalStorageinstance ==null");
@@ -361,27 +326,8 @@ Add Comment C
     return instance.language;
   }
 
-  //endregion
-
   static void setContentLanguage(String language) {
     getInstance().language = language;
-  }
-
-  public static void setOnCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {
-    OCManager.instance.oxManager.setOnCustomSchemeReceiver(onCustomSchemeReceiver);
-  }
-
-  public static void start() {
-    instance.oxManager.start();
-  }
-
-  public static void stop() {
-    instance.oxManager.stop();
-  }
-
-  public static void returnOnCustomSchemeCallback(String customScheme) {
-
-    instance.oxManager.callOnCustomSchemeReceiver(customScheme);
   }
 
   public static OcmContextProvider getOcmContextProvider() {
@@ -413,13 +359,8 @@ Add Comment C
     return instance;
   }
 
-  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
-      String senderId, ImageRecognition vuforia) {
-    if (OCManager.instance != null) {
-      Application app = (Application) instance.ocmContextProvider.getApplicationContext();
-      OCManager.instance.initOrchextra(app, oxKey, oxSecret, notificationActivityClass, senderId,
-          vuforia);
-    }
+  private OCManager() {
+    this.oxManager = new OxManagerImpl();
   }
 
   //region cookies FedexAuth
@@ -626,25 +567,6 @@ Add Comment C
     app.registerActivityLifecycleCallbacks(ocmSdkLifecycle);
   }
 
-  private void initOrchextra(Application app, String oxKey, String oxSecret,
-      Class notificationActivityClass, String senderId) {
-    initOrchextra(app, oxKey, oxSecret, notificationActivityClass, senderId, null);
-  }
-
-  private void initOrchextra(Application app, String oxKey, String oxSecret,
-      Class notificationActivityClass, String senderId, ImageRecognition vuforia) {
-    System.out.println("appOn6.6.1");
-    OxManager.Config config = new OxManager.Config.Builder().setApiKey(oxKey)
-        .setApiSecret(oxSecret)
-        .setNotificationActivityClass(notificationActivityClass)
-        .setSenderId(senderId)
-        .setVuforia(vuforia)
-        .setOrchextraCompletionCallback(mOrchextraCompletionCallback)
-        .build();
-    System.out.println("appOn6.6.2");
-    instance.oxManager.init(app, config);
-  }
-
   public ArrayList<String> readReadArticles() {
 
     ArrayList<String> lst =
@@ -660,11 +582,119 @@ Add Comment C
     saveSerializable(ocmContextProvider.getApplicationContext(), readArticles, READ_ARTICLES_FILE);
   }
 
-  // Custom url
+  static void setUserIsAuthorizated(boolean isAuthorizated) {
+    if (instance != null) {
+      instance.authoritation.setAuthorizatedUser(isAuthorizated);
+    }
+  }
 
-  public static void setCustomUrlCallback(CustomUrlCallback customUrlCallback) {
+  static void setLoggedAction(String elementUrl) {
+    if (instance != null) {
+      instance.schemeHandler.processElementUrl(elementUrl, null, null);
+    }
+  }
 
-    getInstance().customUrlCallback = customUrlCallback;
+  static void processRedirectElementUrl(String elementUrl) {
+    if (instance != null) {
+      instance.schemeHandler.processRedirectElementUrl(elementUrl, null);
+    }
+  }
+
+  static void setDoRequiredLoginCallback(OnRequiredLoginCallback onRequiredLoginCallback) {
+    getInstance().onRequiredLoginCallback = onRequiredLoginCallback;
+  }
+
+  public static void notifyRequiredLoginToContinue() {
+    if (instance != null && instance.onRequiredLoginCallback != null) {
+      instance.onRequiredLoginCallback.doRequiredLogin();
+    }
+  }
+
+  public static void notifyRequiredLoginToContinue(String elementUrl) {
+    if (instance != null && instance.onRequiredLoginCallback != null) {
+      instance.onRequiredLoginCallback.doRequiredLogin(elementUrl);
+    }
+  }
+
+  static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
+      String firebaseApiKey, String firebaseApplicationId, @NonNull String businessUnit,
+      @Nullable final OcmCredentialCallback ocmCredentialCallback, Boolean triggeringEnabled,
+      Boolean anonymous) {
+
+    if (OCManager.instance != null) {
+
+      List<String> businessUnits = new ArrayList<>();
+      if (!businessUnit.isEmpty()) {
+        businessUnits.add(businessUnit);
+      }
+
+      Application app = (Application) instance.ocmContextProvider.getApplicationContext();
+      OxConfig oxConfig =
+          new OxConfig(oxKey, oxSecret, firebaseApiKey, firebaseApplicationId, businessUnits,
+              notificationActivityClass, triggeringEnabled, anonymous);
+
+      instance.oxManager.init(app, oxConfig, new OxManager.StatusListener() {
+        @Override public void onSuccess() {
+          if (ocmCredentialCallback != null) {
+            instance.oxManager.getToken(token -> {
+              ocmCredentialCallback.onCredentialReceiver(token);
+              instance.oxSession.setToken(token);
+            });
+          }
+        }
+
+        @Override public void onError(@NonNull String error) {
+          if (ocmCredentialCallback != null) {
+            ocmCredentialCallback.onCredentailError(error);
+          }
+        }
+      });
+    }
+  }
+
+  public static void getOxToken(final OcmCredentialCallback ocmCredentialCallback) {
+    if (instance != null) {
+      instance.oxManager.getToken(ocmCredentialCallback::onCredentialReceiver);
+    } else {
+      Log.e(TAG, "setErrorListener with null instance");
+    }
+  }
+
+  public static void setErrorListener(final OxManager.ErrorListener errorListener) {
+    if (instance != null) {
+      instance.oxManager.setErrorListener(errorListener);
+    } else {
+      Log.e(TAG, "setErrorListener with null instance");
+    }
+  }
+
+  static void setOrchextraBusinessUnit(String businessUnit,
+      OxManager.StatusListener statusListener) {
+
+    if (instance != null) {
+      List<String> businessUnits = new ArrayList<>();
+      businessUnits.add(businessUnit);
+
+      instance.oxManager.setBusinessUnits(businessUnits, statusListener);
+    } else {
+      Log.e(TAG, "setErrorListener with null instance");
+    }
+  }
+
+  static void bindUser(CrmUser crmUser, OxManager.StatusListener statusListener) {
+    if (instance != null) {
+      instance.oxManager.bindUser(crmUser, statusListener);
+    } else {
+      Log.e(TAG, "bindUser with null instance");
+    }
+  }
+
+  static void unBindUser(OxManager.StatusListener statusListener) {
+    if (instance != null) {
+      instance.oxManager.unBindUser(statusListener);
+    } else {
+      Log.e(TAG, "unBindUser with null instance");
+    }
   }
 
   public static void scanCode(ScanCodeListener scanCodeListener) {
@@ -677,6 +707,25 @@ Add Comment C
     if (instance != null) {
       instance.oxManager.startScanner();
     }
+  }
+
+  public static void setOnCustomSchemeReceiver(OnCustomSchemeReceiver onCustomSchemeReceiver) {
+    OCManager.instance.oxManager.setCustomSchemeReceiver(onCustomSchemeReceiver);
+  }
+
+  public static void returnOnCustomSchemeCallback(String customScheme) {
+    instance.oxManager.onCustomScheme(customScheme);
+  }
+
+  public static void stop() {
+    instance.oxManager.finish();
+  }
+
+  // Custom url
+
+  public static void setCustomUrlCallback(CustomUrlCallback customUrlCallback) {
+
+    getInstance().customUrlCallback = customUrlCallback;
   }
 
   @Nullable public static CustomUrlCallback getCustomUrlCallback() {

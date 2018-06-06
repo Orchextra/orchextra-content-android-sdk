@@ -51,6 +51,30 @@ ext {
                                      staging: '677cf75a17aeec144ee402c281ad3a732d736a8a',
                                      release: '6bc18c500546f253699f61c11a62827679178400']]
 
+  woah_HU = [orchextraBussinesUnit: "oat-hu",
+             applicationId        : "${baseApplicationId}.hu",
+             appName              : "${basePackageName} HU",
+
+             orchextraApiKey      : [debug  : '8286702045adf5a3ad816f70ecb80e4c91fbb8de',
+                                     staging: 'adfc8ba4340828a054bf061f692707a197af96cb',
+                                     release: 'ef08c4dccb7649b9956296a863db002a68240be2'],
+
+             orchextraApiSecret   : [debug  : 'eab37080130215ced60eb9d5ff729049749ec205',
+                                     staging: '677cf75a17aeec144ee402c281ad3a732d736a8a',
+                                     release: '6bc18c500546f253699f61c11a62827679178400']]
+
+  woah_PL = [orchextraBussinesUnit: "pl",
+             applicationId        : "${baseApplicationId}.pl",
+             appName              : "${basePackageName} PL",
+
+             orchextraApiKey      : [debug  : '8286702045adf5a3ad816f70ecb80e4c91fbb8de',
+                                     staging: 'adfc8ba4340828a054bf061f692707a197af96cb',
+                                     release: 'ef08c4dccb7649b9956296a863db002a68240be2'],
+
+             orchextraApiSecret   : [debug  : 'eab37080130215ced60eb9d5ff729049749ec205',
+                                     staging: '677cf75a17aeec144ee402c281ad3a732d736a8a',
+                                     release: '6bc18c500546f253699f61c11a62827679178400']]
+
   woah_RS = [orchextraBussinesUnit: "rs",
              applicationId        : "${baseApplicationId}.rs",
              appName              : "${basePackageName} RS",

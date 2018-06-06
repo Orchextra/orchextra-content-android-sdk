@@ -27,7 +27,7 @@ class ScannerActivity : AppCompatActivity(), ZBarScannerView.ResultHandler {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.ox_activity_scanner)
+    setContentView(R.layout.ox2_activity_scanner)
 
     scannerView = ZBarScannerView(this)
     val contentFrame = findViewById<ViewGroup>(R.id.content_frame)

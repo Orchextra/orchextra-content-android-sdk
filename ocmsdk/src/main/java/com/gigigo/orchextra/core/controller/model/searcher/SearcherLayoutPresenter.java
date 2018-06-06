@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.controller.model.searcher;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,6 +14,8 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
+import com.gigigo.orchextra.core.domain.entities.menus.RequiredAuthoritation;
+import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.R;
@@ -21,13 +24,16 @@ import java.util.List;
 
 public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> {
 
+  private final Authoritation authoritation;
   private final OcmController ocmController;
 
   private String textToSearch;
   private List<Cell> cellGridContentDataList;
 
-  public SearcherLayoutPresenter(OcmController ocmController) {
+  public SearcherLayoutPresenter(OcmController ocmController, Authoritation authoritation) {
+
     this.ocmController = ocmController;
+    this.authoritation = authoritation;
   }
 
   @Override public void onViewAttached() {
@@ -160,6 +166,10 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
             getView().contentNotAvailable();
           }
         });
+  }
+
+  private boolean checkLoginAuth(@NonNull RequiredAuthoritation requiredAuth) {
+    return authoritation.isAuthorizatedUser() || !requiredAuth.equals(RequiredAuthoritation.LOGGED);
   }
 
   public void updateUi() {

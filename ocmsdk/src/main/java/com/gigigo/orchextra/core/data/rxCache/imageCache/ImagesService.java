@@ -26,12 +26,16 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    ocmImageCache.start();
+    if (ocmImageCache != null) {
+      ocmImageCache.start();
+    }
     return START_STICKY;
   }
 
   @Override public void onDestroy() {
-    ocmImageCache.stop();
+    if (ocmImageCache != null) {
+      ocmImageCache.stop();
+    }
     super.onDestroy();
   }
 

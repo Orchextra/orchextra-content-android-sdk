@@ -4,6 +4,7 @@ import android.app.Application;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.domain.OcmController;
+import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetVideo;
 import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
@@ -47,8 +48,13 @@ import orchextra.javax.inject.Singleton;
     return new OcmViewGeneratorImp(ocmController, detailElementsViewPresenterProvides);
   }
 
+  @Singleton @Provides Authoritation provideAuthoritation() {
+    return new Authoritation();
+  }
+
   @Singleton @Provides ActionHandler provideActionHandler(OcmContextProvider ocmContextProvider,
       GetVideo getVideo) {
+
     return new ActionHandler(ocmContextProvider, getVideo);
   }
 
@@ -62,6 +68,6 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Singleton @Provides OxManager provideOxManager() {
-    return new OxManagerImpl(app);
+    return new OxManagerImpl();
   }
 }

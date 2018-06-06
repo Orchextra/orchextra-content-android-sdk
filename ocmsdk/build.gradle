@@ -70,8 +70,6 @@ android {
     }
   }
 
-  //kapt { generateStubs = true }
-
   project.android.libraryVariants.all { variant ->
 
     variant.productFlavors.each { flavor ->
@@ -188,6 +186,9 @@ kotlin {
 
 
 dependencies {
+
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
   //TEST
   testImplementation project.testLibraries.junit
   testImplementation project.testLibraries.mockito
@@ -207,7 +208,7 @@ dependencies {
   api project.libraries.gggJavaLib
 
   //Dagger
-  kapt 'com.squareup:javapoet:1.7.0'
+  kapt 'com.squareup:javapoet:1.8.0'
   //Dagger 2.2 bundles an older version of JavaPoet. Must explicitly add apt 'com.squareup:javapoet:1.7.0' before apt 'com.google.dagger:dagger-compiler:2.2' to fix this.
   implementation project.libraries.dagger
   kapt project.libraries.daggerCompiler
@@ -215,52 +216,27 @@ dependencies {
   //Image Loader Glide/Blur
   api project.libraries.imageloaderGlideBlur
 
-  //Orchextra
-  //   implementation project.libraries.oxvuforiaimplementation
-  //  ocmStagingImplementation(project.libraries.orchextrasdkStaging) { transitive = true
-  //    exclude module: 'support-v4'  }
-  //  ocmDebugImplementation(project.libraries.orchextrasdkDebug) { transitive = true
-  //    exclude module: 'support-v4' }
-  //  ocmReleaseImplementation(project.libraries.orchextrasdkRelease) { transitive = true
-  //    exclude module: 'support-v4' }
-  // implementation project.libraries.oxvuforiaimplementation
-  /*
-   ocmStagingCompile(project.libraries.orchextrasdkStaging) {
-     transitive = true
-     exclude module: 'support-v4'
-   }
-   ocmDebugCompile(project.libraries.orchextrasdkDebug) {
-     transitive = true
-     exclude module: 'support-v4'
-   }
-   ocmReleaseCompile(project.libraries.orchextrasdkRelease) {
-     transitive = true
-     exclude module: 'support-v4'
-   }
- */
-  /*asv old compiles ox gradle 2.3.3*/
-  stagingApi(project.libraries.orchextrasdkStaging) {
-    transitive = true
-    exclude module: 'support-v4'
-  }
-  debugApi(project.libraries.orchextrasdkDebug) {
-    transitive = true
-    exclude module: 'support-v4'
-  }
-  releaseApi(project.libraries.orchextrasdkRelease) {
-    transitive = true
-    exclude module: 'support-v4'
-  }
-  //asv new ox with gradle 3.0.0
+  // ORCHEXTRA
+  stagingImplementation project.libraries.oxCoreStaging
+  debugImplementation project.libraries.oxCoreDebug
+  releaseImplementation project.libraries.oxCoreRelease
 
-  //api('com.github.Orchextra.orchextra-android-sdk:orchextrasdk-control:525Test')
+  stagingImplementation project.libraries.oxGeofenceStaging
+  debugImplementation project.libraries.oxGeofenceDebug
+  releaseImplementation project.libraries.oxGeofenceRelease
 
-  //customs Views
+  stagingImplementation project.libraries.oxIndoorpositioningStaging
+  debugImplementation project.libraries.oxIndoorpositioningDebug
+  releaseImplementation project.libraries.oxIndoorpositioningRelease
 
+  stagingImplementation project.libraries.oxScannerStaging
+  debugImplementation project.libraries.oxScannerDebug
+  releaseImplementation project.libraries.oxScannerRelease
+
+  // Customs Views
   api project.libraries.doubleViewPager
   api project.libraries.autofitTextView
   api project.libraries.multipleGridRecyclerView
-
 
   api project.libraries.rxAndroid
   api project.libraries.rxJava
