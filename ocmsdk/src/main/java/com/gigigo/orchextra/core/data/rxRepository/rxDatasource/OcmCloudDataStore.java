@@ -195,7 +195,7 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.getVersionDataRx()
         .map(apiVersionResponse -> new ApiVersionKache(
             Objects.requireNonNull(apiVersionResponse.getData())))
-        .filter(Objects::nonNull)
+        .filter(v -> v != null)
         .doOnNext(ocmCache::putVersion);
   }
 
