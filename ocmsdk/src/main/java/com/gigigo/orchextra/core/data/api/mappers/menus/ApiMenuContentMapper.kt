@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.data.api.mappers.menus
 
-import android.util.Log
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent
 import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementMapper
@@ -12,8 +11,6 @@ class ApiMenuContentMapper(
     private val apiMenuItemMapper: ApiElementMapper) : ExternalClassToModelMapper<ApiMenuContent, MenuContent> {
 
   override fun externalClassToModel(data: ApiMenuContent): MenuContent {
-    val time = System.currentTimeMillis()
-
     val model = MenuContent()
 
     model.id = data.id
@@ -30,9 +27,6 @@ class ApiMenuContentMapper(
     }
 
     model.elements = menuItemList
-
-    Log.v("TT - ApiMenuContent", ((System.currentTimeMillis() - time) / 1000).toString() + "")
-
     return model
   }
 }

@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.data.api.mappers.video
 
-import android.util.Log
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
 import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData
 import gigigo.com.vimeolibs.VimeoInfo
@@ -11,13 +10,7 @@ import orchextra.javax.inject.Singleton
 class ApiVideoDataMapper @Inject constructor() : ExternalClassToModelMapper<ApiVideoData, VimeoInfo> {
 
   override fun externalClassToModel(data: ApiVideoData): VimeoInfo {
-    val time = System.currentTimeMillis()
-
     val model = data.element
-
-    val currentTime = System.currentTimeMillis() - time
-    Log.v("TT - ApiVideoDataMapper", ("" + currentTime / 1000))
-
     return model
   }
 }

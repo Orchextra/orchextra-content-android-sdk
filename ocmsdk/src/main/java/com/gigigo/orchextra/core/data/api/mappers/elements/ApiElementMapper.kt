@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.data.api.mappers.elements
 
-import android.util.Log
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement
 import com.gigigo.orchextra.core.domain.entities.elements.Element
@@ -10,7 +9,6 @@ class ApiElementMapper(
     private val apiMenuItemViewMapper: ApiElementSectionViewMapper) : ExternalClassToModelMapper<ApiElement, Element> {
 
   override fun externalClassToModel(data: ApiElement): Element? {
-    val time = System.currentTimeMillis()
 
     val model = Element()
 
@@ -42,10 +40,6 @@ class ApiElementMapper(
       }
       model.tags = tagList
     }
-
-    val currentTime = System.currentTimeMillis() - time
-    Log.v("TT - ApiElement", ("" + currentTime / 1000))
-
 
     return model
   }
