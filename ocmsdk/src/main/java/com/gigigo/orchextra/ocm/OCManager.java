@@ -271,6 +271,9 @@ Add Comment C
       instance.ocmCustomBehaviourDelegate.contentNeedsValidation(customProperties, viewType,
           completion);
     }
+    else {
+      completion.invoke(true);
+    }
   }
 
   public static void notifyCustomizationForContent(@NotNull Map<String, Object> customProperties,
