@@ -283,6 +283,10 @@ Add Comment C
       instance.ocmCustomBehaviourDelegate.customizationForContent(customProperties, viewType,
           customizationListener);
     }
+    else {
+      ArrayList viewCustomizationType = new ArrayList<ViewCustomizationType>();
+      customizationListener.invoke(viewCustomizationType);
+    }
   }
 
   public static void notifyEvent(OcmEvent event, Object data) {
