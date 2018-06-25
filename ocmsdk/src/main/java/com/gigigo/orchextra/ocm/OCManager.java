@@ -284,7 +284,7 @@ Add Comment C
           customizationListener);
     }
     else {
-      ArrayList viewCustomizationType = new ArrayList<ViewCustomizationType>();
+      List<ViewCustomizationType> viewCustomizationType = new ArrayList<>();
       customizationListener.invoke(viewCustomizationType);
     }
   }
