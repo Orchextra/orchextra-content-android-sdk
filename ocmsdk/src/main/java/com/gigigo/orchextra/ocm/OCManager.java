@@ -271,6 +271,9 @@ Add Comment C
       instance.ocmCustomBehaviourDelegate.contentNeedsValidation(customProperties, viewType,
           completion);
     }
+    else {
+      completion.invoke(true);
+    }
   }
 
   public static void notifyCustomizationForContent(@NotNull Map<String, Object> customProperties,
@@ -279,6 +282,10 @@ Add Comment C
     if (instance != null && instance.ocmCustomBehaviourDelegate != null) {
       instance.ocmCustomBehaviourDelegate.customizationForContent(customProperties, viewType,
           customizationListener);
+    }
+    else {
+      List<ViewCustomizationType> viewCustomizationType = new ArrayList<>();
+      customizationListener.invoke(viewCustomizationType);
     }
   }
 
