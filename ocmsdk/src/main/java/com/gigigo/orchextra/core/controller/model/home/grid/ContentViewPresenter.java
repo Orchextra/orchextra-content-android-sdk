@@ -21,7 +21,6 @@ import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
-import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.ArrayList;
@@ -370,17 +369,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         return;
       }
 
-      if (element.getCustomProperties() != null && element.getCustomProperties() != null) {
-        OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(),
-            ViewType.GRID_CONTENT, canContinue -> {
-              if (canContinue) {
-                itemClickedContinue(element, view);
-              }
-              return null;
-            });
-      } else {
-        itemClickedContinue(element, view);
-      }
+      itemClickedContinue(element, view);
     }
   }
 
