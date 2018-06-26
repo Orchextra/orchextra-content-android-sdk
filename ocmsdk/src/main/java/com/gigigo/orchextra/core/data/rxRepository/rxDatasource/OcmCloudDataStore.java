@@ -3,7 +3,6 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
 import com.gigigo.orchextra.core.data.api.dto.base.BaseApiResponse;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
@@ -61,24 +60,17 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public Observable<ApiMenuContentData> getMenuEntity() {
-
-    final long time = System.currentTimeMillis();
-
     return ocmApiService.getMenuDataRx()
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(ocmCache::putMenus)
         .doOnNext(apiMenuContentData -> addSectionsToCache(apiMenuContentData))
         .doOnNext(apiMenuContentData -> {
           apiMenuContentData.setFromCloud(true);
-          Log.v("TT - MenuEntity", (System.currentTimeMillis() - time) / 1000 + "");
         });
   }
 
   @Override public Observable<ApiSectionContentData> getSectionEntity(String contentUrl,
       final int numberOfElementsToDownload) {
-
-    final long time = System.currentTimeMillis();
-
     return ocmApiService.getSectionDataRx(contentUrl, withThumbnails)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(contentUrl))
@@ -87,7 +79,6 @@ import orchextra.javax.inject.Singleton;
             numberOfElementsToDownload))
         .doOnNext(apiSectionContentData -> {
           apiSectionContentData.setFromCloud(true);
-          Log.v("TT - SectionEntity", (System.currentTimeMillis() - time) / 1000 + "");
         });
   }
 
@@ -195,7 +186,7 @@ import orchextra.javax.inject.Singleton;
     return ocmApiService.getVersionDataRx()
         .map(apiVersionResponse -> new ApiVersionKache(
             Objects.requireNonNull(apiVersionResponse.getData())))
-        .filter(Objects::nonNull)
+        .filter(v -> v != null)
         .doOnNext(ocmCache::putVersion);
   }
 

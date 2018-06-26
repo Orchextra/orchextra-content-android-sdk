@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.data.api.mappers.elementcache
 
-import android.util.Log
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCacheRender
 import com.gigigo.orchextra.core.data.api.mappers.article.ApiArticleElementMapper
@@ -14,8 +13,6 @@ class ApiElementCacheRenderMapper(private val apiArticleElementMapper: ApiArticl
     private val federatedAuthorizationDataMapper: FederatedAuthorizationDataMapper) : ExternalClassToModelMapper<ApiElementCacheRender, ElementCacheRender> {
 
   override fun externalClassToModel(data: ApiElementCacheRender): ElementCacheRender {
-    val time = System.currentTimeMillis()
-
     val model = ElementCacheRender()
 
     with(model) {
@@ -43,10 +40,6 @@ class ApiElementCacheRenderMapper(private val apiArticleElementMapper: ApiArticl
     }
 
     model.elements = articleElementList
-
-    val currentTime = System.currentTimeMillis() - time
-    Log.v("TT - ApiElemCacheRender", ("" + currentTime/1000))
-
     return model
   }
 }

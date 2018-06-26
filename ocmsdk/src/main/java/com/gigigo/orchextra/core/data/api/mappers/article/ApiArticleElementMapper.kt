@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.data.api.mappers.article
 
-import android.util.Log
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElementRender
@@ -31,7 +30,6 @@ class ApiArticleElementMapper : ExternalClassToModelMapper<ApiArticleElement, Ar
 
   override fun externalClassToModel(
       data: ApiArticleElement): ArticleElement<ArticleElementRender>? {
-    val time = System.currentTimeMillis()
 
     val articleTypeSection = ArticleTypeSection.convertStringToEnum(data.type)
 
@@ -43,9 +41,6 @@ class ApiArticleElementMapper : ExternalClassToModelMapper<ApiArticleElement, Ar
     data.customProperties?.let {
       model.customProperties = data.customProperties
     }
-
-    val currentTime = System.currentTimeMillis() - time
-    Log.v("TT - ApiArticleElement", ("" + currentTime/1000))
 
     return model
   }
