@@ -21,6 +21,7 @@ import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.ArrayList;
 import java.util.List;
+import kotlin.collections.EmptyList;
 
 public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> {
 
@@ -93,9 +94,11 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
         if (cellGridContentDataList != null && cellGridContentDataList.size() > 0) {
           getView().setData(cellGridContentDataList);
         } else {
+          getView().setData(new ArrayList<>());
           showEmptyView();
         }
       } else {
+        getView().setData(new ArrayList<>());
         showEmptyView();
       }
     }

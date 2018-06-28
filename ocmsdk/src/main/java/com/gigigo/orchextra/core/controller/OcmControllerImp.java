@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.controller;
 
-import android.util.Log;
 import com.gigigo.orchextra.core.data.rxException.ApiDetailNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSearchNotFoundException;
@@ -180,8 +179,8 @@ public class OcmControllerImp implements OcmController {
    * if are equals return
    * else retrieve version from cloud
    */
-  @Override public void getSection(DataRequest dataRequest, final String contentUrl, int imagesToDownload,
-      GetSectionControllerCallback getSectionControllerCallback) {
+  @Override public void getSection(DataRequest dataRequest, final String contentUrl,
+      int imagesToDownload, GetSectionControllerCallback getSectionControllerCallback) {
 
     if (contentUrl != null) {
       switch (dataRequest) {
@@ -234,7 +233,7 @@ public class OcmControllerImp implements OcmController {
 
     getSection.execute(new SectionObserver(new GetSectionControllerCallback() {
           @Override public void onGetSectionLoaded(ContentData contentData) {
-            if (getSectionControllerCallback!= null) {
+            if (getSectionControllerCallback != null) {
               if (!contentData.isFromCloud()) {
                 getSectionControllerCallback.onGetSectionLoaded(contentData);
               } else {
@@ -244,7 +243,7 @@ public class OcmControllerImp implements OcmController {
           }
 
           @Override public void onGetSectionFails(Exception e) {
-            if (getSectionControllerCallback!= null) {
+            if (getSectionControllerCallback != null) {
               getSectionControllerCallback.onGetSectionFails(e);
             }
           }
@@ -256,22 +255,22 @@ public class OcmControllerImp implements OcmController {
       GetSectionControllerCallback getSectionControllerCallback) {
 
     getSection.execute(new SectionObserver(new GetSectionControllerCallback() {
-      @Override public void onGetSectionLoaded(ContentData contentData) {
-          if (getSectionControllerCallback!= null) {
-            if (!contentData.isFromCloud()) {
-              getSectionControllerCallback.onGetSectionLoaded(contentData);
-            } else {
-              getSectionControllerCallback.onGetSectionLoaded(null);
+          @Override public void onGetSectionLoaded(ContentData contentData) {
+            if (getSectionControllerCallback != null) {
+              if (!contentData.isFromCloud()) {
+                getSectionControllerCallback.onGetSectionLoaded(contentData);
+              } else {
+                getSectionControllerCallback.onGetSectionLoaded(null);
+              }
             }
           }
-      }
 
-      @Override public void onGetSectionFails(Exception e) {
-        if (getSectionControllerCallback!= null) {
-          getSectionControllerCallback.onGetSectionFails(e);
-        }
-      }
-    }), GetSection.Params.forSection(false, contentUrl, imagesToDownload),
+          @Override public void onGetSectionFails(Exception e) {
+            if (getSectionControllerCallback != null) {
+              getSectionControllerCallback.onGetSectionFails(e);
+            }
+          }
+        }), GetSection.Params.forSection(false, contentUrl, imagesToDownload),
         PriorityScheduler.Priority.HIGH);
   }
 
@@ -371,12 +370,9 @@ public class OcmControllerImp implements OcmController {
   }
 
   private UiMenuData transformMenu(MenuContentData menuContentData) {
-
-    final long time = System.currentTimeMillis();
-
     UiMenuData uiMenuData = new UiMenuData();
 
-    List<UiMenu> menuList = new  ArrayList<>();
+    List<UiMenu> menuList = new ArrayList<>();
 
     if (menuContentData != null
         && menuContentData.getMenuContentList() != null
@@ -407,15 +403,11 @@ public class OcmControllerImp implements OcmController {
     }
 
     uiMenuData.setUiMenuList(menuList);
-
-    Log.v("TT - UiMenuData", (System.currentTimeMillis() - time) / 1000 + "");
-
     return uiMenuData;
   }
 
   //performance https://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html
   //leak with this kind inner class
-
 
   //region observers
   private final class MenuObserver extends DefaultObserver<MenuContentData> {
@@ -488,8 +480,6 @@ public class OcmControllerImp implements OcmController {
         getSectionControllerCallback.onGetSectionLoaded(contentData);
       }
     }
-
-
   }
 
   private final class DetailObserver extends DefaultObserver<ElementData> {
