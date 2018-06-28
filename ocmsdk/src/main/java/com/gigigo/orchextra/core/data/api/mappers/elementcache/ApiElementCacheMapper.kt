@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.data.api.mappers.elementcache
 
-import android.util.Log
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache
@@ -50,9 +49,6 @@ class ApiElementCacheMapper(
         model.customProperties = data.customProperties
       }
     }
-
-    val currentTime = System.currentTimeMillis() - time
-    Log.v("TT - ApiElementCache", ("" + currentTime / 1000))
 
     return model
   }

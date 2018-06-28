@@ -1,6 +1,5 @@
 package com.gigigo.orchextra.core.data.api.mappers.menus
 
-import android.util.Log
 import com.gigigo.ggglib.mappers.ExternalClassToModelMapper
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData
 import com.gigigo.orchextra.core.data.api.mappers.elementcache.ApiElementCacheMapper
@@ -18,8 +17,6 @@ constructor(private val apiMenuContentMapper: ApiMenuContentMapper,
     private val apiElementCacheItemMapper: ApiElementCacheMapper) : ExternalClassToModelMapper<ApiMenuContentData, MenuContentData> {
 
   override fun externalClassToModel(data: ApiMenuContentData): MenuContentData {
-    val time = System.currentTimeMillis()
-
     val model = MenuContentData()
 
     val menuContentList = ArrayList<MenuContent>()
@@ -43,8 +40,6 @@ constructor(private val apiMenuContentMapper: ApiMenuContentMapper,
     model.elementsCache = elementCacheItemMap
     model.isFromCloud = data.isFromCloud
 
-
-    Log.v("TT - ApiMenuContentData", ((System.currentTimeMillis() - time) / 1000).toString() + "")
     return model
   }
 }
