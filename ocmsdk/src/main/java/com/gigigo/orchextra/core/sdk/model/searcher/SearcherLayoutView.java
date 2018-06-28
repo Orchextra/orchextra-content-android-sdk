@@ -68,7 +68,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
     recyclerView = (MultipleGridRecyclerView) view.findViewById(R.id.searcher_recycler_view);
 
     if (emptyLayout == null) {
-      emptyLayout = view.findViewById(R.id.ocm_empty_layout);
+      emptyLayout = view.findViewById(R.id.search_empty_layout);
     }
 
     if (progressLayout == null) {

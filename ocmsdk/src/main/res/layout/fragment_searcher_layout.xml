@@ -4,20 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/oc_background_search_grid_color"
+    android:background="@color/transparent"
     >
-
-  <include
-      layout="@layout/ocm_retry_content_item"
-      android:id="@+id/ocm_empty_layout"
-      android:visibility="gone"
-      />
 
   <com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView
       android:id="@+id/searcher_recycler_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      app:blank_background_color="@color/oc_background_search_grid_color"
+      app:blank_background_color="@color/transparent"
       app:divider_color="@android:color/white"
       app:divider_size="1dp"
       />
@@ -28,6 +22,17 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center"
       android:visibility="gone"
+      />
+
+  <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmNormalTextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      android:id="@+id/search_empty_layout"
+      android:layout_marginStart="60dp"
+      android:alpha="0.7"
+      android:text="@string/empty"
+      android:textColor="#ffffff"
       />
 
 </FrameLayout>
