@@ -28,7 +28,6 @@ def YOUTUBE_DEVELOPER_KEY = "YOUTUBE_DEVELOPER_KEY"
 def VIMEO_ACCESS_TOKEN = "VIMEO_ACCESS_TOKEN"
 android {
   compileSdkVersion project.androidCompileSdkVersion
-  buildToolsVersion project.androidBuildToolsVersion
 
   defaultConfig {
     minSdkVersion project.androidMinSdkVersion

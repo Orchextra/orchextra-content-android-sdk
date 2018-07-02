@@ -16,7 +16,6 @@ android {
     config {}
   }
   compileSdkVersion project.ext.androidCompileSdkVersion
-  buildToolsVersion project.ext.androidBuildToolsVersion
 
   defaultConfig {
     minSdkVersion project.ext.androidMinSdkVersion

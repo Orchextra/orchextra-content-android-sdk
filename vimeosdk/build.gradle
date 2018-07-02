@@ -10,7 +10,6 @@ group = 'com.github.Orchextra'
 
 android {
   compileSdkVersion project.androidCompileSdkVersion
-  buildToolsVersion project.androidBuildToolsVersion
 
   defaultConfig {
     minSdkVersion project.androidMinSdkVersion
