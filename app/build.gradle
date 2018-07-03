@@ -16,11 +16,15 @@ android {
     config {}
   }
   compileSdkVersion project.ext.androidCompileSdkVersion
-  buildToolsVersion project.ext.androidBuildToolsVersion
 
   defaultConfig {
     minSdkVersion project.ext.androidMinSdkVersion
     targetSdkVersion project.ext.androidTargetSdkVersion
+
+    ndk {
+      abiFilters "armeabi-v7a", "x86"
+    }
+
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
   }

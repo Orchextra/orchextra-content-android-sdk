@@ -1,8 +1,8 @@
 project.ext {
 
   androidCompileSdkVersion = 27
-  androidMinSdkVersion = 18
   androidBuildToolsVersion = '27.0.3'
+  androidMinSdkVersion = 18
   androidTargetSdkVersion = 27
   supportVersion = '27.1.1'
   oxVersion = '3.0-RC37'
