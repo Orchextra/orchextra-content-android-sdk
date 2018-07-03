@@ -16,4 +16,7 @@
   <string name="oc_error_content_not_available_without_internet">Connect to the Internet to enjoy all the content of OCM</string>
 
   <string name="ox_scanner_logo_title">scanning by</string>
+
+  <!--<string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>-->
+
 </resources>
