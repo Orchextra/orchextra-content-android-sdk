@@ -17,6 +17,6 @@
 
   <string name="ox_scanner_logo_title">scanning by</string>
 
-  <!--<string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>-->
+  <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
 
 </resources>
