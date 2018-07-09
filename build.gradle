@@ -3,7 +3,7 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'kotlin'
 
 buildscript {
-  ext.kotlin_version = '1.2.30'
+  ext.kotlin_version = '1.2.51'
   repositories {
     google()
     jcenter()
@@ -32,6 +32,7 @@ repositories {
 
 allprojects {
   repositories {
+    google()
     jcenter()
     mavenCentral()
     maven { url "https://jitpack.io" }
