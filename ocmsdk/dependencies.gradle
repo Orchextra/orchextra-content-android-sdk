@@ -44,7 +44,8 @@ project.ext {
 
                imageloaderGlideBlur      : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 
-               multipleGridRecyclerView  : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.7',
+               multipleGridRecyclerView  : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:3.0.1RC',
+               baserecycleradapter       : 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:2.0.1RC',
 
                doubleViewPager           : 'com.github.nuborisar:customViewPager:0.8RC',
                autofitTextView           : 'com.github.GigigoGreenLabs:AutoFitTextView:0.11RC',
