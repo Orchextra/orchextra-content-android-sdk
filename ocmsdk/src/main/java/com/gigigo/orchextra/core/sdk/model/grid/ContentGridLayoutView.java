@@ -199,7 +199,9 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   private void setDataFullScreen(List<Cell> cellDataList) {
+
     uiListedBaseContentData = new VerticalViewContent(context);
+    ((VerticalViewContent) uiListedBaseContentData).setFragmentManager(getChildFragmentManager());
 
     uiListedBaseContentData.setListedContentListener(listedContentListener);
     uiListedBaseContentData.setParams(ClipToPadding.PADDING_NONE, addictionalPadding,

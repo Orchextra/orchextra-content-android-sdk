@@ -176,7 +176,6 @@ finalize.dependsOn(ocmsdk: install)
 install.dependsOn(ocmsdk: build)
 
 
-
 dependencies {
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
@@ -235,6 +234,7 @@ dependencies {
   api project.libraries.arrow
 
   api project.libraries.kache
+  implementation project.libraries.timber
 
 
   api project.libraries.gpuImage //4 readarticles

@@ -4,6 +4,7 @@ import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import com.squareup.leakcanary.LeakCanary;
+import timber.log.Timber;
 
 public class App extends MultiDexApplication {
 
@@ -16,6 +17,7 @@ public class App extends MultiDexApplication {
       return;
     }
 
+    Timber.plant(new Timber.DebugTree());
     LeakCanary.install(this);
     MultiDex.install(this);
   }

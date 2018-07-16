@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.gigigo.orchextra.core.data.rxCache.imageCache.loader.OcmImageLoader
 import com.gigigo.orchextra.ocmsdk.R
+import timber.log.Timber
 
 private const val ARG_NAME = "name"
 private const val ARG_IMAGE_URL = "imageUrl"
@@ -32,7 +33,7 @@ class VerticalItemPageFragment : Fragment() {
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
-    val view = inflater!!.inflate(R.layout.fragment_vertical_item_pager_view, container, false)
+    val view = inflater.inflate(R.layout.fragment_vertical_item_pager_view, container, false)
 
     verticalItemContainer = view.findViewById(R.id.verticalItemContainer)
     verticalItemImageView = view.findViewById(R.id.verticalItemImageView)
@@ -47,6 +48,8 @@ class VerticalItemPageFragment : Fragment() {
       onClickVerticalItem?.onClickItem(verticalItemContainer)
     }
 
+    Timber.d("Name: %s", name)
+    Timber.d("Image: %s", imageUrl)
     OcmImageLoader.load(this, imageUrl).into(verticalItemImageView)
   }
 

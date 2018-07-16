@@ -68,7 +68,7 @@ android {
       println("**************************************************")
       println("-------------" + flavor.name + "." + variant.buildType.name + "-------------")
 
-      println("****"+flavorData+"****")
+      println("****" + flavorData + "****")
 
       setVariantApplicationId(variant, appId)
       setVariantResValue(variant, appName, "app_name", STRING)
@@ -131,7 +131,10 @@ android {
   }
 }
 
-
+configurations {
+  cleanedAnnotations
+  compile.exclude group: 'org.jetbrains', module: 'annotations'
+}
 
 dependencies {
   api project(path: ':ocmsdk')
@@ -146,4 +149,5 @@ dependencies {
 
   implementation 'com.android.support:support-v4:27.1.1'
   implementation 'com.android.support:design:27.1.1'
+  implementation project.libraries.timber
 }

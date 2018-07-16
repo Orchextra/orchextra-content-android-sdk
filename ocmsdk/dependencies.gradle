@@ -61,6 +61,7 @@ project.ext {
                exoplayer                 : 'com.google.android.exoplayer:exoplayer:r2.5.3',
 
                gpuImage                  : 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1',
+               timber                    : 'com.jakewharton.timber:timber:4.7.1',
 
                loggingInterceptor        : 'com.squareup.okhttp3:logging-interceptor:3.8.0']
 
