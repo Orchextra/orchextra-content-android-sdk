@@ -6,5 +6,6 @@ class ApiElement(
     val sectionView: ApiElementSectionView?,
     val slug: String,
     val elementUrl: String?,
+    val contentVersion: String?,
     val name: String?,
     val dates: List<List<String>>?)

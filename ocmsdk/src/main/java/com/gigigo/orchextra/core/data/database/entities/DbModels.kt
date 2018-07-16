@@ -47,6 +47,7 @@ data class DbElement(
     @ColumnInfo(name = "custom_properties") var customProperties: Map<String, String>? = emptyMap(),
     @Embedded(prefix = "view_") var sectionView: DbElementSectionView? = DbElementSectionView(),
     @ColumnInfo(name = "element_url") var elementUrl: String? = "",
+    @ColumnInfo(name = "content_version") var contentVersion: String? = "",
     var name: String? = "",
     @Ignore var dates: List<DbScheduleDates> = emptyList()
 )
