@@ -203,9 +203,9 @@ public class OcmSchemeHandler {
   private void processDetailActivity(String elementUrl, String urlImageToExpand,
       WeakReference<ImageView> imageViewToExpandInDetail) {
     int widthScreen =
-        DeviceUtils.calculateRealWidthDeviceInImmersiveMode(contextProvider.getCurrentActivity());
+        DeviceUtils.calculateRealWidthDeviceInImmersiveMode(contextProvider.getApplicationContext());
     int heightScreen =
-        DeviceUtils.calculateHeightDeviceInImmersiveMode(contextProvider.getCurrentActivity());
+        DeviceUtils.calculateHeightDeviceInImmersiveMode(contextProvider.getApplicationContext());
 
     ImageView imageView = null;
     if (imageViewToExpandInDetail != null) {

@@ -9,6 +9,7 @@ import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import timber.log.Timber;
 
 public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -22,6 +23,8 @@ public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
   }
 
   @Override public Fragment getItem(final int position) {
+
+    Timber.d("getItem(%s)", position);
 
     CellCarouselContentData cell = (CellCarouselContentData) cellDataList.get(position);
     String name = cell.getData().getName();

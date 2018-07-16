@@ -2379,7 +2379,7 @@ public class VerticalViewPager extends ViewGroup {
         case KeyEvent.KEYCODE_DPAD_RIGHT:
           handled = arrowScroll(FOCUS_RIGHT);
           break;
-        case KeyEvent.KEYCODE_TAB:
+        /*case KeyEvent.KEYCODE_TAB:
           if (Build.VERSION.SDK_INT >= 11) {
             // The focus finder had a bug handling FOCUS_FORWARD and FOCUS_BACKWARD
             // before Android 3.0. Ignore the tab key on those devices.
@@ -2389,7 +2389,7 @@ public class VerticalViewPager extends ViewGroup {
             //  handled = arrowScroll(FOCUS_BACKWARD);
             //}
           }
-          break;
+          break;*/
       }
     }
     return handled;

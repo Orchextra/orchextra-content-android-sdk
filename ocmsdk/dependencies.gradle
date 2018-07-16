@@ -1,37 +1,34 @@
 project.ext {
 
-  androidCompileSdkVersion = 26
+  androidCompileSdkVersion = 27
+  androidBuildToolsVersion = '27.0.3'
   androidMinSdkVersion = 18
-  androidBuildToolsVersion = '27.0.0'
   androidTargetSdkVersion = 27
-  supportVersion = '27.0.0'
-  androidBuildToolsVersion = '26.0.2'
-  androidTargetSdkVersion = 26
-  supportVersion = '26.1.0'
-  oxVersion = '3.0-RC33'
-  playVersion = '11.0.4' //11.4.2
+  supportVersion = '27.1.1'
+  oxVersion = '3.0-RC37'
+  playVersion = '15.0.1'
 
   libraries = [androidSupportDesign      : "com.android.support:design:${supportVersion}",
                androidCustomtabs         : "com.android.support:customtabs:${supportVersion}",
                androidAppCompat          : "com.android.support:appcompat-v7:${supportVersion}",
 
-               archLifecycleExtensions : 'android.arch.lifecycle:extensions:1.1.1',
-               archLifecycleCompiler   : 'android.arch.lifecycle:compiler:1.1.1',
-               archPersistenceRuntime  : 'android.arch.persistence.room:runtime:1.0.0',
-               archPersistenceRxJava2  : 'android.arch.persistence.room:rxjava2:1.0.0',
-               archPersistenceCompiler : 'android.arch.persistence.room:compiler:1.0.0',
-               archPersistenceTesting  : 'android.arch.persistence.room:testing:1.0.0',
+               archLifecycleExtensions   : 'android.arch.lifecycle:extensions:1.1.1',
+               archLifecycleCompiler     : 'android.arch.lifecycle:compiler:1.1.1',
+               archPersistenceRuntime    : 'android.arch.persistence.room:runtime:1.0.0',
+               archPersistenceRxJava2    : 'android.arch.persistence.room:rxjava2:1.0.0',
+               archPersistenceCompiler   : 'android.arch.persistence.room:compiler:1.0.0',
+               archPersistenceTesting    : 'android.arch.persistence.room:testing:1.0.0',
 
-               kotlinStdlib            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
-               coroutinesCore          : 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.3',
-               coroutinesAndroid       : 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.22.3',
+               kotlinStdlib              : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
+               coroutinesCore            : 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.3',
+               coroutinesAndroid         : 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.22.3',
 
                daggerCompiler            : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
                dagger                    : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
 
-               gggJavaLib                : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:4.4',
-               ggglogger                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:4.4',
-               ggglib                    : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:4.4',
+               gggJavaLib                : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:4.6.4',
+               ggglogger                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:4.6.4',
+               ggglib                    : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:4.6.4',
 
                oxCoreStaging             : "com.gigigo.orchextra:core:${oxVersion}-S",
                oxCoreDebug               : "com.gigigo.orchextra:core:${oxVersion}-Q",
@@ -56,7 +53,8 @@ project.ext {
 
                imageloaderGlideBlur      : 'com.github.Gigigo-Android-Devs.gigigo-imageLoader-library-android:imageloader-glide-blur:2.01',
 
-               multipleGridRecyclerView  : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:2.5.7',
+               multipleGridRecyclerView  : 'com.github.Gigigo-Android-Devs:gigigo-multipleGridRecyclerView-library-android:3.0.1RC',
+               baserecycleradapter       : 'com.github.Gigigo-Android-Devs:gigigo-baseRecyclerAdapter-library-android:2.0.1RC',
 
                doubleViewPager           : 'com.github.nuborisar:customViewPager:0.8RC',
                autofitTextView           : 'com.github.GigigoGreenLabs:AutoFitTextView:0.11RC',
@@ -70,6 +68,9 @@ project.ext {
 
                vimeoNetworking           : 'com.vimeo.networking:vimeo-networking:1.1.1',
                exoplayer                 : 'com.google.android.exoplayer:exoplayer:r2.5.3',
+
+               gpuImage                  : 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1',
+               timber                    : 'com.jakewharton.timber:timber:4.7.1',
 
                loggingInterceptor        : 'com.squareup.okhttp3:logging-interceptor:3.8.0']
 
