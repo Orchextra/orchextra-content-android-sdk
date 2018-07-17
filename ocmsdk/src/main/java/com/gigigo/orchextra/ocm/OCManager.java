@@ -658,6 +658,7 @@ Add Comment C
     if (instance != null) {
       instance.oxManager.getToken(ocmCredentialCallback::onCredentialReceiver);
     } else {
+      ocmCredentialCallback.onCredentailError("Null instance");
       Log.e(TAG, "setErrorListener with null instance");
     }
   }
