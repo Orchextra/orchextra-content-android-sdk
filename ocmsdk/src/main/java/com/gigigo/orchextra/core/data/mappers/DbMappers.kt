@@ -17,7 +17,6 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbArticleElement
 import com.gigigo.orchextra.core.data.database.entities.DbArticleElementRender
 import com.gigigo.orchextra.core.data.database.entities.DbCidKeyData
@@ -36,8 +35,6 @@ import com.gigigo.orchextra.core.data.database.entities.DbMenuContent
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData
 import com.gigigo.orchextra.core.data.database.entities.DbScheduleDates
 import com.gigigo.orchextra.core.data.database.entities.DbSectionContentData
-import com.gigigo.orchextra.core.data.database.entities.DbVersionData
-import com.gigigo.orchextra.core.data.database.entities.DbVersionData.Companion.VERSION_KEY
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData
 import com.gigigo.orchextra.core.data.database.entities.DbVimeoInfo
 import com.gigigo.orchextra.core.domain.entities.article.ArticleButtonElement
@@ -80,66 +77,9 @@ import com.gigigo.orchextra.core.domain.entities.elements.ElementData
 import com.gigigo.orchextra.core.domain.entities.elements.ElementSectionView
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContent
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData
-import com.gigigo.orchextra.core.domain.entities.version.VersionData
 import gigigo.com.vimeolibs.VimeoInfo
 import java.text.SimpleDateFormat
 import java.util.Locale
-
-//region VERSION
-fun ApiVersionData.toDbVersionData(): DbVersionData = with(this) {
-  val versionData = DbVersionData()
-  versionData.id = VERSION_KEY
-  versionData.version = version
-  return versionData
-}
-
-/*
-fun VersionData.toDbVersionData(): DbVersionData = with(this) {
-  val versionData = DbVersionData()
-  versionData.id = VERSION_KEY
-  versionData.version = version
-  return versionData
-}
-*/
-
-fun ApiVersionData.toVersionData(): VersionData = with(this) {
-  val versionData = VersionData()
-  versionData.version = version
-  return versionData
-}
-
-fun DbVersionData.toVersionData(): VersionData = with(this) {
-  val versionData = VersionData()
-  versionData.version = version
-  return versionData
-}
-
-//endregion
-
-//region MENU
-/*
-fun ApiMenuContentData.toDbMenuContentData(): DbMenuContentData = with(this) {
-  val menuContentData = DbMenuContentData()
-  val menus = ArrayList<DbMenuContent>()
-  menuContentList?.let {
-    for (menuContentItem in it) {
-      menus.add(menuContentItem.toDbMenuContent())
-    }
-  }
-  menuContentData.menuContentList = menus
-
-  val elements = HashMap<String, DbElementCache>()
-  elementsCache?.let {
-    val elementsList = it.entries
-    for ((key, value) in elementsList) {
-      elements[key] = value.toDbElementCache(key)
-    }
-  }
-  menuContentData.elementsCache = elements
-
-  return menuContentData
-}
-*/
 
 fun ApiMenuContentData.toMenuContentData(): MenuContentData = with(this) {
   val menuContent = MenuContentData()

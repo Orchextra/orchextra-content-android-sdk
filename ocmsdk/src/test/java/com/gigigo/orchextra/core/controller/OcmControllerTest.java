@@ -6,7 +6,6 @@ import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
-import com.gigigo.orchextra.core.domain.rxInteractor.GetVersion;
 import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
@@ -37,18 +36,16 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
   @Mock private OcmController.ClearCacheCallback mockClearCacheCallback;
   @Mock private GetDetail mockGetDetail;
   @Mock private GetMenus mockGetMenus;
-  @Mock private GetVersion mockGetVersion;
   @Mock private GetSection mockGetSection;
   @Mock private SearchElements mockSearchElements;
   @Mock private ConnectionUtils mockConnectionUtils;
   @Mock private OcmPreferences mockOcmPreferences;
 
-
   @Rule public ExpectedException expectedException = ExpectedException.none();
 
   @Before public void setUp() {
     ocmController =
-        new OcmControllerImp(mockGetVersion,mockGetMenus, mockGetSection, mockGetDetail, mockSearchElements,
+        new OcmControllerImp(mockGetMenus, mockGetSection, mockGetDetail, mockSearchElements,
             mockClearCache, mockConnectionUtils, mockOcmPreferences);
   }
 

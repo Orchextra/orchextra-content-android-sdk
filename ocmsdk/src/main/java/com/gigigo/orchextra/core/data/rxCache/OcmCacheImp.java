@@ -11,7 +11,6 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
 import com.gigigo.orchextra.core.data.database.OcmDatabase;
 import com.gigigo.orchextra.core.data.database.entities.DbElement;
 import com.gigigo.orchextra.core.data.database.entities.DbElementCache;
@@ -22,7 +21,6 @@ import com.gigigo.orchextra.core.data.database.entities.DbMenuElementJoin;
 import com.gigigo.orchextra.core.data.database.entities.DbScheduleDates;
 import com.gigigo.orchextra.core.data.database.entities.DbSectionContentData;
 import com.gigigo.orchextra.core.data.database.entities.DbSectionElementJoin;
-import com.gigigo.orchextra.core.data.database.entities.DbVersionData;
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData;
 import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
@@ -48,40 +46,6 @@ import orchextra.javax.inject.Singleton;
     this.mContext = context;
   }
 
-  //region VERSION
-  @Override public Observable<DbVersionData> getVersion() {
-    System.out.println("*****GETVERSION GET CACHE THREAD "+ Thread.currentThread().getName());
-    return Observable.create(emitter -> {
-
-      System.out.println("*****GETVERSION GET CACHE EMITTER THREAD "+ Thread.currentThread().getName());
-      DbVersionData versionData = ocmDatabase.versionDao().fetchVersion(DbVersionData.VERSION_KEY);
-
-      if (versionData != null) {
-        emitter.onNext(versionData);
-        emitter.onComplete();
-      } else {
-        emitter.onNext(null);
-      }
-    });
-  }
-
-  @Override public boolean isVersionCached() {
-    System.out.println("*****GETVERSION CACHED ASYNC THREAD " + Thread.currentThread().getName());
-    int versionDataCount = ocmDatabase.versionDao().hasVersion(DbVersionData.VERSION_KEY);
-    return (versionDataCount == 1);
-  }
-
-  @Override public boolean isVersionExpired() {
-    return false;
-  }
-
-  @Override public void putVersion(ApiVersionData apiVersionData) {
-    System.out.println("*****GETVERSION PUT CACHE THREAD "+ Thread.currentThread().getName());
-    DbVersionData dbVersionData = DbMappersKt.toDbVersionData(apiVersionData);
-    ocmDatabase.versionDao().insertVersion(dbVersionData);
-  }
-  //endregion
-
   //region MENU
   @Override public Observable<DbMenuContentData> getMenus() {
     return Observable.create(emitter -> {
@@ -91,10 +55,12 @@ import orchextra.javax.inject.Singleton;
       for (DbMenuContent dbMenuContent : dbMenuContentList) {
         //Long today = DateUtilsKt.getToday();
         //List<DbElement> dbElementList = ocmDatabase.elementDao().fetchMenuElementsOnTime(dbMenuContent.getSlug(), today);
-        List<DbElement> dbElementList = ocmDatabase.elementDao().fetchMenuElements(dbMenuContent.getSlug());
+        List<DbElement> dbElementList =
+            ocmDatabase.elementDao().fetchMenuElements(dbMenuContent.getSlug());
         dbMenuContent.setElements(dbElementList);
         for (DbElement dbElement : dbElementList) {
-          List<DbScheduleDates> dbScheduleDatesList = ocmDatabase.scheduleDatesDao().fetchSchedule(dbElement.getSlug());
+          List<DbScheduleDates> dbScheduleDatesList =
+              ocmDatabase.scheduleDatesDao().fetchSchedule(dbElement.getSlug());
           dbElement.setDates(dbScheduleDatesList);
         }
       }
@@ -155,18 +121,21 @@ import orchextra.javax.inject.Singleton;
   //region SECTION
   @Override public Observable<DbSectionContentData> getSection(final String elementUrl) {
     return Observable.create(emitter -> {
-      DbSectionContentData dbSectionContentData = ocmDatabase.sectionDao().fetchSectionContentData(elementUrl);
+      DbSectionContentData dbSectionContentData =
+          ocmDatabase.sectionDao().fetchSectionContentData(elementUrl);
 
-      List<DbElement> dbSectionContentDataElementList = ocmDatabase.sectionDao().fetchSectionElements(dbSectionContentData.getContent().getSlug());
+      List<DbElement> dbSectionContentDataElementList = ocmDatabase.sectionDao()
+          .fetchSectionElements(dbSectionContentData.getContent().getSlug());
       dbSectionContentData.getContent().setElements(dbSectionContentDataElementList);
 
       Map<String, DbElementCache> elementCaches = new HashMap<>();
       for (DbElement element : dbSectionContentDataElementList) {
-        DbElementCache elementCache = ocmDatabase.elementCacheDao().fetchElementCache(element.getSlug());
+        DbElementCache elementCache =
+            ocmDatabase.elementCacheDao().fetchElementCache(element.getSlug());
         elementCaches.put(element.getElementUrl(), elementCache);
       }
       dbSectionContentData.setElementsCache(elementCaches);
-      
+
       if (dbSectionContentData != null) {
         emitter.onNext(dbSectionContentData);
         emitter.onComplete();
@@ -177,20 +146,22 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void putSection(ApiSectionContentData apiSectionContentData, String key) {
-    DbSectionContentData dbSectionContentData = DbMappersKt.toDbSectionContentData(apiSectionContentData, key);
+    DbSectionContentData dbSectionContentData =
+        DbMappersKt.toDbSectionContentData(apiSectionContentData, key);
     ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData);
 
     ApiContentItem sectionContentItem = apiSectionContentData.getContent();
-    if(sectionContentItem != null) {
+    if (sectionContentItem != null) {
       for (ApiElement element : sectionContentItem.getElements()) {
         ocmDatabase.elementDao().insertElement(DbMappersKt.toDbElement(element));
-        DbSectionElementJoin dbSectionElementJoin = new DbSectionElementJoin(sectionContentItem.getSlug(), element.getSlug());
+        DbSectionElementJoin dbSectionElementJoin =
+            new DbSectionElementJoin(sectionContentItem.getSlug(), element.getSlug());
         ocmDatabase.sectionDao().insertSectionElement((dbSectionElementJoin));
       }
     }
 
     Map<String, ApiElementCache> elementsCache = apiSectionContentData.getElementsCache();
-    if(elementsCache != null) {
+    if (elementsCache != null) {
       Iterator<Map.Entry<String, ApiElementCache>> iterator = elementsCache.entrySet().iterator();
       while (iterator.hasNext()) {
         Map.Entry<String, ApiElementCache> next = iterator.next();

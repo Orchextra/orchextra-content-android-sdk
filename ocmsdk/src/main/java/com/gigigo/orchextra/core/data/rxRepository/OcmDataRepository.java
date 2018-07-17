@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.core.data.rxRepository;
 
 import android.content.Context;
-import android.support.annotation.MainThread;
 import android.support.annotation.WorkerThread;
 import com.gigigo.orchextra.core.data.DateUtilsKt;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
@@ -11,7 +10,6 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
-import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
@@ -26,13 +24,6 @@ import orchextra.javax.inject.Singleton;
     this.ocmDataStoreFactory = ocmDataStoreFactory;
   }
 
-  @Override public Observable<VersionData> getVersion() {
-    System.out.println("*****GETVERSION 1 THREAD "+Thread.currentThread().getName());
-    OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForVersion();
-    System.out.println("*****GETVERSION 2 THREAD "+Thread.currentThread().getName());
-    return ocmDataStore.getVersion();
-  }
-
   @Override public Observable<MenuContentData> getMenus(boolean forceReload) {
     OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForMenus(forceReload);
     return ocmDataStore.getMenus();
@@ -41,8 +32,7 @@ import orchextra.javax.inject.Singleton;
   @Override
   public Observable<ContentData> getSectionElements(boolean forceReload, String contentUrl,
       int numberOfElementsToDownload) {
-    OcmDataStore ocmDataStore =
-        ocmDataStoreFactory.getDataStoreForSection(forceReload, contentUrl);
+    OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForSection(forceReload, contentUrl);
     Observable<ContentData> contentDataObservable =
         ocmDataStore.getSection(contentUrl, numberOfElementsToDownload);
 
@@ -92,8 +82,7 @@ import orchextra.javax.inject.Singleton;
     return ocmDataStore.getVideoById(context, videoId, isWifiConnection, isFastConnection);
   }
 
-  @WorkerThread
-  @Override public Observable<Void> clear(boolean images, boolean data) {
+  @WorkerThread @Override public Observable<Void> clear(boolean images, boolean data) {
     OcmDiskDataStore ocmDataStore = ocmDataStoreFactory.getDiskDataStore();
     ocmDataStore.getOcmCache().evictAll(images, data);
     return Observable.empty();

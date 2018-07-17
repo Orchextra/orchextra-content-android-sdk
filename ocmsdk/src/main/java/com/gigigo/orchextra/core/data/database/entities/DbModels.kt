@@ -7,17 +7,6 @@ import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.ForeignKey.CASCADE
 import android.arch.persistence.room.Ignore
 
-
-@Entity(tableName = "version", primaryKeys = arrayOf("id"))
-data class DbVersionData(
-    var id: String = VERSION_KEY,
-    var version: String? = "") {
-  companion object {
-    @JvmField
-    val VERSION_KEY = "VERSION_KEY"
-  }
-}
-
 data class DbMenuContentData @JvmOverloads constructor(
     var menuContentList: List<DbMenuContent>? = emptyList(),
     var elementsCache: Map<String, DbElementCache>? = emptyMap()

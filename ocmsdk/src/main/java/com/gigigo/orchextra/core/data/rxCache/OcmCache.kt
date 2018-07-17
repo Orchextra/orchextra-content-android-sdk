@@ -4,11 +4,9 @@ import android.content.Context
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbElementData
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData
 import com.gigigo.orchextra.core.data.database.entities.DbSectionContentData
-import com.gigigo.orchextra.core.data.database.entities.DbVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData
 import gigigo.com.vimeolibs.VimeoInfo
 import io.reactivex.Observable
@@ -16,11 +14,6 @@ import io.reactivex.Observable
 interface OcmCache {
 
   val context: Context
-
-  fun getVersion(): Observable<DbVersionData>
-  fun isVersionCached(): Boolean
-  fun isVersionExpired(): Boolean
-  fun putVersion(apiVersionData: ApiVersionData)
 
   fun getMenus(): Observable<DbMenuContentData>
   fun hasMenusCached(): Boolean

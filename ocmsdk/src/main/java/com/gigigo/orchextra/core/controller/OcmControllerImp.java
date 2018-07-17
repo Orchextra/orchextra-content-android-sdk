@@ -4,7 +4,6 @@ import com.gigigo.orchextra.core.data.rxException.ApiDetailNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSearchNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
-import com.gigigo.orchextra.core.data.rxException.ApiVersionNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ClearCacheException;
 import com.gigigo.orchextra.core.data.rxException.NetworkConnectionException;
 import com.gigigo.orchextra.core.domain.OcmController;
@@ -15,13 +14,11 @@ import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
-import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
-import com.gigigo.orchextra.core.domain.rxInteractor.GetVersion;
 import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
@@ -35,7 +32,6 @@ import java.util.List;
 
 public class OcmControllerImp implements OcmController {
 
-  private final GetVersion getVersion;
   private final GetMenus getMenus;
   private final GetSection getSection;
   private final GetDetail getDetail;
@@ -44,11 +40,10 @@ public class OcmControllerImp implements OcmController {
   private final ConnectionUtils connectionUtils;
   private final OcmPreferences ocmPreferences;
 
-  public OcmControllerImp(GetVersion getVersion, GetMenus getMenus, GetSection getSection,
-      GetDetail getDetail, SearchElements searchElements, ClearCache clearCache,
-      ConnectionUtils connectionUtils, OcmPreferences ocmPreferences) {
+  public OcmControllerImp(GetMenus getMenus, GetSection getSection, GetDetail getDetail,
+      SearchElements searchElements, ClearCache clearCache, ConnectionUtils connectionUtils,
+      OcmPreferences ocmPreferences) {
 
-    this.getVersion = getVersion;
     this.getMenus = getMenus;
     this.getSection = getSection;
     this.getDetail = getDetail;
@@ -388,7 +383,8 @@ public class OcmControllerImp implements OcmController {
         uiMenu.setElementUrl(element.getElementUrl());
 
         if (menuContentData.getElementsCache() != null) {
-          ElementCache elementCache = menuContentData.getElementsCache().get(element.getElementUrl());
+          ElementCache elementCache =
+              menuContentData.getElementsCache().get(element.getElementUrl());
           if (elementCache != null) {
             uiMenu.setElementCache(elementCache);
             uiMenu.setUpdateAt(elementCache.getUpdateAt());
@@ -432,27 +428,6 @@ public class OcmControllerImp implements OcmController {
 
     private void retrieveMenu(MenuContentData menuContentData) {
       getMenusCallback.onGetMenusLoaded(transformMenu(menuContentData));
-    }
-  }
-
-  private final class VersionObserver extends DefaultObserver<VersionData> {
-    private final GetVersionControllerCallback getVersionControllerCallback;
-
-    public VersionObserver(GetVersionControllerCallback getVersionControllerCallback) {
-      this.getVersionControllerCallback = getVersionControllerCallback;
-    }
-
-    @Override public void onError(Throwable e) {
-      if (getVersionControllerCallback != null) {
-        getVersionControllerCallback.onGetVersionFails(new ApiVersionNotFoundException(e));
-      }
-      e.printStackTrace();
-    }
-
-    @Override public void onNext(VersionData versionData) {
-      if (getVersionControllerCallback != null) {
-        getVersionControllerCallback.onGetVersionLoaded(versionData);
-      }
     }
   }
 

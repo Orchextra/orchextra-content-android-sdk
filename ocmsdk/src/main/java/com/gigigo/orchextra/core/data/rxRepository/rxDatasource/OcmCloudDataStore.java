@@ -10,7 +10,6 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionData;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
@@ -20,7 +19,6 @@ import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
-import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.core.receiver.WifiReceiver;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -61,16 +59,6 @@ import org.jetbrains.annotations.NotNull;
     }
   }
 
-  @Override public Observable<VersionData> getVersion() {
-    System.out.println("*****GETVERSION CLOUD THREAD "+Thread.currentThread().getName());
-
-    return ocmApiService.getVersionDataRx()
-        .map(apiVersionResponse -> new ApiVersionData(apiVersionResponse.getData()))
-        .filter(apiVersionData -> apiVersionData != null)
-        .doOnNext(this.ocmCache::putVersion)
-        .map(apiVersionData -> DbMappersKt.toVersionData(apiVersionData));
-  }
-
   @Override public Observable<MenuContentData> getMenus() {
     return ocmApiService.getMenuDataRx()
         .map(dataResponse -> dataResponse.getResult())
@@ -84,7 +72,8 @@ import org.jetbrains.annotations.NotNull;
     return ocmApiService.getSectionDataRx(contentUrl, withThumbnails)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiSectionContentData -> ocmCache.putSection(apiSectionContentData, contentUrl))
-        .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload))
+        .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData,
+            numberOfElementsToDownload))
         .map(apiSectionContentData -> DbMappersKt.toContentData(apiSectionContentData));
   }
 

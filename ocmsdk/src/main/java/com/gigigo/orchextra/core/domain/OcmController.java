@@ -3,7 +3,6 @@ package com.gigigo.orchextra.core.domain;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
-import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 
 public interface OcmController {
@@ -26,10 +25,10 @@ public interface OcmController {
 
   // Callbacks
 
-  interface GetVersionControllerCallback{
-    void onGetVersionLoaded(VersionData versionData);
+  interface GetVersionControllerCallback {
     void onGetVersionFails(Exception e);
   }
+
   interface GetMenusControllerCallback {
     void onGetMenusLoaded(UiMenuData menus);
 

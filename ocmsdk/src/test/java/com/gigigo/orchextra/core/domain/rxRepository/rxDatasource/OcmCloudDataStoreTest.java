@@ -3,7 +3,6 @@ package com.gigigo.orchextra.core.domain.rxRepository.rxDatasource;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionResponse;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
@@ -44,8 +43,6 @@ import static org.mockito.Mockito.verify;
         Observable.just(fakeApiMenuContentDataResponse);
     given(mockRestApi.getMenuDataRx()).willReturn(fakeObservable);
 
-    ocmCloudDataStore.getMenuEntity();
-
     verify(mockRestApi).getMenuDataRx();
   }
 
@@ -77,17 +74,5 @@ import static org.mockito.Mockito.verify;
     ocmCloudDataStore.getElementById(FAKE_ID);
 
     verify(mockRestApi).getElementByIdRx(FAKE_ID, FAKE_THUMBNAILS);
-  }
-
-  @Test public void testGetVersion(){
-    ApiVersionResponse fakeVersion = new ApiVersionResponse(true, "");
-
-    Observable<ApiVersionResponse> fakeObservable =  Observable.just(fakeVersion);
-    given(mockRestApi.getVersionDataRx()).willReturn(fakeObservable);
-
-    ocmCloudDataStore.getVersion();
-
-    verify(mockRestApi).getVersionDataRx();
-
   }
 }
