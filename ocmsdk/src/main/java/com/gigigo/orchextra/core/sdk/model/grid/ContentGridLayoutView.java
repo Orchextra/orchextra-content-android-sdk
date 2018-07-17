@@ -99,12 +99,13 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.ocm_content_grid_layout_view, container, false);
     initView(view);
+    initDI();
     return view;
   }
 
   @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    initDI();
+
     setListeners();
 
     try {
@@ -116,9 +117,11 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
 
   private void initDI() {
     Injector injector = OCManager.getInjector();
-    if (injector != null) {
+    try {
       injector.injectContentGridLayoutView(this);
       thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
+    } catch (NullPointerException e) {
+      Ocm.logException(e);
     }
   }
 
