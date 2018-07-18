@@ -56,7 +56,7 @@ import com.gigigo.orchextra.ocmsdk.R;
   }
 
   private void setToolbar() {
-    DetailToolbarView ocmToolbar = (DetailToolbarView) findViewById(R.id.ocmToolbar);
+    DetailToolbarView ocmToolbar = findViewById(R.id.ocmToolbar);
     ocmToolbar.setShareButtonVisible(false);
     ocmToolbar.switchBetweenButtonAndToolbar(false, true, false);
     ocmToolbar.blockSwipeEvents(true);

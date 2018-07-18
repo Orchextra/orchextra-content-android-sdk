@@ -655,11 +655,11 @@ Add Comment C
   }
 
   public static void getOxToken(final OcmCredentialCallback ocmCredentialCallback) {
-    if (instance != null) {
+    try {
       instance.oxManager.getToken(ocmCredentialCallback::onCredentialReceiver);
-    } else {
+    } catch (NullPointerException e) {
       ocmCredentialCallback.onCredentailError("Null instance");
-      Log.e(TAG, "setErrorListener with null instance");
+      Ocm.logException(e);
     }
   }
 
