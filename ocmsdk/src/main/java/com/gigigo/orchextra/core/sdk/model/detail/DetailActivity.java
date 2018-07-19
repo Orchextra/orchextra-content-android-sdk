@@ -33,6 +33,7 @@ import com.gigigo.orchextra.ocmsdk.R;
 import java.util.ArrayList;
 import java.util.List;
 import orchextra.javax.inject.Inject;
+import timber.log.Timber;
 
 public class DetailActivity extends BaseInjectionActivity<DetailActivityComponent>
     implements DetailView {
@@ -75,6 +76,8 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
         activity.overridePendingTransition(R.anim.oc_detail_activity_open_out,
             R.anim.oc_detail_activity_open_in);
       }
+    } else {
+      Timber.e("open() - activity == null");
     }
   }
 

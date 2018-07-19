@@ -28,7 +28,6 @@ import java.util.List;
 
 public class ContentViewPresenter extends Presenter<ContentView> {
 
-  private final Authoritation authoritation;
   private final OcmController ocmController;
   private static final String TAG = "ContentViewPresenter";
 
@@ -36,14 +35,11 @@ public class ContentViewPresenter extends Presenter<ContentView> {
   private int imagesToDownload = 21;
   private String filter;
   private List<Cell> listedCellContentDataList;
-
   private boolean hasToCheckNewContent = false;
   private int padding;
 
-  public ContentViewPresenter(OcmController ocmController, Authoritation authoritation) {
-
+  public ContentViewPresenter(OcmController ocmController) {
     this.ocmController = ocmController;
-    this.authoritation = authoritation;
   }
 
   @Override public void onViewAttached() {

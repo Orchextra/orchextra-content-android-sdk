@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.sdk.model.grid;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -97,25 +98,30 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.ocm_content_grid_layout_view, container, false);
-
-    initDI();
-
     initView(view);
+    initDI();
+    return view;
+  }
+
+  @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
     setListeners();
+
     try {
       presenter.attachView(this);
     } catch (NullPointerException e) {
       Ocm.logException(e);
     }
-
-    return view;
   }
 
   private void initDI() {
     Injector injector = OCManager.getInjector();
-    if (injector != null) {
+    try {
       injector.injectContentGridLayoutView(this);
       thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
+    } catch (NullPointerException e) {
+      Ocm.logException(e);
     }
   }
 

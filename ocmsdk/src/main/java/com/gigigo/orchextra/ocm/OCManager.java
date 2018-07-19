@@ -259,10 +259,12 @@ Add Comment C
   }
 
   public static Injector getInjector() {
-    if (instance == null || instance.injector == null) {
+    try {
+      return instance.injector;
+    } catch (NullPointerException e) {
+      Ocm.logException(e);
       return null;
     }
-    return instance.injector;
   }
 
   public static void notifyCustomBehaviourContinue(@NotNull Map<String, Object> customProperties,
@@ -270,8 +272,7 @@ Add Comment C
     if (instance != null && instance.ocmCustomBehaviourDelegate != null) {
       instance.ocmCustomBehaviourDelegate.contentNeedsValidation(customProperties, viewType,
           completion);
-    }
-    else {
+    } else {
       completion.invoke(true);
     }
   }
@@ -282,8 +283,7 @@ Add Comment C
     if (instance != null && instance.ocmCustomBehaviourDelegate != null) {
       instance.ocmCustomBehaviourDelegate.customizationForContent(customProperties, viewType,
           customizationListener);
-    }
-    else {
+    } else {
       List<ViewCustomizationType> viewCustomizationType = new ArrayList<>();
       customizationListener.invoke(viewCustomizationType);
     }
@@ -655,10 +655,11 @@ Add Comment C
   }
 
   public static void getOxToken(final OcmCredentialCallback ocmCredentialCallback) {
-    if (instance != null) {
+    try {
       instance.oxManager.getToken(ocmCredentialCallback::onCredentialReceiver);
-    } else {
-      Log.e(TAG, "setErrorListener with null instance");
+    } catch (NullPointerException e) {
+      ocmCredentialCallback.onCredentailError("Null instance");
+      Ocm.logException(e);
     }
   }
 
