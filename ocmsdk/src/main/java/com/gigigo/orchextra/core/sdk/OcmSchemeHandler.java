@@ -264,6 +264,9 @@ public class OcmSchemeHandler {
 
   private void openDetailActivity(String elementUrl, String urlImageToExpand, int widthScreen,
       int heightScreen, ImageView imageViewToExpandInDetail) {
+
+
+
     DetailActivity.open(contextProvider.getCurrentActivity(), elementUrl, urlImageToExpand,
         widthScreen, heightScreen, imageViewToExpandInDetail);
   }
