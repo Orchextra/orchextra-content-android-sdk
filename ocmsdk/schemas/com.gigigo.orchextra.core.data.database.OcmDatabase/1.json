@@ -2,34 +2,8 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "78b439c8b08de2f1e9c08b64859b8b73",
+    "identityHash": "e208ec87b193092365b3072fd0cc6f45",
     "entities": [
-      {
-        "tableName": "version",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `version` TEXT, PRIMARY KEY(`id`))",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "version",
-            "columnName": "version",
-            "affinity": "TEXT",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
       {
         "tableName": "menu",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, PRIMARY KEY(`slug`))",
@@ -147,7 +121,7 @@
       },
       {
         "tableName": "element",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, `tags` TEXT, `custom_properties` TEXT, `element_url` TEXT, `name` TEXT, `view_text` TEXT, `view_image_url` TEXT, `view_image_thumb` TEXT, PRIMARY KEY(`slug`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, `tags` TEXT, `custom_properties` TEXT, `element_url` TEXT, `content_version` TEXT, `name` TEXT, `view_text` TEXT, `view_image_url` TEXT, `view_image_thumb` TEXT, PRIMARY KEY(`slug`))",
         "fields": [
           {
             "fieldPath": "slug",
@@ -170,6 +144,12 @@
           {
             "fieldPath": "elementUrl",
             "columnName": "element_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contentVersion",
+            "columnName": "content_version",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -495,7 +475,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"78b439c8b08de2f1e9c08b64859b8b73\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e208ec87b193092365b3072fd0cc6f45\")"
     ]
   }
 }

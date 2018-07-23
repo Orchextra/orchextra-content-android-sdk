@@ -24,7 +24,6 @@ import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.utils.DateUtils;
 import com.gigigo.orchextra.core.sdk.utils.OcmPreferences;
-import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import java.util.ArrayList;
@@ -91,17 +90,7 @@ public class OcmControllerImp implements OcmController {
         if (!menus.isFromCloud()) {
           getMenusCallback.onGetMenusLoaded(menus);
         } else {
-          //It the first time that the app is executed
-          getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
-            @Override public void onGetVersionLoaded(VersionData versionData) {
-              ocmPreferences.saveVersion(versionData.getVersion());
-              getMenusCallback.onGetMenusLoaded(null);
-            }
-
-            @Override public void onGetVersionFails(Exception e) {
-              getMenusCallback.onGetMenusLoaded(null);
-            }
-          }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
+          getMenusCallback.onGetMenusLoaded(null);
         }
       }
 
@@ -116,16 +105,7 @@ public class OcmControllerImp implements OcmController {
   }
 
   private void checkVersionChangedAndRequestMenus(GetMenusControllerCallback getMenusCallback) {
-    getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
-      @Override public void onGetVersionLoaded(VersionData versionData) {
-        boolean forceReload = hasToForceReloadBecauseVersionChanged(versionData);
-        retrieveMenus(forceReload, getMenusCallback);
-      }
-
-      @Override public void onGetVersionFails(Exception e) {
-        retrieveMenus(false, getMenusCallback);
-      }
-    }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
+    retrieveMenus(false, getMenusCallback);
   }
 
   private void retrieveMenus(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
@@ -134,15 +114,7 @@ public class OcmControllerImp implements OcmController {
         if (menus.isFromCloud()) {
           getMenusCallback.onGetMenusLoaded(menus);
         } else {
-          getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
-            @Override public void onGetVersionLoaded(VersionData versionData) {
-              getMenusCallback.onGetMenusLoaded(menus);
-            }
-
-            @Override public void onGetVersionFails(Exception e) {
-              getMenusCallback.onGetMenusLoaded(menus);
-            }
-          }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
+          getMenusCallback.onGetMenusLoaded(menus);
         }
       }
 
@@ -151,20 +123,6 @@ public class OcmControllerImp implements OcmController {
       }
     }), GetMenus.Params.forForceReload(forceReload));
   }
-
-  private boolean hasToForceReloadBecauseVersionChanged(VersionData versionData) {
-    boolean forceReload = false;
-
-    String version = ocmPreferences.getVersion();
-
-    if (versionData != null && (version == null || !version.equals(versionData.getVersion()))) {
-      forceReload = true;
-      ocmPreferences.saveVersion(versionData.getVersion());
-    }
-    return forceReload;
-  }
-
-  //end region
 
   /**
    * Retrieve section from cache
@@ -201,19 +159,8 @@ public class OcmControllerImp implements OcmController {
               }
               return;
             }
-
-            getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
-              @Override public void onGetVersionLoaded(VersionData versionData) {
-                checkVersionAndExpiredAtAndRetrieveSection(versionData, contentData, contentUrl,
-                    imagesToDownload, getSectionControllerCallback);
-              }
-
-              @Override public void onGetVersionFails(Exception e) {
-                if (getSectionControllerCallback != null) {
-                  getSectionControllerCallback.onGetSectionLoaded(contentData);
-                }
-              }
-            }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
+            checkVersionAndExpiredAtAndRetrieveSection(contentData, contentUrl, imagesToDownload,
+                getSectionControllerCallback);
           }
 
           @Override public void onGetSectionFails(Exception e) {
@@ -269,11 +216,11 @@ public class OcmControllerImp implements OcmController {
         PriorityScheduler.Priority.HIGH);
   }
 
-  private void checkVersionAndExpiredAtAndRetrieveSection(VersionData versionData,
-      ContentData contentData, String contentUrl, int imagesToDownload,
+  private void checkVersionAndExpiredAtAndRetrieveSection(ContentData contentData,
+      String contentUrl, int imagesToDownload,
       GetSectionControllerCallback getSectionControllerCallback) {
     boolean requestFromCloud =
-        hasToForceReloadBecauseVersionChangedOrSectionHasExpired(versionData, contentData);
+        hasToForceReloadBecauseVersionChangedOrSectionHasExpired(contentData);
 
     if (requestFromCloud) {
       getSection.execute(new SectionObserver(new GetSectionControllerCallback() {
@@ -323,28 +270,8 @@ public class OcmControllerImp implements OcmController {
   }
 
   @Override public void refreshMenuData() {
-    getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
-      @Override public void onGetVersionLoaded(VersionData versionData) {
-        checkIfNeedsRefreshMenu(versionData);
-      }
 
-      @Override public void onGetVersionFails(Exception e) {
-      }
-    }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
-  }
-
-  private void checkIfNeedsRefreshMenu(VersionData versionData) {
-    boolean forceReload = hasToForceReloadBecauseVersionChanged(versionData);
-    if (forceReload) {
-      retrieveMenus(true, new GetMenusControllerCallback() {
-        @Override public void onGetMenusLoaded(UiMenuData menus) {
-          OCManager.notifyOnMenuChanged(menus);
-        }
-
-        @Override public void onGetMenusFails(Exception e) {
-        }
-      });
-    }
+    //OCManager.notifyOnMenuChanged(menus);
   }
 
   @Override public void disposeUseCases() {
@@ -355,12 +282,9 @@ public class OcmControllerImp implements OcmController {
     clearCache.dispose();
   }
 
-  //end region
-
-  private boolean hasToForceReloadBecauseVersionChangedOrSectionHasExpired(VersionData versionData,
+  private boolean hasToForceReloadBecauseVersionChangedOrSectionHasExpired(
       ContentData contentData) {
-    return !versionData.getVersion().equals(contentData.getVersion())
-        || contentData.getExpiredAt() != null && DateUtils.isAfterCurrentDate(
+    return contentData.getExpiredAt() != null && DateUtils.isAfterCurrentDate(
         contentData.getExpiredAt());
   }
 

@@ -45,7 +45,7 @@ class OcmDataStoreFactory
         println("*****GETVERSION ASYNC THREAD " + Thread.currentThread().name)
         var dataStore: OcmDataStore
 
-        if (diskDataStore.ocmCache.isVersionCached()) {
+        if (false) {
           Log.i(TAG, "DISK - Version")
           dataStore = diskDataStore
         } else {

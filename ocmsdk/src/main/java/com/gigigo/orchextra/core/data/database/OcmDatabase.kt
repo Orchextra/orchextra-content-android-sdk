@@ -11,7 +11,6 @@ import com.gigigo.orchextra.core.data.database.dao.DbElementDao
 import com.gigigo.orchextra.core.data.database.dao.DbMenuContentDao
 import com.gigigo.orchextra.core.data.database.dao.DbScheduleDatesDao
 import com.gigigo.orchextra.core.data.database.dao.DbSectionContentDataDao
-import com.gigigo.orchextra.core.data.database.dao.DbVersionDataDao
 import com.gigigo.orchextra.core.data.database.dao.DbVideoDao
 import com.gigigo.orchextra.core.data.database.entities.DbElement
 import com.gigigo.orchextra.core.data.database.entities.DbElementCache
@@ -20,19 +19,14 @@ import com.gigigo.orchextra.core.data.database.entities.DbMenuElementJoin
 import com.gigigo.orchextra.core.data.database.entities.DbScheduleDates
 import com.gigigo.orchextra.core.data.database.entities.DbSectionContentData
 import com.gigigo.orchextra.core.data.database.entities.DbSectionElementJoin
-import com.gigigo.orchextra.core.data.database.entities.DbVersionData
 import com.gigigo.orchextra.core.data.database.entities.DbVideoData
 
 @Database(
-    entities = arrayOf(DbVersionData::class, DbMenuContent::class,
-        DbSectionContentData::class, DbSectionElementJoin::class,
-        DbElement::class, DbScheduleDates::class,
-        DbMenuElementJoin::class, DbElementCache::class, DbVideoData::class),
+    entities = [(DbMenuContent::class), (DbSectionContentData::class), (DbSectionElementJoin::class), (DbElement::class), (DbScheduleDates::class), (DbMenuElementJoin::class), (DbElementCache::class), (DbVideoData::class)],
     version = 1, exportSchema = true)
-@TypeConverters(value = arrayOf(Converters::class))
+@TypeConverters(value = [(Converters::class)])
 abstract class OcmDatabase : RoomDatabase() {
 
-  abstract fun versionDao(): DbVersionDataDao
   abstract fun menuDao(): DbMenuContentDao
   abstract fun elementDao(): DbElementDao
   abstract fun sectionDao(): DbSectionContentDataDao
@@ -41,7 +35,6 @@ abstract class OcmDatabase : RoomDatabase() {
   abstract fun videoDao(): DbVideoDao
 
   fun deleteAll() {
-    versionDao().deleteAll()
     menuDao().deleteAll()
     sectionDao().deleteAll()
     elementDao().deleteAll()
@@ -51,7 +44,7 @@ abstract class OcmDatabase : RoomDatabase() {
   }
 
   companion object {
-    private val DEFAULT_DATABASE_NAME = "ocm.db"
+    private const val DEFAULT_DATABASE_NAME = "ocm.db"
 
     @JvmOverloads
     fun create(context: Context, useInMemory: Boolean = false,
