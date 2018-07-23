@@ -4,6 +4,7 @@ import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentDataRespo
 import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementDataResponse;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
 import io.reactivex.Observable;
+import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -16,6 +17,8 @@ public interface OcmApiService {
   String ELEMENT = "element/{elementId}";
 
   @GET(MENUS) Observable<ApiMenuContentDataResponse> getMenuDataRx();
+
+  @GET(MENUS) Call<ApiMenuContentDataResponse> getMenu();
 
   @GET(SECTION) Observable<ApiSectionContentDataResponse> getSectionDataRx(
       @Path(value = "section", encoded = true) String section,

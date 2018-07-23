@@ -49,11 +49,10 @@ abstract class OcmDatabase : RoomDatabase() {
     @JvmOverloads
     fun create(context: Context, useInMemory: Boolean = false,
         dbName: String = DEFAULT_DATABASE_NAME): OcmDatabase {
-      val databaseBuilder: RoomDatabase.Builder<OcmDatabase>
-      if (useInMemory) {
-        databaseBuilder = Room.inMemoryDatabaseBuilder(context, OcmDatabase::class.java)
+      val databaseBuilder: RoomDatabase.Builder<OcmDatabase> = if (useInMemory) {
+        Room.inMemoryDatabaseBuilder(context, OcmDatabase::class.java)
       } else {
-        databaseBuilder = Room.databaseBuilder(context, OcmDatabase::class.java, dbName)
+        Room.databaseBuilder(context, OcmDatabase::class.java, dbName)
       }
 
       return databaseBuilder

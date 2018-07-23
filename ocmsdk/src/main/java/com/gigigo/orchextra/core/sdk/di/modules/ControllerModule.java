@@ -1,6 +1,10 @@
 package com.gigigo.orchextra.core.sdk.di.modules;
 
 import com.gigigo.orchextra.core.controller.OcmControllerImp;
+import com.gigigo.orchextra.core.data.OcmDbDataSource;
+import com.gigigo.orchextra.core.data.OcmNetworkDataSource;
+import com.gigigo.orchextra.core.data.api.services.OcmApiService;
+import com.gigigo.orchextra.core.data.database.OcmDatabase;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.OcmCacheImp;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
@@ -59,5 +63,18 @@ import orchextra.javax.inject.Singleton;
   @Provides @Singleton OcmImageCache provideImageCache(OcmContextProvider context,
       ThreadExecutor threadExecutor, ConnectionUtils connectionUtils) {
     return new OcmImageCacheImp(context.getApplicationContext(), threadExecutor, connectionUtils);
+  }
+
+  @Provides @Singleton OcmDatabase provideOcmDatabase(OcmContextProvider context) {
+    return OcmDatabase.Companion.create(context.getApplicationContext());
+  }
+
+  @Provides @Singleton OcmDbDataSource provideOcmDbDataSource(OcmDatabase ocmDatabase) {
+    return new OcmDbDataSource(ocmDatabase);
+  }
+
+  @Provides @Singleton OcmNetworkDataSource provideOcmNetworkDataSource(OcmApiService ocmApiService,
+      OcmDbDataSource ocmDbDataSource) {
+    return new OcmNetworkDataSource(ocmApiService, ocmDbDataSource);
   }
 }

@@ -3,6 +3,8 @@ package com.gigigo.orchextra.core.data.rxRepository;
 import android.content.Context;
 import android.support.annotation.WorkerThread;
 import com.gigigo.orchextra.core.data.DateUtilsKt;
+import com.gigigo.orchextra.core.data.OcmDbDataSource;
+import com.gigigo.orchextra.core.data.OcmNetworkDataSource;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDiskDataStore;
@@ -19,14 +21,26 @@ import orchextra.javax.inject.Singleton;
 
 @Singleton public class OcmDataRepository implements OcmRepository {
   private final OcmDataStoreFactory ocmDataStoreFactory;
+  private final OcmDbDataSource ocmDbDataSource;
+  private final OcmNetworkDataSource ocmNetworkDataSource;
 
-  @Inject public OcmDataRepository(OcmDataStoreFactory ocmDataStoreFactory) {
+  @Inject
+  public OcmDataRepository(OcmDataStoreFactory ocmDataStoreFactory, OcmDbDataSource ocmDbDataSource,
+      OcmNetworkDataSource ocmNetworkDataSource) {
     this.ocmDataStoreFactory = ocmDataStoreFactory;
+    this.ocmDbDataSource = ocmDbDataSource;
+    this.ocmNetworkDataSource = ocmNetworkDataSource;
   }
 
   @Override public Observable<MenuContentData> getMenus(boolean forceReload) {
-    OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForMenus(forceReload);
-    return ocmDataStore.getMenus();
+
+    return Observable.create(emitter -> {
+      MenuContentData cacheMenuContentData = ocmDbDataSource.getMenus();
+      MenuContentData networkMenuContentData = ocmNetworkDataSource.getMenus();
+
+      emitter.onNext(networkMenuContentData);
+      emitter.onComplete();
+    });
   }
 
   @Override

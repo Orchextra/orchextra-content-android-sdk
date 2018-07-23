@@ -141,7 +141,7 @@ fun ApiMenuContent.toDbMenuContent(): DbMenuContent {
   menuContent.elements = elementsList
   return menuContent
 }
-/*
+
 fun MenuContent.toDbMenuContent(): DbMenuContent {
   val menuContent = DbMenuContent()
   menuContent.slug = slug
@@ -154,7 +154,6 @@ fun MenuContent.toDbMenuContent(): DbMenuContent {
   menuContent.elements = elementsList
   return menuContent
 }
-*/
 
 fun ApiMenuContent.toMenuContent(): MenuContent {
   val menuContent = MenuContent()
@@ -195,6 +194,19 @@ fun ApiElementData.toElementData(): ElementData {
 }
 
 fun ApiElement.toDbElement(): DbElement = with(this) {
+  val element = DbElement()
+  element.slug = slug
+  element.name = name
+  element.customProperties = customProperties?.toDbCustomProperties()
+  element.elementUrl = elementUrl
+  element.contentVersion = contentVersion
+  element.sectionView = sectionView?.toDbElementSectionView()
+  element.tags = tags
+  element.dates = dates?.toDbScheduleDates(slug) ?: emptyList()
+  return element
+}
+
+fun Element.toDbElement(): DbElement = with(this) {
   val element = DbElement()
   element.slug = slug
   element.name = name
@@ -248,6 +260,14 @@ private fun DbElement.toElement(): Element = with(this) {
 }
 
 private fun ApiElementSectionView.toDbElementSectionView(): DbElementSectionView = with(this) {
+  val element = DbElementSectionView()
+  element.text = text
+  element.imageUrl = imageUrl
+  element.imageThumb = imageThumb
+  return element
+}
+
+private fun ElementSectionView.toDbElementSectionView(): DbElementSectionView = with(this) {
   val element = DbElementSectionView()
   element.text = text
   element.imageUrl = imageUrl
