@@ -36,7 +36,7 @@ import timber.log.Timber;
     this.ocmNetworkDataSource = ocmNetworkDataSource;
   }
 
-  @Override public Observable<MenuContentData> getMenus(boolean forceReload) {
+  @Override public Observable<MenuContentData> getMenus() {
 
     return Observable.create(emitter -> {
       MenuContentData cacheMenuContentData = ocmDbDataSource.getMenus();

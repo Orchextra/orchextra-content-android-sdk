@@ -68,47 +68,15 @@ public class OcmControllerImp implements OcmController {
    * 4.2 - Return data
    * 4.3 - App is which control menu changes
    */
-  @Override public void getMenu(DataRequest menuRequest,
-      GetMenusControllerCallback getMenusCallback) {
-    switch (menuRequest) {
-      case ONLY_CACHE:
-        retrieveMenusOnlyFromCache(getMenusCallback);
-        break;
-      case FORCE_CLOUD:
-        checkVersionChangedAndRequestMenus(getMenusCallback);
-        break;
-      case FIRST_CACHE:
-        //retrieveMenus(false, getMenusCallback);
-        checkVersionChangedAndRequestMenus(getMenusCallback);
-        break;
-    }
+  @Override public void getMenu(GetMenusControllerCallback getMenusCallback) {
+    retrieveMenus(getMenusCallback);
   }
 
-  private void retrieveMenusOnlyFromCache(GetMenusControllerCallback getMenusCallback) {
-    retrieveMenus(new MenuObserver(new GetMenusControllerCallback() {
-      @Override public void onGetMenusLoaded(UiMenuData menus) {
-        if (!menus.isFromCloud()) {
-          getMenusCallback.onGetMenusLoaded(menus);
-        } else {
-          getMenusCallback.onGetMenusLoaded(null);
-        }
-      }
-
-      @Override public void onGetMenusFails(Exception e) {
-        getMenusCallback.onGetMenusLoaded(null);
-      }
-    }), GetMenus.Params.forForceReload(false));
+  private void retrieveMenus(MenuObserver observer) {
+    getMenus.execute(observer, new GetMenus.Params(), PriorityScheduler.Priority.HIGH);
   }
 
-  private void retrieveMenus(MenuObserver observer, GetMenus.Params params) {
-    getMenus.execute(observer, params, PriorityScheduler.Priority.HIGH);
-  }
-
-  private void checkVersionChangedAndRequestMenus(GetMenusControllerCallback getMenusCallback) {
-    retrieveMenus(false, getMenusCallback);
-  }
-
-  private void retrieveMenus(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
+  private void retrieveMenus(GetMenusControllerCallback getMenusCallback) {
     retrieveMenus(new MenuObserver(new GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(UiMenuData menus) {
         if (menus.isFromCloud()) {
@@ -121,7 +89,7 @@ public class OcmControllerImp implements OcmController {
       @Override public void onGetMenusFails(Exception e) {
 
       }
-    }), GetMenus.Params.forForceReload(forceReload));
+    }));
   }
 
   /**

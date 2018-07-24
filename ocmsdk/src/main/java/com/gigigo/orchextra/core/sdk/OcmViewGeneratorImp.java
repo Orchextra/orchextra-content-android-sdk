@@ -17,7 +17,6 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.entities.elementcache.VideoFormat;
 import com.gigigo.orchextra.core.domain.entities.elementcache.cards.ElementCachePreviewCard;
-import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.sdk.model.detail.layouts.DetailLayoutContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.BrowserContentData;
 import com.gigigo.orchextra.core.sdk.model.detail.viewtypes.CustomTabsContentData;
@@ -56,9 +55,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     this.detailElementsViewPresenterProvider = detailElementsViewPresenterProvider;
   }
 
-  @Override public void getMenu(DataRequest menuRequest,
-      final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
-    ocmController.getMenu(menuRequest, new OcmController.GetMenusControllerCallback() {
+  @Override public void getMenu(final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
+    ocmController.getMenu(new OcmController.GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(UiMenuData menus) {
         getMenusViewGeneratorCallback.onGetMenusLoaded(menus);
       }
@@ -72,30 +70,29 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
   @Override
   public void generateSectionView(UiMenu uiMenu, String filter, final int imagesToDownload,
       GetSectionViewGeneratorCallback getSectionViewGeneratorCallback) {
-    
+
     ElementCache elementCache = uiMenu.getElementCache();
 
     if (elementCache.getType() == ElementCacheType.ARTICLE) {
 
-      getSectionViewGeneratorCallback.onSectionViewLoaded(
-          generateHomeArticleView(uiMenu));
+      getSectionViewGeneratorCallback.onSectionViewLoaded(generateHomeArticleView(uiMenu));
 
       OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
-
     } else if (elementCache.getType() == ElementCacheType.VIDEO
         && elementCache.getRender() != null) {
 
       if (elementCache.getRender().getFormat() == VideoFormat.YOUTUBE) {
         getSectionViewGeneratorCallback.onSectionViewLoaded(
-            YoutubeFragment.newInstance(elementCache.getRender().getSource(), Configuration.ORIENTATION_PORTRAIT));
+            YoutubeFragment.newInstance(elementCache.getRender().getSource(),
+                Configuration.ORIENTATION_PORTRAIT));
       } else if (elementCache.getRender().getFormat() == VideoFormat.VIMEO) {
         //TODO Return vimeo fragment
         getSectionViewGeneratorCallback.onSectionViewLoaded(
-            YoutubeFragment.newInstance(elementCache.getRender().getSource(), Configuration.ORIENTATION_PORTRAIT));
+            YoutubeFragment.newInstance(elementCache.getRender().getSource(),
+                Configuration.ORIENTATION_PORTRAIT));
       }
 
       OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
-
     } else if (elementCache.getType() == ElementCacheType.WEBVIEW
         && elementCache.getRender() != null) {
 
@@ -112,9 +109,9 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
       }
 
       OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
-
     } else if (elementCache.getRender() != null) {
-      getSectionViewGeneratorCallback.onSectionViewLoaded(generateGridContentData(uiMenu, imagesToDownload, filter));
+      getSectionViewGeneratorCallback.onSectionViewLoaded(
+          generateGridContentData(uiMenu, imagesToDownload, filter));
     }
   }
 
@@ -238,7 +235,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     });
   }
 
-  private UiBaseContentData generateArticleDetailView(List<ArticleElement<ArticleElementRender>> elements) {
+  private UiBaseContentData generateArticleDetailView(
+      List<ArticleElement<ArticleElementRender>> elements) {
     ArticleContentData articleContentData = ArticleContentData.newInstance();
     articleContentData.addItems(elements);
     return articleContentData;

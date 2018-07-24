@@ -93,8 +93,24 @@ public final class Ocm {
   /**
    * Get the app menus
    */
-  public static void getMenus(DataRequest menuRequest, OcmCallbacks.Menus menusCallback) {
-    OCManager.getMenus(menuRequest, new OCManagerCallbacks.Menus() {
+  @Deprecated public static void getMenus(DataRequest menuRequest,
+      OcmCallbacks.Menus menusCallback) {
+    OCManager.getMenus(new OCManagerCallbacks.Menus() {
+      @Override public void onMenusLoaded(UiMenuData menus) {
+        menusCallback.onMenusLoaded(menus);
+      }
+
+      @Override public void onMenusFails(Throwable e) {
+        menusCallback.onMenusFails(e);
+      }
+    });
+  }
+
+  /**
+   * Get the app menus
+   */
+  public static void getMenus(OcmCallbacks.Menus menusCallback) {
+    OCManager.getMenus(new OCManagerCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData menus) {
         menusCallback.onMenusLoaded(menus);
       }
