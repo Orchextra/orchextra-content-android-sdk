@@ -9,6 +9,7 @@ public final class UiMenu {
   private long updateAt;
   private String contentUrl;
   private ElementCache elementCache;
+  private boolean hasNewVersion;
 
   public String getSlug() {
     return slug;
@@ -56,5 +57,13 @@ public final class UiMenu {
 
   public String getContentUrl() {
     return contentUrl;
+  }
+
+  public boolean hasNewVersion() {
+    return hasNewVersion;
+  }
+
+  public void setHasNewVersion(boolean hasNewVersion) {
+    this.hasNewVersion = hasNewVersion;
   }
 }

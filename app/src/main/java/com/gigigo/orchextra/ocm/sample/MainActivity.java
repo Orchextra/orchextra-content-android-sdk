@@ -5,10 +5,8 @@ import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.OCManagerCallbacks;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
@@ -31,6 +29,7 @@ import java.util.Set;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import org.jetbrains.annotations.NotNull;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -120,8 +119,6 @@ public class MainActivity extends AppCompatActivity {
     }
   };
 
-  private List<UiMenu> oldUiMenuList;
-
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -179,32 +176,26 @@ public class MainActivity extends AppCompatActivity {
     ocmWrapper.startWithCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET,
         BuildConfig.BUSSINES_UNIT, new OcmWrapper.OnStartWithCredentialsCallback() {
           @Override public void onCredentialReceiver(String accessToken) {
-            Log.d(TAG, "onCredentialReceiver()");
+            Timber.d("onCredentialReceiver()");
             runOnUiThread(() -> getContent());
           }
 
           @Override public void onCredentailError() {
-            Log.e(TAG, "onCredentailError");
+            Timber.e("onCredentailError");
             Toast.makeText(MainActivity.this, "onCredentailError", Toast.LENGTH_SHORT).show();
           }
         });
   }
 
-  private List<UiMenu> copy(List<UiMenu> list) {
-    List<UiMenu> copyList = new ArrayList<>();
-    copyList.addAll(list);
-    return copyList;
-  }
-
   private void clearData() {
     Ocm.clearData(true, true, new OCManagerCallbacks.Clear() {
       @Override public void onDataClearedSuccessfull() {
-        Log.d(TAG, "onDataClearedSuccessfull");
+        Timber.d("onDataClearedSuccessfull");
         runOnUiThread(() -> getContent());
       }
 
       @Override public void onDataClearFails(Exception e) {
-        Log.e(TAG, "onDataClearFails");
+        Timber.e("onDataClearFails");
         Toast.makeText(MainActivity.this, "Clear data fail!", Toast.LENGTH_SHORT).show();
       }
     });
@@ -212,48 +203,30 @@ public class MainActivity extends AppCompatActivity {
 
   private void getContent() {
 
-    Ocm.getMenus(DataRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
-      @Override public void onMenusLoaded(final UiMenuData oldUiMenuData) {
+    Ocm.getMenus(new OcmCallbacks.Menus() {
+      @Override public void onMenusLoaded(final UiMenuData uiMenuData) {
 
-        if (oldUiMenuData == null) {
+        if (uiMenuData == null) {
           Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
         } else {
-          onGoDetailView(oldUiMenuData.getUiMenuList());
+          onGoDetailView(uiMenuData.getUiMenuList());
         }
       }
 
       @Override public void onMenusFails(Throwable e) {
-        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        Timber.e(e, "getMenus()");
+        Toast.makeText(MainActivity.this, "Get menu error!", Toast.LENGTH_SHORT).show();
       }
     });
   }
 
-  private boolean checkIfMenuHasChanged(List<UiMenu> oldUiMenuList, List<UiMenu> newUiMenuList) {
-    if (oldUiMenuList == null || newUiMenuList == null) {
-      return false;
-    }
-
-    if (oldUiMenuList.size() != newUiMenuList.size()) {
-      return true;
-    } else {
-      for (int i = 0; i < newUiMenuList.size(); i++) {
-        if (!oldUiMenuList.get(i).getSlug().equals(newUiMenuList.get(i).getSlug())) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
   private void showIconNewContent(final List<UiMenu> newMenus) {
     newContentMainContainer.setVisibility(View.VISIBLE);
-    newContentMainContainer.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        newContentMainContainer.setVisibility(View.GONE);
+    newContentMainContainer.setOnClickListener(v -> {
+      newContentMainContainer.setVisibility(View.GONE);
 
-        tabLayout.removeAllTabs();
-        onGoDetailView(newMenus);
-      }
+      tabLayout.removeAllTabs();
+      onGoDetailView(newMenus);
     });
   }
 
