@@ -11,7 +11,7 @@ public class App extends MultiDexApplication {
   private static final String TAG = "App";
 
   @Override public void onCreate() {
-    enableStrictMode();
+    //enableStrictMode();
     super.onCreate();
     if (LeakCanary.isInAnalyzerProcess(this)) {
       return;

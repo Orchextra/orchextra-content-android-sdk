@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.data.rxRepository;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import com.gigigo.orchextra.core.data.DateUtilsKt;
 import com.gigigo.orchextra.core.data.OcmDbDataSource;
@@ -10,7 +11,9 @@ import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFact
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDiskDataStore;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContent;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import gigigo.com.vimeolibs.VimeoInfo;
@@ -18,6 +21,7 @@ import io.reactivex.Observable;
 import java.util.Map;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
+import timber.log.Timber;
 
 @Singleton public class OcmDataRepository implements OcmRepository {
   private final OcmDataStoreFactory ocmDataStoreFactory;
@@ -38,7 +42,7 @@ import orchextra.javax.inject.Singleton;
       MenuContentData cacheMenuContentData = ocmDbDataSource.getMenus();
       MenuContentData networkMenuContentData = ocmNetworkDataSource.getMenus();
 
-      emitter.onNext(networkMenuContentData);
+      emitter.onNext(getUpdatedMenuContentData(cacheMenuContentData, networkMenuContentData));
       emitter.onComplete();
     });
   }
@@ -100,5 +104,42 @@ import orchextra.javax.inject.Singleton;
     OcmDiskDataStore ocmDataStore = ocmDataStoreFactory.getDiskDataStore();
     ocmDataStore.getOcmCache().evictAll(images, data);
     return Observable.empty();
+  }
+
+  private MenuContentData getUpdatedMenuContentData(@NonNull MenuContentData cacheMenuContentData,
+      @NonNull MenuContentData networkMenuContentData) {
+
+    if (cacheMenuContentData.getMenuContentList().isEmpty()) {
+      Timber.i("Data from cloud");
+      return networkMenuContentData;
+    }
+
+    MenuContentData updatedMenuContentData = new MenuContentData();
+    updatedMenuContentData.setElementsCache(networkMenuContentData.getElementsCache());
+    updatedMenuContentData.setMenuContentList(networkMenuContentData.getMenuContentList());
+
+    for (MenuContent menuContent : networkMenuContentData.getMenuContentList()) {
+      for (Element element : menuContent.getElements()) {
+
+        Boolean updated = checkContentVersion(element, cacheMenuContentData);
+        Timber.d("Element %s; Updated %s", element.getSlug(), updated);
+        element.setHasNewVersion(updated);
+      }
+    }
+
+    return updatedMenuContentData;
+  }
+
+  private Boolean checkContentVersion(@NonNull Element element,
+      @NonNull MenuContentData cacheMenuContentData) {
+    for (MenuContent menuContent : cacheMenuContentData.getMenuContentList()) {
+      for (Element cacheElement : menuContent.getElements()) {
+        if (cacheElement.getSlug().equals(element.getSlug())) {
+          return cacheElement.getContentVersion() == null || !cacheElement.getContentVersion()
+              .equals(element.getContentVersion());
+        }
+      }
+    }
+    return false;
   }
 }

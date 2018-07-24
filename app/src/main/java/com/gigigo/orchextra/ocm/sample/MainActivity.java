@@ -147,14 +147,14 @@ public class MainActivity extends AppCompatActivity {
   @Override protected void onResume() {
     super.onResume();
 
-    Ocm.setOnChangedMenuCallback(uiMenuData -> {
-      boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, uiMenuData.getUiMenuList());
-      if (menuHasChanged) {
-        showIconNewContent(uiMenuData.getUiMenuList());
-      } else {
-        adapter.reloadSections(viewpager.getCurrentItem());
-      }
-    });
+    //Ocm.setOnChangedMenuCallback(uiMenuData -> {
+    //  boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, uiMenuData.getUiMenuList());
+    //  if (menuHasChanged) {
+    //    showIconNewContent(uiMenuData.getUiMenuList());
+    //  } else {
+    //    adapter.reloadSections(viewpager.getCurrentItem());
+    //  }
+    //});
   }
 
   private void initViews() {
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         BuildConfig.BUSSINES_UNIT, new OcmWrapper.OnStartWithCredentialsCallback() {
           @Override public void onCredentialReceiver(String accessToken) {
             Log.d(TAG, "onCredentialReceiver()");
-            runOnUiThread(() -> clearData());
+            runOnUiThread(() -> getContent());
           }
 
           @Override public void onCredentailError() {
@@ -211,62 +211,14 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void getContent() {
-    Ocm.setOnLoadDataContentSectionFinished(
-        () -> Ocm.getMenus(DataRequest.FIRST_CACHE, new OcmCallbacks.Menus() {
-          @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
-            List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
-            if (newUiMenuList == null) {
-              return;
-            }
 
-            boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
-            if (menuHasChanged) {
-              showIconNewContent(newUiMenuList);
-            }
-
-            oldUiMenuList = copy(newUiMenuList);
-          }
-
-          @Override public void onMenusFails(Throwable e) {
-
-          }
-        }));
-
-    Ocm.getMenus(DataRequest.ONLY_CACHE, new OcmCallbacks.Menus() {
+    Ocm.getMenus(DataRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
       @Override public void onMenusLoaded(final UiMenuData oldUiMenuData) {
+
         if (oldUiMenuData == null) {
-          Ocm.getMenus(DataRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
-            @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
-              if (oldUiMenuList == null) {
-                onGoDetailView(newUiMenuData.getUiMenuList());
-                return;
-              }
-
-              List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
-              if (newUiMenuList == null) {
-                return;
-              }
-
-              boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
-              if (menuHasChanged) {
-                showIconNewContent(newUiMenuList);
-              }
-              oldUiMenuList = copy(newUiMenuList);
-            }
-
-            @Override public void onMenusFails(Throwable e) {
-
-            }
-          });
+          Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
         } else {
-          oldUiMenuList = copy(oldUiMenuData.getUiMenuList());
-
-          if (oldUiMenuList == null) {
-            Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
-            return;
-          }
-
-          onGoDetailView(oldUiMenuList);
+          onGoDetailView(oldUiMenuData.getUiMenuList());
         }
       }
 

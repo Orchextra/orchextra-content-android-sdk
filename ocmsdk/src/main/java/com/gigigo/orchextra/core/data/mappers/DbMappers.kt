@@ -255,6 +255,7 @@ private fun DbElement.toElement(): Element = with(this) {
   element.sectionView = sectionView?.toElementSectionView()
   element.tags = tags
   element.dates = dates.toScheduleDates()
+  element.contentVersion = contentVersion
 
   return element
 }

@@ -9,4 +9,5 @@ class Element {
   var tags: List<String>? = null
   var name: String? = null
   var dates: List<List<String>> = emptyList()
+  var hasNewVersion: Boolean = false
 }
