@@ -43,6 +43,7 @@ public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         for (ScreenSlidePageFragment fragment : fragments) {
           if (fragment.getSlug().equals(uiMenu.getSlug())) {
             fragment.showNewVersionButton();
+            fragment.setItemMenu(uiMenu);
           }
         }
       }

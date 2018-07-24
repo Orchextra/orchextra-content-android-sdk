@@ -95,7 +95,7 @@ public class ScreenSlidePageFragment extends Fragment {
       newContentView.setVisibility(View.VISIBLE);
       newContentView.setOnClickListener(v -> {
         newContentView.setVisibility(View.GONE);
-        // TODO Update content
+        reloadSection(true);
       });
     }
   }
