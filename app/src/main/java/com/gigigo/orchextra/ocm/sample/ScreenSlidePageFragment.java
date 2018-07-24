@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.ocm.sample;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 public class ScreenSlidePageFragment extends Fragment {
   private View emptyViewLayout;
   private View errorViewLayout;
+  private View newContentView;
   private UiGridBaseContentData contentView;
   private UiMenu itemMenu;
   private int numberOfImagesToDownload;
@@ -26,23 +28,25 @@ public class ScreenSlidePageFragment extends Fragment {
   }
 
   private void loadContent() {
-    Ocm.generateSectionView(itemMenu, emotion, numberOfImagesToDownload, new OcmCallbacks.Section() {
-      @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
-        setView(uiGridBaseContentData);
-      }
+    Ocm.generateSectionView(itemMenu, emotion, numberOfImagesToDownload,
+        new OcmCallbacks.Section() {
+          @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+            setView(uiGridBaseContentData);
+          }
 
-      @Override public void onSectionFails(Exception e) {
-        e.printStackTrace();
-      }
-    });
+          @Override public void onSectionFails(Exception e) {
+            e.printStackTrace();
+          }
+        });
   }
 
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+  @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
 
     emptyViewLayout = view.findViewById(R.id.emptyViewLayout);
     errorViewLayout = view.findViewById(R.id.errorViewLayout);
+    newContentView = view.findViewById(R.id.newContentMainContainer);
 
     loadContent();
 
@@ -69,6 +73,11 @@ public class ScreenSlidePageFragment extends Fragment {
             .commit();
       }
     }
+    if (itemMenu.hasNewVersion()) {
+      showNewVersionButton();
+    } else {
+      hideNewVersionButton();
+    }
   }
 
   public void reloadSection(boolean hasToShowNewContentButton) {
@@ -81,11 +90,27 @@ public class ScreenSlidePageFragment extends Fragment {
     this.itemMenu = itemMenu;
   }
 
-  public void setNumberOfImagesToDownload(int numberOfImagesToDownload) {
-    this.numberOfImagesToDownload = numberOfImagesToDownload;
+  public void showNewVersionButton() {
+    if (newContentView != null) {
+      newContentView.setVisibility(View.VISIBLE);
+      newContentView.setOnClickListener(v -> {
+        newContentView.setVisibility(View.GONE);
+        // TODO Update content
+      });
+    }
   }
 
-  public void setEmotion(String emotion) {
-    this.emotion = emotion;
+  public void hideNewVersionButton() {
+    if (newContentView != null) {
+      newContentView.setVisibility(View.GONE);
+    }
+  }
+
+  public String getSlug() {
+    return this.itemMenu.getSlug();
+  }
+
+  public void setNumberOfImagesToDownload(int numberOfImagesToDownload) {
+    this.numberOfImagesToDownload = numberOfImagesToDownload;
   }
 }

@@ -9,19 +9,19 @@
       android:id="@+id/emptyViewLayout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:orientation="vertical"
       android:layout_gravity="center"
+      android:orientation="vertical"
       android:visibility="gone"
       >
     <TextView
-        android:layout_gravity="center"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_margin="100dp"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="100dp"
+        android:gravity="center"
         android:text="Empty View"
-        android:textSize="20dp"
         android:textColor="@color/primary_text"
+        android:textSize="20dp"
         />
   </FrameLayout>
 
@@ -29,19 +29,19 @@
       android:id="@+id/errorViewLayout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:orientation="vertical"
       android:layout_gravity="center"
+      android:orientation="vertical"
       android:visibility="gone"
       >
     <TextView
-        android:layout_gravity="center"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_margin="100dp"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="100dp"
+        android:gravity="center"
         android:text="Error getting content..."
-        android:textSize="20dp"
         android:textColor="@color/primary_text"
+        android:textSize="20dp"
         />
   </FrameLayout>
 
@@ -51,4 +51,11 @@
       android:layout_height="match_parent"
       />
 
+  <include
+      layout="@layout/ocm_new_content"
+      android:id="@+id/newContentMainContainer"
+      android:layout_width="match_parent"
+      android:layout_height="48dp"
+      android:layout_marginTop="48dp"
+      />
 </FrameLayout>

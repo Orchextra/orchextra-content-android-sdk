@@ -33,12 +33,10 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
-  private static final String TAG = "MainActivity";
   private OcmWrapper ocmWrapper;
   private TabLayout tabLayout;
   private ViewPager viewpager;
   private ScreenSlidePagerAdapter adapter;
-  private View newContentMainContainer;
   private TabLayout.OnTabSelectedListener onTabSelectedListener =
       new TabLayout.OnTabSelectedListener() {
         @Override public void onTabSelected(TabLayout.Tab tab) {
@@ -137,21 +135,11 @@ public class MainActivity extends AppCompatActivity {
 
       return map;
     });
-
-    initOcm();
   }
 
   @Override protected void onResume() {
     super.onResume();
-
-    //Ocm.setOnChangedMenuCallback(uiMenuData -> {
-    //  boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, uiMenuData.getUiMenuList());
-    //  if (menuHasChanged) {
-    //    showIconNewContent(uiMenuData.getUiMenuList());
-    //  } else {
-    //    adapter.reloadSections(viewpager.getCurrentItem());
-    //  }
-    //});
+    initOcm();
   }
 
   private void initViews() {
@@ -164,9 +152,6 @@ public class MainActivity extends AppCompatActivity {
         code -> Toast.makeText(MainActivity.this, "Code: " + code, Toast.LENGTH_SHORT).show()));
 
     fabSearch.setOnClickListener(v -> SearcherActivity.open(MainActivity.this));
-
-    newContentMainContainer = findViewById(R.id.newContentMainContainer);
-
     adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
     viewpager.setAdapter(adapter);
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -221,27 +206,40 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void showIconNewContent(final List<UiMenu> newMenus) {
-    newContentMainContainer.setVisibility(View.VISIBLE);
-    newContentMainContainer.setOnClickListener(v -> {
-      newContentMainContainer.setVisibility(View.GONE);
-
-      tabLayout.removeAllTabs();
-      onGoDetailView(newMenus);
-    });
+    //newContentMainContainer.setVisibility(View.VISIBLE);
+    //newContentMainContainer.setOnClickListener(v -> {
+    //  newContentMainContainer.setVisibility(View.GONE);
+    //
+    //  tabLayout.removeAllTabs();
+    //  onGoDetailView(newMenus);
+    //});
   }
 
   private void onGoDetailView(List<UiMenu> uiMenu) {
-    tabLayout.removeAllTabs();
-    if (uiMenu.size() > 0) {
-      for (int i = 0; i < uiMenu.size(); i++) {
-        UiMenu menu = uiMenu.get(i);
+    viewpager.clearOnPageChangeListeners();
+
+
+    int pos = tabLayout.getTabCount();
+
+    if (pos==0) {
+      for (UiMenu menu : uiMenu) {
         TabLayout.Tab tab = tabLayout.newTab().setText(menu.getText());
         tabLayout.addTab(tab);
       }
     }
 
-    adapter.setDataItems(uiMenu);
 
+    //tabLayout.removeAllTabs();
+    //if (uiMenu.size() > 0) {
+    //  for (int i = 0; i < uiMenu.size(); i++) {
+    //    UiMenu menu = uiMenu.get(i);
+    //    TabLayout.Tab tab = tabLayout.newTab().setText(menu.getText());
+    //    tabLayout.addTab(tab);
+    //  }
+    //}
+
+    adapter.setDataItems(uiMenu);
     tabLayout.addOnTabSelectedListener(onTabSelectedListener);
+    viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
   }
 }
