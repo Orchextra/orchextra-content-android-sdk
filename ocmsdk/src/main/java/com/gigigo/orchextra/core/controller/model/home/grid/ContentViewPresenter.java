@@ -17,7 +17,6 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -25,6 +24,7 @@ import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.ArrayList;
 import java.util.List;
+import timber.log.Timber;
 
 public class ContentViewPresenter extends Presenter<ContentView> {
 
@@ -126,7 +126,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
             }
           });
     } else {
-      ocmController.getSection(DataRequest.FIRST_CACHE, contentUrl, imagesToDownload,
+      ocmController.getSection(DataRequest.FORCE_CLOUD, contentUrl, imagesToDownload,
           new OcmController.GetSectionControllerCallback() {
 
             @Override public void onGetSectionLoaded(ContentData contentData) {
@@ -140,21 +140,18 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                  *  Always show the button of new content,
                  *  and only force data when the user does a pull to refresh
                  */
-                if (reloadFromPullToRefresh) {
-                  if (OCManager.hasOnChangedMenuCallback()) {
-                    ocmController.refreshMenuData();
-                  }
-                  renderContentItem(contentData.getContent());
-                } else {
-                  if (getView() != null) {
-                    getView().showNewExistingContent();
-                  }
+
+                if (OCManager.hasOnChangedMenuCallback()) {
+                  ocmController.refreshMenuData();
                 }
+                renderContentItem(contentData.getContent());
+              } else {
+                Timber.e("getSection not isFromCloud");
               }
             }
 
             @Override public void onGetSectionFails(Exception e) {
-
+              Timber.e(e, "getSection(DataRequest.FIRST_CACHE)");
             }
           });
     }

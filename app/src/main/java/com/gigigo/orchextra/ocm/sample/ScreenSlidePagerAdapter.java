@@ -67,12 +67,6 @@ public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
     return menuContent.size();
   }
 
-  public void reloadSections(int currentItem) {
-    if (currentItem < fragments.size()) {
-      fragments.get(currentItem).reloadSection(false);
-    }
-  }
-
   private int getNumberOfImagesToDownload(int position) {
     int number = 0;
     if (position == 0) {

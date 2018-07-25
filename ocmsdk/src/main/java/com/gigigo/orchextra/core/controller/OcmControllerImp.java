@@ -28,6 +28,7 @@ import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import java.util.ArrayList;
 import java.util.List;
+import timber.log.Timber;
 
 public class OcmControllerImp implements OcmController {
 
@@ -109,6 +110,7 @@ public class OcmControllerImp implements OcmController {
           retrieveSectionOnlyFromCache(contentUrl, imagesToDownload, getSectionControllerCallback);
           break;
         case FORCE_CLOUD:
+          retrieveSection(true, contentUrl, imagesToDownload, getSectionControllerCallback);
         case FIRST_CACHE:
           retrieveSection(false, contentUrl, imagesToDownload, getSectionControllerCallback);
           break;
@@ -132,9 +134,9 @@ public class OcmControllerImp implements OcmController {
           }
 
           @Override public void onGetSectionFails(Exception e) {
-
+            Timber.e(e, "retrieveSection()");
           }
-        }), GetSection.Params.forSection(false, contentUrl, imagesToDownload),
+        }), GetSection.Params.forSection(forceRelaod, contentUrl, imagesToDownload),
         PriorityScheduler.Priority.HIGH);
   }
 

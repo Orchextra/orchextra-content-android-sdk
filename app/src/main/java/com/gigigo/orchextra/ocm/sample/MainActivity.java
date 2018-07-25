@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
           viewpager.setCurrentItem(tab.getPosition());
           ScreenSlidePageFragment frag =
               ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem()));
-          frag.reloadSection(false);
+          frag.reloadSection();
         }
 
         @Override public void onTabUnselected(TabLayout.Tab tab) {
@@ -51,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override public void onTabReselected(TabLayout.Tab tab) {
           viewpager.setCurrentItem(tab.getPosition());
-          ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem())).reloadSection(
-              false);
+          ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem())).reloadSection();
         }
       };
 
@@ -218,16 +217,14 @@ public class MainActivity extends AppCompatActivity {
   private void onGoDetailView(List<UiMenu> uiMenu) {
     viewpager.clearOnPageChangeListeners();
 
-
     int pos = tabLayout.getTabCount();
 
-    if (pos==0) {
+    if (pos == 0) {
       for (UiMenu menu : uiMenu) {
         TabLayout.Tab tab = tabLayout.newTab().setText(menu.getText());
         tabLayout.addTab(tab);
       }
     }
-
 
     //tabLayout.removeAllTabs();
     //if (uiMenu.size() > 0) {

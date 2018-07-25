@@ -13,6 +13,7 @@ import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
+import timber.log.Timber;
 
 public class ScreenSlidePageFragment extends Fragment {
   private View emptyViewLayout;
@@ -35,6 +36,7 @@ public class ScreenSlidePageFragment extends Fragment {
           }
 
           @Override public void onSectionFails(Exception e) {
+            Timber.e(e, "loadContent()");
             e.printStackTrace();
           }
         });
@@ -80,9 +82,9 @@ public class ScreenSlidePageFragment extends Fragment {
     }
   }
 
-  public void reloadSection(boolean hasToShowNewContentButton) {
+  public void reloadSection() {
     if (contentView != null) {
-      contentView.reloadSection(hasToShowNewContentButton);
+      contentView.reloadSection(false);
     }
   }
 
@@ -95,7 +97,7 @@ public class ScreenSlidePageFragment extends Fragment {
       newContentView.setVisibility(View.VISIBLE);
       newContentView.setOnClickListener(v -> {
         newContentView.setVisibility(View.GONE);
-        reloadSection(true);
+        reloadSection();
       });
     }
   }
