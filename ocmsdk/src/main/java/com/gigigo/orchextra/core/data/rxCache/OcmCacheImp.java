@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.data.rxCache;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.core.data.DateUtilsKt;
@@ -116,10 +117,8 @@ import orchextra.javax.inject.Singleton;
     int versionDataCount = ocmDatabase.menuDao().hasMenus();
     return (versionDataCount == 1);
   }
-  //endregion
 
-  //region SECTION
-  @Override public Observable<DbSectionContentData> getSection(final String elementUrl) {
+  @Override public Observable<DbSectionContentData> getSection(@NonNull final String elementUrl) {
     return Observable.create(emitter -> {
       DbSectionContentData dbSectionContentData =
           ocmDatabase.sectionDao().fetchSectionContentData(elementUrl);
@@ -136,16 +135,16 @@ import orchextra.javax.inject.Singleton;
       }
       dbSectionContentData.setElementsCache(elementCaches);
 
-      if (dbSectionContentData != null) {
-        emitter.onNext(dbSectionContentData);
-        emitter.onComplete();
-      } else {
-        emitter.onError(new ApiSectionNotFoundException());
-      }
+      emitter.onNext(dbSectionContentData);
+      emitter.onComplete();
     });
   }
 
-  @Override public void putSection(ApiSectionContentData apiSectionContentData, String key) {
+  @Override public void putSection(@NonNull ApiSectionContentData apiSectionContentData,
+      @NonNull String key) {
+
+    ocmDatabase.elementDao().deleteAll();
+
     DbSectionContentData dbSectionContentData =
         DbMappersKt.toDbSectionContentData(apiSectionContentData, key);
     ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData);
@@ -162,9 +161,7 @@ import orchextra.javax.inject.Singleton;
 
     Map<String, ApiElementCache> elementsCache = apiSectionContentData.getElementsCache();
     if (elementsCache != null) {
-      Iterator<Map.Entry<String, ApiElementCache>> iterator = elementsCache.entrySet().iterator();
-      while (iterator.hasNext()) {
-        Map.Entry<String, ApiElementCache> next = iterator.next();
+      for (Map.Entry<String, ApiElementCache> next : elementsCache.entrySet()) {
         ApiElementData apiElementData = new ApiElementData(next.getValue());
         putDetail(apiElementData, next.getKey());
       }
@@ -207,7 +204,7 @@ import orchextra.javax.inject.Singleton;
     return false;
   }
 
-  @Override public void putDetail(ApiElementData apiElementData, String key) {
+  @Override public void putDetail(@NonNull ApiElementData apiElementData, @NonNull String key) {
     DbElementCache elementCacheData =
         DbMappersKt.toDbElementCache(apiElementData.getElement(), key);
     ocmDatabase.elementCacheDao().insertElementCache(elementCacheData);

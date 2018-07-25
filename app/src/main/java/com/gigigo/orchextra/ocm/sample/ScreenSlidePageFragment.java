@@ -75,11 +75,11 @@ public class ScreenSlidePageFragment extends Fragment {
             .commit();
       }
     }
-    if (itemMenu.hasNewVersion()) {
-      showNewVersionButton();
-    } else {
-      hideNewVersionButton();
-    }
+    //if (itemMenu.hasNewVersion()) {
+    //  showNewVersionButton();
+    //} else {
+    //  hideNewVersionButton();
+    //}
   }
 
   public void reloadSection() {

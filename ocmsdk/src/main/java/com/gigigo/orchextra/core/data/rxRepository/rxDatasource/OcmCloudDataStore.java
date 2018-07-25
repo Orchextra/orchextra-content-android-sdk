@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
+import com.gigigo.orchextra.core.data.api.dto.base.BaseApiResponse;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
@@ -70,11 +71,11 @@ import org.jetbrains.annotations.NotNull;
   @Override public Observable<ContentData> getSection(String contentUrl,
       final int numberOfElementsToDownload) {
     return ocmApiService.getSectionDataRx(contentUrl, withThumbnails)
-        .map(dataResponse -> dataResponse.getResult())
+        .map(BaseApiResponse::getResult)
         .doOnNext(apiSectionContentData -> ocmCache.putSection(apiSectionContentData, contentUrl))
         .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData,
             numberOfElementsToDownload))
-        .map(apiSectionContentData -> DbMappersKt.toContentData(apiSectionContentData));
+        .map(DbMappersKt::toContentData);
   }
 
   private void saveSections(ApiMenuContentData apiMenuContentData) {

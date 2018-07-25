@@ -60,11 +60,9 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
       }
     }
 
-    val iterator = apiMenuContentData.elementsCache!!.entries.iterator()
-    while (iterator.hasNext()) {
-      val next = iterator.next()
-      val apiElementData = ApiElementData(next.value)
-      val key = next.key
+    ocmDatabase.elementCacheDao().deleteAll()
+    apiMenuContentData.elementsCache?.forEach { (key, element) ->
+      val apiElementData = ApiElementData(element)
       putDetail(apiElementData, key)
     }
   }
