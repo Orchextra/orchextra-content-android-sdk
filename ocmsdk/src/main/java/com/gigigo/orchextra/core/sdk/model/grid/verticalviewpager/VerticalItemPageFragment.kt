@@ -62,6 +62,7 @@ class VerticalItemPageFragment : Fragment() {
 
     Timber.d("Name: %s", name)
     Timber.d("Image: %s", imageUrl)
+    Timber.d("customProperties: %s", customProperties?.size)
     OcmImageLoader.load(this, imageUrl).into(verticalItemImageView)
 
     hideLoading()
@@ -69,7 +70,7 @@ class VerticalItemPageFragment : Fragment() {
 
     if (customProperties != null) {
       showLoading()
-      OCManager.notifyCustomizationForContent(customProperties!!, ViewType.GRID_CONTENT
+      OCManager.notifyCustomizationForContent(customProperties!!, ViewType.FULL_SCREEN_CONTENT
       ) { customizations ->
         for (viewCustomizationType in customizations) {
 
@@ -81,7 +82,6 @@ class VerticalItemPageFragment : Fragment() {
         hideLoading()
       }
     }
-
   }
 
   fun setOnClickItem(onClickHorizontalItem: OnItemClick) {
