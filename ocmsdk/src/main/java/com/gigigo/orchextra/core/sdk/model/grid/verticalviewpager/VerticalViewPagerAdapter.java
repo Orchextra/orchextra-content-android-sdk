@@ -33,7 +33,7 @@ public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
 
     HashMap<String, Object> customProperties;
     try {
-      customProperties = (HashMap<String, Object>) cell.getData().getCustomProperties();
+      customProperties = new HashMap<>(cell.getData().getCustomProperties());
     } catch (Exception e) {
       Timber.e(e, "to HashMap");
       customProperties = new HashMap<>();
