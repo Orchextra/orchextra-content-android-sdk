@@ -8,6 +8,7 @@ import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import timber.log.Timber;
 
@@ -30,8 +31,16 @@ public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
     String name = cell.getData().getName();
     String imageUrl = cell.getData().getSectionView().getImageUrl();
 
+    HashMap<String, Object> customProperties;
+    try {
+      customProperties = new HashMap<>(cell.getData().getCustomProperties());
+    } catch (Exception e) {
+      Timber.e(e, "to HashMap");
+      customProperties = new HashMap<>();
+    }
+
     VerticalItemPageFragment verticalItemPageFragment =
-        VerticalItemPageFragment.newInstance(name, imageUrl);
+        VerticalItemPageFragment.newInstance(name, imageUrl, customProperties);
 
     verticalItemPageFragment.setOnClickItem(view -> {
       if (listedContentListener != null) {
