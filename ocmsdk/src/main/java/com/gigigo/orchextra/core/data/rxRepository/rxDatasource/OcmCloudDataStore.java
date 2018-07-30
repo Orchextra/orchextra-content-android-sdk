@@ -60,14 +60,6 @@ import org.jetbrains.annotations.NotNull;
     }
   }
 
-  @Override public Observable<MenuContentData> getMenus() {
-    return ocmApiService.getMenuDataRx()
-        .map(dataResponse -> dataResponse.getResult())
-        .doOnNext(ocmCache::putMenus)
-        //.doOnNext(apiMenuContentData -> saveSections(apiMenuContentData))
-        .map(apiMenuContentData -> DbMappersKt.toMenuContentData(apiMenuContentData));
-  }
-
   @Override public Observable<ContentData> getSection(String contentUrl,
       final int numberOfElementsToDownload) {
     return ocmApiService.getSectionDataRx(contentUrl, withThumbnails)

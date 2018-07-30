@@ -1,14 +1,21 @@
 package com.gigigo.orchextra.core.data
 
+import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData
 import com.gigigo.orchextra.core.data.database.OcmDatabase
 import com.gigigo.orchextra.core.data.database.entities.DbElementCache
 import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData
 import com.gigigo.orchextra.core.data.database.entities.DbMenuElementJoin
+import com.gigigo.orchextra.core.data.database.entities.DbSectionElementJoin
+import com.gigigo.orchextra.core.data.mappers.toContentData
+import com.gigigo.orchextra.core.data.mappers.toDbElement
 import com.gigigo.orchextra.core.data.mappers.toDbElementCache
 import com.gigigo.orchextra.core.data.mappers.toDbMenuContent
+import com.gigigo.orchextra.core.data.mappers.toDbSectionContentData
 import com.gigigo.orchextra.core.data.mappers.toMenuContentData
+import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData
 import orchextra.javax.inject.Inject
 import orchextra.javax.inject.Singleton
@@ -70,5 +77,53 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
   private fun putDetail(apiElementData: ApiElementData, key: String) {
     val elementCacheData = apiElementData.element.toDbElementCache(key)
     ocmDatabase.elementCacheDao().insertElementCache(elementCacheData)
+  }
+
+  @Throws(ApiSectionNotFoundException::class)
+  fun getSectionElements(section: String): ContentData {
+
+    val dbSectionContentData = ocmDatabase.sectionDao().fetchSectionContentData(section)
+        ?: throw ApiSectionNotFoundException()
+
+    val dbSectionContentDataElementList = ocmDatabase.sectionDao()
+        .fetchSectionElements(dbSectionContentData.content!!.slug)
+    dbSectionContentData.content!!.elements = dbSectionContentDataElementList
+
+    val elementCaches = HashMap<String, DbElementCache>()
+    for ((slug, _, _, _, elementUrl) in dbSectionContentDataElementList) {
+      val elementCache = ocmDatabase.elementCacheDao().fetchElementCache(slug)
+      if (elementCache != null) {
+        elementUrl?.let {
+          elementCaches[elementUrl] = elementCache
+        }
+      }
+    }
+    dbSectionContentData.elementsCache = elementCaches
+
+    return dbSectionContentData.toContentData()
+  }
+
+  fun putSection(apiSectionContentData: ApiSectionContentData, key: String) {
+    ocmDatabase.elementDao().deleteAll()
+
+    val dbSectionContentData = apiSectionContentData.toDbSectionContentData(key)
+    ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData)
+
+    val sectionContentItem = apiSectionContentData.content
+    if (sectionContentItem != null) {
+      for (element in sectionContentItem.elements!!) {
+        ocmDatabase.elementDao().insertElement(element.toDbElement())
+        val dbSectionElementJoin = DbSectionElementJoin(sectionContentItem.slug, element.slug)
+        ocmDatabase.sectionDao().insertSectionElement(dbSectionElementJoin)
+      }
+    }
+
+    val elementsCache = apiSectionContentData.elementsCache
+    if (elementsCache != null) {
+      for ((key1, value) in elementsCache) {
+        val apiElementData = ApiElementData(value)
+        putDetail(apiElementData, key1)
+      }
+    }
   }
 }

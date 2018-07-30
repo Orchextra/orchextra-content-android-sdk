@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.core.controller.model.home.grid;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -254,7 +253,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       case FULLSCREEN:
         return calculateFullScreenCells(contentItem);
       default:
-        Log.wtf(TAG, "Unknow type: " + contentItem.getLayout().getType());
+        Timber.wtf("Unknow type: %s", contentItem.getLayout().getType());
         return calculateGridCells(contentItem);
     }
   }

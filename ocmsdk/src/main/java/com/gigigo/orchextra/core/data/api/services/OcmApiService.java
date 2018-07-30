@@ -24,6 +24,9 @@ public interface OcmApiService {
       @Path(value = "section", encoded = true) String section,
       @Query("withThumbnails") Integer withThumbnails);
 
+  @GET(SECTION) Call<ApiSectionContentDataResponse> getSectionData(
+      @Path(value = "section", encoded = true) String section);
+
   @GET(SEARCH) Observable<ApiSectionContentDataResponse> searchRx(
       @Query("search") String textToSearch);
 

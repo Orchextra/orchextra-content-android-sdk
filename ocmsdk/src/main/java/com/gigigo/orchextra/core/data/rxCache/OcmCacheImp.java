@@ -47,7 +47,6 @@ import orchextra.javax.inject.Singleton;
     this.mContext = context;
   }
 
-  //region MENU
   @Override public Observable<DbMenuContentData> getMenus() {
     return Observable.create(emitter -> {
       List<DbMenuContent> dbMenuContentList = ocmDatabase.menuDao().fetchMenus();
@@ -176,7 +175,6 @@ import orchextra.javax.inject.Singleton;
   @Override public boolean isSectionExpired(String elementUrl) {
     return false;
   }
-  //endregion
 
   //region ELEMENT
   @Override public Observable<DbElementData> getDetail(String slug) {

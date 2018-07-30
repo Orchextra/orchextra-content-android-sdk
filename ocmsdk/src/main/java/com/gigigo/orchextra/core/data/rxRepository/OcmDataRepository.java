@@ -6,11 +6,11 @@ import android.support.annotation.WorkerThread;
 import com.gigigo.orchextra.core.data.DateUtilsKt;
 import com.gigigo.orchextra.core.data.OcmDbDataSource;
 import com.gigigo.orchextra.core.data.OcmNetworkDataSource;
+import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDiskDataStore;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContent;
@@ -18,7 +18,6 @@ import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
-import java.util.Map;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 import timber.log.Timber;
@@ -50,32 +49,24 @@ import timber.log.Timber;
   @Override
   public Observable<ContentData> getSectionElements(boolean forceReload, String contentUrl,
       int numberOfElementsToDownload) {
-    OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForSection(forceReload, contentUrl);
-    Observable<ContentData> contentDataObservable =
-        ocmDataStore.getSection(contentUrl, numberOfElementsToDownload);
 
-    if (!ocmDataStore.isFromCloud()) {
-      final boolean[] hasTobeUpdated = { false };
-
-      Observable<ContentData> forcedContentDataObservable =
-          contentDataObservable.map(ContentData::getElementsCache)
-              .map(Map::entrySet)
-              .flatMapIterable(entries -> entries)
-              .map(Map.Entry::getValue)
-              .map(ElementCache::getUpdateAt)
-              .filter(this::checkDate)
-              .take(1)
-              .flatMap(aLong -> {
-                hasTobeUpdated[0] = true;
-                return getSectionElements(true, contentUrl, numberOfElementsToDownload);
-              });
-
-      if (hasTobeUpdated[0]) {
-        contentDataObservable = forcedContentDataObservable;
+    return Observable.create(emitter -> {
+      Timber.d("getSectionElements(forceReload: %s)", forceReload);
+      ContentData contentData;
+      if (forceReload) {
+        contentData = ocmNetworkDataSource.getSectionElements(contentUrl);
+      } else {
+        try {
+          contentData = ocmDbDataSource.getSectionElements(contentUrl);
+        } catch (ApiSectionNotFoundException e) {
+          Timber.i(e, "getSectionElements() EMPTY");
+          contentData = ocmNetworkDataSource.getSectionElements(contentUrl);
+        }
       }
-    }
 
-    return contentDataObservable;
+      emitter.onNext(contentData);
+      emitter.onComplete();
+    });
   }
 
   private boolean checkDate(Long updateAt) {
