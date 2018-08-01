@@ -32,6 +32,7 @@ import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import java.util.ArrayList;
 import java.util.List;
+import timber.log.Timber;
 
 public class OcmControllerImp implements OcmController {
 
@@ -424,7 +425,7 @@ public class OcmControllerImp implements OcmController {
 
     @Override public void onError(Throwable e) {
       getMenusCallback.onGetMenusFails(new ApiMenuNotFoundException(e));
-      e.printStackTrace();
+      Timber.e(e, "onGetMenusFails");
     }
 
     @Override public void onNext(MenuContentData menuContentData) {
