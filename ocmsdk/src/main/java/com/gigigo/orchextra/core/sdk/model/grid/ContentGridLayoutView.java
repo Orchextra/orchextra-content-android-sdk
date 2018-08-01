@@ -61,7 +61,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View progressView;
   private FrameLayout listedDataContainer;
   private boolean thumbnailEnabled;
-  private ContentItemTypeLayout type;
+  private LoadContentCallback loadContentCallback;
 
   private View newContentContainer;
   private final View.OnClickListener onNewContentClickListener = new View.OnClickListener() {
@@ -162,7 +162,10 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void setData(List<Cell> cellDataList, ContentItemTypeLayout type) {
-    this.type = type;
+
+    if (loadContentCallback != null) {
+      loadContentCallback.onLoadContent(type);
+    }
 
     switch (type) {
       case GRID:
@@ -317,7 +320,11 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
         Snackbar.LENGTH_SHORT).show();
   }
 
-  public ContentItemTypeLayout getType() {
-    return type;
+  public void setLoadContentCallback(LoadContentCallback loadContentCallback) {
+    this.loadContentCallback = loadContentCallback;
+  }
+
+  public interface LoadContentCallback {
+    void onLoadContent(ContentItemTypeLayout type);
   }
 }
