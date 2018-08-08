@@ -61,6 +61,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   private View progressView;
   private FrameLayout listedDataContainer;
   private boolean thumbnailEnabled;
+  private LoadContentCallback loadContentCallback;
 
   private View newContentContainer;
   private final View.OnClickListener onNewContentClickListener = new View.OnClickListener() {
@@ -161,6 +162,11 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void setData(List<Cell> cellDataList, ContentItemTypeLayout type) {
+
+    if (loadContentCallback != null) {
+      loadContentCallback.onLoadContent(type);
+    }
+
     switch (type) {
       case GRID:
         setDataGrid(cellDataList);
@@ -310,7 +316,26 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void contentNotAvailable() {
-    Snackbar.make(listedDataContainer, R.string.oc_error_content_not_available_without_internet,
-        Snackbar.LENGTH_SHORT).show();
+
+    OCManager.getCustomTranslation(R.string.oc_error_content_not_available_without_internet,
+        text -> {
+
+          if (text != null) {
+            Snackbar.make(listedDataContainer, text, Snackbar.LENGTH_SHORT).show();
+          } else {
+            Snackbar.make(listedDataContainer,
+                R.string.oc_error_content_not_available_without_internet, Snackbar.LENGTH_SHORT)
+                .show();
+          }
+          return null;
+        });
+  }
+
+  public void setLoadContentCallback(LoadContentCallback loadContentCallback) {
+    this.loadContentCallback = loadContentCallback;
+  }
+
+  public interface LoadContentCallback {
+    void onLoadContent(ContentItemTypeLayout type);
   }
 }

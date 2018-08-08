@@ -13,6 +13,7 @@ import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.customProperties.Disabled;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
+import com.gigigo.orchextra.ocm.customProperties.OcmCustomTranslationDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
 import com.gigigo.orchextra.ocm.customProperties.ViewLayer;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
     Ocm.setOnDoRequiredLoginCallback(onDoRequiredLoginCallback);
     Ocm.setCustomBehaviourDelegate(customPropertiesDelegate);
+    Ocm.setCustomTranslationDelegate(ocmCustomTranslationDelegate);
     Ocm.setCustomUrlCallback(parameters -> {
 
       Map<String, String> map = new HashMap<>();
@@ -239,4 +241,13 @@ public class MainActivity extends AppCompatActivity {
     tabLayout.addOnTabSelectedListener(onTabSelectedListener);
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
   }
+
+  private OcmCustomTranslationDelegate ocmCustomTranslationDelegate = (key, completion) -> {
+    if (com.gigigo.orchextra.ocmsdk.R.string.oc_error_content_not_available_without_internet
+        == key) {
+      completion.invoke("Hola");
+    } else {
+      completion.invoke(null);
+    }
+  };
 }

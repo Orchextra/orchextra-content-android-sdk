@@ -314,7 +314,7 @@ public class OcmControllerImp implements OcmController {
 
     @Override public void onError(Throwable e) {
       getMenusCallback.onGetMenusFails(new ApiMenuNotFoundException(e));
-      e.printStackTrace();
+      Timber.e(e, "onGetMenusFails");
     }
 
     @Override public void onNext(MenuContentData menuContentData) {
