@@ -316,8 +316,19 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void contentNotAvailable() {
-    Snackbar.make(listedDataContainer, R.string.oc_error_content_not_available_without_internet,
-        Snackbar.LENGTH_SHORT).show();
+
+    OCManager.getCustomTranslation(R.string.oc_error_content_not_available_without_internet,
+        text -> {
+
+          if (text != null) {
+            Snackbar.make(listedDataContainer, text, Snackbar.LENGTH_SHORT).show();
+          } else {
+            Snackbar.make(listedDataContainer,
+                R.string.oc_error_content_not_available_without_internet, Snackbar.LENGTH_SHORT)
+                .show();
+          }
+          return null;
+        });
   }
 
   public void setLoadContentCallback(LoadContentCallback loadContentCallback) {

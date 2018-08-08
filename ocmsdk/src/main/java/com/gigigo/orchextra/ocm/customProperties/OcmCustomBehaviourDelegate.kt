@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.ocm.customProperties
 
+import android.support.annotation.StringRes
 import android.view.View
 
 interface OcmCustomBehaviourDelegate {
@@ -8,6 +9,10 @@ interface OcmCustomBehaviourDelegate {
 
   fun customizationForContent(customProperties: Map<String, Any>,
       viewType: ViewType, onGetCustomization: (List<ViewCustomizationType>) -> Unit)
+}
+
+interface OcmCustomTranslationDelegate {
+  fun getTranslation(@StringRes key: Int, completion: (String?) -> Unit)
 }
 
 enum class ViewType {

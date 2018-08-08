@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -16,6 +15,7 @@ import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleVimeoVideoElement;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.actions.ActionHandler;
+import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.views.MoreContentArrowView;
 import com.gigigo.orchextra.ocmsdk.R;
 import gigigo.com.vimeolibs.VideoObserver;
@@ -51,8 +51,17 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
       if (connectionUtils.hasConnection()) {
         if (mVimeoInfo != null) VimeoExoPlayerActivity.open(context, mVimeoInfo);
       } else {
-        Snackbar.make(imgThumb, R.string.oc_error_content_not_available_without_internet,
-            Toast.LENGTH_SHORT).show();
+        OCManager.getCustomTranslation(R.string.oc_error_content_not_available_without_internet,
+            text -> {
+
+              if (text != null) {
+                Snackbar.make(imgThumb, text, Snackbar.LENGTH_SHORT).show();
+              } else {
+                Snackbar.make(imgThumb, R.string.oc_error_content_not_available_without_internet,
+                    Snackbar.LENGTH_SHORT).show();
+              }
+              return null;
+            });
       }
     };
 

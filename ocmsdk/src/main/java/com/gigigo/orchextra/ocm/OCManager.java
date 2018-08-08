@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.util.Log;
 import android.webkit.WebStorage;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.callbacks.ScanCodeListener;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
+import com.gigigo.orchextra.ocm.customProperties.OcmCustomTranslationDelegate;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
@@ -165,6 +167,7 @@ Add Comment C
   private OnChangedMenuCallback onChangedMenuCallback;
   private OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback;
   private OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate;
+  private OcmCustomTranslationDelegate ocmCustomTranslationDelegate;
   private UiMenu uiMenuToNotifyWhenSectionIsLoaded;
   private boolean isShowReadedArticles = false;
   private int maxReadArticles = 100;
@@ -176,6 +179,11 @@ Add Comment C
 
   static void setCustomBehaviourDelegate(OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
     getInstance().ocmCustomBehaviourDelegate = ocmCustomBehaviourDelegate;
+  }
+
+  static void setCustomTranslationDelegate(
+      OcmCustomTranslationDelegate ocmCustomTranslationDelegate) {
+    getInstance().ocmCustomTranslationDelegate = ocmCustomTranslationDelegate;
   }
 
   static void setEventCallback(OnEventCallback onEventCallback) {
@@ -286,6 +294,16 @@ Add Comment C
     } else {
       List<ViewCustomizationType> viewCustomizationType = new ArrayList<>();
       customizationListener.invoke(viewCustomizationType);
+    }
+  }
+
+  public static void getCustomTranslation(@StringRes int key,
+      Function1<? super String, Unit> customizationListener) {
+
+    if (instance != null && instance.ocmCustomTranslationDelegate != null) {
+      instance.ocmCustomTranslationDelegate.getTranslation(key, customizationListener);
+    } else {
+      customizationListener.invoke(null);
     }
   }
 

@@ -15,6 +15,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.callbacks.ScanCodeListener;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
+import com.gigigo.orchextra.ocm.customProperties.OcmCustomTranslationDelegate;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
@@ -234,6 +235,11 @@ public final class Ocm {
   public static void setCustomBehaviourDelegate(
       OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
     OCManager.setCustomBehaviourDelegate(ocmCustomBehaviourDelegate);
+  }
+
+  public static void setCustomTranslationDelegate(
+      OcmCustomTranslationDelegate customTranslationDelegate) {
+    OCManager.setCustomTranslationDelegate(customTranslationDelegate);
   }
 
   public static void setCustomUrlCallback(CustomUrlCallback customUrlCallback) {
