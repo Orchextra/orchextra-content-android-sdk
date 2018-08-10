@@ -67,6 +67,7 @@ class OxManagerImpl : OxManager {
         .firebaseApplicationId(config.firebaseApplicationId)
         .triggeringEnabled(config.triggeringEnabled)
         .anonymous(config.anonymous)
+        .proximityEnabled(config.proximityEnabled)
         .deviceBusinessUnits(config.deviceBusinessUnits)
         .debuggable(true)
 

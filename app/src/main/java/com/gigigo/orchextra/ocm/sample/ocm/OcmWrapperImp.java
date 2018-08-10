@@ -37,6 +37,7 @@ public class OcmWrapperImp implements OcmWrapper {
         .setBusinessUnit(businessUnit)
         .setNotificationActivityClass(MainActivity.class)
         .setAnonymous(false)
+        .setProximityEnabled(false)
         .setTriggeringEnabled(false);
 
     Ocm.initialize(ocmBuilder, new OcmCredentialCallback() {

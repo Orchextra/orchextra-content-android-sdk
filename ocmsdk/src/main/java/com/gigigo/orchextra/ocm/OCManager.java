@@ -639,7 +639,7 @@ Add Comment C
   static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
       String firebaseApiKey, String firebaseApplicationId, @NonNull String businessUnit,
       @Nullable final OcmCredentialCallback ocmCredentialCallback, Boolean triggeringEnabled,
-      Boolean anonymous) {
+      Boolean anonymous, Boolean proximityEnabled) {
 
     if (OCManager.instance != null) {
 
@@ -651,7 +651,7 @@ Add Comment C
       Application app = (Application) instance.ocmContextProvider.getApplicationContext();
       OxConfig oxConfig =
           new OxConfig(oxKey, oxSecret, firebaseApiKey, firebaseApplicationId, businessUnits,
-              notificationActivityClass, triggeringEnabled, anonymous);
+              notificationActivityClass, triggeringEnabled, anonymous, proximityEnabled);
 
       instance.oxManager.init(app, oxConfig, new OxManager.StatusListener() {
         @Override public void onSuccess() {

@@ -23,6 +23,7 @@ public final class OcmBuilder {
   private String firebaseApplicationId = "";
   private Boolean triggeringEnabled = true;
   private Boolean anonymous = false;
+  private Boolean proximityEnabled = true;
   private String businessUnit = "";
   private ImageRecognition vuforiaImpl;
   private boolean showReadArticles = false;
@@ -166,6 +167,15 @@ public final class OcmBuilder {
 
   public OcmBuilder setAnonymous(Boolean anonymous) {
     this.anonymous = anonymous;
+    return this;
+  }
+
+  public Boolean isProximityEnabled() {
+    return proximityEnabled;
+  }
+
+  public OcmBuilder setProximityEnabled(Boolean proximityEnabled) {
+    this.proximityEnabled = proximityEnabled;
     return this;
   }
 
