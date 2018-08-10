@@ -31,6 +31,7 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
     for (dbMenuContent in dbMenuContentList) {
       val dbElementList = ocmDatabase.elementDao().fetchMenuElements(dbMenuContent.slug)
       dbMenuContent.elements = dbElementList
+
       for (dbElement in dbElementList) {
         val dbScheduleDatesList = ocmDatabase.scheduleDatesDao().fetchSchedule(dbElement.slug)
         dbElement.dates = dbScheduleDatesList

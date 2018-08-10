@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.data.rxRepository;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import com.gigigo.orchextra.core.data.DateUtilsKt;
 import com.gigigo.orchextra.core.data.OcmDbDataSource;
@@ -39,9 +40,17 @@ import timber.log.Timber;
 
     return Observable.create(emitter -> {
       MenuContentData cacheMenuContentData = ocmDbDataSource.getMenus();
-      MenuContentData networkMenuContentData = ocmNetworkDataSource.getMenus();
+      MenuContentData networkMenuContentData;
+      try {
+        networkMenuContentData = ocmNetworkDataSource.getMenus();
+      } catch (Exception e) {
+        Timber.e("getMenus()");
+        networkMenuContentData = null;
+      }
 
-      emitter.onNext(getUpdatedMenuContentData(cacheMenuContentData, networkMenuContentData));
+      MenuContentData menuContentData =
+          getUpdatedMenuContentData(cacheMenuContentData, networkMenuContentData);
+      emitter.onNext(menuContentData);
       emitter.onComplete();
     });
   }
@@ -98,7 +107,7 @@ import timber.log.Timber;
   }
 
   private MenuContentData getUpdatedMenuContentData(@NonNull MenuContentData cacheMenuContentData,
-      @NonNull MenuContentData networkMenuContentData) {
+      @Nullable MenuContentData networkMenuContentData) {
 
     if (cacheMenuContentData.getMenuContentList().isEmpty()) {
       Timber.i("Data from cloud");
@@ -106,19 +115,26 @@ import timber.log.Timber;
     }
 
     MenuContentData updatedMenuContentData = new MenuContentData();
-    updatedMenuContentData.setElementsCache(networkMenuContentData.getElementsCache());
-    updatedMenuContentData.setMenuContentList(networkMenuContentData.getMenuContentList());
 
-    for (MenuContent menuContent : networkMenuContentData.getMenuContentList()) {
-      for (Element element : menuContent.getElements()) {
+    if (networkMenuContentData != null) {
+      updatedMenuContentData.setElementsCache(networkMenuContentData.getElementsCache());
+      updatedMenuContentData.setMenuContentList(networkMenuContentData.getMenuContentList());
 
-        Boolean updated = checkContentVersion(element, cacheMenuContentData);
-        Timber.d("Element %s; Updated %s", element.getSlug(), updated);
-        element.setHasNewVersion(updated);
+      for (MenuContent menuContent : networkMenuContentData.getMenuContentList()) {
+        for (Element element : menuContent.getElements()) {
+
+          Boolean updated = checkContentVersion(element, cacheMenuContentData);
+          Timber.d("Element %s; Updated %s", element.getSlug(), updated);
+          element.setHasNewVersion(updated);
+        }
       }
-    }
 
-    return updatedMenuContentData;
+      return updatedMenuContentData;
+    } else {
+
+      Timber.w("Data only from cache");
+      return cacheMenuContentData;
+    }
   }
 
   private Boolean checkContentVersion(@NonNull Element element,

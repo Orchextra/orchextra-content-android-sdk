@@ -80,15 +80,11 @@ public class OcmControllerImp implements OcmController {
   private void retrieveMenus(GetMenusControllerCallback getMenusCallback) {
     retrieveMenus(new MenuObserver(new GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(UiMenuData menus) {
-        if (menus.isFromCloud()) {
-          getMenusCallback.onGetMenusLoaded(menus);
-        } else {
-          getMenusCallback.onGetMenusLoaded(menus);
-        }
+        getMenusCallback.onGetMenusLoaded(menus);
       }
 
       @Override public void onGetMenusFails(Exception e) {
-
+        Timber.e(e, "retrieveMenus()");
       }
     }));
   }

@@ -24,7 +24,7 @@ class OcmNetworkDataSource @Inject constructor(private val ocmApiService: OcmApi
         return it.result.toMenuContentData()
       }
     } catch (e: Exception) {
-      Timber.e(e, "getMenus()")
+      Timber.e("getMenus()")
       throw ApiMenuNotFoundException()
     }
     throw NetworkConnectionException()
