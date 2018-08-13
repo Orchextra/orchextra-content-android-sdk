@@ -97,12 +97,12 @@ class OxManagerImpl : OxManager {
   }
 
   override fun setBusinessUnits(businessUnits: List<String>, statusListener: StatusListener) {
-    orchextra.getCrmManager().setDeviceData(null, businessUnits, { statusListener.onSuccess() })
+    orchextra.getCrmManager().setDeviceData(null, businessUnits) { statusListener.onSuccess() }
   }
 
   override fun bindUser(crmUser: CrmUser, statusListener: StatusListener) {
     val crm = OxCRM(crmUser.crmId, crmUser.gender?.name, crmUser.birthdate?.time)
-    orchextra.getCrmManager().bindUser(crm, { statusListener.onSuccess() })
+    orchextra.getCrmManager().bindUser(crm) { statusListener.onSuccess() }
   }
 
   override fun unBindUser(statusListener: StatusListener) {

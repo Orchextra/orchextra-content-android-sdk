@@ -105,7 +105,6 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
   }
 
   fun putSection(apiSectionContentData: ApiSectionContentData, key: String) {
-    ocmDatabase.elementDao().deleteAll()
 
     val dbSectionContentData = apiSectionContentData.toDbSectionContentData(key)
     ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData)

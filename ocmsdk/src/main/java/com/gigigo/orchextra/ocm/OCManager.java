@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.util.Log;
 import android.webkit.WebStorage;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
@@ -42,7 +41,6 @@ import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import com.gigigo.orchextra.ocm.views.UiSearchBaseContentData;
 import com.gigigo.orchextra.wrapper.CrmUser;
-import com.gigigo.orchextra.wrapper.OrchextraCompletionCallback;
 import com.gigigo.orchextra.wrapper.OxConfig;
 import com.gigigo.orchextra.wrapper.OxManager;
 import com.gigigo.orchextra.wrapper.OxManagerImpl;
@@ -59,94 +57,12 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import orchextra.javax.inject.Inject;
 import org.jetbrains.annotations.NotNull;
+import timber.log.Timber;
 
 public final class OCManager {
 
-  private static String TAG = "OCManager";
   private static OCManager instance;
   private CustomUrlCallback customUrlCallback;
-  private static OrchextraCompletionCallback mOrchextraCompletionCallback =
-      new OrchextraCompletionCallback() {
-        @Override public void onSuccess() {
-          Log.d("OCM", "Orchextra initialized successfully");
-        }
-
-        @Override public void onError(String error) {
-          Log.d("OCM", "onError: " + error);
-          //new Handler(Looper.getMainLooper()).post(new Runnable() {
-          //  @Override public void run() {
-          //    Toast.makeText(mApplication, "onError:  app" + error, Toast.LENGTH_LONG).show();
-          //  }
-          //});
-          //performance for use ox3 we need to change the old code error of ox2.0 401 becomes 2000 now x example
-          /*
-          NoDatabase:{
-       code:1100,
-       message:'No database connection'
-   },
-   InvalidCredentials:{
-       code:2001,
-       statusCode: 403,
-       message:'Invalid credentials supplied'
-   },
-   Unauthorized:{
-       code:2002,
-       statusCode: 401,
-       message:'Unauthorized'
-   },
-   ProjectNotFound:{
-       code:2000,
-       statusCode: 404,
-       message:'Project not found'
-   },
-   InvalidJSON:{
-       code:2003,
-       statusCode: 400,
-       message:'Invalid JSON body',
-       conversion: err =>
-           err.name == 'SyntaxError'
-           && (err.message.indexOf('Unexpected token')===0
-           || err.message.indexOf('Unexpected string in JSON')===0)
-   },
-   ValidationError:{
-       code:3000,
-       statusCode: 400,
-       message: 'Validation Error',
-Add Comment C
-           */
-
-          //asv in ox 1.0 && ox 2.0 invalid credentials/or invalid enviroment(credentials from pro in stagign endpoint
-          //was 401, in this case the ox onError must be throw to ocm credentials callback
-          //in ox 3.0 the back error code will be 2000, for the same problem
-          if ((error.equals("401") || error.equals("2000"))
-              && instance.ocmCredentialCallback != null) {
-            instance.ocmCredentialCallback.onCredentailError(error);
-          }
-        }
-
-        @Override public void onInit(String s) {
-          Log.d("OCM", "onInit: " + s);
-          //asvox aki es cuando se va a background , en estepunto ox ya ha recuperado la config anterior(buena)
-          //y cuando llega a onSuccess se rompio del todo
-
-        }
-
-        @Override public void onConfigurationReceive(String accessToken) {
-          Log.d("OCM", "onConfigurationReceive: " + accessToken);
-          //new Handler(Looper.getMainLooper()).post(new Runnable() {
-          //  @Override public void run() {
-          //    Toast.makeText(mApplication, "onConfigurationReceive:  app" + accessToken, Toast.LENGTH_LONG).show();
-          //  }
-          //});
-          instance.oxSession.setToken(accessToken);
-
-          if (instance.ocmCredentialCallback
-              != null) { //asv esto indica q se hace el changecredentials
-            instance.ocmCredentialCallback.onCredentialReceiver(accessToken);
-          }
-        }
-      };
-  //region serialize list of read articles slugs
   private final String READ_ARTICLES_FILE = "read_articles_file.ocm";
   private final OxManager oxManager;
   @Inject OcmSdkLifecycle ocmSdkLifecycle;
@@ -162,7 +78,6 @@ Add Comment C
   private String language;
   private InjectorImpl injector;
   private Map<String, String> localStorage;
-  private OcmCredentialCallback ocmCredentialCallback;
   private OnChangedMenuCallback onChangedMenuCallback;
   private OnLoadContentSectionFinishedCallback onLoadContentSectionFinishedCallback;
   private OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate;
@@ -681,7 +596,7 @@ Add Comment C
     if (instance != null) {
       instance.oxManager.setErrorListener(errorListener);
     } else {
-      Log.e(TAG, "setErrorListener with null instance");
+      Timber.e("setErrorListener with null instance");
     }
   }
 
@@ -694,7 +609,7 @@ Add Comment C
 
       instance.oxManager.setBusinessUnits(businessUnits, statusListener);
     } else {
-      Log.e(TAG, "setErrorListener with null instance");
+      Timber.e("setErrorListener with null instance");
     }
   }
 
@@ -702,7 +617,7 @@ Add Comment C
     if (instance != null) {
       instance.oxManager.bindUser(crmUser, statusListener);
     } else {
-      Log.e(TAG, "bindUser with null instance");
+      Timber.e("bindUser with null instance");
     }
   }
 
@@ -710,7 +625,7 @@ Add Comment C
     if (instance != null) {
       instance.oxManager.unBindUser(statusListener);
     } else {
-      Log.e(TAG, "unBindUser with null instance");
+      Timber.e("unBindUser with null instance");
     }
   }
 
