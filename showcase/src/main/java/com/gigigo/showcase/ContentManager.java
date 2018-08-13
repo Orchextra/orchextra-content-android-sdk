@@ -45,7 +45,6 @@ public class ContentManager {
             .setOrchextraCredentials(ProjectData.getDefaultApiKey(),
                 ProjectData.getDefaultApiSecret())
             .setContentLanguage("EN")
-            .setVuforiaImpl(new ImageRecognitionVuforiaImpl())
             .setOxSenderId("327008883283")
             .setOnEventCallback(new OnEventCallback() {
               @Override public void doEvent(OcmEvent event, Object data) {
