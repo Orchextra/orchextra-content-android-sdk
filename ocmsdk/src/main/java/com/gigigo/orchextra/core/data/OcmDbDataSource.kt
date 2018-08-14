@@ -52,6 +52,8 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
 
   fun saveMenus(apiMenuContentData: ApiMenuContentData) {
 
+    ocmDatabase.menuDao().deleteAll()
+
     apiMenuContentData.menuContentList?.forEach { apiMenuContent ->
       val dbMenuContent = apiMenuContent.toDbMenuContent()
       ocmDatabase.menuDao().insertMenu(dbMenuContent)

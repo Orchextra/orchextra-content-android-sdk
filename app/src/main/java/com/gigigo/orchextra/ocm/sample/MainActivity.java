@@ -7,7 +7,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
-import com.gigigo.orchextra.ocm.OCManagerCallbacks;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
@@ -173,20 +172,6 @@ public class MainActivity extends AppCompatActivity {
         });
   }
 
-  private void clearData() {
-    Ocm.clearData(true, true, new OCManagerCallbacks.Clear() {
-      @Override public void onDataClearedSuccessfull() {
-        Timber.d("onDataClearedSuccessfull");
-        runOnUiThread(() -> getContent());
-      }
-
-      @Override public void onDataClearFails(Exception e) {
-        Timber.e("onDataClearFails");
-        Toast.makeText(MainActivity.this, "Clear data fail!", Toast.LENGTH_SHORT).show();
-      }
-    });
-  }
-
   private void getContent() {
 
     Ocm.getMenus(new OcmCallbacks.Menus() {
@@ -206,36 +191,25 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  private void showIconNewContent(final List<UiMenu> newMenus) {
-    //newContentMainContainer.setVisibility(View.VISIBLE);
-    //newContentMainContainer.setOnClickListener(v -> {
-    //  newContentMainContainer.setVisibility(View.GONE);
-    //
-    //  tabLayout.removeAllTabs();
-    //  onGoDetailView(newMenus);
-    //});
-  }
-
   private void onGoDetailView(List<UiMenu> uiMenu) {
     viewpager.clearOnPageChangeListeners();
 
-    int pos = tabLayout.getTabCount();
+    int count = tabLayout.getTabCount();
 
-    if (pos == 0) {
+    if (count == 0) {
       for (UiMenu menu : uiMenu) {
         TabLayout.Tab tab = tabLayout.newTab().setText(menu.getText());
         tabLayout.addTab(tab);
       }
+    } else {
+      if (count != uiMenu.size()) {
+        tabLayout.removeAllTabs();
+        for (UiMenu menu : uiMenu) {
+          TabLayout.Tab tab = tabLayout.newTab().setText(menu.getText());
+          tabLayout.addTab(tab);
+        }
+      }
     }
-
-    //tabLayout.removeAllTabs();
-    //if (uiMenu.size() > 0) {
-    //  for (int i = 0; i < uiMenu.size(); i++) {
-    //    UiMenu menu = uiMenu.get(i);
-    //    TabLayout.Tab tab = tabLayout.newTab().setText(menu.getText());
-    //    tabLayout.addTab(tab);
-    //  }
-    //}
 
     adapter.setDataItems(uiMenu);
     tabLayout.addOnTabSelectedListener(onTabSelectedListener);
