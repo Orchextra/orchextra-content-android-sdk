@@ -78,6 +78,7 @@ import com.gigigo.orchextra.core.domain.entities.elements.ElementSectionView
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContent
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData
 import gigigo.com.vimeolibs.VimeoInfo
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -996,7 +997,12 @@ fun ApiSectionContentData.toDbSectionContentData(key: String): DbSectionContentD
   sectionContentData.key = key
   sectionContentData.content = content?.toDbContentItem()
   sectionContentData.version = version
-  sectionContentData.expireAt = expireAt?.toLong()
+
+  try {
+    sectionContentData.expireAt = expireAt?.toLong()
+  } catch (e: NumberFormatException) {
+    Timber.e(e, "toDbSectionContentData()")
+  }
 
   val elementMap = HashMap<String, DbElementCache>()
 
