@@ -50,10 +50,6 @@ import timber.log.Timber;
 
       MenuContentData menuContentData =
           getUpdatedMenuContentData(cacheMenuContentData, networkMenuContentData);
-
-
-
-
       emitter.onNext(menuContentData);
       emitter.onComplete();
     });

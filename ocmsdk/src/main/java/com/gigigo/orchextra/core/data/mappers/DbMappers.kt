@@ -196,6 +196,7 @@ fun ApiElementData.toElementData(): ElementData {
 
 fun ApiElement.toDbElement(): DbElement = with(this) {
   val element = DbElement()
+  element.listIndex = -1
   element.slug = slug
   element.name = name
   element.customProperties = customProperties?.toDbCustomProperties()
@@ -209,6 +210,7 @@ fun ApiElement.toDbElement(): DbElement = with(this) {
 
 fun Element.toDbElement(): DbElement = with(this) {
   val element = DbElement()
+  element.listIndex = index
   element.slug = slug
   element.name = name
   element.customProperties = customProperties?.toDbCustomProperties()
@@ -216,7 +218,7 @@ fun Element.toDbElement(): DbElement = with(this) {
   element.contentVersion = contentVersion
   element.sectionView = sectionView?.toDbElementSectionView()
   element.tags = tags
-  element.dates = dates?.toDbScheduleDates(slug) ?: emptyList()
+  element.dates = dates.toDbScheduleDates(slug)
   return element
 }
 
@@ -249,6 +251,7 @@ fun Element.toDbElement(): DbElement = with(this) {
 
 private fun DbElement.toElement(): Element = with(this) {
   val element = Element()
+  element.index = listIndex
   element.slug = slug
   element.name = name
   element.customProperties = customProperties

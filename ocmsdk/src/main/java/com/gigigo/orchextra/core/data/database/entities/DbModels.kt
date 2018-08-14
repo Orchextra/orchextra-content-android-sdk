@@ -20,8 +20,10 @@ data class DbMenuContent(
 
 @Entity(tableName = "menu_element_join",
     foreignKeys = arrayOf(
-        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("menu_slug"), entity = DbMenuContent::class, onDelete = CASCADE),
-        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"), entity = DbElement::class, onDelete = CASCADE)),
+        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("menu_slug"),
+            entity = DbMenuContent::class, onDelete = CASCADE),
+        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"),
+            entity = DbElement::class, onDelete = CASCADE)),
     primaryKeys = arrayOf("menu_slug", "element_slug")
 )
 data class DbMenuElementJoin(
@@ -29,7 +31,7 @@ data class DbMenuElementJoin(
     @ColumnInfo(name = "element_slug") var elementSlug: String = ""
 )
 
-@Entity(tableName = "element", primaryKeys = arrayOf("slug"))
+@Entity(tableName = "element", primaryKeys = ["slug"])
 data class DbElement(
     var slug: String = "",
     var tags: List<String>? = emptyList(),
@@ -38,7 +40,8 @@ data class DbElement(
     @ColumnInfo(name = "element_url") var elementUrl: String? = "",
     @ColumnInfo(name = "content_version") var contentVersion: String? = "",
     var name: String? = "",
-    @Ignore var dates: List<DbScheduleDates> = emptyList()
+    @Ignore var dates: List<DbScheduleDates> = emptyList(),
+    var listIndex: Int = -1
 )
 
 data class DbElementSectionView(
@@ -48,7 +51,9 @@ data class DbElementSectionView(
 )
 
 @Entity(tableName = "schedule_dates",
-    foreignKeys = arrayOf(ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"), entity = DbElement::class, onDelete = CASCADE)),
+    foreignKeys = arrayOf(
+        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"),
+            entity = DbElement::class, onDelete = CASCADE)),
     primaryKeys = arrayOf("element_slug"))
 data class DbScheduleDates(
     @ColumnInfo(name = "element_slug") var slug: String = "",
@@ -89,7 +94,8 @@ data class DbElementCacheRender(
     @ColumnInfo(name = "scheme_uri") var schemeUri: String? = "",
     var source: String? = "",
     var format: String? = "",
-    @Embedded(prefix = "federated_") var federatedAuth: DbFederatedAuthorizationData? = DbFederatedAuthorizationData()
+    @Embedded(
+        prefix = "federated_") var federatedAuth: DbFederatedAuthorizationData? = DbFederatedAuthorizationData()
 )
 
 data class DbElementCacheShare(
@@ -143,7 +149,8 @@ data class DbVimeoInfo(
 data class DbSectionContentData(
     var key: String = "",
     @Embedded(prefix = "content_") var content: DbContentItem? = DbContentItem(),
-    @Ignore @ColumnInfo(name = "elements_cache") var elementsCache: Map<String, DbElementCache>? = emptyMap(),
+    @Ignore @ColumnInfo(
+        name = "elements_cache") var elementsCache: Map<String, DbElementCache>? = emptyMap(),
     var version: String? = null,
     @ColumnInfo(name = "expire_at") var expireAt: Long? = -1
 )

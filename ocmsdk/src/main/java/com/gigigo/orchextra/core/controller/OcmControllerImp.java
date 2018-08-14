@@ -23,10 +23,12 @@ import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.utils.DateUtils;
+import com.gigigo.orchextra.core.sdk.utils.MenuListComparator;
 import com.gigigo.orchextra.core.sdk.utils.OcmPreferences;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import timber.log.Timber;
 
@@ -272,6 +274,7 @@ public class OcmControllerImp implements OcmController {
         uiMenu.setText(element.getSectionView().getText());
         uiMenu.setElementUrl(element.getElementUrl());
         uiMenu.setHasNewVersion(element.getHasNewVersion());
+        uiMenu.setIndex(element.getIndex());
 
         if (menuContentData.getElementsCache() != null) {
           ElementCache elementCache =
@@ -289,6 +292,7 @@ public class OcmControllerImp implements OcmController {
       }
     }
 
+    Collections.sort(menuList, new MenuListComparator());
     uiMenuData.setUiMenuList(menuList);
     return uiMenuData;
   }

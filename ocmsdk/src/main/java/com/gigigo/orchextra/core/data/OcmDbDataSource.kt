@@ -51,11 +51,13 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
   }
 
   fun saveMenus(apiMenuContentData: ApiMenuContentData) {
-    for (apiMenuContent in apiMenuContentData.menuContentList!!) {
+
+    apiMenuContentData.menuContentList?.forEach { apiMenuContent ->
       val dbMenuContent = apiMenuContent.toDbMenuContent()
       ocmDatabase.menuDao().insertMenu(dbMenuContent)
 
-      for (dbElement in dbMenuContent.elements!!) {
+      dbMenuContent.elements?.forEachIndexed { index, dbElement ->
+        dbElement.listIndex = index
         ocmDatabase.elementDao().insertElement(dbElement)
 
         for (scheduleDate in dbElement.dates) {

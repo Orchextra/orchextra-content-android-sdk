@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e208ec87b193092365b3072fd0cc6f45",
+    "identityHash": "9212ab63679ccf455df8af4e633be2e1",
     "entities": [
       {
         "tableName": "menu",
@@ -121,7 +121,7 @@
       },
       {
         "tableName": "element",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, `tags` TEXT, `custom_properties` TEXT, `element_url` TEXT, `content_version` TEXT, `name` TEXT, `view_text` TEXT, `view_image_url` TEXT, `view_image_thumb` TEXT, PRIMARY KEY(`slug`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, `tags` TEXT, `custom_properties` TEXT, `element_url` TEXT, `content_version` TEXT, `name` TEXT, `listIndex` INTEGER NOT NULL, `view_text` TEXT, `view_image_url` TEXT, `view_image_thumb` TEXT, PRIMARY KEY(`slug`))",
         "fields": [
           {
             "fieldPath": "slug",
@@ -158,6 +158,12 @@
             "columnName": "name",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "listIndex",
+            "columnName": "listIndex",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "sectionView.text",
@@ -475,7 +481,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e208ec87b193092365b3072fd0cc6f45\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"9212ab63679ccf455df8af4e633be2e1\")"
     ]
   }
 }

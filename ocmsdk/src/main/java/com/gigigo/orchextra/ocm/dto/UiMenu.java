@@ -3,6 +3,7 @@ package com.gigigo.orchextra.ocm.dto;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 
 public final class UiMenu {
+  private int index;
   private String slug;
   private String text;
   private String elementUrl;
@@ -10,6 +11,14 @@ public final class UiMenu {
   private String contentUrl;
   private ElementCache elementCache;
   private boolean hasNewVersion;
+
+  public int getIndex() {
+    return index;
+  }
+
+  public void setIndex(int index) {
+    this.index = index;
+  }
 
   public String getSlug() {
     return slug;
