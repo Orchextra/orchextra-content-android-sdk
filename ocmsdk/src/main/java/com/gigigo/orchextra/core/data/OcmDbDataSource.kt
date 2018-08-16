@@ -73,6 +73,8 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
     }
 
     ocmDatabase.elementCacheDao().deleteAll()
+
+
     apiMenuContentData.elementsCache?.forEach { (key, element) ->
       val apiElementData = ApiElementData(element)
       putDetail(apiElementData, key)

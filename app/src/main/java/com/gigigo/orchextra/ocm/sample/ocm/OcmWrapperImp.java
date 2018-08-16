@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.ocm.sample.ocm;
 
 import android.app.Application;
-import android.util.Log;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -10,10 +9,10 @@ import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.sample.MainActivity;
+import timber.log.Timber;
 
 public class OcmWrapperImp implements OcmWrapper {
 
-  private static final String TAG = "OcmWrapperImp";
   private OnStartWithCredentialsCallback mOnStartWithCredentialsCallback;
   private boolean isOxLoaded = false;
   private final Application context;
@@ -31,6 +30,8 @@ public class OcmWrapperImp implements OcmWrapper {
     mOnStartWithCredentialsCallback = onStartWithCredentialsCallback;
     isOxLoaded = false;
 
+    Timber.d("startWithCredentials(apiKey: %s, apiSecret: %s)", apiKey, apiSecret);
+
     OcmBuilder ocmBuilder = new OcmBuilder(context).setOrchextraCredentials(apiKey, apiSecret)
         .setOnEventCallback(eventCallback)
         .setContentLanguage("EN")
@@ -41,10 +42,10 @@ public class OcmWrapperImp implements OcmWrapper {
 
     Ocm.initialize(ocmBuilder, new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
-        Log.d(TAG, "onCredentialReceiver");
+        Timber.d("onCredentialReceiver");
 
         Ocm.setErrorListener(error -> {
-          Log.e(TAG, "Ox error: " + error);
+          Timber.e("Ox error: %s", error);
           if (mOnStartWithCredentialsCallback != null) {
             mOnStartWithCredentialsCallback.onCredentailError();
           }
@@ -71,7 +72,7 @@ public class OcmWrapperImp implements OcmWrapper {
       }
 
       @Override public void onCredentailError(String code) {
-        Log.e(TAG, "Error on init Ox: " + code);
+        Timber.e("Error on init Ox: %s", code);
         if (mOnStartWithCredentialsCallback != null) {
           mOnStartWithCredentialsCallback.onCredentailError();
         }
@@ -92,15 +93,15 @@ public class OcmWrapperImp implements OcmWrapper {
   }
 
   private OnCustomSchemeReceiver onCustomSchemeReceiver =
-      scheme -> Log.i(TAG, "OnCustomSchemeReceiver: " + scheme);
+      scheme -> Timber.i("OnCustomSchemeReceiver: %s", scheme);
 
   private OnEventCallback eventCallback = new OnEventCallback() {
     @Override public void doEvent(OcmEvent event, Object data) {
-      Log.i(TAG, "doEvent(OcmEvent event, Object data)");
+      Timber.i("doEvent(OcmEvent event, Object data)");
     }
 
     @Override public void doEvent(OcmEvent event) {
-      Log.i(TAG, "doEvent(OcmEvent event)");
+      Timber.i("doEvent(OcmEvent event)");
     }
   };
 }

@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
           TabLayout.Tab tab = tabLayout.newTab().setText(menu.getText());
           tabLayout.addTab(tab);
         }
+        viewpager.setCurrentItem(0);
       }
     }
 
