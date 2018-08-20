@@ -5,7 +5,7 @@ import java.io.Serializable
 
 
 class ElementCache : Serializable {
-
+  var index: Int = -1
   var slug: String? = null
   var type: ElementCacheType? = null
   var tags: List<String>? = null

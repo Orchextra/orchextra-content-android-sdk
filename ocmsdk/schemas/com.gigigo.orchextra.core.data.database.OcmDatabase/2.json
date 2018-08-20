@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "9212ab63679ccf455df8af4e633be2e1",
+    "identityHash": "977b8ece36295516ae24acdc2dc3ac41",
     "entities": [
       {
         "tableName": "menu",
@@ -289,7 +289,7 @@
       },
       {
         "tableName": "element_cache",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`key` TEXT NOT NULL, `slug` TEXT NOT NULL, `type` TEXT, `tags` TEXT, `custom_properties` TEXT, `name` TEXT, `updated_at` INTEGER NOT NULL, `preview_image_url` TEXT, `preview_text` TEXT, `preview_behaviour` TEXT, `preview_image_thumb` TEXT, `render_content_url` TEXT, `render_url` TEXT, `render_title` TEXT, `render_elements` TEXT, `render_scheme_uri` TEXT, `render_source` TEXT, `render_format` TEXT, `render_federated_active` INTEGER, `render_federated_type` TEXT, `render_federated_cid_site_name` TEXT, `share_url` TEXT, `share_text` TEXT, PRIMARY KEY(`slug`, `key`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`key` TEXT NOT NULL, `slug` TEXT NOT NULL, `type` TEXT, `tags` TEXT, `custom_properties` TEXT, `name` TEXT, `updated_at` INTEGER NOT NULL, `listIndex` INTEGER NOT NULL, `preview_image_url` TEXT, `preview_text` TEXT, `preview_behaviour` TEXT, `preview_image_thumb` TEXT, `render_content_url` TEXT, `render_url` TEXT, `render_title` TEXT, `render_elements` TEXT, `render_scheme_uri` TEXT, `render_source` TEXT, `render_format` TEXT, `render_federated_active` INTEGER, `render_federated_type` TEXT, `render_federated_cid_site_name` TEXT, `share_url` TEXT, `share_text` TEXT, PRIMARY KEY(`slug`, `key`))",
         "fields": [
           {
             "fieldPath": "key",
@@ -330,6 +330,12 @@
           {
             "fieldPath": "updatedAt",
             "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "listIndex",
+            "columnName": "listIndex",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -481,7 +487,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"9212ab63679ccf455df8af4e633be2e1\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"977b8ece36295516ae24acdc2dc3ac41\")"
     ]
   }
 }

@@ -22,24 +22,22 @@ public class ScreenSlidePageFragment extends Fragment {
   private UiGridBaseContentData contentView;
   private UiMenu itemMenu;
   private int numberOfImagesToDownload;
-  private String emotion;
 
   public static ScreenSlidePageFragment newInstance() {
     return new ScreenSlidePageFragment();
   }
 
   private void loadContent() {
-    Ocm.generateSectionView(itemMenu, emotion, numberOfImagesToDownload,
-        new OcmCallbacks.Section() {
-          @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
-            setView(uiGridBaseContentData);
-          }
+    Ocm.generateSectionView(itemMenu, "", numberOfImagesToDownload, new OcmCallbacks.Section() {
+      @Override public void onSectionLoaded(UiGridBaseContentData uiGridBaseContentData) {
+        setView(uiGridBaseContentData);
+      }
 
-          @Override public void onSectionFails(Exception e) {
-            Timber.e(e, "loadContent()");
-            e.printStackTrace();
-          }
-        });
+      @Override public void onSectionFails(Exception e) {
+        Timber.e(e, "loadContent()");
+        e.printStackTrace();
+      }
+    });
   }
 
   @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,

@@ -65,7 +65,7 @@ data class DbElementData(
     var element: DbElementCache? = null
 )
 
-@Entity(tableName = "element_cache", primaryKeys = arrayOf("slug", "key"))
+@Entity(tableName = "element_cache", primaryKeys = ["slug", "key"])
 data class DbElementCache(
     var key: String = "",
     var slug: String = "",
@@ -76,7 +76,8 @@ data class DbElementCache(
     @Embedded(prefix = "share_") var share: DbElementCacheShare? = DbElementCacheShare(),
     @ColumnInfo(name = "custom_properties") var customProperties: Map<String, String>? = emptyMap(),
     var name: String? = "",
-    @ColumnInfo(name = "updated_at") var updatedAt: Long = 0
+    @ColumnInfo(name = "updated_at") var updatedAt: Long = 0,
+    var listIndex: Int = -1
 )
 
 data class DbElementCachePreview(

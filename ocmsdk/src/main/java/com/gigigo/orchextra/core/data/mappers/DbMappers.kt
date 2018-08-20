@@ -136,7 +136,7 @@ fun ApiMenuContent.toDbMenuContent(): DbMenuContent {
   val elementsList = ArrayList<DbElement>()
   elements?.let {
     for (elementItem in it) {
-      elementsList.add(elementItem.toDbElement())
+      elementsList.add(elementItem.toDbElement(-1))
     }
   }
   menuContent.elements = elementsList
@@ -194,9 +194,8 @@ fun ApiElementData.toElementData(): ElementData {
   return elementData
 }
 
-fun ApiElement.toDbElement(): DbElement = with(this) {
+fun ApiElement.toDbElement(index: Int): DbElement = with(this) {
   val element = DbElement()
-  element.listIndex = -1
   element.slug = slug
   element.name = name
   element.customProperties = customProperties?.toDbCustomProperties()
@@ -205,6 +204,7 @@ fun ApiElement.toDbElement(): DbElement = with(this) {
   element.sectionView = sectionView?.toDbElementSectionView()
   element.tags = tags
   element.dates = dates?.toDbScheduleDates(slug) ?: emptyList()
+  element.listIndex = index
   return element
 }
 
@@ -349,7 +349,7 @@ fun ApiElementCache.toElementCache(): ElementCache = with(this) {
   return elementCache
 }
 
-fun ApiElementCache.toDbElementCache(key: String): DbElementCache = with(this) {
+fun ApiElementCache.toDbElementCache(key: String, index: Int): DbElementCache = with(this) {
   val elementCache = DbElementCache()
   elementCache.key = key
   elementCache.slug = slug
@@ -361,6 +361,7 @@ fun ApiElementCache.toDbElementCache(key: String): DbElementCache = with(this) {
   elementCache.tags = tags
   elementCache.type = type
   elementCache.updatedAt = updatedAt
+  elementCache.listIndex = index
   return elementCache
 }
 
@@ -369,23 +370,6 @@ fun DbElementData.toElementData(): ElementData = with(this) {
   elementData.element = element?.toElementCache()
   return elementData
 }
-
-/*
-fun ElementCache.toDbElementCache(key: String): DbElementCache = with(this) {
-  val elementCache = DbElementCache()
-  elementCache.key = key
-  elementCache.slug = slug
-  elementCache.name = name
-  elementCache.customProperties = customProperties?.toDbCustomProperties()
-  elementCache.preview = preview?.toDbElementCachePreview()
-  elementCache.render = render?.toDbElementCacheRender()
-  elementCache.share = share?.toDbElementCacheShare()
-  elementCache.tags = tags
-  elementCache.type = type?.type
-  elementCache.updatedAt = updateAt
-  return elementCache
-}
-*/
 
 fun DbElementCache.toElementCache(): ElementCache = with(this) {
   val elementCache = ElementCache()
@@ -398,6 +382,7 @@ fun DbElementCache.toElementCache(): ElementCache = with(this) {
   elementCache.tags = tags
   elementCache.type = ElementCacheType.convertStringToEnum(type)
   elementCache.updateAt = updatedAt
+  elementCache.index = listIndex
   return elementCache
 }
 
@@ -1009,13 +994,12 @@ fun ApiSectionContentData.toDbSectionContentData(key: String): DbSectionContentD
 
   val elementMap = HashMap<String, DbElementCache>()
 
+  var index = 0
+
   elementsCache?.forEach {
-    val auxElement =
-        when (it.value) {
-          is ApiElementCache -> it.value.toDbElementCache(key)
-          else -> DbElementCache()
-        }
+    val auxElement = it.value.toDbElementCache(key, index)
     elementMap[it.key] = auxElement
+    index++
   }
   sectionContentData.elementsCache = elementMap
 
@@ -1032,11 +1016,7 @@ fun ApiSectionContentData.toContentData(): ContentData = with(this) {
   val elementMap = HashMap<String, ElementCache>()
 
   elementsCache?.forEach {
-    val auxElement =
-        when (it.value) {
-          is ApiElementCache -> it.value.toElementCache()
-          else -> ElementCache()
-        }
+    val auxElement = it.value.toElementCache()
     elementMap[it.key] = auxElement
   }
   sectionContentData.elementsCache = elementMap
@@ -1054,11 +1034,7 @@ fun DbSectionContentData.toContentData(): ContentData = with(this) {
   val elementMap = HashMap<String, ElementCache>()
 
   elementsCache?.forEach {
-    val auxElement =
-        when (it.value) {
-          is DbElementCache -> it.value.toElementCache()
-          else -> ElementCache()
-        }
+    val auxElement = it.value.toElementCache()
     elementMap[it.key] = auxElement
   }
   sectionContentData.elementsCache = elementMap
@@ -1075,7 +1051,7 @@ fun ApiContentItem.toDbContentItem(): DbContentItem = with(this) {
 
   val elementList = ArrayList<DbElement>()
   elements?.forEach {
-    elementList.add(it.toDbElement())
+    elementList.add(it.toDbElement(-1))
   }
   contentItem.elements = elementList
 

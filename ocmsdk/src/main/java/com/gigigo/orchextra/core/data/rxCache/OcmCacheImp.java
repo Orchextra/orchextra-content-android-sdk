@@ -151,7 +151,7 @@ import orchextra.javax.inject.Singleton;
     ApiContentItem sectionContentItem = apiSectionContentData.getContent();
     if (sectionContentItem != null) {
       for (ApiElement element : sectionContentItem.getElements()) {
-        ocmDatabase.elementDao().insertElement(DbMappersKt.toDbElement(element));
+        ocmDatabase.elementDao().insertElement(DbMappersKt.toDbElement(element, -2));
         DbSectionElementJoin dbSectionElementJoin =
             new DbSectionElementJoin(sectionContentItem.getSlug(), element.getSlug());
         ocmDatabase.sectionDao().insertSectionElement((dbSectionElementJoin));
@@ -204,7 +204,7 @@ import orchextra.javax.inject.Singleton;
 
   @Override public void putDetail(@NonNull ApiElementData apiElementData, @NonNull String key) {
     DbElementCache elementCacheData =
-        DbMappersKt.toDbElementCache(apiElementData.getElement(), key);
+        DbMappersKt.toDbElementCache(apiElementData.getElement(), key, -1);
     ocmDatabase.elementCacheDao().insertElementCache(elementCacheData);
   }
   //endregion

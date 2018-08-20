@@ -74,15 +74,16 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
 
     ocmDatabase.elementCacheDao().deleteAll()
 
-
+    var index = 0
     apiMenuContentData.elementsCache?.forEach { (key, element) ->
       val apiElementData = ApiElementData(element)
-      putDetail(apiElementData, key)
+      putDetail(apiElementData, key, index)
+      index++
     }
   }
 
-  private fun putDetail(apiElementData: ApiElementData, key: String) {
-    val elementCacheData = apiElementData.element.toDbElementCache(key)
+  private fun putDetail(apiElementData: ApiElementData, key: String, index: Int) {
+    val elementCacheData = apiElementData.element.toDbElementCache(key, index)
     ocmDatabase.elementCacheDao().insertElementCache(elementCacheData)
   }
 
@@ -115,21 +116,24 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
     val dbSectionContentData = apiSectionContentData.toDbSectionContentData(key)
     ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData)
 
+
+    //apiSectionContentData.elementsCache tiene los articulos que hay que guardar con index y ordenar al leer
+
     val sectionContentItem = apiSectionContentData.content
     if (sectionContentItem != null) {
-      for (element in sectionContentItem.elements!!) {
-        ocmDatabase.elementDao().insertElement(element.toDbElement())
-        val dbSectionElementJoin = DbSectionElementJoin(sectionContentItem.slug, element.slug)
+
+      sectionContentItem.elements?.forEachIndexed { index, apiElement ->
+        ocmDatabase.elementDao().insertElement(apiElement.toDbElement(index))
+        val dbSectionElementJoin = DbSectionElementJoin(sectionContentItem.slug, apiElement.slug)
         ocmDatabase.sectionDao().insertSectionElement(dbSectionElementJoin)
       }
     }
 
-    val elementsCache = apiSectionContentData.elementsCache
-    if (elementsCache != null) {
-      for ((key1, value) in elementsCache) {
-        val apiElementData = ApiElementData(value)
-        putDetail(apiElementData, key1)
-      }
+    var index = 0
+    apiSectionContentData.elementsCache?.forEach { t, u ->
+      val apiElementData = ApiElementData(u)
+      putDetail(apiElementData, t, index)
+      index++
     }
   }
 }

@@ -17,11 +17,13 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
+import com.gigigo.orchextra.core.sdk.utils.ElementComparator;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import timber.log.Timber;
 
@@ -218,6 +220,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
           && contentItem.getLayout() != null
           && contentItem.getElements() != null) {
 
+        Collections.sort(contentItem.getElements(), new ElementComparator());
         listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
 
         if (listedCellContentDataList.size() != 0) {

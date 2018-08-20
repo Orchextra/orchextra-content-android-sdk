@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
-import com.gigigo.orchextra.core.data.DateUtilsKt;
 import com.gigigo.orchextra.core.data.OcmDbDataSource;
 import com.gigigo.orchextra.core.data.OcmNetworkDataSource;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
@@ -59,8 +58,9 @@ import timber.log.Timber;
   public Observable<ContentData> getSectionElements(boolean forceReload, String contentUrl,
       int numberOfElementsToDownload) {
 
+    Timber.d("getSectionElements(forceReload: %s)", forceReload);
+
     return Observable.create(emitter -> {
-      Timber.d("getSectionElements(forceReload: %s)", forceReload);
       ContentData contentData;
       if (forceReload) {
         contentData = ocmNetworkDataSource.getSectionElements(contentUrl);
@@ -76,11 +76,6 @@ import timber.log.Timber;
       emitter.onNext(contentData);
       emitter.onComplete();
     });
-  }
-
-  private boolean checkDate(Long updateAt) {
-    long current = DateUtilsKt.getToday();
-    return updateAt > current;
   }
 
   @Override public Observable<ContentData> doSearch(String textToSearch) {
