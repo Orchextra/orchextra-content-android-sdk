@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import com.gigigo.orchextra.core.data.OcmDbDataSource;
 import com.gigigo.orchextra.core.data.OcmNetworkDataSource;
-import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDiskDataStore;
@@ -67,7 +66,7 @@ import timber.log.Timber;
       } else {
         try {
           contentData = ocmDbDataSource.getSectionElements(contentUrl);
-        } catch (ApiSectionNotFoundException e) {
+        } catch (Exception e) {
           Timber.i(e, "getSectionElements() EMPTY");
           contentData = ocmNetworkDataSource.getSectionElements(contentUrl);
         }
@@ -121,6 +120,11 @@ import timber.log.Timber;
           Boolean updated = checkContentVersion(element, cacheMenuContentData);
           Timber.d("Element %s; Updated %s", element.getSlug(), updated);
           element.setHasNewVersion(updated);
+
+          if (updated) {
+            Timber.d("Element %s; Updated %s", element.getSlug(), updated);
+            //ocmDbDataSource.removeSection(element.getSlug());
+          }
         }
       }
 

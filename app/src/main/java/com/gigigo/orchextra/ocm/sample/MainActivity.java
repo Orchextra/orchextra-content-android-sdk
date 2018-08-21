@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         onGetCustomization.invoke(viewCustomizationType);
-      }, 3000);
+      }, 1000);
     }
 
     @Override public void contentNeedsValidation(@NotNull Map<String, ?> customProperties,

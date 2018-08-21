@@ -15,6 +15,7 @@ import com.gigigo.orchextra.core.data.mappers.toDbMenuContent
 import com.gigigo.orchextra.core.data.mappers.toDbSectionContentData
 import com.gigigo.orchextra.core.data.mappers.toMenuContentData
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException
+import com.gigigo.orchextra.core.data.rxException.ClearCacheException
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData
 import orchextra.javax.inject.Inject
@@ -53,6 +54,7 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
   fun saveMenus(apiMenuContentData: ApiMenuContentData) {
 
     ocmDatabase.menuDao().deleteAll()
+    ocmDatabase.elementDao().deleteAll()
 
     apiMenuContentData.menuContentList?.forEach { apiMenuContent ->
       val dbMenuContent = apiMenuContent.toDbMenuContent()
@@ -108,6 +110,10 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
     }
     dbSectionContentData.elementsCache = elementCaches
 
+    if (dbSectionContentData.elementsCache?.isEmpty() == true) {
+      throw ClearCacheException()
+    }
+
     return dbSectionContentData.toContentData()
   }
 
@@ -115,9 +121,6 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
 
     val dbSectionContentData = apiSectionContentData.toDbSectionContentData(key)
     ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData)
-
-
-    //apiSectionContentData.elementsCache tiene los articulos que hay que guardar con index y ordenar al leer
 
     val sectionContentItem = apiSectionContentData.content
     if (sectionContentItem != null) {
