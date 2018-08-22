@@ -8,8 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
+import timber.log.Timber;
 
 /**
  * Receives wifi changes and creates a notification when wifi connects to a network,
@@ -28,24 +28,22 @@ import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
  */
 public class WifiReceiver extends BroadcastReceiver {
 
-  private final static String TAG = WifiReceiver.class.getSimpleName();
   public static Intent intentService = null;
 
   @Override public void onReceive(final Context context, final Intent intent) {
     int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
     intentService = new Intent(context, ImagesService.class);
+    
     if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())
         && WifiManager.WIFI_STATE_ENABLED == wifiState) {
-      if (Log.isLoggable(TAG, Log.VERBOSE)) {
-        Log.v(TAG, "Wifi is now enabled");
-      }
-      context.startService(intentService);
+
+      Timber.d("Wifi is now enabled");
+      //context.startService(intentService);
     } else {
       if (intentService != null) {
-        context.stopService(intentService);
+        //context.stopService(intentService);
         intentService = null;
       }
     }
   }
-
 }

@@ -1,4 +1,4 @@
-package com.gigigo.orchextra.ocm.sample.ocm;
+package com.gigigo.showcase.ocm;
 
 import android.app.Application;
 import com.gigigo.orchextra.ocm.Ocm;
@@ -8,7 +8,7 @@ import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
-import com.gigigo.orchextra.ocm.sample.MainActivity;
+import com.gigigo.showcase.main.MainActivity;
 import timber.log.Timber;
 
 public class OcmWrapperImp implements OcmWrapper {
@@ -29,8 +29,6 @@ public class OcmWrapperImp implements OcmWrapper {
       final OnStartWithCredentialsCallback onStartWithCredentialsCallback) {
     mOnStartWithCredentialsCallback = onStartWithCredentialsCallback;
     isOxLoaded = false;
-
-    Timber.d("startWithCredentials(apiKey: %s, apiSecret: %s)", apiKey, apiSecret);
 
     OcmBuilder ocmBuilder = new OcmBuilder(context).setOrchextraCredentials(apiKey, apiSecret)
         .setOnEventCallback(eventCallback)

@@ -1,3 +1,12 @@
+apply plugin: 'com.android.application'
+
+apply from: '../ocmsdk/common_methods.gradle'
+apply from: '../ocmsdk/dependencies.gradle'
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'applivery-plugin'
+
 buildscript {
   repositories {
     jcenter()
@@ -7,11 +16,8 @@ buildscript {
   }
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'applivery-plugin'
-
 android {
-  compileSdkVersion 27
+  compileSdkVersion project.ext.androidCompileSdkVersion
 
   signingConfigs {
     config {}
@@ -19,8 +25,8 @@ android {
 
   defaultConfig {
     applicationId "com.gigigo.showcase"
-    minSdkVersion 18
-    targetSdkVersion 27
+    minSdkVersion project.ext.androidMinSdkVersion
+    targetSdkVersion project.ext.androidTargetSdkVersion
     versionCode computeVersionCode()
     versionName "1.0-RC" + computeVersionCode()
 
@@ -48,8 +54,25 @@ android {
     }
   }
 
+  flavorDimensions "ocm"
+
+  productFlavors {
+    ocm {
+      dimension "ocm"
+    }
+  }
+
+  //true to publish all flavour artifacts
+  // publishNonDefault true
+  defaultPublishConfig "ocmRelease"
+
   lintOptions {
     abortOnError false
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
   }
 }
 
@@ -63,17 +86,13 @@ dependencies {
   implementation 'com.android.support:support-v13:27.1.1'
   implementation 'com.android.support:support-v4:27.1.1'
   implementation 'com.android.support:design:27.1.1'
-
+  implementation 'com.jakewharton.timber:timber:4.7.1'
   implementation project(path: ':ocmsdk')
 
   implementation 'com.android.support:multidex:1.0.3'
   implementation 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
   implementation 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
   implementation 'com.android.support:support-v4:27.1.1'
-
-  debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-  qualityImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-  releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
   testImplementation 'junit:junit:4.12'
   androidTestImplementation 'com.android.support.test:runner:1.0.2'

@@ -10,4 +10,5 @@ data class OxConfig(
     val deviceBusinessUnits: List<String> = arrayListOf(),
     val notificationActivityClass: Class<Activity>? = null,
     val triggeringEnabled: Boolean = true,
-    val anonymous: Boolean = false)
+    val anonymous: Boolean = false,
+    val proximityEnabled: Boolean = true)
