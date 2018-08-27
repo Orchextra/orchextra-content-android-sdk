@@ -22,6 +22,13 @@ class MainPresenter(private val contentManager: ContentManager) : Presenter<Main
     }
   }
 
+  fun reloadContent() {
+    view.showLoading()
+    initOcm {
+      getContent()
+    }
+  }
+
   private fun initOcm(callback: () -> Unit) {
     contentManager.init(ProjectData.getDefaultApiKey(), ProjectData.getDefaultApiSecret(), "oat-it",
         callback) {

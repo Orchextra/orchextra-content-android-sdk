@@ -40,9 +40,7 @@ class ContentManager(private val context: Application) {
 
         Ocm.setOnCustomSchemeReceiver(onCustomSchemeReceiver)
 
-        val ocmStyleUiBuilder = OcmStyleUiBuilder().setTitleFont("fonts/Gotham-Ultra.ttf")
-            .setNormalFont("fonts/Gotham-Book.ttf")
-            .setMediumFont("fonts/Gotham-Medium.ttf")
+        val ocmStyleUiBuilder = OcmStyleUiBuilder()
             .setTitleToolbarEnabled(false)
             .disableThumbnailImages()
             .setEnabledStatusBar(false)

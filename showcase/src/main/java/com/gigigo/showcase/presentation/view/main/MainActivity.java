@@ -8,16 +8,18 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.showcase.App;
 import com.gigigo.showcase.R;
 import com.gigigo.showcase.presentation.presenter.MainPresenter;
+import com.gigigo.showcase.presentation.view.main.adapter.ScreenSlidePageFragment;
 import com.gigigo.showcase.presentation.view.main.adapter.ScreenSlidePagerAdapter;
 import com.gigigo.showcase.presentation.view.settings.SettingsActivity;
-import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+public class MainActivity extends AppCompatActivity
+    implements MainView, ScreenSlidePageFragment.LayoutRender {
 
   private static final String INSTANCE_TAB_STATE = "INSTANCE_TAB_STATE";
 
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
   private MainPresenter presenter;
   private Parcelable tabState;
+  private ScreenSlidePagerAdapter pagerAdapter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -54,13 +57,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
     errorView = findViewById(R.id.error_view);
     networkErrorView = findViewById(R.id.network_error_view);
 
-    ScreenSlidePagerAdapter pagerAdapter =
-        new ScreenSlidePagerAdapter(getSupportFragmentManager(), new ArrayList<UiMenu>());
+    pagerAdapter =
+        new ScreenSlidePagerAdapter(getSupportFragmentManager(), () -> presenter.reloadContent());
     viewPager.setAdapter(pagerAdapter);
     viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-    //errorView.setOnClickListener(v -> getContent());
-    //emptyView.setOnClickListener(v -> getContent());
-    //networkErrorView.setOnClickListener(v -> getContent());
+    errorView.setOnClickListener(v -> presenter.reloadContent());
+    emptyView.setOnClickListener(v -> presenter.reloadContent());
+    networkErrorView.setOnClickListener(v -> presenter.reloadContent());
 
     ImageButton settingsButton = findViewById(R.id.settingsButton);
     settingsButton.setOnClickListener(view -> SettingsActivity.openForResult(MainActivity.this));
@@ -113,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
       tabLayout.addTab(tab);
     }
 
-    //pagerAdapter.setDataItems(uiMenuList);
+    pagerAdapter.setDataItems(uiMenuList);
     viewPager.onRestoreInstanceState(tabState);
   }
 
@@ -128,5 +131,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
   @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
     super.onRestoreInstanceState(savedInstanceState);
     tabState = savedInstanceState.getParcelable(INSTANCE_TAB_STATE);
+  }
+
+  @Override public void onLayoutRender(String screenName, ContentItemTypeLayout type) {
+
   }
 }
