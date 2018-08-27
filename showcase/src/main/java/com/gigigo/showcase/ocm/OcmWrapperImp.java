@@ -1,6 +1,7 @@
 package com.gigigo.showcase.ocm;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -25,8 +26,9 @@ public class OcmWrapperImp implements OcmWrapper {
     return isOxLoaded;
   }
 
-  @Override public void startWithCredentials(String apiKey, String apiSecret, String businessUnit,
-      final OnStartWithCredentialsCallback onStartWithCredentialsCallback) {
+  @Override public void startWithCredentials(@NonNull String apiKey, @NonNull String apiSecret,
+      @NonNull String businessUnit,
+      @NonNull final OnStartWithCredentialsCallback onStartWithCredentialsCallback) {
     mOnStartWithCredentialsCallback = onStartWithCredentialsCallback;
     isOxLoaded = false;
 
@@ -83,11 +85,11 @@ public class OcmWrapperImp implements OcmWrapper {
     Ocm.setUserIsAuthorizated(isUserLogged);
   }
 
-  @Override public void setContentLanguage(String languageCode) {
+  @Override public void setContentLanguage(@NonNull String languageCode) {
     Ocm.setContentLanguage(languageCode);
   }
 
-  @Override public void scanCode(ScanCodeListener scanCodeListener) {
+  @Override public void scanCode(@NonNull ScanCodeListener scanCodeListener) {
     Ocm.scanCode(scanCodeListener::onCodeScan);
   }
 

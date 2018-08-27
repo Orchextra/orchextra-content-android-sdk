@@ -9,10 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import com.gigigo.orchextra.Orchextra;
+import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
-import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
@@ -69,28 +68,12 @@ public class MainActivity extends AppCompatActivity {
         new ScreenSlidePagerAdapter(getSupportFragmentManager(), new ArrayList<UiMenu>());
     viewpager.setAdapter(pagerAdapter);
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-    errorView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        getContent();
-      }
-    });
-    emptyView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        getContent();
-      }
-    });
-    networkErrorView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        getContent();
-      }
-    });
+    errorView.setOnClickListener(v -> getContent());
+    emptyView.setOnClickListener(v -> getContent());
+    networkErrorView.setOnClickListener(v -> getContent());
 
     ImageButton settingsButton = findViewById(R.id.settingsButton);
-    settingsButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        SettingsActivity.openForResult(MainActivity.this);
-      }
-    });
+    settingsButton.setOnClickListener(view -> SettingsActivity.openForResult(MainActivity.this));
   }
 
   private void initDefaultOcm() {
@@ -113,17 +96,17 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    Ocm.setOnCustomSchemeReceiver(new OnCustomSchemeReceiver() {
-      @Override public void onReceive(String customScheme) {
-        Toast.makeText(MainActivity.this, customScheme, Toast.LENGTH_SHORT).show();
-        Orchextra.startScannerActivity();
-      }
-    });
-    Ocm.start();
+    //Ocm.setOnCustomSchemeReceiver(new OnCustomSchemeReceiver() {
+    //  @Override public void onReceive(String customScheme) {
+    //    Toast.makeText(MainActivity.this, customScheme, Toast.LENGTH_SHORT).show();
+    //    Orchextra.startScannerActivity();
+    //  }
+    //});
+    //Ocm.start();
   }
 
   void getContent() {
-    Ocm.getMenus(true, new OcmCallbacks.Menus() {
+    Ocm.getMenus(DataRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData menus) {
 
         List<UiMenu> uiMenu = menus.getUiMenuList();
@@ -158,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void checkIfMenuHasChanged(final List<UiMenu> oldMenus) {
-    Ocm.getMenus(true, new OcmCallbacks.Menus() {
+    Ocm.getMenus(DataRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData menus) {
 
         List<UiMenu> newMenus = menus.getUiMenuList();
@@ -185,20 +168,18 @@ public class MainActivity extends AppCompatActivity {
 
   private void showIconNewContent(final List<UiMenu> newMenus) {
     newContentMainContainer.setVisibility(View.VISIBLE);
-    newContentMainContainer.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        newContentMainContainer.setVisibility(View.GONE);
+    newContentMainContainer.setOnClickListener(v -> {
+      newContentMainContainer.setVisibility(View.GONE);
 
-        showContentView();
-        menuContent = newMenus;
-        viewpager.removeAllViews();
-        ScreenSlidePagerAdapter pagerAdapter =
-            new ScreenSlidePagerAdapter(getSupportFragmentManager(), newMenus);
-        viewpager.setAdapter(pagerAdapter);
+      showContentView();
+      menuContent = newMenus;
+      viewpager.removeAllViews();
+      ScreenSlidePagerAdapter pagerAdapter =
+          new ScreenSlidePagerAdapter(getSupportFragmentManager(), newMenus);
+      viewpager.setAdapter(pagerAdapter);
 
-        tabLayout.removeAllTabs();
-        onGoDetailView(newMenus);
-      }
+      tabLayout.removeAllTabs();
+      onGoDetailView(newMenus);
     });
   }
 
