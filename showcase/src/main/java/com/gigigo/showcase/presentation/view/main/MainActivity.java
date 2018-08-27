@@ -1,6 +1,7 @@
 package com.gigigo.showcase.presentation.view.main;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import com.gigigo.showcase.presentation.presenter.MainPresenter;
 import com.gigigo.showcase.presentation.view.main.adapter.ScreenSlidePagerAdapter;
 import com.gigigo.showcase.presentation.view.settings.SettingsActivity;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     networkErrorView.setVisibility(View.GONE);
   }
 
-  @Override public void showContentView() {
+  @Override public void showContentView(@NonNull List<UiMenu> uiMenuList) {
     loadingView.setVisibility(View.GONE);
     emptyView.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
