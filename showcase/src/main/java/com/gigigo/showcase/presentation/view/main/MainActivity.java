@@ -1,6 +1,7 @@
 package com.gigigo.showcase.presentation.view.main;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -18,15 +19,18 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 
+  private static final String INSTANCE_TAB_STATE = "INSTANCE_TAB_STATE";
+
   private TabLayout tabLayout;
   private View loadingView;
   private View emptyView;
   private View errorView;
   private View networkErrorView;
-  private ViewPager viewpager;
+  private ViewPager viewPager;
   private View newContentMainContainer;
 
   private MainPresenter presenter;
+  private Parcelable tabState;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
   private void initViews() {
     tabLayout = findViewById(R.id.tabLayout);
-    viewpager = findViewById(R.id.viewpager);
+    viewPager = findViewById(R.id.viewpager);
     newContentMainContainer = findViewById(R.id.newContentMainContainer);
     loadingView = findViewById(R.id.loading_view);
     emptyView = findViewById(R.id.empty_view);
@@ -52,8 +56,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     ScreenSlidePagerAdapter pagerAdapter =
         new ScreenSlidePagerAdapter(getSupportFragmentManager(), new ArrayList<UiMenu>());
-    viewpager.setAdapter(pagerAdapter);
-    viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+    viewPager.setAdapter(pagerAdapter);
+    viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     //errorView.setOnClickListener(v -> getContent());
     //emptyView.setOnClickListener(v -> getContent());
     //networkErrorView.setOnClickListener(v -> getContent());
@@ -64,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
   @Override public void showLoading() {
     loadingView.setVisibility(View.VISIBLE);
-    viewpager.setVisibility(View.GONE);
+    viewPager.setVisibility(View.GONE);
     emptyView.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
     networkErrorView.setVisibility(View.GONE);
@@ -72,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
   @Override public void showEmptyView() {
     loadingView.setVisibility(View.GONE);
-    viewpager.setVisibility(View.GONE);
+    viewPager.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
     emptyView.setVisibility(View.VISIBLE);
     networkErrorView.setVisibility(View.GONE);
@@ -80,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
   @Override public void showErrorView() {
     loadingView.setVisibility(View.GONE);
-    viewpager.setVisibility(View.GONE);
+    viewPager.setVisibility(View.GONE);
     emptyView.setVisibility(View.GONE);
     errorView.setVisibility(View.VISIBLE);
     networkErrorView.setVisibility(View.GONE);
@@ -90,15 +94,39 @@ public class MainActivity extends AppCompatActivity implements MainView {
     loadingView.setVisibility(View.GONE);
     emptyView.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
-    viewpager.setVisibility(View.VISIBLE);
+    viewPager.setVisibility(View.VISIBLE);
     networkErrorView.setVisibility(View.GONE);
+
+    viewPager.setOffscreenPageLimit(uiMenuList.size());
+
+    tabLayout.removeAllTabs();
+    if (uiMenuList.size() <= 4) {
+      tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+      tabLayout.setTabMode(TabLayout.MODE_FIXED);
+    } else {
+      tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+      tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+    }
+
+    for (UiMenu section : uiMenuList) {
+      TabLayout.Tab tab = tabLayout.newTab().setText(section.getText());
+      tabLayout.addTab(tab);
+    }
+
+    //pagerAdapter.setDataItems(uiMenuList);
+    viewPager.onRestoreInstanceState(tabState);
   }
 
   @Override public void showNetworkErrorView() {
     loadingView.setVisibility(View.GONE);
     emptyView.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
-    viewpager.setVisibility(View.GONE);
+    viewPager.setVisibility(View.GONE);
     networkErrorView.setVisibility(View.VISIBLE);
+  }
+
+  @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    tabState = savedInstanceState.getParcelable(INSTANCE_TAB_STATE);
   }
 }
