@@ -1,4 +1,4 @@
-package com.gigigo.showcase.settings;
+package com.gigigo.showcase.presentation.view.settings;
 
 import android.support.annotation.NonNull;
 import com.gigigo.showcase.BuildConfig;
@@ -56,7 +56,7 @@ public final class ProjectData {
     } else {
 
       projectDataList.add(new ProjectData("Orchextra Demo - {{staging}}",
-          "3b1f7352079beaede1b234e798bdf05a0266a0ff", "df22059fd20c5b4b6e6465ab6b044628ea9a0726"));
+          "8286702045adf5a3ad816f70ecb80e4c91fbb8de", "eab37080130215ced60eb9d5ff729049749ec205"));
 
       projectDataList.add(
           new ProjectData("ANDROID SDK - {{staging}}", "34a4654b9804eab82aae05b2a5f949eb2a9f412c",

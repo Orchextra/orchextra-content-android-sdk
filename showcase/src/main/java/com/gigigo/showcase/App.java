@@ -3,8 +3,11 @@ package com.gigigo.showcase;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import com.gigigo.showcase.ocm.ContentManager;
 
 public class App extends MultiDexApplication {
+
+  private ContentManager contentManager;
 
   @Override public void onCreate() {
     enableStrictMode();
@@ -12,8 +15,11 @@ public class App extends MultiDexApplication {
 
     MultiDex.install(this);
 
-    ContentManager contentManager = ContentManager.getInstance();
-    contentManager.init(this);
+    contentManager = new ContentManager(this);
+  }
+
+  public ContentManager getContentManager() {
+    return contentManager;
   }
 
   private void enableStrictMode() {

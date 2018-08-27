@@ -1,4 +1,4 @@
-package com.gigigo.showcase.settings;
+package com.gigigo.showcase.presentation.view.settings;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-import com.gigigo.showcase.ContentManager;
 import com.gigigo.showcase.R;
 import com.gigigo.showcase.Utils;
 import java.util.HashMap;
@@ -34,12 +33,11 @@ public class SettingsActivity extends AppCompatActivity {
   private boolean doubleTap = false;
   private int currentProject = -1;
   Boolean isFinihsed = true;
-  ContentManager contentManager;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_settings);
-    contentManager = ContentManager.getInstance();
+
     initView();
     projectDataList = ProjectData.getDefaultProjectDataList();
     isFinihsed = false;
@@ -116,27 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
       return;
     }
 
-    ContentManager.ContentManagerCallback callback =
-        new ContentManager.ContentManagerCallback<String>() {
-          @Override public void onSuccess(String result) {
-            if (!isFinihsed) {
-              contentManager.setUserCustomFields(getCurrentCustomFields());
-              hideLoading();
-              Intent returnIntent = new Intent();
-              setResult(Activity.RESULT_OK, returnIntent);
-              finish();
-            }
-            isFinihsed = true;
-          }
-
-          @Override public void onError(Exception exception) {
-            hideLoading();
-            showError("Credentials are not correct", "Apikey and Apisecret are invalid");
-          }
-        };
-
     showLoading();
-    contentManager.start(apiKey, apiSecret, callback);
   }
 
   private Map<String, String> getCurrentCustomFields() {

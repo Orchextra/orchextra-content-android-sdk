@@ -1,17 +1,15 @@
-package com.gigigo.showcase.main;
+package com.gigigo.showcase.presentation.view.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
-import com.gigigo.showcase.ContentManager;
 import com.gigigo.showcase.R;
 
 public class ScreenSlidePageFragment extends Fragment {
@@ -41,16 +39,8 @@ public class ScreenSlidePageFragment extends Fragment {
     emptyView = view.findViewById(R.id.empty_view);
     errorView = view.findViewById(R.id.error_view);
 
-    errorView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        ((MainActivity) getActivity()).getContent();
-      }
-    });
-    emptyView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        ((MainActivity) getActivity()).getContent();
-      }
-    });
+    //errorView.setOnClickListener(v -> ((MainActivity) getActivity()).getContent());
+    //emptyView.setOnClickListener(v -> ((MainActivity) getActivity()).getContent());
 
     return view;
   }
@@ -66,18 +56,18 @@ public class ScreenSlidePageFragment extends Fragment {
 
   private void loadContent(String section, int imagesToDownload) {
 
-    ContentManager contentManager = ContentManager.getInstance();
-
-    contentManager.getContent(section, imagesToDownload,
-        new ContentManager.ContentManagerCallback<UiGridBaseContentData>() {
-          @Override public void onSuccess(UiGridBaseContentData result) {
-            setView(result);
-          }
-
-          @Override public void onError(Exception exception) {
-            Log.e(TAG, "loadContent", exception);
-          }
-        });
+    //ContentManager contentManager = ContentManager.getInstance();
+    //
+    //contentManager.getContent(section, imagesToDownload,
+    //    new ContentManager.ContentManagerCallback<UiGridBaseContentData>() {
+    //      @Override public void onSuccess(UiGridBaseContentData result) {
+    //        setView(result);
+    //      }
+    //
+    //      @Override public void onError(Exception exception) {
+    //        Log.e(TAG, "loadContent", exception);
+    //      }
+    //    });
   }
 
   public void setView(UiGridBaseContentData contentView) {
