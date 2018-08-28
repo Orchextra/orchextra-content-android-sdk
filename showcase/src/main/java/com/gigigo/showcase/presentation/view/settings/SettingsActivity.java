@@ -25,18 +25,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class SettingsActivity extends AppCompatActivity implements SettingsView {
 
-  private static final String TAG = "SettingsActivity";
   public static final int SETTINGS_RESULT_CODE = 0x23;
   private EditText apiKeyEditText;
   private EditText apiSecretEditText;
   private EditText businessUnitEditText;
   private SwitchCompat typeSwitch;
   private Spinner levelSpinner;
+
   private List<DataManager> dataManagerList;
   private boolean doubleTap = false;
   private int currentProject = -1;
-  Boolean isFinihsed = true;
-
   private SettingsPresenter presenter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +43,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsView 
 
     initView();
     //dataManagerList = DataManager.Companion.getDefaultDataManagerList();
-    isFinihsed = false;
 
     App app = (App) getApplication();
-    presenter = new SettingsPresenter(app.getDataManager(), app.getContentManager());
-
+    presenter = new SettingsPresenter(app.getDataManager());
     presenter.attachView(this, true);
   }
 
@@ -74,7 +70,8 @@ public class SettingsActivity extends AppCompatActivity implements SettingsView 
       String apiSecret = apiSecretEditText.getText().toString();
       String businessUnit = businessUnitEditText.getText().toString();
       ConfigData configData = new ConfigData(apiKey, apiSecret, businessUnit);
-      presenter.onStartClick(configData);
+
+      presenter.onStartClick(configData, getCurrentCustomFields());
     });
 
     View projectsView = findViewById(R.id.projectsView);

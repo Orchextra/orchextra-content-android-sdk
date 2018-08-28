@@ -2,11 +2,9 @@ package com.gigigo.showcase.presentation.presenter
 
 import com.gigigo.showcase.domain.DataManager
 import com.gigigo.showcase.domain.entity.ConfigData
-import com.gigigo.showcase.ocm.ContentManager
 import com.gigigo.showcase.presentation.view.settings.SettingsView
 
-class SettingsPresenter(private val dataManager: DataManager,
-    private val contentManager: ContentManager) : Presenter<SettingsView> {
+class SettingsPresenter(private val dataManager: DataManager) : Presenter<SettingsView> {
 
   private lateinit var view: SettingsView
 
@@ -16,8 +14,13 @@ class SettingsPresenter(private val dataManager: DataManager,
     view.showConfigData(dataManager.getConfigData())
   }
 
-  fun onStartClick(configData: ConfigData) {
+  fun onStartClick(configData: ConfigData, customFields: Map<String, String>) {
     dataManager.saveConfigData(configData)
+
+    val userData = dataManager.getUserData().copy(
+        type = customFields.get("type"),
+        level = customFields.get("level"))
+    dataManager.saveUserData(userData)
     view.showNewProject()
   }
 

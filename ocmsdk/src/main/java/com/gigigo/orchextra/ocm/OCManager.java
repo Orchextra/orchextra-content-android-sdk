@@ -718,6 +718,18 @@ Add Comment C
     }
   }
 
+  static void setCustomFields(Map<String, String> customFields,
+      OxManager.StatusListener statusListener) {
+    if (instance != null) {
+      instance.oxManager.setCustomFields(customFields, () -> {
+        statusListener.onSuccess();
+        return null;
+      });
+    } else {
+      Log.e(TAG, "unBindUser with null instance");
+    }
+  }
+
   public static void scanCode(ScanCodeListener scanCodeListener) {
     if (instance != null) {
       instance.oxManager.scanCode(scanCodeListener::onCodeScan);

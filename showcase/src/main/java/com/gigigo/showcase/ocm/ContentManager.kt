@@ -9,20 +9,27 @@ import com.gigigo.orchextra.ocm.OcmBuilder
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver
+import com.gigigo.orchextra.wrapper.CrmUser
 import com.gigigo.orchextra.wrapper.OxManager
+import com.gigigo.showcase.domain.entity.ConfigData
+import com.gigigo.showcase.domain.entity.UserData
 import com.gigigo.showcase.presentation.view.splash.SplashActivity
 import timber.log.Timber
+import java.util.HashMap
 
 class ContentManager(private val context: Application) {
 
   private var token = ""
 
-  fun init(apiKey: String, apiSecret: String, businessUnit: String, onSuccess: () -> Unit = {},
+  fun init(configData: ConfigData, userData: UserData, onSuccess: () -> Unit = {},
       onError: () -> Unit = {}) {
 
-    val ocmBuilder = OcmBuilder(context).setOrchextraCredentials(apiKey, apiSecret)
+    finish()
+
+    val ocmBuilder = OcmBuilder(context).setOrchextraCredentials(configData.apiKey,
+        configData.apiSecret)
         .setContentLanguage("en")
-        .setBusinessUnit(businessUnit)
+        .setBusinessUnit(configData.businessUnit)
         .setTriggeringEnabled(false)
         .setAnonymous(true)
         .setProximityEnabled(false)
@@ -48,8 +55,8 @@ class ContentManager(private val context: Application) {
         Ocm.setStyleUi(ocmStyleUiBuilder)
 
         token = accessToken
+//        bindUserData(userData)
         onSuccess()
-
       }
 
       override fun onCredentailError(code: String) {
@@ -57,6 +64,33 @@ class ContentManager(private val context: Application) {
         if (!code.contains("tr.")) {
           onError()
         }
+      }
+    })
+  }
+
+  private fun bindUserData(userData: UserData, onSuccess: () -> Unit = {},
+      onError: () -> Unit = {}) {
+
+    Ocm.bindUser(CrmUser(userData.id, null, null), object : OxManager.StatusListener {
+      override fun onSuccess() {
+        val customFields = HashMap<String, String>()
+        customFields["type"] = userData.type ?: ""
+        customFields["level"] = userData.level ?: ""
+        Ocm.setCustomFields(customFields, object : OxManager.StatusListener {
+          override fun onSuccess() {
+            onSuccess()
+          }
+
+          override fun onError(error: String) {
+            Timber.e("setCustomFields error: %s", error)
+            onError()
+          }
+        })
+      }
+
+      override fun onError(error: String) {
+        Timber.e("bindUser error: %s", error)
+        onError()
       }
     })
   }
@@ -72,6 +106,14 @@ class ContentManager(private val context: Application) {
         onError()
       }
     })
+  }
+
+  private fun finish() {
+    try {
+      Ocm.stop()
+    } catch (e: Exception) {
+      Timber.e(e, "finish()")
+    }
   }
 
   private val onCustomSchemeReceiver = OnCustomSchemeReceiver { scheme ->

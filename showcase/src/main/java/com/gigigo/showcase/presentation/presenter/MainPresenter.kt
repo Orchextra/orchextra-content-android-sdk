@@ -18,17 +18,12 @@ class MainPresenter(private val dataManager: DataManager,
     this.view = view
 
     view.showLoading()
-
-    if (!isNew) {
+    initOcm {
       contentManager.clearData({
-        initOcm {
-          getContent()
-        }
-      }, { view.showErrorView() })
-    } else {
-      initOcm {
         getContent()
-      }
+      }, {
+        view.showErrorView()
+      })
     }
   }
 
@@ -40,8 +35,7 @@ class MainPresenter(private val dataManager: DataManager,
   }
 
   private fun initOcm(callback: () -> Unit) {
-    val data = dataManager.getConfigData()
-    contentManager.init(data.apiKey, data.apiSecret, data.businessUnit, callback) {
+    contentManager.init(dataManager.getConfigData(), dataManager.getUserData(), callback) {
       view.showErrorView()
     }
   }
