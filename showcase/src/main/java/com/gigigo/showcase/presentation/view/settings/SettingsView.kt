@@ -7,4 +7,6 @@ interface SettingsView {
   fun showLoading()
 
   fun showConfigData(configData: ConfigData)
+
+  fun showNewProject()
 }

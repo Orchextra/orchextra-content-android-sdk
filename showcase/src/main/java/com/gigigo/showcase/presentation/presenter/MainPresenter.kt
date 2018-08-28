@@ -18,8 +18,17 @@ class MainPresenter(private val dataManager: DataManager,
     this.view = view
 
     view.showLoading()
-    initOcm {
-      getContent()
+
+    if (!isNew) {
+      contentManager.clearData({
+        initOcm {
+          getContent()
+        }
+      }, { view.showErrorView() })
+    } else {
+      initOcm {
+        getContent()
+      }
     }
   }
 

@@ -1,7 +1,6 @@
 package com.gigigo.showcase.presentation.view.settings;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,18 +13,21 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
+import com.gigigo.showcase.App;
 import com.gigigo.showcase.R;
 import com.gigigo.showcase.Utils;
 import com.gigigo.showcase.domain.DataManager;
+import com.gigigo.showcase.domain.entity.ConfigData;
+import com.gigigo.showcase.presentation.presenter.SettingsPresenter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements SettingsView {
 
   private static final String TAG = "SettingsActivity";
-  public static final int RESULT_CODE = 0x23;
+  public static final int SETTINGS_RESULT_CODE = 0x23;
   private EditText apiKeyEditText;
   private EditText apiSecretEditText;
   private SwitchCompat typeSwitch;
@@ -35,6 +37,8 @@ public class SettingsActivity extends AppCompatActivity {
   private int currentProject = -1;
   Boolean isFinihsed = true;
 
+  private SettingsPresenter presenter;
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_settings);
@@ -42,6 +46,11 @@ public class SettingsActivity extends AppCompatActivity {
     initView();
     //dataManagerList = DataManager.Companion.getDefaultDataManagerList();
     isFinihsed = false;
+
+    App app = (App) getApplication();
+    presenter = new SettingsPresenter(app.getDataManager(), app.getContentManager());
+
+    presenter.attachView(this, true);
   }
 
   private void initView() {
@@ -58,32 +67,28 @@ public class SettingsActivity extends AppCompatActivity {
     levelSpinner.setAdapter(adapter);
 
     Button startButton = findViewById(R.id.startButton);
-    startButton.setOnClickListener(view -> startOrchextra());
+    startButton.setOnClickListener(v -> {
+
+      String apiKey = "";
+      String apiSecret = "";
+      String businessUnit = "";
+      ConfigData configData = new ConfigData(apiKey, apiSecret, businessUnit);
+      presenter.onStartClick(configData);
+    });
 
     View projectsView = findViewById(R.id.projectsView);
     projectsView.setOnClickListener(v -> {
       if (doubleTap) {
-
         if (currentProject >= dataManagerList.size() - 1) {
           currentProject = 0;
         } else {
           currentProject++;
         }
-
-        loadProjectData();
-        return;
       }
 
       doubleTap = true;
       new Handler().postDelayed(() -> doubleTap = false, 500);
     });
-  }
-
-  void loadProjectData() {
-
-    //Toast.makeText(this, dataManagerList.get(currentProject).getName(), Toast.LENGTH_SHORT).show();
-    //apiKeyEditText.setText(dataManagerList.get(currentProject).getApiKey());
-    //apiSecretEditText.setText(dataManagerList.get(currentProject).getApiSecret());
   }
 
   private void startOrchextra() {
@@ -118,20 +123,15 @@ public class SettingsActivity extends AppCompatActivity {
     return customFields;
   }
 
-  private void showLoading() {
-  }
-
-  private void hideLoading() {
+  @Override public void showLoading() {
   }
 
   private void showError(String title, String message) {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(title)
         .setMessage(message)
-        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
+        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
 
-          }
         })
         .setIcon(R.drawable.ic_mistake)
         .show();
@@ -140,11 +140,7 @@ public class SettingsActivity extends AppCompatActivity {
   private void initToolbar() {
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
-    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        onBackPressed();
-      }
-    });
+    toolbar.setNavigationOnClickListener(view -> onBackPressed());
 
     if (getSupportActionBar() != null) {
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -153,6 +149,17 @@ public class SettingsActivity extends AppCompatActivity {
 
   public static void openForResult(Activity context) {
     Intent intent = new Intent(context, SettingsActivity.class);
-    context.startActivityForResult(intent, RESULT_CODE);
+    context.startActivityForResult(intent, SETTINGS_RESULT_CODE);
+  }
+
+  @Override public void showConfigData(@NotNull ConfigData configData) {
+    apiKeyEditText.setText(configData.getApiKey());
+    apiSecretEditText.setText(configData.getApiSecret());
+  }
+
+  @Override public void showNewProject() {
+    Intent returnIntent = new Intent();
+    setResult(Activity.RESULT_OK, returnIntent);
+    finish();
   }
 }

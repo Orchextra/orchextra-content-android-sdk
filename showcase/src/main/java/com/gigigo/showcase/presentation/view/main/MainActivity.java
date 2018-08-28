@@ -1,5 +1,7 @@
 package com.gigigo.showcase.presentation.view.main;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -42,10 +44,6 @@ public class MainActivity extends AppCompatActivity
 
     App app = (App) getApplication();
     presenter = new MainPresenter(app.getDataManager(), app.getContentManager());
-  }
-
-  @Override protected void onResume() {
-    super.onResume();
     presenter.attachView(this, true);
   }
 
@@ -132,6 +130,14 @@ public class MainActivity extends AppCompatActivity
   @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
     super.onRestoreInstanceState(savedInstanceState);
     tabState = savedInstanceState.getParcelable(INSTANCE_TAB_STATE);
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode == SettingsActivity.SETTINGS_RESULT_CODE && resultCode == Activity.RESULT_OK) {
+      presenter.attachView(this, false);
+    }
   }
 
   @Override public void onLayoutRender(String screenName, ContentItemTypeLayout type) {

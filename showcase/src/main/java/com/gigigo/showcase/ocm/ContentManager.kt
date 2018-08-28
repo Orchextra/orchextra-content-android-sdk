@@ -3,6 +3,7 @@ package com.gigigo.showcase.ocm
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import com.gigigo.orchextra.ocm.OCManagerCallbacks
 import com.gigigo.orchextra.ocm.Ocm
 import com.gigigo.orchextra.ocm.OcmBuilder
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder
@@ -56,6 +57,19 @@ class ContentManager(private val context: Application) {
         if (!code.contains("tr.")) {
           onError()
         }
+      }
+    })
+  }
+
+  fun clearData(onSuccess: () -> Unit = {}, onError: () -> Unit = {}) {
+    Ocm.clearData(true, true, object : OCManagerCallbacks.Clear {
+      override fun onDataClearedSuccessfull() {
+        onSuccess()
+      }
+
+      override fun onDataClearFails(e: Exception?) {
+        Timber.e(e, "clearData()")
+        onError()
       }
     })
   }
