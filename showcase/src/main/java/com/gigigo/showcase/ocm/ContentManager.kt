@@ -9,7 +9,7 @@ import com.gigigo.orchextra.ocm.OcmStyleUiBuilder
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver
 import com.gigigo.orchextra.wrapper.OxManager
-import com.gigigo.showcase.splash.SplashActivity
+import com.gigigo.showcase.presentation.view.splash.SplashActivity
 import timber.log.Timber
 
 class ContentManager(private val context: Application) {

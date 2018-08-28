@@ -1,4 +1,4 @@
-package com.gigigo.showcase.splash;
+package com.gigigo.showcase.presentation.view.splash;
 
 import android.content.Intent;
 import android.os.Bundle;

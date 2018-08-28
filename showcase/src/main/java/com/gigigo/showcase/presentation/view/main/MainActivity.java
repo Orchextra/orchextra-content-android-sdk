@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity
     setContentView(R.layout.activity_main);
     initViews();
 
-    presenter = new MainPresenter(((App) getApplication()).getContentManager());
+    App app = (App) getApplication();
+    presenter = new MainPresenter(app.getDataManager(), app.getContentManager());
   }
 
   @Override protected void onResume() {

@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import com.gigigo.showcase.R;
 import com.gigigo.showcase.Utils;
+import com.gigigo.showcase.domain.DataManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
   private EditText apiSecretEditText;
   private SwitchCompat typeSwitch;
   private Spinner levelSpinner;
-  private List<ProjectData> projectDataList;
+  private List<DataManager> dataManagerList;
   private boolean doubleTap = false;
   private int currentProject = -1;
   Boolean isFinihsed = true;
@@ -39,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
     setContentView(R.layout.activity_settings);
 
     initView();
-    projectDataList = ProjectData.getDefaultProjectDataList();
+    //dataManagerList = DataManager.Companion.getDefaultDataManagerList();
     isFinihsed = false;
   }
 
@@ -57,42 +58,32 @@ public class SettingsActivity extends AppCompatActivity {
     levelSpinner.setAdapter(adapter);
 
     Button startButton = findViewById(R.id.startButton);
-    startButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        startOrchextra();
-      }
-    });
+    startButton.setOnClickListener(view -> startOrchextra());
 
     View projectsView = findViewById(R.id.projectsView);
-    projectsView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (doubleTap) {
+    projectsView.setOnClickListener(v -> {
+      if (doubleTap) {
 
-          if (currentProject >= projectDataList.size() - 1) {
-            currentProject = 0;
-          } else {
-            currentProject++;
-          }
-
-          loadProjectData();
-          return;
+        if (currentProject >= dataManagerList.size() - 1) {
+          currentProject = 0;
+        } else {
+          currentProject++;
         }
 
-        doubleTap = true;
-        new Handler().postDelayed(new Runnable() {
-          @Override public void run() {
-            doubleTap = false;
-          }
-        }, 500);
+        loadProjectData();
+        return;
       }
+
+      doubleTap = true;
+      new Handler().postDelayed(() -> doubleTap = false, 500);
     });
   }
 
   void loadProjectData() {
 
-    Toast.makeText(this, projectDataList.get(currentProject).getName(), Toast.LENGTH_SHORT).show();
-    apiKeyEditText.setText(projectDataList.get(currentProject).getApiKey());
-    apiSecretEditText.setText(projectDataList.get(currentProject).getApiSecret());
+    //Toast.makeText(this, dataManagerList.get(currentProject).getName(), Toast.LENGTH_SHORT).show();
+    //apiKeyEditText.setText(dataManagerList.get(currentProject).getApiKey());
+    //apiSecretEditText.setText(dataManagerList.get(currentProject).getApiSecret());
   }
 
   private void startOrchextra() {

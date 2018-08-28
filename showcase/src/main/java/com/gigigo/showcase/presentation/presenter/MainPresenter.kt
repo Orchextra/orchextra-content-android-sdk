@@ -4,12 +4,13 @@ import com.gigigo.orchextra.core.domain.entities.menus.DataRequest
 import com.gigigo.orchextra.ocm.Ocm
 import com.gigigo.orchextra.ocm.OcmCallbacks
 import com.gigigo.orchextra.ocm.dto.UiMenuData
+import com.gigigo.showcase.domain.DataManager
 import com.gigigo.showcase.ocm.ContentManager
 import com.gigigo.showcase.presentation.view.main.MainView
-import com.gigigo.showcase.presentation.view.settings.ProjectData
 import timber.log.Timber
 
-class MainPresenter(private val contentManager: ContentManager) : Presenter<MainView> {
+class MainPresenter(private val dataManager: DataManager,
+    private val contentManager: ContentManager) : Presenter<MainView> {
 
   private lateinit var view: MainView
 
@@ -30,8 +31,8 @@ class MainPresenter(private val contentManager: ContentManager) : Presenter<Main
   }
 
   private fun initOcm(callback: () -> Unit) {
-    contentManager.init(ProjectData.getDefaultApiKey(), ProjectData.getDefaultApiSecret(), "oat-it",
-        callback) {
+    val data = dataManager.getConfigData()
+    contentManager.init(data.apiKey, data.apiSecret, data.businessUnit, callback) {
       view.showErrorView()
     }
   }
