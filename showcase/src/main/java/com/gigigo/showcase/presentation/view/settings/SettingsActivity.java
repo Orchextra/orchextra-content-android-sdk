@@ -3,23 +3,19 @@ package com.gigigo.showcase.presentation.view.settings;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import com.gigigo.showcase.App;
 import com.gigigo.showcase.R;
-import com.gigigo.showcase.domain.DataManager;
 import com.gigigo.showcase.domain.entity.ConfigData;
 import com.gigigo.showcase.presentation.presenter.SettingsPresenter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,9 +28,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsView 
   private SwitchCompat typeSwitch;
   private Spinner levelSpinner;
 
-  private List<DataManager> dataManagerList;
-  private boolean doubleTap = false;
-  private int currentProject = -1;
   private SettingsPresenter presenter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +35,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsView 
     setContentView(R.layout.activity_settings);
 
     initView();
-    //dataManagerList = DataManager.Companion.getDefaultDataManagerList();
 
     App app = (App) getApplication();
     presenter = new SettingsPresenter(app.getDataManager());
@@ -72,20 +64,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsView 
       ConfigData configData = new ConfigData(apiKey, apiSecret, businessUnit);
 
       presenter.onStartClick(configData, getCurrentCustomFields());
-    });
-
-    View projectsView = findViewById(R.id.projectsView);
-    projectsView.setOnClickListener(v -> {
-      if (doubleTap) {
-        if (currentProject >= dataManagerList.size() - 1) {
-          currentProject = 0;
-        } else {
-          currentProject++;
-        }
-      }
-
-      doubleTap = true;
-      new Handler().postDelayed(() -> doubleTap = false, 500);
     });
   }
 
