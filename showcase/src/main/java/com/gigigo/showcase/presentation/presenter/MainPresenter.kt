@@ -22,6 +22,7 @@ class MainPresenter(private val dataManager: DataManager,
       contentManager.clearData({
         getContent()
       }, {
+        Timber.e("clearData()")
         view.showErrorView()
       })
     }
@@ -35,8 +36,14 @@ class MainPresenter(private val dataManager: DataManager,
   }
 
   private fun initOcm(callback: () -> Unit) {
-    contentManager.init(dataManager.getConfigData(), dataManager.getUserData(), callback) {
-      view.showErrorView()
+    val configData = dataManager.getConfigData()
+    if (configData.isValid()) {
+      contentManager.init(configData, dataManager.getUserData(), callback) {
+        Timber.e("initOcm()")
+        view.showErrorView()
+      }
+    } else {
+      view.showSettingsView()
     }
   }
 
@@ -56,6 +63,10 @@ class MainPresenter(private val dataManager: DataManager,
         view.showErrorView()
       }
     })
+  }
+
+  fun onSettingsClick() {
+    view.showSettingsView()
   }
 
   override fun detachView() {

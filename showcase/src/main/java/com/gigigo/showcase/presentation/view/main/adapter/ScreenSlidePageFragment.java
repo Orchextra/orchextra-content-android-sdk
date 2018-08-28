@@ -1,6 +1,5 @@
 package com.gigigo.showcase.presentation.view.main.adapter;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,8 +8,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
-import com.gigigo.orchextra.core.sdk.model.grid.ContentGridLayoutView;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
@@ -34,7 +31,6 @@ public class ScreenSlidePageFragment extends Fragment {
   private View retryButton;
   private View progressView;
   private EmptyContentCallback emptyContentCallback;
-  private LayoutRender layoutRender;
 
   public static ScreenSlidePageFragment newInstance() {
     return new ScreenSlidePageFragment();
@@ -60,11 +56,6 @@ public class ScreenSlidePageFragment extends Fragment {
               uiGridBaseContentData.setOnLoadMoreContentListener(() -> goToFirstSection());
               setView(uiGridBaseContentData);
               showErrorView(false);
-
-              if (uiGridBaseContentData instanceof ContentGridLayoutView) {
-                ((ContentGridLayoutView) uiGridBaseContentData).setLoadContentCallback(
-                    type -> setLayoutType(itemMenu.getText(), type));
-              }
             }
           }
 
@@ -156,12 +147,6 @@ public class ScreenSlidePageFragment extends Fragment {
     }
   }
 
-  public void setLayoutType(String screenName, ContentItemTypeLayout type) {
-    if (layoutRender != null) {
-      layoutRender.onLayoutRender(screenName, type);
-    }
-  }
-
   public void updateEmotion(String emotion) {
     if (contentView != null) {
       contentView.setFilter(emotion);
@@ -200,22 +185,8 @@ public class ScreenSlidePageFragment extends Fragment {
     this.emptyContentCallback = emptyContentCallback;
   }
 
-  @Override public void onAttach(Context context) {
-    super.onAttach(context);
-
-    try {
-      layoutRender = (LayoutRender) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(context.toString() + " must implement LayoutRender");
-    }
-  }
-
   public interface EmptyContentCallback {
     void onRetryClick();
-  }
-
-  public interface LayoutRender {
-    void onLayoutRender(String screenName, ContentItemTypeLayout type);
   }
 }
 

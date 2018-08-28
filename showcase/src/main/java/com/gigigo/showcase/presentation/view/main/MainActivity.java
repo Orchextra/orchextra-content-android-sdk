@@ -10,18 +10,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
-import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemTypeLayout;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.showcase.App;
 import com.gigigo.showcase.R;
 import com.gigigo.showcase.presentation.presenter.MainPresenter;
-import com.gigigo.showcase.presentation.view.main.adapter.ScreenSlidePageFragment;
 import com.gigigo.showcase.presentation.view.main.adapter.ScreenSlidePagerAdapter;
 import com.gigigo.showcase.presentation.view.settings.SettingsActivity;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-    implements MainView, ScreenSlidePageFragment.LayoutRender {
+public class MainActivity extends AppCompatActivity implements MainView {
 
   private static final String INSTANCE_TAB_STATE = "INSTANCE_TAB_STATE";
 
@@ -31,7 +28,6 @@ public class MainActivity extends AppCompatActivity
   private View errorView;
   private View networkErrorView;
   private ViewPager viewPager;
-  private View newContentMainContainer;
 
   private MainPresenter presenter;
   private Parcelable tabState;
@@ -50,7 +46,6 @@ public class MainActivity extends AppCompatActivity
   private void initViews() {
     tabLayout = findViewById(R.id.tabLayout);
     viewPager = findViewById(R.id.viewpager);
-    newContentMainContainer = findViewById(R.id.newContentMainContainer);
     loadingView = findViewById(R.id.loading_view);
     emptyView = findViewById(R.id.empty_view);
     errorView = findViewById(R.id.error_view);
@@ -65,7 +60,7 @@ public class MainActivity extends AppCompatActivity
     networkErrorView.setOnClickListener(v -> presenter.reloadContent());
 
     ImageButton settingsButton = findViewById(R.id.settingsButton);
-    settingsButton.setOnClickListener(view -> SettingsActivity.openForResult(MainActivity.this));
+    settingsButton.setOnClickListener(view -> presenter.onSettingsClick());
   }
 
   @Override public void showLoading() {
@@ -140,7 +135,7 @@ public class MainActivity extends AppCompatActivity
     }
   }
 
-  @Override public void onLayoutRender(String screenName, ContentItemTypeLayout type) {
-
+  @Override public void showSettingsView() {
+    SettingsActivity.openForResult(MainActivity.this);
   }
 }

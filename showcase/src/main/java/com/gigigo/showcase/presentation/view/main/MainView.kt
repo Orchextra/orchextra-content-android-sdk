@@ -13,4 +13,6 @@ interface MainView {
   fun showContentView(uiMenuList: List<UiMenu>)
 
   fun showNetworkErrorView()
+
+  fun showSettingsView()
 }
