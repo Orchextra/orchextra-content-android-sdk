@@ -57,6 +57,15 @@
         style="@style/EditTextStyle"
         />
 
+    <EditText
+        android:id="@+id/businessUnitEditText"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:hint="business unit"
+        style="@style/EditTextStyle"
+        />
+
 
     <LinearLayout
         android:layout_width="match_parent"

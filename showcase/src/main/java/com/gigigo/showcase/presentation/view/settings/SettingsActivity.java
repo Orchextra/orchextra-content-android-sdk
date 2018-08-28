@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import com.gigigo.showcase.App;
 import com.gigigo.showcase.R;
-import com.gigigo.showcase.Utils;
 import com.gigigo.showcase.domain.DataManager;
 import com.gigigo.showcase.domain.entity.ConfigData;
 import com.gigigo.showcase.presentation.presenter.SettingsPresenter;
@@ -30,6 +29,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsView 
   public static final int SETTINGS_RESULT_CODE = 0x23;
   private EditText apiKeyEditText;
   private EditText apiSecretEditText;
+  private EditText businessUnitEditText;
   private SwitchCompat typeSwitch;
   private Spinner levelSpinner;
   private List<DataManager> dataManagerList;
@@ -58,6 +58,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsView 
     initToolbar();
     apiKeyEditText = findViewById(R.id.apiKeyEditText);
     apiSecretEditText = findViewById(R.id.apiSecretEditText);
+    businessUnitEditText = findViewById(R.id.businessUnitEditText);
     typeSwitch = findViewById(R.id.typeSwitch);
     levelSpinner = findViewById(R.id.levelSpinner);
 
@@ -69,9 +70,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsView 
     Button startButton = findViewById(R.id.startButton);
     startButton.setOnClickListener(v -> {
 
-      String apiKey = "";
-      String apiSecret = "";
-      String businessUnit = "";
+      String apiKey = apiKeyEditText.getText().toString();
+      String apiSecret = apiSecretEditText.getText().toString();
+      String businessUnit = businessUnitEditText.getText().toString();
       ConfigData configData = new ConfigData(apiKey, apiSecret, businessUnit);
       presenter.onStartClick(configData);
     });
@@ -89,28 +90,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsView 
       doubleTap = true;
       new Handler().postDelayed(() -> doubleTap = false, 500);
     });
-  }
-
-  private void startOrchextra() {
-    String apiKey = apiKeyEditText.getText().toString();
-    String apiSecret = apiSecretEditText.getText().toString();
-
-    if (apiSecret.isEmpty() || apiKey.isEmpty()) {
-      showError("Credentials empty", "Apikey and Apisecret are mandatory to start orchextra.");
-      return;
-    }
-
-    getApiToken(apiKey, apiSecret);
-  }
-
-  private void getApiToken(String apiKey, String apiSecret) {
-
-    if (!Utils.isOnline(this)) {
-      showError("Connection error", "You should have internet connection");
-      return;
-    }
-
-    showLoading();
   }
 
   private Map<String, String> getCurrentCustomFields() {
@@ -155,6 +134,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsView 
   @Override public void showConfigData(@NotNull ConfigData configData) {
     apiKeyEditText.setText(configData.getApiKey());
     apiSecretEditText.setText(configData.getApiSecret());
+    businessUnitEditText.setText(configData.getBusinessUnit());
   }
 
   @Override public void showNewProject() {
