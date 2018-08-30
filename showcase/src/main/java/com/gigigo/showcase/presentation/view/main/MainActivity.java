@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     pagerAdapter.setDataItems(uiMenuList);
     viewPager.onRestoreInstanceState(tabState);
+    tabLayout.addOnTabSelectedListener(onTabSelectedListener);
   }
 
   @Override public void showNetworkErrorView() {
@@ -138,4 +139,18 @@ public class MainActivity extends AppCompatActivity implements MainView {
   @Override public void showSettingsView() {
     SettingsActivity.openForResult(MainActivity.this);
   }
+
+  private TabLayout.OnTabSelectedListener onTabSelectedListener =
+      new TabLayout.OnTabSelectedListener() {
+        @Override public void onTabSelected(TabLayout.Tab tab) {
+          viewPager.setCurrentItem(tab.getPosition());
+        }
+
+        @Override public void onTabUnselected(TabLayout.Tab tab) {
+        }
+
+        @Override public void onTabReselected(TabLayout.Tab tab) {
+          viewPager.setCurrentItem(tab.getPosition());
+        }
+      };
 }

@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
-
-  <ImageView
-    android:id="@+id/background_image"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
-
-  <FrameLayout
-    android:id="@+id/main_media_frame"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000">
+    >
+
+  <ImageView
+      android:id="@+id/background_image"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
+
+  <FrameLayout
+      android:id="@+id/main_media_frame"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="#000"
+      >
 
     <ProgressBar
-      android:id="@+id/progress_bar"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:indeterminate="true"
-       />
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        />
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-      android:id="@+id/exoplayer_view"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:visibility="gone"
-      />
+        android:id="@+id/exoplayer_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
   </FrameLayout>
-
 </FrameLayout>
