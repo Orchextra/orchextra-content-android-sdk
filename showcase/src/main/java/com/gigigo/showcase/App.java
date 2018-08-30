@@ -5,6 +5,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import com.gigigo.showcase.domain.DataManager;
 import com.gigigo.showcase.ocm.ContentManager;
+import timber.log.Timber;
 
 public class App extends MultiDexApplication {
 
@@ -15,6 +16,7 @@ public class App extends MultiDexApplication {
     super.onCreate();
 
     MultiDex.install(this);
+    Timber.plant(new Timber.DebugTree());
 
     contentManager = new ContentManager(this);
     dataManager = new DataManager(PreferenceManager.getDefaultSharedPreferences(this));

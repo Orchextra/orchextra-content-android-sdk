@@ -2,9 +2,14 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -48,7 +53,6 @@ import timber.log.Timber;
 
 public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoElement> {
 
-  private static final String TAG = "ArticleVimeoVideoView";
   private Context context;
   private MediaSource videoSource;
   private ConnectionUtils connectionUtils;
@@ -58,6 +62,7 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
   private View videoPlayerSurface;
   private SimpleExoPlayerView videoPlayer;
   private VimeoInfo mVimeoInfo;
+  private int position = -1;
 
   public ArticleVimeoVideoView(Context context, ViewGroup parent, ActionHandler actionHandler) {
     super(context, parent, R.layout.view_article_video_item_vimeo);
@@ -73,7 +78,18 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
   @Override public void bindTo(ArticleVimeoVideoElement articleElement, int position) {
     //todo truchingvimeo
 
+    this.position = position;
+    Timber.d("bindTo %s", position);
+
+    int height = (int) MoreContentArrowView.convertDpToPixel(192, context.getApplicationContext());
+
     videoPlayerSurface.setOnClickListener(onVimeoThumbnailClickListener);
+    ViewGroup.LayoutParams params = videoPlayerSurface.getLayoutParams();
+    params.height = height;
+    videoPlayerSurface.setLayoutParams(params);
+
+    imgThumb.setMaxHeight(height);
+    imgThumb.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
     actionHandler.getVimeoInfo(articleElement.getRender().getSource(),
         new VideoObserver(new VimeoCallback() {
@@ -81,13 +97,7 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
             mVimeoInfo = vimeoInfo;
             String strImgForBlur = mVimeoInfo.getThumbPath();
 
-            imgThumb.setMaxHeight(
-                (int) MoreContentArrowView.convertDpToPixel(192, context.getApplicationContext()));
-            imgThumb.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
-            Glide.with(context.getApplicationContext())
-
-                .load(strImgForBlur)
+            Glide.with(context.getApplicationContext()).load(strImgForBlur)
                 //.asBitmap()
                 // .transform(new BlurTransformation(context, 20))
                 .listener(new RequestListener<String, GlideDrawable>() {
@@ -101,27 +111,86 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
                       boolean isFirstResource) {
                     imgPlay.setVisibility(View.VISIBLE);
 
-                    if (!isPlay) {
-                      isPlay = true;
-                      playVideoPreview(vimeoInfo.getVideoPath());
-                    }
+                    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    //  if (itemView.isAttachedToWindow()) {
+                    //    Handler handler = new Handler();
+                    //    handler.postDelayed(() -> playVideoPreview(mVimeoInfo.getVideoPath()), 500);
+                    //  }
+                    //}
 
                     return false;
                   }
                 })
 
                 .into(imgThumb);
-            //imgPlay.setOnClickListener(onVimeoThumbnailClickListener);
-            //imgThumb.setOnClickListener(onVimeoThumbnailClickListener);
           }
 
           @Override public void onError(@NotNull Throwable e) {
             Timber.e(e, "getVimeoInfo()");
           }
         }));
+
+    itemView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+      @Override public void onViewAttachedToWindow(View v) {
+      }
+
+      @Override public void onViewDetachedFromWindow(View v) {
+        Timber.d("onViewDetachedFromWindow");
+        stopVideoPreview();
+      }
+    });
   }
 
-  public void playVideoPreview(String vimeoLink) {
+  private void playVideoPreview(String vimeoLink) {
+
+    ViewParent view = itemView.getParent();
+
+    if (view instanceof RecyclerView) {
+
+      ((RecyclerView) view).addOnScrollListener(new RecyclerView.OnScrollListener() {
+        @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+          super.onScrollStateChanged(recyclerView, newState);
+
+          Timber.d("Hola");
+
+          int firstCompletelyVisibleItemPosition =
+              ((LinearLayoutManager) ((RecyclerView) view).getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+          int lastCompletelyVisibleItemPosition =
+              ((LinearLayoutManager) ((RecyclerView) view).getLayoutManager()).findLastCompletelyVisibleItemPosition();
+
+          Timber.d("first: %s, last: %s", firstCompletelyVisibleItemPosition,
+              lastCompletelyVisibleItemPosition);
+        }
+
+        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+          super.onScrolled(recyclerView, dx, dy);
+
+          int firstCompletelyVisibleItemPosition =
+              ((LinearLayoutManager) ((RecyclerView) view).getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+          int lastCompletelyVisibleItemPosition =
+              ((LinearLayoutManager) ((RecyclerView) view).getLayoutManager()).findLastCompletelyVisibleItemPosition();
+
+          Timber.d("first: %s, last: %s", firstCompletelyVisibleItemPosition,
+              lastCompletelyVisibleItemPosition);
+        }
+      });
+
+
+      int firstCompletelyVisibleItemPosition =
+          ((LinearLayoutManager) ((RecyclerView) view).getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+      int lastCompletelyVisibleItemPosition =
+          ((LinearLayoutManager) ((RecyclerView) view).getLayoutManager()).findLastCompletelyVisibleItemPosition();
+
+      Timber.d("first: %s, last: %s", firstCompletelyVisibleItemPosition,
+          lastCompletelyVisibleItemPosition);
+
+      if (position >= firstCompletelyVisibleItemPosition
+          && position <= lastCompletelyVisibleItemPosition) {
+        Timber.d("Te veo, position: %s", position);
+      } else {
+        Timber.d("No te veo, position: %s", position);
+      }
+    }
 
     initializeExoPlayer(vimeoLink);
 
@@ -173,7 +242,7 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
     }
   }
 
-  public void stopVideoPreview() {
+  private void stopVideoPreview() {
     if (videoPlayer != null && videoPlayer.getPlayer() != null) {
       videoPlayer.getPlayer().stop();
       videoPlayer.getPlayer().release();
@@ -201,6 +270,4 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
           });
     }
   };
-
-  private static boolean isPlay = false;
 }
