@@ -125,7 +125,7 @@ class ContentManager(private val context: Application) {
       val deeplink = Uri.parse(scheme)
       intent.data = deeplink
 
-      TODO("implement deeplinkHandler")
+      // TODO("implement deeplinkHandler")
 //      deeplinkHandler.processDeeplink(intent)
 
     } catch (exception: Exception) {
