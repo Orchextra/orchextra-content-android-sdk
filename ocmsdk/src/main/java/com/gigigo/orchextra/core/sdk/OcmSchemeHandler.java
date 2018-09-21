@@ -196,7 +196,7 @@ public class OcmSchemeHandler {
         break;
       case GO_CONTENT:
         if (render != null) {
-          actionHandler.processDeepLink(render.getContentUrl());
+          actionHandler.processDeepLink(elementUrl);
         }
         break;
       case NONE:
