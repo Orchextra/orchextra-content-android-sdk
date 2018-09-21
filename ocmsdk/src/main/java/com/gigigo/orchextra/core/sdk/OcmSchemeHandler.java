@@ -194,6 +194,11 @@ public class OcmSchemeHandler {
           processVideo(render.getFormat(), render.getSource(), cachedElement);
         }
         break;
+      case GO_CONTENT:
+        if (render != null) {
+          actionHandler.processDeepLink(render.getContentUrl());
+        }
+        break;
       case NONE:
         Timber.w("Type: NONE");
         processRedirectElementUrl(elementUrl, processElementCallback);
