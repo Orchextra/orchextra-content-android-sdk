@@ -16,6 +16,8 @@ buildscript {
   }
 }
 
+def STRING = "String"
+
 android {
   compileSdkVersion project.ext.androidCompileSdkVersion
 
@@ -39,18 +41,30 @@ android {
       testCoverageEnabled = false
       debuggable true
       applicationIdSuffix ".staging"
+
+      buildConfigField STRING, "DEFAULT_API_KEY", "\"8286702045adf5a3ad816f70ecb80e4c91fbb8de\""
+      buildConfigField STRING, "DEFAULT_API_SECRET", "\"eab37080130215ced60eb9d5ff729049749ec205\""
+      buildConfigField STRING, "DEFAULT_BUSINESS_UNIT", "\"oat-it\""
     }
 
     debug {
       signingConfig signingConfigs.debug
       debuggable true
       applicationIdSuffix ".debug"
+
+      buildConfigField STRING, "DEFAULT_API_KEY", "\"8286702045adf5a3ad816f70ecb80e4c91fbb8de\""
+      buildConfigField STRING, "DEFAULT_API_SECRET", "\"eab37080130215ced60eb9d5ff729049749ec205\""
+      buildConfigField STRING, "DEFAULT_BUSINESS_UNIT", "\"oat-it\""
     }
 
     release {
       signingConfig signingConfigs.debug
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt')
+
+      buildConfigField STRING, "DEFAULT_API_KEY", "\"\""
+      buildConfigField STRING, "DEFAULT_API_SECRET", "\"\""
+      buildConfigField STRING, "DEFAULT_BUSINESS_UNIT", "\"\""
     }
   }
 

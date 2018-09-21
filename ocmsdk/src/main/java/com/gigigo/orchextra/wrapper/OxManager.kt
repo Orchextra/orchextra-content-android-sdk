@@ -33,6 +33,8 @@ interface OxManager {
 
   fun scanCode(scanCodeListener: ScanCodeListener)
 
+  fun setCustomFields(customFields: Map<String, String>, onUpdate: () -> Unit)
+
   interface TokenReceiver {
     fun onGetToken(token: String)
   }

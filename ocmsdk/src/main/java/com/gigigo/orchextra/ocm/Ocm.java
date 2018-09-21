@@ -230,6 +230,11 @@ public final class Ocm {
     OCManager.unBindUser(statusListener);
   }
 
+  public static void setCustomFields(Map<String, String> customFields,
+      OxManager.StatusListener statusListener) {
+    OCManager.setCustomFields(customFields, statusListener);
+  }
+
   public static void stop() {
     OCManager.stop();
     exceptionListener = null;

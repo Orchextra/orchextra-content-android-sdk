@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
-    tools:context="com.gigigo.orchextra.ocm.sample.settings.SettingsActivity"
+    tools:context="com.gigigo.showcase.presentation.view.settings.SettingsActivity"
     >
 
   <android.support.design.widget.AppBarLayout
@@ -25,11 +25,6 @@
 
   </android.support.design.widget.AppBarLayout>
 
-  <View
-      android:id="@+id/projectsView"
-      android:layout_width="match_parent"
-      android:layout_height="200dp"
-      />
 
   <LinearLayout
       android:layout_width="match_parent"
@@ -54,6 +49,15 @@
         android:layout_height="46dp"
         android:layout_marginTop="@dimen/spacing_normal"
         android:hint="Api secret"
+        style="@style/EditTextStyle"
+        />
+
+    <EditText
+        android:id="@+id/businessUnitEditText"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:hint="business unit"
         style="@style/EditTextStyle"
         />
 

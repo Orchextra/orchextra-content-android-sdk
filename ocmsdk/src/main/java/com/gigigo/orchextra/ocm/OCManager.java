@@ -629,6 +629,18 @@ public final class OCManager {
     }
   }
 
+  static void setCustomFields(Map<String, String> customFields,
+      OxManager.StatusListener statusListener) {
+    if (instance != null) {
+      instance.oxManager.setCustomFields(customFields, () -> {
+        statusListener.onSuccess();
+        return null;
+      });
+    } else {
+      Timber.e("unBindUser with null instance");
+    }
+  }
+
   public static void scanCode(ScanCodeListener scanCodeListener) {
     if (instance != null) {
       instance.oxManager.scanCode(scanCodeListener::onCodeScan);

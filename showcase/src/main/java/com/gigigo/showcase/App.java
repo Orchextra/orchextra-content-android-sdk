@@ -1,25 +1,32 @@
 package com.gigigo.showcase;
 
-import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import com.gigigo.showcase.domain.DataManager;
+import com.gigigo.showcase.ocm.ContentManager;
+import timber.log.Timber;
 
 public class App extends MultiDexApplication {
 
+  private ContentManager contentManager;
+  private DataManager dataManager;
+
   @Override public void onCreate() {
-    enableStrictMode();
     super.onCreate();
 
     MultiDex.install(this);
+    Timber.plant(new Timber.DebugTree());
 
-    ContentManager contentManager = ContentManager.getInstance();
-    contentManager.init(this);
+    contentManager = new ContentManager(this);
+    dataManager = new DataManager(PreferenceManager.getDefaultSharedPreferences(this));
   }
 
-  private void enableStrictMode() {
-    StrictMode.setThreadPolicy(
-        new StrictMode.ThreadPolicy.Builder().detectAll()   // or .detectAll() for all detectable problems
-            .penaltyLog().build());
-    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().build());
+  public ContentManager getContentManager() {
+    return contentManager;
+  }
+
+  public DataManager getDataManager() {
+    return dataManager;
   }
 }

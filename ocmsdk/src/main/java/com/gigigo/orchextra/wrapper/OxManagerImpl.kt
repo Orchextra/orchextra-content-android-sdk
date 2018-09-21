@@ -118,4 +118,8 @@ class OxManagerImpl : OxManager {
   override fun onCustomScheme(customScheme: String) {
     customSchemeReceiver?.onReceive(customScheme)
   }
+
+  override fun setCustomFields(customFields: Map<String, String>, onUpdate: () -> Unit) {
+    orchextra.getCrmManager().setCustomFields(customFields) { onUpdate() }
+  }
 }

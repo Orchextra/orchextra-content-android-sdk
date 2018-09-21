@@ -17,7 +17,7 @@
       android:theme="@style/AppTheme"
       tools:replace="android:allowBackup">
     <activity
-        android:name=".splash.SplashActivity"
+        android:name=".presentation.view.splash.SplashActivity"
         android:theme="@style/SplashTheme">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -26,17 +26,17 @@
       </intent-filter>
     </activity>
     <activity
-        android:name=".main.MainActivity"
+        android:name=".presentation.view.main.MainActivity"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme.NoActionBar"/>
     <activity
-        android:name=".settings.SettingsActivity"
+        android:name=".presentation.view.settings.SettingsActivity"
         android:label="@string/title_activity_settings"
-        android:parentActivityName=".main.MainActivity"
+        android:parentActivityName=".presentation.view.main.MainActivity"
         android:theme="@style/AppTheme.NoActionBar">
       <meta-data
           android:name="android.support.PARENT_ACTIVITY"
-          android:value=".main.MainActivity"/>
+          android:value=".presentation.view.main.MainActivity"/>
     </activity>
   </application>
 
