@@ -133,10 +133,12 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
     }
 
     var index = 0
-    apiSectionContentData.elementsCache?.forEach { t, u ->
-      val apiElementData = ApiElementData(u)
-      putDetail(apiElementData, t, index)
-      index++
+    if (apiSectionContentData.elementsCache != null) {
+      for ((key, value) in apiSectionContentData.elementsCache) {
+        val apiElementData = ApiElementData(value)
+        putDetail(apiElementData, key, index)
+        index++
+      }
     }
   }
 }
