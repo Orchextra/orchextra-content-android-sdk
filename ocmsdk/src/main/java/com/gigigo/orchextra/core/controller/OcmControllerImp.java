@@ -361,8 +361,8 @@ public class OcmControllerImp implements OcmController {
 
     @Override public void onNext(ElementData elementData) {
       if (getDetailControllerCallback != null) {
-        if (!connectionUtils.hasConnection() && (elementData.getElement().getType()
-            == ElementCacheType.WEBVIEW
+        if (!connectionUtils.hasConnection() && (elementData.getElement() == null
+            || elementData.getElement().getType() == ElementCacheType.WEBVIEW
             || elementData.getElement().getType() == ElementCacheType.VIDEO)) {
           getDetailControllerCallback.onGetDetailNoAvailable(new NetworkConnectionException());
         } else {
