@@ -119,6 +119,7 @@ public class OcmSchemeHandler {
       }
 
       @Override public void onGetDetailFails(Exception e) {
+        Timber.e(e, "onGetDetailFails()");
         if (elementUrl.matches("([^\\s]+):\\/\\/.*")) {
           actionHandler.processDeepLink(elementUrl);
         } else {

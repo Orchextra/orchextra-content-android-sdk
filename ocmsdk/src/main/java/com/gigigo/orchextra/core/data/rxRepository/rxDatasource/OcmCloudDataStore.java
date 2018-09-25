@@ -19,7 +19,6 @@ import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
-import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.receiver.WifiReceiver;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -141,7 +140,9 @@ import org.jetbrains.annotations.NotNull;
     return ocmApiService.getElementByIdRx(slug, withThumbnails)
         .map(dataResponse -> dataResponse.getResult())
         .doOnNext(apiElementData -> {
-          ocmCache.putDetail(apiElementData, apiElementData.getElement().getSlug());
+          if (apiElementData.getElement().getSlug() != null) {
+            ocmCache.putDetail(apiElementData, apiElementData.getElement().getSlug());
+          }
         })
         .map(apiElementData -> {
           ElementData elementData = DbMappersKt.toElementData(apiElementData);
