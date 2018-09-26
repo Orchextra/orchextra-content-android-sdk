@@ -168,7 +168,12 @@ public class OcmSchemeHandler {
         OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
           render.setUrl(processUrl(render.getUrl()));
-          OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "");
+          if (cachedElement.getShare() != null) {
+            OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "",
+                cachedElement.getShare());
+          } else {
+            OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "");
+          }
         }
         break;
 
