@@ -88,7 +88,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
             @Override public void onGetSectionLoaded(ContentData cachedContentData) {
               if (cachedContentData == null) {
-                ocmController.getSection(DataRequest.FIRST_CACHE, contentUrl, imagesToDownload,
+                ocmController.getSection(DataRequest.FORCE_CLOUD, contentUrl, imagesToDownload,
                     new OcmController.GetSectionControllerCallback() {
 
                       @Override public void onGetSectionLoaded(ContentData newContentData) {
@@ -103,7 +103,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
                 renderContentItem(cachedContentData.getContent());
 
-                ocmController.getSection(DataRequest.FIRST_CACHE, contentUrl, imagesToDownload,
+                ocmController.getSection(DataRequest.FORCE_CLOUD, contentUrl, imagesToDownload,
                     new OcmController.GetSectionControllerCallback() {
 
                       @Override public void onGetSectionLoaded(ContentData newContentData) {
