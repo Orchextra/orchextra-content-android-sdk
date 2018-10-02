@@ -229,7 +229,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     for (int i = viewList.size() - 1; i >= 0; i--) {
       View child = viewList.get(i);
-      if (child.getBackground() != null) {
+      if (child != null && child.getBackground() != null) {
         child.getBackground().setCallback(null);
       }
       if (child instanceof ViewGroup) {
