@@ -7,7 +7,6 @@ import android.support.annotation.WorkerThread;
 import com.gigigo.orchextra.core.AppExecutors;
 import com.gigigo.orchextra.core.data.OcmDbDataSource;
 import com.gigigo.orchextra.core.data.OcmNetworkDataSource;
-import com.gigigo.orchextra.core.data.rxException.NetworkConnectionException;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDiskDataStore;
@@ -66,27 +65,20 @@ import timber.log.Timber;
     Timber.d("getSectionElements(forceReload: %s)", forceReload);
 
     return Observable.create(emitter -> {
+      ContentData contentData;
       if (forceReload) {
-        emitter.onNext(ocmNetworkDataSource.getSectionElements(contentUrl));
-        emitter.onComplete();
+        contentData = ocmNetworkDataSource.getSectionElements(contentUrl);
       } else {
-
-        appExecutors.diskIO().execute(() -> {
-          try {
-            emitter.onNext(ocmDbDataSource.getSectionElements(contentUrl));
-            emitter.onComplete();
-          } catch (Exception e) {
-            Timber.i(e, "getSectionElements() EMPTY");
-            try {
-              emitter.onNext(ocmNetworkDataSource.getSectionElements(contentUrl));
-              emitter.onComplete();
-            } catch (NetworkConnectionException e1) {
-              Timber.e(e1, "getSectionElements()");
-              emitter.onError(e1);
-            }
-          }
-        });
+        try {
+          contentData = ocmDbDataSource.getSectionElements(contentUrl);
+        } catch (Exception e) {
+          Timber.i(e, "getSectionElements() EMPTY");
+          contentData = ocmNetworkDataSource.getSectionElements(contentUrl);
+        }
       }
+
+      emitter.onNext(contentData);
+      emitter.onComplete();
     });
   }
 
