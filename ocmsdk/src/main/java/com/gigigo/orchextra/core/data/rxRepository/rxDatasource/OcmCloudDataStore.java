@@ -11,13 +11,14 @@ import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
-import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
+import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageData;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
+import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.receiver.WifiReceiver;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.ocm.OCManager;
@@ -27,16 +28,14 @@ import gigigo.com.vimeolibs.VimeoCallback;
 import gigigo.com.vimeolibs.VimeoInfo;
 import gigigo.com.vimeolibs.VimeoManager;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import java.util.Iterator;
-import java.util.Objects;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
-
-/**
- * Created by francisco.hernandez on 23/5/17.
- */
+import org.jetbrains.annotations.NotNull;
 
 @Singleton public class OcmCloudDataStore implements OcmDataStore {
 
@@ -44,6 +43,7 @@ import orchextra.javax.inject.Singleton;
   private final OcmApiService ocmApiService;
   private final OcmCache ocmCache;
   private final OcmImageCache ocmImageCache;
+
   private Integer withThumbnails = null; //For default, thumbnails are enabled
 
   @Inject public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,
@@ -59,41 +59,21 @@ import orchextra.javax.inject.Singleton;
     }
   }
 
-  @Override public Observable<ApiMenuContentData> getMenuEntity() {
-    return ocmApiService.getMenuDataRx()
-        .map(dataResponse -> dataResponse.getResult())
-        .doOnNext(ocmCache::putMenus)
-        .doOnNext(apiMenuContentData -> addSectionsToCache(apiMenuContentData))
-        .doOnNext(apiMenuContentData -> {
-          apiMenuContentData.setFromCloud(true);
-        });
-  }
-
-  @Override public Observable<ApiSectionContentData> getSectionEntity(String contentUrl,
+  @Override public Observable<ContentData> getSection(String contentUrl,
       final int numberOfElementsToDownload) {
     return ocmApiService.getSectionDataRx(contentUrl, withThumbnails)
-        .map(dataResponse -> dataResponse.getResult())
-        .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(contentUrl))
-        .doOnNext(ocmCache::putSection)
+        .map(BaseApiResponse::getResult)
+        .doOnNext(apiSectionContentData -> ocmCache.putSection(apiSectionContentData, contentUrl))
         .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData,
             numberOfElementsToDownload))
-        .doOnNext(apiSectionContentData -> {
-          apiSectionContentData.setFromCloud(true);
-        });
+        .map(DbMappersKt::toContentData);
   }
 
-  private void addSectionsToCache(ApiMenuContentData apiMenuContentData) {
-    Iterator<ApiMenuContent> menuContentIterator =
-        apiMenuContentData.getMenuContentList().iterator();
-    while (menuContentIterator.hasNext()) {
-      Iterator<ApiElement> elementIterator = menuContentIterator.next().getElements().iterator();
-      while (elementIterator.hasNext()) {
-        ApiElement apiElement = elementIterator.next();
-        if (apiMenuContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
-          ApiSectionContentData contentData = new ApiSectionContentData();
-          contentData.setKey(apiElement.getElementUrl());
-          ocmCache.putSection(contentData);
-        }
+  private void saveSections(ApiMenuContentData apiMenuContentData) {
+    for (ApiMenuContent apiMenuContent : apiMenuContentData.getMenuContentList()) {
+      for (ApiElement apiElement : apiMenuContent.getElements()) {
+        ApiSectionContentData contentData = new ApiSectionContentData();
+        ocmCache.putSection(contentData, apiElement.getElementUrl());
       }
     }
   }
@@ -109,7 +89,8 @@ import orchextra.javax.inject.Singleton;
         ApiElementData apiElementData = new ApiElementData(
             apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
         if (i < imagestodownload) addImageToQueue(apiElementData);
-        ocmCache.putDetail(apiElementData);
+
+        ocmCache.putDetail(apiElementData, apiElement.getElementUrl());
       }
       i++;
     }
@@ -129,65 +110,73 @@ import orchextra.javax.inject.Singleton;
 
   private void addImageToQueue(ApiElementData apiElementData) {
 
-    //Preview
-    if (apiElementData.getElement().getPreview() != null) {
-      ocmImageCache.add(new ImageData(apiElementData.getElement().getPreview().getImageUrl(), 0));
-    }
-    //Render
-    if (apiElementData.getElement().getRender() != null
-        && apiElementData.getElement().getRender().getElements() != null) {
-      for (ApiArticleElement element : apiElementData.getElement().getRender().getElements()) {
-        if (element.getRender() != null && element.getRender().getImageUrl() != null) {
-          ocmImageCache.add(new ImageData(element.getRender().getImageUrl(), 0));
+    if (apiElementData.getElement() != null) {
+      //Preview
+      if (apiElementData.getElement().getPreview() != null) {
+        ocmImageCache.add(new ImageData(apiElementData.getElement().getPreview().getImageUrl(), 0));
+      }
+      //Render
+      if (apiElementData.getElement().getRender() != null
+          && apiElementData.getElement().getRender().getElements() != null) {
+        Iterator<ApiArticleElement> elementsIterator =
+            apiElementData.getElement().getRender().getElements().iterator();
+        while (elementsIterator.hasNext()) {
+          ApiArticleElement element = elementsIterator.next();
+          if (element.getRender() != null && element.getRender().getImageUrl() != null) {
+            ocmImageCache.add(new ImageData(element.getRender().getImageUrl(), 0));
+          }
         }
       }
     }
   }
 
-  @Override public Observable<ApiSectionContentData> searchByText(String section) {
-    return ocmApiService.searchRx(section).map(BaseApiResponse::getResult);
+  @Override public Observable<ContentData> searchByText(String section) {
+    return ocmApiService.searchRx(section)
+        .map(dataResponse -> dataResponse.getResult())
+        .map(apiSectionContentData -> DbMappersKt.toContentData(apiSectionContentData));
   }
 
-  @Override public Observable<ApiElementData> getElementById(String slug) {
+  @Override public Observable<ElementData> getElementById(String slug) {
     return ocmApiService.getElementByIdRx(slug, withThumbnails)
-        .map(BaseApiResponse::getResult)
-        .doOnNext(ocmCache::putDetail);
+        .map(dataResponse -> dataResponse.getResult())
+        .doOnNext(apiElementData -> {
+          if (apiElementData.getElement().getSlug() != null) {
+            ocmCache.putDetail(apiElementData, apiElementData.getElement().getSlug());
+          }
+        })
+        .map(apiElementData -> {
+          ElementData elementData = DbMappersKt.toElementData(apiElementData);
+          return elementData;
+        });
   }
 
-  @Override public Observable<ApiVideoData> getVideoById(Context context, String videoId,
+  @Override public Observable<VimeoInfo> getVideoById(Context context, String videoId,
       boolean isWifiConnection, boolean isFastConnection) {
-    Observable<ApiVideoData> videoObservable = Observable.create(emitter -> {
-      VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
-      VimeoManager videoManager = new VimeoManager(builder);
+    Observable<VimeoInfo> videoObservable =
+        Observable.create(new ObservableOnSubscribe<VimeoInfo>() {
+          @Override public void subscribe(ObservableEmitter<VimeoInfo> emitter) throws Exception {
+            VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
+            VimeoManager videoManager = new VimeoManager(builder);
 
-      videoManager.getVideoVimeoInfo(context, videoId, isWifiConnection, isFastConnection,
-          new VimeoCallback() {
-            @Override public void onSuccess(@NonNull VimeoInfo vimeoInfo) {
-              ApiVideoData videoData = new ApiVideoData(vimeoInfo);
-              ocmCache.putVideo(videoData);
-              emitter.onNext(videoData);
-            }
+            videoManager.getVideoVimeoInfo(context, videoId, isWifiConnection, isFastConnection,
+                new VimeoCallback() {
+                  @Override public void onError(@NotNull Throwable e) {
+                    emitter.onError(e);
+                  }
 
-            @Override public void onError(@NonNull Throwable exception) {
-              // TODO This method throw OnErrorNotImplementedException and make crash the app. Issue WOAH-3214
-              //emitter.onError(exception);
-            }
-          });
-    });
+                  @Override public void onSuccess(VimeoInfo vimeoInfo) {
+                    ocmCache.putVideo(vimeoInfo);
+                    emitter.onNext(vimeoInfo);
+                  }
+                });
+          }
+        });
 
     videoObservable.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
 
     return videoObservable;
-  }
-
-  @Override public Observable<ApiVersionKache> getVersion() {
-    return ocmApiService.getVersionDataRx()
-        .map(apiVersionResponse -> new ApiVersionKache(
-            Objects.requireNonNull(apiVersionResponse.getData())))
-        .filter(v -> v != null)
-        .doOnNext(ocmCache::putVersion);
   }
 
   @Override public boolean isFromCloud() {

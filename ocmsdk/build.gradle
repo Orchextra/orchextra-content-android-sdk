@@ -10,12 +10,15 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 group = 'com.github.Orchextra'
 version = 'ocmVersion'
 
 
 apply from: 'variants.gradle'
+
+def OCM_DIMENSION = "ocm"
 
 def CONCURRENT_INTERACTORS = "CONCURRENT_INTERACTORS"
 def RETROFIT_LOG = "RETROFIT_LOG"
@@ -39,6 +42,12 @@ android {
       compile.exclude group: "org.jetbrains", module: "annotations"
     }
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    javaCompileOptions {
+      annotationProcessorOptions {
+        arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+      }
+    }
   }
 
   packagingOptions {
@@ -109,11 +118,11 @@ android {
   }
 
 
-  flavorDimensions "ocm"
+  flavorDimensions OCM_DIMENSION
 
   productFlavors {
     ocm {
-      dimension "ocm"
+      dimension OCM_DIMENSION
     }
   }
 
@@ -175,6 +184,11 @@ finalize.dependsOn(ocmsdk: install)
 //install.finalizedBy(finalize)
 install.dependsOn(ocmsdk: build)
 
+kotlin {
+  experimental {
+    coroutines "enable"
+  }
+}
 
 dependencies {
 
@@ -199,8 +213,10 @@ dependencies {
   api project.libraries.gggJavaLib
 
   //Dagger
+  kapt 'com.squareup:javapoet:1.8.0'
+  //Dagger 2.2 bundles an older version of JavaPoet. Must explicitly add apt 'com.squareup:javapoet:1.7.0' before apt 'com.google.dagger:dagger-compiler:2.2' to fix this.
   implementation project.libraries.dagger
-  annotationProcessor project.libraries.daggerCompiler
+  kapt project.libraries.daggerCompiler
 
   //Image Loader Glide/Blur
   api project.libraries.imageloaderGlideBlur
@@ -236,6 +252,16 @@ dependencies {
   api project.libraries.kache
   implementation project.libraries.timber
 
+  implementation project.libraries.kotlinStdlib
+  implementation project.libraries.coroutinesCore
+  implementation project.libraries.coroutinesAndroid
+
+  kapt project.libraries.archLifecycleCompiler
+  kapt project.libraries.archPersistenceCompiler
+  compile project.libraries.archLifecycleExtensions
+  compile project.libraries.archPersistenceRuntime
+  compile project.libraries.archPersistenceRxJava2
+  testCompile project.libraries.archPersistenceTesting
 
   api project.libraries.gpuImage //4 readarticles
 
@@ -246,3 +272,4 @@ dependencies {
   testImplementation project.testLibraries.assertj
   testImplementation project.testLibraries.mockito
 }
+

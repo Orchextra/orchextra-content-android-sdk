@@ -1,49 +1,82 @@
 package com.gigigo.orchextra.core.data.rxCache;
 
 import android.content.Context;
-import android.text.TextUtils;
+import android.support.annotation.NonNull;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
+import com.gigigo.orchextra.core.data.DateUtilsKt;
+import com.gigigo.orchextra.core.data.api.dto.content.ApiContentItem;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
+import com.gigigo.orchextra.core.data.api.dto.elementcache.ApiElementCache;
+import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
+import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentDataResponse;
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
-import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
+import com.gigigo.orchextra.core.data.database.OcmDatabase;
+import com.gigigo.orchextra.core.data.database.entities.DbElement;
+import com.gigigo.orchextra.core.data.database.entities.DbElementCache;
+import com.gigigo.orchextra.core.data.database.entities.DbElementData;
+import com.gigigo.orchextra.core.data.database.entities.DbMenuContent;
+import com.gigigo.orchextra.core.data.database.entities.DbMenuContentData;
+import com.gigigo.orchextra.core.data.database.entities.DbMenuElementJoin;
+import com.gigigo.orchextra.core.data.database.entities.DbScheduleDates;
+import com.gigigo.orchextra.core.data.database.entities.DbSectionContentData;
+import com.gigigo.orchextra.core.data.database.entities.DbSectionElementJoin;
+import com.gigigo.orchextra.core.data.database.entities.DbVideoData;
+import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.CacheDir;
-import com.mskn73.kache.Kache;
 import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
-
-/**
- * Created by francisco.hernandez on 23/5/17.
- */
+import timber.log.Timber;
 
 @Singleton public class OcmCacheImp implements OcmCache {
-
-  private final Kache kache;
+  private final OcmDatabase ocmDatabase;
   private final Context mContext;
 
-  public static final String MENU_KEY = "MENU_KEY";
-  public static final String VERSION_KEY = "VERSION_KEY";
-
   @Inject public OcmCacheImp(Context context, @CacheDir String cacheDir) {
-    this.kache = new Kache(context, cacheDir);
+    this.ocmDatabase = OcmDatabase.Companion.create(context);
     this.mContext = context;
   }
 
-  @Override public Observable<ApiMenuContentData> getMenus() {
+  @Override public Observable<DbMenuContentData> getMenus() {
     return Observable.create(emitter -> {
-      ApiMenuContentData apiMenuContentData =
-          (ApiMenuContentData) kache.get(ApiMenuContentData.class, MENU_KEY);
+      List<DbMenuContent> dbMenuContentList = ocmDatabase.menuDao().fetchMenus();
+      List<DbElementCache> dbElementCacheList = ocmDatabase.elementCacheDao().fetchElementsCache();
 
-      if (apiMenuContentData != null) {
-        emitter.onNext(apiMenuContentData);
+      for (DbMenuContent dbMenuContent : dbMenuContentList) {
+        //Long today = DateUtilsKt.getToday();
+        //List<DbElement> dbElementList = ocmDatabase.elementDao().fetchMenuElementsOnTime(dbMenuContent.getSlug(), today);
+        List<DbElement> dbElementList =
+            ocmDatabase.elementDao().fetchMenuElements(dbMenuContent.getSlug());
+        dbMenuContent.setElements(dbElementList);
+        for (DbElement dbElement : dbElementList) {
+          List<DbScheduleDates> dbScheduleDatesList =
+              ocmDatabase.scheduleDatesDao().fetchSchedule(dbElement.getSlug());
+          dbElement.setDates(dbScheduleDatesList);
+        }
+      }
+
+      DbMenuContentData dbMenuContentData = new DbMenuContentData();
+      dbMenuContentData.setMenuContentList(dbMenuContentList);
+
+      Map<String, DbElementCache> dbElementCacheMap = new HashMap<>(dbElementCacheList.size());
+      for (DbElementCache dbElementCache : dbElementCacheList) {
+        dbElementCacheMap.put(dbElementCache.getKey(), dbElementCache);
+      }
+      dbMenuContentData.setElementsCache(dbElementCacheMap);
+
+      if (dbMenuContentData != null) {
+        emitter.onNext(dbMenuContentData);
         emitter.onComplete();
       } else {
         emitter.onError(new ApiMenuNotFoundException());
@@ -52,55 +85,108 @@ import orchextra.javax.inject.Singleton;
   }
 
   @Override public void putMenus(ApiMenuContentData apiMenuContentData) {
-    if (apiMenuContentData != null) {
-      kache.evict(MENU_KEY);
-      kache.put(apiMenuContentData);
+    for (ApiMenuContent apiMenuContent : apiMenuContentData.getMenuContentList()) {
+      DbMenuContent dbMenuContent = DbMappersKt.toDbMenuContent(apiMenuContent);
+      ocmDatabase.menuDao().insertMenu(dbMenuContent);
+
+      for (DbElement dbElement : dbMenuContent.getElements()) {
+        ocmDatabase.elementDao().insertElement(dbElement);
+
+        for (DbScheduleDates scheduleDate : dbElement.getDates()) {
+          scheduleDate.setSlug(dbElement.getSlug());
+          ocmDatabase.scheduleDatesDao().insertSchedule(scheduleDate);
+        }
+
+        DbMenuElementJoin dbMenuElementJoin =
+            new DbMenuElementJoin(dbMenuContent.getSlug(), dbElement.getSlug());
+        ocmDatabase.elementDao().insertMenuElement(dbMenuElementJoin);
+      }
+    }
+
+    Iterator<Map.Entry<String, ApiElementCache>> iterator =
+        apiMenuContentData.getElementsCache().entrySet().iterator();
+    while (iterator.hasNext()) {
+      Map.Entry<String, ApiElementCache> next = iterator.next();
+      ApiElementData apiElementData = new ApiElementData(next.getValue());
+      String key = next.getKey();
+      putDetail(apiElementData, key);
     }
   }
 
-  @Override public boolean isMenuCached() {
-    return kache.isCached(MENU_KEY);
+  @Override public boolean hasMenusCached() {
+    int versionDataCount = ocmDatabase.menuDao().hasMenus();
+    return (versionDataCount == 1);
   }
 
-  @Override public boolean isMenuExpired() {
-    return kache.isExpired(MENU_KEY, ApiMenuContentDataResponse.class);
-  }
-
-  @Override public Observable<ApiSectionContentData> getSection(final String elementUrl) {
+  @Override public Observable<DbSectionContentData> getSection(@NonNull final String elementUrl) {
     return Observable.create(emitter -> {
-      ApiSectionContentData apiSectionContentData =
-          (ApiSectionContentData) kache.get(ApiSectionContentData.class, elementUrl);
+      DbSectionContentData dbSectionContentData =
+          ocmDatabase.sectionDao().fetchSectionContentData(elementUrl);
 
-      if (apiSectionContentData != null) {
-        emitter.onNext(apiSectionContentData);
-        emitter.onComplete();
-      } else {
-        emitter.onError(new ApiSectionNotFoundException());
+      List<DbElement> dbSectionContentDataElementList = ocmDatabase.sectionDao()
+          .fetchSectionElements(dbSectionContentData.getContent().getSlug());
+      dbSectionContentData.getContent().setElements(dbSectionContentDataElementList);
+
+      Map<String, DbElementCache> elementCaches = new HashMap<>();
+      for (DbElement element : dbSectionContentDataElementList) {
+        DbElementCache elementCache =
+            ocmDatabase.elementCacheDao().fetchElementCache(element.getSlug());
+        elementCaches.put(element.getElementUrl(), elementCache);
       }
+      dbSectionContentData.setElementsCache(elementCaches);
+
+      emitter.onNext(dbSectionContentData);
+      emitter.onComplete();
     });
   }
 
-  @Override public void putSection(ApiSectionContentData apiSectionContentData) {
-    if (apiSectionContentData != null) {
-      kache.evict(apiSectionContentData.getKey());
-      kache.put(apiSectionContentData);
+  @Override public void putSection(@NonNull ApiSectionContentData apiSectionContentData,
+      @NonNull String key) {
+
+    ocmDatabase.elementDao().deleteAll();
+
+    DbSectionContentData dbSectionContentData =
+        DbMappersKt.toDbSectionContentData(apiSectionContentData, key);
+    ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData);
+
+    ApiContentItem sectionContentItem = apiSectionContentData.getContent();
+    if (sectionContentItem != null) {
+      for (ApiElement element : sectionContentItem.getElements()) {
+        ocmDatabase.elementDao().insertElement(DbMappersKt.toDbElement(element, -2));
+        DbSectionElementJoin dbSectionElementJoin =
+            new DbSectionElementJoin(sectionContentItem.getSlug(), element.getSlug());
+        ocmDatabase.sectionDao().insertSectionElement((dbSectionElementJoin));
+      }
+    }
+
+    Map<String, ApiElementCache> elementsCache = apiSectionContentData.getElementsCache();
+    if (elementsCache != null) {
+      for (Map.Entry<String, ApiElementCache> next : elementsCache.entrySet()) {
+        ApiElementData apiElementData = new ApiElementData(next.getValue());
+        putDetail(apiElementData, next.getKey());
+      }
     }
   }
 
   @Override public boolean isSectionCached(String elementUrl) {
-    return kache.isCached(elementUrl);
+    int sectionDataCount = ocmDatabase.sectionDao().hasSectionContentData(elementUrl);
+    return (sectionDataCount == 1);
   }
 
   @Override public boolean isSectionExpired(String elementUrl) {
-    return kache.isExpired(elementUrl, ApiSectionContentData.class);
+    return false;
   }
 
-  @Override public Observable<ApiElementData> getDetail(String slug) {
+  //region ELEMENT
+  @Override public Observable<DbElementData> getDetail(String slug) {
     return Observable.create(emitter -> {
-      ApiElementData apiElementData = (ApiElementData) kache.get(ApiElementData.class, slug);
+      DbElementCache dbElementCacheData = ocmDatabase.elementCacheDao().fetchElementCache(slug);
 
-      if (apiElementData != null) {
-        emitter.onNext(apiElementData);
+      DbElementData dbElementData = new DbElementData();
+      dbElementData.setElement(dbElementCacheData);
+
+      if (dbElementData != null) {
+        emitter.onNext(dbElementData);
         emitter.onComplete();
       } else {
         emitter.onError(new ApiSectionNotFoundException());
@@ -108,24 +194,31 @@ import orchextra.javax.inject.Singleton;
     });
   }
 
-  @Override public void putDetail(ApiElementData apiElementData) {
-    if (apiElementData != null && apiElementData.getKey() != null) {
-      kache.evict(apiElementData.getKey());
-      kache.put(apiElementData);
+  @Override public boolean isDetailCached(@NonNull String slug) {
+    try {
+      int detailDataCount = ocmDatabase.elementCacheDao().hasElementCache(slug);
+      return (detailDataCount == 1);
+    } catch (Exception e) {
+      Timber.e(e, "isDetailCached( %s )", slug);
+      return false;
     }
   }
 
-  @Override public boolean isDetailCached(String slug) {
-    return kache.isCached(slug);
-  }
-
   @Override public boolean isDetailExpired(String slug) {
-    return kache.isExpired(slug, ApiElementData.class);
+    return false;
   }
 
-  @Override public Observable<ApiVideoData> getVideo(String videoId) {
+  @Override public void putDetail(@NonNull ApiElementData apiElementData, @NonNull String key) {
+    DbElementCache elementCacheData =
+        DbMappersKt.toDbElementCache(apiElementData.getElement(), key, -1);
+    ocmDatabase.elementCacheDao().insertElementCache(elementCacheData);
+  }
+  //endregion
+
+  //region VIDEO
+  @Override public Observable<DbVideoData> getVideo(String videoId) {
     return Observable.create(emitter -> {
-      ApiVideoData videoData = (ApiVideoData) kache.get(ApiVideoData.class, videoId);
+      DbVideoData videoData = ocmDatabase.videoDao().fetchVideo(videoId);
 
       if (videoData != null) {
         emitter.onNext(videoData);
@@ -136,23 +229,33 @@ import orchextra.javax.inject.Singleton;
     });
   }
 
-  @Override public void putVideo(ApiVideoData videoData) {
-    if (videoData != null && videoData.getKey() != null) {
-      kache.evict(videoData.getKey());
-      kache.put(videoData);
-    }
+  @Override public void putVideo(VimeoInfo vimeoInfo) {
+    Observable.create(emitter -> {
+      DbVideoData dbVideoData = DbMappersKt.toDbVideoData(vimeoInfo);
+      Long maxExpiredTime = DateUtilsKt.getTodayPlusDays(1);
+      dbVideoData.setExpireAt(maxExpiredTime);
+      ocmDatabase.videoDao().insertVideo(dbVideoData);
+      emitter.onComplete();
+    }).subscribeOn(Schedulers.io()).subscribe();
   }
 
   @Override public boolean isVideoCached(String videoId) {
-    return kache.isCached(videoId);
+    int videoDataCount = ocmDatabase.videoDao().hasVideo(videoId);
+    return (videoDataCount == 1);
   }
 
   @Override public boolean isVideoExpired(String videoId) {
-    return kache.isExpired(videoId, ApiVideoData.class);
+    int videoDataCount = ocmDatabase.videoDao().hasExpiredVideo(videoId, DateUtilsKt.getToday());
+    return (videoDataCount == 1);
   }
+  //endregion
 
   @Override public void evictAll(boolean images, boolean data) {
-    if (data) trimCache(mContext, "kache");
+    if (data) {
+      Observable.create(emitter -> {
+        ocmDatabase.deleteAll();
+      }).subscribeOn(Schedulers.io()).subscribe();
+    }
     if (images) trimCache(mContext, "images");
   }
 
@@ -187,36 +290,5 @@ import orchextra.javax.inject.Singleton;
 
   @Override public Context getContext() {
     return mContext;
-  }
-
-  @Override public void putVersion(ApiVersionKache apiVersionKache) {
-    if (apiVersionKache != null && !TextUtils.isEmpty(apiVersionKache.getVersion())) {
-      kache.evict(VERSION_KEY);
-      kache.put(apiVersionKache);
-    }
-  }
-
-  @Override public Observable<ApiVersionKache> getVersion() {
-
-    return Observable.create(emitter -> {
-      ApiVersionKache apiVersionKache =
-          (ApiVersionKache) kache.get(ApiVersionKache.class, VERSION_KEY);
-
-      if (apiVersionKache != null) {
-
-        emitter.onNext(apiVersionKache);
-        emitter.onComplete();
-      } else {
-        emitter.onNext(new ApiVersionKache("-1"));
-      }
-    });
-  }
-
-  @Override public boolean isVersionCached() {
-    return kache.isCached(VERSION_KEY);
-  }
-
-  @Override public boolean isVersionExpired() {
-    return kache.isExpired(VERSION_KEY, ApiVersionKache.class);
   }
 }

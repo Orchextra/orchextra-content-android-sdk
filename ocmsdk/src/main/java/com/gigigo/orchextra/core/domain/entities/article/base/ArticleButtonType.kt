@@ -8,9 +8,8 @@ enum class ArticleButtonType constructor(val typeButton: String) : Serializable 
 
   companion object {
     fun convertFromString(type: String?): ArticleButtonType {
-      val values = ArticleButtonType.values()
-      for (value in values) {
-        if (value.typeButton == type) {
+      for (value in ArticleButtonType.values()) {
+        if (value.typeButton.equals(type, true)) {
           return value
         }
       }

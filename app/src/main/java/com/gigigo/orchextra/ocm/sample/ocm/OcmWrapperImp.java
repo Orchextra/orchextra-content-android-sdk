@@ -30,6 +30,8 @@ public class OcmWrapperImp implements OcmWrapper {
     mOnStartWithCredentialsCallback = onStartWithCredentialsCallback;
     isOxLoaded = false;
 
+    Timber.d("startWithCredentials(apiKey: %s, apiSecret: %s)", apiKey, apiSecret);
+
     OcmBuilder ocmBuilder = new OcmBuilder(context).setOrchextraCredentials(apiKey, apiSecret)
         .setOnEventCallback(eventCallback)
         .setContentLanguage("EN")

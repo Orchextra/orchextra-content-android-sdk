@@ -96,7 +96,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.ocm_content_grid_layout_view, container, false);
     initView(view);
@@ -135,7 +135,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
     }
     retryButton = view.findViewById(R.id.ocm_retry_button);
     moreButton = view.findViewById(R.id.ocm_more_button);
-    listedDataContainer = (FrameLayout) view.findViewById(R.id.listedDataContainer);
+    listedDataContainer = view.findViewById(R.id.listedDataContainer);
     newContentContainer = view.findViewById(R.id.newContentContainer);
   }
 
@@ -281,7 +281,7 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   @Override public void reloadSection(boolean hasToShowNewContentButton) {
     if (presenter != null) {
       presenter.setHasToCheckNewContent(hasToShowNewContentButton);
-      presenter.loadSection(!hasToShowNewContentButton, uiMenu, emotion, false);
+      presenter.loadSection(true, uiMenu, emotion, false);
     }
   }
 

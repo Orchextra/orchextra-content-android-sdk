@@ -2,8 +2,6 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -174,7 +172,6 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
               lastCompletelyVisibleItemPosition);
         }
       });
-
 
       int firstCompletelyVisibleItemPosition =
           ((LinearLayoutManager) ((RecyclerView) view).getLayoutManager()).findFirstCompletelyVisibleItemPosition();

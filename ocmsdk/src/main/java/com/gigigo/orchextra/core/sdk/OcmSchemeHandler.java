@@ -25,6 +25,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import timber.log.Timber;
 
 public class OcmSchemeHandler {
 
@@ -76,7 +77,7 @@ public class OcmSchemeHandler {
         new WeakReference<>(imageViewToExpandInDetail);
 
     if (processElementCallback == null) {
-      Log.e(TAG, "processElementCallback == null");
+      Timber.e("processElementCallback == null");
     }
 
     ocmController.getDetails(elementUrl, new OcmController.GetDetailControllerCallback() {
@@ -118,8 +119,13 @@ public class OcmSchemeHandler {
       }
 
       @Override public void onGetDetailFails(Exception e) {
-        if (processElementCallback != null) {
-          processElementCallback.onProcessElementFail(e);
+        Timber.e(e, "onGetDetailFails()");
+        if (elementUrl.matches("([^\\s]+):\\/\\/.*")) {
+          actionHandler.processDeepLink(elementUrl);
+        } else {
+          if (processElementCallback != null) {
+            processElementCallback.onProcessElementFail(e);
+          }
         }
       }
 
@@ -162,7 +168,12 @@ public class OcmSchemeHandler {
         OCManager.notifyEvent(OcmEvent.VISIT_URL, cachedElement);
         if (render != null) {
           render.setUrl(processUrl(render.getUrl()));
-          OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "");
+          if (cachedElement.getShare() != null) {
+            OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "",
+                cachedElement.getShare());
+          } else {
+            OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "");
+          }
         }
         break;
 
@@ -189,12 +200,17 @@ public class OcmSchemeHandler {
           processVideo(render.getFormat(), render.getSource(), cachedElement);
         }
         break;
+      case GO_CONTENT:
+        if (render != null) {
+          actionHandler.processDeepLink(elementUrl);
+        }
+        break;
       case NONE:
-        Log.w(TAG, "Type: NONE");
+        Timber.w("Type: NONE");
         processRedirectElementUrl(elementUrl, processElementCallback);
         break;
       default:
-        Log.w(TAG, "Default type: " + type);
+        Timber.w("Default type: " + type);
         processDetailActivity(elementUrl, urlImageToExpand, imageViewToExpandInDetail);
         break;
     }
@@ -202,8 +218,8 @@ public class OcmSchemeHandler {
 
   private void processDetailActivity(String elementUrl, String urlImageToExpand,
       WeakReference<ImageView> imageViewToExpandInDetail) {
-    int widthScreen =
-        DeviceUtils.calculateRealWidthDeviceInImmersiveMode(contextProvider.getApplicationContext());
+    int widthScreen = DeviceUtils.calculateRealWidthDeviceInImmersiveMode(
+        contextProvider.getApplicationContext());
     int heightScreen =
         DeviceUtils.calculateHeightDeviceInImmersiveMode(contextProvider.getApplicationContext());
 
@@ -247,14 +263,14 @@ public class OcmSchemeHandler {
   }
 
   private void processDeepLink(String uri, ProcessElementCallback processElementCallback) {
-    Log.d(TAG, "processDeepLink: " + uri);
+    Timber.d("processDeepLink: " + uri);
 
     if (uri.contains("openScanner")) {
       processScanCode(code -> {
         customParams.put("#code#", code);
 
         String action = uri.replaceAll("^[a-z]*://openScanner/", "");
-        Log.d(TAG, "Code: " + code + " Action: " + action);
+        Timber.d("Code: " + code + " Action: " + action);
         processElementUrl(action, null, processElementCallback);
       });
     } else {
@@ -264,8 +280,6 @@ public class OcmSchemeHandler {
 
   private void openDetailActivity(String elementUrl, String urlImageToExpand, int widthScreen,
       int heightScreen, ImageView imageViewToExpandInDetail) {
-
-
 
     DetailActivity.open(contextProvider.getCurrentActivity(), elementUrl, urlImageToExpand,
         widthScreen, heightScreen, imageViewToExpandInDetail);

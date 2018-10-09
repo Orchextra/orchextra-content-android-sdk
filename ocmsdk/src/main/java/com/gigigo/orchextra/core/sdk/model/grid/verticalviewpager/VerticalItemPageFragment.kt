@@ -43,6 +43,7 @@ class VerticalItemPageFragment : Fragment() {
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
+
     val view = inflater.inflate(R.layout.fragment_vertical_item_pager_view, container, false)
 
     verticalItemContainer = view.findViewById(R.id.verticalItemContainer)
@@ -63,6 +64,7 @@ class VerticalItemPageFragment : Fragment() {
     Timber.d("Name: %s", name)
     Timber.d("Image: %s", imageUrl)
     Timber.d("customProperties: %s", customProperties?.size)
+
     OcmImageLoader.load(this, imageUrl).into(verticalItemImageView)
 
     hideLoading()

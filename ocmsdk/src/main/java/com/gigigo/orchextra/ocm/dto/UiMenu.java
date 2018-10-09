@@ -3,12 +3,22 @@ package com.gigigo.orchextra.ocm.dto;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 
 public final class UiMenu {
+  private int index;
   private String slug;
   private String text;
   private String elementUrl;
   private long updateAt;
   private String contentUrl;
   private ElementCache elementCache;
+  private boolean hasNewVersion;
+
+  public int getIndex() {
+    return index;
+  }
+
+  public void setIndex(int index) {
+    this.index = index;
+  }
 
   public String getSlug() {
     return slug;
@@ -56,5 +66,13 @@ public final class UiMenu {
 
   public String getContentUrl() {
     return contentUrl;
+  }
+
+  public boolean hasNewVersion() {
+    return hasNewVersion;
+  }
+
+  public void setHasNewVersion(boolean hasNewVersion) {
+    this.hasNewVersion = hasNewVersion;
   }
 }

@@ -11,7 +11,7 @@ enum class ArticleButtonSize constructor(val size: String) : Serializable {
     fun convertFromString(size: String?): ArticleButtonSize {
       val values = ArticleButtonSize.values()
       for (value in values) {
-        if (value.size == size) {
+        if (value.size.equals(size,true)) {
           return value
         }
       }

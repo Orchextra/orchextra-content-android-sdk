@@ -3,6 +3,7 @@ package com.gigigo.orchextra.ocm.sample;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 import timber.log.Timber;
 
@@ -11,7 +12,7 @@ public class App extends MultiDexApplication {
   private static final String TAG = "App";
 
   @Override public void onCreate() {
-    enableStrictMode();
+    //enableStrictMode();
     super.onCreate();
     if (LeakCanary.isInAnalyzerProcess(this)) {
       return;
@@ -20,6 +21,8 @@ public class App extends MultiDexApplication {
     Timber.plant(new Timber.DebugTree());
     LeakCanary.install(this);
     MultiDex.install(this);
+
+    Stetho.initializeWithDefaults(this);
   }
 
   private void enableStrictMode() {

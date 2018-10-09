@@ -5,11 +5,8 @@ import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
-import com.gigigo.orchextra.ocm.OCManagerCallbacks;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmCallbacks;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
@@ -32,22 +29,21 @@ import java.util.Set;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import org.jetbrains.annotations.NotNull;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
-  private static final String TAG = "MainActivity";
   private OcmWrapper ocmWrapper;
   private TabLayout tabLayout;
   private ViewPager viewpager;
   private ScreenSlidePagerAdapter adapter;
-  private View newContentMainContainer;
   private TabLayout.OnTabSelectedListener onTabSelectedListener =
       new TabLayout.OnTabSelectedListener() {
         @Override public void onTabSelected(TabLayout.Tab tab) {
           viewpager.setCurrentItem(tab.getPosition());
           ScreenSlidePageFragment frag =
               ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem()));
-          frag.reloadSection(false);
+          frag.reloadSection();
         }
 
         @Override public void onTabUnselected(TabLayout.Tab tab) {
@@ -55,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override public void onTabReselected(TabLayout.Tab tab) {
           viewpager.setCurrentItem(tab.getPosition());
-          ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem())).reloadSection(
-              false);
+          ((ScreenSlidePageFragment) adapter.getItem(viewpager.getCurrentItem())).reloadSection();
         }
       };
 
@@ -89,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         onGetCustomization.invoke(viewCustomizationType);
-      }, 3000);
+      }, 1000);
     }
 
     @Override public void contentNeedsValidation(@NotNull Map<String, ?> customProperties,
@@ -121,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
     }
   };
 
-  private List<UiMenu> oldUiMenuList;
-
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -142,21 +135,11 @@ public class MainActivity extends AppCompatActivity {
 
       return map;
     });
-
-    initOcm();
   }
 
   @Override protected void onResume() {
     super.onResume();
-
-    Ocm.setOnChangedMenuCallback(uiMenuData -> {
-      boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, uiMenuData.getUiMenuList());
-      if (menuHasChanged) {
-        showIconNewContent(uiMenuData.getUiMenuList());
-      } else {
-        adapter.reloadSections(viewpager.getCurrentItem());
-      }
-    });
+    initOcm();
   }
 
   private void initViews() {
@@ -169,9 +152,6 @@ public class MainActivity extends AppCompatActivity {
         code -> Toast.makeText(MainActivity.this, "Code: " + code, Toast.LENGTH_SHORT).show()));
 
     fabSearch.setOnClickListener(v -> SearcherActivity.open(MainActivity.this));
-
-    newContentMainContainer = findViewById(R.id.newContentMainContainer);
-
     adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
     viewpager.setAdapter(adapter);
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -181,145 +161,60 @@ public class MainActivity extends AppCompatActivity {
     ocmWrapper.startWithCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET,
         BuildConfig.BUSSINES_UNIT, new OcmWrapper.OnStartWithCredentialsCallback() {
           @Override public void onCredentialReceiver(String accessToken) {
-            Log.d(TAG, "onCredentialReceiver()");
-            runOnUiThread(() -> clearData());
+            Timber.d("onCredentialReceiver()");
+            runOnUiThread(() -> getContent());
           }
 
           @Override public void onCredentailError() {
-            Log.e(TAG, "onCredentailError");
+            Timber.e("onCredentailError");
             Toast.makeText(MainActivity.this, "onCredentailError", Toast.LENGTH_SHORT).show();
           }
         });
   }
 
-  private List<UiMenu> copy(List<UiMenu> list) {
-    List<UiMenu> copyList = new ArrayList<>();
-    copyList.addAll(list);
-    return copyList;
-  }
-
-  private void clearData() {
-    Ocm.clearData(true, true, new OCManagerCallbacks.Clear() {
-      @Override public void onDataClearedSuccessfull() {
-        Log.d(TAG, "onDataClearedSuccessfull");
-        runOnUiThread(() -> getContent());
-      }
-
-      @Override public void onDataClearFails(Exception e) {
-        Log.e(TAG, "onDataClearFails");
-        Toast.makeText(MainActivity.this, "Clear data fail!", Toast.LENGTH_SHORT).show();
-      }
-    });
-  }
-
   private void getContent() {
-    Ocm.setOnLoadDataContentSectionFinished(
-        () -> Ocm.getMenus(DataRequest.FIRST_CACHE, new OcmCallbacks.Menus() {
-          @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
-            List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
-            if (newUiMenuList == null) {
-              return;
-            }
 
-            boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
-            if (menuHasChanged) {
-              showIconNewContent(newUiMenuList);
-            }
+    Ocm.getMenus(new OcmCallbacks.Menus() {
+      @Override public void onMenusLoaded(final UiMenuData uiMenuData) {
 
-            oldUiMenuList = copy(newUiMenuList);
-          }
-
-          @Override public void onMenusFails(Throwable e) {
-
-          }
-        }));
-
-    Ocm.getMenus(DataRequest.ONLY_CACHE, new OcmCallbacks.Menus() {
-      @Override public void onMenusLoaded(final UiMenuData oldUiMenuData) {
-        if (oldUiMenuData == null) {
-          Ocm.getMenus(DataRequest.FORCE_CLOUD, new OcmCallbacks.Menus() {
-            @Override public void onMenusLoaded(UiMenuData newUiMenuData) {
-              if (oldUiMenuList == null) {
-                onGoDetailView(newUiMenuData.getUiMenuList());
-                return;
-              }
-
-              List<UiMenu> newUiMenuList = newUiMenuData.getUiMenuList();
-              if (newUiMenuList == null) {
-                return;
-              }
-
-              boolean menuHasChanged = checkIfMenuHasChanged(oldUiMenuList, newUiMenuList);
-              if (menuHasChanged) {
-                showIconNewContent(newUiMenuList);
-              }
-              oldUiMenuList = copy(newUiMenuList);
-            }
-
-            @Override public void onMenusFails(Throwable e) {
-
-            }
-          });
+        if (uiMenuData == null) {
+          Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
         } else {
-          oldUiMenuList = copy(oldUiMenuData.getUiMenuList());
-
-          if (oldUiMenuList == null) {
-            Toast.makeText(MainActivity.this, "menu is null", Toast.LENGTH_SHORT).show();
-            return;
-          }
-
-          onGoDetailView(oldUiMenuList);
+          onGoDetailView(uiMenuData.getUiMenuList());
         }
       }
 
       @Override public void onMenusFails(Throwable e) {
-        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-      }
-    });
-  }
-
-  private boolean checkIfMenuHasChanged(List<UiMenu> oldUiMenuList, List<UiMenu> newUiMenuList) {
-    if (oldUiMenuList == null || newUiMenuList == null) {
-      return false;
-    }
-
-    if (oldUiMenuList.size() != newUiMenuList.size()) {
-      return true;
-    } else {
-      for (int i = 0; i < newUiMenuList.size(); i++) {
-        if (!oldUiMenuList.get(i).getSlug().equals(newUiMenuList.get(i).getSlug())) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  private void showIconNewContent(final List<UiMenu> newMenus) {
-    newContentMainContainer.setVisibility(View.VISIBLE);
-    newContentMainContainer.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        newContentMainContainer.setVisibility(View.GONE);
-
-        tabLayout.removeAllTabs();
-        onGoDetailView(newMenus);
+        Timber.e(e, "getMenus()");
+        Toast.makeText(MainActivity.this, "Get menu error!", Toast.LENGTH_SHORT).show();
       }
     });
   }
 
   private void onGoDetailView(List<UiMenu> uiMenu) {
-    tabLayout.removeAllTabs();
-    if (uiMenu.size() > 0) {
-      for (int i = 0; i < uiMenu.size(); i++) {
-        UiMenu menu = uiMenu.get(i);
+    viewpager.clearOnPageChangeListeners();
+
+    int count = tabLayout.getTabCount();
+
+    if (count == 0) {
+      for (UiMenu menu : uiMenu) {
         TabLayout.Tab tab = tabLayout.newTab().setText(menu.getText());
         tabLayout.addTab(tab);
+      }
+    } else {
+      if (count != uiMenu.size()) {
+        tabLayout.removeAllTabs();
+        for (UiMenu menu : uiMenu) {
+          TabLayout.Tab tab = tabLayout.newTab().setText(menu.getText());
+          tabLayout.addTab(tab);
+        }
+        viewpager.setCurrentItem(0);
       }
     }
 
     adapter.setDataItems(uiMenu);
-
     tabLayout.addOnTabSelectedListener(onTabSelectedListener);
+    viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
   }
 
   private OcmCustomTranslationDelegate ocmCustomTranslationDelegate = (key, completion) -> {

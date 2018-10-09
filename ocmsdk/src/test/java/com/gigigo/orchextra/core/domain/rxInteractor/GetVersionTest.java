@@ -10,15 +10,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
-
 @RunWith(MockitoJUnitRunner.class) public class GetVersionTest {
 
   private static final boolean FORCE_RELOAD = false;
-
-  private GetVersion getVersion;
 
   @Mock private OcmRepository mockOcmRepository;
   @Mock private PriorityScheduler mockThreadExecutor;
@@ -27,16 +21,9 @@ import static org.mockito.Mockito.verifyZeroInteractions;
   @Rule public ExpectedException expectedException = ExpectedException.none();
 
   @Before public void setUp() {
-    getVersion = new GetVersion(mockOcmRepository, mockThreadExecutor, mockPostExecutionThread);
   }
 
   @Test public void testGetSectionUseCaseObservableHappyCase() {
-    getVersion.buildUseCaseObservable(GetVersion.Params.forVersion());
 
-    verify(mockOcmRepository).getVersion();
-    verifyNoMoreInteractions(mockOcmRepository);
-    verifyZeroInteractions(mockPostExecutionThread);
-    verifyZeroInteractions(mockThreadExecutor);
   }
-
 }
