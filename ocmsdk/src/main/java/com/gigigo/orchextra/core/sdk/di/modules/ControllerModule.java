@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.sdk.di.modules;
 
+import com.gigigo.orchextra.core.AppExecutors;
 import com.gigigo.orchextra.core.controller.OcmControllerImp;
 import com.gigigo.orchextra.core.data.OcmDbDataSource;
 import com.gigigo.orchextra.core.data.OcmNetworkDataSource;
@@ -73,8 +74,12 @@ import orchextra.javax.inject.Singleton;
     return new OcmDbDataSource(ocmDatabase);
   }
 
+  @Provides @Singleton AppExecutors provideAppExecutors() {
+    return new AppExecutors();
+  }
+
   @Provides @Singleton OcmNetworkDataSource provideOcmNetworkDataSource(OcmApiService ocmApiService,
-      OcmDbDataSource ocmDbDataSource) {
-    return new OcmNetworkDataSource(ocmApiService, ocmDbDataSource);
+      OcmDbDataSource ocmDbDataSource, AppExecutors appExecutors) {
+    return new OcmNetworkDataSource(ocmApiService, ocmDbDataSource, appExecutors);
   }
 }
