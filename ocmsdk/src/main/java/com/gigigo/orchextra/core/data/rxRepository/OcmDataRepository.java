@@ -4,8 +4,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import com.gigigo.orchextra.core.AppExecutors;
 import com.gigigo.orchextra.core.data.OcmDbDataSource;
 import com.gigigo.orchextra.core.data.OcmNetworkDataSource;
+import com.gigigo.orchextra.core.data.rxException.NetworkConnectionException;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDiskDataStore;
@@ -25,31 +27,35 @@ import timber.log.Timber;
   private final OcmDataStoreFactory ocmDataStoreFactory;
   private final OcmDbDataSource ocmDbDataSource;
   private final OcmNetworkDataSource ocmNetworkDataSource;
+  private final AppExecutors appExecutors;
 
   @Inject
   public OcmDataRepository(OcmDataStoreFactory ocmDataStoreFactory, OcmDbDataSource ocmDbDataSource,
-      OcmNetworkDataSource ocmNetworkDataSource) {
+      OcmNetworkDataSource ocmNetworkDataSource, AppExecutors appExecutors) {
     this.ocmDataStoreFactory = ocmDataStoreFactory;
     this.ocmDbDataSource = ocmDbDataSource;
     this.ocmNetworkDataSource = ocmNetworkDataSource;
+    this.appExecutors = appExecutors;
   }
 
   @Override public Observable<MenuContentData> getMenus() {
 
     return Observable.create(emitter -> {
-      MenuContentData cacheMenuContentData = ocmDbDataSource.getMenus();
-      MenuContentData networkMenuContentData;
-      try {
-        networkMenuContentData = ocmNetworkDataSource.getMenus();
-      } catch (Exception e) {
-        Timber.e("getMenus()");
-        networkMenuContentData = null;
-      }
+      appExecutors.diskIO().execute(() -> {
+        MenuContentData cacheMenuContentData = ocmDbDataSource.getMenus();
+        MenuContentData networkMenuContentData;
+        try {
+          networkMenuContentData = ocmNetworkDataSource.getMenus();
+        } catch (Exception e) {
+          Timber.e("getMenus()");
+          networkMenuContentData = null;
+        }
 
-      MenuContentData menuContentData =
-          getUpdatedMenuContentData(cacheMenuContentData, networkMenuContentData);
-      emitter.onNext(menuContentData);
-      emitter.onComplete();
+        MenuContentData menuContentData =
+            getUpdatedMenuContentData(cacheMenuContentData, networkMenuContentData);
+        emitter.onNext(menuContentData);
+        emitter.onComplete();
+      });
     });
   }
 
@@ -60,20 +66,27 @@ import timber.log.Timber;
     Timber.d("getSectionElements(forceReload: %s)", forceReload);
 
     return Observable.create(emitter -> {
-      ContentData contentData;
       if (forceReload) {
-        contentData = ocmNetworkDataSource.getSectionElements(contentUrl);
+        emitter.onNext(ocmNetworkDataSource.getSectionElements(contentUrl));
+        emitter.onComplete();
       } else {
-        try {
-          contentData = ocmDbDataSource.getSectionElements(contentUrl);
-        } catch (Exception e) {
-          Timber.i(e, "getSectionElements() EMPTY");
-          contentData = ocmNetworkDataSource.getSectionElements(contentUrl);
-        }
-      }
 
-      emitter.onNext(contentData);
-      emitter.onComplete();
+        appExecutors.diskIO().execute(() -> {
+          try {
+            emitter.onNext(ocmDbDataSource.getSectionElements(contentUrl));
+            emitter.onComplete();
+          } catch (Exception e) {
+            Timber.i(e, "getSectionElements() EMPTY");
+            try {
+              emitter.onNext(ocmNetworkDataSource.getSectionElements(contentUrl));
+              emitter.onComplete();
+            } catch (NetworkConnectionException e1) {
+              Timber.e(e1, "getSectionElements()");
+              emitter.onError(e1);
+            }
+          }
+        });
+      }
     });
   }
 
