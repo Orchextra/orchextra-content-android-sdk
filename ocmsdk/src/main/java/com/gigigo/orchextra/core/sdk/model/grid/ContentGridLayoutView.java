@@ -302,8 +302,8 @@ public class ContentGridLayoutView extends UiGridBaseContentData implements Cont
   }
 
   @Override public void showNewExistingContent() {
-    newContentContainer.setVisibility(View.VISIBLE);
-    newContentContainer.setOnClickListener(onNewContentClickListener);
+    //newContentContainer.setVisibility(View.VISIBLE);
+    //newContentContainer.setOnClickListener(onNewContentClickListener);
   }
 
   @Override public void onDestroy() {
