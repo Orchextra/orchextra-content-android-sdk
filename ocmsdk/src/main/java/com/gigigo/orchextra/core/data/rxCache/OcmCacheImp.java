@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
+import timber.log.Timber;
 
 @Singleton public class OcmCacheImp implements OcmCache {
   private final OcmDatabase ocmDatabase;
@@ -193,9 +194,14 @@ import orchextra.javax.inject.Singleton;
     });
   }
 
-  @Override public boolean isDetailCached(String slug) {
-    int detailDataCount = ocmDatabase.elementCacheDao().hasElementCache(slug);
-    return (detailDataCount == 1);
+  @Override public boolean isDetailCached(@NonNull String slug) {
+    try {
+      int detailDataCount = ocmDatabase.elementCacheDao().hasElementCache(slug);
+      return (detailDataCount == 1);
+    } catch (Exception e) {
+      Timber.e(e, "isDetailCached( %s )", slug);
+      return false;
+    }
   }
 
   @Override public boolean isDetailExpired(String slug) {
