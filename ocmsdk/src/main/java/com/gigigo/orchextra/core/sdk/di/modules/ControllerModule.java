@@ -70,8 +70,9 @@ import orchextra.javax.inject.Singleton;
     return OcmDatabase.Companion.create(context.getApplicationContext());
   }
 
-  @Provides @Singleton OcmDbDataSource provideOcmDbDataSource(OcmDatabase ocmDatabase) {
-    return new OcmDbDataSource(ocmDatabase);
+  @Provides @Singleton OcmDbDataSource provideOcmDbDataSource(OcmDatabase ocmDatabase,
+      AppExecutors appExecutors) {
+    return new OcmDbDataSource(ocmDatabase, appExecutors);
   }
 
   @Provides @Singleton AppExecutors provideAppExecutors() {

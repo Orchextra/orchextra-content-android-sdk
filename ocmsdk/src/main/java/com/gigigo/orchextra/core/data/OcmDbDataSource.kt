@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.data
 
+import com.gigigo.orchextra.core.AppExecutors
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData
@@ -22,7 +23,8 @@ import orchextra.javax.inject.Inject
 import orchextra.javax.inject.Singleton
 
 @Singleton
-class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) {
+class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
+    private val appExecutors: AppExecutors) {
 
   fun getMenus(): MenuContentData {
 
@@ -119,25 +121,28 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase) 
 
   fun putSection(apiSectionContentData: ApiSectionContentData, key: String) {
 
-    val dbSectionContentData = apiSectionContentData.toDbSectionContentData(key)
-    ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData)
+    appExecutors.diskIO().execute {
 
-    val sectionContentItem = apiSectionContentData.content
-    if (sectionContentItem != null) {
+      val dbSectionContentData = apiSectionContentData.toDbSectionContentData(key)
+      ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData)
 
-      sectionContentItem.elements?.forEachIndexed { index, apiElement ->
-        ocmDatabase.elementDao().insertElement(apiElement.toDbElement(index))
-        val dbSectionElementJoin = DbSectionElementJoin(sectionContentItem.slug, apiElement.slug)
-        ocmDatabase.sectionDao().insertSectionElement(dbSectionElementJoin)
+      val sectionContentItem = apiSectionContentData.content
+      if (sectionContentItem != null) {
+
+        sectionContentItem.elements?.forEachIndexed { index, apiElement ->
+          ocmDatabase.elementDao().insertElement(apiElement.toDbElement(index))
+          val dbSectionElementJoin = DbSectionElementJoin(sectionContentItem.slug, apiElement.slug)
+          ocmDatabase.sectionDao().insertSectionElement(dbSectionElementJoin)
+        }
       }
-    }
 
-    var index = 0
-    if (apiSectionContentData.elementsCache != null) {
-      for ((key, value) in apiSectionContentData.elementsCache) {
-        val apiElementData = ApiElementData(value)
-        putDetail(apiElementData, key, index)
-        index++
+      var index = 0
+      if (apiSectionContentData.elementsCache != null) {
+        for ((key, value) in apiSectionContentData.elementsCache) {
+          val apiElementData = ApiElementData(value)
+          putDetail(apiElementData, key, index)
+          index++
+        }
       }
     }
   }
