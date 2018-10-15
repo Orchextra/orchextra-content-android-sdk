@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
@@ -30,7 +31,7 @@ import timber.log.Timber;
   String uriImgPreview = "";
   String webviewTitle = "";
 
-  public static void open(Context context, ElementCacheRender render, String toolbarText) {
+  public static void open(@NonNull Context context, ElementCacheRender render, String toolbarText) {
     Intent intent = new Intent(context, OcmWebViewActivity.class);
     intent.putExtra(EXTRA_URL, render.getUrl());
     intent.putExtra(EXTRA_FA, render.getFederatedAuth());
@@ -38,7 +39,7 @@ import timber.log.Timber;
     context.startActivity(intent);
   }
 
-  public static void open(Context context, ElementCacheRender render, String toolbarText,
+  public static void open(@NonNull Context context, ElementCacheRender render, String toolbarText,
       ElementCacheShare share) {
     Intent intent = new Intent(context, OcmWebViewActivity.class);
     intent.putExtra(EXTRA_URL, render.getUrl());

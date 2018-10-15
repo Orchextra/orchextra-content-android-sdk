@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.sdk;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -169,8 +170,17 @@ public class OcmSchemeHandler {
         if (render != null) {
           render.setUrl(processUrl(render.getUrl()));
           if (cachedElement.getShare() != null) {
-            OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "",
-                cachedElement.getShare());
+
+            Context context = contextProvider.getCurrentActivity();
+            if (context == null) {
+              context = contextProvider.getApplicationContext();
+            }
+
+            if (context != null) {
+              OcmWebViewActivity.open(context, render, "", cachedElement.getShare());
+            } else {
+              Timber.e("Null context");
+            }
           } else {
             OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "");
           }
