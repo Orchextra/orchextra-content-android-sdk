@@ -172,17 +172,19 @@ public class OcmSchemeHandler {
           if (cachedElement.getShare() != null) {
 
             Context context = contextProvider.getCurrentActivity();
-            if (context == null) {
-              context = contextProvider.getApplicationContext();
-            }
-
             if (context != null) {
               OcmWebViewActivity.open(context, render, "", cachedElement.getShare());
             } else {
               Timber.e("Null context");
             }
           } else {
-            OcmWebViewActivity.open(contextProvider.getCurrentActivity(), render, "");
+
+            Context context = contextProvider.getCurrentActivity();
+            if (context != null) {
+              OcmWebViewActivity.open(context, render, "");
+            } else {
+              Timber.e("Null context");
+            }
           }
         }
         break;
