@@ -56,40 +56,52 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
 
   fun saveMenus(apiMenuContentData: ApiMenuContentData) {
 
-    ocmDatabase.menuDao().deleteAll()
-    ocmDatabase.elementDao().deleteAll()
+    appExecutors.diskIO().execute {
+      try {
+        ocmDatabase.menuDao().deleteAll()
+        ocmDatabase.elementDao().deleteAll()
 
-    apiMenuContentData.menuContentList?.forEach { apiMenuContent ->
-      val dbMenuContent = apiMenuContent.toDbMenuContent()
-      ocmDatabase.menuDao().insertMenu(dbMenuContent)
+        apiMenuContentData.menuContentList?.forEach { apiMenuContent ->
+          val dbMenuContent = apiMenuContent.toDbMenuContent()
+          ocmDatabase.menuDao().insertMenu(dbMenuContent)
 
-      dbMenuContent.elements?.forEachIndexed { index, dbElement ->
-        dbElement.listIndex = index
-        ocmDatabase.elementDao().insertElement(dbElement)
+          dbMenuContent.elements?.forEachIndexed { index, dbElement ->
+            dbElement.listIndex = index
+            ocmDatabase.elementDao().insertElement(dbElement)
 
-        for (scheduleDate in dbElement.dates) {
-          scheduleDate.slug = dbElement.slug
-          ocmDatabase.scheduleDatesDao().insertSchedule(scheduleDate)
+            for (scheduleDate in dbElement.dates) {
+              scheduleDate.slug = dbElement.slug
+              ocmDatabase.scheduleDatesDao().insertSchedule(scheduleDate)
+            }
+
+            val dbMenuElementJoin = DbMenuElementJoin(dbMenuContent.slug, dbElement.slug)
+            ocmDatabase.elementDao().insertMenuElement(dbMenuElementJoin)
+          }
         }
 
-        val dbMenuElementJoin = DbMenuElementJoin(dbMenuContent.slug, dbElement.slug)
-        ocmDatabase.elementDao().insertMenuElement(dbMenuElementJoin)
+        ocmDatabase.elementCacheDao().deleteAll()
+
+        var index = 0
+        apiMenuContentData.elementsCache?.forEach { (key, element) ->
+          val apiElementData = ApiElementData(element)
+          putDetail(apiElementData, key, index)
+          index++
+        }
+      } catch (e: Exception) {
+        Timber.e(e, "saveMenus()")
       }
-    }
-
-    ocmDatabase.elementCacheDao().deleteAll()
-
-    var index = 0
-    apiMenuContentData.elementsCache?.forEach { (key, element) ->
-      val apiElementData = ApiElementData(element)
-      putDetail(apiElementData, key, index)
-      index++
     }
   }
 
   private fun putDetail(apiElementData: ApiElementData, key: String, index: Int) {
-    val elementCacheData = apiElementData.element.toDbElementCache(key, index)
-    ocmDatabase.elementCacheDao().insertElementCache(elementCacheData)
+    appExecutors.diskIO().execute {
+      try {
+        val elementCacheData = apiElementData.element.toDbElementCache(key, index)
+        ocmDatabase.elementCacheDao().insertElementCache(elementCacheData)
+      } catch (e: Exception) {
+        Timber.e(e, "putDetail()")
+      }
+    }
   }
 
   @Throws(ApiSectionNotFoundException::class)
