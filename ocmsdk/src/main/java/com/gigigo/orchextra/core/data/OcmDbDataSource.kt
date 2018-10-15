@@ -21,6 +21,7 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData
 import orchextra.javax.inject.Inject
 import orchextra.javax.inject.Singleton
+import timber.log.Timber
 
 @Singleton
 class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
@@ -122,27 +123,31 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
   fun putSection(apiSectionContentData: ApiSectionContentData, key: String) {
 
     appExecutors.diskIO().execute {
+      try {
+        val dbSectionContentData = apiSectionContentData.toDbSectionContentData(key)
+        ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData)
 
-      val dbSectionContentData = apiSectionContentData.toDbSectionContentData(key)
-      ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData)
+        val sectionContentItem = apiSectionContentData.content
+        if (sectionContentItem != null) {
 
-      val sectionContentItem = apiSectionContentData.content
-      if (sectionContentItem != null) {
-
-        sectionContentItem.elements?.forEachIndexed { index, apiElement ->
-          ocmDatabase.elementDao().insertElement(apiElement.toDbElement(index))
-          val dbSectionElementJoin = DbSectionElementJoin(sectionContentItem.slug, apiElement.slug)
-          ocmDatabase.sectionDao().insertSectionElement(dbSectionElementJoin)
+          sectionContentItem.elements?.forEachIndexed { index, apiElement ->
+            ocmDatabase.elementDao().insertElement(apiElement.toDbElement(index))
+            val dbSectionElementJoin = DbSectionElementJoin(sectionContentItem.slug,
+                apiElement.slug)
+            ocmDatabase.sectionDao().insertSectionElement(dbSectionElementJoin)
+          }
         }
-      }
 
-      var index = 0
-      if (apiSectionContentData.elementsCache != null) {
-        for ((key, value) in apiSectionContentData.elementsCache) {
-          val apiElementData = ApiElementData(value)
-          putDetail(apiElementData, key, index)
-          index++
+        var index = 0
+        if (apiSectionContentData.elementsCache != null) {
+          for ((key, value) in apiSectionContentData.elementsCache) {
+            val apiElementData = ApiElementData(value)
+            putDetail(apiElementData, key, index)
+            index++
+          }
         }
+      } catch (e: Exception) {
+        Timber.e(e, "putSection()")
       }
     }
   }
