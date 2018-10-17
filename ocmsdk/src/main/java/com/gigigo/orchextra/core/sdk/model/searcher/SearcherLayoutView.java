@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.multiplegridrecyclerview.MultipleGridRecyclerView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.multiplegridrecyclerview.entities.CellBlankElement;
@@ -34,6 +33,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   private View emptyLayout;
   private View progressLayout;
   private boolean thumbnailEnabled;
+  private String lastSearch = "";
 
   public static SearcherLayoutView newInstance() {
     return new SearcherLayoutView();
@@ -92,20 +92,16 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
 
     setAdapterDataViewHolders();
 
-    recyclerView.setOnRefreshListener(new MultipleGridRecyclerView.OnRefreshListener() {
-      @Override public void onRefresh() {
-        if (presenter != null) {
-          recyclerView.showLoadingView(true);
-          presenter.doSearch();
-        }
+    recyclerView.setOnRefreshListener(() -> {
+      if (presenter != null) {
+        recyclerView.showLoadingView(true);
+        presenter.doSearch(lastSearch);
       }
     });
 
-    recyclerView.setItemClickListener(new BaseViewHolder.OnItemClickListener() {
-      @Override public void onItemClick(int position, View view) {
-        presenter.onItemClicked(position, (AppCompatActivity) getActivity(), view);
-      }
-    });
+    recyclerView.setItemClickListener(
+        (position, view) -> presenter.onItemClicked(position, (AppCompatActivity) getActivity(),
+            view));
   }
 
   private void setAdapterDataViewHolders() {
@@ -139,6 +135,7 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
   }
 
   @Override public void doSearch(String textToSearch) {
+    this.lastSearch = textToSearch;
     if (presenter != null) {
       presenter.doSearch(textToSearch);
     }
@@ -150,12 +147,6 @@ public class SearcherLayoutView extends UiSearchBaseContentData implements Searc
 
   @Override public void setProgressView(View progressLayout) {
     this.progressLayout = progressLayout;
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-
-    presenter.updateUi();
   }
 
   @Override public void onDestroy() {
