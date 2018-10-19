@@ -41,8 +41,17 @@ import timber.log.Timber;
 
     return Observable.create(emitter -> {
       appExecutors.diskIO().execute(() -> {
-        MenuContentData cacheMenuContentData = ocmDbDataSource.getMenus();
+
+        MenuContentData cacheMenuContentData;
         MenuContentData networkMenuContentData;
+
+        try {
+          cacheMenuContentData = ocmDbDataSource.getMenus();
+        } catch (Exception e) {
+          Timber.e("getMenus()");
+          cacheMenuContentData = null;
+        }
+
         try {
           networkMenuContentData = ocmNetworkDataSource.getMenus();
         } catch (Exception e) {
