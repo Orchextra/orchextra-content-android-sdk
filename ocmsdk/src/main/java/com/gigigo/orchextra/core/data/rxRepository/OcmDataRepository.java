@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import com.gigigo.orchextra.core.AppExecutors;
+import com.gigigo.orchextra.core.data.ElementComparator;
 import com.gigigo.orchextra.core.data.OcmDbDataSource;
 import com.gigigo.orchextra.core.data.OcmNetworkDataSource;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
@@ -18,6 +19,8 @@ import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
+import java.util.Collections;
+import java.util.List;
 import orchextra.javax.inject.Inject;
 import orchextra.javax.inject.Singleton;
 import timber.log.Timber;
@@ -86,9 +89,16 @@ import timber.log.Timber;
         }
       }
 
-      emitter.onNext(contentData);
+      emitter.onNext(sortContentData(contentData));
       emitter.onComplete();
     });
+  }
+
+  private ContentData sortContentData(final ContentData contentData) {
+    List<Element> elements = contentData.getContent().getElements();
+    Collections.sort(elements, new ElementComparator());
+    contentData.getContent().setElements(elements);
+    return contentData;
   }
 
   @Override public Observable<ContentData> doSearch(String textToSearch) {
