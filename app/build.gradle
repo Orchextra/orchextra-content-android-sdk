@@ -109,6 +109,10 @@ android {
       dimension "sample"
     }
 
+    ferring {
+      dimension "sample"
+    }
+
     woah_HU {
       dimension "sample"
     }

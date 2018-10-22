@@ -51,6 +51,18 @@ ext {
                                      staging: '677cf75a17aeec144ee402c281ad3a732d736a8a',
                                      release: '6bc18c500546f253699f61c11a62827679178400']]
 
+  ferring = [orchextraBussinesUnit: "es",
+             applicationId        : "com.ferring.ferringo.debug",
+             appName              : "FerrindOCM",
+
+             orchextraApiKey      : [debug  : 'fb032442652586418769d3d9a46208bd95350f0b',
+                                     staging: 'fb032442652586418769d3d9a46208bd95350f0b',
+                                     release: 'fb032442652586418769d3d9a46208bd95350f0b'],
+
+             orchextraApiSecret   : [debug  : '9c7ee63e98f9c0225c22512621965bad3a5fac7f',
+                                     staging: '9c7ee63e98f9c0225c22512621965bad3a5fac7f',
+                                     release: '9c7ee63e98f9c0225c22512621965bad3a5fac7f']]
+
   woah_HU = [orchextraBussinesUnit: "oat-hu",
              applicationId        : "${baseApplicationId}.hu",
              appName              : "${basePackageName} HU",
