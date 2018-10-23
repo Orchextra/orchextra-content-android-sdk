@@ -17,8 +17,18 @@ public class OcmWrapperImp implements OcmWrapper {
   private boolean isOxLoaded = false;
   private final Application context;
 
-  public OcmWrapperImp(Application context) {
+  private static OcmWrapperImp instance;
+
+  private OcmWrapperImp(Application context) {
     this.context = context;
+  }
+
+  public static OcmWrapperImp getInstance(Application application) {
+    if (instance == null) {
+      instance = new OcmWrapperImp(application);
+    }
+
+    return instance;
   }
 
   @Override public boolean isOcmInitialized() {

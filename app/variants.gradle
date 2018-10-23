@@ -52,8 +52,8 @@ ext {
                                      release: '6bc18c500546f253699f61c11a62827679178400']]
 
   ferring = [orchextraBussinesUnit: "es",
-             applicationId        : "com.ferring.ferringo.debug",
-             appName              : "FerrindOCM",
+             applicationId        : "${baseApplicationId}.ferring",
+             appName              : "FerringOCM",
 
              orchextraApiKey      : [debug  : 'fb032442652586418769d3d9a46208bd95350f0b',
                                      staging: 'fb032442652586418769d3d9a46208bd95350f0b',

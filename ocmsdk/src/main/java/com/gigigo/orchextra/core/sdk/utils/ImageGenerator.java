@@ -14,6 +14,10 @@ public class ImageGenerator {
   private static final String ORIGINAL_HEIGHT = "originalheight";
 
   public static String generateImageUrl(String url, int widthPixels, int heightPixels) {
+    if (url == null) {
+      return "";
+    }
+
     Uri uriUrl = Uri.parse(url)
         .buildUpon()
         .appendQueryParameter("w", String.valueOf(widthPixels))

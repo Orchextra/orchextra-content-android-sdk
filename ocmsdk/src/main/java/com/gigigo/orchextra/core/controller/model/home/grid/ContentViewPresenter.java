@@ -82,6 +82,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
      * force = true
      * Get section from cloud, if data changes refresh content
      */
+
     if (!forceReload) {
       ocmController.getSection(DataRequest.ONLY_CACHE, contentUrl, imagesToDownload,
           new OcmController.GetSectionControllerCallback() {

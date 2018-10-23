@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     initViews();
 
-    ocmWrapper = new OcmWrapperImp(getApplication());
+    ocmWrapper = OcmWrapperImp.getInstance(getApplication());
 
     Ocm.setOnDoRequiredLoginCallback(onDoRequiredLoginCallback);
     Ocm.setCustomBehaviourDelegate(customPropertiesDelegate);
@@ -158,18 +158,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void initOcm() {
-    ocmWrapper.startWithCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET,
-        BuildConfig.BUSSINES_UNIT, new OcmWrapper.OnStartWithCredentialsCallback() {
-          @Override public void onCredentialReceiver(String accessToken) {
-            Timber.d("onCredentialReceiver()");
-            runOnUiThread(() -> getContent());
-          }
-
-          @Override public void onCredentailError() {
-            Timber.e("onCredentailError");
-            Toast.makeText(MainActivity.this, "onCredentailError", Toast.LENGTH_SHORT).show();
-          }
-        });
+    new Handler().postDelayed(this::getContent, 1000);
   }
 
   private void getContent() {
