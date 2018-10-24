@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void initOcm() {
-    new Handler().postDelayed(this::getContent, 1000);
+    new Handler().postDelayed(this::getContent, 2000);
   }
 
   private void getContent() {

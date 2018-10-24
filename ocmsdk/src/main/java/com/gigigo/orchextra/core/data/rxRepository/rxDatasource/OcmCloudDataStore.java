@@ -21,6 +21,7 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.receiver.WifiReceiver;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
+import com.gigigo.orchextra.core.utils.VimeoCredentials;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
 import gigigo.com.vimeolibs.VimeoBuilder;
@@ -43,14 +44,16 @@ import org.jetbrains.annotations.NotNull;
   private final OcmApiService ocmApiService;
   private final OcmCache ocmCache;
   private final OcmImageCache ocmImageCache;
+  private VimeoCredentials vimeoCredentials;
 
   private Integer withThumbnails = null; //For default, thumbnails are enabled
 
   @Inject public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,
-      @NonNull OcmImageCache ocmImageCache) {
+      @NonNull OcmImageCache ocmImageCache, VimeoCredentials vimeoCredentials) {
     this.ocmApiService = ocmApiService;
     this.ocmCache = ocmCache;
     this.ocmImageCache = ocmImageCache;
+    this.vimeoCredentials = vimeoCredentials;
 
     Injector injector = OCManager.getInjector();
     if (injector != null) {
@@ -153,23 +156,21 @@ import org.jetbrains.annotations.NotNull;
   @Override public Observable<VimeoInfo> getVideoById(Context context, String videoId,
       boolean isWifiConnection, boolean isFastConnection) {
     Observable<VimeoInfo> videoObservable =
-        Observable.create(new ObservableOnSubscribe<VimeoInfo>() {
-          @Override public void subscribe(ObservableEmitter<VimeoInfo> emitter) throws Exception {
-            VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
-            VimeoManager videoManager = new VimeoManager(builder);
+        Observable.create(emitter -> {
+          VimeoBuilder builder = new VimeoBuilder(vimeoCredentials.getAccessToken());
+          VimeoManager videoManager = new VimeoManager(builder);
 
-            videoManager.getVideoVimeoInfo(context, videoId, isWifiConnection, isFastConnection,
-                new VimeoCallback() {
-                  @Override public void onError(@NotNull Throwable e) {
-                    emitter.onError(e);
-                  }
+          videoManager.getVideoVimeoInfo(context, videoId, isWifiConnection, isFastConnection,
+              new VimeoCallback() {
+                @Override public void onError(@NotNull Throwable e) {
+                  emitter.onError(e);
+                }
 
-                  @Override public void onSuccess(VimeoInfo vimeoInfo) {
-                    ocmCache.putVideo(vimeoInfo);
-                    emitter.onNext(vimeoInfo);
-                  }
-                });
-          }
+                @Override public void onSuccess(VimeoInfo vimeoInfo) {
+                  ocmCache.putVideo(vimeoInfo);
+                  emitter.onNext(vimeoInfo);
+                }
+              });
         });
 
     videoObservable.subscribeOn(Schedulers.io())

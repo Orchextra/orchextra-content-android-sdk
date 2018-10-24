@@ -3,7 +3,6 @@ package com.gigigo.orchextra.ocm.sample;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-import android.widget.Toast;
 import com.facebook.stetho.Stetho;
 import com.gigigo.orchextra.ocm.sample.ocm.OcmWrapper;
 import com.gigigo.orchextra.ocm.sample.ocm.OcmWrapperImp;
@@ -32,7 +31,7 @@ public class App extends MultiDexApplication {
 
   private void initOcm() {
     OcmWrapperImp.getInstance(this).startWithCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET,
-        BuildConfig.BUSSINES_UNIT, new OcmWrapper.OnStartWithCredentialsCallback() {
+        BuildConfig.BUSSINES_UNIT, "34e1438469ab50e311a171463c8e4f62", new OcmWrapper.OnStartWithCredentialsCallback() {
           @Override public void onCredentialReceiver(String accessToken) {
             Timber.d("onCredentialReceiver()");
           }

@@ -7,6 +7,7 @@ import com.gigigo.orchextra.core.data.api.services.OcmApiService;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmCloudDataStore;
+import com.gigigo.orchextra.core.utils.VimeoCredentials;
 import io.reactivex.Observable;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +35,7 @@ import static org.mockito.Mockito.verify;
 
   @Before public void setUp() {
     MockitoAnnotations.initMocks(this);
-    ocmCloudDataStore = new OcmCloudDataStore(mockRestApi, mockOcmCache, mockImageCache);
+    ocmCloudDataStore = new OcmCloudDataStore(mockRestApi, mockOcmCache, mockImageCache, new VimeoCredentials());
   }
 
   @Test public void testGetMenuEntityFromApi() {

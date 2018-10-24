@@ -29,6 +29,7 @@ public final class OcmBuilder {
   private boolean showReadArticles = false;
   private ImageTransformReadArticle transformReadArticleMode = ImageTransformReadArticle.OVERLAY;
   private int maxReadArticles = 100;
+  private String vimeoAccessToken;
 
   public int getMaxReadArticles() {
     return maxReadArticles;
@@ -209,5 +210,14 @@ public final class OcmBuilder {
 
   Class getNotificationActivityClass() {
     return notificationActivityClass;
+  }
+
+  public OcmBuilder setVimeoAccessToken(String vimeoAccessToken) {
+    this.vimeoAccessToken = vimeoAccessToken;
+    return this;
+  }
+
+  public String getVimeoAccessToken() {
+    return vimeoAccessToken;
   }
 }
