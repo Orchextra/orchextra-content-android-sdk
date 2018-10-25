@@ -36,7 +36,7 @@ public class OcmWrapperImp implements OcmWrapper {
   }
 
   @Override public void startWithCredentials(String apiKey, String apiSecret, String businessUnit,
-      final OnStartWithCredentialsCallback onStartWithCredentialsCallback) {
+      String vimeoAccessToken, final OnStartWithCredentialsCallback onStartWithCredentialsCallback) {
     mOnStartWithCredentialsCallback = onStartWithCredentialsCallback;
     isOxLoaded = false;
 
@@ -45,6 +45,7 @@ public class OcmWrapperImp implements OcmWrapper {
     OcmBuilder ocmBuilder = new OcmBuilder(context).setOrchextraCredentials(apiKey, apiSecret)
         .setOnEventCallback(eventCallback)
         .setContentLanguage("EN")
+        .setVimeoAccessToken(vimeoAccessToken)
         .setBusinessUnit(businessUnit)
         .setNotificationActivityClass(MainActivity.class)
         .setAnonymous(false)

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 import android.webkit.WebStorage;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
@@ -23,6 +24,7 @@ import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.di.injector.InjectorImpl;
 import com.gigigo.orchextra.core.sdk.di.modules.OcmModule;
 import com.gigigo.orchextra.core.sdk.model.detail.DetailActivity;
+import com.gigigo.orchextra.core.utils.VimeoCredentials;
 import com.gigigo.orchextra.ocm.callbacks.CustomUrlCallback;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnChangedMenuCallback;
@@ -73,6 +75,7 @@ public final class OCManager {
   @Inject OcmSchemeHandler schemeHandler;
   @Inject OcmStyleUi ocmStyleUi;
   @Inject OcmController ocmController;
+  @Inject VimeoCredentials vimeoCredentials;
   private OnEventCallback onEventCallback;
   private OnRequiredLoginCallback onRequiredLoginCallback;
   private String language;
@@ -83,12 +86,17 @@ public final class OCManager {
   private OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate;
   private OcmCustomTranslationDelegate ocmCustomTranslationDelegate;
   private UiMenu uiMenuToNotifyWhenSectionIsLoaded;
+  private String vimeoAccessToken;
   private boolean isShowReadedArticles = false;
   private int maxReadArticles = 100;
   private com.bumptech.glide.load.Transformation<Bitmap> readArticlesBitmapTransform;
 
   static void initSdk(Application application) {
     getInstance().initOcm(application);
+
+    if (!TextUtils.isEmpty(getInstance().vimeoAccessToken)) {
+      getInstance().vimeoCredentials.setAccessToken(getInstance().vimeoAccessToken);
+    }
   }
 
   static void setCustomBehaviourDelegate(OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
@@ -478,6 +486,12 @@ public final class OCManager {
       if (instance.uiMenuToNotifyWhenSectionIsLoaded.equals(menuToNotify)) {
         instance.onLoadContentSectionFinishedCallback.onLoadContentSectionFinished();
       }
+    }
+  }
+
+  public static void setVimeoAccessToken(String vimeoAccessToken) {
+    if (getInstance() != null) {
+      getInstance().vimeoAccessToken = vimeoAccessToken;
     }
   }
 

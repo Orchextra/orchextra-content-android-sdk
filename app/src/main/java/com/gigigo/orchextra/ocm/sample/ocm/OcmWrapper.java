@@ -5,7 +5,7 @@ public interface OcmWrapper {
   boolean isOcmInitialized();
 
   void startWithCredentials(String apiKey, String apiSecret, String businessUnit,
-      OnStartWithCredentialsCallback onStartWithCredentialsCallback);
+      String vimeoAccessToken, OnStartWithCredentialsCallback onStartWithCredentialsCallback);
 
   void setUserIsAuthorizated(boolean isUserLogged);
 
