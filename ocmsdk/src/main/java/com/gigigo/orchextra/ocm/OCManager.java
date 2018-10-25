@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 import android.webkit.WebStorage;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
@@ -92,7 +93,10 @@ public final class OCManager {
 
   static void initSdk(Application application) {
     getInstance().initOcm(application);
-    getInstance().vimeoCredentials.setAccessToken(getInstance().vimeoAccessToken);
+
+    if (!TextUtils.isEmpty(getInstance().vimeoAccessToken)) {
+      getInstance().vimeoCredentials.setAccessToken(getInstance().vimeoAccessToken);
+    }
   }
 
   static void setCustomBehaviourDelegate(OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
