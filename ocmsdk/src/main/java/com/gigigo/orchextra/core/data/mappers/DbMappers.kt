@@ -550,7 +550,11 @@ fun <T> ApiArticleElement.toArticleElement(): ArticleElement<T> = with(this) {
     ArticleTypeSection.HEADER -> {
       var elementRender = ArticleHeaderElementRender()
       with(elementRender) {
-        html = render?.html
+        html = if (render?.html.isNullOrEmpty()) {
+          render?.text
+        } else {
+          render?.html
+        }
         imageUrl = render?.imageUrl
         imageThumb = render?.imageThumb
       }
@@ -715,7 +719,11 @@ private fun <T> DbArticleElement.toArticleElement(): ArticleElement<T> = with(th
     ArticleTypeSection.HEADER -> {
       articleElement = ArticleHeaderElement() as ArticleElement<T>
       val headerRender = ArticleHeaderElementRender()
-      headerRender.html = render?.html
+      headerRender.html = if (render?.html.isNullOrEmpty()) {
+        render?.text
+      } else {
+        render?.html
+      }
       headerRender.imageUrl = render?.imageUrl
       headerRender.imageThumb = render?.imageThumb
       headerRender as T
@@ -988,7 +996,7 @@ fun ApiSectionContentData.toDbSectionContentData(key: String): DbSectionContentD
 
   try {
     sectionContentData.expireAt = expireAt?.toLong()
-  } catch (e: NumberFormatException) {
+  } catch (e: Exception) {
     Timber.e(e, "toDbSectionContentData()")
   }
 

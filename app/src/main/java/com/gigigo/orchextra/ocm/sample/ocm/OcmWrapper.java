@@ -13,6 +13,8 @@ public interface OcmWrapper {
 
   void scanCode(ScanCodeListener scanCodeListener);
 
+  void processDeepLink(String deepLink);
+
   interface OnStartWithCredentialsCallback {
     void onCredentialReceiver(String accessToken);
 

@@ -36,7 +36,8 @@ public class OcmWrapperImp implements OcmWrapper {
   }
 
   @Override public void startWithCredentials(String apiKey, String apiSecret, String businessUnit,
-      String vimeoAccessToken, final OnStartWithCredentialsCallback onStartWithCredentialsCallback) {
+      String vimeoAccessToken,
+      final OnStartWithCredentialsCallback onStartWithCredentialsCallback) {
     mOnStartWithCredentialsCallback = onStartWithCredentialsCallback;
     isOxLoaded = false;
 
@@ -102,6 +103,10 @@ public class OcmWrapperImp implements OcmWrapper {
 
   @Override public void scanCode(ScanCodeListener scanCodeListener) {
     Ocm.scanCode(scanCodeListener::onCodeScan);
+  }
+
+  @Override public void processDeepLink(String deepLink) {
+    Ocm.processDeepLinks(deepLink);
   }
 
   private OnCustomSchemeReceiver onCustomSchemeReceiver =
