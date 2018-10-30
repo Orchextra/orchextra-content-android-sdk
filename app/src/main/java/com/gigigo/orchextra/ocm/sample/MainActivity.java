@@ -151,7 +151,11 @@ public class MainActivity extends AppCompatActivity {
     scannerButton.setOnClickListener(v -> ocmWrapper.scanCode(
         code -> Toast.makeText(MainActivity.this, "Code: " + code, Toast.LENGTH_SHORT).show()));
 
-    fabSearch.setOnClickListener(v -> SearcherActivity.open(MainActivity.this));
+    fabSearch.setOnClickListener(v -> {
+      //SearcherActivity.open(MainActivity.this);
+      ocmWrapper.processDeepLink("ocm/Minirin-Day-1-Learning-Card-1-Disease--SkIWhK7c7");
+    });
+
     adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
     viewpager.setAdapter(adapter);
     viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

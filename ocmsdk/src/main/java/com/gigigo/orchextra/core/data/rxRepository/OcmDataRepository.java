@@ -120,7 +120,13 @@ import timber.log.Timber;
 
   @WorkerThread @Override public Observable<Void> clear(boolean images, boolean data) {
     OcmDiskDataStore ocmDataStore = ocmDataStoreFactory.getDiskDataStore();
-    ocmDataStore.getOcmCache().evictAll(images, data);
+    appExecutors.diskIO().execute(() -> {
+      try {
+        ocmDataStore.getOcmCache().evictAll(images, data);
+      } catch (Exception e) {
+        Timber.e("evictAll()");
+      }
+    });
     return Observable.empty();
   }
 
