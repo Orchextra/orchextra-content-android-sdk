@@ -5,6 +5,7 @@ import com.gigigo.orchextra.core.domain.rxExecutor.PostExecutionThread;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import io.reactivex.Observable;
 import orchextra.javax.inject.Inject;
+import timber.log.Timber;
 
 /**
  * This class is an implementation of {@link UseCase} that represents a use case for
@@ -21,7 +22,9 @@ public class GetSection extends UseCase<ContentData, GetSection.Params> {
   }
 
   @Override Observable<ContentData> buildUseCaseObservable(Params params) {
-    return this.ocmRepository.getSectionElements(params.forceReload, params.contentUrl, params.imagesToDownload);
+    Timber.d("Force reload: %s", params.forceReload);
+    return this.ocmRepository.getSectionElements(params.forceReload, params.contentUrl,
+        params.imagesToDownload);
   }
 
   public static final class Params {
