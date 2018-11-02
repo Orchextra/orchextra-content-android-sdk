@@ -8,7 +8,6 @@ import com.gigigo.multiplegridrecyclerview.entities.CellBlankElement;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.controller.model.base.Presenter;
-import com.gigigo.orchextra.core.controller.model.home.UpdateAtType;
 import com.gigigo.orchextra.core.data.ElementComparator;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
@@ -30,13 +29,11 @@ import timber.log.Timber;
 public class ContentViewPresenter extends Presenter<ContentView> {
 
   private final OcmController ocmController;
-  private static final String TAG = "ContentViewPresenter";
 
   private UiMenu uiMenu;
   private int imagesToDownload = 21;
   private String filter;
   private List<Cell> listedCellContentDataList;
-  private boolean hasToCheckNewContent = false;
   private int padding;
 
   public ContentViewPresenter(OcmController ocmController) {
@@ -45,10 +42,6 @@ public class ContentViewPresenter extends Presenter<ContentView> {
 
   @Override public void onViewAttached() {
     getView().initUi();
-  }
-
-  public void setHasToCheckNewContent(boolean hasToCheckNewContent) {
-    this.hasToCheckNewContent = hasToCheckNewContent;
   }
 
   public void loadSection() {
@@ -83,36 +76,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
      * Get section from cloud, if data changes refresh content
      */
 
-    if (!forceReload) {
-      ocmController.getSection(DataRequest.ONLY_CACHE, contentUrl, imagesToDownload,
-          new OcmController.GetSectionControllerCallback() {
-
-            @Override public void onGetSectionLoaded(ContentData cachedContentData) {
-              if (cachedContentData == null) {
-                ocmController.getSection(DataRequest.FORCE_CLOUD, contentUrl, imagesToDownload,
-                    new OcmController.GetSectionControllerCallback() {
-
-                      @Override public void onGetSectionLoaded(ContentData newContentData) {
-                        renderContentItem(newContentData.getContent());
-                      }
-
-                      @Override public void onGetSectionFails(Exception e) {
-                        renderError();
-                      }
-                    });
-              } else {
-                renderContentItem(cachedContentData.getContent());
-              }
-
-              OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
-            }
-
-            @Override public void onGetSectionFails(Exception e) {
-              renderError();
-              OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
-            }
-          });
-    } else {
+    if (forceReload) {
       ocmController.getSection(DataRequest.FORCE_CLOUD, contentUrl, imagesToDownload,
           new OcmController.GetSectionControllerCallback() {
 
@@ -141,63 +105,36 @@ public class ContentViewPresenter extends Presenter<ContentView> {
               Timber.e(e, "getSection(DataRequest.FIRST_CACHE)");
             }
           });
-    }
-  }
-
-  private void checkNewContent(ContentData cachedContentData, ContentData newContentData) {
-    if (cachedContentData == null
-        || newContentData == null
-        || cachedContentData.getContent() == null
-        || newContentData.getContent() == null
-        || cachedContentData.getContent().getElements() == null
-        || newContentData.getContent().getElements() == null
-        || getView() == null) {
-      return;
-    }
-
-    UpdateAtType updateAtType = checkDifferents(cachedContentData, newContentData);
-    switch (updateAtType) {
-      case NEW_CONTENT:
-        getView().showNewExistingContent();
-        hasToCheckNewContent = false;
-        break;
-      case REFRESH:
-        getView().showNewExistingContent();
-        hasToCheckNewContent = false;
-        break;
-    }
-
-    getView().showProgressView(false);
-  }
-
-  private UpdateAtType checkDifferents(ContentData cachedContentData, ContentData newContentData) {
-    List<Element> cachedElements = cachedContentData.getContent().getElements();
-    List<Element> newElements = newContentData.getContent().getElements();
-
-    if (cachedElements.size() > newElements.size()) {
-      return UpdateAtType.REFRESH;
-    } else if (cachedElements.size() < newElements.size()) {
-      return UpdateAtType.NEW_CONTENT;
     } else {
-      for (int i = 0; i < cachedElements.size(); i++) {
-        if (!cachedElements.get(i).getSlug().equalsIgnoreCase(newElements.get(i).getSlug())) {
-          return UpdateAtType.REFRESH;
-        } else {
-          ElementCache cachedElementCache =
-              cachedContentData.getElementsCache().get(cachedElements.get(i).getElementUrl());
+      ocmController.getSection(DataRequest.ONLY_CACHE, contentUrl, imagesToDownload,
+          new OcmController.GetSectionControllerCallback() {
 
-          ElementCache newElementCache =
-              newContentData.getElementsCache().get(newElements.get(i).getElementUrl());
+            @Override public void onGetSectionLoaded(ContentData cachedContentData) {
+              if (cachedContentData == null) {
+                ocmController.getSection(DataRequest.FORCE_CLOUD, contentUrl, imagesToDownload,
+                    new OcmController.GetSectionControllerCallback() {
 
-          if (cachedElementCache != null
-              && newElementCache != null
-              && cachedElementCache.getUpdateAt() != newElementCache.getUpdateAt()) {
-            return UpdateAtType.REFRESH;
-          }
-        }
-      }
+                      @Override public void onGetSectionLoaded(ContentData newContentData) {
+                        renderContentItem(newContentData.getContent());
+                      }
+
+                      @Override public void onGetSectionFails(Exception e) {
+                        renderError();
+                      }
+                    });
+              } else {
+                renderContentItem(cachedContentData.getContent());
+              }
+
+              OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
+            }
+
+            @Override public void onGetSectionFails(Exception e) {
+              renderError();
+              OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
+            }
+          });
     }
-    return UpdateAtType.NONE;
   }
 
   private void renderContentItem(ContentItem contentItem) {

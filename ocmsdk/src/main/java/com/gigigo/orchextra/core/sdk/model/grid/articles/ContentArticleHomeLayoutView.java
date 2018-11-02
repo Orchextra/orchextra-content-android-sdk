@@ -36,7 +36,7 @@ public class ContentArticleHomeLayoutView extends UiGridBaseContentData implemen
   private View.OnClickListener onClickRetryButtonListener = new View.OnClickListener() {
     @Override public void onClick(View v) {
       if (presenter != null) {
-        presenter.reloadSection(false);
+        presenter.reloadSection();
       }
     }
   };
@@ -149,9 +149,9 @@ public class ContentArticleHomeLayoutView extends UiGridBaseContentData implemen
     //}
   }
 
-  @Override public void reloadSection(boolean hasToShowNewContentButton) {
+  @Override public void reloadSection() {
     if (presenter != null) {
-      presenter.reloadSection(hasToShowNewContentButton);
+      presenter.reloadSection();
     }
   }
 

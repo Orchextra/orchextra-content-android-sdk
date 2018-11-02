@@ -165,7 +165,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
   public void reloadSection(boolean hasToShowNewContentButton) {
     if (contentView != null) {
-      contentView.reloadSection(false);
+      contentView.reloadSection();
     }
   }
 

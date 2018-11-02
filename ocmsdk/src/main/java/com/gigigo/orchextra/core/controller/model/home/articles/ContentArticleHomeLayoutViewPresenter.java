@@ -36,7 +36,7 @@ public class ContentArticleHomeLayoutViewPresenter extends Presenter<ArticleView
     }
   }
 
-  public void reloadSection(boolean hasToShowNewContentButton) {
+  public void reloadSection() {
     ocmController.getMenu(new OcmController.GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(UiMenuData menus) {
 
@@ -58,12 +58,7 @@ public class ContentArticleHomeLayoutViewPresenter extends Presenter<ArticleView
         }
 
         getView().showEmptyView(false);
-
-        if (hasToShowNewContentButton) {
-          getView().showNewExistingContent();
-        } else {
-          loadSection();
-        }
+        loadSection();
       }
 
       @Override public void onGetMenusFails(Exception e) {

@@ -82,7 +82,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
   public void reloadSection() {
     if (contentView != null) {
-      contentView.reloadSection(false);
+      contentView.reloadSection();
     }
   }
 
