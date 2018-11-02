@@ -153,7 +153,7 @@ import timber.log.Timber;
 
           if (updated) {
             Timber.d("Element %s; Updated %s", element.getSlug(), updated);
-            //ocmDbDataSource.removeSection(element.getSlug());
+            ocmDbDataSource.deleteElementCache();
           }
         }
       }

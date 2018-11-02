@@ -78,9 +78,6 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
             ocmDatabase.elementDao().insertMenuElement(dbMenuElementJoin)
           }
         }
-
-        ocmDatabase.elementCacheDao().deleteAll()
-
         var index = 0
         apiMenuContentData.elementsCache?.forEach { (key, element) ->
           val apiElementData = ApiElementData(element)
@@ -162,5 +159,9 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
         Timber.e(e, "putSection()")
       }
     }
+  }
+
+  fun deleteElementCache(){
+    ocmDatabase.elementCacheDao().deleteAll()
   }
 }
