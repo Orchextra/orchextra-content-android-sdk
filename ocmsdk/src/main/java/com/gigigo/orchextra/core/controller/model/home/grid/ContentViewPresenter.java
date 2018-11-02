@@ -101,22 +101,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                       }
                     });
               } else {
-
                 renderContentItem(cachedContentData.getContent());
-
-                ocmController.getSection(DataRequest.FORCE_CLOUD, contentUrl, imagesToDownload,
-                    new OcmController.GetSectionControllerCallback() {
-
-                      @Override public void onGetSectionLoaded(ContentData newContentData) {
-                        if (newContentData.isFromCloud()) {
-                          checkNewContent(cachedContentData, newContentData);
-                        }
-                      }
-
-                      @Override public void onGetSectionFails(Exception e) {
-
-                      }
-                    });
               }
 
               OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);

@@ -24,7 +24,6 @@ import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.utils.DateUtils;
 import com.gigigo.orchextra.core.sdk.utils.MenuListComparator;
-import com.gigigo.orchextra.core.sdk.utils.OcmPreferences;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import java.util.ArrayList;
@@ -101,11 +100,9 @@ public class OcmControllerImp implements OcmController {
 
     if (contentUrl != null) {
       switch (dataRequest) {
-        case ONLY_CACHE:
-          retrieveSectionOnlyFromCache(contentUrl, imagesToDownload, getSectionControllerCallback);
-          break;
         case FORCE_CLOUD:
           retrieveSection(true, contentUrl, imagesToDownload, getSectionControllerCallback);
+        case ONLY_CACHE:
         case FIRST_CACHE:
           retrieveSection(false, contentUrl, imagesToDownload, getSectionControllerCallback);
           break;
