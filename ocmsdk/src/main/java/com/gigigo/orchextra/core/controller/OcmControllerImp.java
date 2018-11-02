@@ -40,11 +40,9 @@ public class OcmControllerImp implements OcmController {
   private final SearchElements searchElements;
   private final ClearCache clearCache;
   private final ConnectionUtils connectionUtils;
-  private final OcmPreferences ocmPreferences;
 
   public OcmControllerImp(GetMenus getMenus, GetSection getSection, GetDetail getDetail,
-      SearchElements searchElements, ClearCache clearCache, ConnectionUtils connectionUtils,
-      OcmPreferences ocmPreferences) {
+      SearchElements searchElements, ClearCache clearCache, ConnectionUtils connectionUtils) {
 
     this.getMenus = getMenus;
     this.getSection = getSection;
@@ -53,7 +51,6 @@ public class OcmControllerImp implements OcmController {
     this.clearCache = clearCache;
 
     this.connectionUtils = connectionUtils;
-    this.ocmPreferences = ocmPreferences;
   }
 
   /**
@@ -135,29 +132,6 @@ public class OcmControllerImp implements OcmController {
             Timber.e(e, "retrieveSection()");
           }
         }), GetSection.Params.forSection(forceRelaod, contentUrl, imagesToDownload),
-        PriorityScheduler.Priority.HIGH);
-  }
-
-  private void checkVersionChangedAndRequestSection(String contentUrl, int imagesToDownload,
-      GetSectionControllerCallback getSectionControllerCallback) {
-
-    getSection.execute(new SectionObserver(new GetSectionControllerCallback() {
-          @Override public void onGetSectionLoaded(ContentData contentData) {
-            if (getSectionControllerCallback != null) {
-              if (!contentData.isFromCloud()) {
-                getSectionControllerCallback.onGetSectionLoaded(contentData);
-              } else {
-                getSectionControllerCallback.onGetSectionLoaded(null);
-              }
-            }
-          }
-
-          @Override public void onGetSectionFails(Exception e) {
-            if (getSectionControllerCallback != null) {
-              getSectionControllerCallback.onGetSectionFails(e);
-            }
-          }
-        }), GetSection.Params.forSection(true, contentUrl, imagesToDownload),
         PriorityScheduler.Priority.HIGH);
   }
 

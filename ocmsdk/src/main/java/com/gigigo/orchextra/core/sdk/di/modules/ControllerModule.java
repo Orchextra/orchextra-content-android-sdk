@@ -24,7 +24,6 @@ import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
-import com.gigigo.orchextra.core.sdk.utils.OcmPreferences;
 import com.gigigo.orchextra.ocm.UIThread;
 import orchextra.dagger.Module;
 import orchextra.dagger.Provides;
@@ -34,10 +33,10 @@ import orchextra.javax.inject.Singleton;
 
   @Provides OcmController provideOcmController(GetMenus getMenus, GetSection getSection,
       GetDetail getDetail, SearchElements searchElements, ClearCache clearCache,
-      ConnectionUtils connectionUtils, OcmPreferences ocmPreferences) {
+      ConnectionUtils connectionUtils) {
 
     return new OcmControllerImp(getMenus, getSection, getDetail, searchElements, clearCache,
-        connectionUtils, ocmPreferences);
+        connectionUtils);
   }
 
   @Provides @Singleton ThreadExecutor provideThreadExecutor(JobExecutor jobExecutor) {
