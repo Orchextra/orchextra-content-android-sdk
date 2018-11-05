@@ -22,4 +22,7 @@ import java.util.List;
   @Insert(onConflict = OnConflictStrategy.REPLACE) void insertMenuElement(DbMenuElementJoin menuElementJoin);
 
   @Query("DELETE FROM element") void deleteAll();
+
+  @Query("SELECT element.* FROM element INNER JOIN section_element_join ON element.slug = section_element_join.element_slug WHERE section_slug = :sectionSlug")
+  List<DbElement> fetchSectionElements(String sectionSlug);
 }

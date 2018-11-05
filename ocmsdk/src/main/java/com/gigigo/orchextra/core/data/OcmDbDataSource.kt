@@ -59,7 +59,6 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
     appExecutors.diskIO().execute {
       try {
         ocmDatabase.menuDao().deleteAll()
-        ocmDatabase.elementDao().deleteAll()
 
         apiMenuContentData.menuContentList?.forEach { apiMenuContent ->
           val dbMenuContent = apiMenuContent.toDbMenuContent()
@@ -106,7 +105,7 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
     val dbSectionContentData = ocmDatabase.sectionDao().fetchSectionContentData(section)
         ?: throw ApiSectionNotFoundException()
 
-    val dbSectionContentDataElementList = ocmDatabase.sectionDao()
+    val dbSectionContentDataElementList = ocmDatabase.elementDao()
         .fetchSectionElements(dbSectionContentData.content!!.slug)
     dbSectionContentData.content!!.elements = dbSectionContentDataElementList
 
