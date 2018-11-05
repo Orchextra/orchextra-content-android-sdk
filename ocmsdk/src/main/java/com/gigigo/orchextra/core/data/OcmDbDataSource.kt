@@ -161,7 +161,7 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
     }
   }
 
-  fun deleteElementCache(){
+  fun deleteElementCache() {
     ocmDatabase.elementCacheDao().deleteAll()
   }
 }

@@ -186,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void onGoDetailView(List<UiMenu> uiMenu) {
     viewpager.clearOnPageChangeListeners();
+    viewpager.setOffscreenPageLimit(uiMenu.size());
 
     int count = tabLayout.getTabCount();
 
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
   private OcmCustomTranslationDelegate ocmCustomTranslationDelegate = (key, completion) -> {
     if (com.gigigo.orchextra.ocmsdk.R.string.oc_error_content_not_available_without_internet
         == key) {
-      completion.invoke("Hola");
+      completion.invoke("Sin internet :´(");
     } else {
       completion.invoke(null);
     }

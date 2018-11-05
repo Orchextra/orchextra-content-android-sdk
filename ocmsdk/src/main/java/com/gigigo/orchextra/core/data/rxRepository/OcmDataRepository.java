@@ -150,11 +150,7 @@ import timber.log.Timber;
           Boolean updated = checkContentVersion(element, cacheMenuContentData);
           Timber.d("Element %s; Updated %s", element.getSlug(), updated);
           element.setHasNewVersion(updated);
-
-          if (updated) {
-            Timber.d("Element %s; Updated %s", element.getSlug(), updated);
-            ocmDbDataSource.deleteElementCache();
-          }
+          Timber.d("Element %s; Updated %s", element.getSlug(), updated);
         }
       }
 

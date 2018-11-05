@@ -262,7 +262,7 @@ import timber.log.Timber;
   private void trimCache(Context context, String folder) {
     try {
       File dir = new File(context.getCacheDir().getPath() + "/" + folder);
-      if (dir != null && dir.isDirectory()) {
+      if (dir.isDirectory()) {
         deleteDir(dir);
       }
     } catch (Exception e) {
@@ -270,7 +270,7 @@ import timber.log.Timber;
     }
   }
 
-  public boolean deleteDir(File dir) {
+  private boolean deleteDir(File dir) {
     if (dir != null && dir.isDirectory()) {
       String[] children = dir.list();
       for (int i = 0; i < children.length; i++) {
