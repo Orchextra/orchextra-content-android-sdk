@@ -62,7 +62,7 @@ import timber.log.Timber;
         for (DbElement dbElement : dbElementList) {
           List<DbScheduleDates> dbScheduleDatesList =
               ocmDatabase.scheduleDatesDao().fetchSchedule(dbElement.getSlug());
-          dbElement.setDates(dbScheduleDatesList);
+          //dbElement.setDates(dbScheduleDatesList);
         }
       }
 
@@ -92,10 +92,10 @@ import timber.log.Timber;
       for (DbElement dbElement : dbMenuContent.getElements()) {
         ocmDatabase.elementDao().insertElement(dbElement);
 
-        for (DbScheduleDates scheduleDate : dbElement.getDates()) {
-          scheduleDate.setSlug(dbElement.getSlug());
-          ocmDatabase.scheduleDatesDao().insertSchedule(scheduleDate);
-        }
+        //for (DbScheduleDates scheduleDate : dbElement.getDates()) {
+        //  scheduleDate.setSlug(dbElement.getSlug());
+        //  ocmDatabase.scheduleDatesDao().insertSchedule(scheduleDate);
+        //}
 
         DbMenuElementJoin dbMenuElementJoin =
             new DbMenuElementJoin(dbMenuContent.getSlug(), dbElement.getSlug());

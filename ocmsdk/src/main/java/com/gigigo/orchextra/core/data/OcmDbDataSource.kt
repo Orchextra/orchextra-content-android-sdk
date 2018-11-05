@@ -36,10 +36,11 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
       val dbElementList = ocmDatabase.elementDao().fetchMenuElements(dbMenuContent.slug)
       dbMenuContent.elements = dbElementList
 
-      for (dbElement in dbElementList) {
-        val dbScheduleDatesList = ocmDatabase.scheduleDatesDao().fetchSchedule(dbElement.slug)
-        dbElement.dates = dbScheduleDatesList
-      }
+// TODO Save schedule Dates
+//      for (dbElement in dbElementList) {
+//        val dbScheduleDatesList = ocmDatabase.scheduleDatesDao().fetchSchedule(dbElement.slug)
+//        dbElement.dates = dbScheduleDatesList
+//      }
     }
 
     val dbMenuContentData = DbMenuContentData()
@@ -67,10 +68,11 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
           dbMenuContent.elements?.forEachIndexed { _, dbElement ->
             ocmDatabase.elementDao().insertElement(dbElement)
 
-            for (scheduleDate in dbElement.dates) {
-              scheduleDate.slug = dbElement.slug
-              ocmDatabase.scheduleDatesDao().insertSchedule(scheduleDate)
-            }
+            // TODO Save schedule Dates
+//            for (scheduleDate in dbElement.dates) {
+//              scheduleDate.slug = dbElement.slug
+//              ocmDatabase.scheduleDatesDao().insertSchedule(scheduleDate)
+//            }
 
             val dbMenuElementJoin = DbMenuElementJoin(dbMenuContent.slug, dbElement.slug)
             ocmDatabase.elementDao().insertMenuElement(dbMenuElementJoin)

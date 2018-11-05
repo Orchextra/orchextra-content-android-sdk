@@ -77,6 +77,8 @@ import com.gigigo.orchextra.core.domain.entities.elements.ElementData
 import com.gigigo.orchextra.core.domain.entities.elements.ElementSectionView
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContent
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import gigigo.com.vimeolibs.VimeoInfo
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -195,6 +197,9 @@ fun ApiElementData.toElementData(): ElementData {
 }
 
 fun ApiElement.toDbElement(index: Int): DbElement = with(this) {
+
+  val gson = Gson()
+
   val element = DbElement()
   element.slug = slug
   element.name = name
@@ -203,11 +208,14 @@ fun ApiElement.toDbElement(index: Int): DbElement = with(this) {
   element.contentVersion = contentVersion
   element.sectionView = sectionView?.toDbElementSectionView()
   element.tags = tags
-  element.dates = dates?.toDbScheduleDates(slug) ?: emptyList()
+  element.dates = gson.toJson(dates)
   return element
 }
 
 fun Element.toDbElement(): DbElement = with(this) {
+
+  val gson = Gson()
+
   val element = DbElement()
   element.slug = slug
   element.name = name
@@ -216,7 +224,7 @@ fun Element.toDbElement(): DbElement = with(this) {
   element.contentVersion = contentVersion
   element.sectionView = sectionView?.toDbElementSectionView()
   element.tags = tags
-  element.dates = dates.toDbScheduleDates(slug)
+  element.dates = gson.toJson(dates)
   return element
 }
 
@@ -248,14 +256,23 @@ fun Element.toDbElement(): DbElement = with(this) {
 */
 
 private fun DbElement.toElement(): Element = with(this) {
+
+
   val element = Element()
   element.slug = slug
   element.name = name
   element.customProperties = customProperties
   element.sectionView = sectionView?.toElementSectionView()
   element.tags = tags
-  element.dates = dates.toScheduleDates()
   element.contentVersion = contentVersion
+
+  try {
+    val gson = Gson()
+    val listType = object : TypeToken<List<List<String>>>() {}.getType()
+    element.dates = gson.fromJson(dates, listType)
+  } catch (e: Exception) {
+    Timber.e(e, "DbElement.toElement()")
+  }
 
   element.elementUrl = if (!elementUrl.isNullOrEmpty()) {
     elementUrl

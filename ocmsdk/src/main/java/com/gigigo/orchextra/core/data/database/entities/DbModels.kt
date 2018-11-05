@@ -41,7 +41,7 @@ data class DbElement(
     @ColumnInfo(name = "key") var elementUrlFix: String = "",
     @ColumnInfo(name = "content_version") var contentVersion: String? = "",
     var name: String? = "",
-    @Ignore var dates: List<DbScheduleDates> = emptyList()
+    @ColumnInfo(name = "dates") var dates: String = "{}"
 )
 
 data class DbElementSectionView(
