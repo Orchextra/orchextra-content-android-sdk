@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "977b8ece36295516ae24acdc2dc3ac41",
+    "identityHash": "dfbe9666d348c2675a06390d0e550b28",
     "entities": [
       {
         "tableName": "menu",
@@ -121,7 +121,7 @@
       },
       {
         "tableName": "element",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, `tags` TEXT, `custom_properties` TEXT, `element_url` TEXT, `content_version` TEXT, `name` TEXT, `listIndex` INTEGER NOT NULL, `view_text` TEXT, `view_image_url` TEXT, `view_image_thumb` TEXT, PRIMARY KEY(`slug`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`slug` TEXT NOT NULL, `tags` TEXT, `custom_properties` TEXT, `element_url` TEXT, `key` TEXT NOT NULL, `content_version` TEXT, `name` TEXT, `view_text` TEXT, `view_image_url` TEXT, `view_image_thumb` TEXT, PRIMARY KEY(`slug`))",
         "fields": [
           {
             "fieldPath": "slug",
@@ -148,6 +148,12 @@
             "notNull": false
           },
           {
+            "fieldPath": "elementUrlFix",
+            "columnName": "key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "contentVersion",
             "columnName": "content_version",
             "affinity": "TEXT",
@@ -158,12 +164,6 @@
             "columnName": "name",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "listIndex",
-            "columnName": "listIndex",
-            "affinity": "INTEGER",
-            "notNull": true
           },
           {
             "fieldPath": "sectionView.text",
@@ -487,7 +487,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"977b8ece36295516ae24acdc2dc3ac41\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"dfbe9666d348c2675a06390d0e550b28\")"
     ]
   }
 }

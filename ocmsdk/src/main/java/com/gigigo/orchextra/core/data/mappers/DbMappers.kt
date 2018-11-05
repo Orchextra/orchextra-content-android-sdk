@@ -204,13 +204,11 @@ fun ApiElement.toDbElement(index: Int): DbElement = with(this) {
   element.sectionView = sectionView?.toDbElementSectionView()
   element.tags = tags
   element.dates = dates?.toDbScheduleDates(slug) ?: emptyList()
-  element.listIndex = index
   return element
 }
 
 fun Element.toDbElement(): DbElement = with(this) {
   val element = DbElement()
-  element.listIndex = index
   element.slug = slug
   element.name = name
   element.customProperties = customProperties?.toDbCustomProperties()
@@ -251,16 +249,19 @@ fun Element.toDbElement(): DbElement = with(this) {
 
 private fun DbElement.toElement(): Element = with(this) {
   val element = Element()
-  element.index = listIndex
   element.slug = slug
   element.name = name
   element.customProperties = customProperties
-  element.elementUrl = elementUrl
   element.sectionView = sectionView?.toElementSectionView()
   element.tags = tags
   element.dates = dates.toScheduleDates()
   element.contentVersion = contentVersion
 
+  element.elementUrl = if (!elementUrl.isNullOrEmpty()) {
+    elementUrl
+  } else {
+    elementUrlFix
+  }
   return element
 }
 

@@ -38,10 +38,10 @@ data class DbElement(
     @ColumnInfo(name = "custom_properties") var customProperties: Map<String, String>? = emptyMap(),
     @Embedded(prefix = "view_") var sectionView: DbElementSectionView? = DbElementSectionView(),
     @ColumnInfo(name = "element_url") var elementUrl: String? = "",
+    @ColumnInfo(name = "key") var elementUrlFix: String = "",
     @ColumnInfo(name = "content_version") var contentVersion: String? = "",
     var name: String? = "",
-    @Ignore var dates: List<DbScheduleDates> = emptyList(),
-    var listIndex: Int = -1
+    @Ignore var dates: List<DbScheduleDates> = emptyList()
 )
 
 data class DbElementSectionView(
@@ -51,10 +51,10 @@ data class DbElementSectionView(
 )
 
 @Entity(tableName = "schedule_dates",
-    foreignKeys = arrayOf(
-        ForeignKey(parentColumns = arrayOf("slug"), childColumns = arrayOf("element_slug"),
-            entity = DbElement::class, onDelete = CASCADE)),
-    primaryKeys = arrayOf("element_slug"))
+    foreignKeys = [ForeignKey(parentColumns = arrayOf("slug"),
+        childColumns = arrayOf("element_slug"),
+        entity = DbElement::class, onDelete = CASCADE)],
+    primaryKeys = ["element_slug"])
 data class DbScheduleDates(
     @ColumnInfo(name = "element_slug") var slug: String = "",
     @ColumnInfo(name = "date_start") var dateStart: Long? = -1,

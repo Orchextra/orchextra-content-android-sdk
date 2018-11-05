@@ -65,8 +65,7 @@ class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
           val dbMenuContent = apiMenuContent.toDbMenuContent()
           ocmDatabase.menuDao().insertMenu(dbMenuContent)
 
-          dbMenuContent.elements?.forEachIndexed { index, dbElement ->
-            dbElement.listIndex = index
+          dbMenuContent.elements?.forEachIndexed { _, dbElement ->
             ocmDatabase.elementDao().insertElement(dbElement)
 
             for (scheduleDate in dbElement.dates) {

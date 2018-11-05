@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.core.domain.entities.elements
 
 class Element {
-  var index: Int = -1
   var slug: String = ""
   var customProperties: Map<String, Any>? = null
   var sectionView: ElementSectionView? = null

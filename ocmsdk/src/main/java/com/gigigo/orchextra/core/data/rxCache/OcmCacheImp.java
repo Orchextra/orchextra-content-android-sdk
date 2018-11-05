@@ -123,16 +123,16 @@ import timber.log.Timber;
       DbSectionContentData dbSectionContentData =
           ocmDatabase.sectionDao().fetchSectionContentData(elementUrl);
 
-      List<DbElement> dbSectionContentDataElementList = ocmDatabase.sectionDao()
-          .fetchSectionElements(dbSectionContentData.getContent().getSlug());
-      dbSectionContentData.getContent().setElements(dbSectionContentDataElementList);
+      //List<DbElement> dbSectionContentDataElementList = ocmDatabase.sectionDao()
+      //    .fetchSectionElements(dbSectionContentData.getContent().getSlug());
+      //dbSectionContentData.getContent().setElements(dbSectionContentDataElementList);
 
       Map<String, DbElementCache> elementCaches = new HashMap<>();
-      for (DbElement element : dbSectionContentDataElementList) {
-        DbElementCache elementCache =
-            ocmDatabase.elementCacheDao().fetchElementCache(element.getSlug());
-        elementCaches.put(element.getElementUrl(), elementCache);
-      }
+      //for (DbElement element : dbSectionContentDataElementList) {
+      //  DbElementCache elementCache =
+      //      ocmDatabase.elementCacheDao().fetchElementCache(element.getSlug());
+      //  elementCaches.put(element.getElementUrl(), elementCache);
+      //}
       dbSectionContentData.setElementsCache(elementCaches);
 
       emitter.onNext(dbSectionContentData);
