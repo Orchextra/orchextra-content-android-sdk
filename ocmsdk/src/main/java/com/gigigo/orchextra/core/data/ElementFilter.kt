@@ -10,20 +10,20 @@ class ElementFilter {
 
   fun removeFinishedElements(elements: List<Element>): List<Element> {
     return elements.filter { element ->
-      !isElementFinished(element.dates)
+      !isElementFinished(element)
     }
   }
 
-  private fun isElementFinished(dates: List<List<String>>): Boolean {
+  private fun isElementFinished(element: Element): Boolean {
 
     return try {
-      val stringDate = dates[dates.size - 1][1]
+      val stringDate = element.dates[element.dates.size - 1][1]
       val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
 
       val now = Date()
       val endDate = df.parse(stringDate)
 
-      now > endDate
+      now.time > endDate.time
 
     } catch (e: Exception) {
       Timber.e(e, "isElementFinished()")
