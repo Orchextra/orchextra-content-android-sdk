@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import com.gigigo.orchextra.core.AppExecutors;
 import com.gigigo.orchextra.core.data.ElementComparator;
+import com.gigigo.orchextra.core.data.ElementFilter;
 import com.gigigo.orchextra.core.data.OcmDbDataSource;
 import com.gigigo.orchextra.core.data.OcmNetworkDataSource;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
@@ -98,6 +99,10 @@ import timber.log.Timber;
 
   private ContentData sortContentData(final ContentData contentData) {
     List<Element> elements = contentData.getContent().getElements();
+
+    ElementFilter elementFilter = new ElementFilter();
+    elements = elementFilter.removeFinishedElements(elements);
+
     Collections.sort(elements, new ElementComparator());
     contentData.getContent().setElements(elements);
     return contentData;
