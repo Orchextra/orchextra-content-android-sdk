@@ -209,6 +209,7 @@ fun ApiElement.toDbElement(index: Int): DbElement = with(this) {
   element.sectionView = sectionView?.toDbElementSectionView()
   element.tags = tags
   element.dates = gson.toJson(dates)
+  element.listIndex = index
   return element
 }
 
@@ -225,6 +226,7 @@ fun Element.toDbElement(): DbElement = with(this) {
   element.sectionView = sectionView?.toDbElementSectionView()
   element.tags = tags
   element.dates = gson.toJson(dates)
+  element.listIndex = index
   return element
 }
 
@@ -265,6 +267,7 @@ private fun DbElement.toElement(): Element = with(this) {
   element.sectionView = sectionView?.toElementSectionView()
   element.tags = tags
   element.contentVersion = contentVersion
+  element.index = listIndex
 
   try {
     val gson = Gson()

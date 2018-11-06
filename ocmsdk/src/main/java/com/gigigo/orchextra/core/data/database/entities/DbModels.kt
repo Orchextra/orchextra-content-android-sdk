@@ -41,7 +41,8 @@ data class DbElement(
     @ColumnInfo(name = "key") var elementUrlFix: String = "",
     @ColumnInfo(name = "content_version") var contentVersion: String? = "",
     var name: String? = "",
-    @ColumnInfo(name = "dates") var dates: String = "{}"
+    @ColumnInfo(name = "dates") var dates: String = "{}",
+    var listIndex: Int = -1
 )
 
 data class DbElementSectionView(

@@ -23,7 +23,7 @@ import com.gigigo.orchextra.core.data.database.entities.DbVideoData
 
 @Database(
     entities = [(DbMenuContent::class), (DbSectionContentData::class), (DbSectionElementJoin::class), (DbElement::class), (DbScheduleDates::class), (DbMenuElementJoin::class), (DbElementCache::class), (DbVideoData::class)],
-    version = 2, exportSchema = true)
+    version = 3, exportSchema = true)
 @TypeConverters(value = [(Converters::class)])
 abstract class OcmDatabase : RoomDatabase() {
 
