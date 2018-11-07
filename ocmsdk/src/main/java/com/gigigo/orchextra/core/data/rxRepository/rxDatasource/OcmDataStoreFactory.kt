@@ -3,13 +3,14 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource
 import android.util.Log
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.CommonPool
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import orchextra.javax.inject.Inject
 import orchextra.javax.inject.Singleton
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
+
 
 private val uiContext: CoroutineContext = UI
 private val bgContext: CoroutineContext = CommonPool

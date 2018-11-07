@@ -7,6 +7,7 @@ project.ext {
   supportVersion = '27.1.1'
   oxVersion = '3.1.0'
   playVersion = '15.0.1'
+  coroutinesVersion = '0.30.2-eap13'
 
   libraries = [androidSupportDesign      : "com.android.support:design:${supportVersion}",
                androidCustomtabs         : "com.android.support:customtabs:${supportVersion}",
@@ -20,8 +21,8 @@ project.ext {
                archPersistenceTesting    : 'android.arch.persistence.room:testing:1.0.0',
 
                kotlinStdlib              : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
-               coroutinesCore            : 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.3',
-               coroutinesAndroid         : 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.22.3',
+               coroutinesCore            : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutinesVersion}",
+               coroutinesAndroid         : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutinesVersion}",
 
                daggerCompiler            : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
                dagger                    : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
