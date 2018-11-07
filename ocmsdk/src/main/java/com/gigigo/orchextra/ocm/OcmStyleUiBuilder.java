@@ -12,6 +12,7 @@ public final class OcmStyleUiBuilder {
   private boolean thumbnailEnabled = true;
   private boolean statusBarEnabled = true;
   @DrawableRes private int detailBackground = -1;
+  @DrawableRes private int detailToolbarBackground = -1;
 
   /**
    * Path to the font to apply in titles of the app
@@ -62,6 +63,11 @@ public final class OcmStyleUiBuilder {
     return this;
   }
 
+  public OcmStyleUiBuilder setDetaiToolbarlBackground(@DrawableRes int detailToolbarBackground) {
+    this.detailToolbarBackground = detailToolbarBackground;
+    return this;
+  }
+
   public String getTitleFontPath() {
     return titleFontPath;
   }
@@ -92,5 +98,9 @@ public final class OcmStyleUiBuilder {
 
   public int getDetailBackground() {
     return detailBackground;
+  }
+
+  public int getDetailToolbarBackground() {
+    return detailToolbarBackground;
   }
 }

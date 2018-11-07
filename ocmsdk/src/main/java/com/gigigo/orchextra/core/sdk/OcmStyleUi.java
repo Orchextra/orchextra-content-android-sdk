@@ -21,4 +21,6 @@ public interface OcmStyleUi {
   boolean isThumbnailEnabled();
 
   @DrawableRes int getDetailBackground();
+
+  @DrawableRes int getDetailToolbarBackground();
 }

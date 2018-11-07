@@ -13,5 +13,6 @@
   <!-- Change details view style -->
   <color name="oc_article_rich_text_color">#296fc1</color>
   <color name="oc_article_header_title_text_color">#296fc1</color>
+  <color name="oc_background_detail_toolbar">@color/transparent</color>
 
 </resources>

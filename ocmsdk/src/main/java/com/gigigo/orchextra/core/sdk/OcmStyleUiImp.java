@@ -13,6 +13,7 @@ public class OcmStyleUiImp implements OcmStyleUi {
   private boolean isThumbnailEnabled;
   private boolean isStatusBarEnabled;
   @DrawableRes private int detailBackground;
+  @DrawableRes private int detailToolbarBackground;
 
   @Override public void setStyleUi(OcmStyleUiBuilder styleUi) {
     this.titleFontPath = styleUi.getTitleFontPath();
@@ -23,6 +24,7 @@ public class OcmStyleUiImp implements OcmStyleUi {
     this.isThumbnailEnabled = styleUi.isThumbnailEnabled();
     this.isStatusBarEnabled = styleUi.isStatusBarEnabled();
     this.detailBackground = styleUi.getDetailBackground();
+    this.detailToolbarBackground = styleUi.getDetailToolbarBackground();
   }
 
   @Override public String getTitleFontPath() {
@@ -55,5 +57,9 @@ public class OcmStyleUiImp implements OcmStyleUi {
 
   @Override public boolean isStatusBarEnabled() {
     return isStatusBarEnabled;
+  }
+
+  @Override public int getDetailToolbarBackground() {
+    return detailToolbarBackground;
   }
 }

@@ -74,6 +74,7 @@ public class OcmWrapperImp implements OcmWrapper {
                 .setTitleToolbarEnabled(false)
                 .disableThumbnailImages()
                 .setDetailBackground(R.drawable.journey_morning_background)
+                .setDetaiToolbarlBackground(R.drawable.journey_morning_background)
                 .setEnabledStatusBar(false);
         Ocm.setStyleUi(ocmStyleUiBuilder);
 
