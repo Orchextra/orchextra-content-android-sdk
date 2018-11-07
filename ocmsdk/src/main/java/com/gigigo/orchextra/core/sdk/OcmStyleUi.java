@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.sdk;
 
+import android.support.annotation.DrawableRes;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 
 public interface OcmStyleUi {
@@ -18,4 +19,6 @@ public interface OcmStyleUi {
   boolean isStatusBarEnabled();
 
   boolean isThumbnailEnabled();
+
+  @DrawableRes int getDetailBackground();
 }

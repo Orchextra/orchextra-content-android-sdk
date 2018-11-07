@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.sdk;
 
+import android.support.annotation.DrawableRes;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 
 public class OcmStyleUiImp implements OcmStyleUi {
@@ -11,6 +12,7 @@ public class OcmStyleUiImp implements OcmStyleUi {
   private boolean isTitleToolbarEnabled;
   private boolean isThumbnailEnabled;
   private boolean isStatusBarEnabled;
+  @DrawableRes private int detailBackground;
 
   @Override public void setStyleUi(OcmStyleUiBuilder styleUi) {
     this.titleFontPath = styleUi.getTitleFontPath();
@@ -20,35 +22,35 @@ public class OcmStyleUiImp implements OcmStyleUi {
     this.isTitleToolbarEnabled = styleUi.isTitleToolbarEnabled();
     this.isThumbnailEnabled = styleUi.isThumbnailEnabled();
     this.isStatusBarEnabled = styleUi.isStatusBarEnabled();
+    this.detailBackground = styleUi.getDetailBackground();
   }
 
-  @Override
-  public String getTitleFontPath() {
+  @Override public String getTitleFontPath() {
     return titleFontPath;
   }
 
-  @Override
-  public String getNormalFonPath() {
+  @Override public String getNormalFonPath() {
     return normalFonPath;
   }
 
-  @Override
-  public String getMediumFontPath() {
+  @Override public String getMediumFontPath() {
     return mediumFontPath;
   }
 
-  @Override
-  public String getLightFontPath() {
+  @Override public String getLightFontPath() {
     return lightFontPath;
   }
 
-  @Override
-  public boolean isTitleToolbarEnabled() {
+  @Override public boolean isTitleToolbarEnabled() {
     return isTitleToolbarEnabled;
   }
 
   @Override public boolean isThumbnailEnabled() {
     return isThumbnailEnabled;
+  }
+
+  @Override public int getDetailBackground() {
+    return detailBackground;
   }
 
   @Override public boolean isStatusBarEnabled() {

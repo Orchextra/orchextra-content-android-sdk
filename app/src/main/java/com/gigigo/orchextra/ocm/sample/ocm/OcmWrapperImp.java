@@ -9,6 +9,7 @@ import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.sample.MainActivity;
+import com.gigigo.orchextra.ocm.sample.R;
 import timber.log.Timber;
 
 public class OcmWrapperImp implements OcmWrapper {
@@ -72,6 +73,7 @@ public class OcmWrapperImp implements OcmWrapper {
                 .setMediumFont("fonts/Gotham-Medium.ttf")
                 .setTitleToolbarEnabled(false)
                 .disableThumbnailImages()
+                .setDetailBackground(R.drawable.journey_morning_background)
                 .setEnabledStatusBar(false);
         Ocm.setStyleUi(ocmStyleUiBuilder);
 

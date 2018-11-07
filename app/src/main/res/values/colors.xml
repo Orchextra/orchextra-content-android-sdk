@@ -11,6 +11,7 @@
 
 
   <!-- Change details view style -->
-  <drawable name="oc_background_detail_view_color">@drawable/journey_morning_background</drawable>
+  <color name="oc_article_rich_text_color">#296fc1</color>
+  <color name="oc_article_header_title_text_color">#296fc1</color>
 
 </resources>

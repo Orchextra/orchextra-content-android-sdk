@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +56,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   private UiDetailBaseContentData uiContentView;
   private boolean statusBarEnabled;
   private FrameLayout parentContainer;
+  @DrawableRes private int detailBackground;
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   public static void open(Activity activity, String elementUrl, String urlImageToExpand, int width,
@@ -125,11 +128,12 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     if (injector != null) {
       injector.injectDetailActivity(this);
       statusBarEnabled = injector.provideOcmStyleUi().isStatusBarEnabled();
+      detailBackground = injector.provideOcmStyleUi().getDetailBackground();
     }
   }
 
   @Override public void initUi() {
-    parentContainer = (FrameLayout) findViewById(R.id.parentContainer);
+    parentContainer = findViewById(R.id.parentContainer);
 
     presenter.setOnFinishViewListener(onFinishViewListener);
 
@@ -137,6 +141,10 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     String elementUrl = getIntent().getStringExtra(EXTRA_ELEMENT_URL);
     presenter.loadSection(elementUrl);
+
+    if (detailBackground != -1) {
+      parentContainer.setBackground(ContextCompat.getDrawable(this, detailBackground));
+    }
   }
 
   @Override public void setView(UiDetailBaseContentData uiContentView) {

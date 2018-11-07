@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-  android:id="@+id/parentContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parentContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/oc_background_detail_view_color"
+    android:background="@color/oc_background_detail_view_color"
     >
 
   <ImageView
-      android:transitionName="thumbnail"
       android:id="@+id/animationImageView"
       android:layout_width="match_parent"
-      android:scaleType="centerCrop"
       android:layout_height="match_parent"
       android:adjustViewBounds="true"
+      android:scaleType="centerCrop"
+      android:transitionName="thumbnail"
       />
 
   <FrameLayout

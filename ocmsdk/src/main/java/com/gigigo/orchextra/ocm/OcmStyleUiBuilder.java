@@ -1,5 +1,7 @@
 package com.gigigo.orchextra.ocm;
 
+import android.support.annotation.DrawableRes;
+
 public final class OcmStyleUiBuilder {
 
   private String titleFontPath;
@@ -9,6 +11,7 @@ public final class OcmStyleUiBuilder {
   private boolean titleToolbarEnabled = false;
   private boolean thumbnailEnabled = true;
   private boolean statusBarEnabled = true;
+  @DrawableRes private int detailBackground = -1;
 
   /**
    * Path to the font to apply in titles of the app
@@ -34,8 +37,7 @@ public final class OcmStyleUiBuilder {
     return this;
   }
 
-  @Deprecated
-  public OcmStyleUiBuilder setLightFont(String lightFontPath) {
+  @Deprecated public OcmStyleUiBuilder setLightFont(String lightFontPath) {
     this.lightFontPath = lightFontPath;
     return this;
   }
@@ -55,6 +57,11 @@ public final class OcmStyleUiBuilder {
     return this;
   }
 
+  public OcmStyleUiBuilder setDetailBackground(@DrawableRes int detailBackground) {
+    this.detailBackground = detailBackground;
+    return this;
+  }
+
   public String getTitleFontPath() {
     return titleFontPath;
   }
@@ -67,8 +74,7 @@ public final class OcmStyleUiBuilder {
     return mediumFontPath;
   }
 
-  @Deprecated
-  public String getLightFontPath() {
+  @Deprecated public String getLightFontPath() {
     return lightFontPath;
   }
 
@@ -82,5 +88,9 @@ public final class OcmStyleUiBuilder {
 
   public boolean isStatusBarEnabled() {
     return statusBarEnabled;
+  }
+
+  public int getDetailBackground() {
+    return detailBackground;
   }
 }
