@@ -10,7 +10,7 @@
     android:layout_marginRight="@dimen/oc_spacing_8"
     android:layout_marginTop="@dimen/oc_spacing_12"
     android:autoLink="web"
-    android:background="@color/oc_bg_article_rich_text_color"
+    android:background="@drawable/oc_background_detail_view_color"
     android:gravity="left"
     android:lineSpacingExtra="3dp"
     android:textColor="@color/oc_article_rich_text_color"
