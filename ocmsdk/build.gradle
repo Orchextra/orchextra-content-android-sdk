@@ -184,12 +184,6 @@ finalize.dependsOn(ocmsdk: install)
 //install.finalizedBy(finalize)
 install.dependsOn(ocmsdk: build)
 
-kotlin {
-  experimental {
-    coroutines "enable"
-  }
-}
-
 dependencies {
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
