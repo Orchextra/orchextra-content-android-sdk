@@ -152,23 +152,23 @@ jacocoAndroidUnitTestReport {
 //  ocmDebugImplementation
 //}
 
-//if (android.productFlavors.size() > 0) {
-//  android.libraryVariants.all { variant ->
-//    // Publish a main artifact, otherwise the maven pom is not generated
-//    //if( variant.name == android.defaultPublishConfig ) {
-//    def bundleTask = tasks["bundle${name.capitalize()}"]
-//    artifacts {
-//      println('BUNDLE!' + bundleTask.archivePath)
-//      println('classifier!' + variant.name)
-//      println('builtBy!' + bundleTask.name)
-//      archives(bundleTask.archivePath) {
-//        classifier variant.name
-//        builtBy bundleTask
-//      }
-//    }
-//  }
-//  //}
-//}
+if (android.productFlavors.size() > 0) {
+  android.libraryVariants.all { variant ->
+    // Publish a main artifact, otherwise the maven pom is not generated
+    //if( variant.name == android.defaultPublishConfig ) {
+    def bundleTask = tasks["bundle${name.capitalize()}"]
+    artifacts {
+      println('BUNDLE!' + bundleTask.archivePath)
+      println('classifier!' + variant.name)
+      println('builtBy!' + bundleTask.name)
+      archives(bundleTask.archivePath) {
+        classifier variant.name
+        builtBy bundleTask
+      }
+    }
+  }
+  //}
+}
 //variant.name
 
 task finalize {
