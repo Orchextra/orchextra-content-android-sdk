@@ -57,7 +57,6 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   private boolean statusBarEnabled;
   private FrameLayout parentContainer;
   @DrawableRes private int detailBackground;
-  @DrawableRes private int detailToolbarBackground;
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   public static void open(Activity activity, String elementUrl, String urlImageToExpand, int width,
@@ -130,7 +129,6 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
       injector.injectDetailActivity(this);
       statusBarEnabled = injector.provideOcmStyleUi().isStatusBarEnabled();
       detailBackground = injector.provideOcmStyleUi().getDetailBackground();
-      detailToolbarBackground = injector.provideOcmStyleUi().getDetailToolbarBackground();
     }
   }
 
@@ -144,18 +142,8 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
     String elementUrl = getIntent().getStringExtra(EXTRA_ELEMENT_URL);
     presenter.loadSection(elementUrl);
 
-    if (detailToolbarBackground != -1) {
-      parentContainer.setBackground(ContextCompat.getDrawable(this, detailToolbarBackground));
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        getWindow().setStatusBarColor(getResources().getColor(R.color.transparent));
-      }
-    }
-
     if (detailBackground != -1) {
-      View contentDetailView = findViewById(R.id.content_detail_view);
-      if (contentDetailView != null) {
-        contentDetailView.setBackground(ContextCompat.getDrawable(this, detailBackground));
-      }
+      parentContainer.setBackground(ContextCompat.getDrawable(this, detailBackground));
     }
   }
 
