@@ -3,8 +3,9 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource
 import android.util.Log
 import com.gigigo.orchextra.core.domain.entities.ocm.OxSession
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils
-import kotlinx.coroutines.CommonPool
-import kotlinx.coroutines.android.UI
+import com.gigigo.orchextra.core.utils.CoroutineExecutor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import orchextra.javax.inject.Inject
@@ -12,8 +13,8 @@ import orchextra.javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 
-private val uiContext: CoroutineContext = UI
-private val bgContext: CoroutineContext = CommonPool
+private val uiContext: CoroutineContext = Dispatchers.Main
+private val bgContext: CoroutineContext = CoroutineExecutor.BACKGROUND
 
 @Singleton
 class OcmDataStoreFactory
@@ -41,7 +42,7 @@ class OcmDataStoreFactory
   }
 
   private fun dataStoreForVersion() =
-      async(bgContext) {
+      GlobalScope.async(bgContext) {
 
         println("*****GETVERSION ASYNC THREAD " + Thread.currentThread().name)
         var dataStore: OcmDataStore
@@ -70,7 +71,7 @@ class OcmDataStoreFactory
   }
 
   private fun dataStoreForMenus(force: Boolean) =
-      async(bgContext) {
+      GlobalScope.async(bgContext) {
         var dataStore: OcmDataStore
 
         dataStore = if (force) {
@@ -103,7 +104,7 @@ class OcmDataStoreFactory
   }
 
   private fun dataStoreForSection(force: Boolean, section: String) =
-      async(bgContext) {
+      GlobalScope.async(bgContext) {
         var dataStore: OcmDataStore
 
         dataStore = if (force) {
@@ -136,7 +137,7 @@ class OcmDataStoreFactory
   }
 
   private fun dataStoreForDetail(force: Boolean, slug: String) =
-      async(bgContext) {
+      GlobalScope.async(bgContext) {
         var dataStore: OcmDataStore
 
         dataStore = if (force) {
@@ -169,7 +170,7 @@ class OcmDataStoreFactory
   }
 
   private fun dataStoreForVideo(force: Boolean, videoId: String) =
-      async(bgContext) {
+      GlobalScope.async(bgContext) {
         var dataStore: OcmDataStore
 
         dataStore = if (force) {

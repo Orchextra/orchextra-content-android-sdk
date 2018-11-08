@@ -7,7 +7,7 @@ project.ext {
   supportVersion = '27.1.1'
   oxVersion = '3.1.0'
   playVersion = '15.0.1'
-  coroutinesVersion = '0.30.2-eap13'
+  coroutinesVersion = '1.0.0'
 
   libraries = [androidSupportDesign      : "com.android.support:design:${supportVersion}",
                androidCustomtabs         : "com.android.support:customtabs:${supportVersion}",
