@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.domain;
 
+import android.support.annotation.Nullable;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
@@ -7,7 +8,9 @@ import com.gigigo.orchextra.ocm.dto.UiMenuData;
 
 public interface OcmController {
 
-  void getMenu(final GetMenusControllerCallback getMenusCallback);
+  void getMenu(final GetMenusControllerCallback getMenusCallback, @Nullable String menuSlug);
+
+  void refreschMenu(final GetMenusControllerCallback getMenusCallback);
 
   void getSection(DataRequest forceToReload, final String section, int imagesToDownload,
       final GetSectionControllerCallback getSectionControllerCallback);

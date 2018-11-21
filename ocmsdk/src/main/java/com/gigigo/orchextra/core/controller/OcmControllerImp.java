@@ -1,5 +1,7 @@
 package com.gigigo.orchextra.core.controller;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.gigigo.orchextra.core.data.rxException.ApiDetailNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSearchNotFoundException;
@@ -13,6 +15,7 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContent;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
 import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
@@ -39,6 +42,7 @@ public class OcmControllerImp implements OcmController {
   private final SearchElements searchElements;
   private final ClearCache clearCache;
   private final ConnectionUtils connectionUtils;
+  private @Nullable String menuSlug;
 
   public OcmControllerImp(GetMenus getMenus, GetSection getSection, GetDetail getDetail,
       SearchElements searchElements, ClearCache clearCache, ConnectionUtils connectionUtils) {
@@ -67,15 +71,22 @@ public class OcmControllerImp implements OcmController {
    * 4.2 - Return data
    * 4.3 - App is which control menu changes
    */
-  @Override public void getMenu(GetMenusControllerCallback getMenusCallback) {
-    retrieveMenus(getMenusCallback);
+  @Override public void getMenu(GetMenusControllerCallback getMenusCallback,
+      @Nullable String menuSlug) {
+    this.menuSlug = menuSlug;
+    retrieveMenus(getMenusCallback, menuSlug);
+  }
+
+  @Override public void refreschMenu(GetMenusControllerCallback getMenusCallback) {
+    retrieveMenus(getMenusCallback, menuSlug);
   }
 
   private void retrieveMenus(MenuObserver observer) {
     getMenus.execute(observer, new GetMenus.Params(), PriorityScheduler.Priority.HIGH);
   }
 
-  private void retrieveMenus(GetMenusControllerCallback getMenusCallback) {
+  private void retrieveMenus(GetMenusControllerCallback getMenusCallback,
+      @Nullable String menuSlug) {
     retrieveMenus(new MenuObserver(new GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(UiMenuData menus) {
         getMenusCallback.onGetMenusLoaded(menus);
@@ -84,7 +95,7 @@ public class OcmControllerImp implements OcmController {
       @Override public void onGetMenusFails(Exception e) {
         Timber.e(e, "retrieveMenus()");
       }
-    }));
+    }, menuSlug));
   }
 
   /**
@@ -227,7 +238,7 @@ public class OcmControllerImp implements OcmController {
         contentData.getExpiredAt());
   }
 
-  private UiMenuData transformMenu(MenuContentData menuContentData) {
+  private UiMenuData transformMenu(MenuContentData menuContentData, @Nullable String menuSlug) {
     UiMenuData uiMenuData = new UiMenuData();
 
     List<UiMenu> menuList = new ArrayList<>();
@@ -238,7 +249,13 @@ public class OcmControllerImp implements OcmController {
 
       uiMenuData.setFromCloud(menuContentData.isFromCloud());
 
-      for (Element element : menuContentData.getMenuContentList().get(0).getElements()) {
+      int itemPos = 0;
+
+      if (menuSlug != null && !menuSlug.isEmpty()) {
+        itemPos = getMenuPosition(menuSlug, menuContentData.getMenuContentList());
+      }
+
+      for (Element element : menuContentData.getMenuContentList().get(itemPos).getElements()) {
         UiMenu uiMenu = new UiMenu();
 
         uiMenu.setSlug(element.getSlug());
@@ -268,15 +285,28 @@ public class OcmControllerImp implements OcmController {
     return uiMenuData;
   }
 
+  private int getMenuPosition(@NonNull String menuSlug,
+      @NonNull List<MenuContent> menuContentList) {
+
+    for (int i = 0; i < menuContentList.size(); i++) {
+      if (menuSlug.equals(menuContentList.get(i).getSlug())) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
   //performance https://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html
   //leak with this kind inner class
 
   //region observers
   private final class MenuObserver extends DefaultObserver<MenuContentData> {
     private final GetMenusControllerCallback getMenusCallback;
+    private final @Nullable String menuSlug;
 
-    public MenuObserver(GetMenusControllerCallback getMenusCallback) {
+    public MenuObserver(GetMenusControllerCallback getMenusCallback, @Nullable String menuSlug) {
       this.getMenusCallback = getMenusCallback;
+      this.menuSlug = menuSlug;
     }
 
     @Override public void onComplete() {
@@ -289,11 +319,11 @@ public class OcmControllerImp implements OcmController {
     }
 
     @Override public void onNext(MenuContentData menuContentData) {
-      retrieveMenu(menuContentData);
+      retrieveMenu(menuContentData, menuSlug);
     }
 
-    private void retrieveMenu(MenuContentData menuContentData) {
-      getMenusCallback.onGetMenusLoaded(transformMenu(menuContentData));
+    private void retrieveMenu(MenuContentData menuContentData, @Nullable String menuSlug) {
+      getMenusCallback.onGetMenusLoaded(transformMenu(menuContentData, menuSlug));
     }
   }
 

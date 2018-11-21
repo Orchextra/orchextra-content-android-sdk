@@ -37,7 +37,7 @@ public class ContentArticleHomeLayoutViewPresenter extends Presenter<ArticleView
   }
 
   public void reloadSection() {
-    ocmController.getMenu(new OcmController.GetMenusControllerCallback() {
+    ocmController.refreschMenu(new OcmController.GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(UiMenuData menus) {
 
         if (menus == null) {

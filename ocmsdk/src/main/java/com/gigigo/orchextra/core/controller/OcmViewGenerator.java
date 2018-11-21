@@ -1,5 +1,6 @@
 package com.gigigo.orchextra.core.controller;
 
+import android.support.annotation.Nullable;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
@@ -32,7 +33,8 @@ public interface OcmViewGenerator {
 
   UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
 
-  void getMenu(GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
+  void getMenu(GetMenusViewGeneratorCallback getMenusViewGeneratorCallback,
+      @Nullable String menuSlug);
 
   // Callbacks
   interface GetMenusViewGeneratorCallback {

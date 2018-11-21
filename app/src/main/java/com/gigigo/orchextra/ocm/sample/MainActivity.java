@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         Timber.e(e, "getMenus()");
         Toast.makeText(MainActivity.this, "Get menu error!", Toast.LENGTH_SHORT).show();
       }
-    });
+    },"Shop-AGQb1yH_f");
   }
 
   private void onGoDetailView(List<UiMenu> uiMenu) {

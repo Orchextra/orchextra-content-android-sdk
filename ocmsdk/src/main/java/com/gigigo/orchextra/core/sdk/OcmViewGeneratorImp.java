@@ -2,6 +2,7 @@ package com.gigigo.orchextra.core.sdk;
 
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
@@ -55,7 +56,8 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
     this.detailElementsViewPresenterProvider = detailElementsViewPresenterProvider;
   }
 
-  @Override public void getMenu(final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback) {
+  @Override public void getMenu(final GetMenusViewGeneratorCallback getMenusViewGeneratorCallback,
+      @Nullable String menuSlug) {
     ocmController.getMenu(new OcmController.GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(UiMenuData menus) {
         getMenusViewGeneratorCallback.onGetMenusLoaded(menus);
@@ -64,7 +66,7 @@ public class OcmViewGeneratorImp implements OcmViewGenerator {
       @Override public void onGetMenusFails(Exception e) {
         getMenusViewGeneratorCallback.onGetMenusFails(new ApiMenuNotFoundException(e));
       }
-    });
+    }, menuSlug);
   }
 
   @Override

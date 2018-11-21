@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
-import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.ocm.callbacks.CustomUrlCallback;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
@@ -95,23 +94,14 @@ public final class Ocm {
   /**
    * Get the app menus
    */
-  @Deprecated public static void getMenus(DataRequest menuRequest,
-      OcmCallbacks.Menus menusCallback) {
-    OCManager.getMenus(new OCManagerCallbacks.Menus() {
-      @Override public void onMenusLoaded(UiMenuData menus) {
-        menusCallback.onMenusLoaded(menus);
-      }
-
-      @Override public void onMenusFails(Throwable e) {
-        menusCallback.onMenusFails(e);
-      }
-    });
+  public static void getMenus(OcmCallbacks.Menus menusCallback) {
+    getMenus(menusCallback, null);
   }
 
   /**
    * Get the app menus
    */
-  public static void getMenus(OcmCallbacks.Menus menusCallback) {
+  public static void getMenus(OcmCallbacks.Menus menusCallback, @Nullable String menuSlug) {
     OCManager.getMenus(new OCManagerCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData menus) {
         menusCallback.onMenusLoaded(menus);
@@ -120,7 +110,7 @@ public final class Ocm {
       @Override public void onMenusFails(Throwable e) {
         menusCallback.onMenusFails(e);
       }
-    });
+    }, menuSlug);
   }
 
   /**

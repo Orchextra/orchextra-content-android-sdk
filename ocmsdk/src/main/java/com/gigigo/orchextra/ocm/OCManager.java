@@ -112,7 +112,7 @@ public final class OCManager {
     getInstance().onEventCallback = onEventCallback;
   }
 
-  static void getMenus(final OCManagerCallbacks.Menus menusCallback) {
+  static void getMenus(final OCManagerCallbacks.Menus menusCallback, @Nullable String menuSlug) {
     if (instance != null) {
       instance.ocmViewGenerator.getMenu(new OcmViewGenerator.GetMenusViewGeneratorCallback() {
         @Override public void onGetMenusLoaded(UiMenuData menus) {
@@ -126,7 +126,7 @@ public final class OCManager {
         @Override public void onGetMenusFails(Throwable e) {
           menusCallback.onMenusFails(e);
         }
-      });
+      }, menuSlug);
     }
   }
 
