@@ -68,7 +68,7 @@ project.ext {
                kache                     : 'com.github.mskn73:kache:0.4',
 
                vimeoNetworking           : 'com.vimeo.networking:vimeo-networking:1.1.1',
-               exoplayer                 : 'com.google.android.exoplayer:exoplayer:r2.5.3',
+               exoplayer                 : 'com.google.android.exoplayer:exoplayer:2.9.6',
 
                gpuImage                  : 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1',
                timber                    : 'com.jakewharton.timber:timber:4.7.1',
