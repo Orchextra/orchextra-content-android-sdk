@@ -140,7 +140,7 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
       if (simpleExoPlayerView != null && simpleExoPlayerView.getPlayer() != null) {
         simpleExoPlayerView.getPlayer().stop();
         simpleExoPlayerView.getPlayer().release();
-        simpleExoPlayerView.getPlayer().clearVideoSurface();
+        ((SimpleExoPlayer)simpleExoPlayerView.getPlayer()).clearVideoSurface();
       }
 
       if (fullScreenDialog != null) fullScreenDialog.dismiss();
@@ -320,7 +320,7 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
       simpleExoPlayerView.getPlayer().release();
     }
     SimpleExoPlayer player =
-        ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(this), trackSelector,
+        ExoPlayerFactory.newSimpleInstance(this,new DefaultRenderersFactory(this), trackSelector,
             loadControl);
     simpleExoPlayerView.setPlayer(player);
 
@@ -330,7 +330,7 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
       simpleExoPlayerView.getPlayer().seekTo(resumeWindow, resumePosition);
     }
 
-    simpleExoPlayerView.getPlayer().prepare(videoSource);
+    ((SimpleExoPlayer) simpleExoPlayerView.getPlayer()).prepare(videoSource);
     simpleExoPlayerView.getPlayer().setPlayWhenReady(true);
     simpleExoPlayerView.setVisibility(View.VISIBLE);
   }
