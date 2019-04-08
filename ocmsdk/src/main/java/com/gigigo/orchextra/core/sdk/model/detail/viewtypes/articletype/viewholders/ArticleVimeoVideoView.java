@@ -202,12 +202,12 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
       videoPlayer.getPlayer().release();
     }
     SimpleExoPlayer player =
-        ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(context), trackSelector,
+        ExoPlayerFactory.newSimpleInstance(context,new DefaultRenderersFactory(context), trackSelector,
             loadControl);
     videoPlayer.setPlayer(player);
-    videoPlayer.getPlayer().setVolume(0);
+    ((SimpleExoPlayer) videoPlayer.getPlayer()).setVolume(0);
 
-    videoPlayer.getPlayer().prepare(videoSource);
+    ((SimpleExoPlayer)videoPlayer.getPlayer()).prepare(videoSource);
     videoPlayer.getPlayer().setPlayWhenReady(true);
     videoPlayer.setVisibility(View.VISIBLE);
     videoPlayer.getPlayer().setRepeatMode(Player.REPEAT_MODE_ALL);
@@ -243,7 +243,7 @@ public class ArticleVimeoVideoView extends BaseViewHolder<ArticleVimeoVideoEleme
     if (videoPlayer != null && videoPlayer.getPlayer() != null) {
       videoPlayer.getPlayer().stop();
       videoPlayer.getPlayer().release();
-      videoPlayer.getPlayer().clearVideoSurface();
+      ((SimpleExoPlayer) videoPlayer.getPlayer()).clearVideoSurface();
     }
 
     imgThumb.setVisibility(View.VISIBLE);
