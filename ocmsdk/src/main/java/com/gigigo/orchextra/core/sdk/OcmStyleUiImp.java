@@ -12,6 +12,7 @@ public class OcmStyleUiImp implements OcmStyleUi {
   private boolean isTitleToolbarEnabled;
   private boolean isThumbnailEnabled;
   private boolean isStatusBarEnabled;
+  private boolean isAnimationViewEnabled;
   @DrawableRes private int detailBackground;
   @DrawableRes private int detailToolbarBackground;
 
@@ -23,6 +24,7 @@ public class OcmStyleUiImp implements OcmStyleUi {
     this.isTitleToolbarEnabled = styleUi.isTitleToolbarEnabled();
     this.isThumbnailEnabled = styleUi.isThumbnailEnabled();
     this.isStatusBarEnabled = styleUi.isStatusBarEnabled();
+    this.isAnimationViewEnabled = styleUi.isAnimationViewEnabled();
     this.detailBackground = styleUi.getDetailBackground();
     this.detailToolbarBackground = styleUi.getDetailToolbarBackground();
   }
@@ -49,6 +51,10 @@ public class OcmStyleUiImp implements OcmStyleUi {
 
   @Override public boolean isThumbnailEnabled() {
     return isThumbnailEnabled;
+  }
+
+  @Override public boolean isAnimationViewEnabled() {
+    return isAnimationViewEnabled;
   }
 
   @Override public int getDetailBackground() {

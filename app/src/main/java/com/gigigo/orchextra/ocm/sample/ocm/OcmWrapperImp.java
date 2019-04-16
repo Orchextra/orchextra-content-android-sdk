@@ -73,6 +73,7 @@ public class OcmWrapperImp implements OcmWrapper {
                 .setMediumFont("fonts/Gotham-Medium.ttf")
                 .setTitleToolbarEnabled(false)
                 .disableThumbnailImages()
+                .disableAnimationView()
                 .setDetailBackground(R.drawable.journey_morning_background_light)
                 .setDetaiToolbarlBackground(R.drawable.journey_morning_background)
                 .setEnabledStatusBar(false);

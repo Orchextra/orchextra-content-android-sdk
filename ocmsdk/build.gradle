@@ -252,10 +252,10 @@ dependencies {
 
   kapt project.libraries.archLifecycleCompiler
   kapt project.libraries.archPersistenceCompiler
-  compile project.libraries.archLifecycleExtensions
-  compile project.libraries.archPersistenceRuntime
-  compile project.libraries.archPersistenceRxJava2
-  testCompile project.libraries.archPersistenceTesting
+  api project.libraries.archLifecycleExtensions
+  api project.libraries.archPersistenceRuntime
+  api project.libraries.archPersistenceRxJava2
+  testImplementation project.libraries.archPersistenceTesting
 
   api project.libraries.gpuImage //4 readarticles
 

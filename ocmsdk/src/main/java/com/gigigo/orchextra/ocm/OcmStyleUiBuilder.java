@@ -11,6 +11,8 @@ public final class OcmStyleUiBuilder {
   private boolean titleToolbarEnabled = false;
   private boolean thumbnailEnabled = true;
   private boolean statusBarEnabled = true;
+  private boolean animationViewEnabled = true;
+
   @DrawableRes private int detailBackground = -1;
   @DrawableRes private int detailToolbarBackground = -1;
 
@@ -58,6 +60,10 @@ public final class OcmStyleUiBuilder {
     return this;
   }
 
+  public OcmStyleUiBuilder disableAnimationView() {
+    this.animationViewEnabled = false;
+    return this;
+  }
   public OcmStyleUiBuilder setDetailBackground(@DrawableRes int detailBackground) {
     this.detailBackground = detailBackground;
     return this;
@@ -94,6 +100,9 @@ public final class OcmStyleUiBuilder {
 
   public boolean isStatusBarEnabled() {
     return statusBarEnabled;
+  }
+  public boolean isAnimationViewEnabled() {
+    return animationViewEnabled;
   }
 
   public int getDetailBackground() {

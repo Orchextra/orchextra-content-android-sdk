@@ -31,12 +31,14 @@ public class App extends MultiDexApplication {
 
   private void initOcm() {
     OcmWrapperImp.getInstance(this).startWithCredentials(BuildConfig.API_KEY, BuildConfig.API_SECRET,
-        BuildConfig.BUSSINES_UNIT, "34e1438469ab50e311a171463c8e4f62", new OcmWrapper.OnStartWithCredentialsCallback() {
+        BuildConfig.BUSSINES_UNIT, "50163590b4402cceefb2c78a7aba7093",
+        new OcmWrapper.OnStartWithCredentialsCallback() {
           @Override public void onCredentialReceiver(String accessToken) {
             Timber.d("onCredentialReceiver()");
           }
 
           @Override public void onCredentailError() {
+
             Timber.e("onCredentailError");
           }
         });

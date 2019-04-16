@@ -22,7 +22,7 @@ android {
     targetSdkVersion project.ext.androidTargetSdkVersion
 
     ndk {
-      abiFilters "armeabi-v7a", "x86"
+      abiFilters "armeabi-v7a"
     }
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -85,6 +85,11 @@ android {
   flavorDimensions "sample"
 
   productFlavors {
+
+    showRoom {
+      dimension "sample"
+    }
+
     woah_Showcase {
       dimension "sample"
     }

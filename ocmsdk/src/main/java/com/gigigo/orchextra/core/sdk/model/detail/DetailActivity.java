@@ -55,6 +55,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
   private ImageView animationImageView;
   private UiDetailBaseContentData uiContentView;
   private boolean statusBarEnabled;
+  private boolean animationViewEnabled;
   private FrameLayout parentContainer;
   @DrawableRes private int detailBackground;
 
@@ -129,6 +130,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
       injector.injectDetailActivity(this);
       statusBarEnabled = injector.provideOcmStyleUi().isStatusBarEnabled();
       detailBackground = injector.provideOcmStyleUi().getDetailBackground();
+      animationViewEnabled = injector.provideOcmStyleUi().isAnimationViewEnabled();
     }
   }
 
@@ -137,7 +139,7 @@ public class DetailActivity extends BaseInjectionActivity<DetailActivityComponen
 
     presenter.setOnFinishViewListener(onFinishViewListener);
 
-    setAnimationImageView();
+    if (animationViewEnabled) setAnimationImageView();
 
     String elementUrl = getIntent().getStringExtra(EXTRA_ELEMENT_URL);
     presenter.loadSection(elementUrl);
