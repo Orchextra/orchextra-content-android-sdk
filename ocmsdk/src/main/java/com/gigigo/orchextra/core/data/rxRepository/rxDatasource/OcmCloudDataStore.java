@@ -66,13 +66,16 @@ public class OcmCloudDataStore implements OcmDataStore {
     }
 
     @Override
-    public Observable<ContentData> getSection(String contentUrl,
-                                              final int numberOfElementsToDownload) {
+    public Observable<ContentData> getSection(
+            String contentUrl,
+            final int numberOfElementsToDownload
+    ) {
         return ocmApiService.getSectionDataRx(contentUrl, withThumbnails)
                 .map(BaseApiResponse::getResult)
-                .doOnNext(apiSectionContentData -> ocmCache.putSection(apiSectionContentData, contentUrl))
-                .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData,
-                        numberOfElementsToDownload))
+                .doOnNext(apiSectionContentData ->
+                        ocmCache.putSection(apiSectionContentData, contentUrl))
+                .doOnNext(apiSectionContentData ->
+                        addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload))
                 .map(DbMappersKt::toContentData);
     }
 
@@ -147,7 +150,9 @@ public class OcmCloudDataStore implements OcmDataStore {
     @Override
     public Observable<ElementData> getElementById(String slug) {
         return ocmApiService.getElementByIdRx(slug, withThumbnails)
-                .map(dataResponse -> dataResponse.getResult())
+                .map(dataResponse ->
+                        dataResponse.getResult()
+                )
                 .doOnNext(apiElementData -> {
                     if (apiElementData.getElement().getSlug() != null) {
                         ocmCache.putDetail(apiElementData, apiElementData.getElement().getSlug());

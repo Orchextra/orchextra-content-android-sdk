@@ -7,6 +7,30 @@ apply plugin: 'kotlin-android-extensions'
 group = rootProject.ext.group
 version = rootProject.ext.version
 
+ext {
+  bintrayRepo = 'maven'
+  bintrayName = 'com.gigigo.ocm:vimeosdk'
+
+  publishedGroupId = 'com.gigigo.ocm'
+  libraryName = 'vimeosdk'
+  artifact = 'vimeosdk'
+
+  libraryDescription = 'Orchextra Vimeo Sdk'
+
+  siteUrl = 'https://github.com/Orchextra/orchextra-content-android-sdk'
+  gitUrl = 'https://github.com/Orchextra/orchextra-content-android-sdk.git'
+
+  libraryVersion = rootProject.ext.version
+
+  developerId = 'gigigo-desarrollo'
+  developerName = 'Android Gigigo'
+  developerEmail = 'gigigo.desarrollo@gmail.com'
+
+  licenseName = 'The Apache Software License, Version 2.0'
+  licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+  allLicenses = ["Apache-2.0"]
+}
+
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -42,10 +66,6 @@ android {
       dimension "ocm"
     }
   }
-
-  //true to publish all flavour artifacts
-  // publishNonDefault true
-  defaultPublishConfig "ocmRelease"
 }
 
 dependencies {
@@ -65,3 +85,6 @@ dependencies {
   })
   testImplementation project.testLibraries.junit
 }
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

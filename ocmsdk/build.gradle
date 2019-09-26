@@ -1,16 +1,40 @@
 apply plugin: 'com.android.library'
-apply from: 'jacoco.gradle'
-apply from: 'sonarqube.gradle'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.dcendents.android-maven'
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+
+apply from: 'jacoco.gradle'
 apply from: 'variants.gradle'
 
 group = rootProject.ext.group
 version = rootProject.ext.version
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'com.gigigo.ocm:content'
+
+    publishedGroupId = 'com.gigigo.ocm'
+    libraryName = 'Orchextra Content Manager'
+    artifact = 'ocm'
+
+    libraryDescription = 'Orchextra Content Manager'
+
+    siteUrl = 'https://github.com/Orchextra/orchextra-content-android-sdk'
+    gitUrl = 'https://github.com/Orchextra/orchextra-content-android-sdk.git'
+
+    libraryVersion = rootProject.ext.version
+
+    developerId = 'gigigo-desarrollo'
+    developerName = 'Android Gigigo'
+    developerEmail = 'gigigo.desarrollo@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
 
 def OCM_DIMENSION = "ocm"
 def CONCURRENT_INTERACTORS = "CONCURRENT_INTERACTORS"
@@ -57,7 +81,7 @@ android {
             //      testCoverageEnabled = true
         }
         release {
-            debuggable true
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             signingConfig null
@@ -94,60 +118,16 @@ android {
 
 
     flavorDimensions OCM_DIMENSION
-
     productFlavors {
         ocm {
             dimension OCM_DIMENSION
         }
     }
-
-
-    //true to publish all flavour artifacts
-    // publishNonDefault true
-    defaultPublishConfig "ocmRelease"
-    //defaultPublishConfig "ocmDebug"
-    //defaultPublishConfig {"ocmRelease","ocmDebug","ocmStaging"}
 }
 
 jacocoAndroidUnitTestReport {
     excludes += ['**/BuildConfig*.*']
 }
-
-//configurations {
-//  ocmReleaseImplementation
-//  ocmStagingImplementation
-//  ocmDebugImplementation
-//}
-
-//if (android.productFlavors.size() > 0) {
-//    android.libraryVariants.all { variant ->
-//        // Publish a main artifact, otherwise the maven pom is not generated
-//        //if( variant.name == android.defaultPublishConfig ) {
-//        def bundleTask = tasks["bundle${name.capitalize()}"]
-//        artifacts {
-//            println('BUNDLE!' + bundleTask.archivePath)
-//            println('classifier!' + variant.name)
-//            println('builtBy!' + bundleTask.name)
-//            archives(bundleTask.archivePath) {
-//                classifier variant.name
-//                builtBy bundleTask
-//            }
-//        }
-//    }
-//    //}
-//}
-
-task finalize {
-    doFirst {
-        tasks.assembleOcmDebug.execute()
-        tasks.assembleOcmRelease.execute()
-        tasks.assembleOcmStaging.execute()
-    }
-
-    println('finally!')
-}
-finalize.dependsOn(ocmsdk: install)
-install.dependsOn(ocmsdk: build)
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar']) //youtube
@@ -171,6 +151,7 @@ dependencies {
 
     //Image Loader Glide/Blur
     implementation project.libraries.glide
+    implementation project.libraries.glideTransformations
 
     // ORCHEXTRA
     stagingImplementation project.libraries.oxCoreStaging
@@ -220,8 +201,6 @@ dependencies {
     implementation project.libraries.loggingInterceptor
     implementation project.libraries.exoplayer
     implementation project.libraries.zbar
-    implementation project.libraries.glideTransformations
-
 
     // Modules
     implementation project.modules.vimeo
@@ -232,4 +211,7 @@ dependencies {
     testImplementation project.testLibraries.assertj
     testImplementation project.testLibraries.mockito
 }
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
 

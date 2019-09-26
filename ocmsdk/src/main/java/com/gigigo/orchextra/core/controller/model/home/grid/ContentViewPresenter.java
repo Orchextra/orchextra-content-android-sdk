@@ -14,6 +14,7 @@ import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
@@ -63,7 +64,12 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     this.uiMenu = uiMenu;
     this.filter = filter;
 
-    String contentUrl = uiMenu.getElementCache().getRender().getContentUrl();
+    ElementCacheRender render = uiMenu.getElementCache().getRender();
+    if (render == null) {
+      Timber.e("Render is null");
+      return;
+    }
+    String contentUrl = render.getContentUrl();
 
     /**
      * Init app
