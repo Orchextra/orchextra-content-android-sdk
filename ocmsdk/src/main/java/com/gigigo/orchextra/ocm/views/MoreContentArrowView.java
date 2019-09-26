@@ -4,15 +4,12 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 
-/**
- * Created by nubor on 05/04/2017.
- */
 
-public class MoreContentArrowView extends android.support.v7.widget.AppCompatImageView {
+public class MoreContentArrowView extends androidx.appcompat.widget.AppCompatImageView {
 
   public MoreContentArrowView(Context context) {
     super(context);

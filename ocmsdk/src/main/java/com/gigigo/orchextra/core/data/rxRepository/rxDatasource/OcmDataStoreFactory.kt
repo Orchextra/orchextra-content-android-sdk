@@ -8,8 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import orchextra.javax.inject.Inject
-import orchextra.javax.inject.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 
@@ -22,171 +22,172 @@ class OcmDataStoreFactory
     val cloudDataStore: OcmCloudDataStore,
     val diskDataStore: OcmDiskDataStore,
     private val connectionUtils: ConnectionUtils,
-    private val session: OxSession) {
+    private val session: OxSession
+) {
 
-  private val TAG = OcmDataStoreFactory::class.java.simpleName
+    private val TAG = OcmDataStoreFactory::class.java.simpleName
 
-  fun getDataStoreForVersion(): OcmDataStore {
-    if (session.token == null) {
-      return diskDataStore
-    }
-
-    lateinit var dataStore: OcmDataStore
-
-    runBlocking {
-      println("*****GETVERSION RUNBLOCKING THREAD " + Thread.currentThread().name)
-      dataStore = dataStoreForVersion().await()
-    }
-
-    return dataStore
-  }
-
-  private fun dataStoreForVersion() =
-      GlobalScope.async(bgContext) {
-
-        println("*****GETVERSION ASYNC THREAD " + Thread.currentThread().name)
-        var dataStore: OcmDataStore
-
-        if (false) {
-          Log.i(TAG, "DISK - Version")
-          dataStore = diskDataStore
-        } else {
-          Log.i(TAG, "CLOUD - Version")
-          dataStore = cloudDataStore
+    fun getDataStoreForVersion(): OcmDataStore {
+        if (session.token == null) {
+            return diskDataStore
         }
 
-        dataStore
-      }
+        lateinit var dataStore: OcmDataStore
 
-  fun getDataStoreForMenus(force: Boolean): OcmDataStore {
-    //if (!connectionUtils.hasConnection()) return diskDataStore
-
-    lateinit var dataStore: OcmDataStore
-
-    runBlocking {
-      dataStore = dataStoreForMenus(force).await()
-    }
-
-    return dataStore
-  }
-
-  private fun dataStoreForMenus(force: Boolean) =
-      GlobalScope.async(bgContext) {
-        var dataStore: OcmDataStore
-
-        dataStore = if (force) {
-          Log.i(TAG, "CLOUD - Menus")
-          cloudDataStore
-        } else {
-          val cache = diskDataStore.ocmCache
-          if (cache.hasMenusCached()) {
-            Log.i(TAG, "DISK  - Menus")
-            diskDataStore
-          } else {
-            Log.i(TAG, "CLOUD - Menus")
-            cloudDataStore
-          }
+        runBlocking {
+            println("*****GETVERSION RUNBLOCKING THREAD " + Thread.currentThread().name)
+            dataStore = dataStoreForVersion().await()
         }
 
-        dataStore
-      }
-
-  fun getDataStoreForSection(force: Boolean, section: String): OcmDataStore {
-    if (!connectionUtils.hasConnection()) return diskDataStore
-
-    lateinit var dataStore: OcmDataStore
-
-    runBlocking {
-      dataStore = dataStoreForSection(force, section).await()
+        return dataStore
     }
 
-    return dataStore
-  }
+    private fun dataStoreForVersion() =
+        GlobalScope.async(bgContext) {
 
-  private fun dataStoreForSection(force: Boolean, section: String) =
-      GlobalScope.async(bgContext) {
-        var dataStore: OcmDataStore
+            println("*****GETVERSION ASYNC THREAD " + Thread.currentThread().name)
+            var dataStore: OcmDataStore
 
-        dataStore = if (force) {
-          Log.i(TAG, "CLOUD - Sections")
-          cloudDataStore
-        } else {
-          val cache = diskDataStore.ocmCache
-          if (cache.isSectionCached(section) && !cache.isSectionExpired(section)) {
-            Log.i(TAG, "DISK  - Sections")
-            diskDataStore
-          } else {
-            Log.i(TAG, "CLOUD - Sections")
-            cloudDataStore
-          }
+            if (false) {
+                Log.i(TAG, "DISK - Version")
+                dataStore = diskDataStore
+            } else {
+                Log.i(TAG, "CLOUD - Version")
+                dataStore = cloudDataStore
+            }
+
+            dataStore
         }
 
-        dataStore
-      }
+    fun getDataStoreForMenus(force: Boolean): OcmDataStore {
+        //if (!connectionUtils.hasConnection()) return diskDataStore
 
-  fun getDataStoreForDetail(force: Boolean, slug: String): OcmDataStore {
-    if (!connectionUtils.hasConnection()) return diskDataStore
+        lateinit var dataStore: OcmDataStore
 
-    lateinit var dataStore: OcmDataStore
+        runBlocking {
+            dataStore = dataStoreForMenus(force).await()
+        }
 
-    runBlocking {
-      dataStore = dataStoreForDetail(force, slug).await()
+        return dataStore
     }
 
-    return dataStore
-  }
+    private fun dataStoreForMenus(force: Boolean) =
+        GlobalScope.async(bgContext) {
+            var dataStore: OcmDataStore
 
-  private fun dataStoreForDetail(force: Boolean, slug: String) =
-      GlobalScope.async(bgContext) {
-        var dataStore: OcmDataStore
+            dataStore = if (force) {
+                Log.i(TAG, "CLOUD - Menus")
+                cloudDataStore
+            } else {
+                val cache = diskDataStore.ocmCache
+                if (cache.hasMenusCached()) {
+                    Log.i(TAG, "DISK  - Menus")
+                    diskDataStore
+                } else {
+                    Log.i(TAG, "CLOUD - Menus")
+                    cloudDataStore
+                }
+            }
 
-        dataStore = if (force) {
-          Log.i(TAG, "CLOUD - Detail")
-          cloudDataStore
-        } else {
-          val cache = diskDataStore.ocmCache
-          if (cache.isDetailCached(slug) && !cache.isDetailExpired(slug)) {
-            Log.i(TAG, "DISK  - Detail")
-            diskDataStore
-          } else {
-            Log.i(TAG, "CLOUD - Detail")
-            cloudDataStore
-          }
+            dataStore
         }
 
-        dataStore
-      }
+    fun getDataStoreForSection(force: Boolean, section: String): OcmDataStore {
+        if (!connectionUtils.hasConnection()) return diskDataStore
 
-  fun getDataStoreForVideo(force: Boolean, videoId: String): OcmDataStore {
-    if (!connectionUtils.hasConnection()) return diskDataStore
+        lateinit var dataStore: OcmDataStore
 
-    lateinit var dataStore: OcmDataStore
+        runBlocking {
+            dataStore = dataStoreForSection(force, section).await()
+        }
 
-    runBlocking {
-      dataStore = dataStoreForVideo(force, videoId).await()
+        return dataStore
     }
 
-    return dataStore
-  }
+    private fun dataStoreForSection(force: Boolean, section: String) =
+        GlobalScope.async(bgContext) {
+            var dataStore: OcmDataStore
 
-  private fun dataStoreForVideo(force: Boolean, videoId: String) =
-      GlobalScope.async(bgContext) {
-        var dataStore: OcmDataStore
+            dataStore = if (force) {
+                Log.i(TAG, "CLOUD - Sections")
+                cloudDataStore
+            } else {
+                val cache = diskDataStore.ocmCache
+                if (cache.isSectionCached(section) && !cache.isSectionExpired(section)) {
+                    Log.i(TAG, "DISK  - Sections")
+                    diskDataStore
+                } else {
+                    Log.i(TAG, "CLOUD - Sections")
+                    cloudDataStore
+                }
+            }
 
-        dataStore = if (force) {
-          Log.i(TAG, "CLOUD - Video")
-          cloudDataStore
-        } else {
-          val cache = diskDataStore.ocmCache
-          if (cache.isVideoCached(videoId) && !cache.isVideoExpired(videoId)) {
-            Log.i(TAG, "DISK  - Video")
-            diskDataStore
-          } else {
-            Log.i(TAG, "CLOUD - Video")
-            cloudDataStore
-          }
+            dataStore
         }
 
-        dataStore
-      }
+    fun getDataStoreForDetail(force: Boolean, slug: String): OcmDataStore {
+        if (!connectionUtils.hasConnection()) return diskDataStore
+
+        lateinit var dataStore: OcmDataStore
+
+        runBlocking {
+            dataStore = dataStoreForDetail(force, slug).await()
+        }
+
+        return dataStore
+    }
+
+    private fun dataStoreForDetail(force: Boolean, slug: String) =
+        GlobalScope.async(bgContext) {
+            var dataStore: OcmDataStore
+
+            dataStore = if (force) {
+                Log.i(TAG, "CLOUD - Detail")
+                cloudDataStore
+            } else {
+                val cache = diskDataStore.ocmCache
+                if (cache.isDetailCached(slug) && !cache.isDetailExpired(slug)) {
+                    Log.i(TAG, "DISK  - Detail")
+                    diskDataStore
+                } else {
+                    Log.i(TAG, "CLOUD - Detail")
+                    cloudDataStore
+                }
+            }
+
+            dataStore
+        }
+
+    fun getDataStoreForVideo(force: Boolean, videoId: String): OcmDataStore {
+        if (!connectionUtils.hasConnection()) return diskDataStore
+
+        lateinit var dataStore: OcmDataStore
+
+        runBlocking {
+            dataStore = dataStoreForVideo(force, videoId).await()
+        }
+
+        return dataStore
+    }
+
+    private fun dataStoreForVideo(force: Boolean, videoId: String) =
+        GlobalScope.async(bgContext) {
+            var dataStore: OcmDataStore
+
+            dataStore = if (force) {
+                Log.i(TAG, "CLOUD - Video")
+                cloudDataStore
+            } else {
+                val cache = diskDataStore.ocmCache
+                if (cache.isVideoCached(videoId) && !cache.isVideoExpired(videoId)) {
+                    Log.i(TAG, "DISK  - Video")
+                    diskDataStore
+                } else {
+                    Log.i(TAG, "CLOUD - Video")
+                    cloudDataStore
+                }
+            }
+
+            dataStore
+        }
 }

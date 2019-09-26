@@ -1,8 +1,8 @@
 package com.gigigo.showcase;
 
 import android.preference.PreferenceManager;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 import com.gigigo.showcase.domain.DataManager;
 import com.gigigo.showcase.ocm.ContentManager;
 import timber.log.Timber;

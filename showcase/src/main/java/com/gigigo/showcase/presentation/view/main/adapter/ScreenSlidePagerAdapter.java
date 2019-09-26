@@ -1,9 +1,9 @@
 package com.gigigo.showcase.presentation.view.main.adapter;
 
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 import com.gigigo.orchextra.ocm.callbacks.OnLoadMoreContentListener;
 import com.gigigo.orchextra.ocm.dto.UiMenu;

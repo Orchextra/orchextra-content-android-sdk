@@ -1,6 +1,6 @@
 package com.gigigo.orchextra.ocm.customProperties
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.view.View
 
 interface OcmCustomBehaviourDelegate {

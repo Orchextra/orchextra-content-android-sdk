@@ -17,19 +17,21 @@ ext {
             coroutinesCore            : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutinesVersion}",
             coroutinesAndroid         : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutinesVersion}",
 
-            androidSupportDesign      : "com.android.support:design:${supportVersion}",
-            androidCustomtabs         : "com.android.support:customtabs:${supportVersion}",
-            androidAppCompat          : "com.android.support:appcompat-v7:${supportVersion}",
+            androidSupportDesign      : 'com.google.android.material:material:1.0.0',
+            androidCustomtabs         : 'androidx.browser:browser:1.0.0',
+            androidAppCompat          : 'androidx.appcompat:appcompat:1.0.0',
 
-            archLifecycleExtensions   : 'android.arch.lifecycle:extensions:1.1.1',
-            archLifecycleCompiler     : 'android.arch.lifecycle:compiler:1.1.1',
-            archPersistenceRuntime    : 'android.arch.persistence.room:runtime:1.0.0',
-            archPersistenceRxJava2    : 'android.arch.persistence.room:rxjava2:1.0.0',
-            archPersistenceCompiler   : 'android.arch.persistence.room:compiler:1.0.0',
-            archPersistenceTesting    : 'android.arch.persistence.room:testing:1.0.0',
+            archLifecycleExtensions   : 'androidx.lifecycle:lifecycle-extensions:2.0.0',
+            archLifecycleCompiler     : 'androidx.lifecycle:lifecycle-compiler:2.0.0',
+            archPersistenceRuntime    : 'androidx.room:room-runtime:2.0.0',
+            archPersistenceRxJava2    : 'androidx.room:room-rxjava2:2.0.0',
+            archPersistenceCompiler   : 'androidx.room:room-compiler:2.0.0',
+            archPersistenceTesting    : 'androidx.room:room-testing:2.0.0',
 
-            daggerCompiler            : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
-            dagger                    : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
+//            daggerCompiler            : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
+//            dagger                    : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
+            daggerCompiler            : 'com.google.dagger:dagger-android-processor:2.22.1',
+            dagger                    : 'com.google.dagger:dagger-android:2.22.1',
 
             gggJavaLib                : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:4.6.4',
             ggglogger                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:4.6.4',
@@ -90,7 +92,7 @@ ext {
             assertj          : 'org.assertj:assertj-core:3.8.0',
             androidTestRunner: 'com.android.support.test:runner:0.4.1',
             androidTestRules : 'com.android.support.test:rules:0.4.1',
-            espresso         : 'com.android.support.test.espresso:espresso-core:2.2.2',
+            espresso         : 'androidx.test.espresso:espresso-core:3.1.0',
             mockWebServer    : 'com.squareup.okhttp:mockwebserver:2.6.0'
     ]
 

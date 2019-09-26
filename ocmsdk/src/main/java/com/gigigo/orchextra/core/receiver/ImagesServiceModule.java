@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.receiver;
 
-import orchextra.dagger.Module;
+import dagger.Module;
 
-@Module public class ImagesServiceModule {
+@Module
+public class ImagesServiceModule {
 }

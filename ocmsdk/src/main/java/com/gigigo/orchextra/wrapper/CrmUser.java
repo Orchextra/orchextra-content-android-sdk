@@ -5,9 +5,6 @@ import io.reactivex.annotations.Nullable;
 
 import java.util.GregorianCalendar;
 
-/**
- * Created by alex on 01/12/2017.
- */
 
 public class CrmUser {
 

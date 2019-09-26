@@ -9,7 +9,7 @@ import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.ui.FontCache;
 import com.gigigo.orchextra.ocm.OCManager;
 
-public class OcmTitleEditText extends android.support.v7.widget.AppCompatEditText {
+public class OcmTitleEditText extends androidx.appcompat.widget.AppCompatEditText {
 
   private final Context context;
 

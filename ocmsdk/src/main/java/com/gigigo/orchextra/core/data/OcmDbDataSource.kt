@@ -19,152 +19,157 @@ import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException
 import com.gigigo.orchextra.core.data.rxException.ClearCacheException
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData
-import orchextra.javax.inject.Inject
-import orchextra.javax.inject.Singleton
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-class OcmDbDataSource @Inject constructor(private val ocmDatabase: OcmDatabase,
-    private val appExecutors: AppExecutors) {
+class OcmDbDataSource @Inject constructor(
+    private val ocmDatabase: OcmDatabase,
+    private val appExecutors: AppExecutors
+) {
 
-  fun getMenus(): MenuContentData {
+    fun getMenus(): MenuContentData {
 
-    val dbMenuContentList = ocmDatabase.menuDao().fetchMenus()
-    val dbElementCacheList = ocmDatabase.elementCacheDao().fetchElementsCache()
+        val dbMenuContentList = ocmDatabase.menuDao().fetchMenus()
+        val dbElementCacheList = ocmDatabase.elementCacheDao().fetchElementsCache()
 
-    for (dbMenuContent in dbMenuContentList) {
-      val dbElementList = ocmDatabase.elementDao().fetchMenuElements(dbMenuContent.slug)
-      dbMenuContent.elements = dbElementList
+        for (dbMenuContent in dbMenuContentList) {
+            val dbElementList = ocmDatabase.elementDao().fetchMenuElements(dbMenuContent.slug)
+            dbMenuContent.elements = dbElementList
 
 // TODO Save schedule Dates
 //      for (dbElement in dbElementList) {
 //        val dbScheduleDatesList = ocmDatabase.scheduleDatesDao().fetchSchedule(dbElement.slug)
 //        dbElement.dates = dbScheduleDatesList
 //      }
+        }
+
+        val dbMenuContentData = DbMenuContentData()
+        dbMenuContentData.menuContentList = dbMenuContentList
+
+        val dbElementCacheMap = HashMap<String, DbElementCache>(dbElementCacheList.size)
+        for (dbElementCache in dbElementCacheList) {
+            dbElementCacheMap[dbElementCache.key] = dbElementCache
+        }
+        dbMenuContentData.elementsCache = dbElementCacheMap
+
+        return dbMenuContentData.toMenuContentData()
     }
 
-    val dbMenuContentData = DbMenuContentData()
-    dbMenuContentData.menuContentList = dbMenuContentList
+    fun saveMenus(apiMenuContentData: ApiMenuContentData) {
 
-    val dbElementCacheMap = HashMap<String, DbElementCache>(dbElementCacheList.size)
-    for (dbElementCache in dbElementCacheList) {
-      dbElementCacheMap[dbElementCache.key] = dbElementCache
-    }
-    dbMenuContentData.elementsCache = dbElementCacheMap
+        appExecutors.diskIO().execute {
+            try {
+                ocmDatabase.menuDao().deleteAll()
 
-    return dbMenuContentData.toMenuContentData()
-  }
+                apiMenuContentData.menuContentList?.forEach { apiMenuContent ->
+                    val dbMenuContent = apiMenuContent.toDbMenuContent()
+                    ocmDatabase.menuDao().insertMenu(dbMenuContent)
 
-  fun saveMenus(apiMenuContentData: ApiMenuContentData) {
+                    dbMenuContent.elements?.forEachIndexed { index, dbElement ->
+                        dbElement.listIndex = index
+                        ocmDatabase.elementDao().insertElement(dbElement)
 
-    appExecutors.diskIO().execute {
-      try {
-        ocmDatabase.menuDao().deleteAll()
-
-        apiMenuContentData.menuContentList?.forEach { apiMenuContent ->
-          val dbMenuContent = apiMenuContent.toDbMenuContent()
-          ocmDatabase.menuDao().insertMenu(dbMenuContent)
-
-          dbMenuContent.elements?.forEachIndexed { index, dbElement ->
-            dbElement.listIndex = index
-            ocmDatabase.elementDao().insertElement(dbElement)
-
-            // TODO Save schedule Dates
+                        // TODO Save schedule Dates
 //            for (scheduleDate in dbElement.dates) {
 //              scheduleDate.slug = dbElement.slug
 //              ocmDatabase.scheduleDatesDao().insertSchedule(scheduleDate)
 //            }
 
-            val dbMenuElementJoin = DbMenuElementJoin(dbMenuContent.slug, dbElement.slug)
-            ocmDatabase.elementDao().insertMenuElement(dbMenuElementJoin)
-          }
+                        val dbMenuElementJoin =
+                            DbMenuElementJoin(dbMenuContent.slug, dbElement.slug)
+                        ocmDatabase.elementDao().insertMenuElement(dbMenuElementJoin)
+                    }
+                }
+                var index = 0
+                apiMenuContentData.elementsCache?.forEach { (key, element) ->
+                    val apiElementData = ApiElementData(element)
+                    putDetail(apiElementData, key, index)
+                    index++
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "saveMenus()")
+            }
         }
-        var index = 0
-        apiMenuContentData.elementsCache?.forEach { (key, element) ->
-          val apiElementData = ApiElementData(element)
-          putDetail(apiElementData, key, index)
-          index++
+    }
+
+    private fun putDetail(apiElementData: ApiElementData, key: String, index: Int) {
+        appExecutors.diskIO().execute {
+            try {
+                val elementCacheData = apiElementData.element.toDbElementCache(key, index)
+                ocmDatabase.elementCacheDao().insertElementCache(elementCacheData)
+            } catch (e: Exception) {
+                Timber.e(e, "putDetail()")
+            }
         }
-      } catch (e: Exception) {
-        Timber.e(e, "saveMenus()")
-      }
     }
-  }
 
-  private fun putDetail(apiElementData: ApiElementData, key: String, index: Int) {
-    appExecutors.diskIO().execute {
-      try {
-        val elementCacheData = apiElementData.element.toDbElementCache(key, index)
-        ocmDatabase.elementCacheDao().insertElementCache(elementCacheData)
-      } catch (e: Exception) {
-        Timber.e(e, "putDetail()")
-      }
-    }
-  }
+    @Throws(ApiSectionNotFoundException::class)
+    fun getSectionElements(section: String): ContentData {
 
-  @Throws(ApiSectionNotFoundException::class)
-  fun getSectionElements(section: String): ContentData {
+        val dbSectionContentData = ocmDatabase.sectionDao().fetchSectionContentData(section)
+            ?: throw ApiSectionNotFoundException()
 
-    val dbSectionContentData = ocmDatabase.sectionDao().fetchSectionContentData(section)
-        ?: throw ApiSectionNotFoundException()
+        val dbSectionContentDataElementList = ocmDatabase.elementDao()
+            .fetchSectionElements(dbSectionContentData.content!!.slug)
+        dbSectionContentData.content!!.elements = dbSectionContentDataElementList
 
-    val dbSectionContentDataElementList = ocmDatabase.elementDao()
-        .fetchSectionElements(dbSectionContentData.content!!.slug)
-    dbSectionContentData.content!!.elements = dbSectionContentDataElementList
-
-    val elementCaches = HashMap<String, DbElementCache>()
-    for ((slug, _, _, _, elementUrl) in dbSectionContentDataElementList) {
-      val elementCache = ocmDatabase.elementCacheDao().fetchElementCache(slug)
-      if (elementCache != null) {
-        elementUrl?.let {
-          elementCaches[elementUrl] = elementCache
+        val elementCaches = HashMap<String, DbElementCache>()
+        for ((slug, _, _, _, elementUrl) in dbSectionContentDataElementList) {
+            val elementCache = ocmDatabase.elementCacheDao().fetchElementCache(slug)
+            if (elementCache != null) {
+                elementUrl?.let {
+                    elementCaches[elementUrl] = elementCache
+                }
+            }
         }
-      }
-    }
-    dbSectionContentData.elementsCache = elementCaches
+        dbSectionContentData.elementsCache = elementCaches
 
-    if (dbSectionContentData.elementsCache?.isEmpty() == true) {
-      throw ClearCacheException()
-    }
-
-    return dbSectionContentData.toContentData()
-  }
-
-  fun putSection(apiSectionContentData: ApiSectionContentData, key: String) {
-
-    appExecutors.diskIO().execute {
-      try {
-        val dbSectionContentData = apiSectionContentData.toDbSectionContentData(key)
-        ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData)
-
-        val sectionContentItem = apiSectionContentData.content
-        if (sectionContentItem != null) {
-
-          sectionContentItem.elements?.forEachIndexed { index, apiElement ->
-            ocmDatabase.elementDao().insertElement(apiElement.toDbElement(index))
-            val dbSectionElementJoin = DbSectionElementJoin(sectionContentItem.slug,
-                apiElement.slug)
-            ocmDatabase.sectionDao().insertSectionElement(dbSectionElementJoin)
-          }
+        if (dbSectionContentData.elementsCache?.isEmpty() == true) {
+            throw ClearCacheException()
         }
 
-        var index = 0
-        if (apiSectionContentData.elementsCache != null) {
-          for ((key, value) in apiSectionContentData.elementsCache) {
-            val apiElementData = ApiElementData(value)
-            putDetail(apiElementData, key, index)
-            index++
-          }
-        }
-      } catch (e: Exception) {
-        Timber.e(e, "putSection()")
-      }
+        return dbSectionContentData.toContentData()
     }
-  }
 
-  fun deleteElementCache() {
-    appExecutors.diskIO().execute {
-      ocmDatabase.elementCacheDao().deleteAll()
+    fun putSection(apiSectionContentData: ApiSectionContentData, key: String) {
+
+        appExecutors.diskIO().execute {
+            try {
+                val dbSectionContentData = apiSectionContentData.toDbSectionContentData(key)
+                ocmDatabase.sectionDao().insertSectionContentData(dbSectionContentData)
+
+                val sectionContentItem = apiSectionContentData.content
+                if (sectionContentItem != null) {
+
+                    sectionContentItem.elements?.forEachIndexed { index, apiElement ->
+                        ocmDatabase.elementDao().insertElement(apiElement.toDbElement(index))
+                        val dbSectionElementJoin = DbSectionElementJoin(
+                            sectionContentItem.slug,
+                            apiElement.slug
+                        )
+                        ocmDatabase.sectionDao().insertSectionElement(dbSectionElementJoin)
+                    }
+                }
+
+                var index = 0
+                if (apiSectionContentData.elementsCache != null) {
+                    for ((key, value) in apiSectionContentData.elementsCache) {
+                        val apiElementData = ApiElementData(value)
+                        putDetail(apiElementData, key, index)
+                        index++
+                    }
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "putSection()")
+            }
+        }
     }
-  }
+
+    fun deleteElementCache() {
+        appExecutors.diskIO().execute {
+            ocmDatabase.elementCacheDao().deleteAll()
+        }
+    }
 }

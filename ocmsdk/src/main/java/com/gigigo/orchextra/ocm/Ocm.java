@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.ocm;
 
 import android.app.Application;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;

@@ -1,8 +1,5 @@
 package com.gigigo.orchextra.ocm.dto;
 
-/**
- * Created by josebenito on 9/3/17.
- */
 
 public enum BottomPadding {
   PADDING_40(1),

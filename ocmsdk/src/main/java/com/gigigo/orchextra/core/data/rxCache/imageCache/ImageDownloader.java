@@ -14,9 +14,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-/**
- * Created by nubor on 19/07/2017.
- */
 
 //asv jajaja no me jodas, las inner class a no ser q sea static conservan una instancia del fader,
 // así = x esta chuminá se va de memoria

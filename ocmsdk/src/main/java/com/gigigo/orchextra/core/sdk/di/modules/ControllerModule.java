@@ -25,61 +25,85 @@ import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.application.OcmContextProvider;
 import com.gigigo.orchextra.ocm.UIThread;
-import orchextra.dagger.Module;
-import orchextra.dagger.Provides;
-import orchextra.javax.inject.Singleton;
 
-@Module(includes = { DomainModule.class, InteractorModule.class }) public class ControllerModule {
+import javax.inject.Singleton;
 
-  @Provides OcmController provideOcmController(GetMenus getMenus, GetSection getSection,
-      GetDetail getDetail, SearchElements searchElements, ClearCache clearCache,
-      ConnectionUtils connectionUtils) {
+import dagger.Module;
+import dagger.Provides;
 
-    return new OcmControllerImp(getMenus, getSection, getDetail, searchElements, clearCache,
-        connectionUtils);
-  }
+@Module(includes = {DomainModule.class, InteractorModule.class})
+public class ControllerModule {
 
-  @Provides @Singleton ThreadExecutor provideThreadExecutor(JobExecutor jobExecutor) {
-    return jobExecutor;
-  }
+    @Provides
+    OcmController provideOcmController(GetMenus getMenus, GetSection getSection,
+                                       GetDetail getDetail, SearchElements searchElements, ClearCache clearCache,
+                                       ConnectionUtils connectionUtils) {
 
-  @Provides @Singleton PriorityScheduler providePriorityScheduler() {
-    return PriorityScheduler.create();
-  }
+        return new OcmControllerImp(getMenus, getSection, getDetail, searchElements, clearCache,
+                connectionUtils);
+    }
 
-  @Provides @Singleton PostExecutionThread providePostExecutionThread(UIThread uiThread) {
-    return uiThread;
-  }
+    @Provides
+    @Singleton
+    ThreadExecutor provideThreadExecutor(JobExecutor jobExecutor) {
+        return jobExecutor;
+    }
 
-  @Provides @Singleton OcmRepository provideOcmRepository(OcmDataRepository ocmDataRepository) {
-    return ocmDataRepository;
-  }
+    @Provides
+    @Singleton
+    PriorityScheduler providePriorityScheduler() {
+        return PriorityScheduler.create();
+    }
 
-  @Provides @Singleton OcmCache provideCache(OcmContextProvider context) {
-    return new OcmCacheImp(context.getApplicationContext(),
-        context.getApplicationContext().getCacheDir().getPath());
-  }
+    @Provides
+    @Singleton
+    PostExecutionThread providePostExecutionThread(UIThread uiThread) {
+        return uiThread;
+    }
 
-  @Provides @Singleton OcmImageCache provideImageCache(OcmContextProvider context,
-      ThreadExecutor threadExecutor, ConnectionUtils connectionUtils) {
-    return new OcmImageCacheImp(context.getApplicationContext(), threadExecutor, connectionUtils);
-  }
+    @Provides
+    @Singleton
+    OcmRepository provideOcmRepository(OcmDataRepository ocmDataRepository) {
+        return ocmDataRepository;
+    }
 
-  @Provides @Singleton OcmDatabase provideOcmDatabase(OcmContextProvider context) {
-    return OcmDatabase.Companion.create(context.getApplicationContext());
-  }
+    @Provides
+    @Singleton
+    OcmCache provideCache(OcmContextProvider context) {
+        return new OcmCacheImp(context.getApplicationContext(),
+                context.getApplicationContext().getCacheDir().getPath());
+    }
 
-  @Provides @Singleton OcmDbDataSource provideOcmDbDataSource(OcmDatabase ocmDatabase,
-      AppExecutors appExecutors) {
-    return new OcmDbDataSource(ocmDatabase, appExecutors);
-  }
+    @Provides
+    @Singleton
+    OcmImageCache provideImageCache(OcmContextProvider context,
+                                    ThreadExecutor threadExecutor, ConnectionUtils connectionUtils) {
+        return new OcmImageCacheImp(context.getApplicationContext(), threadExecutor, connectionUtils);
+    }
 
-  @Provides @Singleton AppExecutors provideAppExecutors() {
-    return new AppExecutors();
-  }
+    @Provides
+    @Singleton
+    OcmDatabase provideOcmDatabase(OcmContextProvider context) {
+        return OcmDatabase.Companion.create(context.getApplicationContext());
+    }
 
-  @Provides @Singleton OcmNetworkDataSource provideOcmNetworkDataSource(OcmApiService ocmApiService,
-      OcmDbDataSource ocmDbDataSource, AppExecutors appExecutors) {
-    return new OcmNetworkDataSource(ocmApiService, ocmDbDataSource, appExecutors);
-  }
+    @Provides
+    @Singleton
+    OcmDbDataSource provideOcmDbDataSource(OcmDatabase ocmDatabase,
+                                           AppExecutors appExecutors) {
+        return new OcmDbDataSource(ocmDatabase, appExecutors);
+    }
+
+    @Provides
+    @Singleton
+    AppExecutors provideAppExecutors() {
+        return new AppExecutors();
+    }
+
+    @Provides
+    @Singleton
+    OcmNetworkDataSource provideOcmNetworkDataSource(OcmApiService ocmApiService,
+                                                     OcmDbDataSource ocmDbDataSource, AppExecutors appExecutors) {
+        return new OcmNetworkDataSource(ocmApiService, ocmDbDataSource, appExecutors);
+    }
 }

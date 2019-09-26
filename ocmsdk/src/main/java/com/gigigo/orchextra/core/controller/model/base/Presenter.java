@@ -1,8 +1,5 @@
 package com.gigigo.orchextra.core.controller.model.base;
 
-/**
- * Created by alex on 01/12/2017.
- */
 
 public abstract class Presenter<UiView> {
 

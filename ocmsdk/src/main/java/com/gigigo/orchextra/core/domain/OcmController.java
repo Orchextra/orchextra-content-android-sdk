@@ -1,6 +1,6 @@
 package com.gigigo.orchextra.core.domain;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;

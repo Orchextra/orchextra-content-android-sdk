@@ -1,8 +1,5 @@
 package com.gigigo.orchextra.core.receiver;
 
-/**
- * Created by francisco.hernandez on 12/6/17.
- */
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

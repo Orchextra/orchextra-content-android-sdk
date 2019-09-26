@@ -32,7 +32,7 @@ android {
     versionCode generateAutoVersionCode()
     versionName version
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
   }
 
@@ -95,22 +95,22 @@ configurations {
 }
 
 dependencies {
-  implementation 'com.android.support:appcompat-v7:27.1.1'
-  implementation 'com.android.support:design:27.1.1'
-  implementation 'com.android.support:support-v13:27.1.1'
-  implementation 'com.android.support:support-v4:27.1.1'
-  implementation 'com.android.support:design:27.1.1'
+  implementation 'androidx.appcompat:appcompat:1.0.0'
+  implementation 'com.google.android.material:material:1.0.0'
+  implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+  implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+  implementation 'com.google.android.material:material:1.0.0'
   implementation 'com.jakewharton.timber:timber:4.7.1'
   implementation project(path: ':ocmsdk')
 
-  implementation 'com.android.support:multidex:1.0.3'
+  implementation 'androidx.multidex:multidex:2.0.0'
   implementation 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
   implementation 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
-  implementation 'com.android.support:support-v4:27.1.1'
+  implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
   testImplementation 'junit:junit:4.12'
-  androidTestImplementation 'com.android.support.test:runner:1.0.2'
-  androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+  androidTestImplementation 'androidx.test:runner:1.1.0'
+  androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 }
 
 applivery {

@@ -1,12 +1,11 @@
 package com.gigigo.orchextra.core.data.database.converters;
 
-import android.arch.persistence.room.TypeConverter;
+import androidx.room.TypeConverter;
 import com.gigigo.orchextra.core.data.database.entities.DbArticleElement;
 import com.gigigo.orchextra.core.data.database.entities.DbContentItemPattern;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

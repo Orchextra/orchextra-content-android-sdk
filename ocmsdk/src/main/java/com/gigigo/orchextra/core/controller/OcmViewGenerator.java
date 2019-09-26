@@ -1,6 +1,6 @@
 package com.gigigo.orchextra.core.controller;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;

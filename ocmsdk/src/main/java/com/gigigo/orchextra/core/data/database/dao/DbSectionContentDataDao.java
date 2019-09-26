@@ -1,10 +1,10 @@
 package com.gigigo.orchextra.core.data.database.dao;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
-import com.gigigo.orchextra.core.data.database.entities.DbElement;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+
 import com.gigigo.orchextra.core.data.database.entities.DbSectionContentData;
 import com.gigigo.orchextra.core.data.database.entities.DbSectionElementJoin;
 import java.util.List;

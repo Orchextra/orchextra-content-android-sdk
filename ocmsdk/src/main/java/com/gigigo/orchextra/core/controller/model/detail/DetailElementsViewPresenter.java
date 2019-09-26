@@ -1,6 +1,6 @@
 package com.gigigo.orchextra.core.controller.model.detail;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.controller.model.base.Presenter;

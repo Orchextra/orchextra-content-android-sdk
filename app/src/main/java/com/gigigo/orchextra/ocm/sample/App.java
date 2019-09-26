@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.ocm.sample;
 
 import android.os.StrictMode;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 import com.facebook.stetho.Stetho;
 import com.gigigo.orchextra.ocm.sample.ocm.OcmWrapper;
 import com.gigigo.orchextra.ocm.sample.ocm.OcmWrapperImp;

@@ -6,7 +6,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
-import android.support.customtabs.CustomTabsIntent;
+import androidx.browser.customtabs.CustomTabsIntent;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;

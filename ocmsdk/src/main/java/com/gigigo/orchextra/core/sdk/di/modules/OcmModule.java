@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.sdk.di.modules;
 
 import android.app.Application;
+
 import com.gigigo.orchextra.core.controller.OcmViewGenerator;
 import com.gigigo.orchextra.core.controller.model.detail.DetailElementsViewPresenter;
 import com.gigigo.orchextra.core.domain.OcmController;
@@ -17,57 +18,75 @@ import com.gigigo.orchextra.core.sdk.application.OcmContextProviderImpl;
 import com.gigigo.orchextra.core.sdk.application.OcmSdkLifecycle;
 import com.gigigo.orchextra.wrapper.OxManager;
 import com.gigigo.orchextra.wrapper.OxManagerImpl;
-import orchextra.dagger.Module;
-import orchextra.dagger.Provides;
-import orchextra.javax.inject.Provider;
-import orchextra.javax.inject.Singleton;
 
-@Module(includes = { ControllerModule.class, PresentationModule.class }) public class OcmModule {
+import javax.inject.Provider;
+import javax.inject.Singleton;
 
-  private final Application app;
+import dagger.Module;
+import dagger.Provides;
 
-  public OcmModule(Application app) {
-    this.app = app;
-  }
+@Module(includes = {ControllerModule.class, PresentationModule.class})
+public class OcmModule {
 
-  @Singleton @Provides OcmContextProvider provideOcmContextProvider() {
-    return new OcmContextProviderImpl(app.getApplicationContext());
-  }
+    private final Application app;
 
-  @Singleton @Provides OcmSdkLifecycle provideOcmSdkLifecycle(OcmContextProvider ocmContextProvider,
-      PriorityScheduler priorityScheduler) {
-    OcmSdkLifecycle ocmSdkLifecycle = new OcmSdkLifecycle(priorityScheduler);
+    public OcmModule(Application app) {
+        this.app = app;
+    }
 
-    ocmContextProvider.setOcmActivityLifecycle(ocmSdkLifecycle);
+    @Singleton
+    @Provides
+    OcmContextProvider provideOcmContextProvider() {
+        return new OcmContextProviderImpl(app.getApplicationContext());
+    }
 
-    return ocmSdkLifecycle;
-  }
+    @Singleton
+    @Provides
+    OcmSdkLifecycle provideOcmSdkLifecycle(OcmContextProvider ocmContextProvider,
+                                           PriorityScheduler priorityScheduler) {
+        OcmSdkLifecycle ocmSdkLifecycle = new OcmSdkLifecycle(priorityScheduler);
 
-  @Singleton @Provides OcmViewGenerator provideOcmViewGenerator(OcmController ocmController,
-      Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvides) {
-    return new OcmViewGeneratorImp(ocmController, detailElementsViewPresenterProvides);
-  }
+        ocmContextProvider.setOcmActivityLifecycle(ocmSdkLifecycle);
 
-  @Singleton @Provides Authoritation provideAuthoritation() {
-    return new Authoritation();
-  }
+        return ocmSdkLifecycle;
+    }
 
-  @Singleton @Provides ActionHandler provideActionHandler(OcmContextProvider ocmContextProvider,
-      GetVideo getVideo) {
+    @Singleton
+    @Provides
+    OcmViewGenerator provideOcmViewGenerator(OcmController ocmController, Provider<DetailElementsViewPresenter> detailElementsViewPresenterProvides) {
+        return new OcmViewGeneratorImp(ocmController, detailElementsViewPresenterProvides);
+    }
 
-    return new ActionHandler(ocmContextProvider, getVideo);
-  }
+    @Singleton
+    @Provides
+    Authoritation provideAuthoritation() {
+        return new Authoritation();
+    }
 
-  @Singleton @Provides OcmSchemeHandler provideOcmSchemeHandler(OcmContextProvider contextProvider,
-      OcmController ocmController, ActionHandler actionHandler) {
-    return new OcmSchemeHandler(contextProvider, ocmController, actionHandler);
-  }
+    @Singleton
+    @Provides
+    ActionHandler provideActionHandler(OcmContextProvider ocmContextProvider,
+                                       GetVideo getVideo) {
 
-  @Singleton @Provides OcmStyleUi provideOcmStyleUi() {
-    return new OcmStyleUiImp();
-  }
+        return new ActionHandler(ocmContextProvider, getVideo);
+    }
 
-  @Singleton @Provides OxManager provideOxManager() {
-    return new OxManagerImpl();
-  }
+    @Singleton
+    @Provides
+    OcmSchemeHandler provideOcmSchemeHandler(OcmContextProvider contextProvider,
+                                             OcmController ocmController, ActionHandler actionHandler) {
+        return new OcmSchemeHandler(contextProvider, ocmController, actionHandler);
+    }
+
+    @Singleton
+    @Provides
+    OcmStyleUi provideOcmStyleUi() {
+        return new OcmStyleUiImp();
+    }
+
+    @Singleton
+    @Provides
+    OxManager provideOxManager() {
+        return new OxManagerImpl();
+    }
 }

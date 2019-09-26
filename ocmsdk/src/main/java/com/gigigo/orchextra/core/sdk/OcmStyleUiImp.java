@@ -1,6 +1,6 @@
 package com.gigigo.orchextra.core.sdk;
 
-import android.support.annotation.DrawableRes;
+import androidx.annotation.DrawableRes;
 import com.gigigo.orchextra.ocm.OcmStyleUiBuilder;
 
 public class OcmStyleUiImp implements OcmStyleUi {

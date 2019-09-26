@@ -3,7 +3,7 @@ package com.gigigo.orchextra.core.sdk.ui.views.textviews
 import android.content.Context
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import android.support.v7.widget.AppCompatTextView
+import androidx.appcompat.widget.AppCompatTextView
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher

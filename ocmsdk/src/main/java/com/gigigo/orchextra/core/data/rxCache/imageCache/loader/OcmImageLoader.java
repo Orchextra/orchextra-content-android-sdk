@@ -7,8 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -26,10 +26,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import static android.os.Build.ID;
-
-/**
- * Created by francisco.hernandez on 12/6/17.
- */
 
 public class OcmImageLoader {
     public static boolean DEBUG = true;
@@ -106,7 +102,7 @@ public class OcmImageLoader {
         }
     }
 
-    public static RequestBuilder<Drawable> load(android.support.v4.app.Fragment mFragment,
+    public static RequestBuilder<Drawable> load(androidx.fragment.app.Fragment mFragment,
                                                 String url) {
         File cacheFile = getCacheFile(mFragment.getActivity().getApplicationContext(), md5(url));
         if (cacheFile.exists()) {

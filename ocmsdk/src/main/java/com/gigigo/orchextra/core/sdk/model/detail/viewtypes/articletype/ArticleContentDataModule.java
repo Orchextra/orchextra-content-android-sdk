@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype;
 
-import orchextra.dagger.Module;
+import dagger.Module;
 
-@Module public class ArticleContentDataModule {
+@Module
+public class ArticleContentDataModule {
 }

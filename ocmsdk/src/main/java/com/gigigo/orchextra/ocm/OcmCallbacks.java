@@ -4,9 +4,6 @@ import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.dto.UiVersionData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 
-/**
- * Created by francisco.hernandez on 26/5/17.
- */
 
 public interface OcmCallbacks {
   interface Version {

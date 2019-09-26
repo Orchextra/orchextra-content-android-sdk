@@ -6,9 +6,6 @@ import com.gigigo.orchextra.ocm.dto.UiVersionData;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
 import java.util.List;
 
-/**
- * Created by francisco.hernandez on 26/5/17.
- */
 
 public interface OCManagerCallbacks {
 

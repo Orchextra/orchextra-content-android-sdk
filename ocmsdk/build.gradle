@@ -32,7 +32,7 @@ android {
         configurations {
             compile.exclude group: "org.jetbrains", module: "annotations"
         }
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -168,8 +168,6 @@ dependencies {
     implementation project.libraries.gggJavaLib
 
     //Dagger
-    kapt 'com.squareup:javapoet:1.8.0'
-    //Dagger 2.2 bundles an older version of JavaPoet. Must explicitly add apt 'com.squareup:javapoet:1.7.0' before apt 'com.google.dagger:dagger-compiler:2.2' to fix this.
     implementation project.libraries.dagger
     kapt project.libraries.daggerCompiler
 
@@ -223,6 +221,7 @@ dependencies {
     implementation project.libraries.okhttp3
     implementation project.libraries.loggingInterceptor
     implementation project.libraries.exoplayer
+
 
     // Modules
     implementation project.modules.vimeo
