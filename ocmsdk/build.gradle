@@ -29,9 +29,6 @@ android {
         versionCode generateAutoVersionCode()
         versionName version
 
-        configurations {
-            compile.exclude group: "org.jetbrains", module: "annotations"
-        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -168,8 +165,9 @@ dependencies {
     implementation project.libraries.gggJavaLib
 
     //Dagger
-    implementation project.libraries.dagger
     kapt project.libraries.daggerCompiler
+    kapt project.libraries.daggerProcessor
+    implementation project.libraries.dagger
 
     //Image Loader Glide/Blur
     implementation project.libraries.glide
@@ -221,6 +219,8 @@ dependencies {
     implementation project.libraries.okhttp3
     implementation project.libraries.loggingInterceptor
     implementation project.libraries.exoplayer
+    implementation project.libraries.zbar
+    implementation project.libraries.glideTransformations
 
 
     // Modules

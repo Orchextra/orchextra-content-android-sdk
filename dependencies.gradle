@@ -28,10 +28,9 @@ ext {
             archPersistenceCompiler   : 'androidx.room:room-compiler:2.0.0',
             archPersistenceTesting    : 'androidx.room:room-testing:2.0.0',
 
-//            daggerCompiler            : "com.github.GigigoGreenLabs.repackagedLibs:dagger-compiler:2.2.2",
-//            dagger                    : "com.github.GigigoGreenLabs.repackagedLibs:dagger:2.2.2",
-            daggerCompiler            : 'com.google.dagger:dagger-android-processor:2.22.1',
-            dagger                    : 'com.google.dagger:dagger-android:2.22.1',
+            daggerProcessor            : 'com.google.dagger:dagger-android-processor:2.24',
+            daggerCompiler            : 'com.google.dagger:dagger-compiler:2.24',
+            dagger                    : 'com.google.dagger:dagger-android:2.24',
 
             gggJavaLib                : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:4.6.4',
             ggglogger                 : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglogger:4.6.4',
@@ -72,12 +71,11 @@ ext {
             arrow                     : 'com.fernandocejas:arrow:1.0.0',
 
             kache                     : 'com.github.mskn73:kache:0.4',
-
             vimeoNetworking           : 'com.vimeo.networking:vimeo-networking:1.1.3',
             exoplayer                 : 'com.google.android.exoplayer:exoplayer:2.9.6',
-
             gpuImage                  : 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1',
             timber                    : 'com.jakewharton.timber:timber:4.7.1',
+            zbar                      : 'me.dm7.barcodescanner:zbar:1.8.4',
 
             retrofit                  : 'com.squareup.retrofit2:retrofit:2.6.0',
             retrofitGson              : 'com.squareup.retrofit2:converter-gson:2.6.0',

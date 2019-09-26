@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
@@ -15,8 +16,6 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.gigigo.ggglogger.GGGLogImpl;
-import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.orchextra.ocmsdk.R;
 
 import java.io.File;
@@ -24,6 +23,8 @@ import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import timber.log.Timber;
 
 import static android.os.Build.ID;
 
@@ -34,7 +35,7 @@ public class OcmImageLoader {
     public static RequestBuilder<Drawable> load(Context mContext, String url) {
         File cacheFile = getCacheFile(mContext, md5(url));
         if (cacheFile.exists()) {
-            GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
+            Timber.i("(DISK)  %s", url);
             return Glide.with(mContext)
                     .load(cacheFile.getPath())
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
@@ -43,7 +44,7 @@ public class OcmImageLoader {
                     //.transform(new CacheTransformation(mContext, false))
                     ;
         } else {
-            GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
+            Timber.i("(CLOUD) %s", url);
             return Glide.with(mContext)
                     .load(url)
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
@@ -57,7 +58,7 @@ public class OcmImageLoader {
     public static RequestBuilder<Drawable> load(Activity mActivity, String url) {
         File cacheFile = getCacheFile(mActivity, md5(url));
         if (cacheFile.exists()) {
-            GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
+            Timber.i("(DISK)  %s", url);
             return Glide.with(mActivity)
                     .load(cacheFile.getPath())
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
@@ -66,7 +67,7 @@ public class OcmImageLoader {
                     //.transform(new CacheTransformation(mActivity.getApplicationContext(), false))
                     ;
         } else {
-            GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
+            Timber.i("(CLOUD) %s", url);
             return Glide.with(mActivity)
                     .load(url)
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
@@ -80,7 +81,7 @@ public class OcmImageLoader {
     public static RequestBuilder<Drawable> load(Fragment mFragment, String url) {
         File cacheFile = getCacheFile(mFragment.getActivity().getApplicationContext(), md5(url));
         if (cacheFile.exists()) {
-            GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
+            Timber.i("(DISK)  %s", url);
             return Glide.with(mFragment)
                     .load(cacheFile.getPath())
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
@@ -90,7 +91,7 @@ public class OcmImageLoader {
                     //    new CacheTransformation(mFragment.getActivity().getApplicationContext(), true))
                     ;
         } else {
-            GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
+            Timber.i("(CLOUD) %s", url);
             return Glide.with(mFragment)
                     .load(url)
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
@@ -106,7 +107,7 @@ public class OcmImageLoader {
                                                 String url) {
         File cacheFile = getCacheFile(mFragment.getActivity().getApplicationContext(), md5(url));
         if (cacheFile.exists()) {
-            GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
+            Timber.i("(DISK)  %s", url);
             return Glide.with(mFragment)
                     .load(cacheFile.getPath())
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
@@ -115,7 +116,7 @@ public class OcmImageLoader {
                     //.transform(new CacheTransformation(mFragment.getContext(), false))
                     ;
         } else {
-            GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
+            Timber.i("(CLOUD) %s", url);
             return Glide.with(mFragment)
                     .load(url)
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
@@ -130,12 +131,12 @@ public class OcmImageLoader {
                                                 String url) {
         File cacheFile = getCacheFile(mFragmentActivity, md5(url));
         if (cacheFile.exists()) {
-            GGGLogImpl.log("(DISK)  " + url, LogLevel.INFO, TAG);
+            Timber.i("(DISK)  %s", url);
             return Glide.with(mFragmentActivity)
                     .load(cacheFile.getPath())
                     .thumbnail(Glide.with(mFragmentActivity).load(R.drawable.thumbnail).centerCrop());
         } else {
-            GGGLogImpl.log("(CLOUD) " + url, LogLevel.INFO, TAG);
+            Timber.i("(CLOUD) %s", url);
             return Glide.with(mFragmentActivity)
                     .load(url)
                     .thumbnail(Glide.with(mFragmentActivity).load(R.drawable.thumbnail).centerCrop());
