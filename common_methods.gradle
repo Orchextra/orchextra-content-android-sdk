@@ -110,7 +110,7 @@ ext {
   }
 
   setVariantModeDebugValue = { variant, key, type ->
-    def value = (variant.buildType.name == 'debug' || variant.buildType.name == 'staging')
+    def value = (variant.buildType.name == 'debug' || variant.buildType.name == 'quality')
     setVariantBuildConfigField(variant, value, key, type)
   }
 

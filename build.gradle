@@ -38,6 +38,10 @@ allprojects {
     sourceCompatibility = "1.7"
     targetCompatibility = "1.7"
   }
+
+  tasks.withType(Javadoc).all {
+    enabled = false
+  }
 }
 
 import org.gradle.internal.os.OperatingSystem

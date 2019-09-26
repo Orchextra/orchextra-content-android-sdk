@@ -32,7 +32,7 @@ android {
   }
 
   buildTypes {
-    staging {
+    quality {
       debuggable true
       signingConfig signingConfigs.debug
     }
@@ -153,7 +153,7 @@ dependencies {
 
 
   /*New dependencies*/
-  stagingImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+  qualityImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
   debugImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
   prereleaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
   releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'

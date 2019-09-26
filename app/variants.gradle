@@ -54,11 +54,11 @@ ext {
              appName              : "${basePackageName} IT",
 
              orchextraApiKey      : [debug  : '8286702045adf5a3ad816f70ecb80e4c91fbb8de',
-                                     staging: 'adfc8ba4340828a054bf061f692707a197af96cb',
+                                     quality: 'adfc8ba4340828a054bf061f692707a197af96cb',
                                      release: 'ef08c4dccb7649b9956296a863db002a68240be2'],
 
              orchextraApiSecret   : [debug  : 'eab37080130215ced60eb9d5ff729049749ec205',
-                                     staging: '677cf75a17aeec144ee402c281ad3a732d736a8a',
+                                     quality: '677cf75a17aeec144ee402c281ad3a732d736a8a',
                                      release: '6bc18c500546f253699f61c11a62827679178400']]
 
   ferring = [orchextraBussinesUnit: "es",
@@ -66,11 +66,11 @@ ext {
              appName              : "FerringOCM",
 
              orchextraApiKey      : [debug  : 'fb032442652586418769d3d9a46208bd95350f0b',
-                                     staging: 'fb032442652586418769d3d9a46208bd95350f0b',
+                                     quality: 'fb032442652586418769d3d9a46208bd95350f0b',
                                      release: 'fb032442652586418769d3d9a46208bd95350f0b'],
 
              orchextraApiSecret   : [debug  : '9c7ee63e98f9c0225c22512621965bad3a5fac7f',
-                                     staging: '9c7ee63e98f9c0225c22512621965bad3a5fac7f',
+                                     quality: '9c7ee63e98f9c0225c22512621965bad3a5fac7f',
                                      release: '9c7ee63e98f9c0225c22512621965bad3a5fac7f']]
 
   woah_HU = [orchextraBussinesUnit: "oat-hu",
@@ -78,11 +78,11 @@ ext {
              appName              : "${basePackageName} HU",
 
              orchextraApiKey      : [debug  : '8286702045adf5a3ad816f70ecb80e4c91fbb8de',
-                                     staging: 'adfc8ba4340828a054bf061f692707a197af96cb',
+                                     quality: 'adfc8ba4340828a054bf061f692707a197af96cb',
                                      release: 'ef08c4dccb7649b9956296a863db002a68240be2'],
 
              orchextraApiSecret   : [debug  : 'eab37080130215ced60eb9d5ff729049749ec205',
-                                     staging: '677cf75a17aeec144ee402c281ad3a732d736a8a',
+                                     quality: '677cf75a17aeec144ee402c281ad3a732d736a8a',
                                      release: '6bc18c500546f253699f61c11a62827679178400']]
 
   woah_PL = [orchextraBussinesUnit: "pl",
@@ -90,11 +90,11 @@ ext {
              appName              : "${basePackageName} PL",
 
              orchextraApiKey      : [debug  : '8286702045adf5a3ad816f70ecb80e4c91fbb8de',
-                                     staging: 'adfc8ba4340828a054bf061f692707a197af96cb',
+                                     quality: 'adfc8ba4340828a054bf061f692707a197af96cb',
                                      release: 'ef08c4dccb7649b9956296a863db002a68240be2'],
 
              orchextraApiSecret   : [debug  : 'eab37080130215ced60eb9d5ff729049749ec205',
-                                     staging: '677cf75a17aeec144ee402c281ad3a732d736a8a',
+                                     quality: '677cf75a17aeec144ee402c281ad3a732d736a8a',
                                      release: '6bc18c500546f253699f61c11a62827679178400']]
 
   woah_RS = [orchextraBussinesUnit: "rs",

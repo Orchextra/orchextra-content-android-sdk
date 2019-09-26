@@ -18,7 +18,7 @@ ext {
 
     publishedGroupId = 'com.gigigo.ocm'
     libraryName = 'Orchextra Content Manager'
-    artifact = 'ocm'
+    artifact = 'ocmsdk'
 
     libraryDescription = 'Orchextra Content Manager'
 
@@ -72,13 +72,17 @@ android {
     }
 
     buildTypes {
-        staging {
-            debuggable true
-            //      testCoverageEnabled = true
-        }
         debug {
             debuggable true
-            //      testCoverageEnabled = true
+
+            version = "${rootProject.ext.version}-D"
+            project.ext.libraryVersion = "${rootProject.ext.version}-D"
+        }
+        quality {
+            debuggable true
+
+            version = "${rootProject.ext.version}-Q"
+            project.ext.libraryVersion = "${rootProject.ext.version}-Q"
         }
         release {
             debuggable false
@@ -154,19 +158,19 @@ dependencies {
     implementation project.libraries.glideTransformations
 
     // ORCHEXTRA
-    stagingImplementation project.libraries.oxCoreStaging
+    qualityImplementation project.libraries.oxCoreQuality
     debugImplementation project.libraries.oxCoreDebug
     releaseImplementation project.libraries.oxCoreRelease
 
-    stagingImplementation project.libraries.oxGeofenceStaging
+    qualityImplementation project.libraries.oxGeofenceQuality
     debugImplementation project.libraries.oxGeofenceDebug
     releaseImplementation project.libraries.oxGeofenceRelease
 
-    stagingImplementation project.libraries.oxIndoorpositioningStaging
+    qualityImplementation project.libraries.oxIndoorpositioningQuality
     debugImplementation project.libraries.oxIndoorpositioningDebug
     releaseImplementation project.libraries.oxIndoorpositioningRelease
 
-    stagingImplementation project.libraries.oxScannerStaging
+    qualityImplementation project.libraries.oxScannerQuality
     debugImplementation project.libraries.oxScannerDebug
     releaseImplementation project.libraries.oxScannerRelease
 

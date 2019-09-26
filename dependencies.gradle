@@ -1,15 +1,16 @@
 ext {
 
     group = 'com.gigigo.ocm'
-    version = '4.2.0-rc31'
+    version = '4.2.0-rc32'
 
     compileSdkVersion = 29
     minSdkVersion = 16
     targetSdkVersion = 29
 
-    oxVersionS = '3.2.6'
-    oxVersionQ = '3.2.6'
-    oxVersion = '3.2.6'
+    oxVersionD = '3.2.6.2'
+    oxVersionQ = '3.2.6.2'
+
+    oxVersion = '3.2.6.2'
     playVersion = '17.0.0'
     coroutinesVersion = '1.3.0'
 
@@ -36,19 +37,19 @@ ext {
             gggJavaLib                : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:4.6.4',
             ggglib                    : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:4.6.4',
 
-            oxCoreStaging             : "com.gigigo.orchextra:core:${oxVersionS}-S",
+            oxCoreQuality             : "com.gigigo.orchextra:core:${oxVersionD}-D",
             oxCoreDebug               : "com.gigigo.orchextra:core:${oxVersionQ}-Q",
             oxCoreRelease             : "com.gigigo.orchextra:core:${oxVersion}",
 
-            oxGeofenceStaging         : "com.gigigo.orchextra:geofence:${oxVersionS}-S",
+            oxGeofenceQuality         : "com.gigigo.orchextra:geofence:${oxVersionD}-D",
             oxGeofenceDebug           : "com.gigigo.orchextra:geofence:${oxVersionQ}-Q",
             oxGeofenceRelease         : "com.gigigo.orchextra:geofence:${oxVersion}",
 
-            oxIndoorpositioningStaging: "com.gigigo.orchextra:indoorpositioning:${oxVersionS}-S",
+            oxIndoorpositioningQuality: "com.gigigo.orchextra:indoorpositioning:${oxVersionD}-D",
             oxIndoorpositioningDebug  : "com.gigigo.orchextra:indoorpositioning:${oxVersionQ}-Q",
             oxIndoorpositioningRelease: "com.gigigo.orchextra:indoorpositioning:${oxVersion}",
 
-            oxScannerStaging          : "com.gigigo.orchextra:scanner:${oxVersionS}-S",
+            oxScannerQuality          : "com.gigigo.orchextra:scanner:${oxVersionD}-D",
             oxScannerDebug            : "com.gigigo.orchextra:scanner:${oxVersionQ}-Q",
             oxScannerRelease          : "com.gigigo.orchextra:scanner:${oxVersion}",
 

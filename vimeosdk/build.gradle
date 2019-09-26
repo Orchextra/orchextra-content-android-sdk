@@ -44,12 +44,18 @@ android {
   }
 
   buildTypes {
-    staging {
-      debuggable true
-    }
-
     debug {
       debuggable true
+
+      version = "${rootProject.ext.version}-D"
+      project.ext.libraryVersion = "${rootProject.ext.version}-D"
+    }
+
+    quality {
+      debuggable true
+
+      version = "${rootProject.ext.version}-Q"
+      project.ext.libraryVersion = "${rootProject.ext.version}-Q"
     }
 
     release {
