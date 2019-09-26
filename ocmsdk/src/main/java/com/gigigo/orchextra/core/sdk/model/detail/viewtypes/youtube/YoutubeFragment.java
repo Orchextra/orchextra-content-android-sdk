@@ -7,7 +7,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -20,8 +22,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.gigigo.ggglib.device.AndroidSdkVersion;
 import com.gigigo.orchextra.core.sdk.model.grid.dto.ClipToPadding;
 import com.gigigo.orchextra.ocm.views.UiGridBaseContentData;
@@ -112,15 +114,15 @@ public class YoutubeFragment extends UiGridBaseContentData {
     mImageCallback = new BitmapImageViewTarget(imgBlurBackground) {
 
       @Override
-      public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-        WeakReference<Bitmap> resizedbitmap =
-            new WeakReference<>(Bitmap.createBitmap(bitmap, 0, 45, 480, 270));
-        imgBlurBackground.setImageBitmap(resizedbitmap.get());
+      public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+        WeakReference<Bitmap> resizedBitmap =
+                new WeakReference<>(Bitmap.createBitmap(resource, 0, 45, 480, 270));
+        imgBlurBackground.setImageBitmap(resizedBitmap.get());
 
         boolean isVertical = false;
-        int midleImage = bitmap.getHeight() / 2;
+        int middleImage = resource.getHeight() / 2;
         for (int i = 0; i < 20; i++) {
-          int pixel = bitmap.getPixel(i, midleImage);
+          int pixel = resource.getPixel(i, middleImage);
           int r = Color.red(pixel);
           int g = Color.green(pixel);
           int b = Color.blue(pixel);
@@ -165,10 +167,13 @@ public class YoutubeFragment extends UiGridBaseContentData {
     youtubeId = getArguments().getString(EXTRA_YOUTUBE_ID);
 
     String strImgForBlur = "http://img.youtube.com/vi/" + youtubeId + "/hqdefault.jpg";
+    FragmentActivity activity = YoutubeFragment.this.getActivity();
+    if (activity == null) return;
+
     Glide.with(this)
-        .load(strImgForBlur)
         .asBitmap()
-        .transform(new BlurTransformation(YoutubeFragment.this.getActivity(), 20))
+        .load(strImgForBlur)
+        .transform(new BlurTransformation(activity, 20))
         .into(mImageCallback);
   }
 
@@ -213,7 +218,6 @@ public class YoutubeFragment extends UiGridBaseContentData {
     FrameLayout layout = mView.findViewById(R.id.youtubePlayerFragmentContent);
     // Gets the layout params that will allow you to resize the layout
     ViewGroup.LayoutParams params = layout.getLayoutParams();
-    Log.e("***", "************************\n\n\n\n\n\n\n PASO************************");
 
     params.height = h; //LinearLayout.LayoutParams.WRAP_CONTENT.;
     params.width = LinearLayout.LayoutParams.MATCH_PARENT;

@@ -7,8 +7,11 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,8 +20,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -197,8 +200,8 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
   public void loadBackgroundThumbnail() {
     if (backgroundImage != null) {
       BitmapImageViewTarget  mImageCallback = new BitmapImageViewTarget(backgroundImage) {
-        @Override public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-
+        @Override
+        public void onResourceReady(@NonNull Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
           int width = 480;
           if (width > bitmap.getWidth()) {
             width = bitmap.getWidth();
@@ -219,8 +222,8 @@ public class VimeoExoPlayerActivity extends AppCompatActivity {
       };
 
       Glide.with(this)
-          .load(thumbBackground)
-          .asBitmap()
+              .asBitmap()
+              .load(thumbBackground)
           .transform(new BlurTransformation(VimeoExoPlayerActivity.this, 20))
           .into(mImageCallback);
     }

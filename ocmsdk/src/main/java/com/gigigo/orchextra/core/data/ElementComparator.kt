@@ -1,6 +1,7 @@
 package com.gigigo.orchextra.core.data
 
 import com.gigigo.orchextra.core.domain.entities.elements.Element
+import com.gigigo.orchextra.ocmsdk.BuildConfig
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

@@ -1,8 +1,5 @@
 apply plugin: 'com.android.application'
 
-apply from: '../ocmsdk/common_methods.gradle'
-apply from: '../ocmsdk/dependencies.gradle'
-
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'applivery-plugin'
@@ -16,10 +13,13 @@ buildscript {
   }
 }
 
+group = rootProject.ext.group
+version = rootProject.ext.version
+
 def STRING = "String"
 
 android {
-  compileSdkVersion project.ext.androidCompileSdkVersion
+  compileSdkVersion rootProject.ext.compileSdkVersion
 
   signingConfigs {
     config {}
@@ -27,10 +27,10 @@ android {
 
   defaultConfig {
     applicationId "com.gigigo.showcase"
-    minSdkVersion project.ext.androidMinSdkVersion
-    targetSdkVersion project.ext.androidTargetSdkVersion
-    versionCode computeVersionCode()
-    versionName "1.0-RC" + computeVersionCode()
+    minSdkVersion 18
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode generateAutoVersionCode()
+    versionName version
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true

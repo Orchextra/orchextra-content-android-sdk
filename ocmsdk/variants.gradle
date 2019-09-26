@@ -1,23 +1,23 @@
-project.ext {
-  googleKeyDebug = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
-  //gigigo.desarrollo -> Google Console --> Orchextra2016 --> Woah Dev
-  googleKey = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
+ext {
+    googleKeyDebug = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
+    //gigigo.desarrollo -> Google Console --> Orchextra2016 --> Woah Dev
+    googleKey = "AIzaSyAXJB7s9ygpoQy5scWk3cBaFgc-AN2Hidg"
 
-  ocmSdkVersion = [debug: 'ANDROID_5.0.0']
+    ocmSdkVersion = [debug: 'ANDROID_5.0.0']
 
-  apiOcm = [release: 'https://cm.orchextra.io/',
-            debug  : 'https://cm.q.orchextra.io/',
-            staging: 'https://cm.s.orchextra.io/'
-  ]
+    apiOcm = [release: 'https://cm.orchextra.io/',
+              debug  : 'https://cm.q.orchextra.io/',
+              staging: 'https://cm.s.orchextra.io/'
+    ]
 
-  concurrentInteractors = 3
+    concurrentInteractors = 3
 
-  retrofitLog = [debug  : 'true',
-                 release: 'true'
-  ]
+    retrofitLog = [debug  : 'true',
+                   release: 'false'
+    ]
 
-  youtubeDeveloperKey = [debug  : googleKeyDebug,
-                         release: googleKey
-  ]
-  vimeoAccessToken='50163590b4402cceefb2c78a7aba7093'
+    youtubeDeveloperKey = [debug  : googleKeyDebug,
+                           release: googleKey
+    ]
+    vimeoAccessToken = '50163590b4402cceefb2c78a7aba7093'
 }

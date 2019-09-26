@@ -4,16 +4,17 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-apply from: '../ocmsdk/dependencies.gradle'
-
-group = 'com.github.Orchextra'
+group = rootProject.ext.group
+version = rootProject.ext.version
 
 android {
-  compileSdkVersion project.androidCompileSdkVersion
+  compileSdkVersion rootProject.ext.compileSdkVersion
 
   defaultConfig {
-    minSdkVersion project.androidMinSdkVersion
-    targetSdkVersion project.androidTargetSdkVersion
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode generateAutoVersionCode()
+    versionName version
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
@@ -48,12 +49,16 @@ android {
 }
 
 dependencies {
-  implementation project.libraries.kotlinStdlib
+  implementation project.libraries.kotlinStdLib
   implementation project.libraries.androidAppCompat
-  api project.libraries.vimeoNetworking
-  api project.libraries.exoplayer
-  api project.libraries.imageloaderGlideBlur
-  api project.libraries.rxJava
+  implementation project.libraries.vimeoNetworking
+  implementation project.libraries.exoplayer
+  implementation project.libraries.glide
+  implementation project.libraries.glideTransformations
+  implementation project.libraries.rxJava
+  implementation project.libraries.retrofit
+  implementation project.libraries.okhttp3
+  implementation project.libraries.timber
 
   androidTestImplementation(project.testLibraries.espresso, {
     exclude group: 'com.android.support', module: 'support-annotations'

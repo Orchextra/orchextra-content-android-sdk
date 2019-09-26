@@ -13,6 +13,7 @@ import java.util.AbstractList
 import java.util.ArrayList
 import okhttp3.CacheControl
 import retrofit2.Response
+import timber.log.Timber
 
 class VimeoManager(builder: VimeoBuilder?) {
 
@@ -113,20 +114,17 @@ class VimeoManager(builder: VimeoBuilder?) {
     isWifiConnection: Boolean,
     isFastConnection: Boolean
   ): String {
-
-    return if (isFastConnection) {
-      if (isWifiConnection) {
-        getFullQualityVideo(videoResponse!!.body().files)
-      } else {
-        getHdReadyVideo(videoResponse!!.body().files)
+      val files = videoResponse?.body()?.download
+      if(files == null) {
+          Timber.e("video files empty")
+          return ""
       }
-    } else {
-      if (isWifiConnection) {
-        getSdVideo(videoResponse!!.body().files)
-      } else {
-        getLowQualityVideo(videoResponse!!.body().files)
+      return when {
+          isFastConnection &&  isWifiConnection -> getFullQualityVideo(files)
+          isFastConnection && !isWifiConnection -> getHdReadyVideo(files)
+          !isFastConnection &&  isWifiConnection -> getSdVideo(files)
+          else -> getLowQualityVideo(files)
       }
-    }
   }
 
   private fun getFilteredByQualityVideos(
@@ -145,30 +143,22 @@ class VimeoManager(builder: VimeoBuilder?) {
 
   private fun getFullQualityVideo(files: List<VideoFile>): String {
     return getFilteredByQualityVideos(files, "hd")
-        .maxBy {
-          it.getSize()
-        }?.link ?: returnDefaultVideo(files)
+        .maxBy { it.getSize() }?.link ?: returnDefaultVideo(files)
   }
 
   private fun getHdReadyVideo(files: AbstractList<VideoFile>): String {
     return getFilteredByQualityVideos(files, "hd")
-        .minBy {
-          it.getSize()
-        }?.link ?: returnDefaultVideo(files)
+        .minBy { it.getSize() }?.link ?: returnDefaultVideo(files)
   }
 
   private fun getSdVideo(files: ArrayList<VideoFile>): String {
     return getFilteredByQualityVideos(files, "sd")
-        .maxBy {
-          it.getSize()
-        }?.link ?: returnDefaultVideo(files)
+        .maxBy { it.getSize() }?.link ?: returnDefaultVideo(files)
   }
 
   private fun getLowQualityVideo(files: ArrayList<VideoFile>): String {
     return getFilteredByQualityVideos(files, "sd")
-        .minBy {
-          it.getSize()
-        }?.link ?: returnDefaultVideo(files)
+        .minBy { it.getSize() }?.link ?: returnDefaultVideo(files)
   }
 
   companion object {

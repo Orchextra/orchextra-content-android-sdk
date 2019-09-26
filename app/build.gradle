@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 
-apply from: '../ocmsdk/common_methods.gradle'
-apply from: '../ocmsdk/dependencies.gradle'
 apply from: 'variants.gradle'
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+group = rootProject.ext.group
+version = rootProject.ext.version
 
 def API_KEY = "API_KEY"
 def API_SECRET = "API_SECRET"
@@ -15,11 +16,12 @@ android {
   signingConfigs {
     config {}
   }
-  compileSdkVersion project.ext.androidCompileSdkVersion
+
+  compileSdkVersion rootProject.ext.compileSdkVersion
 
   defaultConfig {
-    minSdkVersion project.ext.androidMinSdkVersion
-    targetSdkVersion project.ext.androidTargetSdkVersion
+    minSdkVersion 18
+    targetSdkVersion rootProject.ext.targetSdkVersion
 
     ndk {
       abiFilters "armeabi-v7a"
@@ -53,7 +55,7 @@ android {
 
   productFlavors.whenObjectAdded { flavor ->
     flavor.versionCode generateAutoVersionCode()
-    flavor.versionName getVersionName(project.ext.version)
+    flavor.versionName getVersionName(appVersion)
   }
 
   project.android.applicationVariants.all { variant ->
@@ -85,7 +87,6 @@ android {
   flavorDimensions "sample"
 
   productFlavors {
-
     showRoom {
       dimension "sample"
     }
