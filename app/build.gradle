@@ -24,7 +24,7 @@ android {
     targetSdkVersion rootProject.ext.targetSdkVersion
 
     ndk {
-      abiFilters "armeabi-v7a"
+      abiFilters "armeabi-v7a", "x86"
     }
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
