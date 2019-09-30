@@ -148,9 +148,8 @@ configurations {
 }
 
 dependencies {
-  api project(path: ':ocmsdk')
-  api 'androidx.multidex:multidex:2.0.0'
-
+  implementation project(path: ':ocmsdk')
+  implementation 'androidx.multidex:multidex:2.0.1'
 
   /*New dependencies*/
   qualityImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
@@ -158,7 +157,7 @@ dependencies {
   prereleaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
   releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
-  implementation 'com.facebook.stetho:stetho:1.5.0'
+  implementation 'com.facebook.stetho:stetho:1.5.1'
 
   implementation 'androidx.legacy:legacy-support-v4:1.0.0'
   implementation 'com.google.android.material:material:1.0.0'

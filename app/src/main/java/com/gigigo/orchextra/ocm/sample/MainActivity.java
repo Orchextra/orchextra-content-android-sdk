@@ -3,6 +3,8 @@ package com.gigigo.orchextra.ocm.sample;
 import android.os.Bundle;
 import android.os.Handler;
 import com.google.android.material.tabs.TabLayout;
+
+import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
@@ -28,7 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
-import org.jetbrains.annotations.NotNull;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
@@ -68,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
   private OcmCustomBehaviourDelegate customPropertiesDelegate = new OcmCustomBehaviourDelegate() {
 
-    @Override public void customizationForContent(@NotNull Map<String, ?> customProperties,
-        @NotNull ViewType viewType, @NotNull
+    @Override public void customizationForContent(@NonNull Map<String, ?> customProperties,
+        @NonNull ViewType viewType, @NonNull
         Function1<? super List<? extends ViewCustomizationType>, Unit> onGetCustomization) {
 
       Handler handler = new Handler();
@@ -87,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
       }, 1000);
     }
 
-    @Override public void contentNeedsValidation(@NotNull Map<String, ?> customProperties,
-        @NotNull ViewType viewType, @NotNull Function1<? super Boolean, Unit> completion) {
+    @Override public void contentNeedsValidation(@NonNull Map<String, ?> customProperties,
+        @NonNull ViewType viewType, @NonNull Function1<? super Boolean, Unit> completion) {
 
       Set<? extends Map.Entry<String, ?>> entrySet = customProperties.entrySet();
       Iterator<? extends Map.Entry<String, ?>> iterator = entrySet.iterator();

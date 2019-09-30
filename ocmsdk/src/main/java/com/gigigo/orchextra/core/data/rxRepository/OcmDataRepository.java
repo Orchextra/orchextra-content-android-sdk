@@ -59,19 +59,25 @@ public class OcmDataRepository implements OcmRepository {
                 try {
                     cacheMenuContentData = ocmDbDataSource.getMenus();
                 } catch (Exception e) {
-                    Timber.e("getMenus()");
+                    Timber.e("cache getMenus()");
                     cacheMenuContentData = null;
                 }
 
                 try {
                     networkMenuContentData = ocmNetworkDataSource.getMenus();
                 } catch (Exception e) {
-                    Timber.e("getMenus()");
+                    Timber.e("network getMenus()");
                     networkMenuContentData = null;
                 }
 
                 MenuContentData menuContentData =
                         getUpdatedMenuContentData(cacheMenuContentData, networkMenuContentData);
+
+                if (menuContentData == null) {
+                    Timber.e("menuContentData is null check menu request");
+                    return;
+                }
+
                 emitter.onNext(menuContentData);
                 emitter.onComplete();
             });

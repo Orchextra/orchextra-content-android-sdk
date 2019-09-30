@@ -6,7 +6,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-apply from: 'jacoco.gradle'
+//apply from: '../jacoco.gradle'
 apply from: 'variants.gradle'
 
 group = rootProject.ext.group
@@ -26,6 +26,7 @@ ext {
     gitUrl = 'https://github.com/Orchextra/orchextra-content-android-sdk.git'
 
     libraryVersion = rootProject.ext.version
+    buildType = "release"
 
     developerId = 'gigigo-desarrollo'
     developerName = 'Android Gigigo'
@@ -36,7 +37,6 @@ ext {
     allLicenses = ["Apache-2.0"]
 }
 
-def OCM_DIMENSION = "ocm"
 def CONCURRENT_INTERACTORS = "CONCURRENT_INTERACTORS"
 def RETROFIT_LOG = "RETROFIT_LOG"
 def API_URL = "API_URL"
@@ -77,30 +77,59 @@ android {
 
             version = "${rootProject.ext.version}-D"
             project.ext.libraryVersion = "${rootProject.ext.version}-D"
+            project.ext.buildType = "debug"
         }
         quality {
             debuggable true
 
             version = "${rootProject.ext.version}-Q"
             project.ext.libraryVersion = "${rootProject.ext.version}-Q"
+            project.ext.buildType = "quality"
         }
         release {
             debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            signingConfig null
+
+            /**
+             * This is set when you run the bintray plugin task deployDebugLib, deployQualityLib
+             * and deployLib. This matters in ../gradle/pom.gradle to generate the proper pom.xml
+             * with the dependencies because debugApi, qualityApi and releaseApi are not working
+             * as expected. Those dependencies are not being added at all in the pom.xml.
+             *
+             * If you run the task from terminal or Android Studio, ext.buildType will be always
+             * release, it will change when you run debugApi, qualityApi or releaseApi.
+             *
+             * Check the pom.gradle.
+             */
+            if (project.hasProperty('debug')) {
+                version = "${rootProject.ext.version}-D"
+                project.ext.libraryVersion = "${rootProject.ext.version}-D"
+                project.ext.buildType = "debug"
+
+            } else if (project.hasProperty('quality')) {
+                version = "${rootProject.ext.version}-Q"
+                project.ext.libraryVersion = "${rootProject.ext.version}-Q"
+                project.ext.buildType = "quality"
+
+            } else {
+                version = "${rootProject.ext.version}"
+                project.ext.libraryVersion = "${rootProject.ext.version}"
+                project.ext.buildType = "release"
+            }
         }
     }
 
     project.android.libraryVariants.all { variant ->
         variant.productFlavors.each { flavor ->
             setVariantBuildConfigField(variant, apiOcm, API_URL, STRING)
-            setVariantBuildConfigField(variant, version, OCM_SDK_VERSION, STRING)
+            setVariantBuildConfigField(variant, ocmSdkVersion, OCM_SDK_VERSION, STRING)
             setVariantBuildConfigField(variant, concurrentInteractors, CONCURRENT_INTERACTORS, INT)
             setVariantBuildConfigField(variant, retrofitLog, RETROFIT_LOG, BOOLEAN)
             setVariantBuildConfigField(variant, youtubeDeveloperKey, YOUTUBE_DEVELOPER_KEY, STRING)
             setVariantBuildConfigField(variant, vimeoAccessToken, VIMEO_ACCESS_TOKEN, STRING)
             println("flavor: " + flavor.name)
+            println("variant: " + variant.name)
             println("--**********************************************************--")
         }
     }
@@ -120,17 +149,17 @@ android {
         unitTests.returnDefaultValues = true
     }
 
-
-    flavorDimensions OCM_DIMENSION
+    flavorDimensions "ocm"
     productFlavors {
         ocm {
-            dimension OCM_DIMENSION
+            dimension "ocm"
         }
     }
-}
 
-jacocoAndroidUnitTestReport {
-    excludes += ['**/BuildConfig*.*']
+    /* DO NOT REMOVE OR CHANGE
+    * Check the note on release buildType.
+    * */
+    defaultPublishConfig "ocmRelease"
 }
 
 dependencies {
@@ -142,7 +171,7 @@ dependencies {
 
     implementation project.libraries.playServicesBase
     implementation project.libraries.playServicesLocation
-    implementation project.libraries.playServicesGcm
+    api project.libraries.playServicesGcm
 
     //gigigo Lib
     implementation project.libraries.ggglib
@@ -157,22 +186,27 @@ dependencies {
     implementation project.libraries.glide
     implementation project.libraries.glideTransformations
 
-    // ORCHEXTRA
-    qualityImplementation project.libraries.oxCoreQuality
-    debugImplementation project.libraries.oxCoreDebug
-    releaseImplementation project.libraries.oxCoreRelease
+    /**
+     * Orchextra api libraries
+     *
+     * They will be visible to other packages.
+     * Check the note on release buildType.
+     */
+    debugApi project.libraries.oxCoreDebug
+    qualityApi project.libraries.oxCoreQuality
+    releaseApi project.libraries.oxCoreRelease
 
-    qualityImplementation project.libraries.oxGeofenceQuality
-    debugImplementation project.libraries.oxGeofenceDebug
-    releaseImplementation project.libraries.oxGeofenceRelease
+    debugApi project.libraries.oxGeofenceDebug
+    qualityApi project.libraries.oxGeofenceQuality
+    releaseApi project.libraries.oxGeofenceRelease
 
-    qualityImplementation project.libraries.oxIndoorpositioningQuality
-    debugImplementation project.libraries.oxIndoorpositioningDebug
-    releaseImplementation project.libraries.oxIndoorpositioningRelease
+    debugApi project.libraries.oxIndoorpositioningDebug
+    qualityApi project.libraries.oxIndoorpositioningQuality
+    releaseApi project.libraries.oxIndoorpositioningRelease
 
-    qualityImplementation project.libraries.oxScannerQuality
-    debugImplementation project.libraries.oxScannerDebug
-    releaseImplementation project.libraries.oxScannerRelease
+    debugApi project.libraries.oxScannerDebug
+    qualityApi project.libraries.oxScannerQuality
+    releaseApi project.libraries.oxScannerRelease
 
     // Customs Views
     implementation project.libraries.doubleViewPager
@@ -216,6 +250,18 @@ dependencies {
     testImplementation project.testLibraries.mockito
 }
 
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+if (project.hasProperty('kapt')) {
+    // Reference for 'kapt' DSL: https://kotlinlang.org/docs/reference/kapt.html#java-compiler-options
+    // kotlin kapt bug in v1.3.50 https://youtrack.jetbrains.com/issue/KT-32804
+    kapt {
+        // we expect this closure to run over a org.jetbrains.kotlin.gradle.plugin.KaptExtension
+        javacOptions {
+            option("-source", "8")
+            option("-target", "8")
+        }
+    }
+}
+
+apply from: '../gradle/pom.gradle'
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
 

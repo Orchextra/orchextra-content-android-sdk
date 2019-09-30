@@ -8,6 +8,7 @@ import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException
 import com.gigigo.orchextra.core.data.rxException.NetworkConnectionException
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData
+import retrofit2.Call
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,13 +16,18 @@ import javax.inject.Singleton
 @Singleton
 class OcmNetworkDataSource @Inject constructor(
     private val ocmApiService: OcmApiService,
-    private val dbDataSource: OcmDbDataSource, private val appExecutors: AppExecutors
+    private val dbDataSource: OcmDbDataSource,
+    private val appExecutors: AppExecutors
 ) {
 
     @Throws(ApiMenuNotFoundException::class, NetworkConnectionException::class)
     fun getMenus(): MenuContentData {
         try {
-            ocmApiService.menu.execute().body()?.let {
+            val response = ocmApiService.menu.execute()
+            response.errorBody()?.string()?.let {
+                Timber.e("menu request error: $it")
+            }
+            response.body()?.let {
                 appExecutors.diskIO().execute {
                     dbDataSource.saveMenus(it.result)
                 }
@@ -37,12 +43,14 @@ class OcmNetworkDataSource @Inject constructor(
     @Throws(NetworkConnectionException::class)
     fun getSectionElements(section: String): ContentData {
         try {
-            ocmApiService.getSectionData(section).execute().body()?.let {
-
+            val response = ocmApiService.getSectionData(section).execute()
+            response.errorBody()?.string()?.let {
+                Timber.e("elements request error: $it")
+            }
+            response.body()?.let {
                 appExecutors.diskIO().execute {
                     dbDataSource.putSection(it.result, section)
                 }
-
                 return it.result.toContentData()
             }
         } catch (e: Exception) {

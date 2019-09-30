@@ -62,16 +62,30 @@ android {
       debuggable false
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+      if (project.hasProperty('debug')) {
+        version = "${rootProject.ext.version}-D"
+        project.ext.libraryVersion = "${rootProject.ext.version}-D"
+
+      } else if (project.hasProperty('quality')) {
+        version = "${rootProject.ext.version}-Q"
+        project.ext.libraryVersion = "${rootProject.ext.version}-Q"
+
+      } else {
+        version = "${rootProject.ext.version}"
+        project.ext.libraryVersion = "${rootProject.ext.version}"
+      }
     }
   }
 
   flavorDimensions "ocm"
-
   productFlavors {
     ocm {
       dimension "ocm"
     }
   }
+
+  defaultPublishConfig "ocmRelease"
 }
 
 dependencies {
@@ -86,9 +100,7 @@ dependencies {
   implementation project.libraries.okhttp3
   implementation project.libraries.timber
 
-  androidTestImplementation(project.testLibraries.espresso, {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
+  androidTestImplementation project.testLibraries.espresso
   testImplementation project.testLibraries.junit
 }
 
