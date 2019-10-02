@@ -1,7 +1,7 @@
 ext {
 
     group = 'com.gigigo.ocm'
-    version = '4.2.1-beta13'
+    version = '4.2.1'
 
     compileSdkVersion = 29
     minSdkVersion = 16
