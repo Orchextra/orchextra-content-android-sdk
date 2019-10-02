@@ -2,9 +2,7 @@ package com.gigigo.orchextra.core.controller.model.home.articles;
 
 import com.gigigo.orchextra.core.controller.model.base.Presenter;
 import com.gigigo.orchextra.core.domain.OcmController;
-import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
-import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 
@@ -38,8 +36,8 @@ public class ContentArticleHomeLayoutViewPresenter extends Presenter<ArticleView
     }
   }
 
-  public void reloadSection(boolean hasToShowNewContentButton) {
-    ocmController.getMenu(DataRequest.ONLY_CACHE, new OcmController.GetMenusControllerCallback() {
+  public void reloadSection() {
+    ocmController.refreschMenu(new OcmController.GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(UiMenuData menus) {
 
         if (menus == null) {
@@ -60,12 +58,7 @@ public class ContentArticleHomeLayoutViewPresenter extends Presenter<ArticleView
         }
 
         getView().showEmptyView(false);
-
-        if (hasToShowNewContentButton) {
-          getView().showNewExistingContent();
-        } else {
-          loadSection();
-        }
+        loadSection();
       }
 
       @Override public void onGetMenusFails(Exception e) {

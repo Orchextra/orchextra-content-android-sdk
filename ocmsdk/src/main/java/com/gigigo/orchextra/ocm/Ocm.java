@@ -1,11 +1,10 @@
 package com.gigigo.orchextra.ocm;
 
 import android.app.Application;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.widget.ImageView;
 import com.gigigo.orchextra.core.controller.model.home.ImageTransformReadArticle;
-import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.ocm.callbacks.CustomUrlCallback;
 import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
@@ -15,6 +14,7 @@ import com.gigigo.orchextra.ocm.callbacks.OnLoadContentSectionFinishedCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnRequiredLoginCallback;
 import com.gigigo.orchextra.ocm.callbacks.ScanCodeListener;
 import com.gigigo.orchextra.ocm.customProperties.OcmCustomBehaviourDelegate;
+import com.gigigo.orchextra.ocm.customProperties.OcmCustomTranslationDelegate;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
@@ -46,6 +46,7 @@ public final class Ocm {
     OCManager.setContentLanguage(ocmBuilder.getContentLanguage());
     OCManager.setDoRequiredLoginCallback(ocmBuilder.getOnRequiredLoginCallback());
     OCManager.setEventCallback(ocmBuilder.getOnEventCallback());
+    OCManager.setVimeoAccessToken(ocmBuilder.getVimeoAccessToken());
     OCManager.initSdk(app);
     OCManager.setShowReadArticles(ocmBuilder.getShowReadArticles());
     if (ocmBuilder.getShowReadArticles() && ocmBuilder.getTransformReadArticleMode()
@@ -65,7 +66,7 @@ public final class Ocm {
     OCManager.initOrchextra(oxKey, oxSecret, notificationActivityClass,
         ocmBuilder.getFirebaseApiKey(), ocmBuilder.getFirebaseApplicationId(),
         ocmBuilder.getBusinessUnit(), onCredentialCallback, ocmBuilder.getTriggeringEnabled(),
-        ocmBuilder.getAnonymous());
+        ocmBuilder.getAnonymous(), ocmBuilder.isProximityEnabled());
   }
 
   public static void getOxToken(final OcmCredentialCallback ocmCredentialCallback) {
@@ -93,8 +94,15 @@ public final class Ocm {
   /**
    * Get the app menus
    */
-  public static void getMenus(DataRequest menuRequest, OcmCallbacks.Menus menusCallback) {
-    OCManager.getMenus(menuRequest, new OCManagerCallbacks.Menus() {
+  public static void getMenus(OcmCallbacks.Menus menusCallback) {
+    getMenus(menusCallback, null);
+  }
+
+  /**
+   * Get the app menus
+   */
+  public static void getMenus(OcmCallbacks.Menus menusCallback, @Nullable String menuSlug) {
+    OCManager.getMenus(new OCManagerCallbacks.Menus() {
       @Override public void onMenusLoaded(UiMenuData menus) {
         menusCallback.onMenusLoaded(menus);
       }
@@ -102,7 +110,7 @@ public final class Ocm {
       @Override public void onMenusFails(Throwable e) {
         menusCallback.onMenusFails(e);
       }
-    });
+    }, menuSlug);
   }
 
   /**
@@ -213,6 +221,11 @@ public final class Ocm {
     OCManager.unBindUser(statusListener);
   }
 
+  public static void setCustomFields(Map<String, String> customFields,
+      OxManager.StatusListener statusListener) {
+    OCManager.setCustomFields(customFields, statusListener);
+  }
+
   public static void stop() {
     OCManager.stop();
     exceptionListener = null;
@@ -234,6 +247,11 @@ public final class Ocm {
   public static void setCustomBehaviourDelegate(
       OcmCustomBehaviourDelegate ocmCustomBehaviourDelegate) {
     OCManager.setCustomBehaviourDelegate(ocmCustomBehaviourDelegate);
+  }
+
+  public static void setCustomTranslationDelegate(
+      OcmCustomTranslationDelegate customTranslationDelegate) {
+    OCManager.setCustomTranslationDelegate(customTranslationDelegate);
   }
 
   public static void setCustomUrlCallback(CustomUrlCallback customUrlCallback) {

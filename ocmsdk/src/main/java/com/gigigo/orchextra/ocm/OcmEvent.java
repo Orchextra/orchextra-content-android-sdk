@@ -1,8 +1,5 @@
 package com.gigigo.orchextra.ocm;
 
-/**
- * Created by rui.alonso on 13/1/17.
- */
 
 public enum OcmEvent {
   SHARE("SHARE"),

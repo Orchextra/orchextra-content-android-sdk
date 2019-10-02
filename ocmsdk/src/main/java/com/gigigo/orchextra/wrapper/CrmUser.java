@@ -1,17 +1,16 @@
 package com.gigigo.orchextra.wrapper;
 
 import io.reactivex.annotations.NonNull;
-import java.util.GregorianCalendar;
-import org.jetbrains.annotations.Nullable;
+import io.reactivex.annotations.Nullable;
 
-/**
- * Created by alex on 01/12/2017.
- */
+import java.util.GregorianCalendar;
+
 
 public class CrmUser {
 
   @NonNull private final String crmId;
-  @Nullable private final GregorianCalendar birthdate;
+  @Nullable
+  private final GregorianCalendar birthdate;
   @Nullable private final Gender gender;
 
   /**

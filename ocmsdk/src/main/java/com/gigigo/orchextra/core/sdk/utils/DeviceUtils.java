@@ -6,7 +6,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
-import android.support.customtabs.CustomTabsIntent;
+import androidx.browser.customtabs.CustomTabsIntent;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -38,18 +38,27 @@ public class DeviceUtils {
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
   public static int calculateRealWidthDeviceInImmersiveMode(Context context) {
+
+    if (context == null) {
+      return 0;
+    }
+
     WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
     DisplayMetrics metrics = new DisplayMetrics();
-    Display display = wm.getDefaultDisplay();
+    if (wm != null) {
+      Display display = wm.getDefaultDisplay();
 
-    if (AndroidSdkVersion.hasJellyBean17()) {
-      display.getRealMetrics(metrics);
-      return metrics.widthPixels;
+      if (AndroidSdkVersion.hasJellyBean17()) {
+        display.getRealMetrics(metrics);
+        return metrics.widthPixels;
+      } else {
+        Point size = new Point();
+        display.getSize(size);
+        return size.x;
+      }
     } else {
-      Point size = new Point();
-      display.getSize(size);
-      return size.x;
+      return 0;
     }
   }
 
@@ -57,7 +66,8 @@ public class DeviceUtils {
     if (activity != null && url != null) {
       try {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-        builder.setToolbarColor(activity.getResources().getColor(R.color.oc_background_detail_toolbar));
+        builder.setToolbarColor(
+            activity.getResources().getColor(R.color.oc_background_detail_toolbar));
         //builder.setCloseButtonIcon(BitmapFactory.decodeResource(
         //    getResources(), android.R.drawable.ic_menu_b));
         CustomTabsIntent customTabsIntent = builder.build();
@@ -71,7 +81,7 @@ public class DeviceUtils {
           activity.startActivity(customTabsIntent.intent);
         }
       } catch (Exception e) {
-        OcmWebViewActivity.open(activity, url,"");
+        OcmWebViewActivity.open(activity, url, "");
       }
     }
   }
@@ -81,7 +91,8 @@ public class DeviceUtils {
     if (activity != null && url != null) {
       try {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-        builder.setToolbarColor(activity.getResources().getColor(R.color.oc_background_detail_toolbar));
+        builder.setToolbarColor(
+            activity.getResources().getColor(R.color.oc_background_detail_toolbar));
         //builder.setCloseButtonIcon(BitmapFactory.decodeResource(
         //    getResources(), android.R.drawable.ic_menu_b));
         CustomTabsIntent customTabsIntent = builder.build();
@@ -139,7 +150,7 @@ public class DeviceUtils {
           activity.startActivity(customTabsIntent.intent);
         }*/
       } catch (Exception e) {
-        OcmWebViewActivity.open(activity, url,"");
+        OcmWebViewActivity.open(activity, url, "");
       }
     }
   }
@@ -162,6 +173,7 @@ public class DeviceUtils {
 
   private static final int MIN_RAM_MEMORY = 256;
   private static final long ONE_MB_INTO_KB = 1048576L;
+
   public static boolean checkDeviceHasEnoughRamMemory() {
     try {
       final Runtime runtime = Runtime.getRuntime();

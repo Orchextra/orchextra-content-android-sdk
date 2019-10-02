@@ -32,12 +32,8 @@ public class OkHttpHeadersInterceptorOcm implements Interceptor {
     }
 
     String accessToken = session.getAccessToken();
-    if (accessToken != null) {
-      builder = builder.header(AUTHORIZATION, accessToken);
-    }
-
+    builder = builder.header(AUTHORIZATION, accessToken);
     builder = builder.header(X_OCM_VERSION, BuildConfig.OCM_SDK_VERSION);
-
     Request request = builder.method(original.method(), original.body()).build();
 
     return chain.proceed(request);

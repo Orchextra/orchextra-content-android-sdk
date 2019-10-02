@@ -1,14 +1,16 @@
 package com.gigigo.orchextra.core.sdk.model.grid.verticalviewpager;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import timber.log.Timber;
 
 public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -23,12 +25,22 @@ public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
 
   @Override public Fragment getItem(final int position) {
 
+    Timber.d("getItem(%s)", position);
+
     CellCarouselContentData cell = (CellCarouselContentData) cellDataList.get(position);
     String name = cell.getData().getName();
     String imageUrl = cell.getData().getSectionView().getImageUrl();
 
+    HashMap<String, Object> customProperties;
+    try {
+      customProperties = new HashMap<>(cell.getData().getCustomProperties());
+    } catch (Exception e) {
+      Timber.e(e, "to HashMap");
+      customProperties = new HashMap<>();
+    }
+
     VerticalItemPageFragment verticalItemPageFragment =
-        VerticalItemPageFragment.newInstance(name, imageUrl);
+        VerticalItemPageFragment.newInstance(name, imageUrl, customProperties);
 
     verticalItemPageFragment.setOnClickItem(view -> {
       if (listedContentListener != null) {

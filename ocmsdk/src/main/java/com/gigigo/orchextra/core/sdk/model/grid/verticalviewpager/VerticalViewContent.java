@@ -1,28 +1,30 @@
 package com.gigigo.orchextra.core.sdk.model.grid.verticalviewpager;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
 import com.gigigo.orchextra.ocm.views.UiListedBaseContentData;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.List;
+import timber.log.Timber;
 
 public class VerticalViewContent extends UiListedBaseContentData {
 
   private VerticalViewPager viewPager;
   private VerticalViewPagerAdapter adapter;
+  private View scrollableArrow;
+  private FragmentManager fragmentManager;
 
   public VerticalViewContent(Context context) {
-    super(context);
+    this(context, null);
   }
 
   public VerticalViewContent(Context context, @Nullable AttributeSet attrs) {
-    super(context, attrs);
+    this(context, attrs, 0);
   }
 
   public VerticalViewContent(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -30,33 +32,45 @@ public class VerticalViewContent extends UiListedBaseContentData {
   }
 
   @Override protected void init() {
-    View view = inflateLayout();
-    initViews(view);
+    initViews();
     initViewPager();
   }
 
-  private View inflateLayout() {
-    LayoutInflater inflater =
-        (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    return inflater.inflate(R.layout.view_vertical_viewpager_item, this, true);
-  }
-
-  private void initViews(View view) {
-    viewPager = view.findViewById(R.id.verticalViewPager);
+  private void initViews() {
+    inflate(getContext(), R.layout.view_vertical_viewpager_item, this);
+    viewPager = findViewById(R.id.verticalViewPager);
+    scrollableArrow = findViewById(R.id.scrollable_arrow);
   }
 
   private void initViewPager() {
     if (viewPager != null) {
-      FragmentManager fragmentManager =
-          ((FragmentActivity) getContext()).getSupportFragmentManager();
       adapter = new VerticalViewPagerAdapter(fragmentManager, listedContentListener);
       viewPager.setAdapter(adapter);
+
+      viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        @Override public void onPageSelected(int position) {
+          super.onPageSelected(position);
+
+          if (position == 0 && adapter.getCount() > 1) {
+            scrollableArrow.setVisibility(VISIBLE);
+          } else {
+            scrollableArrow.setVisibility(GONE);
+          }
+        }
+      });
     }
   }
 
   @Override public void setData(List<Cell> data) {
     if (viewPager != null) {
+      Timber.d("setData(%s)", data.size());
       adapter.setData(data);
+    } else {
+      Timber.e("setData() with null viewPager");
+    }
+
+    if (data.size() <= 1) {
+      scrollableArrow.setVisibility(GONE);
     }
   }
 
@@ -84,5 +98,9 @@ public class VerticalViewContent extends UiListedBaseContentData {
     if (loadingView != null) {
       loadingView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
+  }
+
+  public void setFragmentManager(FragmentManager fragmentManager) {
+    this.fragmentManager = fragmentManager;
   }
 }

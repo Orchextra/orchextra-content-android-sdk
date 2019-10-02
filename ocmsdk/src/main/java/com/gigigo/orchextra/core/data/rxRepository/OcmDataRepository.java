@@ -1,122 +1,201 @@
 package com.gigigo.orchextra.core.data.rxRepository;
 
 import android.content.Context;
-import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
-import com.gigigo.orchextra.core.data.api.mappers.contentdata.ApiContentDataResponseMapper;
-import com.gigigo.orchextra.core.data.api.mappers.elements.ApiElementDataMapper;
-import com.gigigo.orchextra.core.data.api.mappers.menus.ApiMenuContentListResponseMapper;
-import com.gigigo.orchextra.core.data.api.mappers.version.ApiVersionMapper;
-import com.gigigo.orchextra.core.data.api.mappers.video.ApiVideoDataMapper;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+
+import com.gigigo.orchextra.core.AppExecutors;
+import com.gigigo.orchextra.core.data.ElementComparator;
+import com.gigigo.orchextra.core.data.ElementFilter;
+import com.gigigo.orchextra.core.data.OcmDbDataSource;
+import com.gigigo.orchextra.core.data.OcmNetworkDataSource;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStore;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDataStoreFactory;
 import com.gigigo.orchextra.core.data.rxRepository.rxDatasource.OcmDiskDataStore;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
-import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContent;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
-import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.core.domain.rxRepository.OcmRepository;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import gigigo.com.vimeolibs.VimeoInfo;
 import io.reactivex.Observable;
-import java.util.Map;
-import orchextra.javax.inject.Inject;
-import orchextra.javax.inject.Singleton;
+import timber.log.Timber;
 
-/**
- * Created by francisco.hernandez on 23/5/17.
- */
+@Singleton
+public class OcmDataRepository implements OcmRepository {
+    private final OcmDataStoreFactory ocmDataStoreFactory;
+    private final OcmDbDataSource ocmDbDataSource;
+    private final OcmNetworkDataSource ocmNetworkDataSource;
+    private final AppExecutors appExecutors;
 
-@Singleton public class OcmDataRepository implements OcmRepository {
-  private final OcmDataStoreFactory ocmDataStoreFactory;
-  private final ApiMenuContentListResponseMapper apiMenuContentListResponseMapper;
-  private final ApiContentDataResponseMapper apiContentDataResponseMapper;
-  private final ApiElementDataMapper apiElementDataMapper;
-  private final ApiVersionMapper apiVersionMapper;
-  private final ApiVideoDataMapper apiVideoDataMapper;
-
-  @Inject public OcmDataRepository(OcmDataStoreFactory ocmDataStoreFactory,
-      ApiMenuContentListResponseMapper apiMenuContentListResponseMapper,
-      ApiContentDataResponseMapper apiContentDataResponseMapper,
-      ApiElementDataMapper apiElementDataMapper,
-      ApiVersionMapper apiVersionMapper, ApiVideoDataMapper apiVideoDataMapper) {
-    this.ocmDataStoreFactory = ocmDataStoreFactory;
-    this.apiMenuContentListResponseMapper = apiMenuContentListResponseMapper;
-    this.apiContentDataResponseMapper = apiContentDataResponseMapper;
-    this.apiElementDataMapper = apiElementDataMapper;
-    this.apiVersionMapper = apiVersionMapper;
-    this.apiVideoDataMapper = apiVideoDataMapper;
-  }
-
-  @Override public Observable<VersionData> getVersion() {
-    OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForVersion();
-    return ocmDataStore.getVersion()
-        .map(apiVersionMapper::externalClassToModel);
-  }
-
-  @Override public Observable<MenuContentData> getMenu(boolean forceReload) {
-    OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForMenus(forceReload);
-    return ocmDataStore.getMenuEntity().map(apiMenuContentListResponseMapper::externalClassToModel);
-  }
-
-  @Override
-  public Observable<ContentData> getSectionElements(boolean forceReload, String contentUrl,
-      int numberOfElementsToDownload) {
-    OcmDataStore ocmDataStore =
-        ocmDataStoreFactory.getDataStoreForSections(forceReload, contentUrl);
-    Observable<ContentData> contentDataObservable =
-        ocmDataStore.getSectionEntity(contentUrl, numberOfElementsToDownload)
-            .map(apiContentDataResponseMapper::externalClassToModel);
-
-    if (!ocmDataStore.isFromCloud()) {
-      final boolean[] hasTobeUpdated = { false };
-
-      Observable<ContentData> forcedContentDataObservable =
-          contentDataObservable.map(ContentData::getElementsCache)
-              .map(Map::entrySet)
-              .flatMapIterable(entries -> entries)
-              .map(Map.Entry::getValue)
-              .map(ElementCache::getUpdateAt)
-              .filter(this::checkDate)
-              .take(1)
-              .flatMap(aLong -> {
-                hasTobeUpdated[0] = true;
-                return getSectionElements(true, contentUrl, numberOfElementsToDownload);
-              });
-
-      if (hasTobeUpdated[0]) {
-        contentDataObservable = forcedContentDataObservable;
-      }
+    @Inject
+    public OcmDataRepository(OcmDataStoreFactory ocmDataStoreFactory, OcmDbDataSource ocmDbDataSource,
+                             OcmNetworkDataSource ocmNetworkDataSource, AppExecutors appExecutors) {
+        this.ocmDataStoreFactory = ocmDataStoreFactory;
+        this.ocmDbDataSource = ocmDbDataSource;
+        this.ocmNetworkDataSource = ocmNetworkDataSource;
+        this.appExecutors = appExecutors;
     }
 
-    return contentDataObservable;
-  }
+    @Override
+    public Observable<MenuContentData> getMenus() {
 
-  private boolean checkDate(Long updateAt) {
-    //TODO Change to expiredAt
-    long current = System.currentTimeMillis();
-    return updateAt > current;
-  }
+        return Observable.create(emitter -> {
+            appExecutors.diskIO().execute(() -> {
 
-  @Override public Observable<ElementData> getDetail(boolean forceReload, String elementUrl) {
-    OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForDetail(forceReload, elementUrl);
-    return ocmDataStore.getElementById(elementUrl).map(apiElementDataMapper::externalClassToModel);
-  }
+                MenuContentData cacheMenuContentData;
+                MenuContentData networkMenuContentData;
 
-  @Override public Observable<VimeoInfo> getVideo(Context context, boolean forceReload, String videoId, boolean isWifiConnection,
-      boolean isFastConnection) {
-    OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForVideo(forceReload, videoId, isWifiConnection, isFastConnection);
-    return ocmDataStore.getVideoById(context, videoId, isWifiConnection, isFastConnection).map(apiVideoDataMapper::externalClassToModel);
-  }
+                try {
+                    cacheMenuContentData = ocmDbDataSource.getMenus();
+                } catch (Exception e) {
+                    Timber.e("cache getMenus()");
+                    cacheMenuContentData = null;
+                }
 
-  @Override public Observable<ContentData> doSearch(String textToSearch) {
-    OcmDataStore ocmDataStore = ocmDataStoreFactory.getCloudDataStore();
-    return ocmDataStore.searchByText(textToSearch)
-        .map(apiContentDataResponseMapper::externalClassToModel);
-  }
+                try {
+                    networkMenuContentData = ocmNetworkDataSource.getMenus();
+                } catch (Exception e) {
+                    Timber.e("network getMenus()");
+                    networkMenuContentData = null;
+                }
 
-  @Override public Observable<Void> clear(boolean images, boolean data) {
-    OcmDiskDataStore ocmDataStore = (OcmDiskDataStore) ocmDataStoreFactory.getDiskDataStore();
-    ocmDataStore.getOcmCache().evictAll(images, data);
-    return Observable.empty();
-  }
+                MenuContentData menuContentData =
+                        getUpdatedMenuContentData(cacheMenuContentData, networkMenuContentData);
+
+                if (menuContentData == null) {
+                    Timber.e("menuContentData is null check menu request");
+                    return;
+                }
+
+                emitter.onNext(menuContentData);
+                emitter.onComplete();
+            });
+        });
+    }
+
+    @Override
+    public Observable<ContentData> getSectionElements(boolean forceReload, String contentUrl,
+                                                      int numberOfElementsToDownload) {
+
+        Timber.d("getSectionElements(forceReload: %s)", forceReload);
+
+        return Observable.create(emitter -> {
+            ContentData contentData;
+            if (forceReload) {
+                ocmDbDataSource.deleteElementCache();
+                ocmNetworkDataSource.getMenus();
+                contentData = ocmNetworkDataSource.getSectionElements(contentUrl);
+            } else {
+                try {
+                    contentData = ocmDbDataSource.getSectionElements(contentUrl);
+                } catch (Exception e) {
+                    Timber.i(e, "getSectionElements() EMPTY");
+                    contentData = ocmNetworkDataSource.getSectionElements(contentUrl);
+                }
+            }
+
+            emitter.onNext(sortContentData(contentData));
+            emitter.onComplete();
+        });
+    }
+
+    private ContentData sortContentData(final ContentData contentData) {
+        List<Element> elements = contentData.getContent().getElements();
+
+        ElementFilter elementFilter = new ElementFilter();
+        elements = elementFilter.removeFinishedElements(elements);
+
+        Collections.sort(elements, new ElementComparator());
+        contentData.getContent().setElements(elements);
+        return contentData;
+    }
+
+    @Override
+    public Observable<ContentData> doSearch(String textToSearch) {
+        OcmDataStore ocmDataStore = ocmDataStoreFactory.getCloudDataStore();
+        return ocmDataStore.searchByText(textToSearch);
+    }
+
+    @Override
+    public Observable<ElementData> getDetail(boolean forceReload, String elementUrl) {
+        OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForDetail(forceReload, elementUrl);
+        return ocmDataStore.getElementById(elementUrl);
+    }
+
+    @Override
+    public Observable<VimeoInfo> getVideo(Context context, boolean forceReload, String videoId,
+                                          boolean isWifiConnection, boolean isFastConnection) {
+        OcmDataStore ocmDataStore = ocmDataStoreFactory.getDataStoreForVideo(forceReload, videoId);
+        return ocmDataStore.getVideoById(context, videoId, isWifiConnection, isFastConnection);
+    }
+
+    @WorkerThread
+    @Override
+    public Observable<Void> clear(boolean images, boolean data) {
+        OcmDiskDataStore ocmDataStore = ocmDataStoreFactory.getDiskDataStore();
+        appExecutors.diskIO().execute(() -> {
+            try {
+                ocmDataStore.getOcmCache().evictAll(images, data);
+            } catch (Exception e) {
+                Timber.e("evictAll()");
+            }
+        });
+        return Observable.empty();
+    }
+
+    private MenuContentData getUpdatedMenuContentData(@NonNull MenuContentData cacheMenuContentData,
+                                                      @Nullable MenuContentData networkMenuContentData) {
+
+        if (cacheMenuContentData.getMenuContentList().isEmpty()) {
+            Timber.i("Data from cloud");
+            return networkMenuContentData;
+        }
+
+        MenuContentData updatedMenuContentData = new MenuContentData();
+
+        if (networkMenuContentData != null) {
+            updatedMenuContentData.setElementsCache(networkMenuContentData.getElementsCache());
+            updatedMenuContentData.setMenuContentList(networkMenuContentData.getMenuContentList());
+
+            for (MenuContent menuContent : networkMenuContentData.getMenuContentList()) {
+                for (Element element : menuContent.getElements()) {
+
+                    Boolean updated = checkContentVersion(element, cacheMenuContentData);
+                    Timber.d("Element %s; Updated %s", element.getSlug(), updated);
+                    element.setHasNewVersion(updated);
+                    Timber.d("Element %s; Updated %s", element.getSlug(), updated);
+                }
+            }
+
+            return updatedMenuContentData;
+        } else {
+
+            Timber.w("Data only from cache");
+            return cacheMenuContentData;
+        }
+    }
+
+    private Boolean checkContentVersion(@NonNull Element element,
+                                        @NonNull MenuContentData cacheMenuContentData) {
+        for (MenuContent menuContent : cacheMenuContentData.getMenuContentList()) {
+            for (Element cacheElement : menuContent.getElements()) {
+                if (cacheElement.getSlug().equals(element.getSlug())) {
+                    return cacheElement.getContentVersion() == null || !cacheElement.getContentVersion()
+                            .equals(element.getContentVersion());
+                }
+            }
+        }
+        return false;
+    }
 }

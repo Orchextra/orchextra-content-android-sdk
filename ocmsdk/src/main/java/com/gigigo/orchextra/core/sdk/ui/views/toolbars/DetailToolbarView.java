@@ -1,9 +1,10 @@
 package com.gigigo.orchextra.core.sdk.ui.views.toolbars;
 
 import android.content.Context;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,8 +77,16 @@ public class DetailToolbarView extends FrameLayout {
   }
 
   private void setToolbarTitle() {
-    if (ocmStyleUi != null && ocmStyleUi.isTitleToolbarEnabled()) {
-      detailTitleText.setText(title);
+    if (ocmStyleUi != null) {
+
+      if (ocmStyleUi.isTitleToolbarEnabled()) {
+        detailTitleText.setText(title);
+      }
+
+      if (ocmStyleUi.getDetailToolbarBackground() != -1) {
+        detailToolbar.setBackground(
+            ContextCompat.getDrawable(getContext(), ocmStyleUi.getDetailToolbarBackground()));
+      }
     }
   }
 
@@ -97,12 +106,14 @@ public class DetailToolbarView extends FrameLayout {
     isFirstScrollFull = true;
   }
 
-  public void switchBetweenButtonAndToolbar(boolean notifyEvent, boolean areVisibleToolbar, ElementCache elementCache) {
+  public void switchBetweenButtonAndToolbar(boolean notifyEvent, boolean areVisibleToolbar,
+      ElementCache elementCache) {
     this.elementCache = elementCache;
     switchBetweenButtonAndToolbar(notifyEvent, areVisibleToolbar, false);
   }
 
-  public void switchBetweenButtonAndToolbar(boolean notifyEvent, boolean areVisibleToolbar, boolean forceChange) {
+  public void switchBetweenButtonAndToolbar(boolean notifyEvent, boolean areVisibleToolbar,
+      boolean forceChange) {
     boolean hasToChangeViews = (detailToolbar.getVisibility() == GONE && areVisibleToolbar)
         || (detailToolbar.getVisibility() == VISIBLE && !areVisibleToolbar);
 

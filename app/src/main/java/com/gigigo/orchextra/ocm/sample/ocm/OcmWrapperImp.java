@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.ocm.sample.ocm;
 
 import android.app.Application;
-import android.util.Log;
 import com.gigigo.orchextra.ocm.Ocm;
 import com.gigigo.orchextra.ocm.OcmBuilder;
 import com.gigigo.orchextra.ocm.OcmEvent;
@@ -10,16 +9,27 @@ import com.gigigo.orchextra.ocm.callbacks.OcmCredentialCallback;
 import com.gigigo.orchextra.ocm.callbacks.OnCustomSchemeReceiver;
 import com.gigigo.orchextra.ocm.callbacks.OnEventCallback;
 import com.gigigo.orchextra.ocm.sample.MainActivity;
+import com.gigigo.orchextra.ocm.sample.R;
+import timber.log.Timber;
 
 public class OcmWrapperImp implements OcmWrapper {
 
-  private static final String TAG = "OcmWrapperImp";
   private OnStartWithCredentialsCallback mOnStartWithCredentialsCallback;
   private boolean isOxLoaded = false;
   private final Application context;
 
-  public OcmWrapperImp(Application context) {
+  private static OcmWrapperImp instance;
+
+  private OcmWrapperImp(Application context) {
     this.context = context;
+  }
+
+  public static OcmWrapperImp getInstance(Application application) {
+    if (instance == null) {
+      instance = new OcmWrapperImp(application);
+    }
+
+    return instance;
   }
 
   @Override public boolean isOcmInitialized() {
@@ -27,24 +37,29 @@ public class OcmWrapperImp implements OcmWrapper {
   }
 
   @Override public void startWithCredentials(String apiKey, String apiSecret, String businessUnit,
+      String vimeoAccessToken,
       final OnStartWithCredentialsCallback onStartWithCredentialsCallback) {
     mOnStartWithCredentialsCallback = onStartWithCredentialsCallback;
     isOxLoaded = false;
 
+    Timber.d("startWithCredentials(apiKey: %s, apiSecret: %s)", apiKey, apiSecret);
+
     OcmBuilder ocmBuilder = new OcmBuilder(context).setOrchextraCredentials(apiKey, apiSecret)
         .setOnEventCallback(eventCallback)
         .setContentLanguage("EN")
+        .setVimeoAccessToken(vimeoAccessToken)
         .setBusinessUnit(businessUnit)
         .setNotificationActivityClass(MainActivity.class)
         .setAnonymous(false)
-        .setTriggeringEnabled(false);
+        .setProximityEnabled(true)
+        .setTriggeringEnabled(true);
 
     Ocm.initialize(ocmBuilder, new OcmCredentialCallback() {
       @Override public void onCredentialReceiver(String accessToken) {
-        Log.d(TAG, "onCredentialReceiver");
+        Timber.d("onCredentialReceiver");
 
         Ocm.setErrorListener(error -> {
-          Log.e(TAG, "Ox error: " + error);
+          Timber.e("Ox error: %s", error);
           if (mOnStartWithCredentialsCallback != null) {
             mOnStartWithCredentialsCallback.onCredentailError();
           }
@@ -58,6 +73,9 @@ public class OcmWrapperImp implements OcmWrapper {
                 .setMediumFont("fonts/Gotham-Medium.ttf")
                 .setTitleToolbarEnabled(false)
                 .disableThumbnailImages()
+                .disableAnimationView()
+                .setDetailBackground(R.drawable.journey_morning_background_light)
+                .setDetaiToolbarlBackground(R.drawable.journey_morning_background)
                 .setEnabledStatusBar(false);
         Ocm.setStyleUi(ocmStyleUiBuilder);
 
@@ -71,7 +89,7 @@ public class OcmWrapperImp implements OcmWrapper {
       }
 
       @Override public void onCredentailError(String code) {
-        Log.e(TAG, "Error on init Ox: " + code);
+        Timber.e("Error on init Ox: %s", code);
         if (mOnStartWithCredentialsCallback != null) {
           mOnStartWithCredentialsCallback.onCredentailError();
         }
@@ -91,16 +109,20 @@ public class OcmWrapperImp implements OcmWrapper {
     Ocm.scanCode(scanCodeListener::onCodeScan);
   }
 
+  @Override public void processDeepLink(String deepLink) {
+    Ocm.processDeepLinks(deepLink);
+  }
+
   private OnCustomSchemeReceiver onCustomSchemeReceiver =
-      scheme -> Log.i(TAG, "OnCustomSchemeReceiver: " + scheme);
+      scheme -> Timber.i("OnCustomSchemeReceiver: %s", scheme);
 
   private OnEventCallback eventCallback = new OnEventCallback() {
     @Override public void doEvent(OcmEvent event, Object data) {
-      Log.i(TAG, "doEvent(OcmEvent event, Object data)");
+      Timber.i("doEvent(OcmEvent event, Object data)");
     }
 
     @Override public void doEvent(OcmEvent event) {
-      Log.i(TAG, "doEvent(OcmEvent event)");
+      Timber.i("doEvent(OcmEvent event)");
     }
   };
 }

@@ -2,213 +2,200 @@ package com.gigigo.orchextra.core.data.rxRepository.rxDatasource;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.gigigo.orchextra.core.data.api.dto.article.ApiArticleElement;
+import com.gigigo.orchextra.core.data.api.dto.base.BaseApiResponse;
 import com.gigigo.orchextra.core.data.api.dto.content.ApiSectionContentData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElement;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementData;
 import com.gigigo.orchextra.core.data.api.dto.elements.ApiElementSectionView;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContent;
 import com.gigigo.orchextra.core.data.api.dto.menus.ApiMenuContentData;
-import com.gigigo.orchextra.core.data.api.dto.versioning.ApiVersionKache;
-import com.gigigo.orchextra.core.data.api.dto.video.ApiVideoData;
 import com.gigigo.orchextra.core.data.api.services.OcmApiService;
+import com.gigigo.orchextra.core.data.mappers.DbMappersKt;
 import com.gigigo.orchextra.core.data.rxCache.OcmCache;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImageData;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.ImagesService;
 import com.gigigo.orchextra.core.data.rxCache.imageCache.OcmImageCache;
+import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
+import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.receiver.WifiReceiver;
 import com.gigigo.orchextra.core.sdk.di.injector.Injector;
+import com.gigigo.orchextra.core.utils.VimeoCredentials;
 import com.gigigo.orchextra.ocm.OCManager;
-import com.gigigo.orchextra.ocmsdk.BuildConfig;
-import com.vimeo.networking.VimeoClient;
-import com.vimeo.networking.model.Video;
+
+import java.util.Iterator;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import gigigo.com.vimeolibs.VimeoBuilder;
 import gigigo.com.vimeolibs.VimeoCallback;
 import gigigo.com.vimeolibs.VimeoInfo;
 import gigigo.com.vimeolibs.VimeoManager;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import java.util.Iterator;
-import okhttp3.CacheControl;
-import orchextra.javax.inject.Inject;
-import orchextra.javax.inject.Singleton;
-import retrofit2.Response;
 
-/**
- * Created by francisco.hernandez on 23/5/17.
- */
+@Singleton
+public class OcmCloudDataStore implements OcmDataStore {
 
-@Singleton public class OcmCloudDataStore implements OcmDataStore {
+    private static final int MAX_ARTICLES = Integer.MAX_VALUE;
+    private final OcmApiService ocmApiService;
+    private final OcmCache ocmCache;
+    private final OcmImageCache ocmImageCache;
+    private VimeoCredentials vimeoCredentials;
 
-  private static final int MAX_ARTICLES = Integer.MAX_VALUE;
-  private final OcmApiService ocmApiService;
-  private final OcmCache ocmCache;
-  private final OcmImageCache ocmImageCache;
-  private Integer withThumbnails = null; //For default, thumbnails are enabled
+    private Integer withThumbnails = null; //For default, thumbnails are enabled
 
-  @Inject public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,
-      @NonNull OcmImageCache ocmImageCache) {
-    this.ocmApiService = ocmApiService;
-    this.ocmCache = ocmCache;
-    this.ocmImageCache = ocmImageCache;
+    @Inject
+    public OcmCloudDataStore(@NonNull OcmApiService ocmApiService, @NonNull OcmCache ocmCache,
+                             @NonNull OcmImageCache ocmImageCache, VimeoCredentials vimeoCredentials) {
+        this.ocmApiService = ocmApiService;
+        this.ocmCache = ocmCache;
+        this.ocmImageCache = ocmImageCache;
+        this.vimeoCredentials = vimeoCredentials;
 
-    Injector injector = OCManager.getInjector();
-    if (injector != null) {
-      boolean thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
-      this.withThumbnails = thumbnailEnabled ? 0 : null;
-    }
-  }
-
-  @Override public Observable<ApiMenuContentData> getMenuEntity() {
-
-    final long time = System.currentTimeMillis();
-
-    return ocmApiService.getMenuDataRx()
-        .map(dataResponse -> dataResponse.getResult())
-        .doOnNext(ocmCache::putMenus)
-        .doOnNext(apiMenuContentData -> addSectionsToCache(apiMenuContentData))
-        .doOnNext(apiMenuContentData -> {
-          apiMenuContentData.setFromCloud(true);
-          Log.v("TT - MenuEntity", (System.currentTimeMillis() - time) / 1000 + "");
-        });
-  }
-
-  @Override public Observable<ApiSectionContentData> getSectionEntity(String contentUrl,
-      final int numberOfElementsToDownload) {
-
-    final long time = System.currentTimeMillis();
-
-    return ocmApiService.getSectionDataRx(contentUrl, withThumbnails)
-        .map(dataResponse -> dataResponse.getResult())
-        .doOnNext(apiSectionContentData -> apiSectionContentData.setKey(contentUrl))
-        .doOnNext(ocmCache::putSection)
-        .doOnNext(apiSectionContentData -> addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload))
-        .doOnNext(apiSectionContentData -> {
-          apiSectionContentData.setFromCloud(true);
-          Log.v("TT - SectionEntity", (System.currentTimeMillis() - time) / 1000 + "");
-        });
-  }
-
-  private void addSectionsToCache(ApiMenuContentData apiMenuContentData) {
-    Iterator<ApiMenuContent> menuContentIterator = apiMenuContentData.getMenuContentList().iterator();
-    while (menuContentIterator.hasNext()) {
-      Iterator<ApiElement> elementIterator = menuContentIterator.next().getElements().iterator();
-      while (elementIterator.hasNext()) {
-        ApiElement apiElement = elementIterator.next();
-        if (apiMenuContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
-          ApiSectionContentData contentData = new ApiSectionContentData();
-          contentData.setKey(apiElement.getElementUrl());
-          ocmCache.putSection(contentData);
+        Injector injector = OCManager.getInjector();
+        if (injector != null) {
+            boolean thumbnailEnabled = injector.provideOcmStyleUi().isThumbnailEnabled();
+            this.withThumbnails = thumbnailEnabled ? 0 : null;
         }
-      }
-    }
-  }
-
-  private void addSectionsImagesToCache(ApiSectionContentData apiSectionContentData,
-      int imagestodownload) {
-    Iterator<ApiElement> iterator = apiSectionContentData.getContent().getElements().iterator();
-    int i = 0;
-    while (iterator.hasNext() && i < MAX_ARTICLES) {
-      ApiElement apiElement = iterator.next();
-      addImageToQueue(apiElement.getSectionView());
-      if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
-        ApiElementData apiElementData = new ApiElementData(
-            apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
-        if (i < imagestodownload) addImageToQueue(apiElementData);
-        ocmCache.putDetail(apiElementData);
-      }
-      i++;
     }
 
-    Intent intent = new Intent(ocmCache.getContext(), ImagesService.class);
-    WifiReceiver.intentService = intent;
-    ocmCache.getContext().startService(intent);
-  }
-
-  private void addImageToQueue(ApiElementSectionView apiElementSectionView) {
-    if (apiElementSectionView != null) {
-      if (apiElementSectionView.getImageUrl() != null) {
-        ocmImageCache.add(new ImageData(apiElementSectionView.getImageUrl(), 9));
-      }
+    @Override
+    public Observable<ContentData> getSection(
+            String contentUrl,
+            final int numberOfElementsToDownload
+    ) {
+        return ocmApiService.getSectionDataRx(contentUrl, withThumbnails)
+                .map(BaseApiResponse::getResult)
+                .doOnNext(apiSectionContentData ->
+                        ocmCache.putSection(apiSectionContentData, contentUrl))
+                .doOnNext(apiSectionContentData ->
+                        addSectionsImagesToCache(apiSectionContentData, numberOfElementsToDownload))
+                .map(DbMappersKt::toContentData);
     }
-  }
 
-  private void addImageToQueue(ApiElementData apiElementData) {
-
-    if (apiElementData.getElement() != null) {
-      //Preview
-      if (apiElementData.getElement().getPreview() != null) {
-        ocmImageCache.add(new ImageData(apiElementData.getElement().getPreview().getImageUrl(), 0));
-      }
-      //Render
-      if (apiElementData.getElement().getRender() != null
-          && apiElementData.getElement().getRender().getElements() != null) {
-        Iterator<ApiArticleElement> elementsIterator =
-            apiElementData.getElement().getRender().getElements().iterator();
-        while (elementsIterator.hasNext()) {
-          ApiArticleElement element = elementsIterator.next();
-          if (element.getRender() != null && element.getRender().getImageUrl() != null) {
-            ocmImageCache.add(new ImageData(element.getRender().getImageUrl(), 0));
-          }
+    private void saveSections(ApiMenuContentData apiMenuContentData) {
+        for (ApiMenuContent apiMenuContent : apiMenuContentData.getMenuContentList()) {
+            for (ApiElement apiElement : apiMenuContent.getElements()) {
+                ApiSectionContentData contentData = new ApiSectionContentData();
+                ocmCache.putSection(contentData, apiElement.getElementUrl());
+            }
         }
-      }
     }
-  }
 
-  @Override public Observable<ApiSectionContentData> searchByText(String section) {
-    return ocmApiService.searchRx(section).map(dataResponse -> dataResponse.getResult());
-  }
+    private void addSectionsImagesToCache(ApiSectionContentData apiSectionContentData,
+                                          int imagestodownload) {
+        Iterator<ApiElement> iterator = apiSectionContentData.getContent().getElements().iterator();
+        int i = 0;
+        while (iterator.hasNext() && i < MAX_ARTICLES) {
+            ApiElement apiElement = iterator.next();
+            addImageToQueue(apiElement.getSectionView());
+            if (apiSectionContentData.getElementsCache().containsKey(apiElement.getElementUrl())) {
+                ApiElementData apiElementData = new ApiElementData(
+                        apiSectionContentData.getElementsCache().get(apiElement.getElementUrl()));
+                if (i < imagestodownload) addImageToQueue(apiElementData);
 
-  @Override public Observable<ApiElementData> getElementById(String slug) {
-    return ocmApiService.getElementByIdRx(slug, withThumbnails)
-        .map(dataResponse -> dataResponse.getResult())
-        .doOnNext(ocmCache::putDetail);
-  }
+                ocmCache.putDetail(apiElementData, apiElement.getElementUrl());
+            }
+            i++;
+        }
 
-  @Override public Observable<ApiVideoData> getVideoById(Context context, String videoId, boolean isWifiConnection,
-      boolean isFastConnection) {
-    Observable<ApiVideoData> videoObservable = Observable.create(new ObservableOnSubscribe<ApiVideoData>() {
-      @Override public void subscribe(ObservableEmitter<ApiVideoData> emitter) throws Exception {
-        VimeoBuilder builder = new VimeoBuilder(BuildConfig.VIMEO_ACCESS_TOKEN);
-        VimeoManager videoManager = new VimeoManager(builder);
+        Intent intent = new Intent(ocmCache.getContext(), ImagesService.class);
+        WifiReceiver.intentService = intent;
+        ocmCache.getContext().startService(intent);
+    }
 
-        videoManager.getVideoVimeoInfo(context, videoId, isWifiConnection, isFastConnection, new VimeoCallback() {
-          @Override public void onSuccess(VimeoInfo vimeoInfo) {
-            ApiVideoData videoData = new ApiVideoData(vimeoInfo);
-            ocmCache.putVideo(videoData);
-            emitter.onNext(videoData);
-          }
+    private void addImageToQueue(ApiElementSectionView apiElementSectionView) {
+        if (apiElementSectionView != null) {
+            if (apiElementSectionView.getImageUrl() != null) {
+                ocmImageCache.add(new ImageData(apiElementSectionView.getImageUrl(), 9));
+            }
+        }
+    }
 
-          @Override public void onError(Exception exception) {
-            emitter.onError(exception);
-          }
-        });
-      }
-    });
+    private void addImageToQueue(ApiElementData apiElementData) {
 
-    videoObservable
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe();
+        if (apiElementData.getElement() != null) {
+            //Preview
+            if (apiElementData.getElement().getPreview() != null) {
+                ocmImageCache.add(new ImageData(apiElementData.getElement().getPreview().getImageUrl(), 0));
+            }
+            //Render
+            if (apiElementData.getElement().getRender() != null
+                    && apiElementData.getElement().getRender().getElements() != null) {
+                Iterator<ApiArticleElement> elementsIterator =
+                        apiElementData.getElement().getRender().getElements().iterator();
+                while (elementsIterator.hasNext()) {
+                    ApiArticleElement element = elementsIterator.next();
+                    if (element.getRender() != null && element.getRender().getImageUrl() != null) {
+                        ocmImageCache.add(new ImageData(element.getRender().getImageUrl(), 0));
+                    }
+                }
+            }
+        }
+    }
 
-    return videoObservable;
-  }
+    @Override
+    public Observable<ContentData> searchByText(String section) {
+        return ocmApiService.searchRx(section)
+                .map(dataResponse -> dataResponse.getResult())
+                .map(apiSectionContentData -> DbMappersKt.toContentData(apiSectionContentData));
+    }
 
-  @Override public Observable<ApiVersionKache> getVersion() {
-    return ocmApiService.getVersionDataRx()
-        .map(apiVersionResponse -> new ApiVersionKache(apiVersionResponse.getData()))
-        .filter(apiVersionKache -> apiVersionKache != null)
-        .doOnNext(ocmCache::putVersion);
-  }
+    @Override
+    public Observable<ElementData> getElementById(String slug) {
+        return ocmApiService.getElementByIdRx(slug, withThumbnails)
+                .map(dataResponse ->
+                        dataResponse.getResult()
+                )
+                .doOnNext(apiElementData -> {
+                    if (apiElementData.getElement().getSlug() != null) {
+                        ocmCache.putDetail(apiElementData, apiElementData.getElement().getSlug());
+                    }
+                })
+                .map(apiElementData -> {
+                    ElementData elementData = DbMappersKt.toElementData(apiElementData);
+                    return elementData;
+                });
+    }
 
-  @Override public boolean isFromCloud() {
-    return true;
-  }
+    @Override
+    public Observable<VimeoInfo> getVideoById(Context context, String videoId,
+                                              boolean isWifiConnection, boolean isFastConnection) {
+        Observable<VimeoInfo> videoObservable =
+                Observable.create(emitter -> {
+                    VimeoBuilder builder = new VimeoBuilder(vimeoCredentials.getAccessToken());
+                    VimeoManager videoManager = new VimeoManager(builder);
+
+                    videoManager.getVideoVimeoInfo(context, videoId, isWifiConnection, isFastConnection,
+                            new VimeoCallback() {
+                                @Override
+                                public void onError(@NonNull Throwable e) {
+                                    emitter.onError(e);
+                                }
+
+                                @Override
+                                public void onSuccess(VimeoInfo vimeoInfo) {
+                                    ocmCache.putVideo(vimeoInfo);
+                                    emitter.onNext(vimeoInfo);
+                                }
+                            });
+                });
+
+        videoObservable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+
+        return videoObservable;
+    }
+
+    @Override
+    public boolean isFromCloud() {
+        return true;
+    }
 }

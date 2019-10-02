@@ -1,3 +1,9 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'applivery-plugin'
+
 buildscript {
   repositories {
     jcenter()
@@ -7,11 +13,13 @@ buildscript {
   }
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'applivery-plugin'
+group = rootProject.ext.group
+version = rootProject.ext.version
+
+def STRING = "String"
 
 android {
-  compileSdkVersion 26
+  compileSdkVersion rootProject.ext.compileSdkVersion
 
   signingConfigs {
     config {}
@@ -20,36 +28,65 @@ android {
   defaultConfig {
     applicationId "com.gigigo.showcase"
     minSdkVersion 18
-    targetSdkVersion 26
-    versionCode computeVersionCode()
-    versionName "1.0-RC" + computeVersionCode()
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode generateAutoVersionCode()
+    versionName version
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
   }
 
   buildTypes {
-    staging {
+    quality {
       testCoverageEnabled = false
       debuggable true
-      applicationIdSuffix ".staging"
+      applicationIdSuffix ".quality"
+
+      buildConfigField STRING, "DEFAULT_API_KEY", "\"8286702045adf5a3ad816f70ecb80e4c91fbb8de\""
+      buildConfigField STRING, "DEFAULT_API_SECRET", "\"eab37080130215ced60eb9d5ff729049749ec205\""
+      buildConfigField STRING, "DEFAULT_BUSINESS_UNIT", "\"oat-it\""
     }
 
     debug {
       signingConfig signingConfigs.debug
       debuggable true
       applicationIdSuffix ".debug"
+
+      buildConfigField STRING, "DEFAULT_API_KEY", "\"8286702045adf5a3ad816f70ecb80e4c91fbb8de\""
+      buildConfigField STRING, "DEFAULT_API_SECRET", "\"eab37080130215ced60eb9d5ff729049749ec205\""
+      buildConfigField STRING, "DEFAULT_BUSINESS_UNIT", "\"oat-it\""
     }
 
     release {
       signingConfig signingConfigs.debug
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt')
+
+      buildConfigField STRING, "DEFAULT_API_KEY", "\"\""
+      buildConfigField STRING, "DEFAULT_API_SECRET", "\"\""
+      buildConfigField STRING, "DEFAULT_BUSINESS_UNIT", "\"\""
     }
   }
 
+  flavorDimensions "ocm"
+
+  productFlavors {
+    ocm {
+      dimension "ocm"
+    }
+  }
+
+  //true to publish all flavour artifacts
+  // publishNonDefault true
+  defaultPublishConfig "ocmRelease"
+
   lintOptions {
     abortOnError false
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
   }
 }
 
@@ -58,26 +95,22 @@ configurations {
 }
 
 dependencies {
-  implementation 'com.android.support:appcompat-v7:26.1.0'
-  implementation 'com.android.support:design:26.1.0'
-  implementation 'com.android.support:support-v13:26.1.0'
-  implementation 'com.android.support:support-v4:26.1.0'
-  implementation 'com.android.support:design:26.1.0'
-
+  implementation 'androidx.appcompat:appcompat:1.0.0'
+  implementation 'com.google.android.material:material:1.0.0'
+  implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+  implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+  implementation 'com.google.android.material:material:1.0.0'
+  implementation 'com.jakewharton.timber:timber:4.7.1'
   implementation project(path: ':ocmsdk')
 
-  implementation 'com.android.support:multidex:1.0.2'
+  implementation 'androidx.multidex:multidex:2.0.0'
   implementation 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
   implementation 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
-  implementation 'com.android.support:support-v4:26.1.0'
-
-  debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-  qualityImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-  releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+  implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
   testImplementation 'junit:junit:4.12'
-  androidTestImplementation 'com.android.support.test:runner:1.0.1'
-  androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+  androidTestImplementation 'androidx.test:runner:1.1.0'
+  androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 }
 
 applivery {

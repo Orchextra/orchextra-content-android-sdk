@@ -1,1 +1,3 @@
-include ':ocmsdk', ':vimeosdk', ':app'//, ':showcase'
+include ':ocmsdk', ':vimeosdk'
+//include ':app'
+//include ':showcase'

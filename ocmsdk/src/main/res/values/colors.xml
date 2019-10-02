@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <color name="black">#000</color>
-  <color name="white">#000</color>
+  <color name="white">#fff</color>
   <color name="transparent">#0000</color>
 
   <!-- Orchextra -->
@@ -19,7 +19,7 @@
   <color name="oc_retry_content_button_text_color">#807f7f</color>
 
   <!-- Detail -->
-  <color name="oc_background_detail_view_color">#c1c1c1</color>
+  <color name="oc_background_detail_view_color">#fff</color>
   <color name="oc_article_rich_text_color">#474747</color>
   <color name="oc_article_header_title_text_color">#4a4a4a</color>
   <color name="oc_preview_title_text_color">#FFF</color>

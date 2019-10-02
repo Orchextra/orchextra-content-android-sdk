@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -463,7 +463,7 @@ public class WebViewContentData extends UiGridBaseContentData {
     }
   }
 
-  @Override public void reloadSection(boolean hasToShowNewContentButton) {
+  @Override public void reloadSection() {
     if (webView != null) {
       webView.reload();
     }

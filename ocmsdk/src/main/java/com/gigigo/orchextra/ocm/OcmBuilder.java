@@ -23,11 +23,13 @@ public final class OcmBuilder {
   private String firebaseApplicationId = "";
   private Boolean triggeringEnabled = true;
   private Boolean anonymous = false;
+  private Boolean proximityEnabled = true;
   private String businessUnit = "";
   private ImageRecognition vuforiaImpl;
   private boolean showReadArticles = false;
   private ImageTransformReadArticle transformReadArticleMode = ImageTransformReadArticle.OVERLAY;
   private int maxReadArticles = 100;
+  private String vimeoAccessToken;
 
   public int getMaxReadArticles() {
     return maxReadArticles;
@@ -169,6 +171,15 @@ public final class OcmBuilder {
     return this;
   }
 
+  public Boolean isProximityEnabled() {
+    return proximityEnabled;
+  }
+
+  public OcmBuilder setProximityEnabled(Boolean proximityEnabled) {
+    this.proximityEnabled = proximityEnabled;
+    return this;
+  }
+
   Application getApp() {
     return app;
   }
@@ -199,5 +210,14 @@ public final class OcmBuilder {
 
   Class getNotificationActivityClass() {
     return notificationActivityClass;
+  }
+
+  public OcmBuilder setVimeoAccessToken(String vimeoAccessToken) {
+    this.vimeoAccessToken = vimeoAccessToken;
+    return this;
+  }
+
+  public String getVimeoAccessToken() {
+    return vimeoAccessToken;
   }
 }

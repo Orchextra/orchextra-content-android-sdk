@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 
-apply from: '../ocmsdk/common_methods.gradle'
-apply from: '../ocmsdk/dependencies.gradle'
 apply from: 'variants.gradle'
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+group = rootProject.ext.group
+version = rootProject.ext.version
 
 def API_KEY = "API_KEY"
 def API_SECRET = "API_SECRET"
@@ -15,18 +16,23 @@ android {
   signingConfigs {
     config {}
   }
-  compileSdkVersion project.ext.androidCompileSdkVersion
-  buildToolsVersion project.ext.androidBuildToolsVersion
+
+  compileSdkVersion rootProject.ext.compileSdkVersion
 
   defaultConfig {
-    minSdkVersion project.ext.androidMinSdkVersion
-    targetSdkVersion project.ext.androidTargetSdkVersion
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    minSdkVersion 18
+    targetSdkVersion rootProject.ext.targetSdkVersion
+
+    ndk {
+      abiFilters "armeabi-v7a", "x86"
+    }
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
   }
 
   buildTypes {
-    staging {
+    quality {
       debuggable true
       signingConfig signingConfigs.debug
     }
@@ -41,6 +47,7 @@ android {
     }
     release {
       minifyEnabled false
+      debuggable true
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
       signingConfig android.signingConfigs.debug
     }
@@ -48,7 +55,7 @@ android {
 
   productFlavors.whenObjectAdded { flavor ->
     flavor.versionCode generateAutoVersionCode()
-    flavor.versionName getVersionName(project.ext.version)
+    flavor.versionName getVersionName(appVersion)
   }
 
   project.android.applicationVariants.all { variant ->
@@ -64,7 +71,7 @@ android {
       println("**************************************************")
       println("-------------" + flavor.name + "." + variant.buildType.name + "-------------")
 
-      println("****"+flavorData+"****")
+      println("****" + flavorData + "****")
 
       setVariantApplicationId(variant, appId)
       setVariantResValue(variant, appName, "app_name", STRING)
@@ -80,6 +87,10 @@ android {
   flavorDimensions "sample"
 
   productFlavors {
+    showRoom {
+      dimension "sample"
+    }
+
     woah_Showcase {
       dimension "sample"
     }
@@ -104,6 +115,14 @@ android {
       dimension "sample"
     }
 
+    ferring {
+      dimension "sample"
+    }
+
+    woah_HU {
+      dimension "sample"
+    }
+
     woah_PL {
       dimension "sample"
     }
@@ -123,19 +142,24 @@ android {
   }
 }
 
-
+configurations {
+  cleanedAnnotations
+  compile.exclude group: 'org.jetbrains', module: 'annotations'
+}
 
 dependencies {
-  api project(path: ':ocmsdk')
-  api 'com.android.support:multidex:1.0.2'
-
+  implementation project(path: ':ocmsdk')
+  implementation 'androidx.multidex:multidex:2.0.1'
 
   /*New dependencies*/
-  stagingImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+  qualityImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
   debugImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
   prereleaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
   releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
-  implementation 'com.android.support:support-v4:26.0.2'
-  implementation 'com.android.support:design:26.0.2'
+  implementation 'com.facebook.stetho:stetho:1.5.1'
+
+  implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+  implementation 'com.google.android.material:material:1.0.0'
+  implementation project.libraries.timber
 }

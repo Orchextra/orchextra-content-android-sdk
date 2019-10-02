@@ -21,101 +21,131 @@ import com.gigigo.orchextra.core.sdk.di.qualifiers.RetrofitLog;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.RetrofitOcm;
 import com.gigigo.orchextra.core.sdk.di.qualifiers.RetryOnErrorPolicyOcm;
 import com.gigigo.orchextra.ocmsdk.BuildConfig;
-import com.vimeo.networking.Configuration;
-import com.vimeo.networking.VimeoClient;
-import com.vimeo.networking.VimeoService;
-import gigigo.com.vimeolibs.VimeoBuilder;
-import gigigo.com.vimeolibs.VimeoManager;
+
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import orchextra.dagger.Module;
-import orchextra.dagger.Provides;
-import orchextra.javax.inject.Singleton;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-@Module public class ApiModule {
+@Module
+public class ApiModule {
 
-  @Provides @Singleton @EndpointOcm String provideEndpoint() {
-    return BuildConfig.API_URL;
-  }
-
-  @Provides @Singleton @RetrofitLog boolean provideRetrofitLog() {
-    return BuildConfig.DEBUG;
-  }
-
-  @Provides @Singleton @HttpLoggingInterceptorOcm
-  HttpLoggingInterceptor provideLoggingInterceptor() {
-    HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-    return interceptor;
-  }
-
-  @Provides @Singleton OxSession provideOxSession() {
-    return new OxSession();
-  }
-
-  @Provides @Singleton @HeadersInterceptorOcm Interceptor provideHeadersInterceptorOcm(
-      OxSession oxSession) {
-    return new OkHttpHeadersInterceptorOcm(oxSession);
-  }
-
-  @Provides @Singleton @OkHttpClientOcm OkHttpClient provideOkHttpClientOcm(
-      @RetrofitLog boolean retrofitLog, @HeadersInterceptorOcm Interceptor headersInterceptor,
-      @HttpLoggingInterceptorOcm HttpLoggingInterceptor loggingInterceptor) {
-
-    OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-    okHttpClientBuilder.addInterceptor(headersInterceptor);
-
-    if (retrofitLog) {
-      okHttpClientBuilder.addInterceptor(loggingInterceptor);
+    @Provides
+    @Singleton
+    @EndpointOcm
+    String provideEndpoint() {
+        return BuildConfig.API_URL;
     }
 
-    OkHttpClient okHttpClient = okHttpClientBuilder.connectTimeout(30, TimeUnit.SECONDS).
-        readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
+    @Provides
+    @Singleton
+    @RetrofitLog
+    boolean provideRetrofitLog() {
+        return BuildConfig.DEBUG;
+    }
 
-    return okHttpClient;
-  }
+    @Provides
+    @Singleton
+    @HttpLoggingInterceptorOcm
+    HttpLoggingInterceptor provideLoggingInterceptor() {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        return interceptor;
+    }
 
-  @Provides @Singleton @GsonConverterFactoryObject
-  GsonConverterFactory provideGsonConverterFactory() {
-    return GsonConverterFactory.create();
-  }
+    @Provides
+    @Singleton
+    OxSession provideOxSession() {
+        return new OxSession();
+    }
 
-  @Provides @Singleton @RetrofitOcm Retrofit provideOcmRetrofitObject(@EndpointOcm String enpoint,
-      @GsonConverterFactoryObject GsonConverterFactory gsonConverterFactory,
-      @OkHttpClientOcm OkHttpClient okClient) {
+    @Provides
+    @Singleton
+    @HeadersInterceptorOcm
+    Interceptor provideHeadersInterceptorOcm(
+            OxSession oxSession) {
+        return new OkHttpHeadersInterceptorOcm(oxSession);
+    }
 
-    Retrofit retrofit = new Retrofit.Builder().baseUrl(enpoint)
-        .client(okClient)
-        .addConverterFactory(gsonConverterFactory)
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .build();
+    @Provides
+    @Singleton
+    @OkHttpClientOcm
+    OkHttpClient provideOkHttpClientOcm(
+            @RetrofitLog boolean retrofitLog, @HeadersInterceptorOcm Interceptor headersInterceptor,
+            @HttpLoggingInterceptorOcm HttpLoggingInterceptor loggingInterceptor) {
 
-    return retrofit;
-  }
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        okHttpClientBuilder.addInterceptor(headersInterceptor);
 
-  @Provides @Singleton @ErrorConverterOcm ErrorConverter provideErrorConverter(
-      @RetrofitOcm Retrofit retrofit) {
-    return new DefaultErrorConverterImpl(retrofit, BaseApiResponse.class);
-  }
+        if (retrofitLog) {
+            okHttpClientBuilder.addInterceptor(loggingInterceptor);
+        }
 
-  @Provides @Singleton @RetryOnErrorPolicyOcm RetryOnErrorPolicy provideRetryOnErrorPolicy() {
-    return new DefaultRetryOnErrorPolicyImpl();
-  }
+        OkHttpClient okHttpClient = okHttpClientBuilder.connectTimeout(30, TimeUnit.SECONDS).
+                readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
 
-  @Provides @ApiServiceExecutorOcm ApiServiceExecutor provideOcmApiServiceExecutor(
-      @ErrorConverterOcm ErrorConverter errorConverter,
-      @RetryOnErrorPolicyOcm RetryOnErrorPolicy retryOnErrorPolicy) {
-    return new RetrofitApiServiceExcecutor.Builder().errorConverter(errorConverter)
-        .retryOnErrorPolicy(retryOnErrorPolicy)
-        .build();
-  }
+        return okHttpClient;
+    }
 
-  @Provides @Singleton OcmApiService provideOrchextraApiService(@RetrofitOcm Retrofit retrofit) {
-    return retrofit.create(OcmApiService.class);
-  }
+    @Provides
+    @Singleton
+    @GsonConverterFactoryObject
+    GsonConverterFactory provideGsonConverterFactory() {
+        return GsonConverterFactory.create();
+    }
+
+    @Provides
+    @Singleton
+    @RetrofitOcm
+    Retrofit provideOcmRetrofitObject(@EndpointOcm String enpoint,
+                                      @GsonConverterFactoryObject GsonConverterFactory gsonConverterFactory,
+                                      @OkHttpClientOcm OkHttpClient okClient) {
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(enpoint)
+                .client(okClient)
+                .addConverterFactory(gsonConverterFactory)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+
+        return retrofit;
+    }
+
+    @Provides
+    @Singleton
+    @ErrorConverterOcm
+    ErrorConverter provideErrorConverter(
+            @RetrofitOcm Retrofit retrofit) {
+        return new DefaultErrorConverterImpl(retrofit, BaseApiResponse.class);
+    }
+
+    @Provides
+    @Singleton
+    @RetryOnErrorPolicyOcm
+    RetryOnErrorPolicy provideRetryOnErrorPolicy() {
+        return new DefaultRetryOnErrorPolicyImpl();
+    }
+
+    @Provides
+    @ApiServiceExecutorOcm
+    ApiServiceExecutor provideOcmApiServiceExecutor(
+            @ErrorConverterOcm ErrorConverter errorConverter,
+            @RetryOnErrorPolicyOcm RetryOnErrorPolicy retryOnErrorPolicy) {
+        return new RetrofitApiServiceExcecutor.Builder().errorConverter(errorConverter)
+                .retryOnErrorPolicy(retryOnErrorPolicy)
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    OcmApiService provideOrchextraApiService(@RetrofitOcm Retrofit retrofit) {
+        return retrofit.create(OcmApiService.class);
+    }
 }

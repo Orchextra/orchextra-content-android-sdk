@@ -1,8 +1,5 @@
 package com.gigigo.orchextra.core.data.rxException;
 
-/**
- * Created by alex on 17/11/2017.
- */
 
 public class ApiVersionNotFoundException extends Exception{
 

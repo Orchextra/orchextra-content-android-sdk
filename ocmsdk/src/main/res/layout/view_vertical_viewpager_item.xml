@@ -9,4 +9,12 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       />
+
+  <com.gigigo.orchextra.ocm.views.ScrollableContentArrow
+      android:id="@+id/scrollable_arrow"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom|end"
+      android:layout_margin="25dp"
+      />
 </FrameLayout>

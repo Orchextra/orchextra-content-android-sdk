@@ -12,20 +12,19 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
-import android.support.v4.os.ParcelableCompat;
-import android.support.v4.os.ParcelableCompatCreatorCallbacks;
-import android.support.v4.view.AccessibilityDelegateCompat;
-import android.support.v4.view.KeyEventCompat;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.VelocityTrackerCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewConfigurationCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.accessibility.AccessibilityEventCompat;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
-import android.support.v4.view.accessibility.AccessibilityRecordCompat;
-import android.support.v4.widget.EdgeEffectCompat;
+import androidx.core.os.ParcelableCompat;
+import androidx.core.os.ParcelableCompatCreatorCallbacks;
+import androidx.core.view.AccessibilityDelegateCompat;
+import androidx.core.view.MotionEventCompat;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.core.view.VelocityTrackerCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewConfigurationCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.core.view.accessibility.AccessibilityEventCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityRecordCompat;
+import androidx.core.widget.EdgeEffectCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.FocusFinder;
@@ -476,7 +475,7 @@ public class VerticalViewPager extends ViewGroup {
 
   /**
    * Set a listener that will be invoked whenever the page changes or is incrementally
-   * scrolled. See {@link android.support.v4.view.ViewPager.OnPageChangeListener}.
+   * scrolled. See {@link ViewPager.OnPageChangeListener}.
    *
    * @param listener Listener to set
    */
@@ -485,7 +484,7 @@ public class VerticalViewPager extends ViewGroup {
   }
 
   /**
-   * Set a {@link android.support.v4.view.ViewPager.PageTransformer} that will be called for each attached page whenever
+   * Set a {@link ViewPager.PageTransformer} that will be called for each attached page whenever
    * the scroll position is changed. This allows the application to apply custom property
    * transformations to each page, overriding the default sliding look and feel.
    * <p/>
@@ -2380,17 +2379,17 @@ public class VerticalViewPager extends ViewGroup {
         case KeyEvent.KEYCODE_DPAD_RIGHT:
           handled = arrowScroll(FOCUS_RIGHT);
           break;
-        case KeyEvent.KEYCODE_TAB:
+        /*case KeyEvent.KEYCODE_TAB:
           if (Build.VERSION.SDK_INT >= 11) {
             // The focus finder had a bug handling FOCUS_FORWARD and FOCUS_BACKWARD
             // before Android 3.0. Ignore the tab key on those devices.
-            if (KeyEventCompat.hasNoModifiers(event)) {
-              handled = arrowScroll(FOCUS_FORWARD);
-            } else if (KeyEventCompat.hasModifiers(event, KeyEvent.META_SHIFT_ON)) {
-              handled = arrowScroll(FOCUS_BACKWARD);
-            }
+            //if (KeyEventCompat.hasNoModifiers(event)) {
+            //  handled = arrowScroll(FOCUS_FORWARD);
+            //} else if (KeyEventCompat.hasModifiers(event, KeyEvent.META_SHIFT_ON)) {
+            //  handled = arrowScroll(FOCUS_BACKWARD);
+            //}
           }
-          break;
+          break;*/
       }
     }
     return handled;

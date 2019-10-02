@@ -2,8 +2,8 @@ package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.articletype.viewhol
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.snackbar.Snackbar;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
@@ -12,7 +12,6 @@ import android.text.style.URLSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleRichTextElement;
@@ -48,8 +47,18 @@ public class ArticleRichTextView extends BaseViewHolder<ArticleRichTextElement> 
         } else {
           View rootView = ((ViewGroup) ocmContextProvider.getCurrentActivity()
               .findViewById(android.R.id.content)).getChildAt(0);
-          Snackbar.make(rootView, R.string.oc_error_content_not_available_without_internet,
-              Toast.LENGTH_SHORT).show();
+
+          OCManager.getCustomTranslation(R.string.oc_error_content_not_available_without_internet,
+              text -> {
+
+                if (text != null) {
+                  Snackbar.make(rootView, text, Snackbar.LENGTH_SHORT).show();
+                } else {
+                  Snackbar.make(rootView, R.string.oc_error_content_not_available_without_internet,
+                      Snackbar.LENGTH_SHORT).show();
+                }
+                return null;
+              });
         }
       }
     };

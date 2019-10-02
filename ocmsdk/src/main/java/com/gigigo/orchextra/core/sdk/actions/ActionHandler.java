@@ -3,10 +3,10 @@ package com.gigigo.orchextra.core.sdk.actions;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.design.widget.Snackbar;
+import com.google.android.material.snackbar.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import com.gigigo.orchextra.core.data.api.utils.ConnectionUtilsImp;
 import com.gigigo.orchextra.core.domain.entities.elementcache.FederatedAuthorization;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetVideo;
@@ -29,6 +29,7 @@ import gigigo.com.vimeolibs.VimeoInfo;
 
 public class ActionHandler {
 
+  private static final String TAG = "ActionHandler";
   private final OxManager oxManager;
   private final OcmContextProvider ocmContextProvider;
   private final ConnectionUtils connectionUtils;
@@ -59,8 +60,8 @@ public class ActionHandler {
               VimeoExoPlayerActivity.openVideo(ocmContextProvider.getCurrentActivity(), vimeoInfo);
             }
 
-            @Override public void onError(Exception e) {
-              System.out.println("Error VimeoCallback" + e.toString());
+            @Override public void onError(Throwable e) {
+              Log.e(TAG, "getVideo()", e);
             }
           }), GetVideo.Params.Companion.forVideo(ocmContextProvider.getCurrentActivity(), false,
           videoId, connectionUtils.isConnectedWifi(), connectionUtils.isConnectedMobile()),
@@ -75,7 +76,7 @@ public class ActionHandler {
               videoObserver.onNext(vimeoInfo);
             }
 
-            @Override public void onError(Exception e) {
+            @Override public void onError(Throwable e) {
               videoObserver.onError(e);
             }
           }), GetVideo.Params.Companion.forVideo(ocmContextProvider.getCurrentActivity(), false,
@@ -142,8 +143,18 @@ public class ActionHandler {
     } else {
       View rootView = ((ViewGroup) ocmContextProvider.getCurrentActivity()
           .findViewById(android.R.id.content)).getChildAt(0);
-      Snackbar.make(rootView, R.string.oc_error_content_not_available_without_internet,
-          Toast.LENGTH_SHORT).show();
+
+      OCManager.getCustomTranslation(R.string.oc_error_content_not_available_without_internet,
+          text -> {
+
+            if (text != null) {
+              Snackbar.make(rootView, text, Snackbar.LENGTH_SHORT).show();
+            } else {
+              Snackbar.make(rootView, R.string.oc_error_content_not_available_without_internet,
+                  Snackbar.LENGTH_SHORT).show();
+            }
+            return null;
+          });
     }
   }
 }

@@ -2,7 +2,6 @@ package com.gigigo.orchextra.core.sdk.ui.views.edittexts;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v7ox.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import com.gigigo.orchextra.core.sdk.OcmStyleUi;
@@ -10,7 +9,7 @@ import com.gigigo.orchextra.core.sdk.di.injector.Injector;
 import com.gigigo.orchextra.core.sdk.ui.FontCache;
 import com.gigigo.orchextra.ocm.OCManager;
 
-public class OcmTitleEditText extends AppCompatEditText {
+public class OcmTitleEditText extends androidx.appcompat.widget.AppCompatEditText {
 
   private final Context context;
 

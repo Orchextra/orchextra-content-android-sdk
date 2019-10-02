@@ -1,5 +1,7 @@
 package com.gigigo.orchextra.ocm;
 
+import androidx.annotation.DrawableRes;
+
 public final class OcmStyleUiBuilder {
 
   private String titleFontPath;
@@ -9,6 +11,10 @@ public final class OcmStyleUiBuilder {
   private boolean titleToolbarEnabled = false;
   private boolean thumbnailEnabled = true;
   private boolean statusBarEnabled = true;
+  private boolean animationViewEnabled = true;
+
+  @DrawableRes private int detailBackground = -1;
+  @DrawableRes private int detailToolbarBackground = -1;
 
   /**
    * Path to the font to apply in titles of the app
@@ -34,8 +40,7 @@ public final class OcmStyleUiBuilder {
     return this;
   }
 
-  @Deprecated
-  public OcmStyleUiBuilder setLightFont(String lightFontPath) {
+  @Deprecated public OcmStyleUiBuilder setLightFont(String lightFontPath) {
     this.lightFontPath = lightFontPath;
     return this;
   }
@@ -55,6 +60,20 @@ public final class OcmStyleUiBuilder {
     return this;
   }
 
+  public OcmStyleUiBuilder disableAnimationView() {
+    this.animationViewEnabled = false;
+    return this;
+  }
+  public OcmStyleUiBuilder setDetailBackground(@DrawableRes int detailBackground) {
+    this.detailBackground = detailBackground;
+    return this;
+  }
+
+  public OcmStyleUiBuilder setDetaiToolbarlBackground(@DrawableRes int detailToolbarBackground) {
+    this.detailToolbarBackground = detailToolbarBackground;
+    return this;
+  }
+
   public String getTitleFontPath() {
     return titleFontPath;
   }
@@ -67,8 +86,7 @@ public final class OcmStyleUiBuilder {
     return mediumFontPath;
   }
 
-  @Deprecated
-  public String getLightFontPath() {
+  @Deprecated public String getLightFontPath() {
     return lightFontPath;
   }
 
@@ -82,5 +100,16 @@ public final class OcmStyleUiBuilder {
 
   public boolean isStatusBarEnabled() {
     return statusBarEnabled;
+  }
+  public boolean isAnimationViewEnabled() {
+    return animationViewEnabled;
+  }
+
+  public int getDetailBackground() {
+    return detailBackground;
+  }
+
+  public int getDetailToolbarBackground() {
+    return detailToolbarBackground;
   }
 }

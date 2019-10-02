@@ -1,9 +1,9 @@
 package com.gigigo.orchextra.core.sdk.ui.behaviours;
 
 import android.content.Context;
-import android.support.annotation.AnimRes;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
+import androidx.annotation.AnimRes;
+import com.google.android.material.appbar.AppBarLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;

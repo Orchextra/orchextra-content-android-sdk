@@ -6,7 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Handler;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -24,6 +24,7 @@ import com.gigigo.orchextra.ocm.customProperties.Disabled;
 import com.gigigo.orchextra.ocm.customProperties.ViewCustomizationType;
 import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocmsdk.R;
+import timber.log.Timber;
 
 public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
@@ -66,7 +67,11 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
 
     String textColor = articleElement.getRender().getTextColor();
     if (textColor != null) {
-      articleTextButton.setTextColor(Color.parseColor(textColor));
+      try {
+        articleTextButton.setTextColor(Color.parseColor(textColor));
+      } catch (Exception e) {
+        Timber.e(e, "bindTextButton(" + textColor + ")");
+      }
     }
 
     if (!isLoading && !isDisabled) {
@@ -78,7 +83,11 @@ public class ArticleButtonView extends BaseViewHolder<ArticleButtonElement> {
   }
 
   private void setBackground(String color) {
-    articleTextButton.setBackground(makeSelector(Color.parseColor(color)));
+    try {
+      articleTextButton.setBackground(makeSelector(Color.parseColor(color)));
+    } catch (Exception e) {
+      Timber.e(e, "setBackground(" + color + ")");
+    }
   }
 
   private StateListDrawable makeSelector(int color) {

@@ -5,13 +5,15 @@ public interface OcmWrapper {
   boolean isOcmInitialized();
 
   void startWithCredentials(String apiKey, String apiSecret, String businessUnit,
-      OnStartWithCredentialsCallback onStartWithCredentialsCallback);
+      String vimeoAccessToken, OnStartWithCredentialsCallback onStartWithCredentialsCallback);
 
   void setUserIsAuthorizated(boolean isUserLogged);
 
   void setContentLanguage(String languageCode);
 
   void scanCode(ScanCodeListener scanCodeListener);
+
+  void processDeepLink(String deepLink);
 
   interface OnStartWithCredentialsCallback {
     void onCredentialReceiver(String accessToken);

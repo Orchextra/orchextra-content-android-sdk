@@ -1,8 +1,8 @@
 package com.gigigo.orchextra.core.sdk.ui.behaviours;
 
 import android.content.Context;
-import android.support.annotation.AnimRes;
-import android.support.design.widget.CoordinatorLayout;
+import androidx.annotation.AnimRes;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;

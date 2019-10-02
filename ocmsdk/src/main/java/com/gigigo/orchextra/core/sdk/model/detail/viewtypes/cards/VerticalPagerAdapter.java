@@ -1,7 +1,7 @@
 package com.gigigo.orchextra.core.sdk.model.detail.viewtypes.cards;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import com.gigigo.orchextra.core.domain.entities.article.ArticleImageAndTextElement;

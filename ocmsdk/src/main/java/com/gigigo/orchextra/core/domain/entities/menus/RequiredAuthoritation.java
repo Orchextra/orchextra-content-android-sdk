@@ -1,6 +1,6 @@
 package com.gigigo.orchextra.core.domain.entities.menus;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public enum RequiredAuthoritation {
   ALL("all"), LOGGED("logged"), NONE("");

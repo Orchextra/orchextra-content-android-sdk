@@ -1,73 +1,70 @@
 package com.gigigo.orchextra.ocm.sample;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
-  private final FragmentManager fm;
   private List<UiMenu> menuContent;
-  private List<ScreenSlidePageFragment> fragments = new ArrayList<>();
-  private String emotion;
+  private List<ScreenSlidePageFragment> fragments;
 
   public ScreenSlidePagerAdapter(FragmentManager fm) {
     super(fm);
-    this.fm = fm;
     menuContent = new ArrayList<>();
+    fragments = new ArrayList<>();
   }
 
   @Override public Fragment getItem(int position) {
     UiMenu menu = menuContent.get(position);
     ScreenSlidePageFragment screenSlidePageFragment = ScreenSlidePageFragment.newInstance();
     screenSlidePageFragment.setItemMenu(menu);
-    screenSlidePageFragment.setEmotion(emotion);
     screenSlidePageFragment.setNumberOfImagesToDownload(getNumberOfImagesToDownload(position));
-
-    if (position < fragments.size()) {
-      fragments.set(position, screenSlidePageFragment);
-    } else {
-      fragments.add(screenSlidePageFragment);
-    }
+    fragments.add(screenSlidePageFragment);
 
     return screenSlidePageFragment;
   }
 
-  public void setEmotion(String emotion){
-    try {
-      if (!emotion.equals(this.emotion)) {
-        this.emotion = emotion;
-        notifyDataSetChanged();
-      }
-    } catch (Exception ignored) {
-    }
+  public void setDataItems(Collection<UiMenu> collection) {
+    menuContent.clear();
+    menuContent.addAll(collection);
+    notifyDataSetChanged();
+    updateFragmentData(collection);
   }
-  public void setDataItems(List<UiMenu> menuContent) {
-    if (fm != null && !fm.isDestroyed() && menuContent != null && menuContent.size() > 0) {
-      fragments = new ArrayList<>(menuContent.size());
-      this.menuContent = menuContent;
-      notifyDataSetChanged();
+
+  private void updateFragmentData(Collection<UiMenu> collection) {
+    for (UiMenu uiMenu : collection) {
+      if (uiMenu.hasNewVersion()) {
+        for (ScreenSlidePageFragment fragment : fragments) {
+          if (fragment.getSlug().equals(uiMenu.getSlug())) {
+            fragment.showNewVersionButton();
+            fragment.setItemMenu(uiMenu);
+          }
+        }
+      }
     }
   }
 
-  @Override public int getItemPosition(Object object) {
-    //if (object instanceof ScreenSlidePageFragment) {
-    //  ((ScreenSlidePageFragment) object).updateEmotion(emotion);
-    //}
+  @Override public int getItemPosition(@NonNull Object object) {
+
+    if (object instanceof ScreenSlidePageFragment) {
+      String slug = ((ScreenSlidePageFragment) object).getSlug();
+      for (int i = 0; i < menuContent.size(); i++) {
+        if (menuContent.get(i).getSlug().equals(slug)) {
+          return i;
+        }
+      }
+    }
     return POSITION_NONE;
   }
 
   @Override public int getCount() {
-    return (menuContent != null) ? menuContent.size() : 0;
-  }
-
-  public void reloadSections(int currentItem) {
-    if (currentItem < fragments.size()) {
-      fragments.get(currentItem).reloadSection(false);
-    }
+    return menuContent.size();
   }
 
   private int getNumberOfImagesToDownload(int position) {

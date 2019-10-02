@@ -1,11 +1,11 @@
 package com.gigigo.orchextra.core.controller;
 
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.gigigo.orchextra.core.data.rxException.ApiDetailNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiMenuNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSearchNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ApiSectionNotFoundException;
-import com.gigigo.orchextra.core.data.rxException.ApiVersionNotFoundException;
 import com.gigigo.orchextra.core.data.rxException.ClearCacheException;
 import com.gigigo.orchextra.core.data.rxException.NetworkConnectionException;
 import com.gigigo.orchextra.core.domain.OcmController;
@@ -15,41 +15,38 @@ import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.elements.ElementData;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
+import com.gigigo.orchextra.core.domain.entities.menus.MenuContent;
 import com.gigigo.orchextra.core.domain.entities.menus.MenuContentData;
-import com.gigigo.orchextra.core.domain.entities.version.VersionData;
 import com.gigigo.orchextra.core.domain.rxInteractor.ClearCache;
 import com.gigigo.orchextra.core.domain.rxInteractor.DefaultObserver;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetDetail;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetMenus;
 import com.gigigo.orchextra.core.domain.rxInteractor.GetSection;
-import com.gigigo.orchextra.core.domain.rxInteractor.GetVersion;
 import com.gigigo.orchextra.core.domain.rxInteractor.PriorityScheduler;
 import com.gigigo.orchextra.core.domain.rxInteractor.SearchElements;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 import com.gigigo.orchextra.core.sdk.utils.DateUtils;
-import com.gigigo.orchextra.core.sdk.utils.OcmPreferences;
-import com.gigigo.orchextra.ocm.OCManager;
+import com.gigigo.orchextra.core.sdk.utils.MenuListComparator;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import timber.log.Timber;
 
 public class OcmControllerImp implements OcmController {
 
-  private final GetVersion getVersion;
   private final GetMenus getMenus;
   private final GetSection getSection;
   private final GetDetail getDetail;
   private final SearchElements searchElements;
   private final ClearCache clearCache;
   private final ConnectionUtils connectionUtils;
-  private final OcmPreferences ocmPreferences;
+  private @Nullable String menuSlug;
 
-  public OcmControllerImp(GetVersion getVersion, GetMenus getMenus, GetSection getSection,
-      GetDetail getDetail, SearchElements searchElements, ClearCache clearCache,
-      ConnectionUtils connectionUtils, OcmPreferences ocmPreferences) {
+  public OcmControllerImp(GetMenus getMenus, GetSection getSection, GetDetail getDetail,
+      SearchElements searchElements, ClearCache clearCache, ConnectionUtils connectionUtils) {
 
-    this.getVersion = getVersion;
     this.getMenus = getMenus;
     this.getSection = getSection;
     this.getDetail = getDetail;
@@ -57,7 +54,6 @@ public class OcmControllerImp implements OcmController {
     this.clearCache = clearCache;
 
     this.connectionUtils = connectionUtils;
-    this.ocmPreferences = ocmPreferences;
   }
 
   /**
@@ -75,102 +71,32 @@ public class OcmControllerImp implements OcmController {
    * 4.2 - Return data
    * 4.3 - App is which control menu changes
    */
-  @Override public void getMenu(DataRequest menuRequest,
-      GetMenusControllerCallback getMenusCallback) {
-    switch (menuRequest) {
-      case ONLY_CACHE:
-        retrieveMenusOnlyFromCache(getMenusCallback);
-        break;
-      case FORCE_CLOUD:
-        checkVersionChangedAndRequestMenus(getMenusCallback);
-        break;
-      case FIRST_CACHE:
-        //retrieveMenus(false, getMenusCallback);
-        checkVersionChangedAndRequestMenus(getMenusCallback);
-        break;
-    }
+  @Override public void getMenu(GetMenusControllerCallback getMenusCallback,
+      @Nullable String menuSlug) {
+    this.menuSlug = menuSlug;
+    retrieveMenus(getMenusCallback, menuSlug);
   }
 
-  private void retrieveMenusOnlyFromCache(GetMenusControllerCallback getMenusCallback) {
+  @Override public void refreschMenu(GetMenusControllerCallback getMenusCallback) {
+    retrieveMenus(getMenusCallback, menuSlug);
+  }
+
+  private void retrieveMenus(MenuObserver observer) {
+    getMenus.execute(observer, new GetMenus.Params(), PriorityScheduler.Priority.HIGH);
+  }
+
+  private void retrieveMenus(GetMenusControllerCallback getMenusCallback,
+      @Nullable String menuSlug) {
     retrieveMenus(new MenuObserver(new GetMenusControllerCallback() {
       @Override public void onGetMenusLoaded(UiMenuData menus) {
-        if (!menus.isFromCloud()) {
-          getMenusCallback.onGetMenusLoaded(menus);
-        } else {
-          //It the first time that the app is executed
-          getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
-            @Override public void onGetVersionLoaded(VersionData versionData) {
-              ocmPreferences.saveVersion(versionData.getVersion());
-              getMenusCallback.onGetMenusLoaded(null);
-            }
-
-            @Override public void onGetVersionFails(Exception e) {
-              getMenusCallback.onGetMenusLoaded(null);
-            }
-          }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
-        }
+        getMenusCallback.onGetMenusLoaded(menus);
       }
 
       @Override public void onGetMenusFails(Exception e) {
-        getMenusCallback.onGetMenusLoaded(null);
+        Timber.e(e, "retrieveMenus()");
       }
-    }), GetMenus.Params.forForceReload(false));
+    }, menuSlug));
   }
-
-  private void retrieveMenus(MenuObserver observer, GetMenus.Params params) {
-    getMenus.execute(observer, params, PriorityScheduler.Priority.HIGH);
-  }
-
-  private void checkVersionChangedAndRequestMenus(GetMenusControllerCallback getMenusCallback) {
-    getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
-      @Override public void onGetVersionLoaded(VersionData versionData) {
-        boolean forceReload = hasToForceReloadBecauseVersionChanged(versionData);
-        retrieveMenus(forceReload, getMenusCallback);
-      }
-
-      @Override public void onGetVersionFails(Exception e) {
-        retrieveMenus(false, getMenusCallback);
-      }
-    }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
-  }
-
-  private void retrieveMenus(boolean forceReload, GetMenusControllerCallback getMenusCallback) {
-    retrieveMenus(new MenuObserver(new GetMenusControllerCallback() {
-      @Override public void onGetMenusLoaded(UiMenuData menus) {
-        if (menus.isFromCloud()) {
-          getMenusCallback.onGetMenusLoaded(menus);
-        } else {
-          getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
-            @Override public void onGetVersionLoaded(VersionData versionData) {
-              getMenusCallback.onGetMenusLoaded(menus);
-            }
-
-            @Override public void onGetVersionFails(Exception e) {
-              getMenusCallback.onGetMenusLoaded(menus);
-            }
-          }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
-        }
-      }
-
-      @Override public void onGetMenusFails(Exception e) {
-
-      }
-    }), GetMenus.Params.forForceReload(forceReload));
-  }
-
-  private boolean hasToForceReloadBecauseVersionChanged(VersionData versionData) {
-    boolean forceReload = false;
-
-    String version = ocmPreferences.getVersion();
-
-    if (versionData != null && (version == null || !version.equals(versionData.getVersion()))) {
-      forceReload = true;
-      ocmPreferences.saveVersion(versionData.getVersion());
-    }
-    return forceReload;
-  }
-
-  //end region
 
   /**
    * Retrieve section from cache
@@ -180,15 +106,14 @@ public class OcmControllerImp implements OcmController {
    * if are equals return
    * else retrieve version from cloud
    */
-  @Override public void getSection(DataRequest dataRequest, final String contentUrl, int imagesToDownload,
-      GetSectionControllerCallback getSectionControllerCallback) {
+  @Override public void getSection(DataRequest dataRequest, final String contentUrl,
+      int imagesToDownload, GetSectionControllerCallback getSectionControllerCallback) {
 
     if (contentUrl != null) {
       switch (dataRequest) {
-        case ONLY_CACHE:
-          retrieveSectionOnlyFromCache(contentUrl, imagesToDownload, getSectionControllerCallback);
-          break;
         case FORCE_CLOUD:
+          retrieveSection(true, contentUrl, imagesToDownload, getSectionControllerCallback);
+        case ONLY_CACHE:
         case FIRST_CACHE:
           retrieveSection(false, contentUrl, imagesToDownload, getSectionControllerCallback);
           break;
@@ -207,34 +132,23 @@ public class OcmControllerImp implements OcmController {
               }
               return;
             }
-
-            getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
-              @Override public void onGetVersionLoaded(VersionData versionData) {
-                checkVersionAndExpiredAtAndRetrieveSection(versionData, contentData, contentUrl,
-                    imagesToDownload, getSectionControllerCallback);
-              }
-
-              @Override public void onGetVersionFails(Exception e) {
-                if (getSectionControllerCallback != null) {
-                  getSectionControllerCallback.onGetSectionLoaded(contentData);
-                }
-              }
-            }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
+            checkVersionAndExpiredAtAndRetrieveSection(contentData, contentUrl, imagesToDownload,
+                getSectionControllerCallback);
           }
 
           @Override public void onGetSectionFails(Exception e) {
-
+            Timber.e(e, "retrieveSection()");
           }
-        }), GetSection.Params.forSection(false, contentUrl, imagesToDownload),
+        }), GetSection.Params.forSection(forceRelaod, contentUrl, imagesToDownload),
         PriorityScheduler.Priority.HIGH);
   }
 
-  private void checkVersionChangedAndRequestSection(String contentUrl, int imagesToDownload,
+  private void retrieveSectionOnlyFromCache(String contentUrl, int imagesToDownload,
       GetSectionControllerCallback getSectionControllerCallback) {
 
     getSection.execute(new SectionObserver(new GetSectionControllerCallback() {
           @Override public void onGetSectionLoaded(ContentData contentData) {
-            if (getSectionControllerCallback!= null) {
+            if (getSectionControllerCallback != null) {
               if (!contentData.isFromCloud()) {
                 getSectionControllerCallback.onGetSectionLoaded(contentData);
               } else {
@@ -244,42 +158,19 @@ public class OcmControllerImp implements OcmController {
           }
 
           @Override public void onGetSectionFails(Exception e) {
-            if (getSectionControllerCallback!= null) {
+            if (getSectionControllerCallback != null) {
               getSectionControllerCallback.onGetSectionFails(e);
             }
           }
-        }), GetSection.Params.forSection(true, contentUrl, imagesToDownload),
+        }), GetSection.Params.forSection(false, contentUrl, imagesToDownload),
         PriorityScheduler.Priority.HIGH);
   }
 
-  private void retrieveSectionOnlyFromCache(String contentUrl, int imagesToDownload,
-      GetSectionControllerCallback getSectionControllerCallback) {
-
-    getSection.execute(new SectionObserver(new GetSectionControllerCallback() {
-      @Override public void onGetSectionLoaded(ContentData contentData) {
-          if (getSectionControllerCallback!= null) {
-            if (!contentData.isFromCloud()) {
-              getSectionControllerCallback.onGetSectionLoaded(contentData);
-            } else {
-              getSectionControllerCallback.onGetSectionLoaded(null);
-            }
-          }
-      }
-
-      @Override public void onGetSectionFails(Exception e) {
-        if (getSectionControllerCallback!= null) {
-          getSectionControllerCallback.onGetSectionFails(e);
-        }
-      }
-    }), GetSection.Params.forSection(false, contentUrl, imagesToDownload),
-        PriorityScheduler.Priority.HIGH);
-  }
-
-  private void checkVersionAndExpiredAtAndRetrieveSection(VersionData versionData,
-      ContentData contentData, String contentUrl, int imagesToDownload,
+  private void checkVersionAndExpiredAtAndRetrieveSection(ContentData contentData,
+      String contentUrl, int imagesToDownload,
       GetSectionControllerCallback getSectionControllerCallback) {
     boolean requestFromCloud =
-        hasToForceReloadBecauseVersionChangedOrSectionHasExpired(versionData, contentData);
+        hasToForceReloadBecauseVersionChangedOrSectionHasExpired(contentData);
 
     if (requestFromCloud) {
       getSection.execute(new SectionObserver(new GetSectionControllerCallback() {
@@ -329,28 +220,8 @@ public class OcmControllerImp implements OcmController {
   }
 
   @Override public void refreshMenuData() {
-    getVersion.execute(new VersionObserver(new GetVersionControllerCallback() {
-      @Override public void onGetVersionLoaded(VersionData versionData) {
-        checkIfNeedsRefreshMenu(versionData);
-      }
 
-      @Override public void onGetVersionFails(Exception e) {
-      }
-    }), GetVersion.Params.forVersion(), PriorityScheduler.Priority.HIGH);
-  }
-
-  private void checkIfNeedsRefreshMenu(VersionData versionData) {
-    boolean forceReload = hasToForceReloadBecauseVersionChanged(versionData);
-    if (forceReload) {
-      retrieveMenus(true, new GetMenusControllerCallback() {
-        @Override public void onGetMenusLoaded(UiMenuData menus) {
-          OCManager.notifyOnMenuChanged(menus);
-        }
-
-        @Override public void onGetMenusFails(Exception e) {
-        }
-      });
-    }
+    //OCManager.notifyOnMenuChanged(menus);
   }
 
   @Override public void disposeUseCases() {
@@ -361,22 +232,16 @@ public class OcmControllerImp implements OcmController {
     clearCache.dispose();
   }
 
-  //end region
-
-  private boolean hasToForceReloadBecauseVersionChangedOrSectionHasExpired(VersionData versionData,
+  private boolean hasToForceReloadBecauseVersionChangedOrSectionHasExpired(
       ContentData contentData) {
-    return !versionData.getVersion().equals(contentData.getVersion())
-        || contentData.getExpiredAt() != null && DateUtils.isAfterCurrentDate(
+    return contentData.getExpiredAt() != null && DateUtils.isAfterCurrentDate(
         contentData.getExpiredAt());
   }
 
-  private UiMenuData transformMenu(MenuContentData menuContentData) {
-
-    final long time = System.currentTimeMillis();
-
+  private UiMenuData transformMenu(MenuContentData menuContentData, @Nullable String menuSlug) {
     UiMenuData uiMenuData = new UiMenuData();
 
-    List<UiMenu> menuList = new  ArrayList<>();
+    List<UiMenu> menuList = new ArrayList<>();
 
     if (menuContentData != null
         && menuContentData.getMenuContentList() != null
@@ -384,12 +249,20 @@ public class OcmControllerImp implements OcmController {
 
       uiMenuData.setFromCloud(menuContentData.isFromCloud());
 
-      for (Element element : menuContentData.getMenuContentList().get(0).getElements()) {
+      int itemPos = 0;
+
+      if (menuSlug != null && !menuSlug.isEmpty()) {
+        itemPos = getMenuPosition(menuSlug, menuContentData.getMenuContentList());
+      }
+
+      for (Element element : menuContentData.getMenuContentList().get(itemPos).getElements()) {
         UiMenu uiMenu = new UiMenu();
 
         uiMenu.setSlug(element.getSlug());
         uiMenu.setText(element.getSectionView().getText());
         uiMenu.setElementUrl(element.getElementUrl());
+        uiMenu.setHasNewVersion(element.getHasNewVersion());
+        uiMenu.setIndex(element.getIndex());
 
         if (menuContentData.getElementsCache() != null) {
           ElementCache elementCache =
@@ -407,23 +280,33 @@ public class OcmControllerImp implements OcmController {
       }
     }
 
+    Collections.sort(menuList, new MenuListComparator());
     uiMenuData.setUiMenuList(menuList);
-
-    Log.v("TT - UiMenuData", (System.currentTimeMillis() - time) / 1000 + "");
-
     return uiMenuData;
+  }
+
+  private int getMenuPosition(@NonNull String menuSlug,
+      @NonNull List<MenuContent> menuContentList) {
+
+    for (int i = 0; i < menuContentList.size(); i++) {
+      if (menuSlug.equals(menuContentList.get(i).getSlug())) {
+        return i;
+      }
+    }
+    return 0;
   }
 
   //performance https://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html
   //leak with this kind inner class
 
-
   //region observers
   private final class MenuObserver extends DefaultObserver<MenuContentData> {
     private final GetMenusControllerCallback getMenusCallback;
+    private final @Nullable String menuSlug;
 
-    public MenuObserver(GetMenusControllerCallback getMenusCallback) {
+    public MenuObserver(GetMenusControllerCallback getMenusCallback, @Nullable String menuSlug) {
       this.getMenusCallback = getMenusCallback;
+      this.menuSlug = menuSlug;
     }
 
     @Override public void onComplete() {
@@ -432,36 +315,15 @@ public class OcmControllerImp implements OcmController {
 
     @Override public void onError(Throwable e) {
       getMenusCallback.onGetMenusFails(new ApiMenuNotFoundException(e));
-      e.printStackTrace();
+      Timber.e(e, "onGetMenusFails");
     }
 
     @Override public void onNext(MenuContentData menuContentData) {
-      retrieveMenu(menuContentData);
+      retrieveMenu(menuContentData, menuSlug);
     }
 
-    private void retrieveMenu(MenuContentData menuContentData) {
-      getMenusCallback.onGetMenusLoaded(transformMenu(menuContentData));
-    }
-  }
-
-  private final class VersionObserver extends DefaultObserver<VersionData> {
-    private final GetVersionControllerCallback getVersionControllerCallback;
-
-    public VersionObserver(GetVersionControllerCallback getVersionControllerCallback) {
-      this.getVersionControllerCallback = getVersionControllerCallback;
-    }
-
-    @Override public void onError(Throwable e) {
-      if (getVersionControllerCallback != null) {
-        getVersionControllerCallback.onGetVersionFails(new ApiVersionNotFoundException(e));
-      }
-      e.printStackTrace();
-    }
-
-    @Override public void onNext(VersionData versionData) {
-      if (getVersionControllerCallback != null) {
-        getVersionControllerCallback.onGetVersionLoaded(versionData);
-      }
+    private void retrieveMenu(MenuContentData menuContentData, @Nullable String menuSlug) {
+      getMenusCallback.onGetMenusLoaded(transformMenu(menuContentData, menuSlug));
     }
   }
 
@@ -489,8 +351,6 @@ public class OcmControllerImp implements OcmController {
         getSectionControllerCallback.onGetSectionLoaded(contentData);
       }
     }
-
-
   }
 
   private final class DetailObserver extends DefaultObserver<ElementData> {
@@ -502,8 +362,8 @@ public class OcmControllerImp implements OcmController {
 
     @Override public void onNext(ElementData elementData) {
       if (getDetailControllerCallback != null) {
-        if (!connectionUtils.hasConnection() && (elementData.getElement().getType()
-            == ElementCacheType.WEBVIEW
+        if (!connectionUtils.hasConnection() && (elementData.getElement() == null
+            || elementData.getElement().getType() == ElementCacheType.WEBVIEW
             || elementData.getElement().getType() == ElementCacheType.VIDEO)) {
           getDetailControllerCallback.onGetDetailNoAvailable(new NetworkConnectionException());
         } else {

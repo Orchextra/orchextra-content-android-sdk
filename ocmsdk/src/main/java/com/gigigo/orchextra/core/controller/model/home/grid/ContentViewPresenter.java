@@ -1,7 +1,6 @@
 package com.gigigo.orchextra.core.controller.model.home.grid;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import com.gigigo.multiplegridrecyclerview.entities.Cell;
@@ -9,50 +8,41 @@ import com.gigigo.multiplegridrecyclerview.entities.CellBlankElement;
 import com.gigigo.orchextra.core.controller.dto.CellCarouselContentData;
 import com.gigigo.orchextra.core.controller.dto.CellGridContentData;
 import com.gigigo.orchextra.core.controller.model.base.Presenter;
-import com.gigigo.orchextra.core.controller.model.home.UpdateAtType;
+import com.gigigo.orchextra.core.data.ElementComparator;
 import com.gigigo.orchextra.core.domain.OcmController;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentData;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItem;
 import com.gigigo.orchextra.core.domain.entities.contentdata.ContentItemPattern;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
+import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elements.Element;
 import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
-import com.gigigo.orchextra.core.domain.entities.ocm.Authoritation;
 import com.gigigo.orchextra.core.sdk.OcmSchemeHandler;
 import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocm.OcmEvent;
-import com.gigigo.orchextra.ocm.customProperties.ViewType;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import timber.log.Timber;
 
 public class ContentViewPresenter extends Presenter<ContentView> {
 
-  private final Authoritation authoritation;
   private final OcmController ocmController;
-  private static final String TAG = "ContentViewPresenter";
 
   private UiMenu uiMenu;
   private int imagesToDownload = 21;
   private String filter;
   private List<Cell> listedCellContentDataList;
-
-  private boolean hasToCheckNewContent = false;
   private int padding;
 
-  public ContentViewPresenter(OcmController ocmController, Authoritation authoritation) {
-
+  public ContentViewPresenter(OcmController ocmController) {
     this.ocmController = ocmController;
-    this.authoritation = authoritation;
   }
 
   @Override public void onViewAttached() {
     getView().initUi();
-  }
-
-  public void setHasToCheckNewContent(boolean hasToCheckNewContent) {
-    this.hasToCheckNewContent = hasToCheckNewContent;
   }
 
   public void loadSection() {
@@ -74,7 +64,12 @@ public class ContentViewPresenter extends Presenter<ContentView> {
     this.uiMenu = uiMenu;
     this.filter = filter;
 
-    String contentUrl = uiMenu.getElementCache().getRender().getContentUrl();
+    ElementCacheRender render = uiMenu.getElementCache().getRender();
+    if (render == null) {
+      Timber.e("Render is null");
+      return;
+    }
+    String contentUrl = render.getContentUrl();
 
     /**
      * Init app
@@ -86,7 +81,37 @@ public class ContentViewPresenter extends Presenter<ContentView> {
      * force = true
      * Get section from cloud, if data changes refresh content
      */
-    if (!forceReload) {
+
+    if (forceReload) {
+      ocmController.getSection(DataRequest.FORCE_CLOUD, contentUrl, imagesToDownload,
+          new OcmController.GetSectionControllerCallback() {
+
+            @Override public void onGetSectionLoaded(ContentData contentData) {
+              if (contentData.isFromCloud()) {
+
+                /** This condition is realized because when the application is dead,
+                 *  Orchextra is dead too and when the data is sent without forcing
+                 *  it gives an exception because Orchextra is not initialized, so
+                 *  when tries to check menus there is an inconsistency.
+                 *
+                 *  Always show the button of new content,
+                 *  and only force data when the user does a pull to refresh
+                 */
+
+                if (OCManager.hasOnChangedMenuCallback()) {
+                  ocmController.refreshMenuData();
+                }
+                renderContentItem(contentData.getContent());
+              } else {
+                Timber.e("getSection not isFromCloud");
+              }
+            }
+
+            @Override public void onGetSectionFails(Exception e) {
+              Timber.e(e, "getSection(DataRequest.FIRST_CACHE)");
+            }
+          });
+    } else {
       ocmController.getSection(DataRequest.ONLY_CACHE, contentUrl, imagesToDownload,
           new OcmController.GetSectionControllerCallback() {
 
@@ -104,22 +129,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
                       }
                     });
               } else {
-
                 renderContentItem(cachedContentData.getContent());
-
-                ocmController.getSection(DataRequest.FIRST_CACHE, contentUrl, imagesToDownload,
-                    new OcmController.GetSectionControllerCallback() {
-
-                      @Override public void onGetSectionLoaded(ContentData newContentData) {
-                        if (newContentData.isFromCloud()) {
-                          checkNewContent(cachedContentData, newContentData);
-                        }
-                      }
-
-                      @Override public void onGetSectionFails(Exception e) {
-
-                      }
-                    });
               }
 
               OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
@@ -130,95 +140,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
               OCManager.notifyOnLoadDataContentSectionFinished(uiMenu);
             }
           });
-    } else {
-      ocmController.getSection(DataRequest.FIRST_CACHE, contentUrl, imagesToDownload,
-          new OcmController.GetSectionControllerCallback() {
-
-            @Override public void onGetSectionLoaded(ContentData contentData) {
-              if (contentData.isFromCloud()) {
-
-                /** This condition is realized because when the application is dead,
-                 *  Orchextra is dead too and when the data is sent without forcing
-                 *  it gives an exception because Orchextra is not initialized, so
-                 *  when tries to check menus there is an inconsistency.
-                 *
-                 *  Always show the button of new content,
-                 *  and only force data when the user does a pull to refresh
-                 */
-                if (reloadFromPullToRefresh) {
-                  if (OCManager.hasOnChangedMenuCallback()) {
-                    ocmController.refreshMenuData();
-                  }
-                  renderContentItem(contentData.getContent());
-                } else {
-                  if (getView() != null) {
-                    getView().showNewExistingContent();
-                  }
-                }
-              }
-            }
-
-            @Override public void onGetSectionFails(Exception e) {
-
-            }
-          });
     }
-  }
-
-  private void checkNewContent(ContentData cachedContentData, ContentData newContentData) {
-    if (cachedContentData == null
-        || newContentData == null
-        || cachedContentData.getContent() == null
-        || newContentData.getContent() == null
-        || cachedContentData.getContent().getElements() == null
-        || newContentData.getContent().getElements() == null
-        || getView() == null) {
-      return;
-    }
-
-    UpdateAtType updateAtType = checkDifferents(cachedContentData, newContentData);
-    switch (updateAtType) {
-      case NEW_CONTENT:
-        getView().showNewExistingContent();
-        hasToCheckNewContent = false;
-        break;
-      case REFRESH:
-        getView().showNewExistingContent();
-        hasToCheckNewContent = false;
-        break;
-    }
-
-    getView().showProgressView(false);
-  }
-
-  private UpdateAtType checkDifferents(ContentData cachedContentData, ContentData newContentData) {
-    List<Element> cachedElements = cachedContentData.getContent().getElements();
-    List<Element> newElements = newContentData.getContent().getElements();
-
-    if (cachedElements.size() > newElements.size()) {
-      return UpdateAtType.REFRESH;
-    } else if (cachedElements.size() < newElements.size()) {
-      return UpdateAtType.NEW_CONTENT;
-    } else {
-      for (int i = 0; i < cachedElements.size(); i++) {
-        if (!cachedElements.get(i).getSlug().equalsIgnoreCase(newElements.get(i).getSlug())) {
-          return UpdateAtType.REFRESH;
-        } else {
-          ElementCache cachedElementCache =
-              cachedContentData.getElementsCache().get(cachedElements.get(i).getElementUrl());
-
-          ElementCache newElementCache =
-              newContentData.getElementsCache().get(newElements.get(i).getElementUrl());
-
-          if (cachedElementCache != null
-              && newElementCache != null
-              && cachedElementCache.getUpdateAt() != newElementCache.getUpdateAt()) {
-            return UpdateAtType.REFRESH;
-          }
-        }
-      }
-    }
-    return UpdateAtType.NONE;
   }
 
   private void renderContentItem(ContentItem contentItem) {
@@ -227,6 +149,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
           && contentItem.getLayout() != null
           && contentItem.getElements() != null) {
 
+        Collections.sort(contentItem.getElements(), new ElementComparator());
         listedCellContentDataList = checkTypeAndCalculateCelListedContent(contentItem);
 
         if (listedCellContentDataList.size() != 0) {
@@ -262,7 +185,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
       case FULLSCREEN:
         return calculateFullScreenCells(contentItem);
       default:
-        Log.wtf(TAG, "Unknow type: " + contentItem.getLayout().getType());
+        Timber.wtf("Unknow type: %s", contentItem.getLayout().getType());
         return calculateGridCells(contentItem);
     }
   }
@@ -370,17 +293,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
         return;
       }
 
-      if (element.getCustomProperties() != null && element.getCustomProperties() != null) {
-        OCManager.notifyCustomBehaviourContinue(element.getCustomProperties(),
-            ViewType.GRID_CONTENT, canContinue -> {
-              if (canContinue) {
-                itemClickedContinue(element, view);
-              }
-              return null;
-            });
-      } else {
-        itemClickedContinue(element, view);
-      }
+      itemClickedContinue(element, view);
     }
   }
 
@@ -396,7 +309,7 @@ public class ContentViewPresenter extends Presenter<ContentView> {
           @Override public void onProcessElementSuccess(ElementCache elementCache) {
             OCManager.notifyEvent(OcmEvent.CELL_CLICKED, elementCache);
             OCManager.addArticleToReadedArticles(element.getSlug());
-            System.out.println("CELL_CLICKED: " + element.getSlug());
+            Timber.d("CELL_CLICKED: %s", element.getSlug());
           }
 
           @Override public void onProcessElementFail(Exception exception) {

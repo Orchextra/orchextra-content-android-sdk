@@ -12,10 +12,6 @@
       android:allowBackup="false"
       android:supportsRtl="true"
       tools:replace="android:allowBackup">
-    <!--<meta-data-->
-    <!--android:name="com.gigigo.orchextra.core.data.rxCache.imageCache.loader.MyGlideModule"-->
-    <!--android:value="GlideModule"-->
-    <!--tools:node="remove" />-->
 
     <activity
         android:name="com.gigigo.orchextra.core.sdk.model.detail.DetailActivity"

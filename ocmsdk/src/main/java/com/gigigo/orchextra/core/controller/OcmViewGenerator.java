@@ -1,12 +1,12 @@
 package com.gigigo.orchextra.core.controller;
 
+import androidx.annotation.Nullable;
 import com.gigigo.orchextra.core.controller.views.UiBaseContentData;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCache;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCachePreview;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheRender;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheShare;
 import com.gigigo.orchextra.core.domain.entities.elementcache.ElementCacheType;
-import com.gigigo.orchextra.core.domain.entities.menus.DataRequest;
 import com.gigigo.orchextra.ocm.dto.UiMenu;
 import com.gigigo.orchextra.ocm.dto.UiMenuData;
 import com.gigigo.orchextra.ocm.views.UiDetailBaseContentData;
@@ -33,7 +33,8 @@ public interface OcmViewGenerator {
 
   UiBaseContentData generateCardPreview(ElementCachePreview preview, ElementCacheShare share);
 
-  void getMenu(DataRequest menuRequest, GetMenusViewGeneratorCallback getMenusViewGeneratorCallback);
+  void getMenu(GetMenusViewGeneratorCallback getMenusViewGeneratorCallback,
+      @Nullable String menuSlug);
 
   // Callbacks
   interface GetMenusViewGeneratorCallback {

@@ -1,241 +1,267 @@
 apply plugin: 'com.android.library'
-apply from: 'jacoco.gradle'
-apply from: 'sonarqube.gradle'
-
-apply from: 'common_methods.gradle'
-apply from: 'dependencies.gradle'
 apply plugin: 'me.tatarka.retrolambda'
-
 apply plugin: 'com.github.dcendents.android-maven'
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
-group = 'com.github.Orchextra'
-version = 'ocmVersion'
-
-
+//apply from: '../jacoco.gradle'
 apply from: 'variants.gradle'
+
+group = rootProject.ext.group
+version = rootProject.ext.version
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'com.gigigo.ocm:content'
+
+    publishedGroupId = 'com.gigigo.ocm'
+    libraryName = 'Orchextra Content Manager'
+    artifact = 'ocmsdk'
+
+    libraryDescription = 'Orchextra Content Manager'
+
+    siteUrl = 'https://github.com/Orchextra/orchextra-content-android-sdk'
+    gitUrl = 'https://github.com/Orchextra/orchextra-content-android-sdk.git'
+
+    libraryVersion = rootProject.ext.version
+    buildType = "release"
+
+    developerId = 'gigigo-desarrollo'
+    developerName = 'Android Gigigo'
+    developerEmail = 'gigigo.desarrollo@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
 
 def CONCURRENT_INTERACTORS = "CONCURRENT_INTERACTORS"
 def RETROFIT_LOG = "RETROFIT_LOG"
-
 def API_URL = "API_URL"
 def OCM_SDK_VERSION = "OCM_SDK_VERSION"
-
 def YOUTUBE_DEVELOPER_KEY = "YOUTUBE_DEVELOPER_KEY"
-
 def VIMEO_ACCESS_TOKEN = "VIMEO_ACCESS_TOKEN"
+
 android {
-  compileSdkVersion project.androidCompileSdkVersion
-  buildToolsVersion project.androidBuildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
 
-  defaultConfig {
-    minSdkVersion project.androidMinSdkVersion
-    targetSdkVersion project.androidTargetSdkVersion
-    versionCode 1
-    versionName "1.0"
-    //asv mandatory for realm(not exits realm.so version for mips64, armeabi
-    ndk {
-      abiFilters "armeabi-v7a", "x86_64", "x86", "mips", "arm64-v8a"
-    }
-    configurations {
-      compile.exclude group: "org.jetbrains", module: "annotations"
-    }
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-  }
-  buildTypes {
-    staging {
-      debuggable true
-      //      testCoverageEnabled = true
-    }
-    debug {
-      debuggable true
-      //      testCoverageEnabled = true
-    }
-    release {
-      debuggable true
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-      signingConfig null
-    }
-  }
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode generateAutoVersionCode()
+        versionName version
 
-  project.android.libraryVariants.all { variant ->
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-    variant.productFlavors.each { flavor ->
-
-      setVariantBuildConfigField(variant, project.apiOcm, API_URL, STRING)
-      setVariantBuildConfigField(variant, project.ocmSdkVersion, OCM_SDK_VERSION, STRING)
-      setVariantBuildConfigField(variant, project.concurrentInteractors,
-          CONCURRENT_INTERACTORS, INT)
-      setVariantBuildConfigField(variant, project.retrofitLog, RETROFIT_LOG, BOOLEAN)
-      setVariantBuildConfigField(variant, project.youtubeDeveloperKey,
-          YOUTUBE_DEVELOPER_KEY, STRING)
-      setVariantBuildConfigField(variant, project.vimeoAccessToken,
-          VIMEO_ACCESS_TOKEN, STRING)
-      println("flavor: " + flavor)
-      println("--**********************************************************--")
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
-    /* def bundleTask = tasks["bundle${name.capitalize()}"]
-     artifacts {
-       archives(bundleTask.archivePath) {
-         classifier null
-         builtBy bundleTask
-       }
-     }*/
-  }
-
-  lintOptions {
-    quiet true
-    abortOnError false
-    ignoreWarnings true
-  }
-
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8 //this is 4 rx, no problem with ox 1_7
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-
-  testOptions {
-    unitTests.returnDefaultValues = true
-  }
-
-
-  flavorDimensions "ocm"
-
-  productFlavors {
-    ocm {
-      dimension "ocm"
+    packagingOptions {
+        exclude 'lib/mips/*'
+        exclude 'lib/mips64/*'
+        exclude 'lib/x86/*'
+        exclude 'lib/x86_64/*'
+        exclude 'lib/armeabi/*'
+        exclude 'lib/arm64-v8a/*'
     }
-  }
 
+    buildTypes {
+        debug {
+            debuggable true
 
-  //true to publish all flavour artifacts
-  // publishNonDefault true
-  defaultPublishConfig "ocmRelease"
-  //defaultPublishConfig "ocmDebug"
-  //defaultPublishConfig {"ocmRelease","ocmDebug","ocmStaging"}
+            version = "${rootProject.ext.version}-D"
+            project.ext.libraryVersion = "${rootProject.ext.version}-D"
+            project.ext.buildType = "debug"
+        }
+        quality {
+            debuggable true
 
-  // publishNonDefault is deprecated and has no effect anymore. All variants are now published.
-  // true to publish all flavour artifacts
-  //publishNonDefault true
-  //defaultPublishConfig "ocmStaging"
-  //  defaultPublishConfig "ocmDebug"
-  // default build flavour
-  //defaultPublishConfig "ocmDebug"
+            version = "${rootProject.ext.version}-Q"
+            project.ext.libraryVersion = "${rootProject.ext.version}-Q"
+            project.ext.buildType = "quality"
+        }
+        release {
+            debuggable false
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+
+            /**
+             * This is set when you run the bintray plugin task deployDebugLib, deployQualityLib
+             * and deployLib. This matters in ../gradle/pom.gradle to generate the proper pom.xml
+             * with the dependencies because debugApi, qualityApi and releaseApi are not working
+             * as expected. Those dependencies are not being added at all in the pom.xml.
+             *
+             * If you run the task from terminal or Android Studio, ext.buildType will be always
+             * release, it will change when you run debugApi, qualityApi or releaseApi.
+             *
+             * Check the pom.gradle.
+             */
+            if (project.hasProperty('debug')) {
+                version = "${rootProject.ext.version}-D"
+                project.ext.libraryVersion = "${rootProject.ext.version}-D"
+                project.ext.buildType = "debug"
+
+            } else if (project.hasProperty('quality')) {
+                version = "${rootProject.ext.version}-Q"
+                project.ext.libraryVersion = "${rootProject.ext.version}-Q"
+                project.ext.buildType = "quality"
+
+            } else {
+                version = "${rootProject.ext.version}"
+                project.ext.libraryVersion = "${rootProject.ext.version}"
+                project.ext.buildType = "release"
+            }
+        }
+    }
+
+    project.android.libraryVariants.all { variant ->
+        variant.productFlavors.each { flavor ->
+            setVariantBuildConfigField(variant, apiOcm, API_URL, STRING)
+            setVariantBuildConfigField(variant, ocmSdkVersion, OCM_SDK_VERSION, STRING)
+            setVariantBuildConfigField(variant, concurrentInteractors, CONCURRENT_INTERACTORS, INT)
+            setVariantBuildConfigField(variant, retrofitLog, RETROFIT_LOG, BOOLEAN)
+            setVariantBuildConfigField(variant, youtubeDeveloperKey, YOUTUBE_DEVELOPER_KEY, STRING)
+            setVariantBuildConfigField(variant, vimeoAccessToken, VIMEO_ACCESS_TOKEN, STRING)
+            println("flavor: " + flavor.name)
+            println("variant: " + variant.name)
+            println("--**********************************************************--")
+        }
+    }
+
+    lintOptions {
+        quiet true
+        abortOnError false
+        ignoreWarnings true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8 //this is 4 rx, no problem with ox 1_7
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+    flavorDimensions "ocm"
+    productFlavors {
+        ocm {
+            dimension "ocm"
+        }
+    }
+
+    /* DO NOT REMOVE OR CHANGE
+    * Check the note on release buildType.
+    * */
+    defaultPublishConfig "ocmRelease"
 }
-
-jacocoAndroidUnitTestReport {
-  excludes += ['**/BuildConfig*.*']
-}
-
-//configurations {
-//  ocmReleaseImplementation
-//  ocmStagingImplementation
-//  ocmDebugImplementation
-//}
-
-if (android.productFlavors.size() > 0) {
-  android.libraryVariants.all { variant ->
-    // Publish a main artifact, otherwise the maven pom is not generated
-    //if( variant.name == android.defaultPublishConfig ) {
-    def bundleTask = tasks["bundle${name.capitalize()}"]
-    artifacts {
-      println('BUNDLE!' + bundleTask.archivePath)
-      println('classifier!' + variant.name)
-      println('builtBy!' + bundleTask.name)
-      archives(bundleTask.archivePath) {
-        classifier variant.name
-        builtBy bundleTask
-      }
-    }
-  }
-  //}
-}
-//variant.name
-
-task finalize {
-  doFirst {
-    tasks.assembleOcmDebug.execute()
-    tasks.assembleOcmRelease.execute()
-    tasks.assembleOcmStaging.execute()
-  }
-
-  println('finally!')
-}
-finalize.dependsOn(ocmsdk: install)
-//install.finalizedBy(finalize)
-install.dependsOn(ocmsdk: build)
-
-
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar']) //youtube
 
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    //google Support/CustomTabs/playServices
+    implementation project.libraries.androidSupportDesign
+    implementation project.libraries.androidCustomtabs
 
-  //TEST
-  testImplementation project.testLibraries.junit
-  testImplementation project.testLibraries.mockito
+    implementation project.libraries.playServicesBase
+    implementation project.libraries.playServicesLocation
+    api project.libraries.playServicesGcm
 
-  implementation fileTree(dir: 'libs', include: ['*.jar']) //youtube
+    //gigigo Lib
+    implementation project.libraries.ggglib
+    implementation project.libraries.gggJavaLib
 
-  //google Support/CustomTabs/playServices
-  api project.libraries.androidSupportDesign
-  api project.libraries.androidCustomtabs
+    //Dagger
+    kapt project.libraries.daggerCompiler
+    kapt project.libraries.daggerProcessor
+    implementation project.libraries.dagger
 
-  api project.libraries.playServicesBase
-  api project.libraries.playServicesLocation
-  api project.libraries.playServicesGcm
+    //Image Loader Glide/Blur
+    implementation project.libraries.glide
+    implementation project.libraries.glideTransformations
 
-  //gigigo Lib
-  api project.libraries.ggglib
-  api project.libraries.gggJavaLib
+    /**
+     * Orchextra api libraries
+     *
+     * They will be visible to other packages.
+     * Check the note on release buildType.
+     */
+    debugApi project.libraries.oxCoreDebug
+    qualityApi project.libraries.oxCoreQuality
+    releaseApi project.libraries.oxCoreRelease
 
-  //Dagger
-  implementation project.libraries.dagger
-  annotationProcessor project.libraries.daggerCompiler
+    debugApi project.libraries.oxGeofenceDebug
+    qualityApi project.libraries.oxGeofenceQuality
+    releaseApi project.libraries.oxGeofenceRelease
 
-  //Image Loader Glide/Blur
-  api project.libraries.imageloaderGlideBlur
+    debugApi project.libraries.oxIndoorpositioningDebug
+    qualityApi project.libraries.oxIndoorpositioningQuality
+    releaseApi project.libraries.oxIndoorpositioningRelease
 
-  // ORCHEXTRA
-  stagingImplementation project.libraries.oxCoreStaging
-  debugImplementation project.libraries.oxCoreDebug
-  releaseImplementation project.libraries.oxCoreRelease
+    debugApi project.libraries.oxScannerDebug
+    qualityApi project.libraries.oxScannerQuality
+    releaseApi project.libraries.oxScannerRelease
 
-  stagingImplementation project.libraries.oxGeofenceStaging
-  debugImplementation project.libraries.oxGeofenceDebug
-  releaseImplementation project.libraries.oxGeofenceRelease
+    // Customs Views
+    implementation project.libraries.doubleViewPager
+    implementation project.libraries.autofitTextView
+    implementation project.libraries.multipleGridRecyclerView
+    implementation project.libraries.baserecycleradapter
 
-  stagingImplementation project.libraries.oxIndoorpositioningStaging
-  debugImplementation project.libraries.oxIndoorpositioningDebug
-  releaseImplementation project.libraries.oxIndoorpositioningRelease
+    implementation project.libraries.rxAndroid
+    implementation project.libraries.rxJava
+    implementation project.libraries.rxRetrofit
+    implementation project.libraries.arrow
 
-  stagingImplementation project.libraries.oxScannerStaging
-  debugImplementation project.libraries.oxScannerDebug
-  releaseImplementation project.libraries.oxScannerRelease
+    implementation project.libraries.kache
+    implementation project.libraries.timber
 
-  // Customs Views
-  api project.libraries.doubleViewPager
-  api project.libraries.autofitTextView
-  api project.libraries.multipleGridRecyclerView
+    implementation project.libraries.kotlinStdLib
+    implementation project.libraries.coroutinesCore
+    implementation project.libraries.coroutinesAndroid
 
-  api project.libraries.rxAndroid
-  api project.libraries.rxJava
-  api project.libraries.rxRetrofit
-  api project.libraries.arrow
+    kapt project.libraries.archLifecycleCompiler
+    kapt project.libraries.archPersistenceCompiler
+    implementation project.libraries.archLifecycleExtensions
+    implementation project.libraries.archPersistenceRuntime
+    implementation project.libraries.archPersistenceRxJava2
 
-  api project.libraries.kache
+    implementation project.libraries.gpuImage //4 read articles
+    implementation project.libraries.vimeoNetworking
+    implementation project.libraries.retrofit
+    implementation project.libraries.okhttp3
+    implementation project.libraries.loggingInterceptor
+    implementation project.libraries.exoplayer
+    implementation project.libraries.zbar
 
+    // Modules
+    implementation project.modules.vimeo
 
-  api project.libraries.gpuImage //4 readarticles
-
-  api project.modules.vimeo
-
-  //TEST
-  testImplementation project.testLibraries.junit
-  testImplementation project.testLibraries.assertj
-  testImplementation project.testLibraries.mockito
+    //TEST
+    testImplementation project.libraries.archPersistenceTesting
+    testImplementation project.testLibraries.junit
+    testImplementation project.testLibraries.assertj
+    testImplementation project.testLibraries.mockito
 }
+
+if (project.hasProperty('kapt')) {
+    // Reference for 'kapt' DSL: https://kotlinlang.org/docs/reference/kapt.html#java-compiler-options
+    // kotlin kapt bug in v1.3.50 https://youtrack.jetbrains.com/issue/KT-32804
+    kapt {
+        // we expect this closure to run over a org.jetbrains.kotlin.gradle.plugin.KaptExtension
+        javacOptions {
+            option("-source", "8")
+            option("-target", "8")
+        }
+    }
+}
+
+apply from: '../gradle/pom.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+

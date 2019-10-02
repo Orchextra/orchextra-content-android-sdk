@@ -16,9 +16,8 @@ enum class ArticleTypeSection constructor(val typeSection: String) : Serializabl
   companion object {
 
     fun convertStringToEnum(type: String?): ArticleTypeSection {
-      val values = ArticleTypeSection.values()
-      for (value in values) {
-        if (value.typeSection == type) {
+      for (value in ArticleTypeSection.values()) {
+        if (value.typeSection.equals(type, true)) {
           return value
         }
       }

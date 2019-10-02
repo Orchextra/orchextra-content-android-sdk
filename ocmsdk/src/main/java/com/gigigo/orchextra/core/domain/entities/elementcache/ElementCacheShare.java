@@ -2,9 +2,6 @@ package com.gigigo.orchextra.core.domain.entities.elementcache;
 
 import java.io.Serializable;
 
-/**
- * Created by rui.alonso on 5/12/16.
- */
 public class ElementCacheShare implements Serializable {
   private String url;
   private String text;

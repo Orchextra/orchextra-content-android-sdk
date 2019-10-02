@@ -1,7 +1,7 @@
 package com.gigigo.orchextra.core.controller.model.searcher;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,13 +21,13 @@ import com.gigigo.orchextra.ocm.OCManager;
 import com.gigigo.orchextra.ocmsdk.R;
 import java.util.ArrayList;
 import java.util.List;
+import timber.log.Timber;
 
 public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> {
 
   private final Authoritation authoritation;
   private final OcmController ocmController;
 
-  private String textToSearch;
   private List<Cell> cellGridContentDataList;
 
   public SearcherLayoutPresenter(OcmController ocmController, Authoritation authoritation) {
@@ -40,13 +40,8 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
     getView().initUi();
   }
 
-  public void doSearch() {
-    doSearch(textToSearch);
-  }
-
   public void doSearch(String textToSearch) {
-    this.textToSearch = textToSearch;
-
+    Timber.d("doSearch( %s )", textToSearch);
     if (getView() != null) {
       if (TextUtils.isEmpty(textToSearch)) {
         getView().showEmptyView(false);
@@ -93,9 +88,11 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
         if (cellGridContentDataList != null && cellGridContentDataList.size() > 0) {
           getView().setData(cellGridContentDataList);
         } else {
+          getView().setData(new ArrayList<>());
           showEmptyView();
         }
       } else {
+        getView().setData(new ArrayList<>());
         showEmptyView();
       }
     }
@@ -151,7 +148,7 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
     ImageView imageViewToExpandInDetail = null;
 
     if (view != null) {
-      imageViewToExpandInDetail = (ImageView) view.findViewById(R.id.image_to_expand_in_detail);
+      imageViewToExpandInDetail = view.findViewById(R.id.image_to_expand_in_detail);
     }
 
     OCManager.processElementUrl(element.getElementUrl(), imageViewToExpandInDetail,
@@ -170,10 +167,6 @@ public class SearcherLayoutPresenter extends Presenter<SearcherLayoutInterface> 
 
   private boolean checkLoginAuth(@NonNull RequiredAuthoritation requiredAuth) {
     return authoritation.isAuthorizatedUser() || !requiredAuth.equals(RequiredAuthoritation.LOGGED);
-  }
-
-  public void updateUi() {
-    doSearch();
   }
 
   public void destroy() {

@@ -4,60 +4,105 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-apply from: '../ocmsdk/dependencies.gradle'
+group = rootProject.ext.group
+version = rootProject.ext.version
 
-group = 'com.github.Orchextra'
+ext {
+  bintrayRepo = 'maven'
+  bintrayName = 'com.gigigo.ocm:vimeosdk'
+
+  publishedGroupId = 'com.gigigo.ocm'
+  libraryName = 'vimeosdk'
+  artifact = 'vimeosdk'
+
+  libraryDescription = 'Orchextra Vimeo Sdk'
+
+  siteUrl = 'https://github.com/Orchextra/orchextra-content-android-sdk'
+  gitUrl = 'https://github.com/Orchextra/orchextra-content-android-sdk.git'
+
+  libraryVersion = rootProject.ext.version
+
+  developerId = 'gigigo-desarrollo'
+  developerName = 'Android Gigigo'
+  developerEmail = 'gigigo.desarrollo@gmail.com'
+
+  licenseName = 'The Apache Software License, Version 2.0'
+  licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+  allLicenses = ["Apache-2.0"]
+}
 
 android {
-  compileSdkVersion project.androidCompileSdkVersion
-  buildToolsVersion project.androidBuildToolsVersion
+  compileSdkVersion rootProject.ext.compileSdkVersion
 
   defaultConfig {
-    minSdkVersion project.androidMinSdkVersion
-    targetSdkVersion project.androidTargetSdkVersion
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode generateAutoVersionCode()
+    versionName version
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   buildTypes {
-    staging {
-      debuggable true
-    }
-
     debug {
       debuggable true
+
+      version = "${rootProject.ext.version}-D"
+      project.ext.libraryVersion = "${rootProject.ext.version}-D"
+    }
+
+    quality {
+      debuggable true
+
+      version = "${rootProject.ext.version}-Q"
+      project.ext.libraryVersion = "${rootProject.ext.version}-Q"
     }
 
     release {
       debuggable false
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+      if (project.hasProperty('debug')) {
+        version = "${rootProject.ext.version}-D"
+        project.ext.libraryVersion = "${rootProject.ext.version}-D"
+
+      } else if (project.hasProperty('quality')) {
+        version = "${rootProject.ext.version}-Q"
+        project.ext.libraryVersion = "${rootProject.ext.version}-Q"
+
+      } else {
+        version = "${rootProject.ext.version}"
+        project.ext.libraryVersion = "${rootProject.ext.version}"
+      }
     }
   }
 
   flavorDimensions "ocm"
-
   productFlavors {
     ocm {
       dimension "ocm"
     }
   }
 
-  //true to publish all flavour artifacts
-  // publishNonDefault true
   defaultPublishConfig "ocmRelease"
 }
 
 dependencies {
-  implementation project.libraries.kotlinStdlib
+  implementation project.libraries.kotlinStdLib
   implementation project.libraries.androidAppCompat
-  api project.libraries.vimeoNetworking
-  api project.libraries.exoplayer
-  api project.libraries.imageloaderGlideBlur
-  api project.libraries.rxJava
+  implementation project.libraries.vimeoNetworking
+  implementation project.libraries.exoplayer
+  implementation project.libraries.glide
+  implementation project.libraries.glideTransformations
+  implementation project.libraries.rxJava
+  implementation project.libraries.retrofit
+  implementation project.libraries.okhttp3
+  implementation project.libraries.timber
 
-  androidTestImplementation(project.testLibraries.espresso, {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
+  androidTestImplementation project.testLibraries.espresso
   testImplementation project.testLibraries.junit
 }
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

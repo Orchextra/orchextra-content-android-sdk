@@ -4,25 +4,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/oc_bg_article_header_color"
+    android:background="@color/transparent"
     android:orientation="vertical"
     >
+
   <ImageView
       android:id="@+id/article_header_image"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:adjustViewBounds="true"
-      android:src="@color/oc_bg_article_header_color"
+      android:src="@color/transparent"
       />
 
   <com.gigigo.orchextra.core.sdk.ui.views.textviews.OcmTitleTextView
       android:id="@+id/article_header_text"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_centerHorizontal="true"
-      android:layout_centerVertical="true"
-      android:layout_marginLeft="@dimen/oc_spacing_8"
-      android:layout_marginRight="@dimen/oc_spacing_16"
+      android:layout_marginEnd="@dimen/oc_spacing_16"
+      android:layout_marginStart="@dimen/oc_spacing_8"
       android:background="#00000000"
       android:textColor="@color/oc_article_header_title_text_color"
       android:textSize="@dimen/oc_text_30"

@@ -1,0 +1,142 @@
+ext {
+  STRING = "String"
+  BOOLEAN = "boolean"
+  INT = "int"
+
+  generateVersionCode = { major, minor, patch ->
+    def majorFactor = 10000
+    def minorFactor = 100
+    def patchFactor = 1
+
+    if (patch > 99) {
+      println("warning patch number to high! " + patch)
+    }
+    if (minor > 99) {
+      println("warning minor number to high! " + minor)
+    }
+
+    def versionCode = major * majorFactor + minor * minorFactor + patch * patchFactor
+    println("+++++++++++++++versionCode: " + versionCode)
+    return versionCode
+  };
+
+  generateAutoVersionCode = {
+    try {
+      def stdout = new ByteArrayOutputStream()
+      exec {
+        commandLine 'git', 'rev-list', '--count', 'HEAD'
+        standardOutput = stdout
+      }
+      def commitCount = stdout.toString().trim().toInteger()
+
+      println("commitCount: " + commitCount)
+
+      return commitCount
+    } catch (ignored) {
+      return 0
+    }
+  }
+
+  generateVersionName = { major, minor, patch ->
+    def versionName = "${major}.${minor}.${patch}"
+    println("versionName: " + versionName)
+    return versionName
+  }
+
+  getVersionName = { version ->
+    def major = version["major"]
+    def minor = version["minor"]
+    def patch = version["patch"]
+
+    if(major == null) {
+      major = 0
+    }
+
+    if(minor == null) {
+      minor = 0
+    }
+
+    if(patch == null) {
+      patch = "0-beta"
+    }
+
+    return generateVersionName(major, minor, patch)
+  }
+
+  getVariantValue = { field, buildType, key ->
+    def value
+
+    if (field instanceof Map) {
+      if (field["$buildType"] == null) {
+        println("not defined explicit param value for \'${key}\' in \'${buildType}\' configuration. Using first value founded")
+        value = field.entrySet().toList().first().getValue()
+      } else {
+        value = field["$buildType"]
+      }
+    } else {
+      value = field
+    }
+
+    return value
+  }
+
+  getValueWithType = { value, type ->
+    if (value != null) {
+      if (type.toLowerCase().equals("string")) {
+        value = "\"${value}\""
+      } else {
+        value = "${value}"
+      }
+    }
+    return value
+  }
+
+  getVariantFieldValue = { field, buildType ->
+    def value = getVariantValue(field, buildType, buildType)
+
+    return "${value}"
+  }
+
+  getVariantFieldValueWithType = { field, buildType, type ->
+    def value = getVariantFieldValue(field, buildType)
+
+    return getValueWithType(value, type)
+  }
+
+  setVariantApplicationId = { variant, appId ->
+    def mergedFlavor = variant.getVariantData().getVariantConfiguration().getMergedFlavor()
+    mergedFlavor.setApplicationId(appId)
+    println("applicationId: " + appId)
+  }
+
+  setVariantModeDebugValue = { variant, key, type ->
+    def value = (variant.buildType.name == 'debug' || variant.buildType.name == 'quality')
+    setVariantBuildConfigField(variant, value, key, type)
+  }
+
+  setVariantBuildConfigField = { variant, field, key, type ->
+    def value = getVariantFieldValueWithType(field, variant.buildType.name, type)
+
+    if (value != null) {
+      try {
+        variant.buildConfigField(type, key, value)
+        println("BuildConfig -> " + type + ":" + key + " = " + value)
+      } catch (Exception ex) {
+
+        println("Null value: BuildConfig -> " + type + ":" + key + " not added!")
+      }
+    } else {
+      println("Null value: BuildConfig -> " + type + ":" + key + " not added!")
+    }
+  }
+
+  setVariantResValue = { variant, field, key, type ->
+    def value = getVariantFieldValueWithType(field, variant.buildType.name, type)
+    try {
+      variant.resValue(type.toLowerCase(), key.toLowerCase(), value)
+      println("Res -> " + type + ":" + key + " = " + value)
+    } catch (Exception ex) {
+      println("Null value: Res -> " + type + ":" + key + " = " + value)
+    }
+  }
+}

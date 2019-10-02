@@ -6,16 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
-    tools:context="com.gigigo.orchextra.ocm.sample.settings.SettingsActivity"
+    tools:context="com.gigigo.showcase.presentation.view.settings.SettingsActivity"
     >
 
-  <android.support.design.widget.AppBarLayout
+  <com.google.android.material.appbar.AppBarLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:theme="@style/AppTheme.AppBarOverlay"
       >
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -23,13 +23,8 @@
         app:popupTheme="@style/AppTheme.PopupOverlay"
         />
 
-  </android.support.design.widget.AppBarLayout>
+  </com.google.android.material.appbar.AppBarLayout>
 
-  <View
-      android:id="@+id/projectsView"
-      android:layout_width="match_parent"
-      android:layout_height="200dp"
-      />
 
   <LinearLayout
       android:layout_width="match_parent"
@@ -57,6 +52,15 @@
         style="@style/EditTextStyle"
         />
 
+    <EditText
+        android:id="@+id/businessUnitEditText"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:hint="business unit"
+        style="@style/EditTextStyle"
+        />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,7 +84,7 @@
             android:text="Type (A/B)"
             />
 
-        <android.support.v7.widget.SwitchCompat
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/typeSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

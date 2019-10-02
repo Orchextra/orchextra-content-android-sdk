@@ -10,9 +10,6 @@ import android.telephony.TelephonyManager;
 import com.gigigo.orchextra.core.domain.utils.ConnectionStates;
 import com.gigigo.orchextra.core.domain.utils.ConnectionUtils;
 
-/**
- * Created by rui.alonso on 13/11/15.
- */
 public class ConnectionUtilsImp implements ConnectionUtils {
 
   private Context context;

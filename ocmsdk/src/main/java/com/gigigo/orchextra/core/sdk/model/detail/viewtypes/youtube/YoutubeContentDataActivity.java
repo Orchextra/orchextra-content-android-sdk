@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import android.view.Display;
 import com.gigigo.orchextra.core.sdk.di.base.BaseActivity;
 import com.gigigo.orchextra.ocmsdk.R;

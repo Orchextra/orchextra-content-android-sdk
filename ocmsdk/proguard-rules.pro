@@ -83,8 +83,8 @@
 -keepattributes *Annotation*
 
 -keepclassmembers,allowobfuscation class * {
-    @orchextra.javax.inject.* *;
-    @orchextra.dagger.* *;
+    @javax.inject.inject.* *;
+    @dagger.* *;
     <init>();
 }
 

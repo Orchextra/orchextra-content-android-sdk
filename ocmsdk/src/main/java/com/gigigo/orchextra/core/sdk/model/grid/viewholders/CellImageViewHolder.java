@@ -2,15 +2,16 @@ package com.gigigo.orchextra.core.sdk.model.grid.viewholders;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gigigo.baserecycleradapter.viewholder.BaseViewHolder;
@@ -73,7 +74,7 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                 String generatedImageUrl =
                     ImageGenerator.generateImageUrl(sectionView.getImageUrl(),
                         mainLayout.getWidth(), mainLayout.getHeight());
-                DrawableRequestBuilder<String> requestBuilder;
+                RequestBuilder<Drawable> requestBuilder;
 
                 if (!OCManager.isThisArticleReaded(item.getData().getSlug())) {
                   requestBuilder = OcmImageLoader.load(context, generatedImageUrl)
@@ -90,7 +91,8 @@ public class CellImageViewHolder extends BaseViewHolder<CellGridContentData> {
                   Transformation<Bitmap> bitmapTransformReadArticles =
                       OCManager.getBitmapTransformReadArticles();
                   if (bitmapTransformReadArticles != null) {
-                    requestBuilder.bitmapTransform(bitmapTransformReadArticles);
+                    requestBuilder.transform(bitmapTransformReadArticles);
+//                    requestBuilder.bitmapTransform(bitmapTransformReadArticles);
                   } else {
                     //todo overlay, image.setForeground only api23, or ovelary with other image
                     //now change de image for test

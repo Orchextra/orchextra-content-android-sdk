@@ -5,9 +5,6 @@ import android.graphics.Typeface;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by nubor on 22/11/2017.
- */
 
 public class FontCache {
   private static Map<String, Typeface> fontMap = new HashMap<String, Typeface>();

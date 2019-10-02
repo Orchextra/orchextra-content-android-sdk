@@ -5,14 +5,14 @@
 // Initialize global config
 cfg = jplConfig('ocmsdk', 'android', '', [hipchat: '', slack: '#integrations', email: 'qa+ocmsdk@gigigo.com,jose.benito@gigigo.com'])
 cfg.commitValidation.enabled = false
-cfg.androidPackages = '"build-tools;24.0.3" "platforms;android-24" "build-tools;25.0.0" "platforms;android-25" "build-tools;26.0.2" "platforms;android-26"'
+cfg.androidPackages = '"build-tools;24.0.3" "platforms;android-24" "build-tools;25.0.0" "platforms;android-25" "build-tools;27.0.3" "platforms;android-27"'
 cfg.archivePattern = "ocmsdk/build/outputs/aar/ocmsdk-ocm-release.aar"
 
 pipeline {
     agent none
 
     stages {
-        stage ('Initialize') {
+        stage ('Initialize') {p
             agent { label 'docker' }
             steps  {
                 jplStart(cfg)
