@@ -1,16 +1,16 @@
 ext {
 
     group = 'com.gigigo.ocm'
-    version = '4.2.1-beta11'
+    version = '4.2.1-beta13'
 
     compileSdkVersion = 29
     minSdkVersion = 16
     targetSdkVersion = 29
 
-    oxVersionD = '3.2.6.2'
-    oxVersionQ = '3.2.6.2'
+    oxVersionD = '3.2.7-D'
+    oxVersionQ = '3.2.7-Q'
+    oxVersion = '3.2.7'
 
-    oxVersion = '3.2.6-beta01'
     playVersion = '17.0.0'
     coroutinesVersion = '1.3.0'
 
@@ -37,20 +37,20 @@ ext {
             gggJavaLib                : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggg-java-lib:4.6.4',
             ggglib                    : 'com.github.GigigoGreenLabs.gggUtilsSuite:ggglib:4.6.4',
 
-            oxCoreQuality             : "com.gigigo.orchextra:core:${oxVersionD}-D",
-            oxCoreDebug               : "com.gigigo.orchextra:core:${oxVersionQ}-Q",
+            oxCoreQuality             : "com.gigigo.orchextra:core:${oxVersionD}",
+            oxCoreDebug               : "com.gigigo.orchextra:core:${oxVersionQ}",
             oxCoreRelease             : "com.gigigo.orchextra:core:${oxVersion}",
 
-            oxGeofenceQuality         : "com.gigigo.orchextra:geofence:${oxVersionD}-D",
-            oxGeofenceDebug           : "com.gigigo.orchextra:geofence:${oxVersionQ}-Q",
-            oxGeofenceRelease         : "com.gigigo.orchextra:geofence:${oxVersion}@aar",
+            oxGeofenceQuality         : "com.gigigo.orchextra:geofence:${oxVersionD}",
+            oxGeofenceDebug           : "com.gigigo.orchextra:geofence:${oxVersionQ}",
+            oxGeofenceRelease         : "com.gigigo.orchextra:geofence:${oxVersion}",
 
-            oxIndoorpositioningQuality: "com.gigigo.orchextra:indoorpositioning:${oxVersionD}-D",
-            oxIndoorpositioningDebug  : "com.gigigo.orchextra:indoorpositioning:${oxVersionQ}-Q",
+            oxIndoorpositioningQuality: "com.gigigo.orchextra:indoorpositioning:${oxVersionD}",
+            oxIndoorpositioningDebug  : "com.gigigo.orchextra:indoorpositioning:${oxVersionQ}",
             oxIndoorpositioningRelease: "com.gigigo.orchextra:indoorpositioning:${oxVersion}",
 
-            oxScannerQuality          : "com.gigigo.orchextra:scanner:${oxVersionD}-D",
-            oxScannerDebug            : "com.gigigo.orchextra:scanner:${oxVersionQ}-Q",
+            oxScannerQuality          : "com.gigigo.orchextra:scanner:${oxVersionD}",
+            oxScannerDebug            : "com.gigigo.orchextra:scanner:${oxVersionQ}",
             oxScannerRelease          : "com.gigigo.orchextra:scanner:${oxVersion}",
 
             playServicesBase          : "com.google.android.gms:play-services-base:${playVersion}",

@@ -12,7 +12,7 @@ pipeline {
     agent none
 
     stages {
-        stage ('Initialize') {
+        stage ('Initialize') {p
             agent { label 'docker' }
             steps  {
                 jplStart(cfg)
