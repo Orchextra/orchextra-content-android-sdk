@@ -1,4 +1,5 @@
 Orchextra Content	[![Build Status](https://travis-ci.org/Orchextra/orchextra-content-android-sdk.svg?branch=develop)](https://travis-ci.org/Orchextra/orchextra-content-android-sdk)
+[ ![Download](https://api.bintray.com/packages/gigigo-desarrollo/maven/com.gigigo.ocm%3Acontent/images/download.svg) ](https://bintray.com/gigigo-desarrollo/maven/com.gigigo.ocm%3Acontent/_latestVersion)
 ===================
 A library that gives you access to Orchextra Content platform from your Android device.
 
