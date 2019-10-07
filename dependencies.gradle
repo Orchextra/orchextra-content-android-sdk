@@ -7,9 +7,9 @@ ext {
     minSdkVersion = 16
     targetSdkVersion = 29
 
-    oxVersionD = '3.2.7-D'
-    oxVersionQ = '3.2.7-Q'
-    oxVersion = '3.2.7'
+    oxVersionD = '3.2.8-D'
+    oxVersionQ = '3.2.8-Q'
+    oxVersion = '3.2.8'
 
     playVersion = '17.0.0'
     coroutinesVersion = '1.3.0'
