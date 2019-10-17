@@ -226,7 +226,8 @@ public final class OcmBuilder {
     return debuggable;
   }
 
-  public void setDebuggable(boolean debuggable) {
+  public OcmBuilder setDebuggable(boolean debuggable) {
     this.debuggable = debuggable;
+    return this;
   }
 }
