@@ -11,4 +11,5 @@ data class OxConfig(
     val notificationActivityClass: Class<Activity>? = null,
     val triggeringEnabled: Boolean = true,
     val anonymous: Boolean = false,
-    val proximityEnabled: Boolean = true)
+    val proximityEnabled: Boolean = true,
+    val debuggable: Boolean = false)
