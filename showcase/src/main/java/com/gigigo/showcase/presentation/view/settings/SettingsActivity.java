@@ -2,22 +2,21 @@ package com.gigigo.showcase.presentation.view.settings;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
 import com.gigigo.showcase.App;
 import com.gigigo.showcase.R;
 import com.gigigo.showcase.domain.entity.ConfigData;
 import com.gigigo.showcase.presentation.presenter.SettingsPresenter;
 import java.util.HashMap;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
 
 public class SettingsActivity extends AppCompatActivity implements SettingsView {
 
@@ -77,24 +76,14 @@ public class SettingsActivity extends AppCompatActivity implements SettingsView 
     return customFields;
   }
 
-  @Override public void showLoading() {
-  }
-
-  private void showError(String title, String message) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle(title)
-        .setMessage(message)
-        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-
-        })
-        .setIcon(R.drawable.ic_mistake)
-        .show();
-  }
+  @Override public void showLoading() { }
 
   private void initToolbar() {
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
-    toolbar.setNavigationOnClickListener(view -> onBackPressed());
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      toolbar.setNavigationOnClickListener(view -> onBackPressed());
+    }
 
     if (getSupportActionBar() != null) {
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -106,7 +95,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsView 
     context.startActivityForResult(intent, SETTINGS_RESULT_CODE);
   }
 
-  @Override public void showConfigData(@NotNull ConfigData configData) {
+  @Override public void showConfigData(ConfigData configData) {
     apiKeyEditText.setText(configData.getApiKey());
     apiSecretEditText.setText(configData.getApiSecret());
     businessUnitEditText.setText(configData.getBusinessUnit());

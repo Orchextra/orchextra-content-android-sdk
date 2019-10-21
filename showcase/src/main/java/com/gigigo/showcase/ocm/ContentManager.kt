@@ -71,7 +71,7 @@ class ContentManager(private val context: Application) {
   private fun bindUserData(userData: UserData, onSuccess: () -> Unit = {},
       onError: () -> Unit = {}) {
 
-    Ocm.bindUser(CrmUser(userData.id, null, null), object : OxManager.StatusListener {
+    Ocm.bindUser(userData.id?.let { CrmUser(it, null, null) }, object : OxManager.StatusListener {
       override fun onSuccess() {
         val customFields = HashMap<String, String>()
         customFields["type"] = userData.type ?: ""
