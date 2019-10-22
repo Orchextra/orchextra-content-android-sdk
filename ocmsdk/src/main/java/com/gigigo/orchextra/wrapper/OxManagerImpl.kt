@@ -69,8 +69,7 @@ class OxManagerImpl : OxManager {
         .anonymous(config.anonymous)
         .proximityEnabled(config.proximityEnabled)
         .deviceBusinessUnits(config.deviceBusinessUnits)
-        .debuggable(true)
-
+        .debuggable(config.debuggable)
         .build()
 
     orchextra.init(application, config.apiKey, config.apiSecret, options)

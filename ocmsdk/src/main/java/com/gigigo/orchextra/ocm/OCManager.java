@@ -531,7 +531,7 @@ public final class OCManager {
         app.registerActivityLifecycleCallbacks(ocmSdkLifecycle);
     }
 
-    public ArrayList<String> readReadArticles() {
+    private ArrayList<String> readReadArticles() {
 
         ArrayList<String> lst =
                 readSerializable(ocmContextProvider.getApplicationContext(), READ_ARTICLES_FILE);
@@ -583,7 +583,7 @@ public final class OCManager {
     static void initOrchextra(String oxKey, String oxSecret, Class notificationActivityClass,
                               String firebaseApiKey, String firebaseApplicationId, @NonNull String businessUnit,
                               @Nullable final OcmCredentialCallback ocmCredentialCallback, Boolean triggeringEnabled,
-                              Boolean anonymous, Boolean proximityEnabled) {
+                              Boolean anonymous, Boolean proximityEnabled, Boolean debuggable) {
 
         if (OCManager.instance != null) {
 
@@ -595,7 +595,7 @@ public final class OCManager {
             Application app = (Application) instance.ocmContextProvider.getApplicationContext();
             OxConfig oxConfig =
                     new OxConfig(oxKey, oxSecret, firebaseApiKey, firebaseApplicationId, businessUnits,
-                            notificationActivityClass, triggeringEnabled, anonymous, proximityEnabled);
+                            notificationActivityClass, triggeringEnabled, anonymous, proximityEnabled, debuggable);
 
             instance.oxManager.init(app, oxConfig, new OxManager.StatusListener() {
                 @Override

@@ -1,6 +1,5 @@
 package com.gigigo.showcase.presentation.presenter
 
-import com.gigigo.orchextra.core.domain.entities.menus.DataRequest
 import com.gigigo.orchextra.ocm.Ocm
 import com.gigigo.orchextra.ocm.OcmCallbacks
 import com.gigigo.orchextra.ocm.dto.UiMenuData
@@ -48,7 +47,7 @@ class MainPresenter(private val dataManager: DataManager,
   }
 
   private fun getContent() {
-    Ocm.getMenus(DataRequest.FORCE_CLOUD, object : OcmCallbacks.Menus {
+    Ocm.getMenus(object : OcmCallbacks.Menus {
       override fun onMenusLoaded(uiMenuData: UiMenuData?) {
 
         if (uiMenuData == null || uiMenuData.uiMenuList.isEmpty()) {

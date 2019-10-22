@@ -95,7 +95,7 @@ configurations {
 }
 
 dependencies {
-  implementation 'androidx.appcompat:appcompat:1.0.0'
+  implementation 'androidx.appcompat:appcompat:1.1.0'
   implementation 'com.google.android.material:material:1.0.0'
   implementation 'androidx.legacy:legacy-support-v13:1.0.0'
   implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -103,14 +103,15 @@ dependencies {
   implementation 'com.jakewharton.timber:timber:4.7.1'
   implementation project(path: ':ocmsdk')
 
-  implementation 'androidx.multidex:multidex:2.0.0'
+  implementation 'androidx.multidex:multidex:2.0.1'
   implementation 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
   implementation 'com.github.GigigoGreenLabs.imgRecogModule:vuforiaimplementation:2.6'
   implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
   testImplementation 'junit:junit:4.12'
-  androidTestImplementation 'androidx.test:runner:1.1.0'
-  androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+  androidTestImplementation 'androidx.test:runner:1.2.0'
+  androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+  implementation 'org.jetbrains:annotations:16.0.2'
 }
 
 applivery {

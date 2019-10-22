@@ -30,6 +30,7 @@ public final class OcmBuilder {
   private ImageTransformReadArticle transformReadArticleMode = ImageTransformReadArticle.OVERLAY;
   private int maxReadArticles = 100;
   private String vimeoAccessToken;
+  private boolean debuggable = false;
 
   public int getMaxReadArticles() {
     return maxReadArticles;
@@ -50,7 +51,7 @@ public final class OcmBuilder {
     return this;
   }
 
-  private com.bumptech.glide.load.Transformation<Bitmap> customBitmapTransformReadArticle = null;
+  private Transformation<Bitmap> customBitmapTransformReadArticle = null;
 
   /**
    * setter for do vuforia optional in ocm, setted from intetragion app
@@ -219,5 +220,14 @@ public final class OcmBuilder {
 
   public String getVimeoAccessToken() {
     return vimeoAccessToken;
+  }
+
+  public boolean isDebuggable() {
+    return debuggable;
+  }
+
+  public OcmBuilder setDebuggable(boolean debuggable) {
+    this.debuggable = debuggable;
+    return this;
   }
 }
